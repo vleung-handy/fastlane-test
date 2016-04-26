@@ -1,15 +1,21 @@
 package com.handy.portal.ui.fragment;
 
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
@@ -17,11 +23,15 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.ui.activity.LoginActivity;
+import com.handy.portal.util.DeeplinkUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -39,6 +49,8 @@ public class AccountSettingsFragment extends ActionBarFragment
     ProviderManager mProviderManager;
     @Inject
     ConfigManager mConfigManager;
+    @Inject
+    PrefsManager mPrefsManager;
 
     @Bind(R.id.provider_name_text)
     TextView mProviderNameText;
@@ -105,7 +117,7 @@ public class AccountSettingsFragment extends ActionBarFragment
         mBus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitSelected()));
 
         mBus.post(new NavigationEvent.NavigateToTab(
-                MainViewTab.REQUEST_SUPPLIES, null, TransitionStyle.NATIVE_TO_NATIVE, true));
+                MainViewTab.REQUEST_SUPPLIES, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
 
@@ -120,6 +132,37 @@ public class AccountSettingsFragment extends ActionBarFragment
     public void retryProfileFetch()
     {
         requestProviderProfile();
+    }
+
+    @SuppressWarnings("deprecation")
+    @OnClick(R.id.log_out_button)
+    public void logOut()
+    {
+        mPrefsManager.clear();
+
+        if (Build.VERSION.SDK_INT >= 21)
+        {
+            CookieManager.getInstance().removeAllCookies(null);
+            CookieManager.getInstance().flush();
+        }
+        else
+        {
+            CookieSyncManager.createInstance(getActivity());
+            CookieManager.getInstance().removeAllCookie();
+            CookieSyncManager.getInstance().sync();
+        }
+
+        final Intent intent = new Intent(getActivity(), LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        final Uri data = getActivity().getIntent().getData();
+        final Bundle deeplinkBundle = DeeplinkUtils.createDeeplinkBundleFromUri(data);
+        if (deeplinkBundle != null)
+        {
+            intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkBundle);
+            intent.putExtra(BundleKeys.DEEPLINK_SOURCE, DeeplinkLog.Source.LINK);
+        }
+        startActivity(intent);
+        getActivity().finish();
     }
 
     @Subscribe

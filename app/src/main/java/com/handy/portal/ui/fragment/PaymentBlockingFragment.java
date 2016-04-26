@@ -71,7 +71,7 @@ public class PaymentBlockingFragment extends ActionBarFragment
             @Override
             public void onClick(final View v)
             {
-                bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, null, TransitionStyle.REFRESH_TAB, true));
+                bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.REFRESH_TAB, true));
             }
         });
     }

@@ -54,7 +54,7 @@
     <string name="job_claim_success">Success! Job claimed!</string>
     <string name="series_claim_success">Success! Series claimed!</string>
 
-    <string name="job_remove_success">Success! Job removed!</string>
+    <string name="job_remove_success">You have cancelled this job.</string>
     <string name="series_remove_success">Success! Series removed!</string>
 
     <string name="send_verification_success">Your income verification has been sent.</string>
@@ -189,7 +189,7 @@
     <string name="booking_details_claim_target_reached_title">Congratulations!</string>
     <string name="booking_details_claim_target_expected_pay_label">Expected pay in next %1$d days</string>
 
-    <string name="payment_batch_list_entry_subtitle">%1$d jobs, %2$d withholdings</string>
+    <string name="payment_batch_list_entry_subtitle">%1$d jobs, %2$d fees</string>
     <string name="payment_detail_list_group_header">%1$s (%2$d)</string>
 
     <string name="omw_success">Success! Don’t forget to check-in when you get to the job</string>
@@ -245,9 +245,9 @@
     <string name="previous_job">Previous Job</string>
     <string name="total_payment">Total Payment</string>
     <string name="expected_payment">Expected Payment</string>
-    <string name="remaining_withholdings">Remaining Withholdings</string>
+    <string name="remaining_fees">Remaining Fees</string>
     <string name="previous_pay_weeks">PREVIOUS PAY WEEKS</string>
-    <string name="withholdings">Withholdings</string>
+    <string name="fees">Fees</string>
     <string name="current_pay_week">CURRENT PAY WEEK</string>
     <string name="total_earnings">Total Earnings</string>
     <string name="no_more_payments">You have no more payments to load.</string>
@@ -270,8 +270,11 @@
     <string name="pending">Pending</string>
 
     <!-- Payments Bill Blocker -->
-    <string name="payments_bill_blocker_title">Please Update Your Payment Method</string>
-    <string name="payments_bill_blocker_content">Head to the Profile tab to set up your payment method.</string>
+    <string name="payments_bill_blocker_title">Your payment info is missing!</string>
+    <string name="payments_bill_blocker_content_formatted">
+        Please update your bank details, otherwise %1$s via direct deposit
+    </string>
+    <string name="payment_bill_blocker_content_colored">we can’t issue payments</string>
     <string name="payments_bill_blocker_update_now_button">Update Now</string>
     <string name="payments_bill_blocker_remind_me_later_button">REMIND ME LATER</string>
     <string name="bank_account">Bank Account</string>
@@ -331,6 +334,8 @@
     <string name="job_instructions">JOB INSTRUCTIONS</string>
     <string name="location_details">LOCATION DETAILS</string>
     <string name="read_customer_preferences">Please check customer priorities &amp; specific instructions, and check them off when you\u2019re done.</string>
+    <string name="check_customer_preferences">Please let your customer know what you\u2019ve completed by checking tasks off this list.</string>
+    <string name="show_booking_cancellation_policy">Show Details</string>
     <string name="tap_preferences_before_checkout">Tap completed tasks before checking out.</string>
     <string name="payment">Payment</string>
     <string name="get_directions">Get directions</string>
@@ -348,7 +353,7 @@
     <string name="select_a_reason">Let us know why you need to cancel.</string>
     <string name="sure_to_cancel">Are you sure you need to cancel?</string>
     <string name="will_be_charged">You’ll be charged a&#160;</string>
-    <string name="withholding_fee_formatted">%1$s withholding fee.</string>
+    <string name="fee_formatted">%1$s fee.</string>
     <string name="confirm_cancellation">Confirm Cancellation</string>
 
     <!-- Special -->
@@ -358,7 +363,6 @@
     <string name="request_supplies">Request Supplies</string>
     <string name="supply_kit_includes">Supply Kit Includes</string>
     <string name="shipping_address">Shipping Address</string>
-    <string name="withholding_amount">Withholding Amount</string>
     <string name="complete_purchase">Complete Purchase</string>
     <string name="no_address_on_file">No Address On File</string>
 
@@ -380,7 +384,7 @@
     <string name="claim_n_dollar_job_formatted">Claim %1$s Job</string>
     <string name="miles_away_formatted">%1$s miles away</string>
     <string name="kilometers_away_formatted">%1$s kilometers away</string>
-    <string name="withholding_charge">Canceling this job will result in a withholding</string>
+    <string name="fee_charge">Canceling this job will result in a fee</string>
     <string name="please_confirm">Please confirm:</string>
 
     <!-- Logging out a deactivated pro -->
@@ -416,6 +420,7 @@
     <string name="duster">Duster</string>
     <string name="cleaning_solutions">Cleaning solutions for all surfaces</string>
     <string name="apron">Apron</string>
+    <string name="log_out">Log Out</string>
 
     <!-- Referrals -->
     <string name="chevron_description">Chevron</string>
@@ -454,5 +459,15 @@
     <string name="date">Date</string>
     <string name="progress">Progress</string>
     <string name="share">Share</string>
+
+    <!-- Job Cancellation -->
+    <string name="need_to_cancel">Are you sure you need to cancel?</string>
+    <string name="cancel_job">Cancel Job</string>
+    <string name="keep_rate">Keep rate</string>
+    <string name="keep_rate_negatively_impacted">Your keep rate will be negatively impacted.</string>
+    <string name="empty_keep_rate_percent">- - %</string>
+    <string name="keep_rate_percent_formatted">%1$d%%</string>
+    <string name="no_keep_rate">Not enough data</string>
+    <string name="withholding_fee_simple_formatted">You will incur a %1$s fee and reduce your keep rate:</string>
 
 </resources>

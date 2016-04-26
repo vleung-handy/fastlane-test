@@ -1,14 +1,14 @@
 package com.handy.portal.ui.fragment.bookings;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.text.format.DateUtils;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +25,7 @@ import com.handy.portal.constant.BookingProgress;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.constant.RequestCode;
 import com.handy.portal.constant.SupportActionType;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
@@ -41,14 +42,12 @@ import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
-import com.handy.portal.ui.element.bookings.BookingView;
-import com.handy.portal.ui.element.bookings.InProgressBookingView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.dialog.ClaimTargetDialogFragment;
+import com.handy.portal.ui.fragment.dialog.ConfirmBookingCancelDialogFragment;
 import com.handy.portal.ui.layout.SlideUpPanelLayout;
-import com.handy.portal.ui.view.InjectedBusView;
-import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.FragmentUtils;
 import com.handy.portal.util.SupportActionUtils;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
@@ -63,7 +62,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class NewBookingDetailsFragment extends ActionBarFragment implements View.OnClickListener
+public class BookingDetailsWrapperFragment extends ActionBarFragment implements View.OnClickListener
 {
     public static final String SOURCE_LATE_DISPATCH = "late_dispatch";
 
@@ -79,7 +78,6 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
     @Bind(R.id.fetch_error_text)
     TextView mErrorText;
 
-    private InjectedBusView mCurrentView;
     private Booking mBooking;
     private String mRequestedBookingId;
     private Booking.BookingType mRequestedBookingType;
@@ -87,8 +85,6 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
     private String mSource;
     private Bundle mSourceExtras;
     private boolean mFromPaymentsTab;
-    private CountDownTimer mCounter;
-
 
     @Override
     protected MainViewTab getTab()
@@ -132,10 +128,6 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
     public void onResume()
     {
         super.onResume();
-        if (mCurrentView != null)
-        {
-            mCurrentView.registerBus();
-        }
 
         if (!MainActivityFragment.clearingBackStack)
         {
@@ -147,12 +139,6 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
     public void onPause()
     {
         super.onPause();
-        if (mCurrentView != null)
-        {
-            mCurrentView.unregisterBus();
-        }
-        if (mCounter != null)
-        { mCounter.cancel(); }
 
         if (mBooking != null && mBooking.isCheckedIn())
         {
@@ -325,6 +311,31 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         }
     }
 
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
+    {
+        if (resultCode == Activity.RESULT_OK)
+        {
+            switch (requestCode)
+            {
+                case RequestCode.REMOVE_BOOKING:
+                    requestRemoveJob();
+                    break;
+
+            }
+        }
+        else if (resultCode == Activity.RESULT_CANCELED)
+        {
+            switch (requestCode)
+            {
+                case RequestCode.REMOVE_BOOKING:
+                    showJobSupportSlideUpPanel(); //show it again
+                    break;
+            }
+        }
+    }
+
     @Subscribe
     public void onReceiveReportNoShowSuccess(HandyEvent.ReceiveReportNoShowSuccess event)
     {
@@ -359,6 +370,11 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
     @Override
     public void onClick(final View v)
     {
+        showJobSupportSlideUpPanel();
+    }
+
+    private void showJobSupportSlideUpPanel()
+    {
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.JobSupportSelected(mBooking.getId())));
 
         LinearLayout layout = UIUtils.createLinearLayout(getContext(), LinearLayout.VERTICAL);
@@ -377,11 +393,12 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         {
             final Booking.Action removeAction =
                     mBooking.getAction(Booking.Action.ACTION_REMOVE);
+
             bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSuccess(
                     mBooking,
                     ScheduledJobsLog.RemoveJobLog.POPUP,
-                    null,
-                    removeAction != null ? removeAction.getWithholdingAmount() : 0,
+                    getRemovalTypeFromBookingRemoveAction(removeAction),
+                    removeAction != null ? removeAction.getFeeAmount() : 0,
                     removeAction != null ? removeAction.getWarningText() : null
             )));
             TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
@@ -404,15 +421,23 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         handleBookingRemoveError(event.error.getMessage());
     }
 
+    @NonNull
+    private String getRemovalTypeFromBookingRemoveAction(@Nullable Booking.Action bookingRemoveAction)
+    {
+        return bookingRemoveAction != null && bookingRemoveAction.getKeepRate() != null ?
+                ScheduledJobsLog.RemoveJobLog.KEEP_RATE : ScheduledJobsLog.RemoveJobLog.POPUP;
+    }
+
     private void trackRemoveJobError(final String errorMessage)
     {
         final Booking.Action removeAction =
                 mBooking.getAction(Booking.Action.ACTION_REMOVE);
+
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobError(
                 mBooking,
                 ScheduledJobsLog.RemoveJobLog.POPUP,
-                null,
-                removeAction != null ? removeAction.getWithholdingAmount() : 0,
+                getRemovalTypeFromBookingRemoveAction(removeAction),
+                removeAction != null ? removeAction.getFeeAmount() : 0,
                 removeAction != null ? removeAction.getWarningText() : null,
                 errorMessage
         )));
@@ -518,51 +543,25 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         }
     }
 
-    private void updateDisplay()
+    public void updateDisplay()
     {
-        if (mCurrentView != null)
-        {
-            mCurrentView.unregisterBus();
-        }
         mSlideUpPanelContainer.removeAllViews();
 
-        boolean noShowReported = mBooking.getAction(Booking.Action.ACTION_RETRACT_NO_SHOW) != null;
         int bookingProgress = mBooking.getBookingProgress(getLoggedInUserId());
-        if (bookingProgress == BookingProgress.READY_FOR_CLAIM)
+        if (bookingProgress == BookingProgress.READY_FOR_CHECK_OUT
+                && mBooking.getCustomerPreferences().size() > 0)
+        //in progress booking (after check in and before check out)
         {
-            mCurrentView = new BookingView(getContext(), mBooking, mSource, mSourceExtras,
-                    this, noShowReported, mFromPaymentsTab);
-            setActionBarTitle(R.string.available_job);
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.replace(mSlideUpPanelContainer.getId(), InProgressBookingFragment.newInstance(mBooking, mSource)).commit();
         }
-        else if (bookingProgress == BookingProgress.READY_FOR_ON_MY_WAY ||
-                bookingProgress == BookingProgress.READY_FOR_CHECK_IN ||
-                (bookingProgress == BookingProgress.READY_FOR_CHECK_OUT
-                        && mBooking.getCustomerPreferences().size() == 0))
+        else //not in progress booking
         {
-            mCurrentView = new BookingView(getContext(), mBooking, mSource, mSourceExtras,
-                    this, noShowReported, mFromPaymentsTab);
-            setTimerIfNeeded();
-
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.replace(mSlideUpPanelContainer.getId(),
+                    BookingFragment.newInstance(mBooking, mSource, mFromPaymentsTab, false))
+                    .commit();
         }
-        else if (bookingProgress == BookingProgress.READY_FOR_CHECK_OUT)
-        {
-            mCurrentView = new InProgressBookingView(getContext(), mBooking, this, noShowReported);
-            setTimerIfNeeded();
-        }
-        else
-        {
-            mCurrentView = new BookingView(getContext(), mBooking, mSource, mSourceExtras,
-                    this, noShowReported, mFromPaymentsTab);
-            setActionBarTitle(R.string.completed_job);
-        }
-
-        mSlideUpPanelContainer.addView(mCurrentView);
-        mCurrentView.registerBus();
-    }
-
-    private ActionBar getActionBar()
-    {
-        return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
 
     //Show a radio button option dialog to select arrival time for the ETA action
@@ -675,35 +674,69 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
         showRemoveJobWarningDialog(removeAction.getWarningText(), removeAction);
     }
 
+    /**
+     * shows the custom remove job warning dialog if the keep rate data is there,
+     * based on the given booking
+     *
+     * @return true if the custom warning dialog was shown/is already showing, false otherwise
+     */
+    private boolean showCustomRemoveJobWarningDialogIfNecessary()
+    {
+        final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
+        if (removeAction != null)
+        {
+            final Booking.Action.Extras.KeepRate keepRate = removeAction.getKeepRate();
+            if (keepRate != null)
+            {
+                if (getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingCancelDialogFragment.FRAGMENT_TAG) == null)
+                {
+                    final DialogFragment fragment = ConfirmBookingCancelDialogFragment.newInstance(mBooking);
+                    fragment.setTargetFragment(BookingDetailsWrapperFragment.this, RequestCode.REMOVE_BOOKING);
+                    FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), ConfirmBookingCancelDialogFragment.FRAGMENT_TAG);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
     private void showRemoveJobWarningDialog(final String warning, final Booking.Action action)
     {
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
-                mBooking, ScheduledJobsLog.RemoveJobLog.POPUP, action.getWithholdingAmount(),
+                mBooking, ScheduledJobsLog.RemoveJobLog.POPUP, action.getFeeAmount(),
                 action.getWarningText())));
         bus.post(new HandyEvent.ShowConfirmationRemoveJob());
 
-        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
-        WarningButtonsText warningButtonsText = WarningButtonsText.REMOVE_JOB;
+        boolean customWarningDialogShown = showCustomRemoveJobWarningDialogIfNecessary();
+        if (customWarningDialogShown)
+        {
+            mSlideUpPanelContainer.hidePanel();
+        }
+        else
+        {
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+            WarningButtonsText warningButtonsText = WarningButtonsText.REMOVE_JOB;
 
-        // set dialog message
-        alertDialogBuilder
-                .setTitle(warningButtonsText.getTitleStringId())
-                .setMessage(warning)
-                .setPositiveButton(warningButtonsText.getPositiveStringId(), new DialogInterface.OnClickListener()
-                {
-                    public void onClick(DialogInterface dialog, int id)
+            // set dialog message
+            alertDialogBuilder
+                    .setTitle(warningButtonsText.getTitleStringId())
+                    .setMessage(warning)
+                    .setPositiveButton(warningButtonsText.getPositiveStringId(), new DialogInterface.OnClickListener()
                     {
-                        //proceed with action, we have accepted the warning
-                        bus.post(new HandyEvent.ActionWarningAccepted(BookingActionButtonType.REMOVE));
-                        requestRemoveJob();
-                    }
-                })
-                .setNegativeButton(warningButtonsText.getNegativeStringId(), null);
+                        public void onClick(DialogInterface dialog, int id)
+                        {
+                            //proceed with action, we have accepted the warning
+                            bus.post(new HandyEvent.ActionWarningAccepted(BookingActionButtonType.REMOVE));
+                            requestRemoveJob();
+                        }
+                    })
+                    .setNegativeButton(warningButtonsText.getNegativeStringId(), null);
 
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-        // show it
-        alertDialog.show();
+            // create alert dialog
+            AlertDialog alertDialog = alertDialogBuilder.create();
+            // show it
+            alertDialog.show();
+        }
     }
 
     private void requestBookingDetails(String bookingId, Booking.BookingType type, Date bookingDate)
@@ -721,40 +754,11 @@ public class NewBookingDetailsFragment extends ActionBarFragment implements View
                 mBooking,
                 ScheduledJobsLog.RemoveJobLog.POPUP,
                 null,
-                removeAction != null ? removeAction.getWithholdingAmount() : 0,
+                removeAction != null ? removeAction.getFeeAmount() : 0,
                 warning
         )));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestRemoveJob(mBooking));
-    }
-
-    private void setTimerIfNeeded()
-    {
-        if (mCounter != null) { mCounter.cancel(); } // cancel the previous counter
-
-        if (DateTimeUtils.isTimeWithinXMillisecondsFromNow(mBooking.getStartDate(),
-                DateUtils.HOUR_IN_MILLIS * 3))
-        {
-            mCounter = DateTimeUtils.setActionBarCountdownTimer(getContext(), getActionBar(),
-                    mBooking.getStartDate().getTime() - System.currentTimeMillis(),
-                    R.string.start_timer_lowercase_formatted);
-        }
-        else if (DateTimeUtils.isTimeWithinXMillisecondsFromNow(mBooking.getEndDate(),
-                mBooking.getEndDate().getTime() - mBooking.getStartDate().getTime()))
-        {
-            mCounter = DateTimeUtils.setActionBarCountdownTimer(getContext(), getActionBar(),
-                    mBooking.getEndDate().getTime() - System.currentTimeMillis(),
-                    R.string.end_timer_lowercase_formatted);
-        }
-        else if (System.currentTimeMillis() < mBooking.getStartDate().getTime())
-        {
-            // More than 3 hours before booking start
-            setActionBarTitle(R.string.your_job);
-        }
-        else
-        {
-            setActionBarTitle(R.string.time_expired);
-        }
     }
 
     private void handleBookingRemoveError(String errorMessage)

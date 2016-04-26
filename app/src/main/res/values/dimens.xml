@@ -88,6 +88,7 @@
 
     <!--bookings-->
     <dimen name="checklist_title_padding_top">2dp</dimen>
+    <dimen name="cancellation_policy_active_icon_size">7dp</dimen>
 
     <!--booking details-->
     <dimen name="booking_details_map_height">280dp</dimen>
@@ -134,6 +135,8 @@
 
     <!-- Account Settings -->
     <dimen name="account_settings_cell_height">70dp</dimen>
+    <dimen name="log_out_button_width">150dp</dimen>
+    <dimen name="log_out_button_height">48dp</dimen>
 
     <!-- New Checkout -->
     <dimen name="job_times_margin">12dp</dimen>

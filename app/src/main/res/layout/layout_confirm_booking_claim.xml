@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/confirm_booking_action_title"
+        style="@style/TextView.Large.Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_marginLeft="@dimen/default_padding"
+        android:layout_marginRight="@dimen/default_padding"
+        android:gravity="center"
+        android:textStyle="bold"
+        tools:text="Please make sure you can complete this job"
+        />
+
+    <TextView
+        android:id="@+id/confirm_booking_action_subtitle"
+        style="@style/TextView.Medium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_marginLeft="@dimen/default_padding"
+        android:layout_marginRight="@dimen/default_padding"
+        android:gravity="center"
+        android:textColor="@color/subtitle_grey"
+        tools:text="Every time you cancel a job, your Keep Rate is negatively impacted, even if you don't incur any fees."
+        />
+
+    <LinearLayout
+        android:id="@+id/fragment_dialog_confirm_claim_cancellation_policy_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_padding"
+        android:layout_marginRight="@dimen/default_padding"
+        android:animateLayoutChanges="true"
+        android:orientation="vertical"
+        android:padding="@dimen/default_padding"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
+
+    <TextView
+        android:id="@+id/fragment_dialog_confirm_claim_show_cancellation_policy_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:text="@string/show_booking_cancellation_policy"
+        android:textColor="@color/handy_blue"
+        android:textSize="@dimen/medium_text_size"
+        />
+</LinearLayout>
+
+

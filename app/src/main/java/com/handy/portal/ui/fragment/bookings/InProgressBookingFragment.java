@@ -1,15 +1,13 @@
-package com.handy.portal.ui.element.bookings;
+package com.handy.portal.ui.fragment.bookings;
 
-import android.annotation.TargetApi;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.util.AttributeSet;
+import android.support.annotation.Nullable;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -23,13 +21,12 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BookingActionButtonType;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Booking;
-import com.handy.portal.model.Booking.BookingInstructionGroup;
-import com.handy.portal.ui.view.InjectedBusView;
+import com.handy.portal.ui.element.bookings.CustomerRequestsView;
+import com.handy.portal.ui.fragment.TimerActionBarFragment;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.TextUtils;
 import com.handy.portal.util.UIUtils;
@@ -53,8 +50,12 @@ import static com.handy.portal.model.Booking.BookingInstructionGroup.GROUP_PREFE
 import static com.handy.portal.model.Booking.BookingInstructionGroup.GROUP_REFRIGERATOR;
 import static com.handy.portal.model.Booking.BookingInstructionGroup.GROUP_TRASH;
 
-public class InProgressBookingView extends InjectedBusView
+/**
+ * fragment for handling bookings that are in progress/after provider has checked in & before check out
+ */
+public class InProgressBookingFragment extends TimerActionBarFragment
 {
+
     @Inject
     PrefsManager mPrefsManager;
 
@@ -82,10 +83,12 @@ public class InProgressBookingView extends InjectedBusView
     Button mActionButton;
 
     private Booking mBooking;
-    private Toast mToast;
+    private String mSource; // TODO: refactor this into a enum?
 
     private static final Map<String, Integer> GROUP_ICONS;
     private static final Gson GSON = new Gson();
+
+    private View.OnClickListener mOnSupportClickListener;
 
     static
     {
@@ -98,39 +101,55 @@ public class InProgressBookingView extends InjectedBusView
         GROUP_ICONS.put(GROUP_PREFERENCES, R.drawable.ic_details_request);
     }
 
-    public InProgressBookingView(
-            final Context context, @NonNull Booking booking, OnClickListener onSupportClickListener,
-            boolean noShowReported)
+    public static InProgressBookingFragment newInstance(@NonNull final Booking booking, String source)
     {
-        super(context);
-        init();
-        setDisplay(booking, onSupportClickListener, noShowReported);
+        InProgressBookingFragment fragment = new InProgressBookingFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(BundleKeys.BOOKING, booking);
+        args.putString(BundleKeys.BOOKING_SOURCE, source);
+
+        fragment.setArguments(args);
+        return fragment;
     }
 
-    public InProgressBookingView(final Context context, final AttributeSet attrs)
+    @Override
+    protected MainViewTab getTab()
     {
-        super(context, attrs);
-        init();
+        return null;
     }
 
-    public InProgressBookingView(final Context context, final AttributeSet attrs, final int defStyleAttr)
+    @Override
+    public void onCreate(final Bundle savedInstanceState)
     {
-        super(context, attrs, defStyleAttr);
-        init();
+        super.onCreate(savedInstanceState);
+        mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
+        mSource = getArguments().getString(BundleKeys.BOOKING_SOURCE);
     }
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public InProgressBookingView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
+    @Override
+    public void onAttach(final Context context)
     {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
+        super.onAttach(context);
+        mOnSupportClickListener = (View.OnClickListener) getParentFragment();
     }
 
-    public void setDisplay(
-            @NonNull Booking booking, OnClickListener onSupportClickListener, boolean noShowReported)
+    @Override
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
     {
-        mBooking = booking;
-        mSupportButton.setOnClickListener(onSupportClickListener);
+        View view = inflater.inflate(R.layout.fragment_in_progress_booking, container, false);
+        ButterKnife.bind(this, view);
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
+    {
+        setDisplay();
+    }
+
+    public void setDisplay()
+    {
+        mSupportButton.setOnClickListener(mOnSupportClickListener);
 
         // Booking actions
         List<Booking.Action> allowedActions = mBooking.getAllowedActions();
@@ -149,11 +168,11 @@ public class InProgressBookingView extends InjectedBusView
                 mBooking.getCheckInSummary().getCheckInTime()).toLowerCase());
 
         // Booking Instructions
-        List<BookingInstructionGroup> bookingInstructionGroups = mBooking.getBookingInstructionGroups();
+        List<Booking.BookingInstructionGroup> bookingInstructionGroups = mBooking.getBookingInstructionGroups();
         if (bookingInstructionGroups != null && bookingInstructionGroups.size() > 0)
         {
-            BookingInstructionGroup preferencesGroup = null;
-            for (BookingInstructionGroup group : bookingInstructionGroups)
+            Booking.BookingInstructionGroup preferencesGroup = null;
+            for (Booking.BookingInstructionGroup group : bookingInstructionGroups)
             {
                 String groupString = group.getGroup();
 
@@ -163,7 +182,7 @@ public class InProgressBookingView extends InjectedBusView
                     if (instructions != null && !instructions.isEmpty())
                     {
                         mNoteToProText.setText(instructions.get(0).getDescription());
-                        mNoteToProLayout.setVisibility(VISIBLE);
+                        mNoteToProLayout.setVisibility(View.VISIBLE);
                     }
                 }
                 else if (Booking.BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
@@ -202,19 +221,25 @@ public class InProgressBookingView extends InjectedBusView
             }
         }
 
+        boolean noShowReported = mBooking.getAction(Booking.Action.ACTION_RETRACT_NO_SHOW) != null;
         if (noShowReported)
         {
-            mNoShowBannerView.setVisibility(VISIBLE);
+            mNoShowBannerView.setVisibility(View.VISIBLE);
         }
+
+        setTimerIfNeeded(mBooking.getStartDate(), mBooking.getEndDate());
     }
 
     @OnClick(R.id.in_progress_booking_details_view)
     public void swapToJobDetails()
     {
-        Bundle bundle = new Bundle();
-        bundle.putSerializable(BundleKeys.BOOKING, mBooking);
+        Bundle args = new Bundle();
+        args.putSerializable(BundleKeys.BOOKING, mBooking);
+        args.putString(BundleKeys.BOOKING_SOURCE, mSource);
+        args.putBoolean(BundleKeys.BOOKING_FROM_PAYMENT_TAB, false);
+        args.putBoolean(BundleKeys.BOOKING_SHOULD_HIDE_ACTION_BUTTONS, true);
 
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.CHECKOUT_JOB_DETAILS, bundle, true));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.NOT_IN_PROGRESS_JOB_DETAILS, args, true));
     }
 
     @OnClick(R.id.in_progress_booking_action_button)
@@ -225,7 +250,7 @@ public class InProgressBookingView extends InjectedBusView
         {
             Bundle bundle = new Bundle();
             bundle.putSerializable(BundleKeys.BOOKING, mBooking);
-            mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle, true));
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle, true));
         }
         else
         {
@@ -237,45 +262,29 @@ public class InProgressBookingView extends InjectedBusView
     @OnClick(R.id.in_progress_booking_call_customer_view)
     public void callCustomer()
     {
-        mBus.post(new HandyEvent.CallCustomerClicked());
+        bus.post(new HandyEvent.CallCustomerClicked());
 
         String phoneNumber = mBooking.getBookingPhone();
-        try
+        if(phoneNumber == null)
         {
-            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), getContext());
+            Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
+            return;
         }
-        catch (ActivityNotFoundException activityException)
-        {
-            Crashlytics.logException(new RuntimeException("Calling a Phone Number failed", activityException));
-        }
+        Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), getContext());
     }
 
     @OnClick(R.id.in_progress_booking_message_customer_view)
     public void messageCustomer()
     {
-        mBus.post(new HandyEvent.TextCustomerClicked());
+        bus.post(new HandyEvent.TextCustomerClicked());
 
         String phoneNumber = mBooking.getBookingPhone();
-        try
+        if(phoneNumber == null)
         {
-            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)), getContext());
+            Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
+            return;
         }
-        catch (ActivityNotFoundException activityException)
-        {
-            Crashlytics.logException(new RuntimeException("Texting a Phone Number failed", activityException));
-        }
-    }
-
-    private void init()
-    {
-        inflate(getContext(), R.layout.view_in_progress_booking, this);
-        ButterKnife.bind(this);
-        Utils.inject(getContext(), this);
-    }
-
-    private String getLoggedInUserId()
-    {
-        return mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)), getContext());
     }
 
     private void enableActionsIfNeeded(Booking.Action action)
@@ -291,7 +300,7 @@ public class InProgressBookingView extends InjectedBusView
         {
             case CHECK_OUT:
             {
-                mActionButton.setVisibility(action.isEnabled() ? VISIBLE : GONE);
+                mActionButton.setVisibility(action.isEnabled() ? View.VISIBLE : View.GONE);
 
                 if (!TextUtils.isNullOrEmpty(action.getHelperText()))
                 {
@@ -302,21 +311,14 @@ public class InProgressBookingView extends InjectedBusView
             }
             case CONTACT_PHONE:
             {
-                mCallCustomerView.setVisibility(VISIBLE);
+                mCallCustomerView.setVisibility(View.VISIBLE);
                 break;
             }
             case CONTACT_TEXT:
             {
-                mMessageCustomerView.setVisibility(VISIBLE);
+                mMessageCustomerView.setVisibility(View.VISIBLE);
                 break;
             }
         }
-    }
-
-    protected void showToast(String message, int length, int gravity)
-    {
-        mToast = Toast.makeText(getContext(), message, length);
-        mToast.setGravity(gravity, 0, 0);
-        mToast.show();
     }
 }

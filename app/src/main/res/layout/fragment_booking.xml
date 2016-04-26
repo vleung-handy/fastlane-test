@@ -6,6 +6,7 @@
     >
 
     <ScrollView
+        android:id="@+id/booking_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/booking_action_button"
@@ -40,8 +41,8 @@
                     tools:visibility="visible"
                     />
 
-                <FrameLayout
-                    android:id="@+id/booking_map_layout"
+                <com.handy.portal.ui.element.bookings.BookingMapView
+                    android:id="@+id/booking_map_view"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/on_my_way_booking_details_map_height"
                     />
@@ -92,7 +93,7 @@
                 </RelativeLayout>
 
                 <include
-                    layout="@layout/divider_dashboard"
+                    layout="@layout/divider"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/divider_height"
                     />
@@ -122,6 +123,7 @@
                             >
 
                             <TextView
+                                android:id="@+id/booking_address_title_text"
                                 style="@style/CircularBold"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
@@ -139,6 +141,19 @@
                                 android:textColor="@color/black"
                                 android:textSize="@dimen/default_text_size"
                                 tools:text="123 Perry Lane, Apt 4A\nBrooklyn, NY 11231"
+                                />
+
+                            <TextView
+                                android:id="@+id/booking_address_location_description_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/row_margin"
+                                android:lineSpacingMultiplier="1.2"
+                                android:textColor="@color/tertiary_grey"
+                                android:textSize="@dimen/small_text_size"
+                                android:visibility="gone"
+                                tools:text="Includes all neighborhoods above Central Park in Manhattan - including Harlem, Upper Manhattan, Washington Heights and Inwood"
+                                tools:visibility="visible"
                                 />
 
                         </LinearLayout>
@@ -331,14 +346,45 @@
                         android:visibility="gone"
                         />
 
-                    <com.handy.portal.ui.element.bookings.ProxyLocationView
-                        android:id="@+id/booking_details_location_view"
+                    <LinearLayout
+                        android:id="@+id/booking_nearby_transit_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/extra_margin_medium"
+                        android:orientation="vertical"
                         android:visibility="gone"
                         tools:visibility="visible"
-                        />
+                        >
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/default_padding"
+                            >
+
+                            <TextView
+                                style="@style/CircularBold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/nearby_transit"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/default_text_size"
+                                />
+
+                            <LinearLayout
+                                android:id="@+id/nearby_transits"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal"
+                                android:paddingEnd="@dimen/extra_padding"
+                                android:paddingLeft="@dimen/extra_padding"
+                                android:paddingRight="@dimen/extra_padding"
+                                android:paddingStart="@dimen/extra_padding"
+                                />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                     <TextView
                         android:id="@+id/booking_reveal_notice_text"
@@ -362,6 +408,7 @@
                         android:textSize="@dimen/small_text_size"
                         tools:text="Job # 123456"
                         />
+
                 </LinearLayout>
 
             </LinearLayout>
