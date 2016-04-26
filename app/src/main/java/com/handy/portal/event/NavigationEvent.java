@@ -1,6 +1,7 @@
 package com.handy.portal.event;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
@@ -39,7 +40,7 @@ public abstract class NavigationEvent extends HandyEvent
             this(targetTab, arguments, transitionStyle, false);
         }
 
-        public NavigateToTab(MainViewTab targetTab, Bundle arguments, TransitionStyle transitionStyle, boolean addToBackStack)
+        public NavigateToTab(MainViewTab targetTab, @NonNull Bundle arguments, TransitionStyle transitionStyle, boolean addToBackStack)
         {
             this.targetTab = targetTab;
             this.addToBackStack = addToBackStack;

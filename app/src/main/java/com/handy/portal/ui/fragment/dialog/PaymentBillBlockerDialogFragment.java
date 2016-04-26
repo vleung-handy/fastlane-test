@@ -77,7 +77,7 @@ public class PaymentBillBlockerDialogFragment extends InjectedDialogFragment //T
             @Override
             public void onClick(View v)
             {
-                mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, null, TransitionStyle.REFRESH_TAB, true));
+                mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.REFRESH_TAB, true));
                 PaymentBillBlockerDialogFragment.this.dismiss();
             }
         });
