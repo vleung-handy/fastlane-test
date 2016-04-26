@@ -117,7 +117,7 @@ public class AccountSettingsFragment extends ActionBarFragment
         mBus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitSelected()));
 
         mBus.post(new NavigationEvent.NavigateToTab(
-                MainViewTab.REQUEST_SUPPLIES, null, TransitionStyle.NATIVE_TO_NATIVE, true));
+                MainViewTab.REQUEST_SUPPLIES, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
 
