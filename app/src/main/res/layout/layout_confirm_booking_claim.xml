@@ -24,7 +24,7 @@
 
     <TextView
         android:id="@+id/confirm_booking_action_subtitle"
-        style="@style/TextView.Med"
+        style="@style/TextView.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
