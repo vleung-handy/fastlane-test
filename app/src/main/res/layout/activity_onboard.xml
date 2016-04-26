@@ -49,6 +49,14 @@
             />
     </LinearLayout>
 
+    <include
+        layout="@layout/overlay_loading"
+        android:layout_below="@id/toolbar"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:layout_centerInParent="true"
+        />
+
     <Button
         android:id="@+id/btn_next"
         android:layout_width="match_parent"

@@ -24,7 +24,6 @@ import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
-import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.onboarding.BookingViewModel;
 import com.handy.portal.model.onboarding.BookingsWrapperViewModel;
 import com.handy.portal.model.onboarding.JobClaim;
@@ -140,19 +139,14 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
      */
     private boolean hasJobs(BookingsListWrapper wrapper)
     {
-        if (wrapper != null && wrapper.getBookingsWrappers() != null && !wrapper.getBookingsWrappers().isEmpty())
+        if (wrapper == null)
         {
-            //we need to check that it has actual jobs, and not just an empty list
-            for (BookingsWrapper booking : wrapper.getBookingsWrappers())
-            {
-                if (booking.getBookings() != null && !booking.getBookings().isEmpty())
-                {
-                    return true;
-                }
-            }
+            return false;
         }
-
-        return false;
+        else
+        {
+            return wrapper.hasJobs();
+        }
     }
 
     @Override
@@ -320,7 +314,11 @@ public class GettingStartedActivity extends AppCompatActivity implements HandyJo
         if (sum > 0)
         {
             String symbol = mAdapter.getBookingsWrapperViewModels().get(1).mBookingViewModels.get(0).getCurrencySymbol();
-            String formattedPrice = symbol + String.format("%.0f", sum);
+            String formattedPrice = String.format("%.0f", sum);
+            if (symbol != null)
+            {
+                formattedPrice = symbol + formattedPrice;
+            }
             String text = String.format(getString(R.string.onboard_claim_and_earn_formatted), formattedPrice);
             mBtnNext.setText(text);
             mBtnNext.setBackground(mGreenDrawable);

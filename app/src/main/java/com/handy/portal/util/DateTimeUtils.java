@@ -152,6 +152,40 @@ public final class DateTimeUtils
         return getMonthDateFormatter().format(date);
     }
 
+
+    /**
+     * Takes in a date of 2016-04-09 format and converted to
+     * <p/>
+     * SATURDAY, April 9, 2016
+     * TODAY, April 9, 2016
+     * TOMORROW, April 9, 2016
+     * <p/>
+     * format, with the first word bolded.
+     *
+     * @param date
+     * @return
+     */
+    public static String getHtmlFormattedDateString(String date)
+    {
+        String rval = DateTimeUtils.toJobViewDateString(date);
+        if (rval == null)
+        {
+            return "";
+        }
+        else
+        {
+            int idx = rval.indexOf(" ");
+            if (idx < 0)
+            {
+                return "";
+            }
+            else
+            {
+                return "<b>" + rval.substring(0, idx) + "</b>" + rval.substring(idx, rval.length());
+            }
+        }
+    }
+
     /**
      * Incoming date is in format: 2016-04-08
      * Returns string in the formats:

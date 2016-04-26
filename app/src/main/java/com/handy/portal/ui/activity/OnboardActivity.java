@@ -6,13 +6,20 @@ import android.support.annotation.DrawableRes;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.event.ProfileEvent;
+import com.handy.portal.util.Utils;
 import com.plattysoft.leonids.ParticleSystem;
+import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -39,12 +46,23 @@ public class OnboardActivity extends AppCompatActivity
     @Bind(R.id.tv_title)
     TextView mTvTitle;
 
+    @Bind(R.id.loading_overlay)
+    RelativeLayout mLoadingOverlay;
+
+    @Inject
+    Bus mBus;
+
+    private boolean mAnchorViewRendered = false;
+    private boolean mProfileLoaded = false;
+    private boolean mConfettiFired = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_onboard);
         ButterKnife.bind(this);
+        Utils.inject(this, this);
 
         mDrawables = new ArrayList<>(COLORS);
 
@@ -61,9 +79,7 @@ public class OnboardActivity extends AppCompatActivity
         mDrawables.add(R.drawable.confetti_11);
         mDrawables.add(R.drawable.confetti_12);
 
-        //TODO: JIA: remove this hardcoded name with a real name passed in
-        String userName = "Jaclyn";
-        mTvTitle.setText(String.format(getString(R.string.onboard_congratulations_formatted), userName));
+        mTvTitle.setText(getString(R.string.onboard_congratulations));
 
         //we only play the confetti after the anchors have been rendered, otherwise
         //the confetti will come out weird.
@@ -76,6 +92,7 @@ public class OnboardActivity extends AppCompatActivity
                 public void onGlobalLayout()
                 {
                     mLeftCenterView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    mAnchorViewRendered = true;
                     shootingConfetti();
                 }
             });
@@ -90,9 +107,66 @@ public class OnboardActivity extends AppCompatActivity
         finish();
     }
 
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        mBus.register(this);
+        mLoadingOverlay.setVisibility(View.VISIBLE);
+        mBus.post(new ProfileEvent.RequestProviderProfile());
+    }
 
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        mBus.unregister(this);
+    }
+
+    @Subscribe
+    public void onReceiveProviderProfileSuccess(ProfileEvent.ReceiveProviderProfileSuccess event)
+    {
+        mLoadingOverlay.setVisibility(View.GONE);
+        mProfileLoaded = true;
+
+        String name;
+        try
+        {
+            name = event.providerProfile.getProviderPersonalInfo().getFirstName();
+            mTvTitle.setText(String.format(getString(R.string.onboard_congratulations_formatted), name));
+        }
+        catch (Exception e)
+        {
+            //if there's an exception,..., don't do anything. Ues the default name
+        }
+
+        shootingConfetti();
+    }
+
+    @Subscribe
+    public void onReceiveProviderProfileError(ProfileEvent.ReceiveProviderProfileError event)
+    {
+        //we couldn't load the user profile, so we'll just stick with the default message
+        mLoadingOverlay.setVisibility(View.GONE);
+        mProfileLoaded = true;
+        shootingConfetti();
+    }
+
+
+    /**
+     * We only start confetti when these conditions are true:
+     * -Profile information have finished loading
+     * -The anchor views where the confettis are started have rendered.
+     * -confetti haven't been fired before.
+     */
     public void shootingConfetti()
     {
+
+        if (!mProfileLoaded || !mAnchorViewRendered || mConfettiFired)
+        {
+            return;
+        }
+
         int partNumPerSecond = 2;
         int emitTime = 1000;
         for (int i = 0; i < COLORS; i++)

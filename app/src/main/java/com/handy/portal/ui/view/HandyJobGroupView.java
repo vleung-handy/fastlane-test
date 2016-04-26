@@ -63,31 +63,11 @@ public class HandyJobGroupView extends LinearLayout implements CompoundButton.On
     }
 
 
-    /**
-     * Takes in a date of 2016-04-09 format and converted to
-     * <p/>
-     * SATURDAY, April 9, 2016
-     * TODAY, April 9, 2016
-     * TOMORROW, April 9, 2016
-     * <p/>
-     * format, with the first word bolded.
-     *
-     * @param date
-     * @return
-     */
-    private String getHtmlFormattedDateString(String date)
-    {
-        String rval = DateTimeUtils.toJobViewDateString(date);
-        int idx = rval.indexOf(" ");
-
-        return "<b>" + rval.substring(0, idx) + "</b>" + rval.substring(idx, rval.length());
-    }
-
     public void bind(BookingsWrapperViewModel model)
     {
         mViewModel = model;
 
-        mTitle.setText(Html.fromHtml(getHtmlFormattedDateString(mViewModel.getSanitizedDate())));
+        mTitle.setText(Html.fromHtml(DateTimeUtils.getHtmlFormattedDateString(mViewModel.getSanitizedDate())));
 
         for (BookingViewModel bookingViewModel : mViewModel.mBookingViewModels)
         {
