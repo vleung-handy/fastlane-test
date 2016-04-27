@@ -47,7 +47,7 @@ import butterknife.OnClick;
 public class LoginActivityFragment extends InjectedFragment
 {
     @VisibleForTesting
-    static final String HELP_CENTER_URL = "https://help.handy.com/hc/en-us/articles/215593648";
+    static final String HELP_CENTER_URL = "https://prohelp.handy.com/hc/en-us/articles/216733288";
 
     @Bind(R.id.phone_input_layout)
     RelativeLayout phoneInputLayout;
