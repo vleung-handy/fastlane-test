@@ -174,7 +174,18 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         mBooking = event.booking;
-        updateDisplay();
+        final Booking.BookingStatus bookingStatus = mBooking.inferBookingStatus(getLoggedInUserId());
+        if (!mFromPaymentsTab && bookingStatus == Booking.BookingStatus.UNAVAILABLE)
+        {
+            final Bundle arguments = new Bundle();
+            arguments.putString(BundleKeys.MESSAGE, getString(R.string.job_no_longer_available));
+            arguments.putBundle(BundleKeys.EXTRAS, getArguments());
+            returnToTab(MainViewTab.AVAILABLE_JOBS, 0, TransitionStyle.REFRESH_TAB, arguments);
+        }
+        else
+        {
+            updateDisplay();
+        }
     }
 
     @Subscribe
