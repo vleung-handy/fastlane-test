@@ -13,7 +13,10 @@ import com.handy.portal.action.CustomDeepLinkAction;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.helpcenter.HelpModule;
+import com.handy.portal.helpcenter.HelpManager;
+import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
+import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
+import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.location.LocationPingService;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.location.scheduler.LocationScheduleService;
@@ -40,7 +43,11 @@ import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.UserInterfaceUpdateManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
-import com.handy.portal.notification.NotificationModule;
+import com.handy.portal.notification.NotificationMessageManager;
+import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragment;
+import com.handy.portal.notification.ui.fragment.NotificationsFragment;
+import com.handy.portal.notification.ui.view.NotificationsListEntryView;
+import com.handy.portal.notification.ui.view.NotificationsListView;
 import com.handy.portal.receiver.HandyPushReceiver;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
@@ -72,21 +79,31 @@ import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
-import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
-import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.AvailableBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.BookingDetailsFragment;
+import com.handy.portal.ui.fragment.bookings.BookingDetailsWrapperFragment;
+import com.handy.portal.ui.fragment.bookings.BookingFragment;
+import com.handy.portal.ui.fragment.bookings.CancellationRequestFragment;
+import com.handy.portal.ui.fragment.bookings.ComplementaryBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.InProgressBookingFragment;
+import com.handy.portal.ui.fragment.bookings.NearbyBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.SendReceiptCheckoutFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardVideoLibraryFragment;
 import com.handy.portal.ui.fragment.dashboard.RatingsAndFeedbackFragment;
+import com.handy.portal.ui.fragment.dialog.ConfirmBookingCancelDialogFragment;
+import com.handy.portal.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
 import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
+import com.handy.portal.ui.fragment.payments.OutstandingFeesFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
-import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateActivity;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
@@ -114,6 +131,7 @@ import retrofit.converter.GsonConverter;
 
 @Module(injects = {
         BookingDetailsFragment.class,
+        BookingDetailsWrapperFragment.class,
         LoginActivityFragment.class,
         LoginActivity.class,
         ScheduledBookingsFragment.class,
@@ -168,6 +186,15 @@ import retrofit.converter.GsonConverter;
         LocationPermissionsBlockerDialogFragment.class,
         DashboardFeedbackView.class,
         SendReceiptCheckoutFragment.class,
+        ConfirmBookingClaimDialogFragment.class,
+        ConfirmBookingCancelDialogFragment.class,
+        RequestSuppliesWebViewFragment.class,
+        RequestSuppliesWebViewFragment.class,
+        BookingFragment.class,
+        InProgressBookingFragment.class,
+        OutstandingFeesFragment.class,
+        PaymentFeeBreakdownView.class,
+        PaymentBatchListAdapter.class,
 },
         includes = {
                 HelpModule.class,

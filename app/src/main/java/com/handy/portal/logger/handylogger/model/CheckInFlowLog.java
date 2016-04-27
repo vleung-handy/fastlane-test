@@ -38,33 +38,99 @@ public class CheckInFlowLog extends EventLog
         mDistance = MathUtils.getDistance(mProLatitude, mProLatitude, mBookingLatitude, mBookingLongitude);
     }
 
-    public static class OnMyWay extends CheckInFlowLog
+    public static class OnMyWaySubmitted extends CheckInFlowLog
     {
         private static final String EVENT_TYPE = "on_my_way_submitted";
 
-        public OnMyWay(final Booking booking, final LocationData location)
+        public OnMyWaySubmitted(final Booking booking, final LocationData location)
         {
             super(EVENT_TYPE, booking, location);
         }
     }
 
 
-    public static class CheckIn extends CheckInFlowLog
+    public static class OnMyWaySuccess extends CheckInFlowLog
+    {
+        private static final String EVENT_TYPE = "on_my_way_success";
+
+        public OnMyWaySuccess(final Booking booking, final LocationData location)
+        {
+            super(EVENT_TYPE, booking, location);
+        }
+    }
+
+
+    public static class OnMyWayError extends CheckInFlowLog
+    {
+        private static final String EVENT_TYPE = "on_my_way_error";
+
+        public OnMyWayError(final Booking booking, final LocationData location)
+        {
+            super(EVENT_TYPE, booking, location);
+        }
+    }
+
+
+    public static class CheckInSubmitted extends CheckInFlowLog
     {
         private static final String EVENT_TYPE = "manual_checkin_submitted";
 
-        public CheckIn(final Booking booking, final LocationData location)
+        public CheckInSubmitted(final Booking booking, final LocationData location)
         {
             super(EVENT_TYPE, booking, location);
         }
     }
 
 
-    public static class CheckOut extends CheckInFlowLog
+    public static class CheckInSuccess extends CheckInFlowLog
+    {
+        private static final String EVENT_TYPE = "manual_checkin_success";
+
+        public CheckInSuccess(final Booking booking, final LocationData location)
+        {
+            super(EVENT_TYPE, booking, location);
+        }
+    }
+
+
+    public static class CheckInError extends CheckInFlowLog
+    {
+        private static final String EVENT_TYPE = "manual_checkin_error";
+
+        public CheckInError(final Booking booking, final LocationData location)
+        {
+            super(EVENT_TYPE, booking, location);
+        }
+    }
+
+
+    public static class CheckOutSubmitted extends CheckInFlowLog
     {
         private static final String EVENT_TYPE = "manual_checkout_submitted";
 
-        public CheckOut(final Booking booking, final LocationData location)
+        public CheckOutSubmitted(final Booking booking, final LocationData location)
+        {
+            super(EVENT_TYPE, booking, location);
+        }
+    }
+
+
+    public static class CheckOutSuccess extends CheckInFlowLog
+    {
+        private static final String EVENT_TYPE = "manual_checkout_success";
+
+        public CheckOutSuccess(final Booking booking, final LocationData location)
+        {
+            super(EVENT_TYPE, booking, location);
+        }
+    }
+
+
+    public static class CheckOutError extends CheckInFlowLog
+    {
+        private static final String EVENT_TYPE = "manual_checkout_error";
+
+        public CheckOutError(final Booking booking, final LocationData location)
         {
             super(EVENT_TYPE, booking, location);
         }

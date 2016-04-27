@@ -9,7 +9,7 @@
     <color name="handy_teal_pressed">#39B9A3</color>
     <color name="handy_yellow">#FFB600</color>
     <color name="handy_purple">#993092</color>
-    <color name="handy_bg">#EAEAEA</color>
+    <color name="handy_bg">#F4F4F4</color>
     <color name="handy_love">#F9002E</color>
     <color name="tertiary_grey">#9CABB5</color>
     <color name="disabled">#4D9CABB5</color>
@@ -25,6 +25,7 @@
     <color name="light_grey">#606060</color>
     <color name="dark_grey">#4A4A4A</color>
     <color name="dark_grey_pressed">#949494</color>
+    <color name="pink">#FFDEDE</color>
     <color name="steel">#8B9BA6</color>
     <color name="service_sep">#D6D6D6</color>
     <color name="cell_sep">#D6D6D6</color>
@@ -41,6 +42,7 @@
     <color name="subtitle_grey_disabled">#BFC8CE</color>
     <color name="requested_green">#8BC53E</color>
     <color name="partner_blue">#0BB8E3</color>
+    <color name="border_light_grey">#D1D1D1</color>
     <color name="border_grey">#EEEEEE</color>
     <color name="shadow_grey">#9CA7B2</color>
     <color name="helper_text_grey">#A1A1A1</color>

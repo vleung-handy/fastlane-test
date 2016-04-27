@@ -25,6 +25,9 @@ public class Payment implements Serializable
     @SerializedName("booking_type")
     private String bookingType;
 
+    @SerializedName("currency_symbol")
+    private String mCurrencySymbol;
+
     public Date getDate()
     {
         return date;
@@ -55,4 +58,5 @@ public class Payment implements Serializable
         return bookingType;
     }
 
+    public String getCurrencySymbol() {return mCurrencySymbol;}
 }

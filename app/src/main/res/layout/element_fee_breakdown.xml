@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:padding="@dimen/default_padding"
+        >
+
+        <LinearLayout
+            android:id="@+id/fee_breakdown_date_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/fee_breakdown_month_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/default_text_size"
+                tools:text="Sept"
+                />
+
+            <TextView
+                android:id="@+id/fee_breakdown_day_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:textSize="@dimen/large_text_size"
+                tools:text="3"
+                />
+
+        </LinearLayout>
+
+        <LinearLayout
+            style="@style/CircularBold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/fee_breakdown_date_layout"
+            android:layout_toRightOf="@id/fee_breakdown_date_layout"
+            android:orientation="vertical"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingStart="@dimen/default_padding"
+            >
+
+            <TextView
+                android:id="@+id/fee_breakdown_reason_text"
+                style="@style/CircularBold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/large_text_size"
+                tools:text="Late arrival fee (Partial)"
+                />
+
+            <TextView
+                android:id="@+id/fee_breakdown_description_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/default_margin_x2"
+                android:layout_marginRight="@dimen/default_margin_x2"
+                android:textColor="@color/tertiary_grey"
+                android:textSize="@dimen/default_text_size"
+                tools:text="7:00 pm - Flatiron"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/fee_breakdown_amount_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:textColor="@color/error_red"
+            android:textSize="@dimen/large_text_size"
+            tools:text="-$5"
+            />
+
+    </RelativeLayout>
+
+    <include
+        layout="@layout/divider"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/divider_height"
+        />
+
+</LinearLayout>

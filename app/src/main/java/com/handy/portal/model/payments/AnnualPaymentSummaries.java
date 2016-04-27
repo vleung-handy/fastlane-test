@@ -10,7 +10,9 @@ public class AnnualPaymentSummaries implements Serializable //unused for now
     @SerializedName("annual_summaries")
     private AnnualPaymentSummary annualPaymentSummaries[]; //assuming from most recent to least recent, with first entry being current year
 
-    public static class AnnualPaymentSummary implements Serializable{
+
+    public static class AnnualPaymentSummary implements Serializable
+    {
         @SerializedName("year")
         private int year;
 
@@ -43,7 +45,7 @@ public class AnnualPaymentSummaries implements Serializable //unused for now
 
     public boolean isEmpty()
     {
-        return annualPaymentSummaries==null || annualPaymentSummaries.length == 0;
+        return annualPaymentSummaries == null || annualPaymentSummaries.length == 0;
     }
 
     public AnnualPaymentSummary getMostRecentYearSummary()

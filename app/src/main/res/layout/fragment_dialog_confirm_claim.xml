@@ -84,7 +84,7 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
         android:gravity="center"
-        android:text="@string/withholding_charge"
+        android:text="@string/fee_charge"
         android:textColor="@color/black"
         android:textSize="@dimen/xsmall_text_size"
         />

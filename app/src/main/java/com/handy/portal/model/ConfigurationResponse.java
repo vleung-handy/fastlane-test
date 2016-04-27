@@ -33,6 +33,9 @@ public class ConfigurationResponse
     @SerializedName("booking_geofencing_service_enabled")
     private boolean mBookingGeofenceServiceEnabled;
 
+    @SerializedName("boxed_supplies_enabled")
+    private boolean mBoxedSuppliesEnabled;
+
     @SerializedName("onboarding_info")
     private OnboardingParams mOnboardingParams;
 
@@ -47,6 +50,11 @@ public class ConfigurationResponse
     public boolean isBookingGeofenceServiceEnabled()
     {
         return mBookingGeofenceServiceEnabled;
+    }
+
+    public boolean isBoxedSuppliesEnabled()
+    {
+        return mBoxedSuppliesEnabled;
     }
 
     public boolean isComplementaryJobsEnabled()
@@ -97,12 +105,12 @@ public class ConfigurationResponse
 
     public boolean shouldUseHelpCenterWebView()
     {
-        return mHelpCenterInfo.shouldUseHelpCenterWebView();
+        return mHelpCenterInfo == null ? false : mHelpCenterInfo.shouldUseHelpCenterWebView();
     }
 
     public String getHelpCenterUrl()
     {
-        return mHelpCenterInfo.getHelpCenterUrl();
+        return mHelpCenterInfo == null ? null : mHelpCenterInfo.getHelpCenterUrl();
     }
 
     public static class HelpCenterInfo

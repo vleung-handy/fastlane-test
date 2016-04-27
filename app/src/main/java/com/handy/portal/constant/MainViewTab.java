@@ -8,28 +8,31 @@ import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.notification.ui.fragment.NotificationsFragment;
 import com.handy.portal.ui.fragment.AccountSettingsFragment;
-import com.handy.portal.ui.fragment.AvailableBookingsFragment;
-import com.handy.portal.ui.fragment.BookingDetailsFragment;
-import com.handy.portal.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.ui.fragment.PaymentBlockingFragment;
+import com.handy.portal.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
-import com.handy.portal.ui.fragment.ScheduledBookingsFragment;
-import com.handy.portal.ui.fragment.SendReceiptCheckoutFragment;
-import com.handy.portal.ui.fragment.booking.CancellationRequestFragment;
-import com.handy.portal.ui.fragment.booking.NearbyBookingsFragment;
+import com.handy.portal.ui.fragment.RequestSuppliesWebViewFragment;
+import com.handy.portal.ui.fragment.bookings.AvailableBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.BookingDetailsWrapperFragment;
+import com.handy.portal.ui.fragment.bookings.BookingFragment;
+import com.handy.portal.ui.fragment.bookings.CancellationRequestFragment;
+import com.handy.portal.ui.fragment.bookings.ComplementaryBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.NearbyBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.ScheduledBookingsFragment;
+import com.handy.portal.ui.fragment.bookings.SendReceiptCheckoutFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardVideoLibraryFragment;
 import com.handy.portal.ui.fragment.dashboard.RatingsAndFeedbackFragment;
 import com.handy.portal.ui.fragment.dashboard.YoutubePlayerFragment;
+import com.handy.portal.ui.fragment.payments.OutstandingFeesFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
-import com.handy.portal.ui.fragment.profile.ProfileUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.OnboardingFragment;
 
@@ -41,13 +44,15 @@ public enum MainViewTab implements Serializable
     SCHEDULED_JOBS(ScheduledBookingsFragment.class),
     COMPLEMENTARY_JOBS(ComplementaryBookingsFragment.class),
     NEARBY_JOBS(NearbyBookingsFragment.class),
-    JOB_DETAILS(BookingDetailsFragment.class),
+    JOB_DETAILS(BookingDetailsWrapperFragment.class),
     CANCELLATION_REQUEST(CancellationRequestFragment.class),
+    NOT_IN_PROGRESS_JOB_DETAILS(BookingFragment.class),
     SEND_RECEIPT_CHECKOUT(SendReceiptCheckoutFragment.class),
 
     NOTIFICATIONS(NotificationsFragment.class),
 
     PAYMENTS(PaymentsFragment.class),
+    OUTSTANDING_FEES(OutstandingFeesFragment.class),
     PAYMENTS_DETAIL(PaymentsDetailFragment.class),
     SELECT_PAYMENT_METHOD(SelectPaymentMethodFragment.class),
     UPDATE_BANK_ACCOUNT(PaymentsUpdateBankAccountFragment.class),
@@ -62,6 +67,7 @@ public enum MainViewTab implements Serializable
 
     ACCOUNT_SETTINGS(AccountSettingsFragment.class),
     REQUEST_SUPPLIES(RequestSuppliesFragment.class),
+    REQUEST_SUPPLIES_WEB_VIEW(RequestSuppliesWebViewFragment.class),
     PROFILE_UPDATE(ProfileUpdateFragment.class),
 
     REFER_A_FRIEND(ReferAFriendFragment.class),
@@ -72,8 +78,7 @@ public enum MainViewTab implements Serializable
 
     BLOCK_PRO_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
     ONBOARDING_WEBVIEW(OnboardingFragment.class, WebUrlManager.USES_CONFIG_PARAM_ONBOARDING_PAGE),
-    PAYMENT_BLOCKING(PaymentBlockingFragment.class),
-    ;
+    PAYMENT_BLOCKING(PaymentBlockingFragment.class),;
 
     private Class mClassType;
     private
@@ -102,21 +107,5 @@ public enum MainViewTab implements Serializable
     String getWebViewTarget()
     {
         return mWebViewTarget;
-    }
-
-    //If this gets complex setup small state machines to have a transition for each to/from tab
-    public TransitionStyle getDefaultTransitionStyle(MainViewTab targetTab)
-    {
-        if (this.equals(targetTab))
-        {
-            return TransitionStyle.REFRESH_TAB;
-        }
-
-        if (this.equals(MainViewTab.AVAILABLE_JOBS) && targetTab.equals(MainViewTab.JOB_DETAILS))
-        {
-            return TransitionStyle.JOB_LIST_TO_DETAILS;
-        }
-
-        return TransitionStyle.NATIVE_TO_NATIVE;
     }
 }

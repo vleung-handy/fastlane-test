@@ -7,6 +7,9 @@
     <string name="no_data">--</string>
     <string name="none">None</string>
     <string name="time_interval_formatted">%1$s – %2$s</string>
+    <string name="two_lines_formatted">%1$s\n%2$s</string>
+    <string name="comma_formatted">%1$s, %2$s</string>
+    <string name="dash_formatted">%1$s \u2013 %2$s</string>
 
     <!-- Generic Single Word -->
     <string name="success">Success</string>
@@ -43,6 +46,7 @@
     <string name="your_job">Your Job</string>
     <string name="claim">Claim</string>
     <string name="claimed">Claimed</string>
+    <string name="claimed_job">Claimed Job</string>
     <string name="claim_job">Claim Job</string>
     <string name="claim_series">Claim Series</string>
     <string name="on_my_way">On My Way</string>
@@ -50,7 +54,7 @@
     <string name="job_claim_success">Success! Job claimed!</string>
     <string name="series_claim_success">Success! Series claimed!</string>
 
-    <string name="job_remove_success">Success! Job removed!</string>
+    <string name="job_remove_success">You have cancelled this job.</string>
     <string name="series_remove_success">Success! Series removed!</string>
 
     <string name="send_verification_success">Your income verification has been sent.</string>
@@ -185,7 +189,7 @@
     <string name="booking_details_claim_target_reached_title">Congratulations!</string>
     <string name="booking_details_claim_target_expected_pay_label">Expected pay in next %1$d days</string>
 
-    <string name="payment_batch_list_entry_subtitle">%1$d jobs, %2$d withholdings</string>
+    <string name="payment_batch_list_entry_subtitle">%1$d jobs, %2$d fees</string>
     <string name="payment_detail_list_group_header">%1$s (%2$d)</string>
 
     <string name="omw_success">Success! Don’t forget to check-in when you get to the job</string>
@@ -201,6 +205,7 @@
     <string name="customer_prefix">CUSTOMER: </string>
 
     <string name="customer_not_home">My customer is not home</string>
+    <string name="undo_customer_no_show">Customer arrived, undo report</string>
     <string name="add_remove_hours">Request to add/remove hours</string>
     <string name="customer_reschedule">Customer wants to reschedule</string>
     <string name="cancellation_policy">What’s the cancellation policy?</string>
@@ -240,9 +245,8 @@
     <string name="previous_job">Previous Job</string>
     <string name="total_payment">Total Payment</string>
     <string name="expected_payment">Expected Payment</string>
-    <string name="remaining_withholdings">Remaining Withholdings</string>
     <string name="previous_pay_weeks">PREVIOUS PAY WEEKS</string>
-    <string name="withholdings">Withholdings</string>
+    <string name="fees">Fees</string>
     <string name="current_pay_week">CURRENT PAY WEEK</string>
     <string name="total_earnings">Total Earnings</string>
     <string name="no_more_payments">You have no more payments to load.</string>
@@ -263,10 +267,19 @@
     <string name="verified">Verified</string>
     <string name="failed">Failed</string>
     <string name="pending">Pending</string>
+    <string name="outstanding_fees">Outstanding Fees</string>
+    <string name="year_to_date">Year to date:</string>
+    <string name="fees_applied_to_future_payments">Will be applied to future payments</string>
+    <string name="no_outstanding_withholdings">No outstanding withholdings</string>
+    <string name="withholdings_not_deducted_description">Withholdings that have not yet been deducted from payments will show up here.</string>
+    <string name="error_outstanding_fees">Oops! There was an error retrieving your outstanding fees.</string>
 
     <!-- Payments Bill Blocker -->
-    <string name="payments_bill_blocker_title">Please Update Your Payment Method</string>
-    <string name="payments_bill_blocker_content">Head to the Profile tab to set up your payment method.</string>
+    <string name="payments_bill_blocker_title">Your payment info is missing!</string>
+    <string name="payments_bill_blocker_content_formatted">
+        Please update your bank details, otherwise %1$s via direct deposit
+    </string>
+    <string name="payment_bill_blocker_content_colored">we can’t issue payments</string>
     <string name="payments_bill_blocker_update_now_button">Update Now</string>
     <string name="payments_bill_blocker_remind_me_later_button">REMIND ME LATER</string>
     <string name="bank_account">Bank Account</string>
@@ -320,7 +333,6 @@
     <string name="rating_threshold_formatted">*must maintain at least a %1$s</string>
     <string name="video_library">Video Library</string>
 
-
     <!-- Booking Details-->
     <string name="job_location">Job location</string>
     <string name="nearby_transit">Nearby Transit</string>
@@ -328,7 +340,17 @@
     <string name="location_details">LOCATION DETAILS</string>
     <string name="read_customer_preferences">Please check customer priorities &amp; specific instructions, and check them off when you\u2019re done.</string>
     <string name="check_customer_preferences">Please let your customer know what you\u2019ve completed by checking tasks off this list.</string>
-
+    <string name="show_booking_cancellation_policy">Show Details</string>
+    <string name="tap_preferences_before_checkout">Tap completed tasks before checking out.</string>
+    <string name="payment">Payment</string>
+    <string name="get_directions">Get directions</string>
+    <string name="house_details">House Details</string>
+    <string name="paid_extras">Paid Extras</string>
+    <string name="entry_information">Entry Information</string>
+    <string name="customer_request">Customer Request</string>
+    <string name="job_number_formatted">Job # %1$s</string>
+    <string name="frequency">Frequency</string>
+    <string name="completed_job">Completed Job</string>
 
     <!-- Booking Cancellation -->
     <string name="cancellation_request">Cancellation Request</string>
@@ -336,7 +358,7 @@
     <string name="select_a_reason">Let us know why you need to cancel.</string>
     <string name="sure_to_cancel">Are you sure you need to cancel?</string>
     <string name="will_be_charged">You’ll be charged a&#160;</string>
-    <string name="withholding_fee_formatted">%1$s withholding fee.</string>
+    <string name="fee_formatted">%1$s fee.</string>
     <string name="confirm_cancellation">Confirm Cancellation</string>
 
     <!-- Special -->
@@ -346,7 +368,6 @@
     <string name="request_supplies">Request Supplies</string>
     <string name="supply_kit_includes">Supply Kit Includes</string>
     <string name="shipping_address">Shipping Address</string>
-    <string name="withholding_amount">Withholding Amount</string>
     <string name="complete_purchase">Complete Purchase</string>
     <string name="no_address_on_file">No Address On File</string>
 
@@ -354,17 +375,21 @@
     <string name="rate_booking_submit_rating">Submit Rating</string>
     <string name="rate_booking_comment_text_hint">Any additional comments?</string>
     <string name="rate_booking_need_rating">You must select a rating to check out</string>
-    <string name="you_earned_money_formatted">You made %1$s!</string>
-    <string name="how_was_cleaning_formatted">How was your experience cleaning %1$s’s home?</string>
+    <string name="you_earned_money_formatted">You made %1$s</string>
+    <string name="bonus_formatted">\u0020+ %s BONUS</string>
+    <string name="how_was_experience_formatted">How was your experience at %1$s’s home?</string>
 
     <!-- Nearby Booking -->
     <string name="start_timer_formatted">STARTS IN %1$s</string>
+    <string name="start_timer_lowercase_formatted">Starts in %1$s</string>
+    <string name="end_timer_lowercase_formatted">Ends in %1$s</string>
+    <string name="time_expired">Time expired</string>
     <string name="nearby_booking_one">There is 1 open job nearby! Claim it now.</string>
     <string name="nearby_booking_formatted">There are %1$d open jobs nearby! Claim one now.</string>
     <string name="claim_n_dollar_job_formatted">Claim %1$s Job</string>
     <string name="miles_away_formatted">%1$s miles away</string>
     <string name="kilometers_away_formatted">%1$s kilometers away</string>
-    <string name="withholding_charge">Canceling this job will result in a withholding</string>
+    <string name="fee_charge">Canceling this job will result in a fee</string>
     <string name="please_confirm">Please confirm:</string>
 
     <!-- Logging out a deactivated pro -->
@@ -388,6 +413,19 @@
     <string name="order_resupply_kit">Order a Resupply Kit</string>
     <string name="income_verification">Income Verification</string>
     <string name="send_email">Send Email</string>
+    <string name="shop_on_boxed">Shop on Boxed.com</string>
+    <string name="handy_boxed_store">Handy + Boxed.com Store</string>
+    <string name="supplies_instruction1">Professionals should arrive prepared, so we partnered with Boxed.com to create a recommended set of supplies.</string>
+    <string name="supplies_instruction2">The most successful pros on the platform say their standard kit includes:</string>
+    <string name="vacuum">A vacuum</string>
+    <string name="cloths_paper_towels">Microfiber cloths and paper towels</string>
+    <string name="gloves">Gloves</string>
+    <string name="leave_behinds">Leave behinds for your name</string>
+    <string name="mop">Dust mop and wet mop</string>
+    <string name="duster">Duster</string>
+    <string name="cleaning_solutions">Cleaning solutions for all surfaces</string>
+    <string name="apron">Apron</string>
+    <string name="log_out">Log Out</string>
 
     <!-- Referrals -->
     <string name="chevron_description">Chevron</string>
@@ -412,6 +450,9 @@
     <string name="clear_signature">clear signature</string>
     <string name="use_finger_to_sign">use your finger to sign</string>
     <string name="complete_checkout">Complete checkout</string>
+    <string name="job_started">Job started:</string>
+    <string name="see_job_details">see job details</string>
+    <string name="continue_to_check_out">Continue to check out </string>
 
     <!-- API -->
     <string name="google_app_id">AIzaSyCKCHTy6QgYdpLXtEpoDs22MI0JnqP8_mc</string>
@@ -423,5 +464,15 @@
     <string name="date">Date</string>
     <string name="progress">Progress</string>
     <string name="share">Share</string>
+
+    <!-- Job Cancellation -->
+    <string name="need_to_cancel">Are you sure you need to cancel?</string>
+    <string name="cancel_job">Cancel Job</string>
+    <string name="keep_rate">Keep rate</string>
+    <string name="keep_rate_negatively_impacted">Your keep rate will be negatively impacted.</string>
+    <string name="empty_keep_rate_percent">- - %</string>
+    <string name="keep_rate_percent_formatted">%1$d%%</string>
+    <string name="no_keep_rate">Not enough data</string>
+    <string name="withholding_fee_simple_formatted">You will incur a %1$s fee and reduce your keep rate:</string>
 
 </resources>

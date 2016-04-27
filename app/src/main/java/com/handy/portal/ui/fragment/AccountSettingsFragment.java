@@ -1,13 +1,16 @@
 package com.handy.portal.ui.fragment;
 
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,12 +23,15 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
+import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
-import com.handy.portal.model.ResupplyInfo;
-import com.handy.portal.util.UIUtils;
+import com.handy.portal.ui.activity.LoginActivity;
+import com.handy.portal.util.DeeplinkUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -41,21 +47,17 @@ public class AccountSettingsFragment extends ActionBarFragment
     Bus mBus;
     @Inject
     ProviderManager mProviderManager;
+    @Inject
+    ConfigManager mConfigManager;
+    @Inject
+    PrefsManager mPrefsManager;
 
     @Bind(R.id.provider_name_text)
     TextView mProviderNameText;
     @Bind(R.id.verification_status_text)
     TextView mVerificationStatusText;
-
     @Bind(R.id.order_resupply_layout)
     ViewGroup mOrderResupplyLayout;
-    @Bind(R.id.order_resupply_text)
-    TextView mOrderResupplyText;
-    @Bind(R.id.order_resupply_helper_text)
-    TextView mOrderResupplyHelperText;
-    @Bind(R.id.payment_tier_chevron)
-    ImageView mPaymentTierChevron;
-
     @Bind(R.id.account_settings_layout)
     ViewGroup mAccountSettingsLayout;
     @Bind(R.id.fetch_error_view)
@@ -114,10 +116,8 @@ public class AccountSettingsFragment extends ActionBarFragment
     {
         mBus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitSelected()));
 
-        final Bundle args = new Bundle();
-        args.putSerializable(BundleKeys.PROVIDER_PROFILE, mProviderProfile);
         mBus.post(new NavigationEvent.NavigateToTab(
-                MainViewTab.REQUEST_SUPPLIES, args, TransitionStyle.NATIVE_TO_NATIVE, true));
+                MainViewTab.REQUEST_SUPPLIES, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
 
@@ -132,6 +132,37 @@ public class AccountSettingsFragment extends ActionBarFragment
     public void retryProfileFetch()
     {
         requestProviderProfile();
+    }
+
+    @SuppressWarnings("deprecation")
+    @OnClick(R.id.log_out_button)
+    public void logOut()
+    {
+        mPrefsManager.clear();
+
+        if (Build.VERSION.SDK_INT >= 21)
+        {
+            CookieManager.getInstance().removeAllCookies(null);
+            CookieManager.getInstance().flush();
+        }
+        else
+        {
+            CookieSyncManager.createInstance(getActivity());
+            CookieManager.getInstance().removeAllCookie();
+            CookieSyncManager.getInstance().sync();
+        }
+
+        final Intent intent = new Intent(getActivity(), LoginActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+        final Uri data = getActivity().getIntent().getData();
+        final Bundle deeplinkBundle = DeeplinkUtils.createDeeplinkBundleFromUri(data);
+        if (deeplinkBundle != null)
+        {
+            intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkBundle);
+            intent.putExtra(BundleKeys.DEEPLINK_SOURCE, DeeplinkLog.Source.LINK);
+        }
+        startActivity(intent);
+        getActivity().finish();
     }
 
     @Subscribe
@@ -200,46 +231,15 @@ public class AccountSettingsFragment extends ActionBarFragment
         {
             requestProviderProfile();
         }
-        else
-        {
-            final ResupplyInfo resupplyInfo = mProviderProfile.getResupplyInfo();
-            if (resupplyInfo != null && resupplyInfo.providerCanRequestSupplies())
-            {
-                if (!resupplyInfo.providerCanRequestSuppliesNow())
-                {
-                    disableResupplyOptionWithHelperText(resupplyInfo.getHelperText());
-                }
-            }
-            else
-            {
-                disableResupplyOption();
-            }
-        }
+
+        if (mConfigManager.getConfigurationResponse() != null &&
+                mConfigManager.getConfigurationResponse().isBoxedSuppliesEnabled())
+        { mOrderResupplyLayout.setVisibility(View.VISIBLE); }
     }
 
     private void requestProviderProfile()
     {
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         mBus.post(new ProfileEvent.RequestProviderProfile());
-    }
-
-    private void disableResupplyOption()
-    {
-        mOrderResupplyLayout.setVisibility(View.GONE);
-    }
-
-    private void disableResupplyOptionWithHelperText(String resupplyHelperText)
-    {
-        mOrderResupplyLayout.setClickable(false);
-        mPaymentTierChevron.setVisibility(View.GONE);
-
-        mOrderResupplyText.setTextColor(
-                ContextCompat.getColor(getContext(), R.color.subtitle_grey));
-        if (resupplyHelperText != null && !resupplyHelperText.isEmpty())
-        {
-            mOrderResupplyLayout.setLayoutParams(UIUtils.MATCH_WIDTH_WRAP_HEIGHT_PARAMS);
-            mOrderResupplyHelperText.setVisibility(View.VISIBLE);
-            mOrderResupplyHelperText.setText(resupplyHelperText);
-        }
     }
 }

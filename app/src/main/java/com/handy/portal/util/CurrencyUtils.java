@@ -29,4 +29,9 @@ public class CurrencyUtils
         int centsValue = Math.abs(price) % 100;
         return new DecimalFormat(".00").format(centsValue * 0.01);
     }
+
+    public static String formatPriceWithoutCents(final int priceCents, final String currencyChar)
+    {
+        return formatPrice(priceCents * 0.01, currencyChar);
+    }
 }

@@ -54,8 +54,5 @@ public class PaymentsDetailListHeaderView extends LinearLayout
         {
             paymentsDetailExpectDepositLayout.setVisibility(GONE);
         }
-
     }
-
 }
-

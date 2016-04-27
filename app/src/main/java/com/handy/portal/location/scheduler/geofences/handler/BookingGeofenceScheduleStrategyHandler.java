@@ -59,7 +59,7 @@ public class BookingGeofenceScheduleStrategyHandler extends ScheduleStrategyHand
     {
         try
         {
-            if(!LocationUtils.hasRequiredLocationPermissions(mContext))
+            if (!LocationUtils.hasRequiredLocationPermissions(mContext))
             {
                 return;
             }
@@ -162,6 +162,7 @@ public class BookingGeofenceScheduleStrategyHandler extends ScheduleStrategyHand
 
     public interface BookingGeofenceStrategyCallbacks extends ScheduleStrategyHandler.StrategyCallbacks<BookingGeofenceScheduleStrategyHandler>{
         GoogleApiClient getGoogleApiClient();
+
         PendingIntent getPendingIntent();
     }
 }

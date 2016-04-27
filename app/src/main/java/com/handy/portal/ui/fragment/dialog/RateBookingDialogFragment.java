@@ -28,9 +28,10 @@ import com.handy.portal.model.Address;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
+import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.ui.activity.BaseActivity;
-import com.handy.portal.util.TextUtils;
+import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
@@ -50,6 +51,8 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
 
     @Bind(R.id.rate_booking_amount_text)
     TextView mAmountText;
+    @Bind(R.id.rate_booking_bonus_amount_text)
+    TextView mBonusAmountText;
     @Bind(R.id.rate_booking_experience_text)
     TextView mExperienceText;
     @Bind(R.id.rate_booking_comment_text)
@@ -96,11 +99,25 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             mBooking = (Booking) bundle.getSerializable(BundleKeys.BOOKING);
             mNoteToCustomer = bundle.getString(BundleKeys.NOTE_TO_CUSTOMER);
 
-            String amount = mBooking.getPaymentToProvider().getCurrencySymbol() +
-                    TextUtils.DECIMAL_FORMAT_NO_ZERO.format(mBooking.getPaymentToProvider().getAdjustedAmount());
-            mAmountText.setText(getString(R.string.you_earned_money_formatted, amount));
+            PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
+            if (paymentInfo != null)
+            {
+                String amount = CurrencyUtils.formatPrice(
+                        paymentInfo.getAdjustedAmount(), paymentInfo.getCurrencySymbol());
+                mAmountText.setText(getString(R.string.you_earned_money_formatted, amount));
+            }
+            PaymentInfo bonusInfo = mBooking.getBonusPaymentToProvider();
+            if (bonusInfo != null && bonusInfo.getAdjustedAmount() > 0)
+            {
+                String amount = CurrencyUtils.formatPrice(
+                        bonusInfo.getAdjustedAmount(), bonusInfo.getCurrencySymbol());
+                mBonusAmountText.setText(getString(R.string.bonus_formatted, amount));
+                mBonusAmountText.setVisibility(View.VISIBLE);
+            }
             String name = mBooking.getUser().getFirstName();
-            mExperienceText.setText(getString(R.string.how_was_cleaning_formatted, name));
+            mExperienceText.setText(getString(R.string.how_was_experience_formatted, name));
+
+
         }
 
         if (mBooking == null)
@@ -108,7 +125,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             Crashlytics.logException(new Exception("No valid booking passed to RateBookingDialogFragment, aborting rating"));
             mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             final LocationData locationData = getLocationData();
-            mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOut(mBooking, locationData)));
+            mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOutSubmitted(mBooking, locationData)));
             mBus.post(new HandyEvent.RequestNotifyJobCheckOut(mBooking.getId(), new CheckoutRequest(
                     locationData, new ProBookingFeedback(getBookingRatingScore(),
                     getBookingRatingComment()), mNoteToCustomer, null)));
@@ -134,7 +151,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             // TODO: combine this with line 71
             mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             final LocationData locationData = getLocationData();
-            mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOut(mBooking, locationData)));
+            mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOutSubmitted(mBooking, locationData)));
             mBus.post(new HandyEvent.RequestNotifyJobCheckOut(mBooking.getId(), new CheckoutRequest(
                     locationData, new ProBookingFeedback(bookingRatingScore,
                     getBookingRatingComment()), mNoteToCustomer, mBooking.getCustomerPreferences())

@@ -13,6 +13,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.model.Booking;
 import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.ui.fragment.bookings.SendReceiptCheckoutFragment;
 
 import org.junit.Before;
 import org.junit.Test;
