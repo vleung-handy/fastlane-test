@@ -14,12 +14,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
-import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
@@ -78,13 +79,15 @@ public class MainActivityFragment extends InjectedFragment
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @Bind(R.id.navigation_drawer)
-    LinearLayout mNavigationDrawer;
+    RelativeLayout mNavigationDrawer;
     @Bind(R.id.nav_tray_links)
     RadioGroup mNavTrayLinks;
     @Bind(R.id.navigation_header)
     TextView mNavigationHeader;
     @Bind(R.id.content_frame)
     TabbedLayout mContentFrame;
+    @Bind(R.id.build_version_text)
+    TextView mBuildVersionText;
 
     private MainViewTab currentTab = null;
 
@@ -121,6 +124,7 @@ public class MainActivityFragment extends InjectedFragment
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.bind(this, view);
         registerButtonListeners();
+        mBuildVersionText.setText(BuildConfig.VERSION_NAME);
         return view;
     }
 

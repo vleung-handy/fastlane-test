@@ -1,37 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout
     android:id="@+id/navigation_drawer"
-    android:layout_width="264dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/navigation_drawer_width"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:layout_gravity="end"
-    android:background="@color/white"
-    android:clickable="true"
     >
-
-    <TextView
-        style="@style/TextView.XLarge"
-        android:id="@+id/navigation_header"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/default_padding"
-        android:paddingRight="@dimen/default_padding"
-        android:paddingBottom="@dimen/default_padding_medium"
-        android:paddingTop="@dimen/default_padding_xlarge"
-        android:background="@color/tertiary_grey"
-        android:textColor="@color/white"
-        />
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:clickable="true"
         android:orientation="vertical"
-        android:paddingTop="@dimen/default_padding_medium"
-        android:paddingBottom="@dimen/default_padding_medium"
         >
 
-        <include layout="@layout/element_navigation_links"/>
+        <TextView
+            android:id="@+id/navigation_header"
+            style="@style/TextView.XLarge"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/tertiary_grey"
+            android:paddingBottom="@dimen/default_padding_medium"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingRight="@dimen/default_padding"
+            android:paddingTop="@dimen/default_padding_xlarge"
+            android:textColor="@color/white"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/default_padding_medium"
+            android:paddingTop="@dimen/default_padding_medium"
+            >
+
+            <include layout="@layout/element_navigation_links"/>
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/build_version_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:paddingBottom="@dimen/default_padding_medium"
+        android:paddingLeft="@dimen/default_padding_medium"
+        android:paddingRight="@dimen/default_padding_medium"
+        android:paddingTop="@dimen/default_padding_medium"
+        android:textColor="@color/tertiary_grey"
+        android:textSize="@dimen/xsmall_text_size"
+        tools:text="v0.11.4"
+        />
+
+</RelativeLayout>
