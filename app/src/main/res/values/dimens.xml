@@ -173,4 +173,7 @@
     <dimen name="notification_image_margin_top">10dp</dimen>
     <dimen name="notification_unread_count_min_width">20dp</dimen>
 
+    <!-- Payments -->
+    <dimen name="outstanding_week_question_mark_width_height">72dp</dimen>
+
 </resources>

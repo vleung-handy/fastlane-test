@@ -3,8 +3,8 @@ package com.handy.portal.ui.element.payments;
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -36,7 +36,7 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
     TextView currentWeekRemainingFeesText;
 
     @Bind(R.id.payments_current_week_remaining_fees_row)
-    TableRow currentWeekRemainingFeesRow;
+    ViewGroup currentWeekRemainingFeesRow;
 
     public PaymentsBatchListHeaderView(Context context)
     {

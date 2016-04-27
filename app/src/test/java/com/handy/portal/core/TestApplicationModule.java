@@ -26,6 +26,7 @@ import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.TestActivity;
+import com.handy.portal.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListView;
@@ -81,6 +82,7 @@ import static org.mockito.Mockito.when;
         LocationSettingsBlockerDialogFragment.class,
         SendReceiptCheckoutFragment.class,
         SendReceiptCheckoutFragmentTest.class,
+        PaymentBatchListAdapter.class,
 }, library = true)
 public class TestApplicationModule
 {

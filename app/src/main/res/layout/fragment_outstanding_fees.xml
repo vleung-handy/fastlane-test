@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+    >
+
+    <include layout="@layout/layout_fetch_error"/>
+
+    <LinearLayout
+        android:id="@+id/outstanding_fees_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:padding="@dimen/default_padding"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:text="@string/outstanding_fees"
+                android:textColor="@color/black"
+                android:textSize="@dimen/large_text_size"
+                />
+
+            <TextView
+                android:id="@+id/total_fees_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:textColor="@color/error_red"
+                android:textSize="@dimen/large_text_size"
+                tools:text="-$50"
+                />
+
+        </RelativeLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingTop="@dimen/extra_padding"
+            android:text="@string/fees_applied_to_future_payments"
+            android:textColor="@color/tertiary_grey"
+            android:textSize="@dimen/default_text_size"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/no_outstanding_fees_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone"
+        tools:visibility="visible"
+        >
+
+        <ImageView
+            android:layout_width="@dimen/outstanding_week_question_mark_width_height"
+            android:layout_height="@dimen/outstanding_week_question_mark_width_height"
+            android:layout_marginBottom="@dimen/default_margin_medium"
+            android:layout_marginTop="@dimen/default_margin_xlarge"
+            android:src="@drawable/ic_question_mark"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_outstanding_withholdings"
+            android:textColor="@color/tertiary_grey"
+            android:textSize="@dimen/default_text_size"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/extra_margin"
+            android:gravity="center"
+            android:lineSpacingExtra="@dimen/lineSpacing"
+            android:text="@string/withholdings_not_deducted_description"
+            android:textColor="@color/tertiary_grey"
+            android:textSize="@dimen/small_text_size"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/outstanding_fee_breakdown_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/row_margin"
+        android:orientation="vertical"
+        />
+
+</LinearLayout>

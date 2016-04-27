@@ -27,6 +27,7 @@ import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardVideoLibraryFragment;
 import com.handy.portal.ui.fragment.dashboard.RatingsAndFeedbackFragment;
 import com.handy.portal.ui.fragment.dashboard.YoutubePlayerFragment;
+import com.handy.portal.ui.fragment.payments.OutstandingFeesFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsFragment;
 import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
@@ -51,6 +52,7 @@ public enum MainViewTab implements Serializable
     NOTIFICATIONS(NotificationsFragment.class),
 
     PAYMENTS(PaymentsFragment.class),
+    OUTSTANDING_FEES(OutstandingFeesFragment.class),
     PAYMENTS_DETAIL(PaymentsDetailFragment.class),
     SELECT_PAYMENT_METHOD(SelectPaymentMethodFragment.class),
     UPDATE_BANK_ACCOUNT(PaymentsUpdateBankAccountFragment.class),
@@ -76,8 +78,7 @@ public enum MainViewTab implements Serializable
 
     BLOCK_PRO_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
     ONBOARDING_WEBVIEW(OnboardingFragment.class, WebUrlManager.USES_CONFIG_PARAM_ONBOARDING_PAGE),
-    PAYMENT_BLOCKING(PaymentBlockingFragment.class),
-    ;
+    PAYMENT_BLOCKING(PaymentBlockingFragment.class),;
 
     private Class mClassType;
     private

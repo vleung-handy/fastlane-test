@@ -8,19 +8,28 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.model.payments.NeoPaymentBatch;
 import com.handy.portal.model.payments.PaymentBatch;
 import com.handy.portal.model.payments.PaymentBatches;
 import com.handy.portal.ui.element.payments.PaymentsBatchListHeaderView;
 import com.handy.portal.ui.element.payments.PaymentsBatchListItemView;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.Utils;
+import com.squareup.otto.Bus;
 
 import java.util.Date;
+
+import javax.inject.Inject;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
 public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implements StickyListHeadersAdapter //TODO: THIS IS GROSS, NEED TO REFACTOR THIS COMPLETELY!
 {
+    @Inject
+    Bus mBus;
+
     public static final int DAYS_TO_REQUEST_PER_BATCH = 28;
     private final static Date LOWER_BOUND_PAYMENT_REQUEST_DATE = new Date(113, 9, 23); // No payments precede Oct 23, 2013
     private Date nextRequestEndDate;
@@ -30,6 +39,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
     public PaymentBatchListAdapter(Context context)
     {
         super(context, R.layout.element_payments_batch_list_entry, 0);
+        Utils.inject(context, this);
         resetMetadata();
     }
 
@@ -121,6 +131,14 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
             if (convertView == null || !(convertView instanceof PaymentsBatchListHeaderView))
             {
                 v = inflater.inflate(R.layout.element_payments_batch_list_current_week_header, null);
+                v.findViewById(R.id.payments_current_week_remaining_fees_row).setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(final View v)
+                    {
+                        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.OUTSTANDING_FEES, true));
+                    }
+                });
             }
             else
             {
@@ -147,7 +165,8 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
     }
 
     @Override
-    public View getHeaderView(int position, View convertView, ViewGroup parent) {
+    public View getHeaderView(int position, View convertView, ViewGroup parent)
+    {
         View v;
         PaymentBatch paymentBatch = getItem(position);
         LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -161,7 +180,6 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
             v = convertView;
         }
 
-
         String year = DateTimeUtils.getYear(paymentBatch.getEffectiveDate());
         ((TextView) v.findViewById(R.id.payment_list_section_header_text)).setText(year);
 
@@ -169,7 +187,8 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
     }
 
     @Override
-    public long getHeaderId(int position) {
+    public long getHeaderId(int position)
+    {
         PaymentBatch paymentBatch = getItem(position);
         return DateTimeUtils.getYearInt(paymentBatch.getEffectiveDate());
     }
