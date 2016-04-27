@@ -169,10 +169,10 @@ import retrofit.converter.GsonConverter;
         DashboardFeedbackView.class,
         SendReceiptCheckoutFragment.class,
 },
-includes ={
-        HelpModule.class,
-        NotificationModule.class
-}
+        includes = {
+                HelpModule.class,
+                NotificationModule.class
+        }
 )
 public final class ApplicationModule
 {

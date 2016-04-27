@@ -14,15 +14,15 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        library=true,
-        complete=false,
+        library = true,
+        complete = false,
         injects = {
-        NotificationsFragment.class,
-        NotificationsListView.class,
-        NotificationsListEntryView.class,
-        NotificationBlockerDialogFragment.class,
+                NotificationsFragment.class,
+                NotificationsListView.class,
+                NotificationsListEntryView.class,
+                NotificationBlockerDialogFragment.class,
 
-})
+        })
 public final class NotificationModule
 {
     @Provides

@@ -12,13 +12,13 @@ import dagger.Module;
 import dagger.Provides;
 
 @Module(
-        library=true,
-        complete=false,
+        library = true,
+        complete = false,
         injects = {
-        HelpFragment.class,
-        HelpWebViewFragment.class,
-        HelpContactFragment.class,
-})
+                HelpFragment.class,
+                HelpWebViewFragment.class,
+                HelpContactFragment.class,
+        })
 public final class HelpModule
 {
     @Provides

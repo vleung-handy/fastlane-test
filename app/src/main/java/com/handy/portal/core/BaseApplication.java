@@ -113,18 +113,6 @@ public class BaseApplication extends MultiDexApplication
     @Inject
     Bus bus;
 
-    /**
-     *
-     * @return the app modules that should be active for this application
-     */
-    private Object[] getApplicationModules()
-    {
-        return new Object[]
-                {
-                        new ApplicationModule(this)
-                };
-    }
-
     @Override
     public final void onCreate()
     {
@@ -208,7 +196,7 @@ public class BaseApplication extends MultiDexApplication
 
     protected void createObjectGraph()
     {
-        mGraph = ObjectGraph.create(getApplicationModules());
+        mGraph = ObjectGraph.create(new ApplicationModule(this));
     }
 
     public final void inject(final Object object)
