@@ -13,10 +13,7 @@ import com.handy.portal.action.CustomDeepLinkAction;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.helpcenter.HelpManager;
-import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
-import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
-import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
+import com.handy.portal.helpcenter.HelpModule;
 import com.handy.portal.location.LocationPingService;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.location.scheduler.LocationScheduleService;
@@ -43,11 +40,7 @@ import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.UserInterfaceUpdateManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
-import com.handy.portal.notification.NotificationMessageManager;
-import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragment;
-import com.handy.portal.notification.ui.fragment.NotificationsFragment;
-import com.handy.portal.notification.ui.view.NotificationsListEntryView;
-import com.handy.portal.notification.ui.view.NotificationsListView;
+import com.handy.portal.notification.NotificationModule;
 import com.handy.portal.receiver.HandyPushReceiver;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
@@ -144,9 +137,6 @@ import retrofit.converter.GsonConverter;
         PleaseUpdateFragment.class,
         TermsActivity.class,
         TermsFragment.class,
-        HelpFragment.class,
-        HelpWebViewFragment.class,
-        HelpContactFragment.class,
         UrbanAirshipManager.class,
         DeepLinkService.class,
         MainActivityFragmentNavigationHelper.class,
@@ -154,7 +144,6 @@ import retrofit.converter.GsonConverter;
         PaymentsFragment.class,
         PaymentsDetailFragment.class,
         PaymentBillBlockerDialogFragment.class,
-        NotificationBlockerDialogFragment.class,
         LocationSettingsBlockerDialogFragment.class,
         PaymentsUpdateBankAccountFragment.class,
         PaymentsUpdateDebitCardFragment.class,
@@ -170,9 +159,6 @@ import retrofit.converter.GsonConverter;
         PaymentBlockingFragment.class,
         CancellationRequestFragment.class,
         SupportActionView.class,
-        NotificationsFragment.class,
-        NotificationsListView.class,
-        NotificationsListEntryView.class,
         DashboardTiersFragment.class,
         DashboardFeedbackFragment.class,
         DashboardReviewsFragment.class,
@@ -201,7 +187,12 @@ import retrofit.converter.GsonConverter;
         OutstandingFeesFragment.class,
         PaymentFeeBreakdownView.class,
         PaymentBatchListAdapter.class,
-})
+},
+        includes = {
+                HelpModule.class,
+                NotificationModule.class
+        }
+)
 public final class ApplicationModule
 {
     private final Application application;
@@ -432,14 +423,6 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final HelpManager provideHelpManager(final Bus bus,
-                                         final DataManager dataManager)
-    {
-        return new HelpManager(bus, dataManager);
-    }
-
-    @Provides
-    @Singleton
     final Mixpanel provideMixpanel(final PrefsManager prefsManager)
     {
         return new Mixpanel(this.context, prefsManager);
@@ -555,12 +538,5 @@ public final class ApplicationModule
             }
         }
         return "";
-    }
-
-    @Provides
-    @Singleton
-    final NotificationMessageManager provideNotificationMessageManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager)
-    {
-        return new NotificationMessageManager(bus, dataManager, prefsManager);
     }
 }
