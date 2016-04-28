@@ -204,6 +204,7 @@ public class GettingStartedActivity extends AppCompatActivity
     @Subscribe
     public void onJobLoaded(HandyEvent.ReceiveOnboardingJobsSuccess event)
     {
+        mLoadingOverlayView.setVisibility(View.GONE);
         mJobs2 = event.bookings;
         if (!hasJobs(mJobs2))
         {
@@ -241,12 +242,24 @@ public class GettingStartedActivity extends AppCompatActivity
     private void safeDialogRemoval()
     {
         long elapsedTime = System.currentTimeMillis() - mRequestTime;
-        if (mJobs2 != null && (elapsedTime > mWaitTime) && dialogDismissable())
+        if (mJobs2 != null && (elapsedTime >= mWaitTime) && dialogDismissable())
         {
             if (mLoadingDialog.isVisible())
             {
                 mLoadingDialog.dismiss();
                 mRecyclerView.startLayoutAnimation();
+            }
+        }
+        else
+        {
+            Log.d(TAG, "safeDialogRemoval: Not removing, elapsedTime:" + elapsedTime);
+            if (mJobs2 == null)
+            {
+                Log.d(TAG, "safeDialogRemoval: There are no jobs");
+            }
+            if (!dialogDismissable())
+            {
+                Log.d(TAG, "safeDialogRemoval: Dialog not dismissable");
             }
         }
     }
@@ -390,6 +403,10 @@ public class GettingStartedActivity extends AppCompatActivity
         if (bookings.isEmpty())
         {
             Toast.makeText(this, getString(R.string.onboard_no_longer_available), Toast.LENGTH_LONG).show();
+            //clear recycler view and load jobs
+            mRecyclerView.removeAllViews();
+            mLoadingOverlayView.setVisibility(View.VISIBLE);
+            loadJobs();
         }
         else
         {
