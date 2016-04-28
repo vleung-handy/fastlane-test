@@ -40,7 +40,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        setActionBar(R.string.request_supplies, false);
+        setActionBar(R.string.purchase_cleaning_supplies, false);
         setBackButtonEnabled(true);
     }
 

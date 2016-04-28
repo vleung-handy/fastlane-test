@@ -360,7 +360,7 @@
     <string name="special_empty_string"> </string>
 
     <!-- Supplies -->
-    <string name="request_supplies">Request Supplies</string>
+    <string name="purchase_cleaning_supplies">Purchase Cleaning Supplies</string>
     <string name="supply_kit_includes">Supply Kit Includes</string>
     <string name="shipping_address">Shipping Address</string>
     <string name="complete_purchase">Complete Purchase</string>
@@ -407,7 +407,7 @@
     <string name="refer_a_friend">Refer a Friend</string>
     <string name="account_settings">Account Settings</string>
 
-    <string name="order_resupply_kit">Order a Resupply Kit</string>
+    <string name="purchase_supplies">Purchase Supplies</string>
     <string name="income_verification">Income Verification</string>
     <string name="send_email">Send Email</string>
     <string name="shop_on_boxed">Shop on Boxed.com</string>
