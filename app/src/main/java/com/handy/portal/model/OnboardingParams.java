@@ -16,6 +16,9 @@ public class OnboardingParams
     @SerializedName("onboarding_complete_web_url")
     private String mOnboardingCompleteWebUrl;
 
+    @SerializedName("onboarding_use_native_flow")
+    private boolean mOnboardingUseNativeFlow;
+
     @Override
     public boolean equals(Object obj)
     {
@@ -59,13 +62,14 @@ public class OnboardingParams
         return mOnboardingBlocking;
     }
 
-    /**
-     * Shows the native onboarding process if we have to onboard, and there is no URL
-     *
-     * @return
-     */
-    public boolean shouldShowOnboarding()
+    public boolean shouldShowWebOnboarding()
     {
-        return isOnboardingEnabled() && TextUtils.isNullOrEmpty(getOnboardingCompleteWebUrl());
+        return isOnboardingEnabled() && !TextUtils.isNullOrEmpty(getOnboardingCompleteWebUrl());
     }
+
+    public boolean shouldShowNativeOnboarding()
+    {
+        return isOnboardingEnabled() && mOnboardingUseNativeFlow;
+    }
+
 }

@@ -98,11 +98,14 @@ public class ConfigurationResponse
         return mOnboardingParams;
     }
 
-    public boolean shouldShowOnboarding()
+    public boolean shouldShowWebOnboarding()
     {
-        //        TODO: JIA: remove this hard coding = true stuff
-        return true;
-//        return getOnboardingParams() != null && mOnboardingParams.shouldShowOnboarding();
+        return getOnboardingParams() != null && mOnboardingParams.shouldShowWebOnboarding();
+    }
+
+    public boolean shouldShowNativeOnboarding()
+    {
+        return getOnboardingParams() != null && mOnboardingParams.shouldShowNativeOnboarding();
     }
 
     public boolean shouldUseHelpCenterWebView()

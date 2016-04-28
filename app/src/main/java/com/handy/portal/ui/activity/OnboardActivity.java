@@ -25,8 +25,6 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-//TODO: JIA: maybe change the name of this class, per Xi's comment that this process may not be
-//called "OnBoarding"
 public class OnboardActivity extends AppCompatActivity
 {
     public static final int COLORS = 12;
@@ -169,23 +167,25 @@ public class OnboardActivity extends AppCompatActivity
 
         int partNumPerSecond = 2;
         int emitTime = 1000;
+        int maxParticles = 100;
+        int timeToLive = 10000;
         for (int i = 0; i < COLORS; i++)
         {
-            new ParticleSystem(this, 5, mDrawables.get(i), 5000)
+            new ParticleSystem(this, maxParticles, mDrawables.get(i), timeToLive)
                     .setSpeedModuleAndAngleRange(0.1f, 0.3f, 225, 315)
                     .setRotationSpeed(144)
                     .setAcceleration(0.000685f, 90)
                     .setScaleRange(0.3f, 0.5f)
                     .emit(mRightCenterView, partNumPerSecond, emitTime);
 
-            new ParticleSystem(this, 5, mDrawables.get(i), 5000)
+            new ParticleSystem(this, maxParticles, mDrawables.get(i), timeToLive)
                     .setSpeedModuleAndAngleRange(0.1f, 0.3f, 225, 315)
                     .setRotationSpeed(144)
                     .setAcceleration(0.000685f, 90)
                     .setScaleRange(0.3f, 0.5f)
                     .emit(mLeftCenterView, partNumPerSecond, emitTime);
 
-            new ParticleSystem(this, 5, mDrawables.get(i), 5000)
+            new ParticleSystem(this, maxParticles, mDrawables.get(i), timeToLive)
                     .setSpeedModuleAndAngleRange(0.1f, 0.3f, 225, 315)
                     .setRotationSpeed(144)
                     .setAcceleration(0.000685f, 90)

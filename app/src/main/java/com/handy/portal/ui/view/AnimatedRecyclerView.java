@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.view.animation.LayoutAnimationController;
 
 /**
- * Created by jtse on 4/18/16.
  */
 public class AnimatedRecyclerView extends RecyclerView
 {

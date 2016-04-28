@@ -185,13 +185,21 @@ public class MainActivityFragment extends InjectedFragment
 
     private void handleOnboardingFlow()
     {
-        if (currentTab != null &&
-                currentTab != MainViewTab.ONBOARDING_WEBVIEW &&
-                configManager.getConfigurationResponse() != null &&
-                configManager.getConfigurationResponse().shouldShowOnboarding()
-                )
+        if (configManager.getConfigurationResponse() != null)
         {
-            startActivity(new Intent(getContext(), OnboardActivity.class));
+
+            if (configManager.getConfigurationResponse().shouldShowNativeOnboarding())
+            {
+                startActivity(new Intent(getContext(), OnboardActivity.class));
+            }
+            else if (currentTab != null &&
+                    currentTab != MainViewTab.ONBOARDING_WEBVIEW &&
+                    configManager.getConfigurationResponse().shouldShowWebOnboarding()
+                    )
+            {
+                //We can be lazy here with params, TabNavigationManager will do all the work for us, we are just firing it up
+                switchToTab(MainViewTab.ONBOARDING_WEBVIEW, false);
+            }
         }
     }
 

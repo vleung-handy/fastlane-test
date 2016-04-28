@@ -91,7 +91,7 @@ public class TabNavigationManager
     private boolean doesCachedProviderNeedOnboarding()
     {
         return (mConfigManager.getConfigurationResponse() != null &&
-                mConfigManager.getConfigurationResponse().shouldShowOnboarding());
+                mConfigManager.getConfigurationResponse().shouldShowWebOnboarding());
     }
 
     private boolean isOnboardingBlocking()

@@ -20,7 +20,6 @@ import butterknife.ButterKnife;
 
 /**
  * This is a fancy "loading" dialog fragment.
- * Created by jtse on 4/19/16.
  * <p/>
  * TODO: JIA: Style the onboarding dialog when the design specs come in
  */

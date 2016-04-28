@@ -7,7 +7,6 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Created by jtse on 4/25/16.
  */
 public class JobClaimResponse implements Serializable
 {

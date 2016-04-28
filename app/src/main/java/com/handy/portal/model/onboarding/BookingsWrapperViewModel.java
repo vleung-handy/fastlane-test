@@ -10,7 +10,6 @@ import java.util.List;
  * This is a view model that bridges the gap between a list of bookings vs a set of bookings
  * grouped by date. This is used in the onboarding work flow to claim initial jobs
  * <p/>
- * Created by jtse on 4/18/16.
  */
 public class BookingsWrapperViewModel
 {

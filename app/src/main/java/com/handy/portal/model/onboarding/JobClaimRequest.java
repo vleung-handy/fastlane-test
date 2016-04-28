@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by jtse on 4/22/16.
  */
 public class JobClaimRequest implements Serializable
 {

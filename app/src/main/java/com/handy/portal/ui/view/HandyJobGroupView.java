@@ -19,7 +19,6 @@ import java.util.List;
  * This is a custom view that holds a collection of HandyJobView. It has a title to label
  * the group
  * <p/>
- * Created by jtse on 4/18/16.
  */
 public class HandyJobGroupView extends LinearLayout implements CompoundButton.OnCheckedChangeListener
 {

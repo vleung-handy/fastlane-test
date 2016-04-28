@@ -70,13 +70,8 @@ public class GettingStartedActivity extends AppCompatActivity
     Bus mBus;
 
     OnboardLoadingDialog mLoadingDialog;
-
     JobsRecyclerAdapter mAdapter;
-
-
-    //    TODO: JIA: make sure to save this onSavedInstanceState during cleanup work
     BookingsListWrapper mJobs2;
-
     String mNoThanks;
 
     Drawable mGreenDrawable;
@@ -394,11 +389,11 @@ public class GettingStartedActivity extends AppCompatActivity
 
         if (bookings.isEmpty())
         {
-            Toast.makeText(this, getString(R.string.onboard_no_longer_available), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.onboard_no_longer_available), Toast.LENGTH_LONG).show();
         }
         else
         {
-            Toast.makeText(this, event.mJobClaimResponse.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, event.mJobClaimResponse.getMessage(), Toast.LENGTH_LONG).show();
             goToScheduledJobs();
         }
     }
@@ -432,7 +427,7 @@ public class GettingStartedActivity extends AppCompatActivity
             msg = getString(R.string.onboard_job_claim_error);
         }
 
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 
     @Override

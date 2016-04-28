@@ -6,7 +6,6 @@ import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
 
 /**
- * Created by jtse on 4/18/16.
  * <p/>
  * This is a view model to bridge the gap between the booking and what needs to be displayed on the
  * onboard claim job screen.

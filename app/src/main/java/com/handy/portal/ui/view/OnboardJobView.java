@@ -8,7 +8,6 @@ import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -21,7 +20,6 @@ import butterknife.ButterKnife;
  * This is a custom view used for showing jobs in the onboarding screen. It'll hold a check box,
  * job title & hours, and pricing
  * <p/>
- * Created by jtse on 4/18/16.
  */
 public class OnboardJobView extends FrameLayout implements CompoundButton.OnCheckedChangeListener
 {
@@ -30,9 +28,6 @@ public class OnboardJobView extends FrameLayout implements CompoundButton.OnChec
 
     @Bind(R.id.check_box)
     CheckBox mCheckBox;
-
-    @Bind(R.id.relative_layout)
-    RelativeLayout mRelativeLayout;
 
     @Bind(R.id.price)
     TextView mTvPrice;
