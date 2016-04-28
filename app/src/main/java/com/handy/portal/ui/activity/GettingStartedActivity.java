@@ -383,6 +383,8 @@ public class GettingStartedActivity extends AppCompatActivity
     @OnClick(R.id.try_again_button)
     public void doRequestBookingsAgain()
     {
+        mFetchErrorView.setVisibility(View.GONE);
+        mLoadingOverlayView.setVisibility(View.VISIBLE);
         loadJobs();
     }
 
@@ -397,6 +399,7 @@ public class GettingStartedActivity extends AppCompatActivity
     public void onReceiveClaimJobsSuccess(HandyEvent.ReceiveClaimJobsSuccess event)
     {
         mLoadingOverlayView.setVisibility(View.GONE);
+        mFetchErrorView.setVisibility(View.GONE);
 
         List<Booking> bookings = jobsClaimedByMe(event.mJobClaimResponse);
 
@@ -434,14 +437,15 @@ public class GettingStartedActivity extends AppCompatActivity
     public void onReceiveClaimJobsError(HandyEvent.ReceiveClaimJobsError error)
     {
         mLoadingOverlayView.setVisibility(View.GONE);
+        mFetchErrorView.setVisibility(View.VISIBLE);
         String msg = "";
         if (error.error.getType() == DataManager.DataManagerError.Type.NETWORK)
         {
-            msg = getString(R.string.error_fetching_connectivity_issue);
+            mErrorText.setText(getString(R.string.error_fetching_connectivity_issue));
         }
         else
         {
-            msg = getString(R.string.onboard_job_claim_error);
+            mErrorText.setText(getString(R.string.onboard_job_claim_error));
         }
 
         Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
