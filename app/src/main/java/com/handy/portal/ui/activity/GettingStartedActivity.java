@@ -1,5 +1,6 @@
 package com.handy.portal.ui.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -45,6 +46,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class GettingStartedActivity extends AppCompatActivity
         implements HandyJobGroupView.OnJobChangeListener,
@@ -456,6 +458,12 @@ public class GettingStartedActivity extends AppCompatActivity
     {
         super.onDestroy();
         mDestroyed = true;
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase)
+    {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override

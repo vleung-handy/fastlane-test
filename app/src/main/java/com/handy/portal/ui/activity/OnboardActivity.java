@@ -1,5 +1,6 @@
 package com.handy.portal.ui.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
@@ -24,6 +25,7 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class OnboardActivity extends AppCompatActivity
 {
@@ -112,6 +114,12 @@ public class OnboardActivity extends AppCompatActivity
         mBus.register(this);
         mLoadingOverlay.setVisibility(View.VISIBLE);
         mBus.post(new ProfileEvent.RequestProviderProfile());
+    }
+
+    @Override
+    protected void attachBaseContext(Context newBase)
+    {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override

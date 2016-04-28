@@ -11,7 +11,10 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.model.onboarding.BookingViewModel;
+import com.handy.portal.ui.element.BookingDetailsPaymentView;
+import com.handy.portal.util.UIUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,8 +32,11 @@ public class OnboardJobView extends FrameLayout implements CompoundButton.OnChec
     @Bind(R.id.check_box)
     CheckBox mCheckBox;
 
-    @Bind(R.id.price)
-    TextView mTvPrice;
+    @Bind(R.id.onboard_payment)
+    BookingDetailsPaymentView mPayment;
+
+    @Bind(R.id.onboard_payment_bonus)
+    TextView mBonusPaymentText;
 
     @Bind(R.id.tv_title)
     TextView mTitle;
@@ -94,7 +100,18 @@ public class OnboardJobView extends FrameLayout implements CompoundButton.OnChec
     public void bind(BookingViewModel bookingViewModel)
     {
         mBookingViewModel = bookingViewModel;
-        mTvPrice.setText(bookingViewModel.getFormattedPrice());
+
+        //Payment
+        mPayment.init(bookingViewModel.booking);
+
+        //Bonus Payment
+        PaymentInfo paymentInfo = bookingViewModel.booking.getBonusPaymentToProvider();
+        if (paymentInfo != null && paymentInfo.getAmount() > 0)
+        {
+            UIUtils.setPaymentInfo(mBonusPaymentText, null, paymentInfo,
+                    getResources().getString(R.string.bonus_payment_value));
+        }
+
         mTitle.setText(bookingViewModel.getTitle());
         mSubTitle.setText(bookingViewModel.getSubTitle());
         mCheckBox.setChecked(bookingViewModel.selected);

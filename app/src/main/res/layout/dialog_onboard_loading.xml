@@ -31,7 +31,7 @@
             android:layout_marginLeft="@dimen/default_margin_x4"
             android:layout_marginRight="@dimen/default_margin_x4"
             android:text="@string/onboard_loading"
-            style="@style/TextView.XXLarge.Bold"
+            style="@style/TextView.XXLarge"
             android:gravity="center"
             />
     </LinearLayout>
