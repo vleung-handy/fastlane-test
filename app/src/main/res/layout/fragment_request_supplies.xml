@@ -239,6 +239,17 @@
 
             </LinearLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:lineSpacingExtra="@dimen/lineSpacing"
+                android:text="@string/supplies_footer"
+                android:textColor="@color/tertiary_grey"
+                android:textSize="@dimen/default_text_size"
+                />
+
         </LinearLayout>
     </ScrollView>
 
