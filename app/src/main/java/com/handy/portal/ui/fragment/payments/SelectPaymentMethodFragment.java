@@ -62,12 +62,6 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     }
 
     @Override
-    protected MainViewTab getTab()
-    {
-        return MainViewTab.SELECT_PAYMENT_METHOD;
-    }
-
-    @Override
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);

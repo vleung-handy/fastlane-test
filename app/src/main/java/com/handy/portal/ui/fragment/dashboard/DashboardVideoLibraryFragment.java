@@ -5,7 +5,6 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.webview.PortalWebViewFragment;
@@ -18,12 +17,6 @@ public class DashboardVideoLibraryFragment extends PortalWebViewFragment
     ProviderManager mProviderManager;
 
     private static final String VIDEO_URL = "http://www.handy.com/pro/resources?native=1";
-
-    @Override
-    protected MainViewTab getTab()
-    {
-        return MainViewTab.DASHBOARD_VIDEO_LIBRARY;
-    }
 
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)

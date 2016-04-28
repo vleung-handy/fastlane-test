@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.ui.adapter.ReviewListAdapter;
@@ -41,12 +40,6 @@ public class DashboardReviewsFragment extends ActionBarFragment
     private static int MIN_STAR = 5;
     private List<ProviderRating> mRatings = new ArrayList<>();
     private ProviderEvaluation mEvaluation;
-
-    @Override
-    protected MainViewTab getTab()
-    {
-        return MainViewTab.DASHBOARD_REVIEWS;
-    }
 
     @Override
     public void onCreate(final Bundle savedInstanceState)

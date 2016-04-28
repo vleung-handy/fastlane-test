@@ -2,8 +2,7 @@ package com.handy.portal.ui.fragment;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -18,6 +17,8 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.util.UIUtils;
 
+import java.io.Serializable;
+
 import javax.inject.Inject;
 
 public abstract class ActionBarFragment extends InjectedFragment
@@ -26,8 +27,6 @@ public abstract class ActionBarFragment extends InjectedFragment
     EnvironmentModifier environmentModifier;
     private UpdateTabsCallback tabsCallback;
 
-    protected abstract MainViewTab getTab();
-
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
@@ -35,7 +34,7 @@ public abstract class ActionBarFragment extends InjectedFragment
         Bundle args = getArguments();
         if (args != null)
         {
-            tabsCallback = args.getParcelable(BundleKeys.UPDATE_TAB_CALLBACK);
+            tabsCallback = (UpdateTabsCallback) args.getSerializable(BundleKeys.UPDATE_TAB_CALLBACK);
         }
 
         // If not given, create one that does nothing to avoid NullPointerException
@@ -43,12 +42,6 @@ public abstract class ActionBarFragment extends InjectedFragment
         {
             tabsCallback = new UpdateTabsCallback()
             {
-                @Override
-                public int describeContents() { return 0; }
-
-                @Override
-                public void writeToParcel(Parcel parcel, int i) { }
-
                 @Override
                 public void updateTabs(MainViewTab tab) { }
             };
@@ -65,10 +58,7 @@ public abstract class ActionBarFragment extends InjectedFragment
     public void onResume()
     {
         super.onResume();
-        if (getTab() != null)
-        {
-            tabsCallback.updateTabs(getTab());
-        }
+        tabsCallback.updateTabs(getTab());
     }
 
     @Override
@@ -191,23 +181,10 @@ public abstract class ActionBarFragment extends InjectedFragment
         }
     }
 
-    public interface UpdateTabsCallback extends Parcelable
+    protected MainViewTab getTab() { return null; }
+
+    public interface UpdateTabsCallback extends Serializable
     {
-        Parcelable.Creator CREATOR = new Parcelable.Creator()
-        {
-            @Override
-            public Object createFromParcel(Parcel source)
-            {
-                return null;
-            }
-
-            @Override
-            public Object[] newArray(int size)
-            {
-                return new Object[0];
-            }
-        };
-
-        void updateTabs(MainViewTab tab);
+        void updateTabs(@Nullable MainViewTab tab);
     }
 }

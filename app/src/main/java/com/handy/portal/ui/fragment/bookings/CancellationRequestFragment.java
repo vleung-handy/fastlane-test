@@ -55,12 +55,6 @@ public class CancellationRequestFragment extends ActionBarFragment
     private Booking.Action mAction;
 
     @Override
-    protected MainViewTab getTab()
-    {
-        return MainViewTab.CANCELLATION_REQUEST;
-    }
-
-    @Override
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);

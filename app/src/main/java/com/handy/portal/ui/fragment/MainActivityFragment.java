@@ -2,7 +2,6 @@ package com.handy.portal.ui.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -297,7 +296,6 @@ public class MainActivityFragment extends InjectedFragment
         setTabVisibility(true);
         setDrawerActive(false);
         swapFragment(event);
-        updateSelectedTabButton(event.targetTab);
         ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
         currentTab = event.targetTab;
     }
@@ -485,84 +483,69 @@ public class MainActivityFragment extends InjectedFragment
 
     private void addUpdateTabCallback(Bundle argumentsBundle)
     {
-        argumentsBundle.putParcelable(BundleKeys.UPDATE_TAB_CALLBACK, new ActionBarFragment.UpdateTabsCallback()
+        argumentsBundle.putSerializable(BundleKeys.UPDATE_TAB_CALLBACK, new ActionBarFragment.UpdateTabsCallback()
         {
             @Override
-            public int describeContents() { return 0; }
-
-            @Override
-            public void writeToParcel(Parcel parcel, int i) { }
-
-            @Override
-            public void updateTabs(MainViewTab tab)
+            public void updateTabs(@Nullable MainViewTab tab)
             {
-                if (mTabs != null) { updateSelectedTabButton(tab); }
+                if (tab == null) { return; }
+                switch (tab)
+                {
+                    case AVAILABLE_JOBS:
+                    case BLOCK_PRO_WEBVIEW:
+                    {
+                        mJobsButton.toggle();
+                        mNavTrayLinks.clearCheck();
+                    }
+                    break;
+                    case SEND_RECEIPT_CHECKOUT:
+                    case SCHEDULED_JOBS:
+                    {
+                        mScheduleButton.toggle();
+                        mNavTrayLinks.clearCheck();
+                    }
+                    break;
+                    case NOTIFICATIONS:
+                    {
+                        mNotificationsButton.toggle();
+                        mNavTrayLinks.clearCheck();
+                    }
+                    break;
+                    case PAYMENTS:
+                    {
+                        mButtonMore.toggle();
+                        mNavLinkPayments.toggle();
+                    }
+                    break;
+                    case YOUTUBE_PLAYER:
+                    case DASHBOARD:
+                    {
+                        mButtonMore.toggle();
+                        mNavLinkRatingsAndFeedback.toggle();
+                    }
+                    break;
+                    case REFER_A_FRIEND:
+                    {
+                        mButtonMore.toggle();
+                        mNavLinkReferAFriend.toggle();
+                    }
+                    break;
+                    case ACCOUNT_SETTINGS:
+                    {
+                        mButtonMore.toggle();
+                        mNavAccountSettings.toggle();
+                    }
+                    break;
+                    case HELP:
+                    case HELP_WEBVIEW:
+                    {
+                        mButtonMore.toggle();
+                        mNavLinkHelp.toggle();
+                    }
+                    break;
+                }
             }
         });
-    }
-
-    //Update the visuals to show the correct selected button
-    private void updateSelectedTabButton(MainViewTab targetTab)
-    {
-        //Somewhat ugly mapping right now, is there a more elegant way to do this? Tabs as a model should not know about their buttons
-        if (targetTab != MainViewTab.JOB_DETAILS)
-        {
-            switch (targetTab)
-            {
-                case AVAILABLE_JOBS:
-                case BLOCK_PRO_WEBVIEW:
-                {
-                    mJobsButton.toggle();
-                    mNavTrayLinks.clearCheck();
-                }
-                break;
-                case SEND_RECEIPT_CHECKOUT:
-                case SCHEDULED_JOBS:
-                {
-                    mScheduleButton.toggle();
-                    mNavTrayLinks.clearCheck();
-                }
-                break;
-                case NOTIFICATIONS:
-                {
-                    mNotificationsButton.toggle();
-                    mNavTrayLinks.clearCheck();
-                }
-                break;
-                case PAYMENTS:
-                {
-                    mButtonMore.toggle();
-                    mNavLinkPayments.toggle();
-                }
-                break;
-                case YOUTUBE_PLAYER:
-                case DASHBOARD:
-                {
-                    mButtonMore.toggle();
-                    mNavLinkRatingsAndFeedback.toggle();
-                }
-                break;
-                case REFER_A_FRIEND:
-                {
-                    mButtonMore.toggle();
-                    mNavLinkReferAFriend.toggle();
-                }
-                break;
-                case ACCOUNT_SETTINGS:
-                {
-                    mButtonMore.toggle();
-                    mNavAccountSettings.toggle();
-                }
-                break;
-                case HELP:
-                case HELP_WEBVIEW:
-                {
-                    mButtonMore.toggle();
-                    mNavLinkHelp.toggle();
-                }
-                break;
-            }
-        }
     }
 
     private void swapFragment(NavigationEvent.SwapFragmentEvent swapFragmentEvent)

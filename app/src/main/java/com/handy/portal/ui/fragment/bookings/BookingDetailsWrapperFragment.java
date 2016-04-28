@@ -85,11 +85,13 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     private String mSource;
     private Bundle mSourceExtras;
     private boolean mFromPaymentsTab;
+    private MainViewTab mCurrentTab;
+
 
     @Override
     protected MainViewTab getTab()
     {
-        return null;
+        return mCurrentTab;
     }
 
     @Override
@@ -122,6 +124,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
             mSourceExtras = arguments;
         }
         mFromPaymentsTab = arguments.getBoolean(BundleKeys.IS_FOR_PAYMENTS, false);
+        mCurrentTab = (MainViewTab) arguments.getSerializable(BundleKeys.TAB);
     }
 
     @Override
