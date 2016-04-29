@@ -186,6 +186,7 @@ public class BookingFragment extends TimerActionBarFragment
         super.onViewCreated(view, savedInstanceState);
         mBookingMapView.onCreate(savedInstanceState);
         mBookingMapView.disableParentScrolling(mScrollView);
+        setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
     }
 

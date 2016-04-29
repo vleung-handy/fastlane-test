@@ -1,12 +1,9 @@
 package com.handy.portal.ui.fragment;
 
 import android.os.CountDownTimer;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.text.format.DateUtils;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.util.DateTimeUtils;
 
 import java.util.Date;
@@ -17,18 +14,6 @@ public class TimerActionBarFragment extends ActionBarFragment
     private static final long TIMER_START_INTERVAL = DateUtils.HOUR_IN_MILLIS * 3;
 
     private CountDownTimer mCounter;
-
-    @Override
-    protected MainViewTab getTab()
-    {
-        return null;
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-    }
 
     @Override
     public void onPause()
@@ -65,10 +50,5 @@ public class TimerActionBarFragment extends ActionBarFragment
         {
             setActionBarTitle(R.string.time_expired);
         }
-    }
-
-    private ActionBar getActionBar()
-    {
-        return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
 }

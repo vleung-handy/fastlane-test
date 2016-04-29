@@ -291,7 +291,6 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onSwapFragment(NavigationEvent.SwapFragmentEvent event)
     {
-        addUpdateTabCallback(event.arguments);
         trackSwitchToTab(event.targetTab);
         setTabVisibility(true);
         setDrawerActive(false);
@@ -317,6 +316,67 @@ public class MainActivityFragment extends InjectedFragment
     {
         logOutProvider();
         showToast(R.string.handy_account_no_longer_active);
+    }
+
+    @Subscribe
+    public void updateSelectedTabButton(NavigationEvent.SelectTab event)
+    {
+        if (event.tab == null) { return; }
+        switch (event.tab)
+        {
+            case AVAILABLE_JOBS:
+            case BLOCK_PRO_WEBVIEW:
+            {
+                mJobsButton.toggle();
+                mNavTrayLinks.clearCheck();
+            }
+            break;
+            case SEND_RECEIPT_CHECKOUT:
+            case SCHEDULED_JOBS:
+            {
+                mScheduleButton.toggle();
+                mNavTrayLinks.clearCheck();
+            }
+            break;
+            case NOTIFICATIONS:
+            {
+                mNotificationsButton.toggle();
+                mNavTrayLinks.clearCheck();
+            }
+            break;
+            case PAYMENTS:
+            {
+                mButtonMore.toggle();
+                mNavLinkPayments.toggle();
+            }
+            break;
+            case YOUTUBE_PLAYER:
+            case DASHBOARD:
+            {
+                mButtonMore.toggle();
+                mNavLinkRatingsAndFeedback.toggle();
+            }
+            break;
+            case REFER_A_FRIEND:
+            {
+                mButtonMore.toggle();
+                mNavLinkReferAFriend.toggle();
+            }
+            break;
+            case ACCOUNT_SETTINGS:
+            {
+                mButtonMore.toggle();
+                mNavAccountSettings.toggle();
+            }
+            break;
+            case HELP:
+            case HELP_WEBVIEW:
+            {
+                mButtonMore.toggle();
+                mNavLinkHelp.toggle();
+            }
+            break;
+        }
     }
 
 //Click Listeners
@@ -479,73 +539,6 @@ public class MainActivityFragment extends InjectedFragment
     private void trackSwitchToTab(MainViewTab targetTab)
     {
         bus.post(new HandyEvent.Navigation(targetTab.toString().toLowerCase()));
-    }
-
-    private void addUpdateTabCallback(Bundle argumentsBundle)
-    {
-        argumentsBundle.putSerializable(BundleKeys.UPDATE_TAB_CALLBACK, new ActionBarFragment.UpdateTabsCallback()
-        {
-            @Override
-            public void updateTabs(@Nullable MainViewTab tab)
-            {
-                if (tab == null) { return; }
-                switch (tab)
-                {
-                    case AVAILABLE_JOBS:
-                    case BLOCK_PRO_WEBVIEW:
-                    {
-                        mJobsButton.toggle();
-                        mNavTrayLinks.clearCheck();
-                    }
-                    break;
-                    case SEND_RECEIPT_CHECKOUT:
-                    case SCHEDULED_JOBS:
-                    {
-                        mScheduleButton.toggle();
-                        mNavTrayLinks.clearCheck();
-                    }
-                    break;
-                    case NOTIFICATIONS:
-                    {
-                        mNotificationsButton.toggle();
-                        mNavTrayLinks.clearCheck();
-                    }
-                    break;
-                    case PAYMENTS:
-                    {
-                        mButtonMore.toggle();
-                        mNavLinkPayments.toggle();
-                    }
-                    break;
-                    case YOUTUBE_PLAYER:
-                    case DASHBOARD:
-                    {
-                        mButtonMore.toggle();
-                        mNavLinkRatingsAndFeedback.toggle();
-                    }
-                    break;
-                    case REFER_A_FRIEND:
-                    {
-                        mButtonMore.toggle();
-                        mNavLinkReferAFriend.toggle();
-                    }
-                    break;
-                    case ACCOUNT_SETTINGS:
-                    {
-                        mButtonMore.toggle();
-                        mNavAccountSettings.toggle();
-                    }
-                    break;
-                    case HELP:
-                    case HELP_WEBVIEW:
-                    {
-                        mButtonMore.toggle();
-                        mNavLinkHelp.toggle();
-                    }
-                    break;
-                }
-            }
-        });
     }
 
     private void swapFragment(NavigationEvent.SwapFragmentEvent swapFragmentEvent)
