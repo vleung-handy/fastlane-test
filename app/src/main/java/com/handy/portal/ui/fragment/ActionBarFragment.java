@@ -89,7 +89,7 @@ public abstract class ActionBarFragment extends InjectedFragment
         }
     }
 
-    private ActionBar getActionBar()
+    protected ActionBar getActionBar()
     {
         return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
