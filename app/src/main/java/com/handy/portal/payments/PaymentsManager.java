@@ -1,17 +1,16 @@
-package com.handy.portal.manager;
+package com.handy.portal.payments;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.model.SuccessWrapper;
-import com.handy.portal.model.payments.AnnualPaymentSummaries;
-import com.handy.portal.model.payments.CreateDebitCardResponse;
-import com.handy.portal.model.payments.NeoPaymentBatch;
-import com.handy.portal.model.payments.PaymentBatches;
-import com.handy.portal.model.payments.PaymentGroup;
-import com.handy.portal.model.payments.PaymentOutstandingFees;
-import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
+import com.handy.portal.payments.model.AnnualPaymentSummaries;
+import com.handy.portal.payments.model.CreateDebitCardResponse;
+import com.handy.portal.payments.model.NeoPaymentBatch;
+import com.handy.portal.payments.model.PaymentBatches;
+import com.handy.portal.payments.model.PaymentGroup;
+import com.handy.portal.payments.model.PaymentOutstandingFees;
+import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

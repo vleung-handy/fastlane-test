@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.handy.portal.ui.element.payments.PaymentsDetailGroupView
+<com.handy.portal.payments.ui.element.PaymentsDetailGroupView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -31,4 +31,4 @@
         android:gravity="end"
         android:text="@string/no_data"
         android:textAppearance="@style/HandyTextAppearanceLarge"/>
-</com.handy.portal.ui.element.payments.PaymentsDetailGroupView>
+</com.handy.portal.payments.ui.element.PaymentsDetailGroupView>

@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment.dialog;
+package com.handy.portal.payments.ui.fragment;
 
 import android.app.Dialog;
 import android.graphics.Color;
@@ -19,6 +19,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.ui.fragment.dialog.InjectedDialogFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

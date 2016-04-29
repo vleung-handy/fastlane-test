@@ -16,7 +16,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.PaymentInfo;
+import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.MainActivity;
 import com.squareup.otto.Bus;
 

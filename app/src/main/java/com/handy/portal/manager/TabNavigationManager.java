@@ -5,6 +5,7 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.BasicLog;
+import com.handy.portal.payments.PaymentsManager;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

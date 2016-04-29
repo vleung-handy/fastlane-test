@@ -1,11 +1,12 @@
-package com.handy.portal.event;
+package com.handy.portal.payments;
 
 import com.handy.portal.data.DataManager;
-import com.handy.portal.model.payments.AnnualPaymentSummaries;
-import com.handy.portal.model.payments.CreateDebitCardResponse;
-import com.handy.portal.model.payments.PaymentBatches;
-import com.handy.portal.model.payments.PaymentFlow;
-import com.handy.portal.model.payments.PaymentOutstandingFees;
+import com.handy.portal.event.HandyEvent;
+import com.handy.portal.payments.model.AnnualPaymentSummaries;
+import com.handy.portal.payments.model.CreateDebitCardResponse;
+import com.handy.portal.payments.model.PaymentBatches;
+import com.handy.portal.payments.model.PaymentFlow;
+import com.handy.portal.payments.model.PaymentOutstandingFees;
 
 import java.util.Date;
 

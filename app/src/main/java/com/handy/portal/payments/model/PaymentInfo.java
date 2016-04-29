@@ -1,4 +1,4 @@
-package com.handy.portal.model;
+package com.handy.portal.payments.model;
 
 import com.google.gson.annotations.SerializedName;
 

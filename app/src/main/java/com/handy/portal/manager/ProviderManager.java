@@ -8,7 +8,6 @@ import com.handy.portal.constant.NoShowKey;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
@@ -21,7 +20,8 @@ import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
-import com.handy.portal.model.payments.PaymentFlow;
+import com.handy.portal.payments.PaymentEvent;
+import com.handy.portal.payments.model.PaymentFlow;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

@@ -1,4 +1,4 @@
-package com.handy.portal.ui.adapter;
+package com.handy.portal.payments.ui.adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -6,11 +6,11 @@ import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
 import com.handy.portal.R;
-import com.handy.portal.model.payments.NeoPaymentBatch;
-import com.handy.portal.model.payments.Payment;
-import com.handy.portal.model.payments.PaymentGroup;
-import com.handy.portal.ui.element.payments.PaymentsDetailGroupView;
-import com.handy.portal.ui.element.payments.PaymentsDetailItemView;
+import com.handy.portal.payments.model.NeoPaymentBatch;
+import com.handy.portal.payments.model.Payment;
+import com.handy.portal.payments.model.PaymentGroup;
+import com.handy.portal.payments.ui.element.PaymentsDetailGroupView;
+import com.handy.portal.payments.ui.element.PaymentsDetailItemView;
 
 public class PaymentDetailExpandableListAdapter extends BaseExpandableListAdapter
 {

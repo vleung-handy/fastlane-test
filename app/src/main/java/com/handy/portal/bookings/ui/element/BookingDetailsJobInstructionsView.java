@@ -19,7 +19,7 @@ import com.google.gson.JsonSyntaxException;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.model.PaymentInfo;
+import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.TextUtils;

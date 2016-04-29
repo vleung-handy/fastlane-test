@@ -11,7 +11,7 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.constant.Country;
 import com.handy.portal.model.Address;
-import com.handy.portal.model.PaymentInfo;
+import com.handy.portal.payments.model.PaymentInfo;
 
 import java.io.Serializable;
 import java.util.ArrayList;

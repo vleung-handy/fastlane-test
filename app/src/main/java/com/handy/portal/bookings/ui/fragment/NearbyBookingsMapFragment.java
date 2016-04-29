@@ -17,7 +17,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.location.LocationUtils;
 import com.handy.portal.model.Address;
-import com.handy.portal.model.PaymentInfo;
+import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.view.PriceMarker;
 import com.handy.portal.util.UIUtils;
 

@@ -1,4 +1,4 @@
-package com.handy.portal.ui.adapter;
+package com.handy.portal.payments.ui.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -10,11 +10,11 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.model.payments.NeoPaymentBatch;
-import com.handy.portal.model.payments.PaymentBatch;
-import com.handy.portal.model.payments.PaymentBatches;
-import com.handy.portal.ui.element.payments.PaymentsBatchListHeaderView;
-import com.handy.portal.ui.element.payments.PaymentsBatchListItemView;
+import com.handy.portal.payments.model.NeoPaymentBatch;
+import com.handy.portal.payments.model.PaymentBatch;
+import com.handy.portal.payments.model.PaymentBatches;
+import com.handy.portal.payments.ui.element.PaymentsBatchListHeaderView;
+import com.handy.portal.payments.ui.element.PaymentsBatchListItemView;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;

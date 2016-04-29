@@ -45,7 +45,7 @@ import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.LocationData;
-import com.handy.portal.model.PaymentInfo;
+import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.fragment.TimerActionBarFragment;
 import com.handy.portal.ui.view.MapPlaceholderView;
