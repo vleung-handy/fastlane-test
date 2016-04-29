@@ -34,7 +34,7 @@
                     android:orientation="vertical"
                     />
 
-                <com.handy.portal.ui.element.bookings.BookingDetailsDateView
+                <com.handy.portal.bookings.ui.element.BookingDetailsDateView
                     android:id="@+id/booking_details_date_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -43,26 +43,26 @@
                     android:orientation="horizontal"
                     />
 
-                <com.handy.portal.ui.element.bookings.BookingDetailsTitleView
+                <com.handy.portal.bookings.ui.element.BookingDetailsTitleView
                     android:id="@+id/booking_details_title_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     />
 
-                <com.handy.portal.ui.element.bookings.BookingDetailsActionPanelView
+                <com.handy.portal.bookings.ui.element.BookingDetailsActionPanelView
                     android:id="@+id/booking_details_action_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     />
 
-                <com.handy.portal.ui.element.bookings.BookingDetailsActionContactPanelView
+                <com.handy.portal.bookings.ui.element.BookingDetailsActionContactPanelView
                     android:id="@+id/booking_details_contact_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/extra_margin_medium"
                     />
 
-                <com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView
+                <com.handy.portal.bookings.ui.element.BookingDetailsJobInstructionsView
                     android:id="@+id/booking_details_job_instructions_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -70,14 +70,14 @@
                     android:orientation="horizontal"
                     />
 
-                <com.handy.portal.ui.element.bookings.ProxyLocationView
+                <com.handy.portal.bookings.ui.element.ProxyLocationView
                     android:id="@+id/booking_details_location_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/extra_margin_medium"
                     />
 
-                <com.handy.portal.ui.widget.BookingActionButton
+                <com.handy.portal.bookings.ui.element.BookingActionButton
                     android:id="@+id/booking_details_support_button"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
