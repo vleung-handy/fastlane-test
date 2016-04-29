@@ -292,8 +292,12 @@
         <activity
             android:name=".ui.activity.OnboardActivity"
             android:theme="@style/AppTheme.Translucent"
+            android:screenOrientation="portrait"
             />
-        <activity android:name=".ui.activity.GettingStartedActivity">
+        <activity
+            android:name=".ui.activity.GettingStartedActivity"
+            android:screenOrientation="portrait"
+            >
         </activity>
     </application>
 

@@ -1,6 +1,5 @@
 package com.handy.portal.ui.fragment.bookings;
 
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -10,7 +9,6 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
@@ -44,19 +42,12 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     SwipeRefreshLayout mNoAvailableBookingsLayout;
     @Bind(R.id.toggle_available_job_notification)
     SwitchCompat mToggleAvailableJobNotification;
-    private String mMessage;
+
 
     @Override
     protected MainViewTab getTab()
     {
         return MainViewTab.AVAILABLE_JOBS;
-    }
-
-    @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        mMessage = getArguments().getString(BundleKeys.MESSAGE);
     }
 
     @Override
@@ -163,22 +154,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
     {
         bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.DateClicked(dateOfBookings, bookingsForDay.size())));
-
-        if (mMessage != null)
-        {
-            Snackbar.make(
-                    mBookingsContent,
-                    mMessage,
-                    Snackbar.LENGTH_LONG
-            ).show();
-            if (mMessage.equals(getString(R.string.job_no_longer_available)))
-            {
-                final Bundle extras = getArguments().getBundle(BundleKeys.EXTRAS);
-                bus.post(new LogEvent.AddLogEvent(
-                        new AvailableJobsLog.UnavailableJobNoticeShown(extras)));
-            }
-            mMessage = null; // this is a one-off
-        }
+        super.afterDisplayBookings(bookingsForDay, dateOfBookings);
     }
 
     @Subscribe

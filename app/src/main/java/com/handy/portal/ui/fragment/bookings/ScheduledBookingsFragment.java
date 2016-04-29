@@ -123,6 +123,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
     {
+        super.afterDisplayBookings(bookingsForDay, dateOfBookings);
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.DateClicked(dateOfBookings, bookingsForDay.size())));
         bus.post(new HandyEvent.RequestProviderInfo());
 

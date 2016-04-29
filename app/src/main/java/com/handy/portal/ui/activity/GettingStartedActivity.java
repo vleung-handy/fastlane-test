@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -19,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
@@ -184,7 +186,7 @@ public class GettingStartedActivity extends AppCompatActivity
         switch (item.getItemId())
         {
             case android.R.id.home:
-                goToAvailableJobs();
+                goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -194,7 +196,7 @@ public class GettingStartedActivity extends AppCompatActivity
     @Override
     public void onBackPressed()
     {
-        goToAvailableJobs();
+        goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
     }
 
     /**
@@ -210,7 +212,7 @@ public class GettingStartedActivity extends AppCompatActivity
         mJobs2 = event.bookings;
         if (!hasJobs(mJobs2))
         {
-            goToAvailableJobs();
+            goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
         }
         else
         {
@@ -351,7 +353,10 @@ public class GettingStartedActivity extends AppCompatActivity
                 {
                     if (bookingView.selected)
                     {
-                        request.mJobs.add(new JobClaim(bookingView.booking.getId(), bookingView.booking.getType().name().toLowerCase()));
+                        request.mJobs.add(new JobClaim(
+                                bookingView.booking.getId(),
+                                bookingView.booking.getType().name().toLowerCase())
+                        );
                     }
                 }
             }
@@ -365,21 +370,30 @@ public class GettingStartedActivity extends AppCompatActivity
         else
         {
             //no jobs were selected, send the user to claim job screen.
-            goToAvailableJobs();
+            goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
         }
     }
 
-    private void goToAvailableJobs()
+    private void goToAvailableJobs(Bundle bundle)
     {
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS));
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS, bundle));
         finish();
     }
 
 
-    private void goToScheduledJobs()
+    private void goToScheduledJobs(Bundle bundle)
     {
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS));
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, bundle));
         finish();
+    }
+
+    private Bundle getBundle(String message, @DrawableRes int imageRes)
+    {
+        Bundle bundle = new Bundle();
+        bundle.putString(BundleKeys.MESSAGE, message);
+        bundle.putInt(BundleKeys.MESSAGE_ICON, imageRes);
+
+        return bundle;
     }
 
     @OnClick(R.id.try_again_button)
@@ -405,18 +419,23 @@ public class GettingStartedActivity extends AppCompatActivity
 
         List<Booking> bookings = jobsClaimedByMe(event.mJobClaimResponse);
 
+        String message = event.mJobClaimResponse.getMessage();
         if (bookings.isEmpty())
         {
-            Toast.makeText(this, getString(R.string.onboard_no_longer_available), Toast.LENGTH_LONG).show();
-            //clear recycler view and load jobs
-            mRecyclerView.removeAllViews();
-            mLoadingOverlayView.setVisibility(View.VISIBLE);
-            loadJobs();
+            goToAvailableJobs(getBundle(message, R.drawable.snack_bar_error));
         }
         else
         {
-            Toast.makeText(this, event.mJobClaimResponse.getMessage(), Toast.LENGTH_LONG).show();
-            goToScheduledJobs();
+            if (bookings.size() == event.mJobClaimResponse.getJobs().size())
+            {
+                //I was able to claim 100% of the jobs I wanted.
+                goToScheduledJobs(getBundle(message, R.drawable.snack_bar_check));
+            }
+            else
+            {
+                goToScheduledJobs(getBundle(message, R.drawable.snack_bar_schedule));
+                //I was only able to claim partially what I wanted.
+            }
         }
     }
 

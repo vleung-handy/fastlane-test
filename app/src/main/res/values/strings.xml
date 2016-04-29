@@ -465,4 +465,5 @@
     <string name="onboard_no_longer_available">Looks like these job(s) are no longer available. Try these jobs.</string>
     <string name="onboard_job_claim_error">"There was an error claiming job(s), please try again"</string>
     <string name="onboard_job_load_error">"There was an error finding jobs, please try again"</string>
+    <string name="onboard_claim_no_job">"Want to see those preselected jobs again?\nTap the schedule help button in the top right."</string>
 </resources>

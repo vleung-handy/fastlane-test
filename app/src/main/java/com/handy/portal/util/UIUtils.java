@@ -7,7 +7,9 @@ import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.support.annotation.DrawableRes;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -49,6 +51,8 @@ public final class UIUtils
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
     public static final ViewGroup.LayoutParams MATCH_WIDTH_WRAP_HEIGHT_PARAMS = new LinearLayout.LayoutParams(
             ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+    private static final int SNACK_BAR_DURATION_WITH_ICON = 4000;
+
 
     public static boolean validateField(FormFieldTableRow field, FieldDefinition fieldDefinition)
     {
@@ -151,6 +155,25 @@ public final class UIUtils
         if (parent != null)
         {
             parent.removeView(view);
+        }
+    }
+
+    public static void setSnackbarImage(Snackbar snackbar, @DrawableRes int imageRes, int padding)
+    {
+        //make the snackbar display an icon if there exists one.
+        View snackbarLayout = snackbar.getView();
+
+        //ignore the lint error: Must be one of: Snackbar.LENGTH_SHORT, Snackbar.LENGTH_LONG.
+        //will work wtih design library 23.0+, which is what we have.
+        snackbar.setDuration(SNACK_BAR_DURATION_WITH_ICON);
+
+        TextView textView = (TextView) snackbarLayout.findViewById(android.support.design.R.id.snackbar_text);
+        if (textView != null)
+        {
+            textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
+            textView.setCompoundDrawablesWithIntrinsicBounds(imageRes, 0, 0, 0);
+            textView.setCompoundDrawablePadding(padding);
+            textView.setLineSpacing(0, 1.2f);
         }
     }
 
