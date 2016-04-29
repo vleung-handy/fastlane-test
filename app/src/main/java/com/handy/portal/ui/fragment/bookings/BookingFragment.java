@@ -159,12 +159,6 @@ public class BookingFragment extends TimerActionBarFragment
     }
 
     @Override
-    protected MainViewTab getTab()
-    {
-        return null;
-    }
-
-    @Override
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);

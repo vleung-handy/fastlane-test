@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
-import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
@@ -73,12 +72,6 @@ public class ProfileUpdateFragment extends ActionBarFragment
     ProviderManager mProviderManager;
 
     private FormDefinitionWrapper mFormDefinitionWrapper;
-
-    @Override
-    protected MainViewTab getTab()
-    {
-        return MainViewTab.PROFILE_UPDATE;
-    }
 
     @Override
     public void onCreate(Bundle savedInstance)
