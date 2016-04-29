@@ -177,7 +177,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     private void requestBookingsForSelectedDay(boolean showOverlay)
     {
-        requestBookings(Lists.newArrayList(mSelectedDay), showOverlay, false);
+        requestBookings(Lists.newArrayList(mSelectedDay), showOverlay, true);
     }
 
     private void requestBookingsForOtherDays(Date dayToExclude)
@@ -219,7 +219,10 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     {
         mRefreshLayout.setRefreshing(false);
         getNoBookingsSwipeRefreshLayout().setRefreshing(false);
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        if (event.day.equals(mSelectedDay))
+        {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        }
 
         List<Booking> bookings = event.bookings;
         Collections.sort(bookings);
