@@ -10,6 +10,7 @@
     <string name="two_lines_formatted">%1$s\n%2$s</string>
     <string name="comma_formatted">%1$s, %2$s</string>
     <string name="dash_formatted">%1$s \u2013 %2$s</string>
+    <string name="exclamation_point">!</string>
 
     <!-- Generic Single Word -->
     <string name="success">Success</string>

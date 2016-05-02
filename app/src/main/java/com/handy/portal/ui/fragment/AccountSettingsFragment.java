@@ -140,7 +140,7 @@ public class AccountSettingsFragment extends ActionBarFragment
     {
         mPrefsManager.clear();
 
-        if (Build.VERSION.SDK_INT >= 21)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         {
             CookieManager.getInstance().removeAllCookies(null);
             CookieManager.getInstance().flush();

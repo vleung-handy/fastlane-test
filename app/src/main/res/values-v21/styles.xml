@@ -7,4 +7,19 @@
         <item name="colorPrimaryDark">@color/handy_blue_pressed</item>
         <item name="colorControlActivated">@color/handy_blue</item>
     </style>
+
+    <style name="Button">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/large_text_size</item>
+        <item name="android:paddingTop">12dp</item>
+        <item name="android:paddingBottom">12dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:maxHeight">50dp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="fontPath">fonts/CircularStd-Book.otf</item>
+        <item name="android:textColor">@drawable/button_text_white_trans</item>
+        <item name="android:stateListAnimator">@null</item>
+    </style>
 </resources>

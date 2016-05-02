@@ -100,14 +100,9 @@ public abstract class BaseActivity extends AppCompatActivity
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
         Utils.inject(this, this);
 
-        final Intent intent = getIntent();
-        final Uri data = intent.getData();
-
         mAppUpdateEventListener = new AppUpdateEventListener(this);
-
         onBackPressedListenerStack = new Stack<>();
 
         buildGoogleApiClient();
