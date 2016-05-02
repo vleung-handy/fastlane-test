@@ -164,14 +164,6 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         requestBookingDetails(mRequestedBookingId, mRequestedBookingType, mAssociatedBookingDate);
     }
 
-    @Override
-    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
-    {
-        super.onViewCreated(view, savedInstanceState);
-        setOptionsMenuEnabled(true);
-        setBackButtonEnabled(true);
-    }
-
     @Subscribe
     public void onReceiveBookingDetailsSuccess(HandyEvent.ReceiveBookingDetailsSuccess event)
     {
