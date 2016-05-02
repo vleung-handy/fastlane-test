@@ -5,14 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
-import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.TouchDelegate;
-import android.view.View;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -23,14 +18,10 @@ import com.handy.portal.ui.activity.BaseActivity;
 
 public final class Utils //TODO: we should reorganize these methods into more specific util classes
 {
-    public final static float LDPI = 0.75f;
     public final static float MDPI = 1.0f;
     public final static float HDPI = 1.5f;
     public final static float XHDPI = 2.0f;
     public final static float XXHDPI = 3.0f;
-    public final static int RGBA_ALPHA_100_PERCENT = 255;
-    public final static int RGBA_ALPHA_50_PERCENT = 127;
-    public final static int DRAWABLE_TOP_INDEX = 1;
 
     //TODO move somewhere else
     public static boolean areAllPermissionsGranted(@NonNull Context context, @NonNull String[] permissions)
@@ -92,63 +83,6 @@ public final class Utils //TODO: we should reorganize these methods into more sp
     public static void inject(Context context, Object object)
     {
         ((BaseApplication) context.getApplicationContext()).inject(object);
-    }
-
-    public static int toDP(final float px, final Context context)
-    {
-        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP,
-                px, context.getResources().getDisplayMetrics()));
-    }
-
-    static int toDP(final int px, final Context context)
-    {
-        return toDP((float) px, context);
-    }
-
-    public static boolean isInteger(String input)
-    {
-        try
-        {
-            Integer.parseInt(input);
-            return true;
-        }
-        catch (Exception e)
-        {
-            return false;
-        }
-    }
-
-    public static void extendHitArea(final View view, final View parent, final int extra)
-    {
-        parent.post(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                final Rect delegateArea = new Rect();
-                view.getHitRect(delegateArea);
-                delegateArea.right += extra;
-                delegateArea.bottom += extra;
-
-                final TouchDelegate touchDelegate = new TouchDelegate(delegateArea, view);
-                if (View.class.isInstance(view.getParent()))
-                {
-                    ((View) view.getParent()).setTouchDelegate(touchDelegate);
-                }
-            }
-        });
-    }
-
-    public static int interpolateColor(final int color1, final int color2, final float proportion)
-    {
-        final float[] hsva = new float[3];
-        final float[] hsvb = new float[3];
-
-        Color.colorToHSV(color1, hsva);
-        Color.colorToHSV(color2, hsvb);
-
-        for (int i = 0; i < 3; i++) { hsvb[i] = (hsva[i] + ((hsvb[i] - hsva[i]) * proportion)); }
-        return Color.HSVToColor(hsvb);
     }
 
     public static int getAppVersion(Context context)

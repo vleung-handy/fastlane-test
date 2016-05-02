@@ -25,7 +25,7 @@ public class UserInterfaceUpdateManager
     {
         if (mLoadingOverlayVisibility != null)
         {
-            return new HandyEvent.SetLoadingOverlayVisibility(mLoadingOverlayVisibility.booleanValue());
+            return new HandyEvent.SetLoadingOverlayVisibility(mLoadingOverlayVisibility);
         }
         return null;
     }
