@@ -173,7 +173,7 @@ public final class UIUtils
             textView.setGravity(Gravity.CENTER_VERTICAL | Gravity.LEFT);
             textView.setCompoundDrawablesWithIntrinsicBounds(imageRes, 0, 0, 0);
             textView.setCompoundDrawablePadding(padding);
-            textView.setLineSpacing(0, 1.2f);
+            textView.setMaxLines(3);    //otherwise for some devices, it won't fit some of the messages we have.
         }
     }
 

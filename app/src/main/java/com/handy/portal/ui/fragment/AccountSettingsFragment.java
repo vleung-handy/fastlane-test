@@ -197,6 +197,6 @@ public class AccountSettingsFragment extends ActionBarFragment
     private void requestProviderProfile()
     {
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        mBus.post(new ProfileEvent.RequestProviderProfile());
+        mBus.post(new ProfileEvent.RequestProviderProfile(true));
     }
 }

@@ -1,9 +1,15 @@
 package com.handy.portal.ui.fragment.bookings;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SwitchCompat;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -12,11 +18,13 @@ import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.ConfigurationResponse;
+import com.handy.portal.ui.activity.GettingStartedActivity;
 import com.handy.portal.ui.element.AvailableBookingElementView;
 import com.handy.portal.ui.element.BookingElementView;
 import com.handy.portal.ui.element.BookingListView;
@@ -43,11 +51,19 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Bind(R.id.toggle_available_job_notification)
     SwitchCompat mToggleAvailableJobNotification;
 
+    private MenuItem mMenuSchedule;
 
     @Override
     protected MainViewTab getTab()
     {
         return MainViewTab.AVAILABLE_JOBS;
+    }
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -65,6 +81,36 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
             setLateDispatchOptInToggleListener();
         }
+    }
+
+
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
+    {
+        //don't do anything if the fragment isn't visible to the user.
+        if (!isResumed())
+        {
+            return;
+        }
+
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_available_bookings, menu);
+
+        mMenuSchedule = menu.findItem(R.id.action_initial_jobs);
+
+        bus.post(new ProfileEvent.RequestProviderProfile(false));
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item)
+    {
+        if (item.getItemId() == R.id.action_initial_jobs)
+        {
+            startActivity(new Intent(getContext(), GettingStartedActivity.class));
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     protected BookingListView getBookingListView()
@@ -158,6 +204,22 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Subscribe
+    public void onReceiveProviderProfileSuccess(ProfileEvent.ReceiveProviderProfileSuccess event)
+    {
+        //show the menu option if the pro haven't claimed jobs before.
+        if (event.providerProfile != null
+                && event.providerProfile.getPerformanceInfo() != null
+                && event.providerProfile.getPerformanceInfo().getTotalJobsCount() <= 0)
+        {
+            mMenuSchedule.setVisible(true);
+        }
+        else
+        {
+            mMenuSchedule.setVisible(false);
+        }
+    }
+
+    @Subscribe
     public void onBookingsRetrieved(HandyEvent.ReceiveAvailableBookingsSuccess event)
     {
         handleBookingsRetrieved(event);
@@ -196,7 +258,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
             mPrefsManager.setBoolean(PrefsKey.SAME_DAY_LATE_DISPATCH_AVAILABLE_JOB_NOTIFICATION_EXPLAINED, true);
             Snackbar snackbar = Snackbar
                     .make(mBookingsContent, R.string.notify_available_jobs_update_intro_success, Snackbar.LENGTH_LONG);
-
+            snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.snack_bar_gray));
             snackbar.show();
         }
     }
@@ -217,7 +279,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
         Snackbar snackbar = Snackbar
                 .make(mBookingsContent, R.string.notify_available_jobs_update_error, Snackbar.LENGTH_LONG);
-
+        snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.snack_bar_gray));
         snackbar.show();
     }
 

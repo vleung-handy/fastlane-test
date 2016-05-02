@@ -113,7 +113,7 @@ public class OnboardActivity extends AppCompatActivity
         super.onResume();
         mBus.register(this);
         mLoadingOverlay.setVisibility(View.VISIBLE);
-        mBus.post(new ProfileEvent.RequestProviderProfile());
+        mBus.post(new ProfileEvent.RequestProviderProfile(true));
     }
 
     @Override

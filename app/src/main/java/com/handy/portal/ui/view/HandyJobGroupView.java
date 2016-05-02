@@ -11,6 +11,7 @@ import com.handy.portal.R;
 import com.handy.portal.model.onboarding.BookingViewModel;
 import com.handy.portal.model.onboarding.BookingsWrapperViewModel;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.FontUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +55,7 @@ public class HandyJobGroupView extends LinearLayout implements CompoundButton.On
         layoutParams.setMargins(mMargin, 0, mMargin, 0);
         mTitle.setLayoutParams(layoutParams);
         mTitle.setTextAppearance(getContext(), R.style.TextView_Small);
-
-
+        mTitle.setTypeface(FontUtils.getFont(getContext(), FontUtils.CIRCULAR_BOOK));
         addView(mTitle);
 
         setPadding(0, 0, 0, mMargin);

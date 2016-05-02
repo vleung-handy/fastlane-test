@@ -7,7 +7,15 @@ import com.handy.portal.model.ProviderProfile;
 
 public abstract class ProfileEvent extends HandyEvent
 {
-    public static class RequestProviderProfile extends RequestEvent {}
+    public static class RequestProviderProfile extends RequestEvent
+    {
+        public boolean useCache = false;
+
+        public RequestProviderProfile(final boolean useCache)
+        {
+            this.useCache = useCache;
+        }
+    }
 
     public static class ReceiveProviderProfileSuccess extends ReceiveSuccessEvent
     {

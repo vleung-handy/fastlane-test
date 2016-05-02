@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -101,6 +102,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                     mBookingsContent,
                     mMessage, Snackbar.LENGTH_LONG
             );
+
+            snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.snack_bar_gray));
 
             //set the snack bar image
             if (mMessageIconRes > Integer.MIN_VALUE)
