@@ -8,7 +8,6 @@
     <dimen name="default_margin">16dp</dimen>
     <dimen name="default_margin_medium">24dp</dimen>
     <dimen name="extra_margin_xsmall">3dp</dimen>
-    <dimen name="extra_margin_xxsmall">2dp</dimen>
     <dimen name="extra_margin">5dp</dimen>
     <dimen name="extra_margin_medium">10dp</dimen>
     <dimen name="extra_margin_large">15dp</dimen>
@@ -17,8 +16,6 @@
     <dimen name="default_margin_x2">32dp</dimen>
     <dimen name="default_margin_large">32dp</dimen>
     <dimen name="default_margin_xlarge">48dp</dimen>
-    <dimen name="booking_details_contact_action_button_margin">8dp</dimen>
-    <dimen name="booking_details_action_text_margin_top">10dp</dimen>
     <dimen name="payment_detail_date_margin">3dp</dimen>
 
     <!-- padding -->
@@ -28,7 +25,6 @@
     <dimen name="extra_padding_small">3dp</dimen>
     <dimen name="extra_padding">5dp</dimen>
     <dimen name="extra_padding_medium">10dp</dimen>
-    <dimen name="extra_padding_large">15dp</dimen>
     <dimen name="extra_padding_xlarge">20dp</dimen>
     <dimen name="default_padding">16dp</dimen>
     <dimen name="default_padding_medium">24dp</dimen>
@@ -37,9 +33,7 @@
     <dimen name="default_padding_xlarge">48dp</dimen>
     <dimen name="options_wheel_padding">10dp</dimen>
     <dimen name="inner_text_field_padding">12dp</dimen>
-    <dimen name="tab_top_padding">8dp</dimen>
     <dimen name="tab_bottom_padding">8dp</dimen>
-    <dimen name="tab_side_padding">4dp</dimen>
     <dimen name="toolbar_top_padding">24dp</dimen>
     <dimen name="form_field_left_padding">11dp</dimen>
     <dimen name="terms_side_padding">8dp</dimen>
@@ -50,7 +44,6 @@
 
     <!-- text sizes -->
     <dimen name="default_text_size">16sp</dimen>
-    <dimen name="xxsmall_text_size">10sp</dimen>
     <dimen name="xsmall_text_size">12sp</dimen>
     <dimen name="small_text_size">14sp</dimen>
     <dimen name="medium_text_size">16sp</dimen>
@@ -66,7 +59,6 @@
     <dimen name="round_button_radius">5dp</dimen>
     <dimen name="round_button_stroke">1dp</dimen>
     <dimen name="thin_padding">1dp</dimen>
-    <dimen name="supply_list_bullet_width">25dp</dimen>
     <dimen name="x_icon_size">60dp</dimen>
     <dimen name="default_elevation">2dp</dimen>
 
@@ -88,13 +80,9 @@
     <dimen name="notification_section_header_vertical_padding">10dp</dimen>
 
     <!--bookings-->
-    <dimen name="checklist_title_padding_top">2dp</dimen>
     <dimen name="cancellation_policy_active_icon_size">7dp</dimen>
 
     <!--booking details-->
-    <dimen name="booking_details_map_height">280dp</dimen>
-    <dimen name="booking_details_date_margin">2dp</dimen>
-    <dimen name="booking_details_notice_text_margin">15dp</dimen>
     <dimen name="customer_no_show_banner_height">48dp</dimen>
 
     <!--job list-->
@@ -148,13 +136,11 @@
     <dimen name="checkbox_width_height">16dp</dimen>
     <dimen name="customer_note_text_min_height">120dp</dimen>
     <dimen name="sign_helper_text_margin_top">4dp</dimen>
-    <dimen name="available_booking_details_map_height">248dp</dimen>
     <dimen name="on_my_way_booking_details_map_height">200dp</dimen>
     <dimen name="check_in_booking_details_map_height">250dp</dimen>
     <dimen name="customer_action_width_height">32dp</dimen>
     <dimen name="get_directions_width_height">16dp</dimen>
     <dimen name="get_directions_margin_top">4dp</dimen>
-    <dimen name="job_support_button_height">48dp</dimen>
     <dimen name="job_details_chevron_width_height">16dp</dimen>
     <dimen name="checklist_checkbox_width_height">32dp</dimen>
     <dimen name="signature_height">200dp</dimen>
@@ -166,7 +152,6 @@
     <dimen name="customer_name_height">60dp</dimen>
 
     <!-- Badge text size -->
-    <dimen name="badge_text_size">10sp</dimen>
 
     <!-- Notifications -->
     <dimen name="notification_image_margin_left">3dp</dimen>

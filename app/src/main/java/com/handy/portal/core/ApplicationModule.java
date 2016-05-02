@@ -11,9 +11,7 @@ import com.google.gson.GsonBuilder;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.action.CustomDeepLinkAction;
 import com.handy.portal.bookings.BookingManager;
-import com.handy.portal.bookings.ui.element.BookingDetailsJobInstructionsView;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
-import com.handy.portal.bookings.ui.fragment.BookingDetailsFragment;
 import com.handy.portal.bookings.ui.fragment.BookingDetailsWrapperFragment;
 import com.handy.portal.bookings.ui.fragment.BookingFragment;
 import com.handy.portal.bookings.ui.fragment.CancellationRequestFragment;
@@ -122,7 +120,6 @@ import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
 @Module(injects = {
-        BookingDetailsFragment.class,
         BookingDetailsWrapperFragment.class,
         LoginActivityFragment.class,
         LoginActivity.class,
@@ -167,7 +164,6 @@ import retrofit.converter.GsonConverter;
         BookingGeofenceScheduleHandler.class,
         LocationScheduleService.class,
         LocationPingService.class,
-        BookingDetailsJobInstructionsView.class,
         HandyPushReceiver.class,
         AccountSettingsFragment.class,
         RatingsAndFeedbackFragment.class,

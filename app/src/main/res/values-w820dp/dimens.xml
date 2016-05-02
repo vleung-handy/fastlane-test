@@ -5,5 +5,4 @@
     <dimen name="activity_horizontal_margin">64dp</dimen>
 
     <!-- Fixing bottom nav bar on different sizes -->
-    <dimen name="tab_side_padding">8dp</dimen>
 </resources>

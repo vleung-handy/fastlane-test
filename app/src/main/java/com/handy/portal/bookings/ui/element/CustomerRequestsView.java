@@ -2,7 +2,6 @@ package com.handy.portal.bookings.ui.element;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -24,15 +23,6 @@ public class CustomerRequestsView extends FrameLayout
 
     private List<InstructionCheckItemView> mCheckBoxEntries = new LinkedList<>();
 
-    public CustomerRequestsView(
-            final Context context, final String sectionTitle, @Nullable final Integer sectionIconId,
-            @NonNull final List<Booking.BookingInstructionUpdateRequest> entries)
-    {
-        super(context);
-        init();
-        setDisplay(sectionTitle, sectionIconId, entries);
-    }
-
     public CustomerRequestsView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
@@ -45,8 +35,7 @@ public class CustomerRequestsView extends FrameLayout
         init();
     }
 
-    public void setDisplay(String sectionTitle, @Nullable Integer sectionIconId,
-                           @NonNull List<Booking.BookingInstructionUpdateRequest> customerPreferences)
+    public void setDisplay(@NonNull List<Booking.BookingInstructionUpdateRequest> customerPreferences)
     {
         for (Booking.BookingInstructionUpdateRequest instruction : customerPreferences)
         {
