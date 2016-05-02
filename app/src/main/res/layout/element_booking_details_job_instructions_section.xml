@@ -1,42 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/default_margin"
+    android:layout_marginTop="@dimen/default_margin"
+    android:orientation="vertical"
+    >
 
-    <com.handy.portal.bookings.ui.element.BookingDetailsJobInstructionsSectionView
-        android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/booking_details_job_instructions_section_title_text"
+        style="@style/CircularBold"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:background="@color/white">
+        android:text="@string/house_details"
+        android:textColor="@color/black"
+        android:textSize="@dimen/default_text_size"
+        />
 
-        <ImageView
-            android:id="@+id/booking_details_job_instructions_section_title_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginRight="8dp"
-            android:cropToPadding="false"
-            android:src="@drawable/ic_details_extras"/>
-
-        <TextView
-            android:id="@+id/booking_details_job_instructions_section_title_text"
-            style="@style/TextView.Bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_toEndOf="@id/booking_details_job_instructions_section_title_icon"
-            android:layout_toRightOf="@id/booking_details_job_instructions_section_title_icon"
-            android:paddingTop="2dp"
-            android:textColor="@color/bg_inactive_grey"
-            android:textSize="16sp"/>
-
-        <LinearLayout
-            android:id="@+id/booking_details_job_instructions_section_entries_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@id/booking_details_job_instructions_section_title_text"
-            android:layout_alignStart="@id/booking_details_job_instructions_section_title_text"
-            android:layout_below="@id/booking_details_job_instructions_section_title_text"
-            android:layout_marginTop="8dp"
-            android:orientation="vertical">
-        </LinearLayout>
-
-    </com.handy.portal.bookings.ui.element.BookingDetailsJobInstructionsSectionView>
-</merge>
+    <LinearLayout
+        android:id="@+id/booking_details_job_instructions_section_entries_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/row_margin"
+        android:adjustViewBounds="true"
+        android:divider="@drawable/divider_2dp"
+        android:orientation="vertical"
+        android:showDividers="middle"
+        />
+</LinearLayout>

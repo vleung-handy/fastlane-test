@@ -3,10 +3,7 @@ package com.handy.portal.core;
 import android.app.Application;
 
 import com.handy.portal.bookings.BookingManager;
-import com.handy.portal.bookings.ui.element.BookingDetailsJobInstructionsView;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
-import com.handy.portal.bookings.ui.fragment.BookingDetailsFragment;
-import com.handy.portal.bookings.ui.fragment.BookingDetailsFragmentTest;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.data.DataManager;
@@ -66,7 +63,6 @@ import static org.mockito.Mockito.when;
         PleaseUpdateFragment.class,
         AvailableBookingsFragment.class,
         ScheduledBookingsFragment.class,
-        BookingDetailsFragment.class,
         HelpFragment.class,
         HelpContactFragment.class,
         UrbanAirshipManager.class,
@@ -75,10 +71,8 @@ import static org.mockito.Mockito.when;
         TestActivity.class,
         PaymentsBatchListView.class,
         SupportActionView.class,
-        BookingDetailsFragmentTest.class,
         PaymentsFragmentTest.class,
         MainActivityFragmentTest.class,
-        BookingDetailsJobInstructionsView.class,
         LocationSettingsBlockerDialogFragment.class,
         SendReceiptCheckoutFragment.class,
         SendReceiptCheckoutFragmentTest.class,

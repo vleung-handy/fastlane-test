@@ -215,8 +215,7 @@ public class InProgressBookingFragment extends TimerActionBarFragment
                 }
                 if (checklist != null)
                 {
-                    mCustomerRequestsView.setDisplay(preferencesGroup.getLabel(),
-                            GROUP_ICONS.get(preferencesGroup.getGroup()), checklist);
+                    mCustomerRequestsView.setDisplay(checklist);
                 }
             }
         }
@@ -265,7 +264,7 @@ public class InProgressBookingFragment extends TimerActionBarFragment
         bus.post(new HandyEvent.CallCustomerClicked());
 
         String phoneNumber = mBooking.getBookingPhone();
-        if(phoneNumber == null)
+        if (phoneNumber == null)
         {
             Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
             return;
@@ -279,7 +278,7 @@ public class InProgressBookingFragment extends TimerActionBarFragment
         bus.post(new HandyEvent.TextCustomerClicked());
 
         String phoneNumber = mBooking.getBookingPhone();
-        if(phoneNumber == null)
+        if (phoneNumber == null)
         {
             Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
             return;
