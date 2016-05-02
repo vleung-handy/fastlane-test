@@ -1,4 +1,4 @@
-package com.handy.portal.ui.adapter;
+package com.handy.portal.notification.ui.adapter;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
