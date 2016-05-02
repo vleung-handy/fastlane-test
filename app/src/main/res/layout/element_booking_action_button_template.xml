@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/booking_action_button_template"
     >
-     <com.handy.portal.ui.widget.BookingActionButton
+     <com.handy.portal.bookings.ui.element.BookingActionButton
             style="@style/Button.BookingAction"
             android:layout_alignParentBottom="false"
          />

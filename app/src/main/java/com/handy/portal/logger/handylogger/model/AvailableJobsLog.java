@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.model.Booking;
+import com.handy.portal.bookings.model.Booking;
 
 import java.util.Date;
 import java.util.HashMap;

@@ -101,7 +101,7 @@
         android:orientation="vertical"
         >
 
-        <com.handy.portal.ui.element.BookingDetailsPaymentView
+        <com.handy.portal.bookings.ui.element.BookingDetailsPaymentView
             android:id="@+id/booking_details_payment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

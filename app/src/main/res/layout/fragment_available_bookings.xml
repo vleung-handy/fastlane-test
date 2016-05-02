@@ -47,7 +47,7 @@
                 android:layout_height="wrap_content"
                 >
 
-                <com.handy.portal.ui.element.BookingListView
+                <com.handy.portal.bookings.ui.element.BookingListView
                     android:id="@+id/available_jobs_list_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

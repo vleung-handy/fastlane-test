@@ -41,7 +41,7 @@
                     tools:visibility="visible"
                     />
 
-                <com.handy.portal.ui.element.bookings.BookingMapView
+                <com.handy.portal.bookings.ui.element.BookingMapView
                     android:id="@+id/booking_map_view"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/on_my_way_booking_details_map_height"

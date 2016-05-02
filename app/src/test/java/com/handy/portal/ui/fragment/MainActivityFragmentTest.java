@@ -4,11 +4,11 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
 import com.handy.portal.RobolectricGradleTestWrapper;
+import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.core.TestBaseApplication;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.activity.MainActivity;
-import com.handy.portal.ui.fragment.bookings.AvailableBookingsFragment;
 
 import org.junit.Before;
 import org.junit.Ignore;

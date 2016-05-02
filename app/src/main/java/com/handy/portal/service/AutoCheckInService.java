@@ -5,9 +5,9 @@ import android.content.Intent;
 import android.location.Location;
 import android.text.format.DateUtils;
 
+import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.util.Utils;

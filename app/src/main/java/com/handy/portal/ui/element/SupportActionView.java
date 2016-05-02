@@ -9,10 +9,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.util.SupportActionUtils;
 import com.handy.portal.constant.SupportActionType;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.model.Booking;
-import com.handy.portal.util.SupportActionUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
