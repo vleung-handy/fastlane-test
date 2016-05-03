@@ -33,6 +33,7 @@ public final class DateTimeUtils
     public final static SimpleDateFormat MONTH_YEAR_FORMATTER = new SimpleDateFormat("MMM yyyy");
     public final static SimpleDateFormat ISO8601_FORMATTER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
     public final static SimpleDateFormat LOCAL_TIME_12_HOURS = new SimpleDateFormat("hh:mm a");
+    public final static SimpleDateFormat NUMERIC_YEAR_MONTH_DATE_FORMATTER = new SimpleDateFormat("yyyyMMdd");
 
     public final static int HOURS_IN_DAY = 24;
     public final static int HOURS_IN_SIX_DAYS = HOURS_IN_DAY * 6;

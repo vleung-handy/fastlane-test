@@ -12,6 +12,7 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingManager;
+import com.handy.portal.bookings.BookingModalsManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpManager;
@@ -67,6 +68,8 @@ public class BaseApplication extends MultiDexApplication
     GoogleManager googleManager;
     @Inject
     BookingManager bookingManager;
+    @Inject
+    BookingModalsManager bookingModalsManager;
     @Inject
     LoginManager loginManager;
     @Inject

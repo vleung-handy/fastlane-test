@@ -22,6 +22,8 @@ import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingCancelDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.EarlyAccessTrialDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.JobAccessUnlockedDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
@@ -183,6 +185,8 @@ import retrofit.converter.GsonConverter;
         OutstandingFeesFragment.class,
         PaymentFeeBreakdownView.class,
         PaymentBatchListAdapter.class,
+        EarlyAccessTrialDialogFragment.class,
+        JobAccessUnlockedDialogFragment.class
 },
         includes = {
                 HelpModule.class,

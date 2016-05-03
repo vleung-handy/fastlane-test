@@ -448,4 +448,14 @@
     <string name="no_keep_rate">Not enough data</string>
     <string name="withholding_fee_simple_formatted">You will incur a %1$s fee and reduce your keep rate:</string>
 
+    <!-- Job Access -->
+    <string name="job_access_unlocked_banner_title_formatted">%1$d%% goal achieved!</string>
+    <string name="job_access_unlocked_banner_subtitle_formatted">Your current Keep Rate is %1$d%%</string>
+    <string name="job_access_unlocked_popup_action_button">Start Claiming</string>
+
+    <string name="job_access_early_access_banner_title">Early Access Trial</string>
+    <string name="job_access_early_access_banner_subtitle_formatted">Maintain a Keep Rate above %1$d%% to access these jobs.</string>
+    <string name="job_access_early_access_popup_action_button">Start Claiming</string>
+    <string name="job_access_locked_learn_more">Learn more about</string>
+
 </resources>

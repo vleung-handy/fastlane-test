@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/transparent"
+    android:layout_gravity="center"
+    >
+
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_gravity="center"
+        android:background="@color/white"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:layout_margin="@dimen/default_margin"
+        android:padding="@dimen/default_padding_medium"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:padding="@dimen/default_padding"
+            tools:src="@drawable/img_unlocked"
+            android:id="@+id/fragment_dialog_job_access_header_image"
+            />
+
+        <TextView
+            style="@style/TextView.Large.Bold"
+            android:id="@+id/fragment_dialog_job_access_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:gravity="center"
+            tools:text="80% Keep Rate Achieved"
+            />
+
+        <TextView
+            style="@style/TextView.Large"
+            android:id="@+id/fragment_dialog_job_access_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:gravity="center"
+            tools:text="With a 98% Keep Rate, you unlocked access to jobs six days in the future. Well done."
+            />
+
+        <Button
+            android:id="@+id/fragment_dialog_job_access_action_button"
+            style="@style/Button.Green.Round"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:text="Start Claiming"
+            />
+
+    </LinearLayout>
+</RelativeLayout>

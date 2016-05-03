@@ -1,17 +1,12 @@
 package com.handy.portal.ui.fragment.dialog;
 
-import android.app.Dialog;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -23,7 +18,7 @@ import com.handy.portal.event.NavigationEvent;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class PaymentBillBlockerDialogFragment extends InjectedDialogFragment //TODO: consolidate some of this logic with other dialog fragments
+public class PaymentBillBlockerDialogFragment extends PopupDialogFragment //TODO: consolidate some of this logic with other dialog fragments
 {
 
     @Bind(R.id.payments_bill_blocker_content)
@@ -39,28 +34,14 @@ public class PaymentBillBlockerDialogFragment extends InjectedDialogFragment //T
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_dialog_payment_bill_blocker, container, false);
-        ButterKnife.bind(this, view);
-        return view;
-    }
-
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(final Bundle savedInstanceState)
-    {
-        Dialog dialog = new Dialog(getContext());
-        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.getWindow().getAttributes().windowAnimations =
-                R.style.dialog_animation_slide_down_up_from_top;
-        return dialog;
+        return inflater.inflate(R.layout.fragment_dialog_payment_bill_blocker, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-
+        ButterKnife.bind(this, view);
         String coloredText = getString(R.string.payment_bill_blocker_content_colored);
         String content = getString(R.string.payments_bill_blocker_content_formatted, coloredText);
 
