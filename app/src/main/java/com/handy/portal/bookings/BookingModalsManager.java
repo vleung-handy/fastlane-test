@@ -15,7 +15,7 @@ import javax.inject.Inject;
  *
  * i.e. bookings for day unlocked modal
  */
-public class BookingModalsManager //TODO repackage bookings into a feature package and then move this there
+public class BookingModalsManager
 {
     private final Bus mBus;
     private final PrefsManager mPrefsManager;
@@ -42,10 +42,12 @@ public class BookingModalsManager //TODO repackage bookings into a feature packa
             BOOKINGS_FOR_DAY_UNLOCKED_MODAL,
             BOOKINGS_FOR_DAY_UNLOCKED_TRIAL_MODAL
         }
-        //ex. 20160502
+
         private final BookingsForDayModalType mBookingsForDayModalType;
         private final Date mBookingDay;
         private final PrefsManager mPrefsManager;
+        private static final String MODAL_SHOWN_PREFS_KEY_SUFFIX = "_SHOWN";
+
         public BookingsForDayModalsManager(
                 @NonNull BookingsForDayModalType bookingsForDayModalType,
                 @NonNull Date bookingDay,
@@ -64,14 +66,8 @@ public class BookingModalsManager //TODO repackage bookings into a feature packa
 
         private String getModalShownPrefsKey()
         {
-            //todo parameterize the magic string
-            return mBookingsForDayModalType + "_SHOWN_" + getModalPrefsKeyForDate();
-        }
-
-        //todo give more specific name
-        private String getModalPrefsKeyForDate()
-        {
-            return DateTimeUtils.NUMERIC_YEAR_MONTH_DATE_FORMATTER.format(mBookingDay);
+            String datePrefsKey = DateTimeUtils.NUMERIC_YEAR_MONTH_DATE_FORMATTER.format(mBookingDay);
+            return datePrefsKey + "_" + mBookingsForDayModalType + MODAL_SHOWN_PREFS_KEY_SUFFIX;
         }
 
         public boolean bookingsForDayModalPreviouslyShown()
@@ -86,7 +82,6 @@ public class BookingModalsManager //TODO repackage bookings into a feature packa
             mPrefsManager.setBoolean(prefsKey, true);
         }
 
-        //todo give better name
         public void resetModalShownStatus()
         {
             String prefsKey = getModalShownPrefsKey();
