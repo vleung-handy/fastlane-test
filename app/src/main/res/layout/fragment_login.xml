@@ -24,7 +24,7 @@
             android:layout_height="wrap_content"
             android:background="@color/transparent"
             android:padding="5dp"
-            android:src="@drawable/abc_ic_ab_back_mtrl_am_alpha"
+            android:src="@drawable/ic_back"
             />
 
         <LinearLayout

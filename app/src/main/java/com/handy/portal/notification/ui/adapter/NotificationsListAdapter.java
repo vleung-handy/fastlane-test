@@ -55,7 +55,7 @@ public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> 
         LayoutInflater inflater = LayoutInflater.from(getContext());
         if (v == null)
         {
-            v = inflater.inflate(R.layout.element_notification_list_section_header, null);
+            v = inflater.inflate(R.layout.element_notification_list_section_header, parent, false);
         }
 
         String headerText = DateTimeUtils.dayDifferenceInWords(notificationMessage.getCreatedAt());

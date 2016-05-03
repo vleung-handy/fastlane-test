@@ -26,7 +26,6 @@ import java.util.Set;
 import javax.inject.Inject;
 
 /**
- *
  * does whatever needs to be done given a schedule that contains strategies, sorted by start date
  * TODO: try to not have to define the StrategyHandler class type, because that's supposed to be implied from the strategy type
  */
@@ -57,10 +56,13 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
 
     /**
      * the request code for the wake-up alarm
+     *
      * @return
      */
     protected abstract int getWakeupAlarmRequestCode();
+
     protected abstract String getWakeupAlarmBroadcastAction();
+
     protected IntentFilter getAlarmIntentFilter()
     {
         IntentFilter intentFilter = new IntentFilter();
@@ -82,9 +84,11 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
 
     /**
      * need this because to work around being unable to inherit static methods
+     *
      * @return the static Creator object of the ScheduleStrategyType
      */
     protected abstract Parcelable.Creator<ScheduleStrategyType> getStrategyCreator();
+
     /**
      * assume schedule sorted by date asc
      * <p/>
@@ -131,7 +135,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
 
     /**
      * receives wake ups from alarm manager
-     *
+     * <p/>
      * subclasses must make sure that they call super.onReceive()
      *
      * @param context
@@ -154,10 +158,10 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
             return;
         }
 
-        if(intentAction.equals(getWakeupAlarmBroadcastAction()))
+        if (intentAction.equals(getWakeupAlarmBroadcastAction()))
         {
             ScheduleStrategyType scheduleStrategy = ParcelableUtils.unmarshall(extrasBundle, getStrategyBundleExtraKey(), getStrategyCreator());
-            if(scheduleStrategy == null) return;
+            if (scheduleStrategy == null) { return; }
             onStrategyAlarmTriggered(scheduleStrategy);
         }
     }
@@ -171,6 +175,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
     }
 
     public abstract StrategyHandlerType createStrategyHandler(ScheduleStrategyType scheduleStrategyType);
+
     public void stopAllActiveStrategies()
     {
         for (StrategyHandlerType strategyHandlerType : mActiveStrategies)
@@ -179,6 +184,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
         }
         mActiveStrategies.clear();
     }
+
     /**
      * TODO: need to consolidate with below function
      * <p/>
@@ -243,9 +249,10 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
 
     /**
      * Schedules an alarm to wake this broadcast receiver up with the strategy, for the strategy start date
+     *
      * @param strategy
      */
-    private final void scheduleAlarm(@NonNull ScheduleStrategyType strategy)
+    private void scheduleAlarm(@NonNull ScheduleStrategyType strategy)
     {
         /**
          * passing byte array to avoid exception
@@ -278,6 +285,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
     /**
      * the bundle key used to marshall and unmarshall the strategy parcel
      * which is used to pass the strategy to the alarm manager
+     *
      * @return
      */
     protected abstract String getStrategyBundleExtraKey();
@@ -285,6 +293,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
     /**
      * called when the wake-up alarm for the given strategy is triggered
      * will start the strategy and then scan the schedule
+     *
      * @param scheduleStrategyType
      */
     public final void onStrategyAlarmTriggered(ScheduleStrategyType scheduleStrategyType)
@@ -305,10 +314,9 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
     }
 
     /**
-     *
      * TODO override if you want it to do something
      * called by location service when network reconnected event is broadcast
-     *
+     * <p/>
      * don't want to subscribe to event here, because this object does not have a strict lifecycle
      * unlike the location service, so it is harder to guarantee that the bus will be unregistered
      * when we no longer care about this object (ex. what if this object loses its reference?)
@@ -320,6 +328,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
 
     /**
      * remove the expired strategy from the active strategies list and post all pending updates for it
+     *
      * @param strategyHandler
      */
     public void onStrategyExpired(StrategyHandlerType strategyHandler)

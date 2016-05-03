@@ -7,7 +7,7 @@ import android.os.AsyncTask;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.handy.portal.constant.ServerParams;
 import com.handy.portal.ui.activity.MainActivity;
@@ -44,12 +44,14 @@ public class GoogleManager
 
     public boolean checkPlayServices(Activity targetActivity)
     {
-        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(targetActivity);
+        GoogleApiAvailability googleApiAvailability = GoogleApiAvailability.getInstance();
+        int resultCode = googleApiAvailability.isGooglePlayServicesAvailable(targetActivity);
         if (resultCode != ConnectionResult.SUCCESS)
         {
-            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode))
+            if (googleApiAvailability.isUserResolvableError(resultCode))
             {
-                GooglePlayServicesUtil.getErrorDialog(resultCode, targetActivity, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+                googleApiAvailability.getErrorDialog(targetActivity,
+                        resultCode, PLAY_SERVICES_RESOLUTION_REQUEST).show();
             }
             else
             {
@@ -116,7 +118,7 @@ public class GoogleManager
                     SharedPreferences pref = context.getSharedPreferences("HandybookProviderApp", 0);
                     SharedPreferences.Editor editor = pref.edit();
                     editor.putString("deviceId", regId);
-                    editor.commit();
+                    editor.apply();
                 }
                 catch (Exception ex)
                 {

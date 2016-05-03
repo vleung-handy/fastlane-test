@@ -26,7 +26,6 @@ import butterknife.OnClick;
 public abstract class SlideUpDialogFragment extends DialogFragment
 {
     /**
-     *
      * @param inflater
      * @param container
      * @return the view that will be stuffed inside confirm_booking_action_content of this fragment's view
@@ -47,17 +46,13 @@ public abstract class SlideUpDialogFragment extends DialogFragment
          * (the layout overflows at the bottom and then it gets redrawn so that it's not)
          * seen when cancellation policy is shown in confirm claim
          * */
-        dialog.setCanceledOnTouchOutside(cancelDialogOnTouchOutside());
+        dialog.setCanceledOnTouchOutside(true);
         return dialog;
-    }
-
-    protected boolean cancelDialogOnTouchOutside()
-    {
-        return true;
     }
 
     /**
      * creates the view with the subclass's specific content layout
+     *
      * @param inflater
      * @param container
      * @param savedInstanceState

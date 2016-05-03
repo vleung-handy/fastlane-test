@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/handy_bg"
     android:gravity="center"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    >
 
     <include layout="@layout/layout_fetch_error"/>
 
@@ -14,6 +15,7 @@
         android:id="@+id/progress_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:indeterminate="true"/>
+        android:indeterminate="true"
+        />
 
 </LinearLayout>

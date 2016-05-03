@@ -90,6 +90,7 @@ public class MainActivityFragment extends InjectedFragment
     @Bind(R.id.build_version_text)
     TextView mBuildVersionText;
 
+    private ActionBarDrawerToggle mActionBarDrawerToggle;
     private MainViewTab currentTab = null;
 
     //Are we currently clearing out the backstack?
@@ -108,6 +109,26 @@ public class MainActivityFragment extends InjectedFragment
     {
         super.onCreate(savedInstanceState);
         setDeeplinkData(savedInstanceState);
+
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), mDrawerLayout,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        {
+            @Override
+            public void onDrawerOpened(final View drawerView)
+            {
+                super.onDrawerOpened(drawerView);
+                bus.post(new LogEvent.AddLogEvent(new SideMenuLog.Opened()));
+                setDrawerActive(true);
+            }
+
+            @Override
+            public void onDrawerClosed(final View drawerView)
+            {
+                super.onDrawerClosed(drawerView);
+                bus.post(new LogEvent.AddLogEvent(new SideMenuLog.Closed()));
+                setDrawerActive(false);
+            }
+        };
     }
 
     @Override
@@ -130,33 +151,10 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
-        mDrawerLayout.setDrawerListener(new ActionBarDrawerToggle(getActivity(), mDrawerLayout,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        {
-            @Override
-            public void onDrawerOpened(final View drawerView)
-            {
-                super.onDrawerOpened(drawerView);
-                bus.post(new LogEvent.AddLogEvent(new SideMenuLog.Opened()));
-                setDrawerActive(true);
-            }
-
-            @Override
-            public void onDrawerClosed(final View drawerView)
-            {
-                super.onDrawerClosed(drawerView);
-                bus.post(new LogEvent.AddLogEvent(new SideMenuLog.Closed()));
-                setDrawerActive(false);
-            }
-        });
-    }
-
-    @Override
     public void onResume()
     {
         super.onResume();
+
         bus.post(new NotificationEvent.RequestUnreadCount());
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
         if (currentTab == null)
@@ -164,6 +162,7 @@ public class MainActivityFragment extends InjectedFragment
             switchToTab(MainViewTab.AVAILABLE_JOBS, false);
         }
         handleDeeplink();
+        mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
     }
 
     @Subscribe
@@ -250,6 +249,7 @@ public class MainActivityFragment extends InjectedFragment
         super.onPause();
         mConfigAlreadyReceivedThisSession = false;
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(false));
+        mDrawerLayout.removeDrawerListener(mActionBarDrawerToggle);
     }
 
 //Event Listeners
