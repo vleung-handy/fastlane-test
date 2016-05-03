@@ -19,8 +19,6 @@ public class TabNavigationManager
     private final WebUrlManager mWebUrlManager;
     private final ConfigManager mConfigManager;
 
-    private boolean mHaveShownNonBlockingOnboarding = false; //Now storing this for session client side so non-blocking will not be shown multiple times
-
     @Inject
     public TabNavigationManager(final Bus bus,
                                 final ProviderManager providerManager,
@@ -47,20 +45,8 @@ public class TabNavigationManager
         NavigationEvent.SwapFragmentEvent swapFragmentEvent = new NavigationEvent.SwapFragmentEvent(
                 event.targetTab, event.arguments, event.transitionStyle, event.addToBackStack);
 
-        //TODO: think of a better way to handle these instead of hacking them
-        //HACK : Magical hack to direct new pros to a webview for their onboarding
-        if (doesCachedProviderNeedOnboarding() &&
-                (isOnboardingBlocking() || !mHaveShownNonBlockingOnboarding))
-        {
-            if (!isOnboardingBlocking())
-            {
-                mHaveShownNonBlockingOnboarding = true;
-            }
-            swapFragmentEvent.targetTab = MainViewTab.ONBOARDING_WEBVIEW;
-        }
-
         //HACK : Magical hack to show a blocking fragment if the pro's payment info is out of date
-        else if (doesCachedProviderNeedPaymentInformation() &&
+        if (doesCachedProviderNeedPaymentInformation() &&
                 configBlockingForPayment() &&
                 (event.targetTab == MainViewTab.AVAILABLE_JOBS ||
                         event.targetTab == MainViewTab.SCHEDULED_JOBS ||
@@ -87,19 +73,6 @@ public class TabNavigationManager
     private boolean isCachedProviderBlockPro()
     {
         return mProviderManager.getCachedActiveProvider() != null && mProviderManager.getCachedActiveProvider().isBlockCleaner();
-    }
-
-    private boolean doesCachedProviderNeedOnboarding()
-    {
-        return (mConfigManager.getConfigurationResponse() != null &&
-                mConfigManager.getConfigurationResponse().shouldShowOnboarding());
-    }
-
-    private boolean isOnboardingBlocking()
-    {
-        return (mConfigManager.getConfigurationResponse() != null &&
-                mConfigManager.getConfigurationResponse().getOnboardingParams() != null &&
-                mConfigManager.getConfigurationResponse().getOnboardingParams().isOnboardingBlocking());
     }
 
     private boolean doesCachedProviderNeedPaymentInformation()
