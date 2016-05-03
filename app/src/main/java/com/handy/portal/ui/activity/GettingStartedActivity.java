@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -25,6 +24,9 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
+import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingClaimDetails;
 import com.handy.portal.model.BookingsListWrapper;
@@ -32,7 +34,6 @@ import com.handy.portal.model.onboarding.BookingViewModel;
 import com.handy.portal.model.onboarding.BookingsWrapperViewModel;
 import com.handy.portal.model.onboarding.JobClaim;
 import com.handy.portal.model.onboarding.JobClaimRequest;
-import com.handy.portal.model.onboarding.JobClaimResponse;
 import com.handy.portal.ui.adapter.JobsRecyclerAdapter;
 import com.handy.portal.ui.fragment.OnboardLoadingDialog;
 import com.handy.portal.ui.view.HandyJobGroupView;
@@ -56,6 +57,11 @@ public class GettingStartedActivity extends AppCompatActivity
 {
 
     private static final String TAG = GettingStartedActivity.class.getName();
+
+    /**
+     * This is used for logging analytics
+     */
+    private static final String SOURCE = "onboarding";
 
     @Bind(R.id.recycler_view)
     RecyclerView mRecyclerView;
@@ -83,6 +89,11 @@ public class GettingStartedActivity extends AppCompatActivity
     private long mRequestTime;
     private int mWaitTime;
     private boolean mDestroyed;
+
+    /**
+     * mainly used for logging error of the booking ids that weren't claimed properly
+     */
+    private ArrayList<String> mBookingIdsToClaim;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -186,6 +197,7 @@ public class GettingStartedActivity extends AppCompatActivity
         switch (item.getItemId())
         {
             case android.R.id.home:
+                mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.Skipped()));
                 goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
                 return true;
             default:
@@ -196,6 +208,7 @@ public class GettingStartedActivity extends AppCompatActivity
     @Override
     public void onBackPressed()
     {
+        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.Skipped()));
         goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
     }
 
@@ -212,6 +225,7 @@ public class GettingStartedActivity extends AppCompatActivity
         mJobs2 = event.bookings;
         if (!hasJobs(mJobs2))
         {
+            mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NoJobsLoaded()));
             goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
         }
         else
@@ -343,7 +357,8 @@ public class GettingStartedActivity extends AppCompatActivity
     @OnClick(R.id.btn_next)
     public void buttonClicked()
     {
-        JobClaimRequest request = new JobClaimRequest();
+        JobClaimRequest jobClaimRequest = new JobClaimRequest();
+        mBookingIdsToClaim = new ArrayList<>();
         for (BookingsWrapperViewModel model : mAdapter.getBookingsWrapperViewModels())
         {
             //model could be null, if it's just a header
@@ -353,23 +368,26 @@ public class GettingStartedActivity extends AppCompatActivity
                 {
                     if (bookingView.selected)
                     {
-                        request.mJobs.add(new JobClaim(
+                        jobClaimRequest.mJobs.add(new JobClaim(
                                 bookingView.booking.getId(),
                                 bookingView.booking.getType().name().toLowerCase())
                         );
+                        mBookingIdsToClaim.add(bookingView.booking.getId());
                     }
                 }
             }
         }
 
-        if (!request.mJobs.isEmpty())
+        if (!jobClaimRequest.mJobs.isEmpty())
         {
             mLoadingOverlayView.setVisibility(View.VISIBLE);
-            mBus.post(new HandyEvent.RequestClaimJobs(request));
+            mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSubmitted(mBookingIdsToClaim)));
+            mBus.post(new HandyEvent.RequestClaimJobs(jobClaimRequest));
         }
         else
         {
             //no jobs were selected, send the user to claim job screen.
+            mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.Skipped()));
             goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
         }
     }
@@ -417,11 +435,43 @@ public class GettingStartedActivity extends AppCompatActivity
         mLoadingOverlayView.setVisibility(View.GONE);
         mFetchErrorView.setVisibility(View.GONE);
 
-        List<Booking> bookings = jobsClaimedByMe(event.mJobClaimResponse);
+        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSuccess(mBookingIdsToClaim)));
 
         String message = event.mJobClaimResponse.getMessage();
+        if (event.mJobClaimResponse == null || event.mJobClaimResponse.getJobs() == null)
+        {
+            //this should never happen, but just in case.
+            goToAvailableJobs(getBundle(message, R.drawable.snack_bar_error));
+        }
+
+        List<Booking> bookings = new ArrayList<>();
+        for (BookingClaimDetails bcd : event.mJobClaimResponse.getJobs())
+        {
+            if (bcd.getBooking().isClaimedByMe())
+            {
+                bookings.add(bcd.getBooking());
+                mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimSuccess(
+                        bcd.getBooking(),
+                        SOURCE,
+                        null,
+                        0.0f
+                )));
+            }
+            else
+            {
+                mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimError(
+                        bcd.getBooking(),
+                        SOURCE,
+                        null,
+                        0.0f,
+                        message
+                )));
+            }
+        }
+
         if (bookings.isEmpty())
         {
+            //nothing was claimed.
             goToAvailableJobs(getBundle(message, R.drawable.snack_bar_error));
         }
         else
@@ -439,24 +489,11 @@ public class GettingStartedActivity extends AppCompatActivity
         }
     }
 
-    @NonNull
-    private List<Booking> jobsClaimedByMe(JobClaimResponse jobsClaimed)
-    {
-        List<Booking> rval = new ArrayList<>();
-        for (BookingClaimDetails bcd : jobsClaimed.getJobs())
-        {
-            if (bcd.getBooking().isClaimedByMe())
-            {
-                rval.add(bcd.getBooking());
-            }
-        }
-
-        return rval;
-    }
-
     @Subscribe
     public void onReceiveClaimJobsError(HandyEvent.ReceiveClaimJobsError error)
     {
+        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchError(mBookingIdsToClaim, error.error.getMessage())));
+
         mLoadingOverlayView.setVisibility(View.GONE);
         mFetchErrorView.setVisibility(View.VISIBLE);
         String msg = "";

@@ -556,9 +556,6 @@ public abstract class HandyEvent
         }
     }
 
-
-    //    TODO: JIA: Verify this tracking
-    @Track("claim jobs")
     public static class ReceiveClaimJobsSuccess extends ReceiveSuccessEvent
     {
         public JobClaimResponse mJobClaimResponse;
