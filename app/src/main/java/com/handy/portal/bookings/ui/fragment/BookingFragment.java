@@ -29,6 +29,7 @@ import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.constant.BookingActionButtonType;
 import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.ui.element.BookingDetailsDisplayMessageView;
 import com.handy.portal.bookings.ui.element.BookingDetailsJobInstructionsSectionView;
 import com.handy.portal.bookings.ui.element.BookingMapView;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
@@ -78,6 +79,8 @@ public class BookingFragment extends TimerActionBarFragment
     @Inject
     PrefsManager mPrefsManager;
 
+    @Bind(R.id.booking_details_display_message_layout)
+    BookingDetailsDisplayMessageView mBookingDetailsDisplayMessageView;
     @Bind(R.id.booking_scroll_view)
     ScrollView mScrollView;
     @Bind(R.id.booking_no_show_banner_text)
@@ -188,6 +191,25 @@ public class BookingFragment extends TimerActionBarFragment
         mBookingMapView.disableParentScrolling(mScrollView);
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
+
+        updateDisplayWithBookingDisplayAttributes();
+    }
+
+    /**
+     * shows the booking details message view
+     * with the message in the booking's display model
+     * if the message is present
+     */
+    private void updateDisplayWithBookingDisplayAttributes()
+    {
+        Booking.DisplayAttributes displayAttributes = mBooking.getDisplayAttributes();
+        if (displayAttributes != null
+                && (displayAttributes.getDetailsBody() != null
+                        || displayAttributes.getDetailsTitle() != null))
+        {
+            mBookingDetailsDisplayMessageView.setVisibility(View.VISIBLE); //GONE by default
+            mBookingDetailsDisplayMessageView.setDisplayModel(displayAttributes);
+        }
     }
 
     @Override

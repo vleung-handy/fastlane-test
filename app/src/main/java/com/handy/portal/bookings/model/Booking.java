@@ -105,8 +105,23 @@ public class Booking implements Comparable<Booking>, Serializable
 
     @SerializedName("region_id")
     private int mRegionId;
+    @SerializedName("display_attributes")
+    private DisplayAttributes mDisplayAttributes;
 
     private List<BookingInstructionUpdateRequest> mCustomerPreferences;
+
+    public DisplayAttributes getDisplayAttributes()
+    {
+//        return mDisplayAttributes;
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(mStartDate);
+        if(calendar.get(Calendar.HOUR_OF_DAY) < 11)
+        {
+            return new DisplayAttributes(); //TODO revert, test only!
+        }
+        return null;
+    }
 
     public int compareTo(@NonNull Booking other)
     {
@@ -212,7 +227,15 @@ public class Booking implements Comparable<Booking>, Serializable
 
     public boolean isRequested()
     {
-        return mIsRequested;
+//        return mIsRequested;
+        //TODO revert, test only!
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(mStartDate);
+        if(calendar.get(Calendar.HOUR_OF_DAY) < 11)
+        {
+            return true;
+        }
+        return false;
     }
 
     public String getId()
@@ -412,6 +435,59 @@ public class Booking implements Comparable<Booking>, Serializable
         UNAVAILABLE,
     }
 
+    public static class DisplayAttributes
+    {
+        @SerializedName("pin_to_top")
+        private Boolean mPinToTop;
+        @SerializedName("listing_title")
+        private String mListingTitle;
+        @SerializedName("details_title")
+        private String mDetailsTitle;
+        @SerializedName("details_body")
+        private String mDetailsBody;
+
+//        public Boolean getPinToTop()
+//        {
+//            return mPinToTop;
+//        }
+//
+//        public String getListingTitle()
+//        {
+//            return mListingTitle;
+//        }
+//
+//        public String getDetailsTitle()
+//        {
+//            return mDetailsTitle;
+//        }
+//
+//        public String getDetailsBody()
+//        {
+//            return mDetailsBody;
+//        }
+
+        //todo test only. need to mock server payload for now
+
+        public Boolean getPinToTop()
+        {
+            return true;
+        }
+
+        public String getListingTitle()
+        {
+            return "listing title";
+        }
+
+        public String getDetailsTitle()
+        {
+            return "details title";
+        }
+
+        public String getDetailsBody()
+        {
+            return "details body";
+        }
+    }
     public enum ArrivalTimeOption //TODO: better system to enforce values in sync with server?
     {
         /* KEEP IN SYNC WITH SERVER VALUES */

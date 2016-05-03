@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -32,8 +32,8 @@ public class AvailableBookingElementView extends BookingElementView
     @Bind(R.id.booking_entry_partner_text)
     TextView mPartnerText;
 
-    @Bind(R.id.booking_entry_requested_indicator_layout)
-    LinearLayout mRequestedIndicatorLayout;
+    @Bind(R.id.booking_entry_listing_message_title_view)
+    BookingMessageTitleView mBookingMessageTitleView;
 
     @Bind(R.id.booking_entry_start_date_text)
     TextView mStartTimeText;
@@ -44,10 +44,11 @@ public class AvailableBookingElementView extends BookingElementView
     @Bind(R.id.booking_entry_distance_text)
     TextView mFormattedDistanceText;
 
+    @Bind(R.id.booking_list_entry_left_strip_indicator)
+    ImageView mLeftStripIndicator;
+
     public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent)
     {
-        boolean isRequested = booking.isRequested();
-
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null)
         {
@@ -86,7 +87,29 @@ public class AvailableBookingElementView extends BookingElementView
         }
 
         //Requested Provider
-        mRequestedIndicatorLayout.setVisibility(isRequested ? View.VISIBLE : View.GONE);
+//        mTitleLayout.setVisibility(isRequested ? View.VISIBLE : View.GONE);
+        //todo do we need backwards compatibility for the "is_requested" booking attr?
+
+        //Honor display attributes
+        boolean isRequested = booking.isRequested();
+
+        Booking.DisplayAttributes displayAttributes = booking.getDisplayAttributes();
+        if(displayAttributes != null)
+        {
+            if(displayAttributes.getListingTitle() != null)
+            {
+                mBookingMessageTitleView
+                        .setBodyText(displayAttributes.getListingTitle())
+                        .setVisibility(View.VISIBLE); //the layout is GONE by default
+            }
+        }
+
+        //apply styles specific to pro requested status
+        if(isRequested)
+        {
+            //show the green strip indicator on the left of this entry
+            mLeftStripIndicator.setVisibility(View.VISIBLE);
+        }
 
         //Partner
         setPartnerText(booking.getPartner());
@@ -110,7 +133,7 @@ public class AvailableBookingElementView extends BookingElementView
             mPartnerText.setVisibility(View.VISIBLE);
 
             // if the partner text is present, "you're requested" should not show up
-            mRequestedIndicatorLayout.setVisibility(View.GONE);
+            mBookingMessageTitleView.setVisibility(View.GONE);
         }
         else
         {

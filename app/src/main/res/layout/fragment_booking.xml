@@ -23,7 +23,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:orientation="vertical"
                 >
 
@@ -47,8 +46,18 @@
                     android:layout_height="@dimen/on_my_way_booking_details_map_height"
                     />
 
+                <com.handy.portal.bookings.ui.element.BookingDetailsDisplayMessageView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:id="@+id/booking_details_display_message_layout"
+                    android:layout_marginBottom="@dimen/default_margin"
+                    android:visibility="gone"
+                    />
+
                 <RelativeLayout
                     android:id="@+id/booking_customer_contact_layout"
+                    android:background="@color/white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/default_padding"
@@ -104,6 +113,7 @@
                     android:divider="?android:attr/dividerHorizontal"
                     android:dividerPadding="@dimen/default_padding"
                     android:orientation="vertical"
+                    android:background="@color/white"
                     android:showDividers="middle"
                     >
 
