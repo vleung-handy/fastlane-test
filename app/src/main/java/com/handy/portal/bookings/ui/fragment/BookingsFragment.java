@@ -259,7 +259,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
         if (mSelectedDay != null && mSelectedDay.equals(event.day))
         {
-//            updateBookingsForDateDisplay(bookingsWrapper, mSelectedDay);
             displayBookings(bookingsWrapper, mSelectedDay);
         }
     }

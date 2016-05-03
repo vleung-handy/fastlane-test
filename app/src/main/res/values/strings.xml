@@ -456,6 +456,6 @@
     <string name="job_access_early_access_banner_title">Early Access Trial</string>
     <string name="job_access_early_access_banner_subtitle_formatted">Maintain a Keep Rate above %1$d%% to access these jobs.</string>
     <string name="job_access_early_access_popup_action_button">Start Claiming</string>
-    <string name="job_access_locked_learn_more">Learn more about</string>
+    <string name="job_access_locked_learn_more">Learn more about\u0020</string>
 
 </resources>

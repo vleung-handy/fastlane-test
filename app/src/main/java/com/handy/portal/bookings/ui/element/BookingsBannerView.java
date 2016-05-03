@@ -26,8 +26,8 @@ public class BookingsBannerView extends LinearLayout
     @Bind(R.id.layout_bookings_banner_description)
     TextView mBannerDescriptionText;
 
-    @Bind(R.id.layout_bookings_banner_left_image) //todo rename
-    ImageView mBannerImageView;
+    @Bind(R.id.layout_bookings_banner_left_image)
+    ImageView mBannerLeftImage;
 
     @Bind(R.id.layout_bookings_banner_content)
     View mBannerContent;
@@ -77,7 +77,7 @@ public class BookingsBannerView extends LinearLayout
 
     public BookingsBannerView setLeftDrawable(Drawable drawable)
     {
-        mBannerImageView.setImageDrawable(drawable);
+        mBannerLeftImage.setImageDrawable(drawable);
         return this;
     }
 

@@ -106,7 +106,7 @@ public class BookingManager
                 final BookingsWrapper cachedBookings = availableBookingsCache.getIfPresent(day);
                 if (cachedBookings != null)
                 {
-                    mBus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(cachedBookings, day)); //TODO
+                    mBus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(cachedBookings, day));
                 }
                 else
                 {

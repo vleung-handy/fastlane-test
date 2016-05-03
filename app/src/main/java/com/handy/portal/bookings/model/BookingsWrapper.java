@@ -18,7 +18,7 @@ public class BookingsWrapper
     @SerializedName("jobs")
     private List<Booking> bookings;
 
-    public static class PriorityAccessInfo implements Serializable //todo rename
+    public static class PriorityAccessInfo implements Serializable
     {
         @SerializedName("minimum_keep_rate")
         private Integer mMinimumKeepRate; //percentage out of 100. range is 0-100 inclusive

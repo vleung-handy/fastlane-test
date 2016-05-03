@@ -38,7 +38,12 @@
 
             <include layout="@layout/element_same_day_notification_toggle"/>
 
-            <include tools:visibility="gone" android:id="@+id/layout_job_access_locked" layout="@layout/layout_job_access_locked"/>
+            <com.handy.portal.bookings.ui.element.BookingsAccessLockedView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/layout_job_access_locked"
+                android:visibility="gone"
+                />
 
             <RelativeLayout
                 android:layout_width="match_parent"

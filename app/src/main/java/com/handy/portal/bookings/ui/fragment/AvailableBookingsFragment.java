@@ -10,7 +10,6 @@ import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
@@ -20,6 +19,7 @@ import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
+import com.handy.portal.bookings.ui.element.BookingsAccessLockedView;
 import com.handy.portal.bookings.ui.element.BookingsBannerView;
 import com.handy.portal.bookings.ui.fragment.dialog.EarlyAccessTrialDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.JobAccessUnlockedDialogFragment;
@@ -45,7 +45,6 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.Bind;
-import butterknife.OnClick;
 
 import static com.handy.portal.bookings.BookingModalsManager.BookingsForDayModalsManager.BookingsForDayModalType.BOOKINGS_FOR_DAY_UNLOCKED_MODAL;
 import static com.handy.portal.bookings.BookingModalsManager.BookingsForDayModalsManager.BookingsForDayModalType.BOOKINGS_FOR_DAY_UNLOCKED_TRIAL_MODAL;
@@ -62,7 +61,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Bind(R.id.available_bookings_empty)
     SwipeRefreshLayout mNoAvailableBookingsLayout;
     @Bind(R.id.layout_job_access_locked)
-    LinearLayout mJobAccessLockedLayout;
+    BookingsAccessLockedView mJobAccessLockedLayout;
 
     BookingsBannerView mJobAccessUnlockedBannerLayout;
     @Bind(R.id.toggle_available_job_notification)
@@ -95,6 +94,14 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 .setContentVisible(false);
         getBookingListView().addHeaderView(mJobAccessUnlockedBannerLayout);
         //hacky: need to add the banner as booking list header view so it will scroll with the bookings list
+
+        mJobAccessLockedLayout.setKeepRateInfoButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v)
+            {
+                goToHelpCenter(HelpCenterUrl.KEEP_RATE_INFO_REDIRECT_URL);
+            }
+        });
     }
 
     @Override
@@ -154,12 +161,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         //Bookings are sorted such that the requested bookings show up first so we just need to check the first one
         return bookingsForDay.size() > 0 && bookingsForDay.get(0).isRequested();
-    }
-
-    @OnClick(R.id.layout_job_access_locked_keep_rate_info_button)
-    public void onKeepRateInfoButtonClicked()
-    {
-        goToHelpCenter(HelpCenterUrl.KEEP_RATE_INFO_REDIRECT_URL);
     }
 
     private void goToHelpCenter(final String helpCenterRedirectPath)
@@ -233,27 +234,33 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         }
     }
 
+    /**
+     * TODO needs better naming
+     * populates the booking content view. may show a locked screen, banners and/or the booking list
+     * @param bookingsWrapper
+     * @param dateOfBookings
+     */
     @Override
     protected void displayBookings(@NonNull final BookingsWrapper bookingsWrapper, @NonNull final Date dateOfBookings)
     {
-        boolean shouldDisplayBookings = updateBookingsForDateDisplay(bookingsWrapper, dateOfBookings);
-        if(shouldDisplayBookings)//todo for quick test only, dont actually do this
+        boolean shouldDisplayBookingsList = showBookingsForDayModalsAndBannersIfNecessary(bookingsWrapper, dateOfBookings);
+        if(shouldDisplayBookingsList)
         {
             super.displayBookings(bookingsWrapper, dateOfBookings);
         }
     }
 
     /**
-     * TODO clean this up
      * shows any popups based on the given bookings/date selected
      *
      * shows any banners based on the given bookings/date selected
      *
-     * updates the bookings view with the given bookings
      * @param bookingsWrapper
      * @param dateOfBookings
+     * @return true if the bookings list should still be shown. false otherwise
+     * TODO how to make this clearer?
      */
-    private boolean updateBookingsForDateDisplay(BookingsWrapper bookingsWrapper, Date dateOfBookings) //todo rename
+    private boolean showBookingsForDayModalsAndBannersIfNecessary(@NonNull BookingsWrapper bookingsWrapper, @NonNull Date dateOfBookings) //todo rename
     {
         mJobAccessUnlockedBannerLayout.setContentVisible(false);
         mJobAccessLockedLayout.setVisibility(View.GONE);
@@ -331,16 +338,12 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     private void showBookingsLayoutForLockedPriorityAccess(@NonNull BookingsWrapper.PriorityAccessInfo priorityAccessInfo)
     {
-        //TODO put in custom view later
-        TextView jobAccessLockedTitle = (TextView) mJobAccessLockedLayout.findViewById(R.id.layout_job_access_locked_title);
-        TextView jobAccessLockedDescription = (TextView) mJobAccessLockedLayout.findViewById(R.id.layout_job_access_locked_description);
-
-        jobAccessLockedDescription.setText(priorityAccessInfo.getMessageDescription());
-        jobAccessLockedTitle.setText(priorityAccessInfo.getMessageTitle());
+        mJobAccessLockedLayout
+                .setTitleText(priorityAccessInfo.getMessageTitle())
+                .setDescriptionText(priorityAccessInfo.getMessageDescription());
 
         getNoBookingsSwipeRefreshLayout().setVisibility(View.GONE);
         mJobAccessLockedLayout.setVisibility(View.VISIBLE);
-        //don't display bookings
     }
 
     @Subscribe
@@ -452,13 +455,12 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
             Crashlytics.logException(new Exception("received available bookings event with null bookings wrapper or day"));
             return;
         }
-        //todo add safety checks
-        resetBookingsForDayModalShownIfNecessary(event.bookingsWrapper, event.day);
+
+        resetBookingsForDayUnlockedModalShownIfNecessary(event.bookingsWrapper, event.day);
         setDateButtonPropertiesForDay(event.bookingsWrapper.getPriorityAccessInfo(), event.day);
     }
 
-    //todo def rename this
-    private void resetBookingsForDayModalShownIfNecessary(@NonNull BookingsWrapper bookingsWrapper, @NonNull Date date)
+    private void resetBookingsForDayUnlockedModalShownIfNecessary(@NonNull BookingsWrapper bookingsWrapper, @NonNull Date date)
     {
         BookingsWrapper.PriorityAccessInfo priorityAccessInfo = bookingsWrapper.getPriorityAccessInfo();
         if(priorityAccessInfo == null || priorityAccessInfo.getBookingsForDayStatus() == null) return;
@@ -475,8 +477,8 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     /**
-     * TODO clean this up. test only
-     * sets the enabled state for the date button for a given day, based on a priority access object
+     * modifies the style of the date button for the given day if needed
+     *
      * @param priorityAccessInfo
      * @param day
      */
@@ -492,12 +494,9 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
             switch(priorityAccessBookingsForDayPriorityAccessStatus)
             {
                 case LOCKED:
-                    dateButtonView.getBackground().setAlpha(128);
-//                    dateButtonView.setBackgroundColor(getResources().getColor(R.color.handy_blue_pressed));//todo set the actual style
+                    dateButtonView.setAlpha(0.5f);
                     break;
-                case NEW_PRO:
-
-                    break;
+                //more cases to handle?
 
             }
 
