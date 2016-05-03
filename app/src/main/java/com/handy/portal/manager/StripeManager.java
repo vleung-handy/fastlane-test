@@ -7,9 +7,9 @@ import com.handy.portal.constant.Country;
 import com.handy.portal.core.PropertiesReader;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.StripeEvent;
-import com.handy.portal.model.payments.BankAccountInfo;
-import com.handy.portal.model.payments.DebitCardInfo;
-import com.handy.portal.model.payments.StripeTokenResponse;
+import com.handy.portal.payments.model.BankAccountInfo;
+import com.handy.portal.payments.model.DebitCardInfo;
+import com.handy.portal.payments.model.StripeTokenResponse;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

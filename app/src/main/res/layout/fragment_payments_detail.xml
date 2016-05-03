@@ -13,7 +13,7 @@
 
         <include layout="@layout/element_payment_details_list_header"/>
 
-        <com.handy.portal.ui.element.payments.PaymentDetailExpandableListView
+        <com.handy.portal.payments.ui.element.PaymentDetailExpandableListView
             android:id="@+id/payments_detail_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -25,6 +25,6 @@
             android:paddingTop="1dp"
             android:transcriptMode="disabled">
 
-        </com.handy.portal.ui.element.payments.PaymentDetailExpandableListView>
+        </com.handy.portal.payments.ui.element.PaymentDetailExpandableListView>
     </LinearLayout>
 </ScrollView>

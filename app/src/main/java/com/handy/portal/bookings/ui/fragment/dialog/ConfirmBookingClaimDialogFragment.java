@@ -17,7 +17,7 @@ import com.handy.portal.bookings.ui.element.BookingCancellationPolicyListItemVie
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
-import com.handy.portal.model.PaymentInfo;
+import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.util.CurrencyUtils;
 import com.squareup.otto.Bus;
 

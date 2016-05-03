@@ -10,7 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.model.PaymentInfo;
+import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.util.UIUtils;
 
 import butterknife.Bind;

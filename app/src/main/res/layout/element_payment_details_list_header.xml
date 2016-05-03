@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.handy.portal.ui.element.payments.PaymentsDetailListHeaderView
+<com.handy.portal.payments.ui.element.PaymentsDetailListHeaderView
     android:id="@+id/payment_details_list_header"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -77,4 +77,4 @@
             />
 
     </LinearLayout>
-</com.handy.portal.ui.element.payments.PaymentsDetailListHeaderView>
+</com.handy.portal.payments.ui.element.PaymentsDetailListHeaderView>
