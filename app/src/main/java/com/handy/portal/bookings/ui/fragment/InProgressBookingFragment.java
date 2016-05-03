@@ -126,6 +126,8 @@ public class InProgressBookingFragment extends TimerActionBarFragment
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
     {
         setDisplay();
+        setOptionsMenuEnabled(true);
+        setBackButtonEnabled(true);
     }
 
     public void setDisplay()
