@@ -228,19 +228,16 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
             mSendNoteText.setText(getResources().getString(
                     R.string.send_note_to_customer_formatted, firstName));
 
-            if (completedTasks != null)
+            if (completedTasks.size() == 0)
             {
-                if (completedTasks.size() == 0)
+                mCompletedTasksHeader.setVisibility(View.GONE);
+            }
+            else
+            {
+                for (Booking.BookingInstructionUpdateRequest completedTask : completedTasks)
                 {
-                    mCompletedTasksHeader.setVisibility(View.GONE);
-                }
-                else
-                {
-                    for (Booking.BookingInstructionUpdateRequest completedTask : completedTasks)
-                    {
-                        if (completedTask.isInstructionCompleted())
-                        { addTaskItem(completedTask.getTitle()); }
-                    }
+                    if (completedTask.isInstructionCompleted())
+                    { addTaskItem(completedTask.getTitle()); }
                 }
             }
         }

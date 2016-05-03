@@ -33,9 +33,7 @@ import com.handy.portal.util.UIUtils;
 import com.handy.portal.util.Utils;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -43,12 +41,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.handy.portal.bookings.model.Booking.BookingInstructionGroup.GROUP_ENTRY_METHOD;
-import static com.handy.portal.bookings.model.Booking.BookingInstructionGroup.GROUP_LINENS_LAUNDRY;
 import static com.handy.portal.bookings.model.Booking.BookingInstructionGroup.GROUP_NOTE_TO_PRO;
-import static com.handy.portal.bookings.model.Booking.BookingInstructionGroup.GROUP_PREFERENCES;
-import static com.handy.portal.bookings.model.Booking.BookingInstructionGroup.GROUP_REFRIGERATOR;
-import static com.handy.portal.bookings.model.Booking.BookingInstructionGroup.GROUP_TRASH;
 
 /**
  * fragment for handling bookings that are in progress/after provider has checked in & before check out
@@ -82,24 +75,12 @@ public class InProgressBookingFragment extends TimerActionBarFragment
     @Bind(R.id.in_progress_booking_action_button)
     Button mActionButton;
 
-    private Booking mBooking;
-    private String mSource; // TODO: refactor this into a enum?
-
-    private static final Map<String, Integer> GROUP_ICONS;
     private static final Gson GSON = new Gson();
 
+    private Booking mBooking;
+    private String mSource; // TODO: refactor this into a enum?
     private View.OnClickListener mOnSupportClickListener;
 
-    static
-    {
-        GROUP_ICONS = new HashMap<>();
-        GROUP_ICONS.put(GROUP_ENTRY_METHOD, R.drawable.ic_details_entry);
-        GROUP_ICONS.put(GROUP_LINENS_LAUNDRY, R.drawable.ic_details_linens);
-        GROUP_ICONS.put(GROUP_REFRIGERATOR, R.drawable.ic_details_fridge);
-        GROUP_ICONS.put(GROUP_TRASH, R.drawable.ic_details_trash);
-        GROUP_ICONS.put(GROUP_NOTE_TO_PRO, R.drawable.ic_details_request);
-        GROUP_ICONS.put(GROUP_PREFERENCES, R.drawable.ic_details_request);
-    }
 
     public static InProgressBookingFragment newInstance(@NonNull final Booking booking, String source)
     {
@@ -215,8 +196,7 @@ public class InProgressBookingFragment extends TimerActionBarFragment
                 }
                 if (checklist != null)
                 {
-                    mCustomerRequestsView.setDisplay(preferencesGroup.getLabel(),
-                            GROUP_ICONS.get(preferencesGroup.getGroup()), checklist);
+                    mCustomerRequestsView.setDisplay(checklist);
                 }
             }
         }
@@ -265,7 +245,7 @@ public class InProgressBookingFragment extends TimerActionBarFragment
         bus.post(new HandyEvent.CallCustomerClicked());
 
         String phoneNumber = mBooking.getBookingPhone();
-        if(phoneNumber == null)
+        if (phoneNumber == null)
         {
             Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
             return;
@@ -279,7 +259,7 @@ public class InProgressBookingFragment extends TimerActionBarFragment
         bus.post(new HandyEvent.TextCustomerClicked());
 
         String phoneNumber = mBooking.getBookingPhone();
-        if(phoneNumber == null)
+        if (phoneNumber == null)
         {
             Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
             return;

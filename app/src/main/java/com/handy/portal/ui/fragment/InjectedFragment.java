@@ -76,11 +76,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment
             if (!suppliedArguments.containsKey(requiredArgument))
             {
                 validated = false;
-
-                if (!validated)
-                {
-                    errorDetails += "Missing required argument : " + requiredArgument + "\n";
-                }
+                errorDetails += "Missing required argument : " + requiredArgument + "\n";
             }
         }
 

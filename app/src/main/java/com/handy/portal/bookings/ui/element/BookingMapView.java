@@ -26,7 +26,7 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.bookings.ui.fragment.BookingDetailsFragment;
+import com.handy.portal.bookings.ui.fragment.BookingDetailsWrapperFragment;
 import com.handy.portal.location.LocationUtils;
 import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.ui.activity.BaseActivity;
@@ -155,7 +155,7 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
     private boolean shouldIncludeCurrentLocation()
     {
         return mSource != null &&
-                mSource.equals(BookingDetailsFragment.SOURCE_LATE_DISPATCH);
+                mSource.equals(BookingDetailsWrapperFragment.SOURCE_LATE_DISPATCH);
     }
 
     /**
@@ -248,7 +248,7 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
         else
         {
             //fallback so we don't crash
-            Crashlytics.logException(new Exception("BookingMapFragment booking has no valid midpoint " + mBooking.getId()));
+            Crashlytics.logException(new Exception("BookingMapView booking has no valid midpoint " + mBooking.getId()));
             return new LatLng(0.0f, 0.0f);
         }
     }

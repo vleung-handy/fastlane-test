@@ -3,6 +3,7 @@ package com.handy.portal.ui.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -308,13 +309,13 @@ public class LoginActivityFragment extends InjectedFragment
         if (currentLoginState == LoginState.WAITING_FOR_LOGIN_RESPONSE)
         {
             DataManager.DataManagerError.Type errorType = event.error == null ? null : event.error.getType();
-            if(errorType != null)
+            if (errorType != null)
             {
-                if(errorType.equals(DataManager.DataManagerError.Type.NETWORK))
+                if (errorType.equals(DataManager.DataManagerError.Type.NETWORK))
                 {
                     showToast(R.string.error_connectivity);
                 }
-                else if(errorType.equals(DataManager.DataManagerError.Type.CLIENT))
+                else if (errorType.equals(DataManager.DataManagerError.Type.CLIENT))
                 {
                     showToast(R.string.login_error_bad_login);
                 }
@@ -355,6 +356,7 @@ public class LoginActivityFragment extends InjectedFragment
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void beginLogin(LoginDetails loginDetails)
     {
         changeState(LoginState.COMPLETE);
@@ -362,9 +364,18 @@ public class LoginActivityFragment extends InjectedFragment
         //Set cookies to enable seamless access in our webview
         if (loginDetails.getAuthToken() != null)
         {
-            CookieSyncManager.createInstance(getActivity());
-            CookieManager.getInstance().setCookie(dataManager.getBaseUrl(), loginDetails.getUserCredentialsCookie());
-            CookieSyncManager.getInstance().sync();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            {
+                CookieManager.getInstance().setCookie(dataManager.getBaseUrl(),
+                        loginDetails.getUserCredentialsCookie());
+                CookieManager.getInstance().flush();
+            }
+            else
+            {
+                CookieSyncManager.createInstance(getActivity());
+                CookieManager.getInstance().setCookie(dataManager.getBaseUrl(), loginDetails.getUserCredentialsCookie());
+                CookieSyncManager.getInstance().sync();
+            }
         }
 
         String providerId = loginDetails.getProviderId();

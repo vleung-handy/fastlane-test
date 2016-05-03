@@ -3,6 +3,7 @@ package com.handy.portal.bookings.ui.element;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.ImageView;
@@ -71,7 +72,7 @@ public class BookingCancellationPolicyListItemView extends RelativeLayout
     public BookingCancellationPolicyListItemView setHighlighted(boolean highlighted)
     {
         int colorResourceId;
-        if(highlighted)
+        if (highlighted)
         {
             colorResourceId = R.color.handy_blue;
             mActiveItemIndicator.setVisibility(VISIBLE);
@@ -81,8 +82,9 @@ public class BookingCancellationPolicyListItemView extends RelativeLayout
             colorResourceId = R.color.subtitle_grey;
             mActiveItemIndicator.setVisibility(GONE);
         }
-        mLeftText.setTextColor(getContext().getResources().getColor(colorResourceId));
-        mRightText.setTextColor(getContext().getResources().getColor(colorResourceId));
+        final int textColor = ContextCompat.getColor(getContext(), colorResourceId);
+        mLeftText.setTextColor(textColor);
+        mRightText.setTextColor(textColor);
         return this;
     }
 

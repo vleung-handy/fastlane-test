@@ -29,8 +29,8 @@ import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.constant.BookingActionButtonType;
 import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.ui.element.BookingDetailsJobInstructionsSectionView;
 import com.handy.portal.bookings.ui.element.BookingMapView;
-import com.handy.portal.bookings.ui.element.NewBookingDetailsJobInstructionsSectionView;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
 import com.handy.portal.constant.BundleKeys;
@@ -372,8 +372,8 @@ public class BookingFragment extends TimerActionBarFragment
         boolean isHomeCleaning = mBooking.getServiceInfo().isHomeCleaning();
         if (!isHomeCleaning && mBooking.getDescription() != null && !mBooking.getDescription().isEmpty())
         {
-            NewBookingDetailsJobInstructionsSectionView descriptionSectionView =
-                    new NewBookingDetailsJobInstructionsSectionView(getContext());
+            BookingDetailsJobInstructionsSectionView descriptionSectionView =
+                    new BookingDetailsJobInstructionsSectionView(getContext());
             descriptionSectionView.setDisplay(getContext().getString(R.string.description),
                     mBooking.getDescription());
             mInstructionsLayout.setVisibility(View.VISIBLE);
@@ -388,8 +388,8 @@ public class BookingFragment extends TimerActionBarFragment
             List<String> entries = new ArrayList<>();
             entries.add(getContext().getString(R.string.bring_cleaning_supplies));
 
-            NewBookingDetailsJobInstructionsSectionView suppliesSectionView =
-                    new NewBookingDetailsJobInstructionsSectionView(getContext());
+            BookingDetailsJobInstructionsSectionView suppliesSectionView =
+                    new BookingDetailsJobInstructionsSectionView(getContext());
             suppliesSectionView.setDisplay(getContext().getString(R.string.supplies), entries);
 
             mInstructionsLayout.setVisibility(View.VISIBLE);
@@ -411,8 +411,8 @@ public class BookingFragment extends TimerActionBarFragment
 
             if (entries.size() > 0)
             {
-                NewBookingDetailsJobInstructionsSectionView suppliesSectionView =
-                        new NewBookingDetailsJobInstructionsSectionView(getContext());
+                BookingDetailsJobInstructionsSectionView suppliesSectionView =
+                        new BookingDetailsJobInstructionsSectionView(getContext());
                 suppliesSectionView.setDisplay(getContext().getString(R.string.supplies), entries);
 
                 mInstructionsLayout.setVisibility(View.VISIBLE);
@@ -432,8 +432,8 @@ public class BookingFragment extends TimerActionBarFragment
                 {
                     if (!Booking.BookingInstructionGroup.GROUP_PREFERENCES.equals(group.getGroup()))
                     {
-                        NewBookingDetailsJobInstructionsSectionView sectionView =
-                                new NewBookingDetailsJobInstructionsSectionView(getContext());
+                        BookingDetailsJobInstructionsSectionView sectionView =
+                                new BookingDetailsJobInstructionsSectionView(getContext());
                         sectionView.setDisplay(group.getLabel(), group.getInstructions());
                         mInstructionsLayout.setVisibility(View.VISIBLE);
                         mInstructionsLayout.addView(sectionView);
