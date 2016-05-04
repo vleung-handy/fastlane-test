@@ -98,7 +98,7 @@ public class MainActivityFragment extends InjectedFragment
 
     private boolean mOnResumeTransitionToMainTab; //need to catch and hold until onResume so we can catch the response from the bus
 
-    private boolean mFirstTimeConfigReturned = true; //the first time we get config response back we may need to navigate away
+    private boolean mConfigAlreadyReceivedThisSession = false; //the first time we get config response back we may need to navigate away
     private Bundle mDeeplinkData;
     private boolean mDeeplinkHandled;
     private String mDeeplinkSource;
@@ -171,9 +171,9 @@ public class MainActivityFragment extends InjectedFragment
     {
         //If the config response came back for the first time may need to navigate away
         //Normally the fragment would take care of itself, but this would launch the fragment if needed
-        if (mFirstTimeConfigReturned)
+        if (!mConfigAlreadyReceivedThisSession)
         {
-            mFirstTimeConfigReturned = false;
+            mConfigAlreadyReceivedThisSession = true;
             handleOnboardingFlow();
         }
     }
@@ -186,13 +186,9 @@ public class MainActivityFragment extends InjectedFragment
 
     private void handleOnboardingFlow()
     {
-        if (currentTab != null &&
-                currentTab != MainViewTab.ONBOARDING_WEBVIEW &&
-                configManager.getConfigurationResponse() != null &&
-                configManager.getConfigurationResponse().shouldShowOnboarding()
-                )
+        if (currentTab != null && currentTab != MainViewTab.ONBOARDING_WEBVIEW &&
+                doesCachedProviderNeedOnboarding())
         {
-            //We can be lazy here with params, TabNavigationManager will do all the work for us, we are just firing it up
             switchToTab(MainViewTab.ONBOARDING_WEBVIEW, false);
         }
     }
@@ -252,6 +248,7 @@ public class MainActivityFragment extends InjectedFragment
     public void onPause()
     {
         super.onPause();
+        mConfigAlreadyReceivedThisSession = false;
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(false));
     }
 
@@ -611,6 +608,12 @@ public class MainActivityFragment extends InjectedFragment
     private ConfigurationResponse getConfigurationResponse()
     {
         return mConfigManager.getConfigurationResponse();
+    }
+
+    private boolean doesCachedProviderNeedOnboarding()
+    {
+        return (getConfigurationResponse() != null &&
+                getConfigurationResponse().shouldShowOnboarding());
     }
 
     @SuppressWarnings("deprecation")
