@@ -449,7 +449,7 @@
     <string name="withholding_fee_simple_formatted">You will incur a %1$s fee and reduce your keep rate:</string>
 
     <!-- Job Access -->
-    <string name="job_access_unlocked_banner_title_formatted">%1$d%% goal achieved!</string>
+    <string name="job_access_unlocked_banner_title_formatted">%1$d%% Goal Achieved!</string>
     <string name="job_access_unlocked_banner_subtitle_formatted">Your current Keep Rate is %1$d%%</string>
     <string name="job_access_unlocked_popup_action_button">Start Claiming</string>
 

@@ -30,7 +30,7 @@
         style="@style/TextView.Medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin_xlarge"
         android:gravity="center"
         tools:text="In order to access jobs this far in advance, you need to improve your 45% Keep Rate by claiming and completing jobs."
         />
@@ -38,6 +38,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin_large"
         android:gravity="center"
         android:orientation="horizontal"
         >

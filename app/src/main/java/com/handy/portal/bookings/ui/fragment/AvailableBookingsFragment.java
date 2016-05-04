@@ -2,7 +2,6 @@ package com.handy.portal.bookings.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -34,7 +33,6 @@ import com.handy.portal.helpcenter.constants.HelpCenterUrl;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.FragmentUtils;
@@ -90,9 +88,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        mJobAccessUnlockedBannerLayout = new BookingsBannerView(getContext())
-                .setLeftDrawable(ContextCompat.getDrawable(getContext(), R.drawable.img_unlocked_banner))
-                .setContentVisible(false);
+        mJobAccessUnlockedBannerLayout = new BookingsBannerView(getContext()).setContentVisible(false);
         getBookingListView().addHeaderView(mJobAccessUnlockedBannerLayout);
         //hacky: need to add the banner as booking list header view so it will scroll with the bookings list
 
@@ -299,6 +295,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
             String subtitle = getString(R.string.job_access_early_access_banner_subtitle_formatted,
                     priorityAccessInfo.getMinimumKeepRate());
             mJobAccessUnlockedBannerLayout
+                    .setLeftDrawable(ContextCompat.getDrawable(getContext(), R.drawable.img_unlocked_trial_banner))
                     .setTitleText(title)
                     .setDescriptionText(subtitle)
                     .setContentVisible(true);
@@ -324,6 +321,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
             String subtitle = getString(R.string.job_access_unlocked_banner_subtitle_formatted,
                     priorityAccessInfo.getCurrentKeepRate());
             mJobAccessUnlockedBannerLayout
+                    .setLeftDrawable(ContextCompat.getDrawable(getContext(), R.drawable.img_unlocked_banner))
                     .setTitleText(title)
                     .setDescriptionText(subtitle)
                     .setContentVisible(true);
@@ -458,7 +456,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         }
 
         resetBookingsForDayUnlockedModalsShownIfNecessary(event.bookingsWrapper, event.day);
-        setDateButtonPropertiesForDay(event.bookingsWrapper.getPriorityAccessInfo(), event.day);
     }
 
     /**
@@ -482,34 +479,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
             mBookingModalsManager
                     .getBookingsForDayModalsManager(BOOKINGS_FOR_DAY_UNLOCKED_TRIAL_MODAL, date)
                     .resetModalShownStatus();
-        }
-    }
-
-    /**
-     * modifies the style of the date button for the given day if needed
-     *
-     * @param priorityAccessInfo
-     * @param day
-     */
-    private void setDateButtonPropertiesForDay(@Nullable BookingsWrapper.PriorityAccessInfo priorityAccessInfo, Date day)
-    {
-        if(priorityAccessInfo != null)
-        {
-            BookingsWrapper.PriorityAccessInfo.BookingsForDayPriorityAccessStatus priorityAccessBookingsForDayPriorityAccessStatus = priorityAccessInfo.getBookingsForDayStatus();
-            DateButtonView dateButtonView = mDateDateButtonViewMap.get(day);
-
-            if(priorityAccessBookingsForDayPriorityAccessStatus == null || dateButtonView == null) return;
-
-            switch(priorityAccessBookingsForDayPriorityAccessStatus)
-            {
-                case LOCKED:
-                    dateButtonView.setAlpha(0.5f);
-                    break;
-                //more cases to handle?
-
-            }
-
-
         }
     }
 }
