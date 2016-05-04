@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingModalsManager;
+import com.handy.portal.bookings.BookingModalsManager.BookingsForDayModalsManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
@@ -62,10 +63,10 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     SwipeRefreshLayout mNoAvailableBookingsLayout;
     @Bind(R.id.layout_job_access_locked)
     BookingsAccessLockedView mJobAccessLockedLayout;
-
-    BookingsBannerView mJobAccessUnlockedBannerLayout;
     @Bind(R.id.toggle_available_job_notification)
     SwitchCompat mToggleAvailableJobNotification;
+
+    BookingsBannerView mJobAccessUnlockedBannerLayout;
 
     @Inject
     BookingModalsManager mBookingModalsManager;
@@ -290,7 +291,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     private void showBookingsLayoutForEarlyAccessTrialPriorityAccess(@NonNull BookingsWrapper.PriorityAccessInfo priorityAccessInfo,
                                                                      @NonNull Date dateOfBookings)
     {
-        BookingModalsManager.BookingsForDayModalsManager bookingsForDayModalsManager
+        BookingsForDayModalsManager bookingsForDayModalsManager
                 = mBookingModalsManager.getBookingsForDayModalsManager(BOOKINGS_FOR_DAY_UNLOCKED_TRIAL_MODAL, dateOfBookings);
         if(bookingsForDayModalsManager.bookingsForDayModalPreviouslyShown())
         {
@@ -456,15 +457,23 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
             return;
         }
 
-        resetBookingsForDayUnlockedModalShownIfNecessary(event.bookingsWrapper, event.day);
+        resetBookingsForDayUnlockedModalsShownIfNecessary(event.bookingsWrapper, event.day);
         setDateButtonPropertiesForDay(event.bookingsWrapper.getPriorityAccessInfo(), event.day);
     }
 
-    private void resetBookingsForDayUnlockedModalShownIfNecessary(@NonNull BookingsWrapper bookingsWrapper, @NonNull Date date)
+    /**
+     * resets the modal shown status for the given day if the priority access status
+     * is not explicitly "unlocked" or "new_pro", so is either not present or "locked"
+     * @param bookingsWrapper
+     * @param date
+     */
+    private void resetBookingsForDayUnlockedModalsShownIfNecessary(@NonNull BookingsWrapper bookingsWrapper, @NonNull Date date)
     {
         BookingsWrapper.PriorityAccessInfo priorityAccessInfo = bookingsWrapper.getPriorityAccessInfo();
-        if(priorityAccessInfo == null || priorityAccessInfo.getBookingsForDayStatus() == null) return;
-        if(priorityAccessInfo.getBookingsForDayStatus() == BookingsWrapper.PriorityAccessInfo.BookingsForDayPriorityAccessStatus.LOCKED)
+        if (priorityAccessInfo == null
+                || priorityAccessInfo.getBookingsForDayStatus() == null
+                || priorityAccessInfo.getBookingsForDayStatus() ==
+                BookingsWrapper.PriorityAccessInfo.BookingsForDayPriorityAccessStatus.LOCKED)
         {
             mBookingModalsManager
                     .getBookingsForDayModalsManager(BOOKINGS_FOR_DAY_UNLOCKED_MODAL, date)

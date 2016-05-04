@@ -17,7 +17,6 @@ import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.ui.fragment.dialog.PopupDialogFragment;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
@@ -61,7 +60,6 @@ public abstract class JobAccessDialogFragment extends PopupDialogFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
         BookingsWrapper.PriorityAccessInfo priorityAccessInfo = getPriorityAccessFromBundle();
         if(priorityAccessInfo == null)
         {

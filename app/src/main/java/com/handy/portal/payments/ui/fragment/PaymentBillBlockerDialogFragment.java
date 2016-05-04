@@ -17,7 +17,6 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.ui.fragment.dialog.PopupDialogFragment;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
 
 public class PaymentBillBlockerDialogFragment extends PopupDialogFragment //TODO: consolidate some of this logic with other dialog fragments
 {
@@ -42,7 +41,6 @@ public class PaymentBillBlockerDialogFragment extends PopupDialogFragment //TODO
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
         String coloredText = getString(R.string.payment_bill_blocker_content_colored);
         String content = getString(R.string.payments_bill_blocker_content_formatted, coloredText);
 
