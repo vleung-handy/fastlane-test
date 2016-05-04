@@ -26,6 +26,7 @@
     <dimen name="extra_padding">5dp</dimen>
     <dimen name="extra_padding_medium">10dp</dimen>
     <dimen name="extra_padding_xlarge">20dp</dimen>
+    <dimen name="default_padding_half">8dp</dimen>
     <dimen name="default_padding">16dp</dimen>
     <dimen name="default_padding_medium">24dp</dimen>
     <dimen name="default_padding_large">32dp</dimen>

@@ -26,13 +26,13 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="@dimen/default_margin"
-            android:padding="@dimen/default_padding"
+            android:padding="@dimen/default_padding_half"
             tools:src="@drawable/img_unlocked"
             android:id="@+id/fragment_dialog_job_access_header_image"
             />
 
         <TextView
-            style="@style/TextView.Large.Bold"
+            style="@style/TextView.XLarge.Bold"
             android:id="@+id/fragment_dialog_job_access_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -42,7 +42,7 @@
             />
 
         <TextView
-            style="@style/TextView.Large"
+            style="@style/TextView.Medium"
             android:id="@+id/fragment_dialog_job_access_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
