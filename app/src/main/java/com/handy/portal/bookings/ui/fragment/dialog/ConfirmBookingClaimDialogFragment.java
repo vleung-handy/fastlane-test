@@ -42,7 +42,7 @@ public class ConfirmBookingClaimDialogFragment
     @Override
     protected String getConfirmButtonText()
     {
-        return getString(R.string.claim_job);
+        return getString(R.string.confirm_claim);
     }
 
     @Override
