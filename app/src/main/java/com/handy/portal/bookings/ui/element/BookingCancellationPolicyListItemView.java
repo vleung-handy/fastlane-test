@@ -2,6 +2,7 @@ package com.handy.portal.bookings.ui.element;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Paint;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -19,8 +20,10 @@ public class BookingCancellationPolicyListItemView extends RelativeLayout
 {
     @Bind(R.id.cancellation_policy_list_item_left_text)
     TextView mLeftText;
-    @Bind(R.id.cancellation_policy_list_item_right_text)
-    TextView mRightText;
+    @Bind(R.id.cancellation_policy_list_item_right_text_1)
+    TextView mRightText1;
+    @Bind(R.id.cancellation_policy_list_item_right_text_2)
+    TextView mRightText2;
     @Bind(R.id.cancellation_policy_list_item_active_indicator)
     ImageView mActiveItemIndicator;
     @Bind(R.id.cancellation_policy_list_item_divider)
@@ -55,6 +58,7 @@ public class BookingCancellationPolicyListItemView extends RelativeLayout
     {
         inflate(getContext(), R.layout.element_cancellation_policy_list_item, this);
         ButterKnife.bind(this);
+        mRightText1.setPaintFlags(mRightText1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
     }
 
     public BookingCancellationPolicyListItemView setLeftText(String leftText)
@@ -63,9 +67,23 @@ public class BookingCancellationPolicyListItemView extends RelativeLayout
         return this;
     }
 
-    public BookingCancellationPolicyListItemView setRightText(String rightText)
+    public BookingCancellationPolicyListItemView setRightText1(final String rightText1)
     {
-        mRightText.setText(rightText);
+        if (rightText1 != null)
+        {
+            mRightText1.setText(rightText1);
+            mRightText1.setVisibility(VISIBLE);
+        }
+        else
+        {
+            mRightText1.setVisibility(GONE);
+        }
+        return this;
+    }
+
+    public BookingCancellationPolicyListItemView setRightText2(String rightText2)
+    {
+        mRightText2.setText(rightText2);
         return this;
     }
 
@@ -84,7 +102,7 @@ public class BookingCancellationPolicyListItemView extends RelativeLayout
         }
         final int textColor = ContextCompat.getColor(getContext(), colorResourceId);
         mLeftText.setTextColor(textColor);
-        mRightText.setTextColor(textColor);
+        mRightText2.setTextColor(textColor);
         return this;
     }
 

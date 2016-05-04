@@ -36,16 +36,35 @@
             tools:text="Under 48 hours"
             />
 
-        <TextView
-            android:id="@+id/cancellation_policy_list_item_right_text"
-            style="@style/TextView.Medium"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
-            android:textColor="@color/tertiary_gray"
-            tools:text="$10"
-            />
+            >
+
+            <TextView
+                android:id="@+id/cancellation_policy_list_item_right_text_1"
+                style="@style/TextView.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/extra_margin"
+                android:layout_marginRight="@dimen/extra_margin"
+                android:textColor="@color/subtitle_grey"
+                android:visibility="gone"
+                tools:text="$20"
+                tools:visibility="visible"
+                />
+
+            <TextView
+                android:id="@+id/cancellation_policy_list_item_right_text_2"
+                style="@style/TextView.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/subtitle_grey"
+                tools:text="$10"
+                />
+        </LinearLayout>
     </LinearLayout>
 
     <include

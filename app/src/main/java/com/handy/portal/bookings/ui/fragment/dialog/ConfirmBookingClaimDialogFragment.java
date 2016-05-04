@@ -141,14 +141,21 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
             {
                 Booking.Action.Extras.CancellationPolicy.CancellationPolicyItem cancellationPolicy = cancellationPolicies[i];
                 PaymentInfo fee = cancellationPolicy.getPaymentInfo();
+                PaymentInfo waivedFee = cancellationPolicy.getWaivedPaymentInfo();
                 if(fee != null)
                 {
-                    String feeAmountFormatted = CurrencyUtils.formatPriceWithoutCents(fee.getAmount(), fee.getCurrencySymbol());
+                    final String feeAmountFormatted = CurrencyUtils.formatPriceWithoutCents(fee.getAmount(), fee.getCurrencySymbol());
+                    String waivedFeeAmountFormatted = null;
+                    if (waivedFee != null)
+                    {
+                        waivedFeeAmountFormatted = CurrencyUtils.formatPriceWithoutCents(waivedFee.getAmount(), waivedFee.getCurrencySymbol());
+                    }
 
                     BookingCancellationPolicyListItemView policyListItemView =
                             new BookingCancellationPolicyListItemView(getContext())
                                     .setLeftText(cancellationPolicy.getDisplayText())
-                                    .setRightText(feeAmountFormatted)
+                                    .setRightText1(waivedFeeAmountFormatted)
+                                    .setRightText2(feeAmountFormatted)
                                     .setHighlighted(cancellationPolicy.isActive())
                                     .setDividerVisible(i != (cancellationPolicies.length - 1));
                     mCancellationPolicyContent.addView(policyListItemView);
