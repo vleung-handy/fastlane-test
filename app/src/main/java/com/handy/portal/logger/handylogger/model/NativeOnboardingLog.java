@@ -1,6 +1,7 @@
 package com.handy.portal.logger.handylogger.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.model.Booking;
 
 import java.util.ArrayList;
 
@@ -105,6 +106,38 @@ public class NativeOnboardingLog extends EventLog
         public NoJobsLoaded()
         {
             super(EVENT_TYPE);
+        }
+    }
+
+
+    /**
+     * The specific job was successfully claimed through the onboarding funnel
+     */
+    public static class ClaimSuccess extends JobsLog
+    {
+        private static final String EVENT_TYPE = "claim_success";
+
+        public ClaimSuccess(final Booking booking)
+        {
+            super(EVENT_TYPE, EVENT_CONTEXT, booking);
+        }
+    }
+
+
+    /**
+     * The onboarding jobs claim response was an error response
+     */
+    public static class ClaimError extends JobsLog
+    {
+        private static final String EVENT_TYPE = "claim_error";
+
+        @SerializedName("error_message")
+        private String mErrorMessage;
+
+        public ClaimError(final Booking booking, String errorMessage)
+        {
+            super(EVENT_TYPE, EVENT_CONTEXT, booking);
+            mErrorMessage = errorMessage;
         }
     }
 }

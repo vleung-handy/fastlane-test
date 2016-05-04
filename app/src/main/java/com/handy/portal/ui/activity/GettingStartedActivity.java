@@ -25,7 +25,6 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.BookingClaimDetails;
@@ -450,20 +449,14 @@ public class GettingStartedActivity extends AppCompatActivity
             if (bcd.getBooking().isClaimedByMe())
             {
                 bookings.add(bcd.getBooking());
-                mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimSuccess(
-                        bcd.getBooking(),
-                        SOURCE,
-                        null,
-                        0.0f
+                mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimSuccess(
+                        bcd.getBooking()
                 )));
             }
             else
             {
-                mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimError(
+                mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimError(
                         bcd.getBooking(),
-                        SOURCE,
-                        null,
-                        0.0f,
                         message
                 )));
             }
