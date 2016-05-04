@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:gravity="center"
+        android:text="@string/supply_kit_purchase_inquiry"
+        android:textAppearance="@style/TextView.XLarge.Bold"
+        />
+
+    <Button
+        android:id="@+id/primary_button"
+        style="@style/Button.Green.Round"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/row_margin"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
+        android:text="@string/yes_supply_kit"
+        android:textColor="@color/white"
+        android:textSize="@dimen/large_text_size"
+        />
+
+    <Button
+        android:id="@+id/secondary_button"
+        style="@style/Button.Grey.Round"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
+        android:text="@string/no_supply_kit"
+        android:textColor="@color/white"
+        android:textSize="@dimen/large_text_size"
+        />
+
+</LinearLayout>

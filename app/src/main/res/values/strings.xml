@@ -460,4 +460,9 @@
     <string name="job_access_locked_learn_more">Learn more about\u0020</string>
     <string name="job_access_locked_keep_rate_info_button">Keep Rate</string>
 
+    <!-- Pre-activation -->
+    <string name="supply_kit_purchase_inquiry">Would you like to buy a starter supply kit?</string>
+    <string name="yes_supply_kit">Yes, I Want a Starter Kit</string>
+    <string name="no_supply_kit">No, I Have My Own</string>
+
 </resources>
