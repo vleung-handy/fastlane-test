@@ -3,33 +3,50 @@ package com.handy.portal.bookings.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SwitchCompat;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
+import com.handy.portal.bookings.BookingModalsManager;
+import com.handy.portal.bookings.BookingModalsManager.BookingsForDayModalsManager;
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
+import com.handy.portal.bookings.ui.element.BookingsAccessLockedView;
+import com.handy.portal.bookings.ui.element.BookingsBannerView;
+import com.handy.portal.bookings.ui.fragment.dialog.EarlyAccessTrialDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.JobAccessUnlockedDialogFragment;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
+import com.handy.portal.helpcenter.constants.HelpCenterUrl;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.FragmentUtils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.Bind;
+
+import static com.handy.portal.bookings.BookingModalsManager.BookingsForDayModalsManager.BookingsForDayModalType.BOOKINGS_FOR_DAY_UNLOCKED_MODAL;
+import static com.handy.portal.bookings.BookingModalsManager.BookingsForDayModalsManager.BookingsForDayModalType.BOOKINGS_FOR_DAY_UNLOCKED_TRIAL_MODAL;
 
 public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.ReceiveAvailableBookingsSuccess>
 {
@@ -42,8 +59,16 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     LinearLayout mAvailableJobsDatesScrollViewLayout;
     @Bind(R.id.available_bookings_empty)
     SwipeRefreshLayout mNoAvailableBookingsLayout;
+    @Bind(R.id.layout_job_access_locked)
+    BookingsAccessLockedView mJobAccessLockedLayout;
     @Bind(R.id.toggle_available_job_notification)
     SwitchCompat mToggleAvailableJobNotification;
+
+    BookingsBannerView mJobAccessUnlockedBannerLayout;
+
+    @Inject
+    BookingModalsManager mBookingModalsManager;
+
     private String mMessage;
 
     @Override
@@ -57,6 +82,23 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         super.onCreate(savedInstanceState);
         mMessage = getArguments().getString(BundleKeys.MESSAGE);
+    }
+
+    @Override
+    public void onViewCreated(final View view, final Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        mJobAccessUnlockedBannerLayout = new BookingsBannerView(getContext()).setContentVisible(false);
+        getBookingListView().addHeaderView(mJobAccessUnlockedBannerLayout);
+        //hacky: need to add the banner as booking list header view so it will scroll with the bookings list
+
+        mJobAccessLockedLayout.setKeepRateInfoButtonClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(final View v)
+            {
+                goToHelpCenter(HelpCenterUrl.KEEP_RATE_INFO_REDIRECT_URL);
+            }
+        });
     }
 
     @Override
@@ -116,6 +158,14 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         //Bookings are sorted such that the requested bookings show up first so we just need to check the first one
         return bookingsForDay.size() > 0 && bookingsForDay.get(0).isRequested();
+    }
+
+    private void goToHelpCenter(final String helpCenterRedirectPath)
+    {
+        //don't ever need to support native help center again so ignore the config response
+        final Bundle arguments = new Bundle();
+        arguments.putString(BundleKeys.HELP_REDIRECT_PATH, helpCenterRedirectPath);
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP_WEBVIEW, arguments, true));
     }
 
     @Override
@@ -179,6 +229,114 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
             }
             mMessage = null; // this is a one-off
         }
+    }
+
+    /**
+     * TODO needs better naming
+     * populates the booking content view. may show a locked screen, banners and/or the booking list
+     * @param bookingsWrapper
+     * @param dateOfBookings
+     */
+    @Override
+    protected void displayBookings(@NonNull final BookingsWrapper bookingsWrapper, @NonNull final Date dateOfBookings)
+    {
+        super.displayBookings(bookingsWrapper, dateOfBookings);
+        showBookingsForDayModalsAndBannersIfNecessary(bookingsWrapper, dateOfBookings);
+    }
+
+    /**
+     * shows any popups based on the given bookings/date selected
+     *
+     * shows any banners based on the given bookings/date selected
+     *
+     * @param bookingsWrapper
+     * @param dateOfBookings
+     */
+    private void showBookingsForDayModalsAndBannersIfNecessary(@NonNull BookingsWrapper bookingsWrapper, @NonNull Date dateOfBookings) //todo rename
+    {
+        mJobAccessUnlockedBannerLayout.setContentVisible(false);
+        mJobAccessLockedLayout.setVisibility(View.GONE);
+        BookingsWrapper.PriorityAccessInfo priorityAccessInfo = bookingsWrapper.getPriorityAccessInfo();
+        if(priorityAccessInfo != null)
+        {
+            BookingsWrapper.PriorityAccessInfo.BookingsForDayPriorityAccessStatus bookingsForDayPriorityAccessStatus = priorityAccessInfo.getBookingsForDayStatus();
+            if(bookingsForDayPriorityAccessStatus != null)
+            {
+                switch (bookingsForDayPriorityAccessStatus)
+                {
+                    case NEW_PRO:
+                        showBookingsLayoutForEarlyAccessTrialPriorityAccess(priorityAccessInfo, dateOfBookings);
+                        break;
+                    case UNLOCKED:
+                        showBookingsLayoutForUnlockedPriorityAccess(priorityAccessInfo, dateOfBookings);
+                        break;
+                    case LOCKED:
+                        showBookingsLayoutForLockedPriorityAccess(priorityAccessInfo);
+                        break;
+                }
+            }
+        }
+    }
+
+    private void showBookingsLayoutForEarlyAccessTrialPriorityAccess(@NonNull BookingsWrapper.PriorityAccessInfo priorityAccessInfo,
+                                                                     @NonNull Date dateOfBookings)
+    {
+        BookingsForDayModalsManager bookingsForDayModalsManager
+                = mBookingModalsManager.getBookingsForDayModalsManager(BOOKINGS_FOR_DAY_UNLOCKED_TRIAL_MODAL, dateOfBookings);
+        if(bookingsForDayModalsManager.bookingsForDayModalPreviouslyShown())
+        {
+            String title = getString(R.string.job_access_early_access_banner_title);
+            String subtitle = getString(R.string.job_access_early_access_banner_subtitle_formatted,
+                    priorityAccessInfo.getMinimumKeepRate());
+            mJobAccessUnlockedBannerLayout
+                    .setLeftDrawable(ContextCompat.getDrawable(getContext(), R.drawable.img_unlocked_trial_banner))
+                    .setTitleText(title)
+                    .setDescriptionText(subtitle)
+                    .setContentVisible(true);
+        }
+        else if(getActivity().getSupportFragmentManager().findFragmentByTag(EarlyAccessTrialDialogFragment.FRAGMENT_TAG) == null)
+        {
+            EarlyAccessTrialDialogFragment earlyAccessTrialDialogFragment =
+                    EarlyAccessTrialDialogFragment.newInstance(priorityAccessInfo);
+            FragmentUtils.safeLaunchDialogFragment(earlyAccessTrialDialogFragment, getActivity(), EarlyAccessTrialDialogFragment.FRAGMENT_TAG);
+            bookingsForDayModalsManager.onBookingsForDayModalShown();
+        }
+    }
+
+    private void showBookingsLayoutForUnlockedPriorityAccess(@NonNull BookingsWrapper.PriorityAccessInfo priorityAccessInfo,
+                                                             @NonNull Date dateOfBookings)
+    {
+        BookingModalsManager.BookingsForDayModalsManager bookingsForDayModalsManager
+                = mBookingModalsManager.getBookingsForDayModalsManager(BOOKINGS_FOR_DAY_UNLOCKED_MODAL, dateOfBookings);
+        if(bookingsForDayModalsManager.bookingsForDayModalPreviouslyShown())
+        {
+            String title = getString(R.string.job_access_unlocked_banner_title_formatted,
+                    priorityAccessInfo.getMinimumKeepRate());
+            String subtitle = getString(R.string.job_access_unlocked_banner_subtitle_formatted,
+                    priorityAccessInfo.getCurrentKeepRate());
+            mJobAccessUnlockedBannerLayout
+                    .setLeftDrawable(ContextCompat.getDrawable(getContext(), R.drawable.img_unlocked_banner))
+                    .setTitleText(title)
+                    .setDescriptionText(subtitle)
+                    .setContentVisible(true);
+        }
+        else if(getActivity().getSupportFragmentManager().findFragmentByTag(JobAccessUnlockedDialogFragment.FRAGMENT_TAG) == null)
+        {
+            JobAccessUnlockedDialogFragment jobAccessUnlockedDialogFragment =
+                    JobAccessUnlockedDialogFragment.newInstance(priorityAccessInfo);
+            FragmentUtils.safeLaunchDialogFragment(jobAccessUnlockedDialogFragment, getActivity(), JobAccessUnlockedDialogFragment.FRAGMENT_TAG);
+            bookingsForDayModalsManager.onBookingsForDayModalShown();
+        }
+    }
+
+    private void showBookingsLayoutForLockedPriorityAccess(@NonNull BookingsWrapper.PriorityAccessInfo priorityAccessInfo)
+    {
+        mJobAccessLockedLayout
+                .setTitleText(priorityAccessInfo.getMessageTitle())
+                .setDescriptionText(priorityAccessInfo.getMessageDescription());
+
+        getNoBookingsSwipeRefreshLayout().setVisibility(View.GONE);
+        mJobAccessLockedLayout.setVisibility(View.VISIBLE);
     }
 
     @Subscribe
@@ -278,5 +436,43 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 }
             }
         });
+    }
+
+    @Override
+    protected void handleBookingsRetrieved(final HandyEvent.ReceiveAvailableBookingsSuccess event)
+    {
+        super.handleBookingsRetrieved(event);
+
+        if(event.bookingsWrapper == null || event.day == null)
+        {
+            Crashlytics.logException(new Exception("received available bookings event with null bookings wrapper or day"));
+            return;
+        }
+
+        resetBookingsForDayUnlockedModalsShownIfNecessary(event.bookingsWrapper, event.day);
+    }
+
+    /**
+     * resets the modal shown status for the given day if the priority access status
+     * is not explicitly "unlocked" or "new_pro", so is either not present or "locked"
+     * @param bookingsWrapper
+     * @param date
+     */
+    private void resetBookingsForDayUnlockedModalsShownIfNecessary(@NonNull BookingsWrapper bookingsWrapper, @NonNull Date date)
+    {
+        BookingsWrapper.PriorityAccessInfo priorityAccessInfo = bookingsWrapper.getPriorityAccessInfo();
+        if (priorityAccessInfo == null
+                || priorityAccessInfo.getBookingsForDayStatus() == null
+                || priorityAccessInfo.getBookingsForDayStatus() ==
+                BookingsWrapper.PriorityAccessInfo.BookingsForDayPriorityAccessStatus.LOCKED)
+        {
+            mBookingModalsManager
+                    .getBookingsForDayModalsManager(BOOKINGS_FOR_DAY_UNLOCKED_MODAL, date)
+                    .resetModalShownStatus();
+
+            mBookingModalsManager
+                    .getBookingsForDayModalsManager(BOOKINGS_FOR_DAY_UNLOCKED_TRIAL_MODAL, date)
+                    .resetModalShownStatus();
+        }
     }
 }

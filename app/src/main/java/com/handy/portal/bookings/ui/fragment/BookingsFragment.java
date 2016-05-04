@@ -16,6 +16,7 @@ import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
 import com.handy.portal.constant.BundleKeys;
@@ -95,7 +96,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     public abstract void onBookingsRetrieved(T event);
 
     //should use date without time for these entries, see Utils.getDateWithoutTime
-    private Map<Date, DateButtonView> mDateDateButtonViewMap;
+    protected Map<Date, DateButtonView> mDateDateButtonViewMap;
     protected Date mSelectedDay;
     protected List<Booking> mBookingsForSelectedDay;
     protected ProviderSettings mProviderSettings;
@@ -215,8 +216,15 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         bus.post(getRequestEvent(dates, useCachedIfPresent));
     }
 
-    protected void handleBookingsRetrieved(HandyEvent.ReceiveBookingsSuccess event)
+    protected void handleBookingsRetrieved(T event)
     {
+        BookingsWrapper bookingsWrapper = event.bookingsWrapper;
+        if(bookingsWrapper == null || event.day == null)
+        {
+            Crashlytics.logException(new Exception("on receive bookings success bookings wrapper or day is null"));
+            return;
+        }
+
         mRefreshLayout.setRefreshing(false);
         getNoBookingsSwipeRefreshLayout().setRefreshing(false);
         if (event.day.equals(mSelectedDay))
@@ -224,7 +232,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         }
 
-        List<Booking> bookings = event.bookings;
+        List<Booking> bookings = event.bookingsWrapper.getBookings();
         Collections.sort(bookings);
 
         for (Booking b : bookings)
@@ -251,7 +259,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
         if (mSelectedDay != null && mSelectedDay.equals(event.day))
         {
-            displayBookings(bookings, mSelectedDay);
+            displayBookings(bookingsWrapper, mSelectedDay);
         }
     }
 
@@ -305,6 +313,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 }
             });
 
+
             mDateDateButtonViewMap.put(day, dateButtonView);
         }
     }
@@ -320,8 +329,14 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         mSelectedDay = day;
     }
 
-    private void displayBookings(List<Booking> bookings, Date dateOfBookings)
+    /**
+     * updates the bookings view with the given list of bookings for the given date
+     * @param bookingsWrapper
+     * @param dateOfBookings
+     */
+    protected void displayBookings(@NonNull BookingsWrapper bookingsWrapper, @NonNull Date dateOfBookings)
     {
+        List<Booking> bookings = bookingsWrapper.getBookings();
         mBookingsForSelectedDay = bookings;
         getBookingListView().populateList(bookings, getBookingElementViewClass());
         initListClickListener();

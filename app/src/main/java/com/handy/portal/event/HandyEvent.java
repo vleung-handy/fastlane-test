@@ -10,6 +10,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.Booking.Action;
 import com.handy.portal.bookings.model.Booking.BookingType;
 import com.handy.portal.bookings.model.BookingClaimDetails;
+import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.logger.mixpanel.annotation.Track;
@@ -298,16 +299,16 @@ public abstract class HandyEvent
 
     public static abstract class ReceiveBookingsSuccess extends ReceiveSuccessEvent
     {
-        public List<Booking> bookings;
+        public BookingsWrapper bookingsWrapper;
         public Date day;
     }
 
 
     public static class ReceiveAvailableBookingsSuccess extends ReceiveBookingsSuccess
     {
-        public ReceiveAvailableBookingsSuccess(List<Booking> bookings, Date day)
+        public ReceiveAvailableBookingsSuccess(BookingsWrapper bookingsWrapper, Date day)
         {
-            this.bookings = bookings;
+            this.bookingsWrapper = bookingsWrapper;
             this.day = day;
         }
     }
@@ -315,9 +316,9 @@ public abstract class HandyEvent
 
     public static class ReceiveScheduledBookingsSuccess extends ReceiveBookingsSuccess
     {
-        public ReceiveScheduledBookingsSuccess(List<Booking> bookings, Date day)
+        public ReceiveScheduledBookingsSuccess(BookingsWrapper bookingsWrapper, Date day)
         {
-            this.bookings = bookings;
+            this.bookingsWrapper = bookingsWrapper;
             this.day = day;
         }
     }
