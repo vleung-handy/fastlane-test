@@ -21,18 +21,18 @@ import butterknife.OnClick;
 public abstract class ConfirmBookingCancellationPolicyDialogFragment
         extends ConfirmBookingActionDialogFragment
 {
-    @Bind(R.id.fragment_dialog_confirm_claim_cancellation_policy_content)
+    @Bind(R.id.fragment_dialog_confirm_booking_cancellation_policy_content)
     LinearLayout mCancellationPolicyContent;
-    @Bind(R.id.fragment_dialog_confirm_claim_show_cancellation_policy_button)
+    @Bind(R.id.fragment_dialog_confirm_booking_show_cancellation_policy_button)
     TextView mShowCancellationPolicyButton;
     @Bind(R.id.confirm_booking_action_title)
     TextView mConfirmBookingActionTitle;
     @Bind(R.id.confirm_booking_action_subtitle)
     TextView mConfirmBookingActionSubtitle;
 
-    private Booking.Action mAction;
+    protected Booking.Action mAction;
 
-    @OnClick(R.id.fragment_dialog_confirm_claim_show_cancellation_policy_button)
+    @OnClick(R.id.fragment_dialog_confirm_booking_show_cancellation_policy_button)
     public void onShowCancellationPolicyButtonClicked()
     {
         mCancellationPolicyContent.setVisibility(View.VISIBLE);
@@ -52,7 +52,7 @@ public abstract class ConfirmBookingCancellationPolicyDialogFragment
     @Override
     protected View inflateBookingActionContentView(final LayoutInflater inflater, final ViewGroup container)
     {
-        return inflater.inflate(R.layout.layout_confirm_booking_claim, container, false);
+        return inflater.inflate(R.layout.layout_confirm_booking_cancellation_policy, container, false);
     }
 
     @Override

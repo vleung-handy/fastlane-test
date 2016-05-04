@@ -23,9 +23,9 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 
-public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDialogFragment
+public class ConfirmBookingCancelKeepRateDialogFragment extends ConfirmBookingActionDialogFragment
 {
-    public static final String FRAGMENT_TAG = ConfirmBookingCancelDialogFragment.class.getSimpleName();
+    public static final String FRAGMENT_TAG = ConfirmBookingCancelKeepRateDialogFragment.class.getSimpleName();
 
     @Bind(R.id.keep_rate)
     View mKeepRateView;
@@ -43,9 +43,9 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
     @Inject
     Bus mBus;
 
-    public static ConfirmBookingCancelDialogFragment newInstance(@NonNull final Booking booking)
+    public static ConfirmBookingCancelKeepRateDialogFragment newInstance(@NonNull final Booking booking)
     {
-        ConfirmBookingCancelDialogFragment fragment = new ConfirmBookingCancelDialogFragment();
+        ConfirmBookingCancelKeepRateDialogFragment fragment = new ConfirmBookingCancelKeepRateDialogFragment();
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING, booking);
         fragment.setArguments(arguments);
