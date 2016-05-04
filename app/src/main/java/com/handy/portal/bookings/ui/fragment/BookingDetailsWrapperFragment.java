@@ -41,7 +41,6 @@ import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
@@ -652,19 +651,9 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
 
     private void goToHelpCenter(final Booking.Action action)
     {
-        final ConfigurationResponse configuration = configManager.getConfigurationResponse();
-        if (configuration != null && configuration.shouldUseHelpCenterWebView())
-        {
-            final Bundle arguments = new Bundle();
-            arguments.putString(BundleKeys.HELP_REDIRECT_PATH, action.getHelpRedirectPath());
-            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP_WEBVIEW, arguments, true));
-        }
-        else
-        {
-            final Bundle arguments = new Bundle();
-            arguments.putString(BundleKeys.HELP_NODE_ID, action.getDeepLinkData());
-            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments, true));
-        }
+        final Bundle arguments = new Bundle();
+        arguments.putString(BundleKeys.HELP_REDIRECT_PATH, action.getHelpRedirectPath());
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP_WEBVIEW, arguments, true));
     }
 
     private void unassignJob(@NonNull Booking.Action removeAction)

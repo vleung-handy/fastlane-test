@@ -10,8 +10,6 @@ import com.handy.portal.bookings.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.NearbyBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
-import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
-import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.notification.ui.fragment.NotificationsFragment;
@@ -72,9 +70,7 @@ public enum MainViewTab implements Serializable
 
     REFER_A_FRIEND(ReferAFriendFragment.class),
 
-    HELP(HelpFragment.class),
     HELP_WEBVIEW(HelpWebViewFragment.class),
-    HELP_CONTACT(HelpContactFragment.class),
 
     BLOCK_PRO_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
     ONBOARDING_WEBVIEW(OnboardingFragment.class, WebUrlManager.USES_CONFIG_PARAM_ONBOARDING_PAGE),
