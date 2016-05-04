@@ -240,11 +240,8 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected void displayBookings(@NonNull final BookingsWrapper bookingsWrapper, @NonNull final Date dateOfBookings)
     {
-        boolean shouldDisplayBookingsList = showBookingsForDayModalsAndBannersIfNecessary(bookingsWrapper, dateOfBookings);
-        if(shouldDisplayBookingsList)
-        {
-            super.displayBookings(bookingsWrapper, dateOfBookings);
-        }
+        super.displayBookings(bookingsWrapper, dateOfBookings);
+        showBookingsForDayModalsAndBannersIfNecessary(bookingsWrapper, dateOfBookings);
     }
 
     /**
@@ -254,10 +251,8 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
      *
      * @param bookingsWrapper
      * @param dateOfBookings
-     * @return true if the bookings list should still be shown. false otherwise
-     * TODO how to make this clearer?
      */
-    private boolean showBookingsForDayModalsAndBannersIfNecessary(@NonNull BookingsWrapper bookingsWrapper, @NonNull Date dateOfBookings) //todo rename
+    private void showBookingsForDayModalsAndBannersIfNecessary(@NonNull BookingsWrapper bookingsWrapper, @NonNull Date dateOfBookings) //todo rename
     {
         mJobAccessUnlockedBannerLayout.setContentVisible(false);
         mJobAccessLockedLayout.setVisibility(View.GONE);
@@ -277,11 +272,10 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
                         break;
                     case LOCKED:
                         showBookingsLayoutForLockedPriorityAccess(priorityAccessInfo);
-                        return false;
+                        break;
                 }
             }
         }
-        return true;
     }
 
     private void showBookingsLayoutForEarlyAccessTrialPriorityAccess(@NonNull BookingsWrapper.PriorityAccessInfo priorityAccessInfo,
