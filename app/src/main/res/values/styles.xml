@@ -511,7 +511,7 @@
     </style>
 
     <style name="TextView.XXLarge">
-        <item name="android:textSize">@dimen/xxlarge_text_size</item>
+        <item name="android:textSize">@dimen/xxlarge_text_size_new</item>
     </style>
 
     <style name="TextView.XXLarge.Bold">
@@ -548,6 +548,16 @@
     </style>
 
     <style name="TextView.Headline.XSmall.Bold">
+        <item name="fontPath">fonts/CircularStd-Bold.otf</item>
+    </style>
+
+    <!--According to Jaclyn, this is the biggest our heading should ever be. 24sp-->
+    <style name="TextView.Headline.XLarge">
+        <item name="android:textSize">@dimen/xxlarge_text_size_new</item>
+        <item name="android:textAllCaps">false</item>
+    </style>
+
+    <style name="TextView.Headline.XLarge.Bold">
         <item name="fontPath">fonts/CircularStd-Bold.otf</item>
     </style>
 

@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class OnboardActivity extends AppCompatActivity
+public class OnboardWelcomeActivity extends AppCompatActivity
 {
     public static final int COLORS = 12;
 
@@ -60,7 +60,7 @@ public class OnboardActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_onboard);
+        setContentView(R.layout.activity_onboard_welcome);
         ButterKnife.bind(this);
         Utils.inject(this, this);
 

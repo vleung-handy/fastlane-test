@@ -290,7 +290,7 @@
         </receiver>
 
         <activity
-            android:name=".ui.activity.OnboardActivity"
+            android:name=".ui.activity.OnboardWelcomeActivity"
             android:theme="@style/AppTheme.Translucent"
             android:screenOrientation="portrait"
             />

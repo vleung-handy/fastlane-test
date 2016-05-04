@@ -38,7 +38,7 @@ import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.SwapFragmentArguments;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
-import com.handy.portal.ui.activity.OnboardActivity;
+import com.handy.portal.ui.activity.OnboardWelcomeActivity;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.handy.portal.ui.layout.TabbedLayout;
 import com.handy.portal.ui.widget.TabButton;
@@ -190,7 +190,7 @@ public class MainActivityFragment extends InjectedFragment
 
             if (configManager.getConfigurationResponse().shouldShowNativeOnboarding())
             {
-                startActivity(new Intent(getContext(), OnboardActivity.class));
+                startActivity(new Intent(getContext(), OnboardWelcomeActivity.class));
             }
             else if (currentTab != null &&
                     currentTab != MainViewTab.ONBOARDING_WEBVIEW &&

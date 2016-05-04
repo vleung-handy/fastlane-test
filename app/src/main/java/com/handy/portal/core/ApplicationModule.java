@@ -60,7 +60,7 @@ import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.GettingStartedActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
-import com.handy.portal.ui.activity.OnboardActivity;
+import com.handy.portal.ui.activity.OnboardWelcomeActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.element.SupportActionView;
@@ -197,7 +197,7 @@ import retrofit.converter.GsonConverter;
         CheckoutJobDetailsFragment.class,
         RequestSuppliesWebViewFragment.class,
         GettingStartedActivity.class,
-        OnboardActivity.class,
+        OnboardWelcomeActivity.class,
 })
 public final class ApplicationModule
 {

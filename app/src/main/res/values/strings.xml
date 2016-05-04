@@ -453,7 +453,7 @@
     <string name="share">Share</string>
 
     <!-- Onboarding -->
-    <string name="onboard_congratulations_formatted">Congratulations, %1$s</string>
+    <string name="onboard_congratulations_formatted">Congratulations,\n%1$s</string>
     <string name="onboard_congratulations">Congratulations!</string>
     <string name="onboard_get_started">Let\'s Get Started</string>
     <string name="onboard_getting_started">Getting Started</string>
@@ -461,7 +461,7 @@
     <string name="onboard_getting_started_title">Start building your schedule with these jobs.</string>
     <string name="onboard_claim_and_earn_formatted">Claim &amp; Earn %s</string>
     <string name="onboard_no_thanks">No thanks, I\'ll find my own jobs</string>
-    <string name="onboard_loading">Choosing jobs in your city...</string>
+    <string name="onboard_loading">Choosing jobs\nin your city...</string>
     <string name="onboard_no_longer_available">Looks like these job(s) are no longer available. Try these jobs.</string>
     <string name="onboard_job_claim_error">"There was an error claiming job(s), please try again"</string>
     <string name="onboard_job_load_error">"There was an error finding jobs, please try again"</string>

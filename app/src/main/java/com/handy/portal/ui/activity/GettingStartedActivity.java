@@ -16,7 +16,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
@@ -35,7 +34,7 @@ import com.handy.portal.model.onboarding.JobClaim;
 import com.handy.portal.model.onboarding.JobClaimRequest;
 import com.handy.portal.ui.adapter.JobsRecyclerAdapter;
 import com.handy.portal.ui.fragment.OnboardLoadingDialog;
-import com.handy.portal.ui.view.HandyJobGroupView;
+import com.handy.portal.ui.view.OnboardJobGroupView;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -51,7 +50,7 @@ import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class GettingStartedActivity extends AppCompatActivity
-        implements HandyJobGroupView.OnJobChangeListener,
+        implements OnboardJobGroupView.OnJobChangeListener,
         DialogInterface.OnCancelListener
 {
 
@@ -118,6 +117,7 @@ public class GettingStartedActivity extends AppCompatActivity
         getSupportActionBar().setTitle(getString(R.string.onboard_getting_started));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_x_white);
+        mFetchErrorView.setBackgroundColor(ContextCompat.getColor(this, R.color.handy_bg));
     }
 
     @Override
@@ -183,8 +183,7 @@ public class GettingStartedActivity extends AppCompatActivity
             public void run()
             {
                 Log.d(TAG, "run: DialogRunCompleted");
-                bindJobs();
-                safeDialogRemoval();
+                bindJobsAndRemoveDialog();
             }
         }, mWaitTime);
 
@@ -220,6 +219,7 @@ public class GettingStartedActivity extends AppCompatActivity
     @Subscribe
     public void onJobLoaded(HandyEvent.ReceiveOnboardingJobsSuccess event)
     {
+        Log.d(TAG, "onJobLoaded: ");
         mLoadingOverlayView.setVisibility(View.GONE);
         mJobs2 = event.bookings;
         if (!hasJobs(mJobs2))
@@ -229,8 +229,7 @@ public class GettingStartedActivity extends AppCompatActivity
         }
         else
         {
-            bindJobs();
-            safeDialogRemoval();
+            bindJobsAndRemoveDialog();
         }
     }
 
@@ -256,36 +255,12 @@ public class GettingStartedActivity extends AppCompatActivity
     /**
      * dismiss the dialog after the jobs have loaded, or 4 seconds, whichever one is slowest
      */
-    private void safeDialogRemoval()
+    private void bindJobsAndRemoveDialog()
     {
         long elapsedTime = System.currentTimeMillis() - mRequestTime;
         if (mJobs2 != null && (elapsedTime >= mWaitTime) && dialogDismissable())
         {
-            if (mLoadingDialog.isVisible())
-            {
-                mLoadingDialog.dismiss();
-                mRecyclerView.startLayoutAnimation();
-            }
-        }
-        else
-        {
-            Log.d(TAG, "safeDialogRemoval: Not removing, elapsedTime:" + elapsedTime);
-            if (mJobs2 == null)
-            {
-                Log.d(TAG, "safeDialogRemoval: There are no jobs");
-            }
-            if (!dialogDismissable())
-            {
-                Log.d(TAG, "safeDialogRemoval: Dialog not dismissable");
-            }
-        }
-    }
-
-    private void bindJobs()
-    {
-        Log.d(TAG, "bindJobs: ");
-        if (mJobs2 != null)
-        {
+            Log.d(TAG, "bindJobs: ");
             mAdapter = new JobsRecyclerAdapter(
                     mJobs2.getBookingsWrappers(),
                     getString(R.string.onboard_getting_started_title),
@@ -293,7 +268,18 @@ public class GettingStartedActivity extends AppCompatActivity
             );
             mRecyclerView.setAdapter(mAdapter);
             updateButton();
+
+            if (mLoadingDialog.isVisible())
+            {
+                mLoadingDialog.dismiss();
+                mRecyclerView.startLayoutAnimation();
+            }
         }
+    }
+
+    private void bindJobs()
+    {
+
     }
 
     /**
@@ -489,7 +475,6 @@ public class GettingStartedActivity extends AppCompatActivity
 
         mLoadingOverlayView.setVisibility(View.GONE);
         mFetchErrorView.setVisibility(View.VISIBLE);
-        String msg = "";
         if (error.error.getType() == DataManager.DataManagerError.Type.NETWORK)
         {
             mErrorText.setText(getString(R.string.error_fetching_connectivity_issue));
@@ -498,8 +483,6 @@ public class GettingStartedActivity extends AppCompatActivity
         {
             mErrorText.setText(getString(R.string.onboard_job_claim_error));
         }
-
-        Toast.makeText(this, msg, Toast.LENGTH_LONG).show();
     }
 
     @Override

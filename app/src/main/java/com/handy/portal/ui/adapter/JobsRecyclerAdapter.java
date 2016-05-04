@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.onboarding.BookingsWrapperViewModel;
-import com.handy.portal.ui.view.HandyJobGroupView;
+import com.handy.portal.ui.view.OnboardJobGroupView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,10 +25,10 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
     List<BookingsWrapperViewModel> mBookingsWrapperViewModels;
     String mTitle;
 
-    HandyJobGroupView.OnJobChangeListener mOnJobChangeListener;
+    OnboardJobGroupView.OnJobChangeListener mOnJobChangeListener;
 
     public JobsRecyclerAdapter(List<BookingsWrapper> bookings, String title,
-                               HandyJobGroupView.OnJobChangeListener mListener)
+                               OnboardJobGroupView.OnJobChangeListener mListener)
     {
 
         mBookingsWrapperViewModels = new ArrayList<>();
@@ -65,8 +65,8 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
 
                 break;
             case TYPE_ITEM:
-                layoutView = new HandyJobGroupView(parent.getContext());
-                ((HandyJobGroupView) layoutView).setOnJobChangeListener(mOnJobChangeListener);
+                layoutView = new OnboardJobGroupView(parent.getContext());
+                ((OnboardJobGroupView) layoutView).setOnJobChangeListener(mOnJobChangeListener);
                 break;
         }
 
@@ -109,14 +109,14 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
 
     static class RecyclerViewHolder extends RecyclerView.ViewHolder
     {
-        public HandyJobGroupView mJobView;
+        public OnboardJobGroupView mJobView;
 
         public RecyclerViewHolder(View itemView)
         {
             super(itemView);
-            if (itemView instanceof HandyJobGroupView)
+            if (itemView instanceof OnboardJobGroupView)
             {
-                mJobView = (HandyJobGroupView) itemView;
+                mJobView = (OnboardJobGroupView) itemView;
             }
         }
     }

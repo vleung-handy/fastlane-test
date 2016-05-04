@@ -21,7 +21,7 @@ import java.util.List;
  * the group
  * <p/>
  */
-public class HandyJobGroupView extends LinearLayout implements CompoundButton.OnCheckedChangeListener
+public class OnboardJobGroupView extends LinearLayout implements CompoundButton.OnCheckedChangeListener
 {
 
     TextView mTitle;
@@ -32,7 +32,7 @@ public class HandyJobGroupView extends LinearLayout implements CompoundButton.On
 
     OnJobChangeListener mOnJobChangeListener;
 
-    public HandyJobGroupView(Context context)
+    public OnboardJobGroupView(Context context)
     {
         super(context);
         init();

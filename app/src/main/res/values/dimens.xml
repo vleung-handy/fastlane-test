@@ -17,6 +17,7 @@
     <dimen name="default_margin_x2">32dp</dimen>
     <dimen name="default_margin_x3">48dp</dimen>
     <dimen name="default_margin_x4">64dp</dimen>
+    <dimen name="default_margin_x5">80dp</dimen>
     <dimen name="default_margin_large">32dp</dimen>
     <dimen name="default_margin_xlarge">48dp</dimen>
     <dimen name="booking_details_contact_action_button_margin">8dp</dimen>
@@ -60,6 +61,10 @@
     <dimen name="dashboard_header_text_size">21sp</dimen>
     <dimen name="xlarge_text_size">22sp</dimen>
     <dimen name="hero_text_size">28sp</dimen>
+
+    <!--According to Jaclyn, we should not have anything bigger than 24sp ..., so
+        going forward, this will replace the xxlarge_text_size -->
+    <dimen name="xxlarge_text_size_new">24sp</dimen>
     <dimen name="xxlarge_text_size">32sp</dimen>
     <dimen name="title_text_size">25sp</dimen>
     <dimen name="accept_terms_button_text_size">20sp</dimen>
@@ -75,6 +80,7 @@
     <dimen name="medium_corner_radius">4dp</dimen>
 
     <!-- Generic -->
+    <dimen name="negative_complete_button_height_half">-32dp</dimen>
     <dimen name="complete_button_height">64dp</dimen>
 
     <!--notifications-->

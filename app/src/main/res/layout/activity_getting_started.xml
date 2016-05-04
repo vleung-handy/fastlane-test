@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.handy.portal.ui.activity.GettingStartedActivity"
+    android:background="@color/handy_bg"
     >
 
     <android.support.v7.widget.Toolbar

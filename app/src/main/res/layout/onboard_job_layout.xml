@@ -63,7 +63,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="Midtown East, Murray Hill, Gramercy"
-            style="@style/TextView.Large.Bold"
+            style="@style/TextView.Med"
             android:ellipsize="end"
             android:maxLines="2"
             android:textColor="@color/black"
@@ -74,7 +74,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             tools:text="1:00pm - 4:00pm"
-            android:textSize="@dimen/default_text_size"
+            android:textSize="@dimen/small_text_size"
+            android:textColor="@color/dark_grey"
             />
     </LinearLayout>
 

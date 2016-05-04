@@ -37,6 +37,7 @@
     <color name="error_red_pressed">#F25757</color>
     <color name="very_light_grey">#9F9794</color>
     <color name="bg_inactive_grey">#9CABB5</color>
+    <color name="bg_inactive_grey_50">#809CABB5</color>
     <color name="bg_active_grey">#8A969E</color>
     <color name="text_light_grey">#CCCCCC</color>
     <color name="subtitle_grey">#9CABB5</color>
