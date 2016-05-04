@@ -4,39 +4,20 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.bookings.ui.element.BookingCancellationPolicyListItemView;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
-import com.handy.portal.payments.model.PaymentInfo;
-import com.handy.portal.util.CurrencyUtils;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
-import butterknife.OnClick;
-
-public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialogFragment
+public class ConfirmBookingClaimDialogFragment
+        extends ConfirmBookingCancellationPolicyDialogFragment
 {
-    @Bind(R.id.fragment_dialog_confirm_claim_cancellation_policy_content)
-    LinearLayout mCancellationPolicyContent;
-    @Bind(R.id.fragment_dialog_confirm_claim_show_cancellation_policy_button)
-    TextView mShowCancellationPolicyButton;
-    @Bind(R.id.confirm_booking_action_title)
-    TextView mConfirmBookingActionTitle;
-    @Bind(R.id.confirm_booking_action_subtitle)
-    TextView mConfirmBookingActionSubtitle;
-
     @Inject
     Bus mBus;
 
@@ -47,14 +28,9 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
         ConfirmBookingClaimDialogFragment fragment = new ConfirmBookingClaimDialogFragment();
         Bundle args = new Bundle();
         args.putSerializable(BundleKeys.BOOKING, booking);
+        args.putSerializable(BundleKeys.BOOKING_ACTION, booking.getAction(Booking.Action.ACTION_CLAIM));
         fragment.setArguments(args);
         return fragment;
-    }
-
-    @Override
-    public View inflateBookingActionContentView(LayoutInflater inflater, ViewGroup container)
-    {
-        return inflater.inflate(R.layout.layout_confirm_booking_claim, container, false);
     }
 
     @Override
@@ -70,46 +46,11 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
-        super.onViewCreated(view, savedInstanceState);
-
-        setTitleAndSubtitle();
-        setBookingCancellationPolicyDisplay();
-
-        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ConfirmClaimShown()));
-    }
-
-    private void setTitleAndSubtitle()
-    {
-        Booking.Action bookingClaimAction = mBooking.getAction(Booking.Action.ACTION_CLAIM);
-        if(bookingClaimAction == null
-                || bookingClaimAction.getExtras() == null
-                || bookingClaimAction.getExtras().getCancellationPolicy() == null)
-        {
-            Crashlytics.logException(new Exception("Booking claim action object is null or missing cancellation policy"));
-            return;
-        }
-
-        Booking.Action.Extras.CancellationPolicy cancellationPolicy = bookingClaimAction.getExtras().getCancellationPolicy();
-        mConfirmBookingActionTitle.setText(cancellationPolicy.getHeaderText());
-        mConfirmBookingActionSubtitle.setText(cancellationPolicy.getSubtitleText());
-    }
-
-    @OnClick(R.id.fragment_dialog_confirm_claim_show_cancellation_policy_button)
-    public void onShowCancellationPolicyButtonClicked()
-    {
-        mCancellationPolicyContent.setVisibility(View.VISIBLE);
-        mShowCancellationPolicyButton.setVisibility(View.GONE);
-        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ConfirmClaimDetailsShown()));
-    }
-
-    @Override
     protected void onConfirmBookingActionButtonClicked()
     {
         Intent intent = new Intent();
         intent.putExtra(BundleKeys.BOOKING, mBooking);
-        if(getTargetFragment() != null)
+        if (getTargetFragment() != null)
         {
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
         }
@@ -121,54 +62,15 @@ public class ConfirmBookingClaimDialogFragment extends ConfirmBookingActionDialo
         dismiss();
     }
 
-    private void setBookingCancellationPolicyDisplay()
+    @Override
+    public void afterShowCancellationPolicyButtonClicked()
     {
-        Booking.Action bookingClaimAction = mBooking.getAction(Booking.Action.ACTION_CLAIM);
-        if(bookingClaimAction == null
-                || bookingClaimAction.getExtras() == null
-                || bookingClaimAction.getExtras().getCancellationPolicy() == null)
-        {
-            Crashlytics.logException(new Exception("Booking claim action object is null or missing cancellation policy"));
-            return;
-        }
-        Booking.Action.Extras.CancellationPolicy.CancellationPolicyItem cancellationPolicies[] =
-                bookingClaimAction.getExtras().getCancellationPolicy().getCancellationPolicyItems();
+        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ConfirmClaimDetailsShown()));
+    }
 
-        mCancellationPolicyContent.removeAllViews();
-        if(cancellationPolicies != null)
-        {
-            for(int i = 0; i< cancellationPolicies.length; i++)
-            {
-                Booking.Action.Extras.CancellationPolicy.CancellationPolicyItem cancellationPolicy = cancellationPolicies[i];
-                PaymentInfo fee = cancellationPolicy.getPaymentInfo();
-                PaymentInfo waivedFee = cancellationPolicy.getWaivedPaymentInfo();
-                if(fee != null)
-                {
-                    final String feeAmountFormatted = CurrencyUtils.formatPriceWithoutCents(fee.getAmount(), fee.getCurrencySymbol());
-                    String waivedFeeAmountFormatted = null;
-                    if (waivedFee != null)
-                    {
-                        waivedFeeAmountFormatted = CurrencyUtils.formatPriceWithoutCents(waivedFee.getAmount(), waivedFee.getCurrencySymbol());
-                    }
-
-                    BookingCancellationPolicyListItemView policyListItemView =
-                            new BookingCancellationPolicyListItemView(getContext())
-                                    .setLeftText(cancellationPolicy.getDisplayText())
-                                    .setRightText1(waivedFeeAmountFormatted)
-                                    .setRightText2(feeAmountFormatted)
-                                    .setHighlighted(cancellationPolicy.isActive())
-                                    .setDividerVisible(i != (cancellationPolicies.length - 1));
-                    mCancellationPolicyContent.addView(policyListItemView);
-                }
-                else
-                {
-                    Crashlytics.logException(new Exception("Cancellation policy item payment info is null"));
-                }
-            }
-        }
-        else
-        {
-            Crashlytics.logException(new Exception("Cancellation policies array is null"));
-        }
+    @Override
+    public void afterViewCreated()
+    {
+        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ConfirmClaimShown()));
     }
 }
