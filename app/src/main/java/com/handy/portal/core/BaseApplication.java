@@ -1,7 +1,6 @@
 package com.handy.portal.core;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -177,12 +176,6 @@ public class BaseApplication extends MultiDexApplication
             @Override
             public void onActivityDestroyed(final Activity activity) { }
         });
-    }
-
-    @Override
-    protected void attachBaseContext(Context base)
-    {
-        super.attachBaseContext(base);
     }
 
     protected void startNewRelic()

@@ -126,6 +126,8 @@ public class InProgressBookingFragment extends TimerActionBarFragment
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
     {
         setDisplay();
+        setOptionsMenuEnabled(true);
+        setBackButtonEnabled(true);
     }
 
     public void setDisplay()
@@ -145,8 +147,15 @@ public class InProgressBookingFragment extends TimerActionBarFragment
             mCustomerNameText.setText(user.getFullName());
         }
 
-        mJobStartTimeText.setText(DateTimeUtils.formatDateTo12HourClock(
-                mBooking.getCheckInSummary().getCheckInTime()).toLowerCase());
+        if (mBooking.getCheckInSummary() != null && mBooking.getCheckInSummary().getCheckInTime() != null)
+        {
+            String dateString = DateTimeUtils.formatDateTo12HourClock(
+                    mBooking.getCheckInSummary().getCheckInTime());
+            if (dateString != null)
+            {
+                mJobStartTimeText.setText(dateString.toLowerCase());
+            }
+        }
 
         // Booking Instructions
         List<Booking.BookingInstructionGroup> bookingInstructionGroups = mBooking.getBookingInstructionGroups();

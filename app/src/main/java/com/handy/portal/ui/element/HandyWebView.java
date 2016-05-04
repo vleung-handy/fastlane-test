@@ -69,7 +69,8 @@ public class HandyWebView extends WebView //TODO: refactor class name
             String template = CharStreams.toString(new InputStreamReader(stream, UTF_8));
             return content == null ? "" : template.replace(TEMPLATE_PLACEHOLDER, content);
 
-        } catch (IOException e)
+        }
+        catch (IOException e)
         {
             Crashlytics.logException(e);
             return content;
@@ -88,22 +89,18 @@ public class HandyWebView extends WebView //TODO: refactor class name
                     try
                     {
                         Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.parse(url)), view.getContext());
-                    } catch (Exception e)
+                    }
+                    catch (Exception e)
                     {
                         Crashlytics.log("Attempted to open " + url);
                         Crashlytics.logException(e);
                     }
                     return true;
-                } else
+                }
+                else
                 {
                     return false;
                 }
-            }
-
-            @Override
-            public void onPageFinished(WebView webView, String url)
-            {
-                super.onPageFinished(webView, url);
             }
         });
     }

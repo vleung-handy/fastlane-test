@@ -34,17 +34,12 @@ public class PaymentBlockingFragment extends ActionBarFragment
         return MainViewTab.AVAILABLE_JOBS;
     }
 
-    protected int getFragmentResourceId()
-    {
-        return R.layout.fragment_payment_blocking;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(getFragmentResourceId(), null);
+        View view = inflater.inflate(R.layout.fragment_payment_blocking, container, false);
         ButterKnife.bind(this, view);
         setActionBarTitle(R.string.payment_blocking_title);
         return view;

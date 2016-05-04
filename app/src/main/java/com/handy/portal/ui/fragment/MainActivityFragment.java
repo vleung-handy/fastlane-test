@@ -90,6 +90,7 @@ public class MainActivityFragment extends InjectedFragment
     @Bind(R.id.build_version_text)
     TextView mBuildVersionText;
 
+    private ActionBarDrawerToggle mActionBarDrawerToggle;
     private MainViewTab currentTab = null;
 
     //Are we currently clearing out the backstack?
@@ -98,7 +99,7 @@ public class MainActivityFragment extends InjectedFragment
 
     private boolean mOnResumeTransitionToMainTab; //need to catch and hold until onResume so we can catch the response from the bus
 
-    private boolean mFirstTimeConfigReturned = true; //the first time we get config response back we may need to navigate away
+    private boolean mConfigAlreadyReceivedThisSession = false; //the first time we get config response back we may need to navigate away
     private Bundle mDeeplinkData;
     private boolean mDeeplinkHandled;
     private String mDeeplinkSource;
@@ -108,6 +109,26 @@ public class MainActivityFragment extends InjectedFragment
     {
         super.onCreate(savedInstanceState);
         setDeeplinkData(savedInstanceState);
+
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), mDrawerLayout,
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close)
+        {
+            @Override
+            public void onDrawerOpened(final View drawerView)
+            {
+                super.onDrawerOpened(drawerView);
+                bus.post(new LogEvent.AddLogEvent(new SideMenuLog.Opened()));
+                setDrawerActive(true);
+            }
+
+            @Override
+            public void onDrawerClosed(final View drawerView)
+            {
+                super.onDrawerClosed(drawerView);
+                bus.post(new LogEvent.AddLogEvent(new SideMenuLog.Closed()));
+                setDrawerActive(false);
+            }
+        };
     }
 
     @Override
@@ -130,33 +151,10 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
-        mDrawerLayout.setDrawerListener(new ActionBarDrawerToggle(getActivity(), mDrawerLayout,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        {
-            @Override
-            public void onDrawerOpened(final View drawerView)
-            {
-                super.onDrawerOpened(drawerView);
-                bus.post(new LogEvent.AddLogEvent(new SideMenuLog.Opened()));
-                setDrawerActive(true);
-            }
-
-            @Override
-            public void onDrawerClosed(final View drawerView)
-            {
-                super.onDrawerClosed(drawerView);
-                bus.post(new LogEvent.AddLogEvent(new SideMenuLog.Closed()));
-                setDrawerActive(false);
-            }
-        });
-    }
-
-    @Override
     public void onResume()
     {
         super.onResume();
+
         bus.post(new NotificationEvent.RequestUnreadCount());
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
         if (currentTab == null)
@@ -164,6 +162,7 @@ public class MainActivityFragment extends InjectedFragment
             switchToTab(MainViewTab.AVAILABLE_JOBS, false);
         }
         handleDeeplink();
+        mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
     }
 
     @Subscribe
@@ -171,9 +170,9 @@ public class MainActivityFragment extends InjectedFragment
     {
         //If the config response came back for the first time may need to navigate away
         //Normally the fragment would take care of itself, but this would launch the fragment if needed
-        if (mFirstTimeConfigReturned)
+        if (!mConfigAlreadyReceivedThisSession)
         {
-            mFirstTimeConfigReturned = false;
+            mConfigAlreadyReceivedThisSession = true;
             handleOnboardingFlow();
         }
     }
@@ -186,13 +185,9 @@ public class MainActivityFragment extends InjectedFragment
 
     private void handleOnboardingFlow()
     {
-        if (currentTab != null &&
-                currentTab != MainViewTab.ONBOARDING_WEBVIEW &&
-                configManager.getConfigurationResponse() != null &&
-                configManager.getConfigurationResponse().shouldShowOnboarding()
-                )
+        if (currentTab != null && currentTab != MainViewTab.ONBOARDING_WEBVIEW &&
+                doesCachedProviderNeedOnboarding())
         {
-            //We can be lazy here with params, TabNavigationManager will do all the work for us, we are just firing it up
             switchToTab(MainViewTab.ONBOARDING_WEBVIEW, false);
         }
     }
@@ -252,7 +247,9 @@ public class MainActivityFragment extends InjectedFragment
     public void onPause()
     {
         super.onPause();
+        mConfigAlreadyReceivedThisSession = false;
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(false));
+        mDrawerLayout.removeDrawerListener(mActionBarDrawerToggle);
     }
 
 //Event Listeners
@@ -611,6 +608,12 @@ public class MainActivityFragment extends InjectedFragment
     private ConfigurationResponse getConfigurationResponse()
     {
         return mConfigManager.getConfigurationResponse();
+    }
+
+    private boolean doesCachedProviderNeedOnboarding()
+    {
+        return (getConfigurationResponse() != null &&
+                getConfigurationResponse().shouldShowOnboarding());
     }
 
     @SuppressWarnings("deprecation")

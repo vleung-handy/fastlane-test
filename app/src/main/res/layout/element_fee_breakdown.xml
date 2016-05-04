@@ -68,10 +68,9 @@
 
             <TextView
                 android:id="@+id/fee_breakdown_description_text"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/payment_description_width"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/default_margin_x2"
-                android:layout_marginRight="@dimen/default_margin_x2"
+                android:layout_marginTop="@dimen/extra_margin_xsmall"
                 android:textColor="@color/tertiary_grey"
                 android:textSize="@dimen/default_text_size"
                 tools:text="7:00 pm - Flatiron"
@@ -88,7 +87,7 @@
             android:layout_centerVertical="true"
             android:textColor="@color/error_red"
             android:textSize="@dimen/large_text_size"
-            tools:text="-$5"
+            tools:text="-$35"
             />
 
     </RelativeLayout>
