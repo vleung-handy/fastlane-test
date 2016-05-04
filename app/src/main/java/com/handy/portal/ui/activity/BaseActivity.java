@@ -170,12 +170,6 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onPostResume()
-    {
-        super.onPostResume();
-    }
-
-    @Override
     public void onResumeFragments()
     {
         super.onResumeFragments();

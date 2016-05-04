@@ -25,12 +25,6 @@ public class PaymentDetailExpandableListView extends ExpandableListView
         super(context, attrs, defStyle);
     }
 
-    @Override
-    protected void onFinishInflate()
-    {
-        super.onFinishInflate();
-    }
-
     public void updateData(NeoPaymentBatch neoPaymentBatch)
     {
         PaymentDetailExpandableListAdapter itemsAdapter = new PaymentDetailExpandableListAdapter(

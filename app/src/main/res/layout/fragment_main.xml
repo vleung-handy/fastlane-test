@@ -15,7 +15,7 @@
         android:orientation="vertical"
         >
 
-        <LinearLayout
+        <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_top_padding"
             android:background="?attr/colorPrimary"
@@ -39,7 +39,7 @@
             <FrameLayout
                 android:id="@+id/main_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_above="@+id/tabs"
                 />
 

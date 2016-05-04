@@ -24,12 +24,6 @@ public abstract class ActionBarFragment extends InjectedFragment
     EnvironmentModifier environmentModifier;
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         setActionBarVisible(true);
@@ -136,11 +130,6 @@ public abstract class ActionBarFragment extends InjectedFragment
     public void setActionBar(int titleStringId, boolean backButtonEnabled)
     {
         setActionBar(getResources().getString(titleStringId), backButtonEnabled);
-    }
-
-    public void invalidateOptionsMenu()
-    {
-        getActivity().invalidateOptionsMenu();
     }
 
     public void setOptionsMenuEnabled(boolean enabled)

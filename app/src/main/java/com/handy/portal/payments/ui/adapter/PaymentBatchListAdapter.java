@@ -19,6 +19,7 @@ import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import javax.inject.Inject;
@@ -31,7 +32,6 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
     Bus mBus;
 
     public static final int DAYS_TO_REQUEST_PER_BATCH = 28;
-    private final static Date LOWER_BOUND_PAYMENT_REQUEST_DATE = new Date(113, 9, 23); // No payments precede Oct 23, 2013
     private Date nextRequestEndDate;
 
     //TODO: we don't need to keep track of oldest date when we can use new pagination API that allows us to get the N next batches
@@ -80,8 +80,15 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
     {
         if (nextRequestEndDate != null)
         {
+            final Calendar lowerBoundPaymentRequestDate = Calendar.getInstance();
+            lowerBoundPaymentRequestDate.set(2013, 9, 23); // No payments precede Oct 23, 2013
+
             Date newDate = new Date(requestStartDate.getTime() - 1);
-            nextRequestEndDate = newDate.before(LOWER_BOUND_PAYMENT_REQUEST_DATE) ? null : newDate;
+            Calendar newDateCalendar = Calendar.getInstance();
+            newDateCalendar.setTime(requestStartDate);
+
+            nextRequestEndDate = newDateCalendar.before(lowerBoundPaymentRequestDate)
+                    ? null : newDate;
         }
     }
 

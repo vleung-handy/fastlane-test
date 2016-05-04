@@ -346,43 +346,36 @@
                         android:visibility="gone"
                         />
 
+
                     <LinearLayout
                         android:id="@+id/booking_nearby_transit_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/default_padding"
                         android:visibility="gone"
                         tools:visibility="visible"
                         >
 
+                        <TextView
+                            style="@style/CircularBold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/nearby_transit"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/default_text_size"
+                            />
+
                         <LinearLayout
+                            android:id="@+id/nearby_transits"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:padding="@dimen/default_padding"
-                            >
-
-                            <TextView
-                                style="@style/CircularBold"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/nearby_transit"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/default_text_size"
-                                />
-
-                            <LinearLayout
-                                android:id="@+id/nearby_transits"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:paddingEnd="@dimen/extra_padding"
-                                android:paddingLeft="@dimen/extra_padding"
-                                android:paddingRight="@dimen/extra_padding"
-                                android:paddingStart="@dimen/extra_padding"
-                                />
-
-                        </LinearLayout>
+                            android:paddingEnd="@dimen/extra_padding"
+                            android:paddingLeft="@dimen/extra_padding"
+                            android:paddingRight="@dimen/extra_padding"
+                            android:paddingStart="@dimen/extra_padding"
+                            />
 
                     </LinearLayout>
 

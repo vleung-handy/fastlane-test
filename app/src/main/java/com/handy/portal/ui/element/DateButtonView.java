@@ -13,6 +13,7 @@ import com.handy.portal.util.DateTimeUtils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -65,7 +66,7 @@ public class DateButtonView extends RelativeLayout implements Checkable
 
         mSelectedDayIndicator.setVisibility(View.INVISIBLE);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(DATE_FORMAT, Locale.getDefault());
         String[] formattedDate = dateFormat.format(date.getTime()).split(" ");
 
         //only display month for first day in a month
@@ -82,7 +83,8 @@ public class DateButtonView extends RelativeLayout implements Checkable
         {
             mTodayText.setVisibility(View.VISIBLE);
             mDayOfMonthText.setVisibility(View.INVISIBLE);
-            mDayOfWeekText.setText(formattedDate[1] + " " + formattedDate[2]);
+            mDayOfWeekText.setText(getResources().getString(R.string.space_formatted,
+                    formattedDate[1], formattedDate[2]));
         }
         else
         {

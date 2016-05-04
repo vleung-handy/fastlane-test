@@ -31,7 +31,7 @@ public abstract class PortalWebViewFragment extends ActionBarFragment
                              Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_webportal, null);
+        View view = inflater.inflate(R.layout.fragment_webportal, container, false);
         ButterKnife.bind(this, view);
 
         if (Build.VERSION.SDK_INT == Build.VERSION_CODES.KITKAT) //needed to workaround a bug in android 4.4 that cause webview artifacts to show.
@@ -92,8 +92,7 @@ public abstract class PortalWebViewFragment extends ActionBarFragment
                 + "&skip_web_portal_version_tracking=1"
                 + "&skip_web_portal_blocking=1"
                 + "&from_android_native=1"
-                + "&disable_mobile_splash=1"
-                ;
+                + "&disable_mobile_splash=1";
         String urlWithParams = url + (url.contains("?") ? "&" : "?") + endOfUrl;
         webView.loadUrl(urlWithParams);
     }
