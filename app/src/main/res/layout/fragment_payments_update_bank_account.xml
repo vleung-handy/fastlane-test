@@ -68,7 +68,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/extra_margin"
                 android:text="@string/your_bank_check"
-                android:textColor="@color/subtitle_grey"/>
+                android:textColor="@color/tertiary_gray"
+                />
 
             <ImageView
                 android:layout_width="match_parent"

@@ -159,14 +159,14 @@ public class ProviderEvaluation implements Serializable
             switch (mStatus)
             {
                 case POSITIVE:
-                    return R.color.requested_green;
+                    return R.color.cleaner_green;
                 case NEUTRAL:
-                    return R.color.handy_yellow;
+                    return R.color.electrician_yellow;
                 case NA:
-                    return R.color.requested_green;
+                    return R.color.cleaner_green;
                 case NEGATIVE:
                 default:
-                    return R.color.error_red;
+                    return R.color.plumber_red;
             }
         }
 

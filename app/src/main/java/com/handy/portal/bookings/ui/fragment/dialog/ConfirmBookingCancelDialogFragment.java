@@ -182,7 +182,7 @@ public class ConfirmBookingCancelDialogFragment extends ConfirmBookingActionDial
         final int start = withholdingFeeMessageFormatted.indexOf(feeFormatted);
         final int end = start + feeFormatted.length();
         spannable.setSpan(
-                new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.error_red)),
+                new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.plumber_red)),
                 start,
                 end,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE

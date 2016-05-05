@@ -34,7 +34,7 @@
             android:gravity="center_horizontal"
             android:paddingBottom="@dimen/default_padding"
             android:paddingTop="@dimen/lineSpacing"
-            android:textColor="@color/tertiary_grey"
+            android:textColor="@color/tertiary_gray"
             android:textSize="@dimen/medium_text_size"
             tools:text="January 5, 2016 - February 5, 2016"
             />

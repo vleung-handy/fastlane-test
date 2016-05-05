@@ -71,7 +71,7 @@
                 android:layout_width="@dimen/payment_description_width"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/extra_margin_xsmall"
-                android:textColor="@color/tertiary_grey"
+                android:textColor="@color/tertiary_gray"
                 android:textSize="@dimen/default_text_size"
                 tools:text="For 12:00 pm booking on May 5"
                 />
@@ -85,7 +85,7 @@
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:textColor="@color/error_red"
+            android:textColor="@color/plumber_red"
             android:textSize="@dimen/large_text_size"
             tools:text="-$35"
             />

@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/job_access_locked_learn_more"
-            android:textColor="@color/subtitle_grey"
+            android:textColor="@color/tertiary_gray"
             />
 
         <TextView

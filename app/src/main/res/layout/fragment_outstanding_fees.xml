@@ -45,7 +45,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
                     android:layout_alignParentRight="true"
-                    android:textColor="@color/error_red"
+                    android:textColor="@color/plumber_red"
                     android:textSize="@dimen/large_text_size"
                     tools:text="-$50"
                     />
@@ -57,7 +57,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/extra_padding"
                 android:text="@string/fees_applied_to_future_payments"
-                android:textColor="@color/tertiary_grey"
+                android:textColor="@color/tertiary_gray"
                 android:textSize="@dimen/default_text_size"
                 />
 
@@ -86,7 +86,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/no_outstanding_withholdings"
-                android:textColor="@color/tertiary_grey"
+                android:textColor="@color/tertiary_gray"
                 android:textSize="@dimen/default_text_size"
                 />
 
@@ -97,7 +97,7 @@
                 android:gravity="center"
                 android:lineSpacingExtra="@dimen/lineSpacing"
                 android:text="@string/withholdings_not_deducted_description"
-                android:textColor="@color/tertiary_grey"
+                android:textColor="@color/tertiary_gray"
                 android:textSize="@dimen/small_text_size"
                 />
 

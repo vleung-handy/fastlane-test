@@ -80,7 +80,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginTop="30dp"
-                    android:backgroundTint="@color/very_light_grey"
+                    android:backgroundTint="@color/very_light_gray"
                     android:clickable="false"
                     android:digits="1234567890"
                     android:ems="12"
@@ -92,7 +92,7 @@
                     android:maxLength="14"
                     android:maxLines="1"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/very_light_grey"
+                    android:textColorHint="@color/very_light_gray"
                     />
 
             </RelativeLayout>
@@ -112,7 +112,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginTop="30dp"
-                    android:backgroundTint="@color/very_light_grey"
+                    android:backgroundTint="@color/very_light_gray"
                     android:ems="12"
                     android:gravity="center_horizontal"
                     android:hint="@string/pin_code_hint"
@@ -120,7 +120,7 @@
                     android:maxLength="6"
                     android:maxLines="1"
                     android:textColor="@color/white"
-                    android:textColorHint="@color/very_light_grey"
+                    android:textColorHint="@color/very_light_gray"
                     />
             </RelativeLayout>
 

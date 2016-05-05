@@ -59,7 +59,7 @@ public class PaymentsBatchListItemView extends TableLayout
             statusText.setText(neoPaymentBatch.getStatus());
             //color status text
 
-            statusText.setTextColor(ContextCompat.getColor(getContext(), NeoPaymentBatch.Status.FAILED.toString().equalsIgnoreCase(neoPaymentBatch.getStatus()) ? R.color.error_red : R.color.subtitle_grey));
+            statusText.setTextColor(ContextCompat.getColor(getContext(), NeoPaymentBatch.Status.FAILED.toString().equalsIgnoreCase(neoPaymentBatch.getStatus()) ? R.color.plumber_red : R.color.tertiary_gray));
 
             PaymentGroup paymentGroups[] = neoPaymentBatch.getPaymentGroups();
             int numJobs = 0;
@@ -84,7 +84,7 @@ public class PaymentsBatchListItemView extends TableLayout
             dateText.setText(DateTimeUtils.formatDateMonthDay(legacyPaymentBatch.getDate()));
             paymentAmountText.setText(CurrencyUtils.formatPriceWithCents(legacyPaymentBatch.getEarnedByProvider(), legacyPaymentBatch.getCurrencySymbol()));
             statusText.setText(legacyPaymentBatch.getStatus());
-            statusText.setTextColor(ContextCompat.getColor(getContext(), R.color.subtitle_grey));
+            statusText.setTextColor(ContextCompat.getColor(getContext(), R.color.tertiary_gray));
             jobInfoText.setText(getResources().getString(R.string.job_num) + legacyPaymentBatch.getBookingId());
             setEnabled(false);
         }

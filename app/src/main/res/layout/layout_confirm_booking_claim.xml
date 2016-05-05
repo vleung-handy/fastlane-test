@@ -32,7 +32,7 @@
         android:layout_marginLeft="@dimen/default_padding"
         android:layout_marginRight="@dimen/default_padding"
         android:gravity="center"
-        android:textColor="@color/subtitle_grey"
+        android:textColor="@color/tertiary_gray"
         tools:text="Every time you cancel a job, your Keep Rate is negatively impacted, even if you don't incur any fees."
         />
 

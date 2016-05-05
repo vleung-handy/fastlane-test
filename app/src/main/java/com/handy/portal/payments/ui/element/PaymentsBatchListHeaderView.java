@@ -59,7 +59,7 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
         currentWeekExpectedPaymentText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getNetEarningsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
         currentWeekFeesText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getFeesTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
         currentWeekTotalEarningsText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getGrossEarningsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
-        currentWeekFeesText.setTextColor(ContextCompat.getColor(getContext(), neoPaymentBatch.getFeesTotalAmount() < 0 ? R.color.error_red : R.color.black));
+        currentWeekFeesText.setTextColor(ContextCompat.getColor(getContext(), neoPaymentBatch.getFeesTotalAmount() < 0 ? R.color.plumber_red : R.color.black));
 
         if (neoPaymentBatch.getRemainingFeeAmount() == 0)
         {

@@ -47,7 +47,7 @@ public class PaymentBillBlockerDialogFragment extends PopupDialogFragment //TODO
         SpannableString spannableString = new SpannableString(content);
         int startIndex = content.indexOf(coloredText);
         spannableString.setSpan(
-                new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.error_red)),
+                new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.plumber_red)),
                 startIndex,
                 startIndex + coloredText.length(), 0);
         mPaymentBlockerContentText.setText(spannableString, TextView.BufferType.SPANNABLE);

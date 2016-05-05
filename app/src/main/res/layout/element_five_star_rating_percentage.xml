@@ -47,7 +47,7 @@
             android:layout_alignBottom="@+id/five_star_percentage_number"
             android:layout_centerHorizontal="true"
             android:text="@string/five_star"
-            android:textColor="@color/tertiary_grey"
+            android:textColor="@color/tertiary_gray"
             />
 
     </RelativeLayout>

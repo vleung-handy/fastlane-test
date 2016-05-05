@@ -35,7 +35,7 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/video_chevron"
             android:layout_toStartOf="@+id/video_chevron"
-            android:textColor="@color/tertiary_grey"
+            android:textColor="@color/tertiary_gray"
             android:textSize="@dimen/large_text_size"
             tools:text="$15"
             />
@@ -96,7 +96,7 @@
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/feedback_chevron"
             android:layout_toStartOf="@+id/feedback_chevron"
-            android:textColor="@color/error_red"
+            android:textColor="@color/plumber_red"
             android:textSize="@dimen/default_text_size"
             tools:text="Quality of Service"
             />
@@ -149,7 +149,7 @@
                 android:layout_centerVertical="true"
                 android:layout_toLeftOf="@+id/reviews_chevron"
                 android:layout_toStartOf="@+id/reviews_chevron"
-                android:textColor="@color/tertiary_grey"
+                android:textColor="@color/tertiary_gray"
                 android:textSize="@dimen/large_text_size"
                 tools:text="18"
                 />
@@ -196,7 +196,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:paddingTop="@dimen/extra_padding"
-                android:textColor="@color/tertiary_grey"
+                android:textColor="@color/tertiary_gray"
                 android:textSize="@dimen/small_text_size"
                 tools:text="Sam, May 2015"
                 />

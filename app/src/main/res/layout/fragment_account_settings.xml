@@ -37,7 +37,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/your_contact_information"
-                    android:textColor="@color/dark_grey"
+                    android:textColor="@color/dark_gray"
                     android:textSize="@dimen/default_text_size"
                     />
 
@@ -48,7 +48,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/contact_tier_chevron"
                     android:layout_toStartOf="@+id/contact_tier_chevron"
-                    android:textColor="@color/tertiary_grey"
+                    android:textColor="@color/tertiary_gray"
                     android:textSize="@dimen/default_text_size"
                     tools:text="Mike Gallagher"
                     />
@@ -84,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/edit_payment_method"
-                    android:textColor="@color/dark_grey"
+                    android:textColor="@color/dark_gray"
                     android:textSize="@dimen/default_text_size"
                     />
 
@@ -95,7 +95,7 @@
                     android:layout_centerVertical="true"
                     android:layout_toLeftOf="@+id/edit_payment_option_chevron"
                     android:layout_toStartOf="@+id/edit_payment_option_chevron"
-                    android:textColor="@color/tertiary_grey"
+                    android:textColor="@color/tertiary_gray"
                     android:textSize="@dimen/default_text_size"
                     tools:text="verified"
                     />
@@ -140,7 +140,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:text="@string/purchase_supplies"
-                        android:textColor="@color/dark_grey"
+                        android:textColor="@color/dark_gray"
                         android:textSize="@dimen/default_text_size"
                         />
 
@@ -177,7 +177,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:text="@string/income_verification"
-                    android:textColor="@color/dark_grey"
+                    android:textColor="@color/dark_gray"
                     android:textSize="@dimen/default_text_size"
                     />
 

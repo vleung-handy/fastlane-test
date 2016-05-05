@@ -48,7 +48,7 @@
                     android:text="@string/verified"
                     android:textAllCaps="true"
                     android:textAppearance="@style/TextView.Bold"
-                    android:textColor="@color/handy_teal"
+                    android:textColor="@color/handyman_teal"
                     android:textSize="@dimen/small_text_size"
                     />
 
@@ -76,7 +76,7 @@
                     android:text="@string/failed"
                     android:textAllCaps="true"
                     android:textAppearance="@style/TextView.Bold"
-                    android:textColor="@color/error_red"
+                    android:textColor="@color/plumber_red"
                     android:textSize="@dimen/small_text_size"
                     />
 
@@ -195,7 +195,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/default_margin"
         android:text="@string/update_payment_method_note"
-        android:textColor="@color/subtitle_grey"
+        android:textColor="@color/tertiary_gray"
         android:textSize="@dimen/small_text_size"
         />
 

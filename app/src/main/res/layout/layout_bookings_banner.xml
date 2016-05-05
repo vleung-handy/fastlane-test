@@ -39,7 +39,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/TextView.Medium.Bold"
-                android:textColor="@color/handy_yellow"
+                android:textColor="@color/electrician_yellow"
                 android:id="@+id/layout_bookings_banner_title"
                 tools:text="80% goal achieved!"
                 />
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 style="@style/TextView.Small"
                 android:id="@+id/layout_bookings_banner_description"
-                android:textColor="@color/subtitle_grey"
+                android:textColor="@color/tertiary_gray"
                 tools:text="Your current Keep Rate is 98%."
                 />
 

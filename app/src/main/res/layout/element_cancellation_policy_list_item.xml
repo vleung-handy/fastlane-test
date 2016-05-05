@@ -32,7 +32,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="start"
-            android:textColor="@color/subtitle_grey"
+            android:textColor="@color/tertiary_gray"
             tools:text="Under 48 hours"
             />
 
@@ -43,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="end"
-            android:textColor="@color/subtitle_grey"
+            android:textColor="@color/tertiary_gray"
             tools:text="$10"
             />
     </LinearLayout>
