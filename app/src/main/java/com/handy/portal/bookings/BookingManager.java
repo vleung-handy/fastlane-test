@@ -150,8 +150,6 @@ public class BookingManager
      * TODO: need to detect when pull to fresh happens, and make sure this is called again
      * unlike onRequestScheduledBookings, this will not fire events containing bookings for a specific date,
      * but rather for a batch of dates, not in any particular order. currently used by location scheduler manager
-     *
-     * @param event
      */
     @Subscribe
     public void onRequestScheduledBookingsBatch(final HandyEvent.RequestScheduledBookingsBatch event)
@@ -427,19 +425,19 @@ public class BookingManager
     {
         LocationData locationData = event.locationData;
 
-        mDataManager.notifyCheckInBooking(event.bookingId, event.isAuto, locationData.getLocationMap(), new DataManager.Callback<Booking>()
+        mDataManager.notifyCheckInBooking(event.bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
             {
-                mBus.post(new HandyEvent.ReceiveNotifyJobCheckInSuccess(booking, event.isAuto));
+                mBus.post(new HandyEvent.ReceiveNotifyJobCheckInSuccess(booking));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
                 //still need to invalidate so we don't allow them to click on same booking
-                mBus.post(new HandyEvent.ReceiveNotifyJobCheckInError(error, event.isAuto));
+                mBus.post(new HandyEvent.ReceiveNotifyJobCheckInError(error));
             }
         });
     }
@@ -447,18 +445,18 @@ public class BookingManager
     @Subscribe
     public void onRequestNotifyCheckOut(final HandyEvent.RequestNotifyJobCheckOut event)
     {
-        mDataManager.notifyCheckOutBooking(event.bookingId, event.isAuto, event.checkoutRequest, new DataManager.Callback<Booking>()
+        mDataManager.notifyCheckOutBooking(event.bookingId, event.checkoutRequest, new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
             {
-                mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(booking, event.isAuto));
+                mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(booking));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutError(error, event.isAuto));
+                mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutError(error));
             }
         });
     }

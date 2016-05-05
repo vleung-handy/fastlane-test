@@ -177,14 +177,14 @@ public class DataManager
         mService.notifyOnMyWay(bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
-    public void notifyCheckInBooking(String bookingId, boolean isAuto, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
+    public void notifyCheckInBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
     {
-        mService.checkIn(bookingId, isAuto, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
+        mService.checkIn(bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
-    public void notifyCheckOutBooking(String bookingId, boolean isAuto, CheckoutRequest request, final Callback<Booking> cb)
+    public void notifyCheckOutBooking(String bookingId, CheckoutRequest request, final Callback<Booking> cb)
     {
-        mService.checkOut(bookingId, isAuto, request, new BookingHandyRetroFitCallback(cb));
+        mService.checkOut(bookingId, request, new BookingHandyRetroFitCallback(cb));
     }
 
     public void notifyUpdateArrivalTimeBooking(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption, final Callback<Booking> cb)

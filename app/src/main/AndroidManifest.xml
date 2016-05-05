@@ -158,9 +158,7 @@
             </intent-filter>
         </service>
 
-        <service android:name=".service.AutoCheckInService"/>
         <service android:name=".location.LocationPingService"/>
-        <service android:name=".service.AutoCheckInService"/>
 
         <receiver android:name=".receiver.HandyPushReceiver">
             <intent-filter>

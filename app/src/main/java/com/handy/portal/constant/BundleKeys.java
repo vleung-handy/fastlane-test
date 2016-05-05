@@ -8,7 +8,6 @@ public class BundleKeys
     public static final String BOOKING_TYPE = "booking_type";
     public static final String BOOKING_DATE = "booking_date";
     public static final String BOOKING_SOURCE = "booking_source";
-    public static final String BOOKING_STATUS = "booking_status";
     public static final String BOOKING_ACTION = "booking_action";
     public static final String BOOKING_FROM_PAYMENT_TAB = "booking_from_payment_tab";
     public static final String BOOKING_SHOULD_HIDE_ACTION_BUTTONS = "booking_should_hide_action_buttons";
@@ -22,9 +21,6 @@ public class BundleKeys
     public static final String TAB = "tab";
     public static final String PAYMENT_BATCH = "payment_batch";
     public static final String IS_FOR_PAYMENTS = "is_for_payments";
-    public static final String UPDATE_TAB_CALLBACK = "update_tab_callback";
-    public static final String ZIP_CLUSTER_POLYGONS = "zip_cluster_polygons";
-    public static final String PROVIDER_PROFILE = "provider_profile";
     public static final String BOOKINGS = "bookings";
     public static final String MAP_CENTER = "map_center";
     public static final String MESSAGE = "message";

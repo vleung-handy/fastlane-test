@@ -255,29 +255,23 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     @Subscribe
     public void onReceiveNotifyJobCheckInSuccess(final HandyEvent.ReceiveNotifyJobCheckInSuccess event)
     {
-        if (!event.isAuto)
-        {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSuccess(
-                    mBooking, getLocationData())));
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSuccess(
+                mBooking, getLocationData())));
 
-            //refresh the page with the new booking
-            mBooking = event.booking;
-            updateDisplay();
-        }
+        //refresh the page with the new booking
+        mBooking = event.booking;
+        updateDisplay();
     }
 
     @Subscribe
     public void onReceiveNotifyJobCheckInError(final HandyEvent.ReceiveNotifyJobCheckInError event)
     {
-        if (!event.isAuto)
-        {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInError(
-                    mBooking, getLocationData())));
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInError(
+                mBooking, getLocationData())));
 
-            handleNotifyCheckInError(event);
-        }
+        handleNotifyCheckInError(event);
     }
 
     @Subscribe
