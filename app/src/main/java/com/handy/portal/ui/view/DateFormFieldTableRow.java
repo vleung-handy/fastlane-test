@@ -9,36 +9,56 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
+import butterknife.Bind;
+import butterknife.ButterKnife;
+
 public class DateFormFieldTableRow extends TableRow implements Errorable
 {
+    @Bind(R.id.label_text_date)
+    TextView mLabelText;
+    @Bind(R.id.month_value_text)
+    TextView mMonthValueText;
+    @Bind(R.id.year_value_text)
+    TextView mYearValueText;
+    @Bind(R.id.error_indicator_date)
+    View mErrorIndicatorDate;
+
     public DateFormFieldTableRow(Context context)
     {
         super(context);
+        init();
     }
 
     public DateFormFieldTableRow(Context context, AttributeSet attrs)
     {
         super(context, attrs);
+        init();
+    }
+
+    private void init()
+    {
+        inflate(getContext(), R.layout.element_date_form_field, this);
+        ButterKnife.bind(this);
     }
 
     public TextView getLabel()
     {
-        return (TextView) findViewById(R.id.label_text_date);
+        return mLabelText;
     }
 
     public TextView getMonthValue()
     {
-        return (TextView) findViewById(R.id.month_value_text);
+        return mMonthValueText;
     }
 
     public TextView getYearValue()
     {
-        return (TextView) findViewById(R.id.year_value_text);
+        return mYearValueText;
     }
 
     public View getErrorIndicator()
     {
-        return findViewById(R.id.error_indicator_date);
+        return mErrorIndicatorDate;
     }
 
     @Override

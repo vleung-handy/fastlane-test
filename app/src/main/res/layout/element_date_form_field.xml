@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <ImageView
+        android:id="@+id/error_indicator_date"
+        android:layout_width="5dp"
+        android:layout_height="match_parent"
+        android:paddingBottom="1dp"
+        android:src="@drawable/rectangle_red"
+        android:visibility="invisible"
+        />
+
+    <TextView
+        android:id="@+id/label_text_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingBottom="@dimen/default_padding"
+        android:paddingLeft="@dimen/form_field_left_padding"
+        android:paddingStart="@dimen/form_field_left_padding"
+        android:paddingTop="@dimen/default_padding"
+        android:textColor="@color/black"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        >
+
+        <EditText
+            android:id="@+id/month_value_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:inputType="date"
+            android:maxLength="2"
+            android:nextFocusDown="@+id/year_value_text"
+            android:padding="@dimen/default_padding"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/slash"
+            android:textColor="@color/black"
+            />
+
+        <EditText
+            android:id="@+id/year_value_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@null"
+            android:maxLength="4"
+            android:nextFocusDown="@+id/tax_id_field"
+            android:padding="@dimen/default_padding"
+            android:singleLine="true"
+            android:textColor="@color/black"
+            />
+
+    </LinearLayout>
+</merge>
