@@ -20,6 +20,42 @@
             android:orientation="vertical"
             >
 
+            <LinearLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                >
+
+                <TextView
+                    android:id="@+id/header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/default_margin"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextView.XLarge.Bold"
+                    android:visibility="gone"
+                    tools:text="@string/enter_payment_information"
+                    tools:visibility="visible"
+                    />
+
+                <TextView
+                    android:id="@+id/sub_header"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/default_margin"
+                    android:layout_marginEnd="@dimen/default_margin"
+                    android:layout_marginLeft="@dimen/default_margin"
+                    android:layout_marginRight="@dimen/default_margin"
+                    android:layout_marginStart="@dimen/default_margin"
+                    android:gravity="center"
+                    android:textAppearance="@style/TextView.Large"
+                    android:visibility="gone"
+                    tools:text="@string/wont_charge_until_two_weeks"
+                    tools:visibility="visible"
+                    />
+            </LinearLayout>
+
             <FrameLayout
                 android:id="@+id/main_content"
                 android:layout_width="match_parent"

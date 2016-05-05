@@ -7,13 +7,25 @@ public class PurchaseSuppliesFragment extends PreActivationSetupStepFragment
     @Override
     protected int getLayoutResId()
     {
-        return R.layout.fragment_pre_activation_purchase_supplies;
+        return 0;
     }
 
     @Override
     protected String getTitle()
     {
         return getString(R.string.purchase_supplies);
+    }
+
+    @Override
+    protected String getHeaderText()
+    {
+        return getString(R.string.supply_kit_purchase_inquiry);
+    }
+
+    @Override
+    protected String getSubHeaderText()
+    {
+        return null;
     }
 
     @Override
@@ -31,8 +43,7 @@ public class PurchaseSuppliesFragment extends PreActivationSetupStepFragment
     @Override
     protected void onPrimaryButtonClicked()
     {
-        // FIXME: Implement correctly
-        goToStep(PreActivationSetupStep.PURCHASE_SUPPLIES);
+        goToStep(PreActivationSetupStep.PURCHASE_SUPPLIES_PAYMENT);
     }
 
     @Override

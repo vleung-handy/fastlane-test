@@ -3,6 +3,7 @@ package com.handy.portal.preactivation;
 public enum PreActivationSetupStep
 {
     PURCHASE_SUPPLIES(PurchaseSuppliesFragment.class),
+    PURCHASE_SUPPLIES_PAYMENT(PurchaseSuppliesPaymentFragment.class),
     ;
 
     private Class<? extends PreActivationSetupStepFragment> mFragmentClass;
