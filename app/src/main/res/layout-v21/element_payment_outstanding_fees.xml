@@ -46,7 +46,7 @@
         android:layout_centerVertical="true"
         android:text="@string/no_data"
         android:textAppearance="@style/HandyTextAppearanceLarge"
-        android:textColor="@color/error_red"
+        android:textColor="@color/plumber_red"
         tools:text="-$40"
         />
 

@@ -80,7 +80,7 @@
                     android:layout_marginTop="16dp"
                     android:gravity="center_horizontal"
                     android:text="@string/find_jobs_close_to_your_claimed_job"
-                    android:textColor="@color/subtitle_grey"
+                    android:textColor="@color/tertiary_gray"
                     />
 
             </LinearLayout>

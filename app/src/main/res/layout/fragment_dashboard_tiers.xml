@@ -126,7 +126,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider_height"
-        android:background="@color/tertiary_grey"
+        android:background="@color/tertiary_gray"
         />
 
     <TextView
@@ -142,7 +142,7 @@
         android:paddingStart="@dimen/default_padding"
         android:paddingTop="@dimen/extra_padding_xlarge"
         android:text="@string/payment_tier_info"
-        android:textColor="@color/tertiary_grey"
+        android:textColor="@color/tertiary_gray"
         android:textSize="@dimen/default_text_size"
         />
 

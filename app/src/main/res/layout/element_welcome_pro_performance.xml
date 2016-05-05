@@ -27,7 +27,7 @@
         android:paddingRight="@dimen/default_padding"
         android:paddingLeft="@dimen/default_padding"
         android:gravity="center_horizontal"
-        android:textColor="@color/requested_green"
+        android:textColor="@color/cleaner_green"
         android:textSize="@dimen/large_text_size"
         tools:text="Sit tight. You don't have any recent ratings."
         />

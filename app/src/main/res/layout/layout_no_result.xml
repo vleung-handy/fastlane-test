@@ -22,7 +22,7 @@
         android:drawablePadding="@dimen/error_margin_top"
         android:drawableTop="@drawable/ic_cup"
         android:gravity="center_horizontal"
-        android:textColor="@color/subtitle_grey"
+        android:textColor="@color/tertiary_gray"
         android:textSize="@dimen/error_text"
         tools:text="@string/no_feedback"
         />

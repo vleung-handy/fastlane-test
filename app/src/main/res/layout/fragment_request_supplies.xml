@@ -257,7 +257,7 @@
                 android:gravity="center"
                 android:lineSpacingExtra="@dimen/lineSpacing"
                 android:text="@string/supplies_footer"
-                android:textColor="@color/tertiary_grey"
+                android:textColor="@color/tertiary_gray"
                 android:textSize="@dimen/default_text_size"
                 />
 
@@ -268,7 +268,7 @@
         android:id="@+id/request_supplies_text"
         android:layout_width="match_parent"
         android:layout_height="@dimen/complete_button_height"
-        android:background="@color/requested_green"
+        android:background="@color/cleaner_green"
         android:drawableEnd="@drawable/ic_external_link"
         android:drawableRight="@drawable/ic_external_link"
         android:gravity="center"

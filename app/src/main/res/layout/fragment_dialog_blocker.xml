@@ -29,7 +29,7 @@
         android:layout_marginBottom="@dimen/payment_container_vertical_padding"
         android:lineSpacingExtra="@dimen/lineSpacing"
         android:textAppearance="@style/HandyTextAppearanceMedium"
-        android:textColor="@color/dark_grey"
+        android:textColor="@color/dark_gray"
         tools:text="@string/notification_blocker_body"
         />
 

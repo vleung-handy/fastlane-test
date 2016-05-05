@@ -178,7 +178,7 @@ public class FiveStarRatingPercentageView extends FrameLayout
     {
         mDynamicArcView.configureAngles(360, 0);
 
-        SeriesItem arcBackTrack = new SeriesItem.Builder(ContextCompat.getColor(getContext(), R.color.border_grey))
+        SeriesItem arcBackTrack = new SeriesItem.Builder(ContextCompat.getColor(getContext(), R.color.border_gray))
                 .setRange(0, MAX_GRAPH_VALUE, 0)
                 .setInitialVisibility(false)
                 .setLineWidth(getDimension(CIRCULAR_TRACK_WIDTH))

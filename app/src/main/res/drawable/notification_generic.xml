@@ -11,7 +11,7 @@
                 android:topRightRadius="@dimen/notification_icon_radius"
                 />
 
-            <solid android:color="@color/handy_yellow"/>
+            <solid android:color="@color/electrician_yellow"/>
         </shape>
     </item>
 
