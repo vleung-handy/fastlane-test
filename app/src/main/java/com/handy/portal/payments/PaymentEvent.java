@@ -331,10 +331,12 @@ public abstract class PaymentEvent extends HandyEvent
     public static class RequestBookingPaymentDetails extends RequestEvent
     {
         public final String bookingId;
+        public final String bookingType;
 
-        public RequestBookingPaymentDetails(@NonNull final String bookingId)
+        public RequestBookingPaymentDetails(@NonNull final String bookingId, @NonNull String bookingType)
         {
             this.bookingId = bookingId;
+            this.bookingType = bookingType;
         }
     }
 

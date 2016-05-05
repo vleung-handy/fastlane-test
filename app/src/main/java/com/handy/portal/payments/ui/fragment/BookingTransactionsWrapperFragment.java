@@ -33,6 +33,7 @@ public class BookingTransactionsWrapperFragment extends ActionBarFragment
     TextView mErrorText;
 
     private String mRequestedBookingId;
+    private String mRequestedBookingType;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
@@ -46,6 +47,7 @@ public class BookingTransactionsWrapperFragment extends ActionBarFragment
         if (arguments == null) { return; }
 
         mRequestedBookingId = arguments.getString(BundleKeys.BOOKING_ID);
+        mRequestedBookingType = arguments.getString(BundleKeys.BOOKING_TYPE);
     }
 
     @Override
@@ -61,14 +63,14 @@ public class BookingTransactionsWrapperFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
-        requestBookingPaymentDetails(mRequestedBookingId);
+        requestBookingPaymentDetails();
         Log.d("xizz", "Booking id: " + mRequestedBookingId);
     }
 
     @OnClick(R.id.try_again_button)
     public void onClickRequestDetails()
     {
-        requestBookingPaymentDetails(mRequestedBookingId);
+        requestBookingPaymentDetails();
     }
 
     @Subscribe
@@ -104,10 +106,10 @@ public class BookingTransactionsWrapperFragment extends ActionBarFragment
         mFetchErrorView.setVisibility(View.VISIBLE);
     }
 
-    private void requestBookingPaymentDetails(String bookingId)
+    private void requestBookingPaymentDetails()
     {
         mFetchErrorView.setVisibility(View.GONE);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new PaymentEvent.RequestBookingPaymentDetails(bookingId));
+        bus.post(new PaymentEvent.RequestBookingPaymentDetails(mRequestedBookingId, mRequestedBookingType));
     }
 }

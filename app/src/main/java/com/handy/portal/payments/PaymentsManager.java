@@ -87,7 +87,7 @@ public class PaymentsManager
     public void onRequestBookingPaymentDetails(final PaymentEvent.RequestBookingPaymentDetails event)
     {
 
-        mDataManager.getBookingTransactions(event.bookingId, new DataManager.Callback<BookingTransactions>()
+        mDataManager.getBookingTransactions(event.bookingId, event.bookingType, new DataManager.Callback<BookingTransactions>()
         {
             @Override
             public void onSuccess(BookingTransactions response)

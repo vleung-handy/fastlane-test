@@ -170,9 +170,9 @@ public class DataManager
         mService.getNeedsToUpdatePaymentInfo(new NeedsToUpdatePaymentInfoRetroFitCallback(cb));
     }
 
-    public void getBookingTransactions(String bookingId, Callback<BookingTransactions> cb)
+    public void getBookingTransactions(String bookingId, String bookingType, Callback<BookingTransactions> cb)
     {
-        mService.getBookingTransactions(bookingId, new BookingTransactionsRetroFitCallback(cb));
+        mService.getBookingTransactions(bookingId, bookingType, new BookingTransactionsRetroFitCallback(cb));
     }
 
     public void notifyOnMyWayBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)

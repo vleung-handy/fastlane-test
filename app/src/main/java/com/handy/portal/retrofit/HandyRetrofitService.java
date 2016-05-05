@@ -109,6 +109,7 @@ public interface HandyRetrofitService
 
     @GET(PAYMENTS_PATH + "booking_details")
     void getBookingTransactions(@Query("booking_id") String bookingId,
+                                @Query("booking_type") String bookingType,
                                 HandyRetrofitCallback cb);
 
     @FormUrlEncoded

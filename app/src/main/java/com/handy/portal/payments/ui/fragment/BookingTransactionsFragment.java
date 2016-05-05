@@ -101,7 +101,6 @@ public class BookingTransactionsFragment extends InjectedFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        mBannerText.setDisplay(BookingResultBannerTextView.CUSTOMER_CANCELLED);
         setDisplay();
     }
 
