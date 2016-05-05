@@ -11,9 +11,21 @@ public class PurchaseSuppliesFragment extends PreActivationSetupStepFragment
     }
 
     @Override
-    protected int getTitleResId()
+    protected String getTitle()
     {
-        return R.string.purchase_supplies;
+        return getString(R.string.purchase_supplies);
+    }
+
+    @Override
+    protected String getPrimaryButtonText()
+    {
+        return getString(R.string.yes_supply_kit);
+    }
+
+    @Override
+    protected String getSecondaryButtonText()
+    {
+        return getString(R.string.no_supply_kit);
     }
 
     @Override

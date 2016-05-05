@@ -7,8 +7,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 
 import com.handy.portal.R;
-import com.handy.portal.preactivation.PreActivationSetupStep;
-import com.handy.portal.preactivation.PreActivationSetupStepFragment;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 
