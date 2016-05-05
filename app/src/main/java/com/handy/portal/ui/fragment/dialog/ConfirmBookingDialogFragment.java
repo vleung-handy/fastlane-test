@@ -1,21 +1,12 @@
 package com.handy.portal.ui.fragment.dialog;
 
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.Point;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.NonNull;
-import android.support.v4.app.DialogFragment;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -29,7 +20,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ConfirmBookingDialogFragment extends DialogFragment
+public class ConfirmBookingDialogFragment extends BottomUpDialogFragment
 {
 
     @Bind(R.id.booking_info_address)
@@ -62,20 +53,6 @@ public class ConfirmBookingDialogFragment extends DialogFragment
         mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
     }
 
-    @NonNull
-    @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState)
-    {
-        Dialog dialog = super.onCreateDialog(savedInstanceState);
-        Window window = dialog.getWindow();
-        window.requestFeature(Window.FEATURE_NO_TITLE);
-        window.getAttributes().windowAnimations = R.style.dialog_animation_slide_up_down_from_bottom;
-        Drawable background = new ColorDrawable(Color.BLACK);
-        background.setAlpha(130);
-        window.setBackgroundDrawable(background);
-        return dialog;
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
@@ -85,17 +62,6 @@ public class ConfirmBookingDialogFragment extends DialogFragment
 
         setBookingInfoDisplay();
         return view;
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-        Point size = new Point();
-        getActivity().getWindowManager().getDefaultDisplay().getSize(size);
-        Window window = getDialog().getWindow();
-        window.setGravity(Gravity.BOTTOM);
-        window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, size.y / 2);
     }
 
     @Override

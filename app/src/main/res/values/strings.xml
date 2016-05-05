@@ -466,4 +466,6 @@
     <string name="onboard_job_claim_error">"There was an error claiming job(s), please try again"</string>
     <string name="onboard_job_load_error">"There was an error finding jobs, please try again"</string>
     <string name="onboard_claim_no_job">"Want to see those preselected jobs again? Tap the schedule help button in the top right."</string>
+    <string name="onboard_claim_job_confirmation">"Are you sure you want to\nclaim all of these jobs?"</string>
+    <string name="onboard_confirm_claim">"Confirm Claim"</string>
 </resources>

@@ -34,6 +34,7 @@ import com.handy.portal.model.onboarding.JobClaim;
 import com.handy.portal.model.onboarding.JobClaimRequest;
 import com.handy.portal.ui.adapter.JobsRecyclerAdapter;
 import com.handy.portal.ui.fragment.OnboardLoadingDialog;
+import com.handy.portal.ui.fragment.dialog.OnboardJobClaimConfirmDialog;
 import com.handy.portal.ui.view.OnboardJobGroupView;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
@@ -51,7 +52,8 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class GettingStartedActivity extends AppCompatActivity
         implements OnboardJobGroupView.OnJobChangeListener,
-        DialogInterface.OnCancelListener
+        DialogInterface.OnCancelListener,
+        OnboardJobClaimConfirmDialog.ConfirmationDialogListener
 {
 
     private static final String TAG = GettingStartedActivity.class.getName();
@@ -78,6 +80,8 @@ public class GettingStartedActivity extends AppCompatActivity
     Bus mBus;
 
     OnboardLoadingDialog mLoadingDialog;
+    OnboardJobClaimConfirmDialog mOnboardJobClaimConfirmDialog;
+
     JobsRecyclerAdapter mAdapter;
     BookingsListWrapper mJobs2;
     String mNoThanks;
@@ -92,6 +96,9 @@ public class GettingStartedActivity extends AppCompatActivity
      * mainly used for logging error of the booking ids that weren't claimed properly
      */
     private ArrayList<String> mBookingIdsToClaim;
+
+    private JobClaimRequest mJobClaimRequest;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -195,8 +202,7 @@ public class GettingStartedActivity extends AppCompatActivity
         switch (item.getItemId())
         {
             case android.R.id.home:
-                mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.Skipped()));
-                goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
+                skipJobSelection();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -206,8 +212,7 @@ public class GettingStartedActivity extends AppCompatActivity
     @Override
     public void onBackPressed()
     {
-        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.Skipped()));
-        goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
+        skipJobSelection();
     }
 
     /**
@@ -277,11 +282,6 @@ public class GettingStartedActivity extends AppCompatActivity
         }
     }
 
-    private void bindJobs()
-    {
-
-    }
-
     /**
      * The dialog is only dismissable under these conditions.
      *
@@ -342,7 +342,7 @@ public class GettingStartedActivity extends AppCompatActivity
     @OnClick(R.id.btn_next)
     public void buttonClicked()
     {
-        JobClaimRequest jobClaimRequest = new JobClaimRequest();
+        mJobClaimRequest = new JobClaimRequest();
         mBookingIdsToClaim = new ArrayList<>();
         for (BookingsWrapperViewModel model : mAdapter.getBookingsWrapperViewModels())
         {
@@ -353,7 +353,7 @@ public class GettingStartedActivity extends AppCompatActivity
                 {
                     if (bookingView.selected)
                     {
-                        jobClaimRequest.mJobs.add(new JobClaim(
+                        mJobClaimRequest.mJobs.add(new JobClaim(
                                 bookingView.booking.getId(),
                                 bookingView.booking.getType().name().toLowerCase())
                         );
@@ -363,18 +363,29 @@ public class GettingStartedActivity extends AppCompatActivity
             }
         }
 
-        if (!jobClaimRequest.mJobs.isEmpty())
+        if (!mJobClaimRequest.mJobs.isEmpty())
         {
-            mLoadingOverlayView.setVisibility(View.VISIBLE);
-            mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSubmitted(mBookingIdsToClaim)));
-            mBus.post(new HandyEvent.RequestClaimJobs(jobClaimRequest));
+            //show confirmation dialog to confirm the selected jobs.
+            mOnboardJobClaimConfirmDialog = new OnboardJobClaimConfirmDialog();
+            mOnboardJobClaimConfirmDialog.show(
+                    getSupportFragmentManager(),
+                    OnboardJobClaimConfirmDialog.class.getSimpleName()
+            );
         }
         else
         {
             //no jobs were selected, send the user to claim job screen.
-            mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.Skipped()));
-            goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
+            skipJobSelection();
         }
+    }
+
+    /**
+     * Post an analytics event that the user decided to not select a job. Navigate to the
+     * Available Jobs section
+     */
+    private void skipJobSelection() {
+        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.Skipped()));
+        goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
     }
 
     private void goToAvailableJobs(Bundle bundle)
@@ -501,15 +512,22 @@ public class GettingStartedActivity extends AppCompatActivity
     @Override
     public void onCancel(final DialogInterface dialog)
     {
-        //the loading dialog is being dismissed. If it was being dismissed because the user
-        //hit back/or didn't want to wait, then we need to exit this activity and go to available jobs.
-        if (mJobs2 == null || !mJobs2.hasJobs())
-        {
-            finish();
+        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.Skipped()));
+        goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
+    }
+
+    /**
+     * This happens if the user confirms the job claims via the confirmation dialog
+     */
+    @Override
+    public void confirmJobClaims()
+    {
+        if (mOnboardJobClaimConfirmDialog != null) {
+            mOnboardJobClaimConfirmDialog.dismiss();
         }
-        else
-        {
-            mRecyclerView.startLayoutAnimation();
-        }
+
+        mLoadingOverlayView.setVisibility(View.VISIBLE);
+        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSubmitted(mBookingIdsToClaim)));
+        mBus.post(new HandyEvent.RequestClaimJobs(mJobClaimRequest));
     }
 }
