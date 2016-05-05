@@ -283,18 +283,20 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         BookingsForDayModalsManager bookingsForDayModalsManager
                 = mBookingModalsManager.getBookingsForDayModalsManager(BOOKINGS_FOR_DAY_UNLOCKED_TRIAL_MODAL, dateOfBookings);
-        if(bookingsForDayModalsManager.bookingsForDayModalPreviouslyShown())
-        {
-            String title = getString(R.string.job_access_early_access_banner_title);
-            String subtitle = getString(R.string.job_access_early_access_banner_subtitle_formatted,
-                    priorityAccessInfo.getMinimumKeepRate());
-            mJobAccessUnlockedBannerLayout
-                    .setLeftDrawable(ContextCompat.getDrawable(getContext(), R.drawable.img_unlocked_trial_banner))
-                    .setTitleText(title)
-                    .setDescriptionText(subtitle)
-                    .setContentVisible(true);
-        }
-        else if(getActivity().getSupportFragmentManager().findFragmentByTag(EarlyAccessTrialDialogFragment.FRAGMENT_TAG) == null)
+
+        //show the banner
+        String title = getString(R.string.job_access_early_access_banner_title);
+        String subtitle = getString(R.string.job_access_early_access_banner_subtitle_formatted,
+                priorityAccessInfo.getMinimumKeepRate());
+        mJobAccessUnlockedBannerLayout
+                .setLeftDrawable(ContextCompat.getDrawable(getContext(), R.drawable.img_unlocked_trial_banner))
+                .setTitleText(title)
+                .setDescriptionText(subtitle)
+                .setContentVisible(true);
+
+        //only show the modal if it wasn't shown before
+        if (!bookingsForDayModalsManager.bookingsForDayModalPreviouslyShown()
+                && getActivity().getSupportFragmentManager().findFragmentByTag(EarlyAccessTrialDialogFragment.FRAGMENT_TAG) == null)
         {
             EarlyAccessTrialDialogFragment earlyAccessTrialDialogFragment =
                     EarlyAccessTrialDialogFragment.newInstance(priorityAccessInfo);
@@ -308,19 +310,21 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         BookingModalsManager.BookingsForDayModalsManager bookingsForDayModalsManager
                 = mBookingModalsManager.getBookingsForDayModalsManager(BOOKINGS_FOR_DAY_UNLOCKED_MODAL, dateOfBookings);
-        if(bookingsForDayModalsManager.bookingsForDayModalPreviouslyShown())
-        {
-            String title = getString(R.string.job_access_unlocked_banner_title_formatted,
-                    priorityAccessInfo.getMinimumKeepRate());
-            String subtitle = getString(R.string.job_access_unlocked_banner_subtitle_formatted,
-                    priorityAccessInfo.getCurrentKeepRate());
-            mJobAccessUnlockedBannerLayout
-                    .setLeftDrawable(ContextCompat.getDrawable(getContext(), R.drawable.img_unlocked_banner))
-                    .setTitleText(title)
-                    .setDescriptionText(subtitle)
-                    .setContentVisible(true);
-        }
-        else if(getActivity().getSupportFragmentManager().findFragmentByTag(JobAccessUnlockedDialogFragment.FRAGMENT_TAG) == null)
+
+        //show the banner
+        String title = getString(R.string.job_access_unlocked_banner_title_formatted,
+                priorityAccessInfo.getMinimumKeepRate());
+        String subtitle = getString(R.string.job_access_unlocked_banner_subtitle_formatted,
+                priorityAccessInfo.getCurrentKeepRate());
+        mJobAccessUnlockedBannerLayout
+                .setLeftDrawable(ContextCompat.getDrawable(getContext(), R.drawable.img_unlocked_banner))
+                .setTitleText(title)
+                .setDescriptionText(subtitle)
+                .setContentVisible(true);
+
+        //only show the modal if it wasn't shown before
+        if (!bookingsForDayModalsManager.bookingsForDayModalPreviouslyShown()
+                && getActivity().getSupportFragmentManager().findFragmentByTag(JobAccessUnlockedDialogFragment.FRAGMENT_TAG) == null)
         {
             JobAccessUnlockedDialogFragment jobAccessUnlockedDialogFragment =
                     JobAccessUnlockedDialogFragment.newInstance(priorityAccessInfo);
