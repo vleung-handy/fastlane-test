@@ -164,14 +164,12 @@ public interface HandyRetrofitService
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/check_in")
     void checkIn(@Path("booking_id") String bookingId,
-                 @Query("auto") boolean isAuto,
                  @FieldMap Map<String, String> locationParams,
                  HandyRetrofitCallback cb);
 
     @POST(BOOKINGS_PATH + "{booking_id}/check_out")
     void checkOut(
             @Path("booking_id") String bookingId,
-            @Query("auto") boolean isAuto,
             @Body CheckoutRequest request,
             HandyRetrofitCallback cb);
 

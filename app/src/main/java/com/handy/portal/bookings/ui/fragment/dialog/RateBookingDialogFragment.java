@@ -168,32 +168,26 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     @Subscribe
     public void onReceiveNotifyJobCheckOutSuccess(final HandyEvent.ReceiveNotifyJobCheckOutSuccess event)
     {
-        if (!event.isAutoCheckIn)
+        Address address = mBooking.getAddress();
+        if (address != null)
         {
-            Address address = mBooking.getAddress();
-            if (address != null)
-            {
-                mPrefsManager.setBookingInstructions(mBooking.getId(), null);
+            mPrefsManager.setBookingInstructions(mBooking.getId(), null);
 
-                mBus.post(new BookingEvent.RequestNearbyBookings(mBooking.getRegionId(),
-                        address.getLatitude(), address.getLongitude()));
-            }
-            else
-            {
-                dismiss();
-            }
+            mBus.post(new BookingEvent.RequestNearbyBookings(mBooking.getRegionId(),
+                    address.getLatitude(), address.getLongitude()));
+        }
+        else
+        {
+            dismiss();
         }
     }
 
     @Subscribe
     public void onReceiveNotifyJobCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
     {
-        if (!event.isAuto)
-        {
-            mBus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-            UIUtils.showToast(getContext(), getString(R.string.an_error_has_occurred), Toast.LENGTH_SHORT);
-            //allow them to try again. they can always click the X button if they don't want to.
-        }
+        mBus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        UIUtils.showToast(getContext(), getString(R.string.an_error_has_occurred), Toast.LENGTH_SHORT);
+        //allow them to try again. they can always click the X button if they don't want to.
     }
 
     @Subscribe

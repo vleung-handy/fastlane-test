@@ -80,7 +80,7 @@ public class SendReceiptCheckoutFragmentTest extends RobolectricGradleTestWrappe
     @Test
     public void onCheckOutSuccess_switchToScheduleTabAndDisplayToast() throws Exception
     {
-        fragment.onReceiveNotifyJobCheckOutSuccess(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(null, false));
+        fragment.onReceiveNotifyJobCheckOutSuccess(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(null));
 
         assertThat(getBusCaptorValue(NavigationEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULED_JOBS));
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(fragment.getString(R.string.check_out_success)));
