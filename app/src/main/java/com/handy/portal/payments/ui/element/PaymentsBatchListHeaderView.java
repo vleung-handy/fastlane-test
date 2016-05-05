@@ -54,7 +54,7 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
 
     public void updateDisplay(NeoPaymentBatch neoPaymentBatch) //assuming that current pay week is always returned and is the first element
     {
-        currentWeekDateRangeText.setText(DateTimeUtils.formatDateRange(DateTimeUtils.DAY_OF_WEEK_MONTH_DAY_FORMATTER, neoPaymentBatch.getStartDate(), neoPaymentBatch.getEndDate()));
+        currentWeekDateRangeText.setText(DateTimeUtils.formatDateRange(DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER, neoPaymentBatch.getStartDate(), neoPaymentBatch.getEndDate()));
         currentWeekRemainingFeesText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getRemainingFeeAmount(), neoPaymentBatch.getCurrencySymbol()));
         currentWeekExpectedPaymentText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getNetEarningsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
         currentWeekFeesText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getFeesTotalAmount(), neoPaymentBatch.getCurrencySymbol()));

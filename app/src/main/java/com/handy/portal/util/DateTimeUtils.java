@@ -25,6 +25,8 @@ public final class DateTimeUtils
             new SimpleDateFormat("h:mm a", Locale.getDefault());
     public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DAY_FORMATTER =
             new SimpleDateFormat("EEEE, MMMM d", Locale.getDefault());
+    public final static SimpleDateFormat SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER =
+            new SimpleDateFormat("E, MMMM d", Locale.getDefault());
     public final static SimpleDateFormat MONTH_SHORT_NAME_FORMATTER =
             new SimpleDateFormat("MMM", Locale.getDefault());
     public final static SimpleDateFormat SUMMARY_DATE_FORMATTER =
