@@ -14,8 +14,6 @@ import com.handy.portal.bookings.BookingManager;
 import com.handy.portal.bookings.BookingModalsManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.helpcenter.HelpManager;
-import com.handy.portal.helpcenter.helpcontact.HelpContactManager;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
@@ -79,10 +77,6 @@ public class BaseApplication extends MultiDexApplication
     TermsManager termsManager;
     @Inject
     ConfigManager configManager;
-    @Inject
-    HelpManager helpManager;
-    @Inject
-    HelpContactManager helpContactManager;
     @Inject
     PrefsManager prefsManager;
     @Inject
