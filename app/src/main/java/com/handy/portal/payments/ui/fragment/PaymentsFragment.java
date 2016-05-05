@@ -1,14 +1,12 @@
 package com.handy.portal.payments.ui.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -67,9 +65,6 @@ public final class PaymentsFragment extends ActionBarFragment
     @Bind(R.id.fetch_error_view)
     ViewGroup fetchErrorView;
 
-    @VisibleForTesting
-    ListView helpNodesListView;
-
     //TODO: refactor request protocols when we can use new pagination API that allows us to get the N next batches
 
     private View fragmentView;
@@ -84,9 +79,6 @@ public final class PaymentsFragment extends ActionBarFragment
         }
 
         ButterKnife.bind(this, fragmentView);
-
-        helpNodesListView = new ListView(getActivity());
-        helpNodesListView.setDivider(null);
 
         return fragmentView;
     }

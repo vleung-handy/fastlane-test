@@ -2,7 +2,6 @@ package com.handy.portal.payments.ui.fragment;
 
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.View;
 
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
@@ -31,11 +30,8 @@ import javax.inject.Inject;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.anyInt;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -73,20 +69,7 @@ public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldShowHelpSlideUpWhenHelpIconIsClicked() throws Exception
-    {
-        ShadowActivity shadowActivity = Shadows.shadowOf(mFragment.getActivity());
-        mFragment.helpNodesListView = spy(mFragment.helpNodesListView);
-        when(mFragment.helpNodesListView.getCount()).thenReturn(1);
-
-        mFragment.mSlideUpPanelLayout = mock(SlideUpPanelLayout.class);
-        shadowActivity.clickMenuItem(R.id.action_help);
-
-        verify(mFragment.mSlideUpPanelLayout).showPanel(anyInt(), any(View.class));
-    }
-
-    @Test
-    public void shouldRedirectToHelpCenterWhenHelpIconIsClickedButThereAreNoHelpNodes() throws Exception
+    public void shouldRedirectToHelpCenterWhenHelpIconIsClicked() throws Exception
     {
         ShadowActivity shadowActivity = Shadows.shadowOf(mFragment.getActivity());
 
@@ -96,8 +79,9 @@ public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
         ArgumentCaptor<HandyEvent> captor = ArgumentCaptor.forClass(HandyEvent.class);
         verify(mBus, atLeastOnce()).post(captor.capture());
         NavigationEvent.NavigateToTab event = TestUtils.getBusCaptorValue(captor, NavigationEvent.NavigateToTab.class);
+
         assertNotNull("NavigateToTab event was not post to bus", event);
-        assertEquals("Failed to navigate to help tab", MainViewTab.HELP, event.targetTab);
+        assertEquals("Failed to navigate to help tab", MainViewTab.HELP_WEBVIEW, event.targetTab);
     }
 
 }
