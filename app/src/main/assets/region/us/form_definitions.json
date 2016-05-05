@@ -58,6 +58,35 @@
         }
       }
     },
+    "update_credit_card_info": {
+      "field_definitions": {
+        "credit_card_number": {
+          "display_name": "Card #",
+          "input_type": "number",
+          "hint_text": "",
+          "pattern": "^[0-9]{15,17}$"
+        },
+        "expiration_date":{
+          "display_name": "Expiration Date"
+        },
+        "expiration_month":{
+          "input_type": "number",
+          "hint_text": "MM",
+          "pattern": "^(([1][0-2])|([0]?[1-9]))$"
+        },
+        "expiration_year":{
+          "input_type": "number",
+          "hint_text": "YYYY",
+          "pattern": "^[0-9]{4}$"
+        },
+        "security_code": {
+          "display_name": "CVC Code",
+          "input_type": "number",
+          "hint_text": "",
+          "pattern": "^[0-9]{3,4}$"
+        }
+      }
+    },
     "update_provider_info": {
       "field_definitions": {
         "email": {

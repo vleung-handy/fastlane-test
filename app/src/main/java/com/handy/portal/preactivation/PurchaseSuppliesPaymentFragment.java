@@ -1,11 +1,68 @@
 package com.handy.portal.preactivation;
 
+import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
+import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.FormDefinitionKey;
+import com.handy.portal.event.RegionDefinitionEvent;
+import com.handy.portal.model.definitions.FieldDefinition;
+import com.handy.portal.ui.view.DateFormFieldTableRow;
+import com.handy.portal.ui.view.FormFieldTableRow;
+import com.handy.portal.util.UIUtils;
+import com.squareup.otto.Subscribe;
+
+import java.util.Map;
+
+import butterknife.Bind;
 
 public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragment
 {
+    @Bind(R.id.credit_card_number_field)
+    FormFieldTableRow mCreditCardNumberField;
+
+    @Bind(R.id.expiration_date_field)
+    DateFormFieldTableRow mExpirationDateField;
+
+    @Bind(R.id.security_code_field)
+    FormFieldTableRow mSecurityCodeField;
+
+    @Bind(R.id.order_total)
+    TextView mOrderTotal;
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        bus.post(new RegionDefinitionEvent.RequestFormDefinitions("US", getActivity()));
+    }
+
+    @Override
+    public void onViewCreated(final View view, final Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        // FIXME: Pull form server
+        mOrderTotal.setText(getString(R.string.order_total_formatted, "$75"));
+    }
+
+    @Subscribe
+    public void onReceiveFormDefinitions(
+            final RegionDefinitionEvent.ReceiveFormDefinitionsSuccess event)
+    {
+        final Map<String, FieldDefinition> fieldDefinitions = event.formDefinitionWrapper
+                .getFieldDefinitionsForForm(FormDefinitionKey.UPDATE_CREDIT_CARD_INFO);
+        UIUtils.setFieldsFromDefinition(mCreditCardNumberField,
+                fieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.CREDIT_CARD_NUMBER));
+        UIUtils.setFieldsFromDefinition(mExpirationDateField,
+                fieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_DATE),
+                fieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_MONTH),
+                fieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_YEAR));
+        UIUtils.setFieldsFromDefinition(mSecurityCodeField,
+                fieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.SECURITY_CODE_NUMBER));
+    }
+
     @Override
     protected int getLayoutResId()
     {
