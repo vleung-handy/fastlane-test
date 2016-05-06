@@ -82,7 +82,7 @@ public interface HandyRetrofitService
                       @Query("type") String type,
                       HandyRetrofitCallback cb);
 
-    @PUT(JOBS_PATH + "claim_proxies")
+    @PUT(JOBS_PATH + "claim_jobs")
     void claimBookings(@Body JobClaimRequest jobClaimRequest,
                       HandyRetrofitCallback cb);
 
