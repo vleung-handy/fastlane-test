@@ -1,5 +1,7 @@
 package com.handy.portal.model.onboarding;
 
+import android.text.TextUtils;
+
 import com.handy.portal.model.Booking;
 import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.util.CurrencyUtils;
@@ -14,7 +16,9 @@ import com.handy.portal.util.DateTimeUtils;
  */
 public class BookingViewModel
 {
-    public Booking booking;
+
+    private static final String NO_TIME_AVAILABLE = "No Time Available";
+    public final Booking booking;
     public boolean selected;
 
     public BookingViewModel(final Booking booking)
@@ -41,7 +45,15 @@ public class BookingViewModel
     {
         String startTime = DateTimeUtils.formatDateTo12HourClock(booking.getStartDate());
         String endTime = DateTimeUtils.formatDateTo12HourClock(booking.getEndDate());
-        return startTime.toLowerCase() + " - " + endTime.toLowerCase();
+
+        if (!TextUtils.isEmpty(startTime) && !TextUtils.isEmpty(endTime))
+        {
+            return startTime.toLowerCase() + " - " + endTime.toLowerCase();
+        }
+        else
+        {
+            return NO_TIME_AVAILABLE;
+        }
     }
 
     public String getFormattedPrice()

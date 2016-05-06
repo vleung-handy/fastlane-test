@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
@@ -32,7 +33,7 @@ public class OnboardWelcomeActivity extends AppCompatActivity
     public static final int COLORS = 12;
 
     @DrawableRes
-    List<Integer> mDrawables;
+    private List<Integer> mDrawables;
 
     @Bind(R.id.left_center_view)
     View mLeftCenterView;
@@ -136,14 +137,16 @@ public class OnboardWelcomeActivity extends AppCompatActivity
         mProfileLoaded = true;
 
         String name;
-        try
+
+        if (event.providerProfile != null
+                && event.providerProfile.getProviderPersonalInfo() != null
+                && !TextUtils.isEmpty(event.providerProfile.getProviderPersonalInfo().getFirstName()))
         {
-            name = event.providerProfile.getProviderPersonalInfo().getFirstName();
-            mTvTitle.setText(String.format(getString(R.string.onboard_congratulations_formatted), name));
-        }
-        catch (Exception e)
-        {
-            //if there's an exception,..., don't do anything. Ues the default name
+
+            mTvTitle.setText(String.format(getString(
+                    R.string.onboard_congratulations_formatted),
+                    event.providerProfile.getProviderPersonalInfo().getFirstName()
+            ));
         }
 
         shootingConfetti();
@@ -168,10 +171,7 @@ public class OnboardWelcomeActivity extends AppCompatActivity
     public void shootingConfetti()
     {
 
-        if (!mProfileLoaded || !mAnchorViewRendered || mConfettiFired)
-        {
-            return;
-        }
+        if (!mProfileLoaded || !mAnchorViewRendered || mConfettiFired) { return; }
 
         int partNumPerSecond = 2;
         int emitTime = 1000;

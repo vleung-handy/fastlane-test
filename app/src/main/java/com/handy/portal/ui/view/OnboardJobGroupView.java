@@ -24,13 +24,11 @@ import java.util.List;
 public class OnboardJobGroupView extends LinearLayout implements CompoundButton.OnCheckedChangeListener
 {
 
-    TextView mTitle;
-
-    int mMargin;
-    int mMarginHalf;
-    BookingsWrapperViewModel mViewModel;
-
-    OnJobChangeListener mOnJobChangeListener;
+    private TextView mTitle;
+    private int mMargin;
+    private int mMarginHalf;
+    private BookingsWrapperViewModel mViewModel;
+    private OnJobChangeListener mOnJobChangeListener;
 
     public OnboardJobGroupView(Context context)
     {

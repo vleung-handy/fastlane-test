@@ -79,15 +79,15 @@ public class GettingStartedActivity extends AppCompatActivity
     @Inject
     Bus mBus;
 
-    OnboardLoadingDialog mLoadingDialog;
-    OnboardJobClaimConfirmDialog mOnboardJobClaimConfirmDialog;
+    private OnboardLoadingDialog mLoadingDialog;
+    private OnboardJobClaimConfirmDialog mOnboardJobClaimConfirmDialog;
 
-    JobsRecyclerAdapter mAdapter;
-    BookingsListWrapper mJobs2;
-    String mNoThanks;
+    private JobsRecyclerAdapter mAdapter;
+    private BookingsListWrapper mJobs2;
+    private String mNoThanks;
 
-    Drawable mGreenDrawable;
-    Drawable mGrayDrawable;
+    private Drawable mGreenDrawable;
+    private Drawable mGrayDrawable;
     private long mRequestTime;
     private int mWaitTime;
     private boolean mDestroyed;

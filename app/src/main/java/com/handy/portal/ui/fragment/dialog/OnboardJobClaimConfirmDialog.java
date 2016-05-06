@@ -14,8 +14,6 @@ import com.handy.portal.R;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- */
 public class OnboardJobClaimConfirmDialog extends BottomUpDialogFragment
 {
 

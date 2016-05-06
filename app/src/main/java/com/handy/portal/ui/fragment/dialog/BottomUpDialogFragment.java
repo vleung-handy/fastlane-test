@@ -14,8 +14,6 @@ import android.view.Window;
 
 import com.handy.portal.R;
 
-/**
- */
 public class BottomUpDialogFragment extends DialogFragment
 {
     @NonNull
@@ -27,7 +25,6 @@ public class BottomUpDialogFragment extends DialogFragment
         window.requestFeature(Window.FEATURE_NO_TITLE);
         window.getAttributes().windowAnimations = R.style.dialog_animation_slide_up_down_from_bottom;
         Drawable background = new ColorDrawable(Color.BLACK);
-        background.setAlpha(130);
         window.setBackgroundDrawable(background);
         return dialog;
     }

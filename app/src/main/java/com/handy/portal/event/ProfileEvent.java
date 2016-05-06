@@ -9,7 +9,7 @@ public abstract class ProfileEvent extends HandyEvent
 {
     public static class RequestProviderProfile extends RequestEvent
     {
-        public boolean useCache = false;
+        public final boolean useCache;
 
         public RequestProviderProfile(final boolean useCache)
         {

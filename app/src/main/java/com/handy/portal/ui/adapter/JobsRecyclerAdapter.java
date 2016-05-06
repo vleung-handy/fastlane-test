@@ -22,10 +22,9 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
     private static final int TYPE_ITEM = 1;
 
     //this is the view model
-    List<BookingsWrapperViewModel> mBookingsWrapperViewModels;
-    String mTitle;
-
-    OnboardJobGroupView.OnJobChangeListener mOnJobChangeListener;
+    private List<BookingsWrapperViewModel> mBookingsWrapperViewModels;
+    private String mTitle;
+    private OnboardJobGroupView.OnJobChangeListener mOnJobChangeListener;
 
     public JobsRecyclerAdapter(List<BookingsWrapper> bookings, String title,
                                OnboardJobGroupView.OnJobChangeListener mListener)

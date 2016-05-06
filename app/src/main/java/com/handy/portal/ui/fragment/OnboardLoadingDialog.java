@@ -21,7 +21,6 @@ import butterknife.ButterKnife;
 /**
  * This is a fancy "loading" dialog fragment.
  * <p/>
- * TODO: JIA: Style the onboarding dialog when the design specs come in
  */
 public class OnboardLoadingDialog extends DialogFragment
 {
@@ -30,7 +29,7 @@ public class OnboardLoadingDialog extends DialogFragment
     @Bind(R.id.image_view)
     ImageView mImageView;
 
-    DialogInterface.OnCancelListener mOnCancelListener;
+    private DialogInterface.OnCancelListener mOnCancelListener;
 
     @Override
     public void onCreate(Bundle savedInstanceState)
