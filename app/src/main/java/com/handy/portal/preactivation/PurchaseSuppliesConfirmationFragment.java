@@ -16,6 +16,7 @@ import com.squareup.otto.Subscribe;
 import java.util.Map;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 
 public class PurchaseSuppliesConfirmationFragment extends PreActivationSetupStepFragment
 {
@@ -37,6 +38,13 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationSetupStep
     FormFieldTableRow mStateField;
     @Bind(R.id.zip_field)
     FormFieldTableRow mZipField;
+
+    @OnClick(R.id.cancel_edit)
+    void onCancelEditClicked()
+    {
+        mShippingSummary.setVisibility(View.VISIBLE);
+        mEditAddressForm.setVisibility(View.GONE);
+    }
 
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState)
