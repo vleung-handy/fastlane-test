@@ -546,7 +546,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     {
         mSlideUpPanelContainer.removeAllViews();
 
-        int bookingProgress = mBooking.getBookingProgress(getLoggedInUserId());
+        int bookingProgress = mBooking.getBookingProgress();
         if (bookingProgress == BookingProgress.READY_FOR_CHECK_OUT
                 && mBooking.getCustomerPreferences().size() > 0)
         //in progress booking (after check in and before check out)
