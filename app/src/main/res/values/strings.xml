@@ -475,5 +475,6 @@
     <string name="payment_method">Payment Method</string>
     <string name="edit">Edit</string>
     <string name="cannot_ship_to_po_box">We cannot ship to a PO Box</string>
+    <string name="see_products">See full list of products</string>
 
 </resources>

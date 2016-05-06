@@ -14,6 +14,7 @@ import com.handy.portal.R;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class SimpleContentLayout extends FrameLayout
 {
@@ -26,7 +27,18 @@ public class SimpleContentLayout extends FrameLayout
     @Bind(R.id.description)
     TextView mDescription;
     @Bind(R.id.action_button)
-    TextView mAction;
+    TextView mActionButton;
+    @Bind(R.id.expand_button)
+    TextView mExpandButton;
+    @Bind(R.id.content_holder)
+    View mContentHolder;
+
+    @OnClick(R.id.expand_button)
+    void onExpandButtonClicked()
+    {
+        mContentHolder.setVisibility(VISIBLE);
+        mExpandButton.setVisibility(GONE);
+    }
 
     public SimpleContentLayout(final Context context)
     {
@@ -73,12 +85,20 @@ public class SimpleContentLayout extends FrameLayout
         return this;
     }
 
-    public SimpleContentLayout setAction(final String actionText,
+    public SimpleContentLayout setAction(final String actionButtonText,
                                          final OnClickListener onClickListener)
     {
-        mAction.setText(actionText);
-        mAction.setOnClickListener(onClickListener);
-        mAction.setVisibility(VISIBLE);
+        mActionButton.setText(actionButtonText);
+        mActionButton.setOnClickListener(onClickListener);
+        mActionButton.setVisibility(VISIBLE);
+        return this;
+    }
+
+    public SimpleContentLayout collapse(final String expandButtonText)
+    {
+        mExpandButton.setText(expandButtonText);
+        mExpandButton.setVisibility(VISIBLE);
+        mContentHolder.setVisibility(GONE);
         return this;
     }
 }

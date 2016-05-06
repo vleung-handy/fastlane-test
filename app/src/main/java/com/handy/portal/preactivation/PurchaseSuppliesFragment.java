@@ -28,7 +28,8 @@ public class PurchaseSuppliesFragment extends PreActivationSetupStepFragment
                 "It should arrive 1 to 3 business days after you\u2019ve been activated.");
         mProductsSummary.setContent("What does it include?",
                 " ⋅ 2 All purpose cleaner\n ⋅ 2 Tub and tile cleaner\n" +
-                        " ⋅ Handy apron");
+                        " ⋅ Handy apron")
+                .collapse(getString(R.string.see_products));
     }
 
     @Override

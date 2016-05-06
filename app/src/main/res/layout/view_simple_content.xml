@@ -1,75 +1,97 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/default_padding"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical"
     >
 
-    <FrameLayout
-        android:id="@+id/image_holder"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/default_margin"
-        android:layout_marginRight="@dimen/default_margin"
-        android:background="@color/border_grey"
-        android:gravity="center"
-        android:padding="1dp"
-        android:visibility="gone"
-        tools:visibility="visible"
-        >
-
-        <ImageView
-            android:id="@+id/image"
-            android:layout_width="@dimen/default_image_size"
-            android:layout_height="@dimen/default_image_size"
-            android:scaleType="centerCrop"
-            tools:src="@drawable/img_supplies"
-            />
-    </FrameLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignWithParentIfMissing="true"
-        android:layout_centerVertical="true"
-        android:layout_toEndOf="@+id/image_holder"
-        android:layout_toRightOf="@+id/image_holder"
-        android:gravity="center_vertical"
-        android:orientation="vertical"
-        >
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/extra_margin"
-            android:textAppearance="@style/TextView.Bold"
-            tools:text="@string/supply_starter_kit"
-            />
-
-        <TextView
-            android:id="@+id/description"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textAppearance="@style/TextView"
-            tools:text="Order Total: $75"
-            />
-
-    </LinearLayout>
-
     <TextView
-        android:id="@+id/action_button"
+        android:id="@+id/expand_button"
         style="@style/TextView.Medium"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
+        android:gravity="center"
+        android:padding="@dimen/default_padding_half"
         android:textColor="@color/handy_blue"
         android:visibility="gone"
-        tools:text="Edit"
+        tools:text="See full list"
         tools:visibility="visible"
         />
 
-</RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/content_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/default_padding"
+        >
+
+        <FrameLayout
+            android:id="@+id/image_holder"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:background="@color/border_gray"
+            android:gravity="center"
+            android:padding="1dp"
+            android:visibility="gone"
+            tools:visibility="visible"
+            >
+
+            <ImageView
+                android:id="@+id/image"
+                android:layout_width="@dimen/default_image_size"
+                android:layout_height="@dimen/default_image_size"
+                android:scaleType="centerCrop"
+                tools:src="@drawable/img_supplies"
+                />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@+id/image_holder"
+            android:layout_toRightOf="@+id/image_holder"
+            android:gravity="center_vertical"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/extra_margin"
+                android:textAppearance="@style/TextView.Bold"
+                tools:text="@string/supply_starter_kit"
+                />
+
+            <TextView
+                android:id="@+id/description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextView"
+                tools:text="Order Total: $75"
+                />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/action_button"
+            style="@style/TextView.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:textColor="@color/handy_blue"
+            android:visibility="gone"
+            tools:text="Edit"
+            tools:visibility="visible"
+            />
+
+    </RelativeLayout>
+</LinearLayout>
