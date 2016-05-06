@@ -7,7 +7,7 @@ import com.handy.portal.webview.PortalWebViewFragment;
 
 public class RequestSuppliesWebViewFragment extends PortalWebViewFragment
 {
-    private static final String REQUEST_SUPPLIES_URL = "http://www.boxed.com/handy-zcxknjvlij34iojq3";
+    private static final String REQUEST_SUPPLIES_URL = "https://www.handy.com/boxed";
 
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState)
