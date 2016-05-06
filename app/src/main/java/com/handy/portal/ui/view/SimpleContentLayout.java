@@ -25,6 +25,8 @@ public class SimpleContentLayout extends FrameLayout
     TextView mTitle;
     @Bind(R.id.description)
     TextView mDescription;
+    @Bind(R.id.action_button)
+    TextView mAction;
 
     public SimpleContentLayout(final Context context)
     {
@@ -68,6 +70,15 @@ public class SimpleContentLayout extends FrameLayout
     {
         mImage.setImageDrawable(drawable);
         mImageHolder.setVisibility(VISIBLE);
+        return this;
+    }
+
+    public SimpleContentLayout setAction(final String actionText,
+                                         final OnClickListener onClickListener)
+    {
+        mAction.setText(actionText);
+        mAction.setOnClickListener(onClickListener);
+        mAction.setVisibility(VISIBLE);
         return this;
     }
 }

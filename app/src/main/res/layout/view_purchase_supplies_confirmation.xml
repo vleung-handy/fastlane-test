@@ -3,6 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/extra_margin"
+    android:animateLayoutChanges="true"
     android:orientation="vertical"
     >
 
@@ -12,6 +14,42 @@
         android:layout_height="wrap_content"
         android:background="@drawable/border_gray_no_side"
         />
+
+    <LinearLayout
+        android:id="@+id/edit_address_form"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_gray_no_side"
+            android:orientation="vertical"
+            android:padding="@dimen/default_padding"
+            >
+
+            <TextView
+                style="@style/TextView.Bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/extra_margin"
+                android:text="@string/shipping_address"
+                />
+
+            <TextView
+                style="@style/TextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/cannot_ship_to_po_box"
+                android:textColor="@color/subtitle_grey"
+                />
+        </LinearLayout>
+
+        <include layout="@layout/view_edit_address"/>
+    </LinearLayout>
 
     <com.handy.portal.ui.view.SimpleContentLayout
         android:id="@+id/payment_summary"

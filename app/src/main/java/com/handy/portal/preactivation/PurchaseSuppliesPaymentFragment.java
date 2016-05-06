@@ -97,6 +97,7 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
     @Override
     protected void onPrimaryButtonClicked()
     {
+        UIUtils.dismissKeyboard(getActivity());
         goToStep(PreActivationSetupStep.PURCHASE_SUPPLIES_CONFIRMATION);
     }
 }

@@ -7,6 +7,7 @@ public class FormDefinitionKey
     public static final String UPDATE_DEBIT_CARD_INFO = "update_debit_card_info";
     public static final String UPDATE_CREDIT_CARD_INFO = "update_credit_card_info";
     public static final String UPDATE_PROVIDER_INFO = "update_provider_info";
+    public static final String UPDATE_ADDRESS = "update_address";
 
     public static class FieldDefinitionKey
     {

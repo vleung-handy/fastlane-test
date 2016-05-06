@@ -473,5 +473,7 @@
     <string name="confirm_purchase">Confirm Purchase</string>
     <string name="shipping_address">Shipping Address</string>
     <string name="payment_method">Payment Method</string>
+    <string name="edit">Edit</string>
+    <string name="cannot_ship_to_po_box">We cannot ship to a PO Box</string>
 
 </resources>

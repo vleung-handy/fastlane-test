@@ -18,7 +18,7 @@
         android:paddingLeft="@dimen/form_field_left_padding"
         android:paddingStart="@dimen/form_field_left_padding"
         android:paddingTop="@dimen/default_padding"
-        android:textColor="@color/black"
+        android:textColor="@color/form_label"
         />
 
     <LinearLayout
