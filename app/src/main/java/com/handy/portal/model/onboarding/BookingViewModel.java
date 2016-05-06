@@ -27,7 +27,14 @@ public class BookingViewModel
 
     public String getTitle()
     {
-        return booking.getLocationName();
+        if (booking.isProxy())
+        {
+            return booking.getLocationName();
+        }
+        else
+        {
+            return booking.getAddress().getShortRegion();
+        }
     }
 
     public String getSubTitle()
