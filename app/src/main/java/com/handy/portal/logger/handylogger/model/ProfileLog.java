@@ -38,39 +38,24 @@ public class ProfileLog extends EventLog
     }
 
 
-    public static class ResupplyKitRequestSubmitted extends ProfileLog
+    public static class ResupplyKitSiteLoadStarted extends ProfileLog
     {
-        private static final String EVENT_TYPE = "resupply_kit_request_submitted";
+        private static final String EVENT_TYPE = "resupply_kit_site_load_started";
 
-        public ResupplyKitRequestSubmitted()
+        public ResupplyKitSiteLoadStarted()
         {
             super(EVENT_TYPE);
         }
     }
 
 
-    public static class ResupplyKitRequestConfirmed extends ProfileLog
+    public static class ResupplyKitSiteLoadFailed extends ProfileLog
     {
-        private static final String EVENT_TYPE = "resupply_kit_confirmed";
+        private static final String EVENT_TYPE = "resupply_kit_site_load_failed";
 
-        public ResupplyKitRequestConfirmed()
+        public ResupplyKitSiteLoadFailed()
         {
             super(EVENT_TYPE);
-        }
-    }
-
-
-    public static class ResupplyKitRequestError extends ProfileLog
-    {
-        private static final String EVENT_TYPE = "resupply_kit_error";
-
-        @SerializedName("error_message")
-        private final String mErrorMessage;
-
-        public ResupplyKitRequestError(final String errorMessage)
-        {
-            super(EVENT_TYPE);
-            mErrorMessage = errorMessage;
         }
     }
 

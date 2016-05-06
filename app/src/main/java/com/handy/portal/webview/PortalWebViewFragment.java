@@ -80,6 +80,11 @@ public abstract class PortalWebViewFragment extends ActionBarFragment
         webView.setWebViewClient(new PortalWebViewClient(this, webView, googleManager, bus));
     }
 
+    protected void initResupplyKitWebViewClient()
+    {
+        webView.setWebViewClient(new RequestSuppliesWebViewClient(this, webView, googleManager, bus));
+    }
+
     private void loadUrlWithFromAppParam(String url)
     {
         //TODO: This code seems to be duplicated in the PortalWebViewClient
