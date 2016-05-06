@@ -9,6 +9,7 @@ import dagger.Module;
                 PreActivationSetupActivity.class,
                 PurchaseSuppliesFragment.class,
                 PurchaseSuppliesPaymentFragment.class,
+                PurchaseSuppliesConfirmationFragment.class,
         })
 public class PreActivationModule
 {

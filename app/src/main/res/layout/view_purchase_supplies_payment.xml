@@ -1,10 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="@dimen/extra_margin"
     android:orientation="vertical"
     >
 
@@ -37,39 +35,12 @@
             />
     </TableLayout>
 
-    <LinearLayout
+    <com.handy.portal.ui.view.SimpleContentLayout
+        android:id="@+id/order_summary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginTop="@dimen/default_margin_half"
         android:background="@drawable/border_gray_no_side"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:padding="@dimen/default_padding"
-        >
+        />
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/extra_margin"
-                android:text="@string/supply_starter_kit"
-                android:textAppearance="@style/TextView.Bold"
-                />
-
-            <TextView
-                android:id="@+id/order_total"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textAppearance="@style/TextView"
-                tools:text="Order Total: $75"
-                />
-
-        </LinearLayout>
-
-    </LinearLayout>
 </LinearLayout>

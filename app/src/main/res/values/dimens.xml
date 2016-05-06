@@ -5,6 +5,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="row_margin">8dp</dimen>
+    <dimen name="default_margin_half">8dp</dimen>
     <dimen name="default_margin">16dp</dimen>
     <dimen name="default_margin_medium">24dp</dimen>
     <dimen name="extra_margin_xsmall">3dp</dimen>

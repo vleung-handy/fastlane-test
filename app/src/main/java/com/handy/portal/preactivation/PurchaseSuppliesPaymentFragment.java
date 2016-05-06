@@ -3,7 +3,6 @@ package com.handy.portal.preactivation;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
-import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
@@ -11,6 +10,7 @@ import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.ui.view.DateFormFieldTableRow;
 import com.handy.portal.ui.view.FormFieldTableRow;
+import com.handy.portal.ui.view.SimpleContentLayout;
 import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
 
@@ -22,15 +22,12 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
 {
     @Bind(R.id.credit_card_number_field)
     FormFieldTableRow mCreditCardNumberField;
-
     @Bind(R.id.expiration_date_field)
     DateFormFieldTableRow mExpirationDateField;
-
     @Bind(R.id.security_code_field)
     FormFieldTableRow mSecurityCodeField;
-
-    @Bind(R.id.order_total)
-    TextView mOrderTotal;
+    @Bind(R.id.order_summary)
+    SimpleContentLayout mOrderSummary;
 
     @Override
     public void onResume()
@@ -44,7 +41,8 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
     {
         super.onViewCreated(view, savedInstanceState);
         // FIXME: Pull form server
-        mOrderTotal.setText(getString(R.string.order_total_formatted, "$75"));
+        final String descriptionText = getString(R.string.order_total_formatted, "$75");
+        mOrderSummary.setContent(getString(R.string.supply_starter_kit), descriptionText);
     }
 
     @Subscribe
@@ -98,6 +96,6 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
     @Override
     protected void onPrimaryButtonClicked()
     {
-        goToStep(null);
+        goToStep(PreActivationSetupStep.PURCHASE_SUPPLIES_CONFIRMATION);
     }
 }

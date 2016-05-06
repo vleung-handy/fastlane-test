@@ -4,6 +4,7 @@ public enum PreActivationSetupStep
 {
     PURCHASE_SUPPLIES(PurchaseSuppliesFragment.class),
     PURCHASE_SUPPLIES_PAYMENT(PurchaseSuppliesPaymentFragment.class),
+    PURCHASE_SUPPLIES_CONFIRMATION(PurchaseSuppliesConfirmationFragment.class),
     ;
 
     private Class<? extends PreActivationSetupStepFragment> mFragmentClass;
