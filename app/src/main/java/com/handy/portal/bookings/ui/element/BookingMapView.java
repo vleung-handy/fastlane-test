@@ -25,8 +25,8 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolygonOptions;
 import com.handy.portal.R;
+import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.bookings.ui.fragment.BookingDetailsWrapperFragment;
 import com.handy.portal.location.LocationUtils;
 import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.ui.activity.BaseActivity;
@@ -154,8 +154,7 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
 
     private boolean shouldIncludeCurrentLocation()
     {
-        return mSource != null &&
-                mSource.equals(BookingDetailsWrapperFragment.SOURCE_LATE_DISPATCH);
+        return mBooking.getBookingProgress() == BookingProgress.READY_FOR_CHECK_IN;
     }
 
     /**
