@@ -2,9 +2,12 @@ package com.handy.portal.ui.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -14,9 +17,12 @@ import butterknife.ButterKnife;
 
 public class SimpleContentLayout extends FrameLayout
 {
+    @Bind(R.id.image_holder)
+    View mImageHolder;
+    @Bind(R.id.image)
+    ImageView mImage;
     @Bind(R.id.title)
     TextView mTitle;
-
     @Bind(R.id.description)
     TextView mDescription;
 
@@ -51,9 +57,17 @@ public class SimpleContentLayout extends FrameLayout
         ButterKnife.bind(this);
     }
 
-    public void setContent(final String titleText, final String descriptionText)
+    public SimpleContentLayout setContent(final String titleText, final String descriptionText)
     {
         mTitle.setText(titleText);
         mDescription.setText(descriptionText);
+        return this;
+    }
+
+    public SimpleContentLayout setImage(final Drawable drawable)
+    {
+        mImage.setImageDrawable(drawable);
+        mImageHolder.setVisibility(VISIBLE);
+        return this;
     }
 }

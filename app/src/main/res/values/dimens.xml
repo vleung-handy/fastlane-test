@@ -67,6 +67,7 @@
     <!-- Generic -->
     <dimen name="complete_button_height">64dp</dimen>
     <dimen name="navigation_drawer_width">264dp</dimen>
+    <dimen name="default_image_size">80dp</dimen>
 
     <!--notifications-->
     <dimen name="notification_list_entry_vertical_padding">14dp</dimen>

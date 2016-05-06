@@ -29,8 +29,9 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationSetupStep
         mPaymentSummary.setContent(getString(R.string.payment_method),
                 "Visa ending in 1234");
         // FIXME: Pull form server
-        final String descriptionText = getString(R.string.order_total_formatted, "$75");
-        mOrderSummary.setContent(getString(R.string.supply_starter_kit), descriptionText);
+        final String orderTotalFormatted = getString(R.string.order_total_formatted, "$75");
+        mOrderSummary.setContent(getString(R.string.supply_starter_kit), orderTotalFormatted)
+                .setImage(getResources().getDrawable(R.drawable.img_supplies));
     }
 
     @Override
