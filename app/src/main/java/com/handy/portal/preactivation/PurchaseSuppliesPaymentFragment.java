@@ -34,6 +34,7 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
     SimpleContentLayout mOrderSummary;
 
     private Map<String, FieldDefinition> mFieldDefinitions;
+    private Card mCard;
 
     public static PurchaseSuppliesPaymentFragment newInstance()
     {
@@ -117,13 +118,13 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
 
         showLoadingOverlay();
 
-        final Card card = new Card(
+        mCard = new Card(
                 mCreditCardNumberField.getValue().getText().toString(),
                 Integer.parseInt(mExpirationDateField.getMonthValue().getText().toString()),
                 Integer.parseInt(mExpirationDateField.getYearValue().getText().toString()),
                 mSecurityCodeField.getValue().getText().toString()
         );
-        bus.post(new StripeEvent.RequestStripeChargeToken(card, Country.US));
+        bus.post(new StripeEvent.RequestStripeChargeToken(mCard, Country.US));
     }
 
     private boolean validate()
@@ -152,8 +153,7 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
         mExpirationDateField.getMonthValue().setText(null);
         mExpirationDateField.getYearValue().setText(null);
         mSecurityCodeField.getValue().setText(null);
-        // FIXME: Pass arguments
-        next(PurchaseSuppliesConfirmationFragment.newInstance());
+        next(PurchaseSuppliesConfirmationFragment.newInstance(mCard));
     }
 
     @Subscribe

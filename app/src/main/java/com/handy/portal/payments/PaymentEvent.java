@@ -313,20 +313,7 @@ public abstract class PaymentEvent extends HandyEvent
     }
 
 
-    public static class ReceiveUpdateCreditCardSuccess extends ReceiveSuccessEvent
-    {
-        private Token mToken;
-
-        public ReceiveUpdateCreditCardSuccess(final Token token)
-        {
-            mToken = token;
-        }
-
-        public Token getToken()
-        {
-            return mToken;
-        }
-    }
+    public static class ReceiveUpdateCreditCardSuccess extends ReceiveSuccessEvent {}
 
 
     public static class ReceiveUpdateCreditCardError extends ReceiveErrorEvent

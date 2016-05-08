@@ -476,5 +476,6 @@
     <string name="edit">Edit</string>
     <string name="cannot_ship_to_po_box">We cannot ship to a PO Box</string>
     <string name="see_products">See full list of products</string>
+    <string name="card_info_formatted">%1$s ending in %2$s</string>
 
 </resources>

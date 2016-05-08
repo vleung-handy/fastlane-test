@@ -50,4 +50,8 @@ public class BundleKeys
 
     // New Checkout
     public static final String NOTE_TO_CUSTOMER = "note_to_customer";
+
+    // Payments
+    public static final String CARD_LAST4 = "card_last4";
+    public static final String CARD_TYPE = "card_type";
 }

@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.model.definitions.FieldDefinition;
@@ -12,6 +13,7 @@ import com.handy.portal.ui.view.FormFieldTableRow;
 import com.handy.portal.ui.view.SimpleContentLayout;
 import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
+import com.stripe.android.model.Card;
 
 import java.util.Map;
 
@@ -39,9 +41,26 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationSetupStep
     @Bind(R.id.zip_field)
     FormFieldTableRow mZipField;
 
-    public static PurchaseSuppliesConfirmationFragment newInstance()
+    private String mCardLast4;
+    private String mCardType;
+
+    public static PurchaseSuppliesConfirmationFragment newInstance(final Card card)
     {
-        return new PurchaseSuppliesConfirmationFragment();
+        final PurchaseSuppliesConfirmationFragment fragment =
+                new PurchaseSuppliesConfirmationFragment();
+        final Bundle arguments = new Bundle();
+        arguments.putString(BundleKeys.CARD_TYPE, card.getType());
+        arguments.putString(BundleKeys.CARD_LAST4, card.getLast4());
+        fragment.setArguments(arguments);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        mCardLast4 = getArguments().getString(BundleKeys.CARD_LAST4);
+        mCardType = getArguments().getString(BundleKeys.CARD_TYPE);
     }
 
     @OnClick(R.id.cancel_edit)
@@ -67,9 +86,8 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationSetupStep
                         mShippingSummary.setVisibility(View.GONE);
                     }
                 });
-        // FIXME: Pull from arguments
         mPaymentSummary.setContent(getString(R.string.payment_method),
-                "Visa ending in 1234");
+                getString(R.string.card_info_formatted, mCardType, mCardLast4));
         // FIXME: Pull form server
         final String orderTotalFormatted = getString(R.string.order_total_formatted, "$75");
         mOrderSummary.setContent(getString(R.string.supply_starter_kit), orderTotalFormatted)

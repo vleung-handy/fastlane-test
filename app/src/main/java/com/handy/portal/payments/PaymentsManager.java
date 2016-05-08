@@ -221,7 +221,7 @@ public class PaymentsManager
             @Override
             public void onSuccess(final SuccessWrapper response)
             {
-                mBus.post(new PaymentEvent.ReceiveUpdateCreditCardSuccess(token));
+                mBus.post(new PaymentEvent.ReceiveUpdateCreditCardSuccess());
             }
 
             @Override
