@@ -35,6 +35,11 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
 
     private Map<String, FieldDefinition> mFieldDefinitions;
 
+    public static PurchaseSuppliesPaymentFragment newInstance()
+    {
+        return new PurchaseSuppliesPaymentFragment();
+    }
+
     @Override
     public void onResume()
     {
@@ -148,7 +153,7 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
         mExpirationDateField.getYearValue().setText(null);
         mSecurityCodeField.getValue().setText(null);
         // FIXME: Pass arguments
-        goToStep(PreActivationSetupStep.PURCHASE_SUPPLIES_CONFIRMATION);
+        next(PurchaseSuppliesConfirmationFragment.newInstance());
     }
 
     @Subscribe

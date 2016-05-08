@@ -21,34 +21,25 @@ public class PreActivationSetupActivity extends BaseActivity
         goToFirstStep();
     }
 
-    public void goToStep(@Nullable final PreActivationSetupStep step,
-                         final boolean allowBackNavigation)
+    public void next(@Nullable final PreActivationSetupStepFragment fragment,
+                     final boolean allowBackNavigation)
     {
-        if (step != null)
+        if (fragment != null)
         {
-            try
+            final FragmentTransaction fragmentTransaction =
+                    getSupportFragmentManager().beginTransaction();
+            if (allowBackNavigation)
             {
-                final PreActivationSetupStepFragment fragment =
-                        step.getFragmentClass().newInstance();
-                final FragmentTransaction fragmentTransaction =
-                        getSupportFragmentManager().beginTransaction();
-                if (allowBackNavigation)
-                {
-                    fragmentTransaction.addToBackStack(null);
-                }
-                fragmentTransaction.setCustomAnimations(
-                        R.anim.slide_in_right,
-                        R.anim.slide_out_left,
-                        R.anim.slide_in_left,
-                        R.anim.slide_out_right
-                );
-                fragmentTransaction.replace(R.id.main_container, fragment);
-                fragmentTransaction.commit();
+                fragmentTransaction.addToBackStack(null);
             }
-            catch (Exception e)
-            {
-                // should not happen
-            }
+            fragmentTransaction.setCustomAnimations(
+                    R.anim.slide_in_right,
+                    R.anim.slide_out_left,
+                    R.anim.slide_in_left,
+                    R.anim.slide_out_right
+            );
+            fragmentTransaction.replace(R.id.main_container, fragment);
+            fragmentTransaction.commit();
         }
         else
         {
@@ -61,6 +52,6 @@ public class PreActivationSetupActivity extends BaseActivity
 
     private void goToFirstStep()
     {
-        goToStep(PreActivationSetupStep.first(), false);
+        next(PurchaseSuppliesFragment.newInstance(), false);
     }
 }

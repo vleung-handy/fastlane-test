@@ -18,6 +18,11 @@ public class PurchaseSuppliesFragment extends PreActivationSetupStepFragment
     @Bind(R.id.products_summary)
     SimpleContentLayout mProductsSummary;
 
+    public static PurchaseSuppliesFragment newInstance()
+    {
+        return new PurchaseSuppliesFragment();
+    }
+
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
@@ -72,7 +77,7 @@ public class PurchaseSuppliesFragment extends PreActivationSetupStepFragment
     @Override
     protected void onPrimaryButtonClicked()
     {
-        goToStep(PreActivationSetupStep.PURCHASE_SUPPLIES_PAYMENT);
+        next(PurchaseSuppliesPaymentFragment.newInstance());
     }
 
     @OnClick(R.id.loading_overlay)
@@ -86,6 +91,6 @@ public class PurchaseSuppliesFragment extends PreActivationSetupStepFragment
     {
         // FIXME: Show confirmation slide-up
         showLoadingOverlay();
-        goToStep(null);
+        next(null);
     }
 }

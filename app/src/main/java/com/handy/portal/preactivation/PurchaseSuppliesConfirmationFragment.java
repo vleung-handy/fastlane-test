@@ -39,6 +39,11 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationSetupStep
     @Bind(R.id.zip_field)
     FormFieldTableRow mZipField;
 
+    public static PurchaseSuppliesConfirmationFragment newInstance()
+    {
+        return new PurchaseSuppliesConfirmationFragment();
+    }
+
     @OnClick(R.id.cancel_edit)
     void onCancelEditClicked()
     {
@@ -132,6 +137,6 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationSetupStep
     protected void onPrimaryButtonClicked()
     {
         UIUtils.dismissKeyboard(getActivity());
-        goToStep(null);
+        next(null);
     }
 }

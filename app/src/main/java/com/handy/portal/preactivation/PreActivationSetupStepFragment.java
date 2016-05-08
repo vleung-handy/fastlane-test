@@ -69,15 +69,15 @@ public abstract class PreActivationSetupStepFragment extends ActionBarFragment
         // do nothing
     }
 
-    protected void goToStep(@Nullable final PreActivationSetupStep step)
+    protected void next(@Nullable final PreActivationSetupStepFragment step)
     {
-        goToStep(step, true);
+        next(step, true);
     }
 
-    protected void goToStep(@Nullable final PreActivationSetupStep step,
-                            boolean allowBackNavigation)
+    protected void next(@Nullable final PreActivationSetupStepFragment step,
+                        boolean allowBackNavigation)
     {
-        ((PreActivationSetupActivity) getActivity()).goToStep(step, allowBackNavigation);
+        ((PreActivationSetupActivity) getActivity()).next(step, allowBackNavigation);
     }
 
     protected void showLoadingOverlay()
