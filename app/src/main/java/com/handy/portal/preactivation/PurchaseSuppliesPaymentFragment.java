@@ -33,6 +33,8 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
     @Bind(R.id.order_summary)
     SimpleContentLayout mOrderSummary;
 
+    private Map<String, FieldDefinition> mFieldDefinitions;
+
     @Override
     public void onResume()
     {
@@ -51,19 +53,19 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
     }
 
     @Subscribe
-    public void onReceiveFormDefinitions(
+    public void onReceiveFormDefinitionsSuccess(
             final RegionDefinitionEvent.ReceiveFormDefinitionsSuccess event)
     {
-        final Map<String, FieldDefinition> fieldDefinitions = event.formDefinitionWrapper
+        mFieldDefinitions = event.formDefinitionWrapper
                 .getFieldDefinitionsForForm(FormDefinitionKey.UPDATE_CREDIT_CARD_INFO);
         UIUtils.setFieldsFromDefinition(mCreditCardNumberField,
-                fieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.CREDIT_CARD_NUMBER));
+                mFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.CREDIT_CARD_NUMBER));
         UIUtils.setFieldsFromDefinition(mExpirationDateField,
-                fieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_DATE),
-                fieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_MONTH),
-                fieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_YEAR));
+                mFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_DATE),
+                mFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_MONTH),
+                mFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_YEAR));
         UIUtils.setFieldsFromDefinition(mSecurityCodeField,
-                fieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.SECURITY_CODE_NUMBER));
+                mFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.SECURITY_CODE_NUMBER));
     }
 
     @Override
@@ -102,6 +104,12 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
     protected void onPrimaryButtonClicked()
     {
         UIUtils.dismissKeyboard(getActivity());
+
+        if (!validate())
+        {
+            return;
+        }
+
         showLoadingOverlay();
 
         final Card card = new Card(
@@ -111,6 +119,18 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
                 mSecurityCodeField.getValue().getText().toString()
         );
         bus.post(new StripeEvent.RequestStripeChargeToken(card, Country.US));
+    }
+
+    private boolean validate()
+    {
+        boolean allFieldsValid = UIUtils.validateField(mCreditCardNumberField,
+                mFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.CREDIT_CARD_NUMBER));
+        allFieldsValid &= UIUtils.validateField(mExpirationDateField,
+                mFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_MONTH),
+                mFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_YEAR));
+        allFieldsValid &= UIUtils.validateField(mSecurityCodeField,
+                mFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.SECURITY_CODE_NUMBER));
+        return allFieldsValid;
     }
 
     @Subscribe
@@ -123,6 +143,10 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
     void onReceiveUpdateCreditCardSuccess(final PaymentEvent.ReceiveUpdateCreditCardSuccess event)
     {
         hideLoadingOverlay();
+        mCreditCardNumberField.getValue().setText(null);
+        mExpirationDateField.getMonthValue().setText(null);
+        mExpirationDateField.getYearValue().setText(null);
+        mSecurityCodeField.getValue().setText(null);
         // FIXME: Pass arguments
         goToStep(PreActivationSetupStep.PURCHASE_SUPPLIES_CONFIRMATION);
     }

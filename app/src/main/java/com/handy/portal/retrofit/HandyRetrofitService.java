@@ -120,7 +120,7 @@ public interface HandyRetrofitService
                                   HandyRetrofitCallback cb);
 
     @FormUrlEncoded
-    @POST(STRIPE_PATH + "update_credit_card")
+    @PUT(STRIPE_PATH + "update_credit_card")
     void updateCreditCard(@Field("token") String token,
                           HandyRetrofitCallback cb);
 

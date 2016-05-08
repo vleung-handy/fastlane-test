@@ -8,6 +8,7 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.util.UIUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,6 +38,7 @@ public class FormFieldTableRow extends TableRow implements Errorable
     {
         inflate(getContext(), R.layout.element_form_field, this);
         ButterKnife.bind(this);
+        mValueText.addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(this));
     }
 
     public TextView getLabel()
@@ -58,10 +60,11 @@ public class FormFieldTableRow extends TableRow implements Errorable
     public void setErrorState(boolean error)
     {
         int errorColor = ContextCompat.getColor(getContext(), R.color.plumber_red);
-        int normalColor = ContextCompat.getColor(getContext(), R.color.black);
+        int normalLabelColor = ContextCompat.getColor(getContext(), R.color.form_label);
+        int normalValueColor = ContextCompat.getColor(getContext(), R.color.black);
 
         getErrorIndicator().setVisibility(error ? VISIBLE : INVISIBLE);
-        getLabel().setTextColor(error ? errorColor : normalColor);
-        getValue().setTextColor(error ? errorColor : normalColor);
+        getLabel().setTextColor(error ? errorColor : normalLabelColor);
+        getValue().setTextColor(error ? errorColor : normalValueColor);
     }
 }
