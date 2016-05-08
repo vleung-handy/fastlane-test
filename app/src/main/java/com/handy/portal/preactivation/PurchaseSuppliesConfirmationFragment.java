@@ -41,6 +41,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationSetupStep
     @Bind(R.id.zip_field)
     FormFieldTableRow mZipField;
 
+    private Map<String, FieldDefinition> mFieldDefinitions;
     private String mCardLast4;
     private String mCardType;
 
@@ -105,18 +106,18 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationSetupStep
     public void onReceiveFormDefinitions(
             final RegionDefinitionEvent.ReceiveFormDefinitionsSuccess event)
     {
-        final Map<String, FieldDefinition> fieldDefinitions = event.formDefinitionWrapper
+        mFieldDefinitions = event.formDefinitionWrapper
                 .getFieldDefinitionsForForm(FormDefinitionKey.UPDATE_ADDRESS);
         UIUtils.setFieldsFromDefinition(mAddress1Field,
-                fieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.ADDRESS));
+                mFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.ADDRESS));
         UIUtils.setFieldsFromDefinition(mAddress2Field,
-                fieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.ADDRESS2));
+                mFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.ADDRESS2));
         UIUtils.setFieldsFromDefinition(mCityField,
-                fieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.CITY));
+                mFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.CITY));
         UIUtils.setFieldsFromDefinition(mStateField,
-                fieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.STATE));
+                mFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.STATE));
         UIUtils.setFieldsFromDefinition(mZipField,
-                fieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.ZIP_CODE));
+                mFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.ZIP_CODE));
     }
 
     @Override
@@ -155,6 +156,27 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationSetupStep
     protected void onPrimaryButtonClicked()
     {
         UIUtils.dismissKeyboard(getActivity());
+
+        if (mEditAddressForm.getVisibility() == View.VISIBLE && !validate())
+        {
+            return;
+        }
+
         next(null);
+    }
+
+    private boolean validate()
+    {
+        boolean allFieldsValid = UIUtils.validateField(mAddress1Field,
+                mFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.ADDRESS));
+        allFieldsValid &= UIUtils.validateField(mAddress2Field,
+                mFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.ADDRESS2));
+        allFieldsValid &= UIUtils.validateField(mCityField,
+                mFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.CITY));
+        allFieldsValid &= UIUtils.validateField(mStateField,
+                mFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.STATE));
+        allFieldsValid &= UIUtils.validateField(mZipField,
+                mFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.ZIP_CODE));
+        return allFieldsValid;
     }
 }
