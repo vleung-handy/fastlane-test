@@ -7,6 +7,7 @@ import com.handy.portal.R;
 import com.handy.portal.ui.view.SimpleContentLayout;
 
 import butterknife.Bind;
+import butterknife.OnClick;
 
 public class PurchaseSuppliesFragment extends PreActivationSetupStepFragment
 {
@@ -74,10 +75,17 @@ public class PurchaseSuppliesFragment extends PreActivationSetupStepFragment
         goToStep(PreActivationSetupStep.PURCHASE_SUPPLIES_PAYMENT);
     }
 
+    @OnClick(R.id.loading_overlay)
+    void asdf()
+    {
+        hideLoadingOverlay();
+    }
+
     @Override
     protected void onSecondaryButtonClicked()
     {
         // FIXME: Show confirmation slide-up
+        showLoadingOverlay();
         goToStep(null);
     }
 }

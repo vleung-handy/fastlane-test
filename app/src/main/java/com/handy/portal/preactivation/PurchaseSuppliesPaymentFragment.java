@@ -102,6 +102,7 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
     protected void onPrimaryButtonClicked()
     {
         UIUtils.dismissKeyboard(getActivity());
+        showLoadingOverlay();
 
         final Card card = new Card(
                 mCreditCardNumberField.getValue().getText().toString(),
@@ -110,7 +111,6 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
                 mSecurityCodeField.getValue().getText().toString()
         );
         bus.post(new StripeEvent.RequestStripeChargeToken(card, Country.US));
-        // FIXME: Spin
     }
 
     @Subscribe
@@ -122,7 +122,7 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
     @Subscribe
     void onReceiveUpdateCreditCardSuccess(final PaymentEvent.ReceiveUpdateCreditCardSuccess event)
     {
-        // FIXME: Stop spinning
+        hideLoadingOverlay();
         // FIXME: Pass arguments
         goToStep(PreActivationSetupStep.PURCHASE_SUPPLIES_CONFIRMATION);
     }
@@ -130,12 +130,14 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
     @Subscribe
     void onReceiveStripeChargeTokenError(final StripeEvent.ReceiveStripeChargeTokenError event)
     {
-        // FIXME: Stop spinning, show toast
+        hideLoadingOverlay();
+        // FIXME: Show toast
     }
 
     @Subscribe
     void onReceiveUpdateCreditCardError(final PaymentEvent.ReceiveUpdateCreditCardError event)
     {
-        // FIXME: Stop spinning, show toast
+        hideLoadingOverlay();
+        // FIXME: Show toast
     }
 }

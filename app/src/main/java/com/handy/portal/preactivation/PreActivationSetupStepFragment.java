@@ -17,6 +17,8 @@ import butterknife.OnClick;
 
 public abstract class PreActivationSetupStepFragment extends ActionBarFragment
 {
+    @Bind(R.id.loading_overlay)
+    View mLoadingOverlay;
     @Bind(R.id.action_button_group)
     ViewGroup mActionButtonGroup;
     @Bind(R.id.single_action_button)
@@ -76,6 +78,16 @@ public abstract class PreActivationSetupStepFragment extends ActionBarFragment
                             boolean allowBackNavigation)
     {
         ((PreActivationSetupActivity) getActivity()).goToStep(step, allowBackNavigation);
+    }
+
+    protected void showLoadingOverlay()
+    {
+        mLoadingOverlay.setVisibility(View.VISIBLE);
+    }
+
+    protected void hideLoadingOverlay()
+    {
+        mLoadingOverlay.setVisibility(View.GONE);
     }
 
     @Nullable

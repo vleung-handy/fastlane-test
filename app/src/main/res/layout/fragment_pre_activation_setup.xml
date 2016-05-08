@@ -120,4 +120,6 @@
         tools:visibility="visible"
         />
 
+    <include layout="@layout/overlay_loading"/>
+
 </RelativeLayout>
