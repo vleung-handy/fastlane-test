@@ -5,14 +5,17 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.Country;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.event.RegionDefinitionEvent;
+import com.handy.portal.event.StripeEvent;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.ui.view.DateFormFieldTableRow;
 import com.handy.portal.ui.view.FormFieldTableRow;
 import com.handy.portal.ui.view.SimpleContentLayout;
 import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
+import com.stripe.android.model.Card;
 
 import java.util.Map;
 
@@ -33,7 +36,7 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
     public void onResume()
     {
         super.onResume();
-        bus.post(new RegionDefinitionEvent.RequestFormDefinitions("US", getActivity()));
+        bus.post(new RegionDefinitionEvent.RequestFormDefinitions(Country.US, getActivity()));
     }
 
     @Override
@@ -98,6 +101,27 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
     protected void onPrimaryButtonClicked()
     {
         UIUtils.dismissKeyboard(getActivity());
-        goToStep(PreActivationSetupStep.PURCHASE_SUPPLIES_CONFIRMATION);
+
+        final Card card = new Card(
+                mCreditCardNumberField.getValue().getText().toString(),
+                Integer.parseInt(mExpirationDateField.getMonthValue().getText().toString()),
+                Integer.parseInt(mExpirationDateField.getYearValue().getText().toString()),
+                mSecurityCodeField.getValue().getText().toString()
+        );
+        bus.post(new StripeEvent.RequestStripeChargeToken(card, Country.US));
+        // FIXME: Spin
+    }
+
+    @Subscribe
+    void onReceiveStripeChargeTokenSuccess(final StripeEvent.ReceiveStripeChargeTokenSuccess event)
+    {
+        final String chargeId = event.getToken().getId();
+        // FIXME: Send another request
+    }
+
+    @Subscribe
+    void onReceiveStripeChargeTokenError(final StripeEvent.ReceiveStripeChargeTokenError event)
+    {
+        // FIXME: Stop spinning, show toast
     }
 }
