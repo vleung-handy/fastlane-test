@@ -119,6 +119,11 @@ public interface HandyRetrofitService
     void createDebitCardForCharge(@Field("token") String stripeToken,
                                   HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
+    @POST(STRIPE_PATH + "update_credit_card")
+    void updateCreditCard(@Field("token") String token,
+                          HandyRetrofitCallback cb);
+
     @GET(PROVIDERS_PATH + "{id}/payment_flow")
     void getPaymentFlow(@Path("id") String providerId,
                         HandyRetrofitCallback cb);

@@ -246,6 +246,11 @@ public class DataManager
         mService.createDebitCardForCharge(stripeToken, new CreateDebitCardRetroFitCallback(cb));
     }
 
+    public void updateCreditCard(final String token, final Callback<SuccessWrapper> cb)
+    {
+        mService.updateCreditCard(token, new CreateBankAccountRetroFitCallback(cb));
+    }
+
     public void getPaymentFlow(String providerId, final Callback<PaymentFlow> cb)
     {
         mService.getPaymentFlow(providerId, new GetPaymentFlowRetroFitCallback(cb));

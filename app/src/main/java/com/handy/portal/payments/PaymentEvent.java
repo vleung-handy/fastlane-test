@@ -7,6 +7,7 @@ import com.handy.portal.payments.model.CreateDebitCardResponse;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.model.PaymentFlow;
 import com.handy.portal.payments.model.PaymentOutstandingFees;
+import com.stripe.android.model.Token;
 
 import java.util.Date;
 
@@ -294,4 +295,45 @@ public abstract class PaymentEvent extends HandyEvent
 
 
     public static class RequestPaymentFlow extends RequestEvent {}
+
+
+    public static class RequestUpdateCreditCard extends RequestEvent
+    {
+        private Token mToken;
+
+        public RequestUpdateCreditCard(final Token token)
+        {
+            mToken = token;
+        }
+
+        public Token getToken()
+        {
+            return mToken;
+        }
+    }
+
+
+    public static class ReceiveUpdateCreditCardSuccess extends ReceiveSuccessEvent
+    {
+        private Token mToken;
+
+        public ReceiveUpdateCreditCardSuccess(final Token token)
+        {
+            mToken = token;
+        }
+
+        public Token getToken()
+        {
+            return mToken;
+        }
+    }
+
+
+    public static class ReceiveUpdateCreditCardError extends ReceiveErrorEvent
+    {
+        public ReceiveUpdateCreditCardError(final DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 }

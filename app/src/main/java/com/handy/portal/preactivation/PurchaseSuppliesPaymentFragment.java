@@ -10,6 +10,7 @@ import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.event.StripeEvent;
 import com.handy.portal.model.definitions.FieldDefinition;
+import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.ui.view.DateFormFieldTableRow;
 import com.handy.portal.ui.view.FormFieldTableRow;
 import com.handy.portal.ui.view.SimpleContentLayout;
@@ -115,12 +116,25 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragm
     @Subscribe
     void onReceiveStripeChargeTokenSuccess(final StripeEvent.ReceiveStripeChargeTokenSuccess event)
     {
-        final String chargeId = event.getToken().getId();
-        // FIXME: Send another request
+        bus.post(new PaymentEvent.RequestUpdateCreditCard(event.getToken()));
+    }
+
+    @Subscribe
+    void onReceiveUpdateCreditCardSuccess(final PaymentEvent.ReceiveUpdateCreditCardSuccess event)
+    {
+        // FIXME: Stop spinning
+        // FIXME: Pass arguments
+        goToStep(PreActivationSetupStep.PURCHASE_SUPPLIES_CONFIRMATION);
     }
 
     @Subscribe
     void onReceiveStripeChargeTokenError(final StripeEvent.ReceiveStripeChargeTokenError event)
+    {
+        // FIXME: Stop spinning, show toast
+    }
+
+    @Subscribe
+    void onReceiveUpdateCreditCardError(final PaymentEvent.ReceiveUpdateCreditCardError event)
     {
         // FIXME: Stop spinning, show toast
     }
