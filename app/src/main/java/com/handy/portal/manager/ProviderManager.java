@@ -22,6 +22,7 @@ import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.PaymentFlow;
+import com.handy.portal.util.TextUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -431,22 +432,22 @@ public class ProviderManager
     {
         TypeSafeMap<ProviderKey> params = new TypeSafeMap<>();
 
-        putIfNonNull(params, ProviderKey.EMAIL, info.email);
-        putIfNonNull(params, ProviderKey.PHONE, info.phone);
-        putIfNonNull(params, ProviderKey.ADDRESS1, info.address1);
-        putIfNonNull(params, ProviderKey.ADDRESS2, info.address2);
-        putIfNonNull(params, ProviderKey.CITY, info.city);
-        putIfNonNull(params, ProviderKey.STATE, info.state);
-        putIfNonNull(params, ProviderKey.ZIPCODE, info.zipCode);
+        putIfNonEmpty(params, ProviderKey.EMAIL, info.email);
+        putIfNonEmpty(params, ProviderKey.PHONE, info.phone);
+        putIfNonEmpty(params, ProviderKey.ADDRESS1, info.address1);
+        putIfNonEmpty(params, ProviderKey.ADDRESS2, info.address2);
+        putIfNonEmpty(params, ProviderKey.CITY, info.city);
+        putIfNonEmpty(params, ProviderKey.STATE, info.state);
+        putIfNonEmpty(params, ProviderKey.ZIPCODE, info.zipCode);
 
         return params;
     }
 
-    private static void putIfNonNull(final TypeSafeMap<ProviderKey> params,
-                                     final ProviderKey key,
-                                     final String value)
+    private static void putIfNonEmpty(final TypeSafeMap<ProviderKey> params,
+                                      final ProviderKey key,
+                                      final String value)
     {
-        if (value != null)
+        if (!TextUtils.isNullOrEmpty(value))
         {
             params.put(key, value);
         }

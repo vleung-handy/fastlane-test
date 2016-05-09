@@ -10,6 +10,7 @@ import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
+import com.handy.portal.model.Address;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.ui.view.FormFieldTableRow;
 import com.handy.portal.ui.view.SimpleContentLayout;
@@ -164,8 +165,8 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationSetupStep
             if (validate())
             {
                 bus.post(new ProfileEvent.RequestProfileUpdate(
-                        null,
-                        null,
+                        "",
+                        "",
                         mAddress1Field.getValue().getText(),
                         mAddress2Field.getValue().getText(),
                         mCityField.getValue().getText(),
@@ -185,14 +186,17 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationSetupStep
     @Subscribe
     void onReceiveProfileUpdateSuccess(final ProfileEvent.ReceiveProfileUpdateSuccess event)
     {
-        // FIXME: Immediately set the address displayed to the one in event (even if it's hidden)
+        final Address address = event.providerPersonalInfo.getAddress();
+        mShippingSummary.setDescription(event.providerPersonalInfo.getFirstName() + " " +
+                event.providerPersonalInfo.getLastName() + "\n" + address.getStreetAddress() +
+                "\n" + address.getCityStateZip());
         bus.post(new HandyEvent.RequestOnboardingSupplies(true));
-
     }
 
     @Subscribe
     void onReceiveOnboardingSuppliesSuccess(final HandyEvent.ReceiveOnboardingSuppliesSuccess event)
     {
+        hideLoadingOverlay();
         next(null);
     }
 
