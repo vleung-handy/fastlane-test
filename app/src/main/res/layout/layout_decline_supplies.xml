@@ -3,15 +3,13 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/default_margin"
-    android:layout_marginTop="@dimen/default_margin"
     android:orientation="vertical"
     android:paddingBottom="@dimen/default_padding"
     android:paddingEnd="@dimen/default_padding_large"
     android:paddingLeft="@dimen/default_padding_large"
     android:paddingRight="@dimen/default_padding_large"
     android:paddingStart="@dimen/default_padding_large"
-    android:paddingTop="@dimen/default_padding"
+    android:paddingTop="@dimen/default_padding_large"
     >
 
     <TextView
@@ -24,14 +22,11 @@
         />
 
     <TextView
-        style="@style/TextView.Medium"
+        style="@style/TextView.Large"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
         android:gravity="center"
-        android:paddingEnd="@dimen/default_padding_half"
-        android:paddingLeft="@dimen/default_padding_half"
-        android:paddingRight="@dimen/default_padding_half"
-        android:paddingStart="@dimen/default_padding_half"
         android:text="@string/supplies_expectation"
         android:textColor="@color/tertiary_gray"
         />
@@ -42,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_margin="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"
         android:text="@string/i_have_my_own_supplies"
         android:textColor="@color/white"
         android:textSize="@dimen/large_text_size"
