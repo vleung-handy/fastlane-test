@@ -1,14 +1,18 @@
 package com.handy.portal.preactivation;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
 import com.handy.portal.model.onboarding.OnboardingSuppliesSection;
 import com.handy.portal.ui.view.SimpleContentLayout;
+import com.handy.portal.util.FragmentUtils;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
@@ -117,9 +121,24 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
     @Override
     protected void onSecondaryButtonClicked()
     {
-        // FIXME: Show confirmation slide-up
-        showLoadingOverlay();
-        bus.post(new HandyEvent.RequestOnboardingSupplies(false));
+        final DeclineSuppliesDialogFragment fragment = DeclineSuppliesDialogFragment.newInstance();
+        fragment.setTargetFragment(this, RequestCode.DECLINE_SUPPLIES);
+        FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), null);
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
+    {
+        if (resultCode == Activity.RESULT_OK)
+        {
+            switch (requestCode)
+            {
+                case RequestCode.DECLINE_SUPPLIES:
+                    showLoadingOverlay();
+                    bus.post(new HandyEvent.RequestOnboardingSupplies(false));
+                    break;
+            }
+        }
     }
 
     @Subscribe
