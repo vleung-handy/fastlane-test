@@ -133,6 +133,6 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
     void onReceiveOnboardingSuppliesError(final HandyEvent.ReceiveOnboardingSuppliesError event)
     {
         hideLoadingOverlay();
-        showError(event.error.getMessage());
+        next(null);
     }
 }
