@@ -284,8 +284,7 @@
 
     <!-- Profile -->
     <string name="share_with">Share with…</string>
-    <string name="earn_a_bonus">Earn a %1$s bonus</string>
-    <string name="refer_a_pro">Refer a professional to Handy</string>
+    <string name="earn_a_reward">Earn a %1$s reward</string>
     <string name="rating">Rating</string>
     <string name="jobs">Jobs</string>
     <string name="rate">Rate</string>
@@ -404,6 +403,7 @@
 
     <!-- Referrals -->
     <string name="chevron_description">Chevron</string>
+    <string name="referral_subtitle">If your referral uses your code in their application and completes at least five jobs in their first two weeks, you’ll get a referral reward in your payments!</string>
 
     <!-- Location -->
     <string name="change_location_settings_dialog_title">Location services required</string>
