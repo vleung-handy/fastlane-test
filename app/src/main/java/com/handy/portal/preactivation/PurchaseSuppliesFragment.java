@@ -145,13 +145,13 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
     void onReceiveOnboardingSuppliesSuccess(final HandyEvent.ReceiveOnboardingSuppliesSuccess event)
     {
         hideLoadingOverlay();
-        next(null);
+        terminate();
     }
 
     @Subscribe
     void onReceiveOnboardingSuppliesError(final HandyEvent.ReceiveOnboardingSuppliesError event)
     {
         hideLoadingOverlay();
-        next(null);
+        terminate();
     }
 }

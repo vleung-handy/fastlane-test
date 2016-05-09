@@ -1,6 +1,7 @@
 package com.handy.portal.preactivation;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -71,15 +72,14 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
         // do nothing
     }
 
-    protected void next(@Nullable final PreActivationFlowFragment step)
+    protected void next(@NonNull final PreActivationFlowFragment fragment)
     {
-        next(step, true);
+        ((PreActivationFlowActivity) getActivity()).next(fragment, true);
     }
 
-    protected void next(@Nullable final PreActivationFlowFragment step,
-                        boolean allowBackNavigation)
+    protected void terminate()
     {
-        ((PreActivationFlowActivity) getActivity()).next(step, allowBackNavigation);
+        ((PreActivationFlowActivity) getActivity()).terminate();
     }
 
     protected void showLoadingOverlay()
