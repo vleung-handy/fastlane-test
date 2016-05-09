@@ -7,6 +7,8 @@ import android.view.View;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.FormDefinitionKey;
+import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.ui.view.FormFieldTableRow;
@@ -157,12 +159,55 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationSetupStep
     {
         UIUtils.dismissKeyboard(getActivity());
 
-        if (mEditAddressForm.getVisibility() == View.VISIBLE && !validate())
+        if (mEditAddressForm.getVisibility() == View.VISIBLE)
         {
-            return;
+            if (validate())
+            {
+                bus.post(new ProfileEvent.RequestProfileUpdate(
+                        null,
+                        null,
+                        mAddress1Field.getValue().getText(),
+                        mAddress2Field.getValue().getText(),
+                        mCityField.getValue().getText(),
+                        mStateField.getValue().getText(),
+                        mZipField.getValue().getText()
+                ));
+                showLoadingOverlay();
+            }
         }
+        else
+        {
+            bus.post(new HandyEvent.RequestOnboardingSupplies(true));
+            showLoadingOverlay();
+        }
+    }
 
+    @Subscribe
+    void onReceiveProfileUpdateSuccess(final ProfileEvent.ReceiveProfileUpdateSuccess event)
+    {
+        // FIXME: Immediately set the address displayed to the one in event (even if it's hidden)
+        bus.post(new HandyEvent.RequestOnboardingSupplies(true));
+
+    }
+
+    @Subscribe
+    void onReceiveOnboardingSuppliesSuccess(final HandyEvent.ReceiveOnboardingSuppliesSuccess event)
+    {
         next(null);
+    }
+
+    @Subscribe
+    void onReceiveProfileUpdateError(final ProfileEvent.ReceiveProfileUpdateError event)
+    {
+        hideLoadingOverlay();
+        // FIXME: Show toast
+    }
+
+    @Subscribe
+    void onReceiveOnboardingSuppliesError(final HandyEvent.ReceiveOnboardingSuppliesError event)
+    {
+        hideLoadingOverlay();
+        // FIXME: Show toast
     }
 
     private boolean validate()

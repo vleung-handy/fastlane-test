@@ -4,10 +4,11 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.handy.portal.R;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.ui.view.SimpleContentLayout;
+import com.squareup.otto.Subscribe;
 
 import butterknife.Bind;
-import butterknife.OnClick;
 
 public class PurchaseSuppliesFragment extends PreActivationSetupStepFragment
 {
@@ -80,17 +81,25 @@ public class PurchaseSuppliesFragment extends PreActivationSetupStepFragment
         next(PurchaseSuppliesPaymentFragment.newInstance());
     }
 
-    @OnClick(R.id.loading_overlay)
-    void asdf()
-    {
-        hideLoadingOverlay();
-    }
-
     @Override
     protected void onSecondaryButtonClicked()
     {
         // FIXME: Show confirmation slide-up
         showLoadingOverlay();
+        bus.post(new HandyEvent.RequestOnboardingSupplies(false));
+    }
+
+    @Subscribe
+    void onReceiveOnboardingSuppliesSuccess(final HandyEvent.ReceiveOnboardingSuppliesSuccess event)
+    {
+        hideLoadingOverlay();
         next(null);
+    }
+
+    @Subscribe
+    void onReceiveOnboardingSuppliesError(final HandyEvent.ReceiveOnboardingSuppliesError event)
+    {
+        hideLoadingOverlay();
+        // FIXME: Show toast
     }
 }

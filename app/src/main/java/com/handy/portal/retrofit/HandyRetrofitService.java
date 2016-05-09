@@ -258,6 +258,11 @@ public interface HandyRetrofitService
     @GET(PROVIDERS_PATH + "{id}/feedback")
     void getProviderFeedback(@Path("id") String providerId, HandyRetrofitCallback cb);
 
+    @POST(PROVIDERS_PATH + "{id}/onboarding_supplies")
+    void requestOnboardingSupplies(@Path("id") String providerId,
+                                   @Query("onboarding_supplies") Boolean value,
+                                   HandyRetrofitCallback cb);
+
     @GET(PAYMENTS_PATH + "outstanding_fees")
     void getPaymentOutstandingFees(HandyRetrofitCallback cb);
 

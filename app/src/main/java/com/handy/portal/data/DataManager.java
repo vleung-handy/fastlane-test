@@ -8,7 +8,7 @@ import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.constant.LocationKey;
-import com.handy.portal.constant.NoShowKey;
+import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
@@ -124,7 +124,7 @@ public class DataManager
         mService.getProviderProfile(providerId, new ProviderProfileRetrofitCallback(cb));
     }
 
-    public void updateProviderProfile(String providerId, TypeSafeMap<NoShowKey> params, Callback<ProviderPersonalInfo> cb)
+    public void updateProviderProfile(String providerId, TypeSafeMap<ProviderKey> params, Callback<ProviderPersonalInfo> cb)
     {
         mService.updateProviderProfile(providerId, params.toStringMap(), new ProviderPersonalInfoHandyRetroFitCallback(cb));
     }
@@ -189,7 +189,7 @@ public class DataManager
         mService.updateArrivalTime(bookingId, arrivalTimeOption.getValue(), new BookingHandyRetroFitCallback(cb));
     }
 
-    public void reportNoShow(String bookingId, TypeSafeMap<NoShowKey> params, Callback<Booking> cb)
+    public void reportNoShow(String bookingId, TypeSafeMap<ProviderKey> params, Callback<Booking> cb)
     {
         mService.reportNoShow(bookingId, params.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
@@ -308,6 +308,14 @@ public class DataManager
     public void getProviderFeedback(final String providerId, final Callback<List<ProviderFeedback>> cb)
     {
         mService.getProviderFeedback(providerId, new GetProviderFeedbackRetrofitCallback(cb));
+    }
+
+    public void requestOnboardingSupplies(final String providerId,
+                                          final boolean value,
+                                          final Callback<SuccessWrapper> cb)
+    {
+        mService.requestOnboardingSupplies(providerId, value,
+                new SuccessWrapperRetroFitCallback(cb));
     }
 
 

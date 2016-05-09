@@ -11,7 +11,7 @@ import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.constant.LocationKey;
-import com.handy.portal.constant.NoShowKey;
+import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.LocationData;
@@ -520,14 +520,14 @@ public class BookingManager
         });
     }
 
-    private TypeSafeMap<NoShowKey> getNoShowParams(boolean active, LocationData locationData)
+    private TypeSafeMap<ProviderKey> getNoShowParams(boolean active, LocationData locationData)
     {
-        TypeSafeMap<NoShowKey> noShowParams = new TypeSafeMap<>();
+        TypeSafeMap<ProviderKey> noShowParams = new TypeSafeMap<>();
         TypeSafeMap<LocationKey> locationParamsMap = locationData.getLocationMap();
-        noShowParams.put(NoShowKey.LATITUDE, locationParamsMap.get(LocationKey.LATITUDE));
-        noShowParams.put(NoShowKey.LONGITUDE, locationParamsMap.get(LocationKey.LONGITUDE));
-        noShowParams.put(NoShowKey.ACCURACY, locationParamsMap.get(LocationKey.ACCURACY));
-        noShowParams.put(NoShowKey.ACTIVE, Boolean.toString(active));
+        noShowParams.put(ProviderKey.LATITUDE, locationParamsMap.get(LocationKey.LATITUDE));
+        noShowParams.put(ProviderKey.LONGITUDE, locationParamsMap.get(LocationKey.LONGITUDE));
+        noShowParams.put(ProviderKey.ACCURACY, locationParamsMap.get(LocationKey.ACCURACY));
+        noShowParams.put(ProviderKey.ACTIVE, Boolean.toString(active));
         return noShowParams;
     }
 

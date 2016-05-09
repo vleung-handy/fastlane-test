@@ -4,7 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.handy.portal.constant.NoShowKey;
+import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
@@ -86,7 +86,7 @@ public class ProviderManager
     public void onUpdateProviderProfile(ProfileEvent.RequestProfileUpdate event)
     {
         String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
-        mDataManager.updateProviderProfile(providerId, getNoShowParams(event), new DataManager.Callback<ProviderPersonalInfo>()
+        mDataManager.updateProviderProfile(providerId, getProfileParams(event), new DataManager.Callback<ProviderPersonalInfo>()
         {
             @Override
             public void onSuccess(ProviderPersonalInfo response)
@@ -321,6 +321,26 @@ public class ProviderManager
 //        });
     }
 
+    @Subscribe
+    public void onRequestOnboardingSupplies(final HandyEvent.RequestOnboardingSupplies event)
+    {
+        mDataManager.requestOnboardingSupplies(getLastProviderId(), event.getValue(),
+                new DataManager.Callback<SuccessWrapper>()
+                {
+                    @Override
+                    public void onSuccess(final SuccessWrapper response)
+                    {
+                        mBus.post(new HandyEvent.ReceiveOnboardingSuppliesSuccess());
+                    }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        mBus.post(new HandyEvent.ReceiveOnboardingSuppliesError(error));
+                    }
+                });
+    }
+
     private void requestProviderInfo()
     {
         mDataManager.getProviderInfo(new DataManager.Callback<Provider>()
@@ -407,18 +427,28 @@ public class ProviderManager
         return mProviderSettingsCache.getIfPresent(PROVIDER_SETTINGS_CACHE_KEY);
     }
 
-    private static TypeSafeMap<NoShowKey> getNoShowParams(ProfileEvent.RequestProfileUpdate info)
+    private static TypeSafeMap<ProviderKey> getProfileParams(ProfileEvent.RequestProfileUpdate info)
     {
-        TypeSafeMap<NoShowKey> noShowParams = new TypeSafeMap<>();
+        TypeSafeMap<ProviderKey> params = new TypeSafeMap<>();
 
-        noShowParams.put(NoShowKey.EMAIL, info.email);
-        noShowParams.put(NoShowKey.PHONE, info.phone);
-        noShowParams.put(NoShowKey.ADDRESS1, info.address1);
-        noShowParams.put(NoShowKey.ADDRESS2, info.address2);
-        noShowParams.put(NoShowKey.CITY, info.city);
-        noShowParams.put(NoShowKey.STATE, info.state);
-        noShowParams.put(NoShowKey.ZIPCODE, info.zipCode);
+        putIfNonNull(params, ProviderKey.EMAIL, info.email);
+        putIfNonNull(params, ProviderKey.PHONE, info.phone);
+        putIfNonNull(params, ProviderKey.ADDRESS1, info.address1);
+        putIfNonNull(params, ProviderKey.ADDRESS2, info.address2);
+        putIfNonNull(params, ProviderKey.CITY, info.city);
+        putIfNonNull(params, ProviderKey.STATE, info.state);
+        putIfNonNull(params, ProviderKey.ZIPCODE, info.zipCode);
 
-        return noShowParams;
+        return params;
+    }
+
+    private static void putIfNonNull(final TypeSafeMap<ProviderKey> params,
+                                     final ProviderKey key,
+                                     final String value)
+    {
+        if (value != null)
+        {
+            params.put(key, value);
+        }
     }
 }
