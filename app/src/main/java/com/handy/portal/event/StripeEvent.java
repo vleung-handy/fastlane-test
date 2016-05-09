@@ -1,9 +1,9 @@
 package com.handy.portal.event;
 
 import com.handy.portal.data.DataManager;
-import com.handy.portal.model.payments.BankAccountInfo;
-import com.handy.portal.model.payments.DebitCardInfo;
-import com.handy.portal.model.payments.StripeTokenResponse;
+import com.handy.portal.payments.model.BankAccountInfo;
+import com.handy.portal.payments.model.DebitCardInfo;
+import com.handy.portal.payments.model.StripeTokenResponse;
 
 public abstract class StripeEvent extends HandyEvent
 {

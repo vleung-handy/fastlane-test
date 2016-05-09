@@ -1,26 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout
     android:id="@+id/payments_bill_blocker_window"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:layout_gravity="center"
-    android:gravity="center"
     >
-
-    <!--<ImageView-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="wrap_content"-->
-    <!--android:translationY="-20dp"-->
-    <!--android:src="@drawable/ic_alert_circle"/>-->
-    <!--TODO: style this so that it doesn't get clipped-->
 
     <LinearLayout
         android:id="@+id/payments_bill_blocker_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|top"
+        android:layout_alignParentTop="true"
+        android:layout_below="@+id/alert_circle_image"
+        android:layout_marginTop="@dimen/default_margin_x2"
+        android:background="@color/white"
         android:orientation="vertical"
         android:paddingBottom="@dimen/default_padding"
         android:paddingLeft="@dimen/default_padding_medium"
@@ -33,6 +28,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin_x2"
             android:lineSpacingExtra="@dimen/lineSpacing"
             android:text="@string/payments_bill_blocker_title"
             android:textAppearance="@style/TextView.Bold"
@@ -45,14 +41,14 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/payment_container_vertical_padding"
             android:lineSpacingExtra="@dimen/lineSpacing"
-            android:text="@string/payments_bill_blocker_content"
             android:textAppearance="@style/HandyTextAppearanceMedium"
-            android:textColor="@color/dark_grey"
+            android:textColor="@color/dark_gray"
+            tools:text="@string/payments_bill_blocker_content_formatted"
             />
 
         <Button
             android:id="@+id/payments_bill_blocker_update_now_button"
-            style="@style/Button.Green.Round"
+            style="@style/Button.Red.Round"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_padding"
@@ -67,9 +63,18 @@
             android:text="@string/payments_bill_blocker_remind_me_later_button"
             android:textAllCaps="true"
             android:textAppearance="@style/TextView.Bold"
-            android:textColor="@color/tertiary_grey"
+            android:textColor="@color/tertiary_gray"
             android:textSize="@dimen/small_text_size"
             />
 
     </LinearLayout>
+
+    <ImageView
+        android:id="@id/alert_circle_image"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:src="@drawable/ic_alert_circle"
+        />
+
 </RelativeLayout>

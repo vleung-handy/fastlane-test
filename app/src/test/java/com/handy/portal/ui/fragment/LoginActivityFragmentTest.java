@@ -12,6 +12,7 @@ import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.helpcenter.constants.HelpCenterUrl;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.ui.activity.LoginActivity;
@@ -149,7 +150,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
         fragmentView.findViewById(R.id.login_help).performClick();
 
         Intent actualIntent = shadowOf(activity).getNextStartedActivity();
-        Intent expectedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(LoginActivityFragment.HELP_CENTER_URL));
+        Intent expectedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(HelpCenterUrl.LOGIN_HELP_ABSOLUTE_URL));
         assertThat(actualIntent, equalTo(expectedIntent));
     }
 

@@ -5,16 +5,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.handy.portal.constant.BookingActionButtonType;
+import com.handy.portal.bookings.constant.BookingActionButtonType;
+import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.model.Booking.Action;
+import com.handy.portal.bookings.model.Booking.BookingType;
+import com.handy.portal.bookings.model.BookingClaimDetails;
+import com.handy.portal.bookings.model.BookingsListWrapper;
+import com.handy.portal.bookings.model.BookingsWrapper;
+import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.logger.mixpanel.annotation.Track;
 import com.handy.portal.logger.mixpanel.annotation.TrackField;
-import com.handy.portal.model.Booking;
-import com.handy.portal.model.Booking.Action;
-import com.handy.portal.model.Booking.BookingType;
-import com.handy.portal.model.BookingClaimDetails;
-import com.handy.portal.model.BookingsListWrapper;
-import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.LoginDetails;
@@ -188,6 +189,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class RequestEnableApplication extends RequestEvent
     {
         public String packageName;
@@ -294,8 +296,6 @@ public abstract class HandyEvent
 
         /**
          * these dates should be without time
-         *
-         * @return
          */
         public Map<Date, List<Booking>> getDateToBookingMap()
         {
@@ -306,16 +306,16 @@ public abstract class HandyEvent
 
     public static abstract class ReceiveBookingsSuccess extends ReceiveSuccessEvent
     {
-        public List<Booking> bookings;
+        public BookingsWrapper bookingsWrapper;
         public Date day;
     }
 
 
     public static class ReceiveAvailableBookingsSuccess extends ReceiveBookingsSuccess
     {
-        public ReceiveAvailableBookingsSuccess(List<Booking> bookings, Date day)
+        public ReceiveAvailableBookingsSuccess(BookingsWrapper bookingsWrapper, Date day)
         {
-            this.bookings = bookings;
+            this.bookingsWrapper = bookingsWrapper;
             this.day = day;
         }
     }
@@ -334,9 +334,9 @@ public abstract class HandyEvent
 
     public static class ReceiveScheduledBookingsSuccess extends ReceiveBookingsSuccess
     {
-        public ReceiveScheduledBookingsSuccess(List<Booking> bookings, Date day)
+        public ReceiveScheduledBookingsSuccess(BookingsWrapper bookingsWrapper, Date day)
         {
-            this.bookings = bookings;
+            this.bookingsWrapper = bookingsWrapper;
             this.day = day;
         }
     }
@@ -476,14 +476,7 @@ public abstract class HandyEvent
     @Track("provider checkin submitted")
     public static class RequestNotifyJobCheckIn extends RequestBookingActionEvent
     {
-        public boolean isAuto;
         public LocationData locationData;
-
-        public RequestNotifyJobCheckIn(String bookingId, boolean isAuto, LocationData locationData)
-        {
-            this(bookingId, locationData);
-            this.isAuto = isAuto;
-        }
 
         public RequestNotifyJobCheckIn(String bookingId, LocationData locationData)
         {
@@ -497,13 +490,6 @@ public abstract class HandyEvent
     public static class RequestNotifyJobCheckOut extends RequestBookingActionEvent
     {
         public CheckoutRequest checkoutRequest;
-        public boolean isAuto;
-
-        public RequestNotifyJobCheckOut(String bookingId, boolean isAuto, CheckoutRequest checkoutRequest)
-        {
-            this(bookingId, checkoutRequest);
-            this.isAuto = isAuto;
-        }
 
         public RequestNotifyJobCheckOut(String bookingId, CheckoutRequest checkoutRequest)
         {
@@ -586,12 +572,9 @@ public abstract class HandyEvent
     @Track("check in")
     public static class ReceiveNotifyJobCheckInSuccess extends ReceiveBookingSuccessEvent
     {
-        public boolean isAuto;
-
-        public ReceiveNotifyJobCheckInSuccess(Booking booking, boolean isAuto)
+        public ReceiveNotifyJobCheckInSuccess(Booking booking)
         {
             this.booking = booking;
-            this.isAuto = isAuto;
         }
     }
 
@@ -599,18 +582,14 @@ public abstract class HandyEvent
     @Track("check out")
     public static class ReceiveNotifyJobCheckOutSuccess extends ReceiveBookingSuccessEvent
     {
-        public boolean isAutoCheckIn;
-
-        public ReceiveNotifyJobCheckOutSuccess(Booking booking, boolean isAutoCheckIn)
+        public ReceiveNotifyJobCheckOutSuccess(Booking booking)
         {
             this.booking = booking;
-            this.isAutoCheckIn = isAutoCheckIn;
         }
     }
 
-//Job Action Receive Errors
 
-
+    //Job Action Receive Errors
     public static class ReceiveClaimJobError extends ReceiveErrorEvent
     {
         private Booking mBooking;
@@ -664,24 +643,18 @@ public abstract class HandyEvent
 
     public static class ReceiveNotifyJobCheckInError extends ReceiveErrorEvent
     {
-        public boolean isAuto;
-
-        public ReceiveNotifyJobCheckInError(DataManager.DataManagerError error, boolean isAuto)
+        public ReceiveNotifyJobCheckInError(DataManager.DataManagerError error)
         {
             this.error = error;
-            this.isAuto = isAuto;
         }
     }
 
 
     public static class ReceiveNotifyJobCheckOutError extends ReceiveErrorEvent
     {
-        public boolean isAuto;
-
-        public ReceiveNotifyJobCheckOutError(DataManager.DataManagerError error, boolean isAuto)
+        public ReceiveNotifyJobCheckOutError(DataManager.DataManagerError error)
         {
             this.error = error;
-            this.isAuto = isAuto;
         }
     }
 

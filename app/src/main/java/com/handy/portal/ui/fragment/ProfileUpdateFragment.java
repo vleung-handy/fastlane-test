@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
-import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
@@ -73,12 +72,6 @@ public class ProfileUpdateFragment extends ActionBarFragment
     ProviderManager mProviderManager;
 
     private FormDefinitionWrapper mFormDefinitionWrapper;
-
-    @Override
-    protected MainViewTab getTab()
-    {
-        return MainViewTab.PROFILE_UPDATE;
-    }
 
     @Override
     public void onCreate(Bundle savedInstance)
@@ -245,7 +238,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
     {
         if (!TextUtils.validateText(text, pattern))
         {
-            textView.setTextColor(ContextCompat.getColor(getContext(), R.color.error_red));
+            textView.setTextColor(ContextCompat.getColor(getContext(), R.color.plumber_red));
             errorIndicator.setVisibility(View.VISIBLE);
             return false;
         }
@@ -272,7 +265,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
         @Override
         public void afterTextChanged(Editable s)
         {
-            mText.setTextColor(ContextCompat.getColor(mText.getContext(), R.color.dark_grey));
+            mText.setTextColor(ContextCompat.getColor(mText.getContext(), R.color.dark_gray));
             mErrorIndicator.setVisibility(View.INVISIBLE);
         }
     }

@@ -45,14 +45,20 @@ public class PrefsManager
         mDefaultPrefs.edit().putString(prefsKey, value).apply();
     }
 
-    public boolean getBoolean(@PrefsKey.Key String prefsKey, boolean defaultValue)
+    public boolean getBoolean(String prefsKey, boolean defaultValue)
     {
         return mDefaultPrefs.getBoolean(prefsKey, defaultValue);
     }
 
-    public void setBoolean(@PrefsKey.Key String prefsKey, boolean value)
+    public void setBoolean(String prefsKey, boolean value)
     {
         mDefaultPrefs.edit().putBoolean(prefsKey, value).apply();
+    }
+
+    public void clear()
+    {
+        mDefaultPrefs.edit().clear().apply();
+        mBookingInstructionsPrefs.edit().clear().apply();
     }
 
     public void setBookingInstructions(String bookingId, String value)

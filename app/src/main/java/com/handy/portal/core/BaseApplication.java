@@ -1,7 +1,6 @@
 package com.handy.portal.core;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -11,19 +10,17 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
+import com.handy.portal.bookings.BookingManager;
+import com.handy.portal.bookings.BookingModalsManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.helpcenter.HelpManager;
-import com.handy.portal.helpcenter.helpcontact.HelpContactManager;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
-import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
-import com.handy.portal.manager.PaymentsManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.RegionDefinitionsManager;
@@ -36,6 +33,7 @@ import com.handy.portal.manager.UserInterfaceUpdateManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.notification.NotificationMessageManager;
+import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.util.FontUtils;
@@ -68,6 +66,8 @@ public class BaseApplication extends MultiDexApplication
     @Inject
     BookingManager bookingManager;
     @Inject
+    BookingModalsManager bookingModalsManager;
+    @Inject
     LoginManager loginManager;
     @Inject
     ProviderManager providerManager;
@@ -77,10 +77,6 @@ public class BaseApplication extends MultiDexApplication
     TermsManager termsManager;
     @Inject
     ConfigManager configManager;
-    @Inject
-    HelpManager helpManager;
-    @Inject
-    HelpContactManager helpContactManager;
     @Inject
     PrefsManager prefsManager;
     @Inject
@@ -174,12 +170,6 @@ public class BaseApplication extends MultiDexApplication
             @Override
             public void onActivityDestroyed(final Activity activity) { }
         });
-    }
-
-    @Override
-    protected void attachBaseContext(Context base)
-    {
-        super.attachBaseContext(base);
     }
 
     protected void startNewRelic()

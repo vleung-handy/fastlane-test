@@ -32,11 +32,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.BookingActionButtonType;
+import com.handy.portal.bookings.constant.BookingActionButtonType;
+import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.core.EnvironmentModifier;
-import com.handy.portal.model.Booking;
-import com.handy.portal.model.PaymentInfo;
 import com.handy.portal.model.definitions.FieldDefinition;
+import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.view.DateFormFieldTableRow;
 import com.handy.portal.ui.view.Errorable;

@@ -1,8 +1,8 @@
 package com.handy.portal.retrofit;
 
 import com.google.gson.JsonObject;
+import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.location.model.LocationBatchUpdate;
-import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.onboarding.JobClaimRequest;
 
@@ -172,14 +172,12 @@ public interface HandyRetrofitService
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/check_in")
     void checkIn(@Path("booking_id") String bookingId,
-                 @Query("auto") boolean isAuto,
                  @FieldMap Map<String, String> locationParams,
                  HandyRetrofitCallback cb);
 
     @POST(BOOKINGS_PATH + "{booking_id}/check_out")
     void checkOut(
             @Path("booking_id") String bookingId,
-            @Query("auto") boolean isAuto,
             @Body CheckoutRequest request,
             HandyRetrofitCallback cb);
 
@@ -262,6 +260,9 @@ public interface HandyRetrofitService
 
     @GET(PROVIDERS_PATH + "{id}/feedback")
     void getProviderFeedback(@Path("id") String providerId, HandyRetrofitCallback cb);
+
+    @GET(PAYMENTS_PATH + "outstanding_fees")
+    void getPaymentOutstandingFees(HandyRetrofitCallback cb);
 
     @POST("/events")
     void postLogs(@Body JsonObject eventLogBundle, HandyRetrofitCallback cb);

@@ -4,6 +4,8 @@ import com.squareup.otto.Bus;
 
 import org.mockito.ArgumentCaptor;
 
+import java.util.List;
+
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 
@@ -11,11 +13,13 @@ public class TestUtils
 {
     public static <T> T getBusCaptorValue(ArgumentCaptor<?> captor, Class<T> classType)
     {
-        for (Object o : captor.getAllValues())
+        List<?> values = captor.getAllValues();
+        // using a index for loop to search from latest to earliest
+        for (int i = values.size() - 1; i >= 0; --i)
         {
-            if (classType.isInstance(o))
+            if (classType.isInstance(values.get(i)))
             {
-                return classType.cast(o);
+                return classType.cast(values.get(i));
             }
         }
         return null;

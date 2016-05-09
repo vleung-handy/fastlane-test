@@ -39,7 +39,7 @@ public class FormFieldTableRow extends TableRow implements Errorable
     @Override
     public void setErrorState(boolean error)
     {
-        int errorColor = ContextCompat.getColor(getContext(), R.color.error_red);
+        int errorColor = ContextCompat.getColor(getContext(), R.color.plumber_red);
         int normalColor = ContextCompat.getColor(getContext(), R.color.black);
 
         getErrorIndicator().setVisibility(error ? VISIBLE : INVISIBLE);

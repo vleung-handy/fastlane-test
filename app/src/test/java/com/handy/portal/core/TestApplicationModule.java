@@ -2,14 +2,15 @@ package com.handy.portal.core;
 
 import android.app.Application;
 
+import com.handy.portal.bookings.BookingManager;
+import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
+import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.TestDataManager;
-import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
-import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
 import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
-import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
@@ -21,27 +22,22 @@ import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.UserInterfaceUpdateManager;
 import com.handy.portal.model.Provider;
+import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
+import com.handy.portal.payments.ui.element.PaymentsBatchListView;
+import com.handy.portal.payments.ui.fragment.PaymentsDetailFragment;
+import com.handy.portal.payments.ui.fragment.PaymentsFragment;
+import com.handy.portal.payments.ui.fragment.PaymentsFragmentTest;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.TestActivity;
 import com.handy.portal.ui.element.SupportActionView;
-import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
-import com.handy.portal.ui.element.payments.PaymentsBatchListView;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragmentTest;
 import com.handy.portal.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.ui.fragment.SendReceiptCheckoutFragmentTest;
-import com.handy.portal.ui.fragment.bookings.AvailableBookingsFragment;
-import com.handy.portal.ui.fragment.bookings.BookingDetailsFragment;
-import com.handy.portal.ui.fragment.bookings.BookingDetailsFragmentTest;
-import com.handy.portal.ui.fragment.bookings.ScheduledBookingsFragment;
-import com.handy.portal.ui.fragment.bookings.SendReceiptCheckoutFragment;
-import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
-import com.handy.portal.ui.fragment.payments.PaymentsFragment;
-import com.handy.portal.ui.fragment.payments.PaymentsFragmentTest;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.securepreferences.SecurePreferences;
@@ -65,22 +61,18 @@ import static org.mockito.Mockito.when;
         PleaseUpdateFragment.class,
         AvailableBookingsFragment.class,
         ScheduledBookingsFragment.class,
-        BookingDetailsFragment.class,
-        HelpFragment.class,
-        HelpContactFragment.class,
         UrbanAirshipManager.class,
         PaymentsFragment.class,
         PaymentsDetailFragment.class,
         TestActivity.class,
         PaymentsBatchListView.class,
         SupportActionView.class,
-        BookingDetailsFragmentTest.class,
         PaymentsFragmentTest.class,
         MainActivityFragmentTest.class,
-        BookingDetailsJobInstructionsView.class,
         LocationSettingsBlockerDialogFragment.class,
         SendReceiptCheckoutFragment.class,
         SendReceiptCheckoutFragmentTest.class,
+        PaymentBatchListAdapter.class,
 }, library = true)
 public class TestApplicationModule
 {

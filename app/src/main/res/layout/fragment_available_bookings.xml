@@ -1,10 +1,9 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
-              tools:context=".AvailableBookingsFragment"
-              >
+    >
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -39,23 +38,44 @@
 
             <include layout="@layout/element_same_day_notification_toggle"/>
 
-            <include layout="@layout/layout_available_bookings_empty"/>
+            <com.handy.portal.bookings.ui.element.BookingsAccessLockedView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:id="@+id/layout_job_access_locked"
+                android:visibility="gone"
+                />
 
-            <com.handy.portal.ui.widget.SafeSwipeRefreshLayout
-                android:id="@+id/refresh_layout"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 >
 
-                <com.handy.portal.ui.element.BookingListView
-                    android:id="@+id/available_jobs_list_view"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:divider="@color/white_trans"
-                    android:dividerHeight="1dp"
-                    android:paddingTop="1dp"
-                    />
-            </com.handy.portal.ui.widget.SafeSwipeRefreshLayout>
+                <com.handy.portal.ui.widget.SafeSwipeRefreshLayout
+                    android:id="@+id/refresh_layout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+                        <com.handy.portal.bookings.ui.element.BookingListView
+                            android:id="@+id/available_jobs_list_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:divider="@color/white_trans"
+                            android:dividerHeight="1dp"
+                            android:paddingTop="1dp"
+                            />
+                        <include tools:visibility="visible" layout="@layout/layout_available_bookings_empty"/>
+
+                    </LinearLayout>
+
+                </com.handy.portal.ui.widget.SafeSwipeRefreshLayout>
+
+            </RelativeLayout>
 
         </LinearLayout>
 

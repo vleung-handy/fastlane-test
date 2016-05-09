@@ -30,7 +30,7 @@
             android:layout_marginTop="@dimen/default_margin"
             android:gravity="center_horizontal"
             android:text="@string/no_scheduled_jobs"
-            android:textColor="@color/subtitle_grey"
+            android:textColor="@color/tertiary_gray"
             android:textSize="@dimen/large_text_size"
             />
 

@@ -100,14 +100,9 @@ public abstract class BaseActivity extends AppCompatActivity
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
         Utils.inject(this, this);
 
-        final Intent intent = getIntent();
-        final Uri data = intent.getData();
-
         mAppUpdateEventListener = new AppUpdateEventListener(this);
-
         onBackPressedListenerStack = new Stack<>();
 
         buildGoogleApiClient();
@@ -170,14 +165,8 @@ public abstract class BaseActivity extends AppCompatActivity
 
         if (googleApiClient != null)
         {
-            googleApiClient.connect();
+            googleApiClient.disconnect();
         }
-    }
-
-    @Override
-    protected void onPostResume()
-    {
-        super.onPostResume();
     }
 
     @Override

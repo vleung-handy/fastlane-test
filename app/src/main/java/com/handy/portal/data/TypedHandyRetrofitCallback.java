@@ -5,13 +5,12 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
-import com.handy.portal.helpcenter.model.HelpNodeWrapper;
+import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.model.BookingClaimDetails;
+import com.handy.portal.bookings.model.BookingsListWrapper;
+import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
-import com.handy.portal.model.Booking;
-import com.handy.portal.model.BookingClaimDetails;
-import com.handy.portal.model.BookingsListWrapper;
-import com.handy.portal.model.BookingsWrapper;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
@@ -25,14 +24,14 @@ import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
-import com.handy.portal.model.onboarding.JobClaimResponse;
-import com.handy.portal.model.payments.AnnualPaymentSummaries;
-import com.handy.portal.model.payments.CreateDebitCardResponse;
-import com.handy.portal.model.payments.PaymentBatches;
-import com.handy.portal.model.payments.PaymentFlow;
-import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
-import com.handy.portal.model.payments.StripeTokenResponse;
 import com.handy.portal.notification.model.NotificationMessages;
+import com.handy.portal.payments.model.AnnualPaymentSummaries;
+import com.handy.portal.payments.model.CreateDebitCardResponse;
+import com.handy.portal.payments.model.PaymentBatches;
+import com.handy.portal.payments.model.PaymentFlow;
+import com.handy.portal.payments.model.PaymentOutstandingFees;
+import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
+import com.handy.portal.payments.model.StripeTokenResponse;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.updater.model.UpdateDetails;
 
@@ -99,6 +98,13 @@ class AnnualPaymentSummariesRetroFitCallback extends TypedHandyRetrofitCallback<
     }
 }
 
+class PaymentOutstandingFeesRetroFitCallback extends TypedHandyRetrofitCallback<PaymentOutstandingFees>
+{
+    PaymentOutstandingFeesRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
 
 class NeedsToUpdatePaymentInfoRetroFitCallback extends TypedHandyRetrofitCallback<RequiresPaymentInfoUpdate>
 {
@@ -188,16 +194,6 @@ class TermsDetailsGroupResponseHandyRetroFitCallback extends TypedHandyRetrofitC
         super(callback);
     }
 }
-
-
-class HelpNodeResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<HelpNodeWrapper>
-{
-    HelpNodeResponseHandyRetroFitCallback(DataManager.Callback callback)
-    {
-        super(callback);
-    }
-}
-
 
 class EmptyHandyRetroFitCallback extends TypedHandyRetrofitCallback<Void>
 {

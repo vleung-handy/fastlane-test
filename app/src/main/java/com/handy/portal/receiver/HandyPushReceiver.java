@@ -11,7 +11,6 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.EventLog;
 import com.handy.portal.logger.handylogger.model.PushNotificationLog;
-import com.handy.portal.service.AutoCheckInService;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
@@ -32,7 +31,6 @@ public class HandyPushReceiver extends BaseIntentReceiver
         super.onReceive(context, intent);
     }
 
-    public static final String TYPE_AUTO_CHECK_IN = "P_AUTO_CHECKIN";
     public static final String TYPE_LOCATION_PING = "P_LOCATION_PING";
 
     @Override
@@ -71,20 +69,7 @@ public class HandyPushReceiver extends BaseIntentReceiver
     @Override
     protected void onBackgroundPushReceived(@NonNull Context context,
                                             @NonNull PushMessage pushMessage)
-    {
-        Bundle pushBundle = pushMessage.getPushBundle();
-        String type = pushBundle.getString(BundleKeys.HANDY_PUSH_TYPE, "");
-        switch (type)
-        {
-            case TYPE_AUTO_CHECK_IN:
-                Intent autoCheckInServiceIntent = new Intent(context, AutoCheckInService.class);
-                autoCheckInServiceIntent.putExtras(pushBundle);
-                context.startService(autoCheckInServiceIntent);
-                break;
-            default:
-                break;
-        }
-    }
+    { }
 
     @Override
     protected boolean onNotificationOpened(@NonNull Context context,
@@ -114,9 +99,7 @@ public class HandyPushReceiver extends BaseIntentReceiver
                                                  int notificationId,
                                                  @NonNull String buttonId,
                                                  boolean isForeground)
-    {
-        return false;
-    }
+    { return false; }
 
     @Override
     protected void onNotificationDismissed(

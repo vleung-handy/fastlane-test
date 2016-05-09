@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/youre_requested"
                 android:textAllCaps="true"
-                android:textColor="@color/requested_green"
+                android:textColor="@color/cleaner_green"
                 tools:text="You're Requested"
                 />
 
@@ -115,7 +115,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/extra_margin"
-            android:textColor="@color/subtitle_grey"
+            android:textColor="@color/tertiary_gray"
             tools:text="One Time · 2-3.5 hour job"
             />
 
@@ -139,13 +139,13 @@
             style="@style/TextView.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/subtitle_grey"
+            android:textColor="@color/tertiary_gray"
             android:visibility="gone"
             tools:text="0.5 miles"
             tools:visibility="gone"
             />
 
-        <com.handy.portal.ui.element.BookingDetailsPaymentView
+        <com.handy.portal.bookings.ui.element.BookingDetailsPaymentView
             android:id="@+id/booking_entry_payment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

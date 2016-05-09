@@ -5,8 +5,8 @@ import android.view.View;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.TestUtils;
+import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.model.Booking;
 import com.squareup.otto.Bus;
 
 import org.junit.Before;

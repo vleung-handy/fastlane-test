@@ -5,7 +5,6 @@ import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.text.format.DateUtils;
-import android.text.format.Time;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -14,6 +13,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -21,23 +21,37 @@ public final class DateTimeUtils
 {
     //TODO: refactor code throughout the app to put date formats here
     //TODO: rename these fields & methods to something better
+    public final static SimpleDateFormat CLOCK_FORMATTER_12HR =
+            new SimpleDateFormat("h:mm a", Locale.getDefault());
+    public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DAY_FORMATTER =
+            new SimpleDateFormat("EEEE, MMMM d", Locale.getDefault());
+    public final static SimpleDateFormat SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER =
+            new SimpleDateFormat("E, MMMM d", Locale.getDefault());
+    public final static SimpleDateFormat MONTH_SHORT_NAME_FORMATTER =
+            new SimpleDateFormat("MMM", Locale.getDefault());
+    public final static SimpleDateFormat SUMMARY_DATE_FORMATTER =
+            new SimpleDateFormat("MMM d", Locale.getDefault());
+    public final static SimpleDateFormat DETAILED_DATE_FORMATTER =
+            new SimpleDateFormat("EEEE, MMMM d 'at' h:mm a", Locale.getDefault());
+    public final static SimpleDateFormat MONTH_DATE_FORMATTER =
+            new SimpleDateFormat("MMMM d", Locale.getDefault());
+    public final static SimpleDateFormat MONTH_DATE_YEAR_FORMATTER =
+            new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
+    public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER =
+            new SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault());
+    public final static SimpleDateFormat YEAR_FORMATTER = new SimpleDateFormat("yyyy", Locale.getDefault());
+    public final static SimpleDateFormat MONTH_YEAR_FORMATTER =
+            new SimpleDateFormat("MMM yyyy", Locale.getDefault());
+    public final static SimpleDateFormat ISO8601_FORMATTER =
+            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
+    public final static SimpleDateFormat LOCAL_TIME_12_HOURS =
+            new SimpleDateFormat("hh:mm a", Locale.getDefault());
+    public final static SimpleDateFormat NUMERIC_YEAR_MONTH_DATE_FORMATTER
+            = new SimpleDateFormat("yyyyMMdd");
 
-    public final static SimpleDateFormat CLOCK_FORMATTER_12HR = new SimpleDateFormat("h:mm a");
-    public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DAY_FORMATTER = new SimpleDateFormat("EEEE, MMMM d");
     public final static SimpleDateFormat DAY_OF_WEEK_FORMATTER = new SimpleDateFormat("EEEE");
     public final static SimpleDateFormat DAY_OF_YEAR_FORMATTER = new SimpleDateFormat("D");
-    public final static SimpleDateFormat SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER = new SimpleDateFormat("E, MMM d");
-    public final static SimpleDateFormat MONTH_SHORT_NAME_FORMATTER = new SimpleDateFormat("MMM");
-    public final static SimpleDateFormat SUMMARY_DATE_FORMATTER = new SimpleDateFormat("MMM d");
-    public final static SimpleDateFormat DETAILED_DATE_FORMATTER = new SimpleDateFormat("EEEE, MMMM d 'at' h:mm a");
-    public final static SimpleDateFormat MONTH_DATE_FORMATTER = new SimpleDateFormat("MMMM d");
-    public final static SimpleDateFormat MONTH_DATE_YEAR_FORMATTER = new SimpleDateFormat("MMMM d, yyyy");
-    public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER = new SimpleDateFormat("EEE, MMM d, yyyy");
-    public final static SimpleDateFormat YEAR_FORMATTER = new SimpleDateFormat("yyyy");
     public final static SimpleDateFormat YEAR_MONTH_DAY_FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
-    public final static SimpleDateFormat MONTH_YEAR_FORMATTER = new SimpleDateFormat("MMM yyyy");
-    public final static SimpleDateFormat ISO8601_FORMATTER = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-    public final static SimpleDateFormat LOCAL_TIME_12_HOURS = new SimpleDateFormat("hh:mm a");
 
     public final static int HOURS_IN_DAY = 24;
     public final static int HOURS_IN_SIX_DAYS = HOURS_IN_DAY * 6;
@@ -261,17 +275,17 @@ public final class DateTimeUtils
 
     public static boolean equalCalendarDates(final Date date1, final Date date2)
     {
-        final Time time = new Time();
-        time.set(date1.getTime());
+        Calendar c = Calendar.getInstance();
+        c.setTime(date1);
 
-        final int thenYear = time.year;
-        final int thenMonth = time.month;
-        final int thenMonthDay = time.monthDay;
+        final int thenYear = c.get(Calendar.YEAR);
+        final int thenMonth = c.get(Calendar.MONTH);
+        final int thenMonthDay = c.get(Calendar.DAY_OF_MONTH);
 
-        time.set(date2.getTime());
+        c.setTime(date2);
 
-        return (thenYear == time.year) && (thenMonth == time.month)
-                && (thenMonthDay == time.monthDay);
+        return (thenYear == c.get(Calendar.YEAR)) && (thenMonth == c.get(Calendar.MONTH))
+                && (thenMonthDay == c.get(Calendar.DAY_OF_MONTH));
     }
 
     public static Date getDateWithoutTime(final Date date)
@@ -325,7 +339,7 @@ public final class DateTimeUtils
         long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(hours);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) -
                 TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millis));
-        return String.format("%02d:%02d:%02d", hours, minutes, seconds);
+        return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
     }
 
     public static String getTimeWithoutDate(final Date date)

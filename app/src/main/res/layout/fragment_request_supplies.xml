@@ -36,6 +36,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/row_margin"
+                android:gravity="center"
                 android:lineSpacingExtra="@dimen/lineSpacing"
                 android:text="@string/supplies_instruction1"
                 android:textSize="@dimen/default_text_size"
@@ -45,6 +46,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/row_margin"
+                android:gravity="center"
                 android:lineSpacingExtra="@dimen/lineSpacing"
                 android:text="@string/supplies_instruction2"
                 android:textSize="@dimen/default_text_size"
@@ -78,6 +80,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/supplies_image_l1"
                         android:layout_centerInParent="true"
+                        android:gravity="center"
                         android:text="@string/vacuum"
                         android:textSize="@dimen/default_text_size"
                         />
@@ -99,6 +102,7 @@
                         android:layout_below="@id/supplies_image_l2"
                         android:layout_centerInParent="true"
                         android:layout_gravity="center"
+                        android:gravity="center"
                         android:text="@string/cloths_paper_towels"
                         android:textSize="@dimen/default_text_size"
                         />
@@ -120,6 +124,7 @@
                         android:layout_below="@id/supplies_image_l3"
                         android:layout_centerInParent="true"
                         android:layout_gravity="center"
+                        android:gravity="center"
                         android:text="@string/gloves"
                         android:textSize="@dimen/default_text_size"
                         />
@@ -141,6 +146,7 @@
                         android:layout_below="@id/supplies_image_l4"
                         android:layout_centerInParent="true"
                         android:layout_gravity="center"
+                        android:gravity="center"
                         android:text="@string/leave_behinds"
                         android:textSize="@dimen/default_text_size"
                         />
@@ -168,6 +174,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/supplies_image_r1"
                         android:layout_centerInParent="true"
+                        android:gravity="center"
                         android:text="@string/mop"
                         android:textSize="@dimen/default_text_size"
                         />
@@ -189,6 +196,7 @@
                         android:layout_below="@id/supplies_image_r2"
                         android:layout_centerInParent="true"
                         android:layout_gravity="center"
+                        android:gravity="center"
                         android:text="@string/duster"
                         android:textSize="@dimen/default_text_size"
                         />
@@ -210,6 +218,7 @@
                         android:layout_below="@id/supplies_image_r3"
                         android:layout_centerInParent="true"
                         android:layout_gravity="center"
+                        android:gravity="center"
                         android:text="@string/cleaning_solutions"
                         android:textSize="@dimen/default_text_size"
                         />
@@ -231,6 +240,7 @@
                         android:layout_below="@id/supplies_image_r4"
                         android:layout_centerInParent="true"
                         android:layout_gravity="center"
+                        android:gravity="center"
                         android:text="@string/apron"
                         android:textSize="@dimen/default_text_size"
                         />
@@ -239,6 +249,18 @@
 
             </LinearLayout>
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:gravity="center"
+                android:lineSpacingExtra="@dimen/lineSpacing"
+                android:text="@string/supplies_footer"
+                android:textColor="@color/tertiary_gray"
+                android:textSize="@dimen/default_text_size"
+                />
+
         </LinearLayout>
     </ScrollView>
 
@@ -246,7 +268,7 @@
         android:id="@+id/request_supplies_text"
         android:layout_width="match_parent"
         android:layout_height="@dimen/complete_button_height"
-        android:background="@color/requested_green"
+        android:background="@color/cleaner_green"
         android:drawableEnd="@drawable/ic_external_link"
         android:drawableRight="@drawable/ic_external_link"
         android:gravity="center"

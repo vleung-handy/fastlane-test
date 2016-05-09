@@ -43,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:textColor="@color/subtitle_grey"
+            android:textColor="@color/tertiary_gray"
             android:textSize="@dimen/small_text_size"
             tools:text="@string/time"
             />
@@ -72,7 +72,7 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:textColor="@color/subtitle_grey"
+            android:textColor="@color/tertiary_gray"
             android:textSize="@dimen/small_text_size"
             tools:text="@string/miles_away_formatted"
             />

@@ -16,12 +16,6 @@ import butterknife.OnClick;
 public class RequestSuppliesFragment extends ActionBarFragment
 {
     @Override
-    protected MainViewTab getTab()
-    {
-        return MainViewTab.REQUEST_SUPPLIES;
-    }
-
-    @Override
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
@@ -40,7 +34,7 @@ public class RequestSuppliesFragment extends ActionBarFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        setActionBar(R.string.request_supplies, false);
+        setActionBar(R.string.purchase_cleaning_supplies, false);
         setBackButtonEnabled(true);
     }
 

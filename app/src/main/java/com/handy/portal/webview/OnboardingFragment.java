@@ -17,12 +17,6 @@ public class OnboardingFragment extends PortalWebViewFragment
     private OnboardingParams mLastOnboardingParams;
 
     @Override
-    protected MainViewTab getTab()
-    {
-        return MainViewTab.ONBOARDING_WEBVIEW;
-    }
-
-    @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);

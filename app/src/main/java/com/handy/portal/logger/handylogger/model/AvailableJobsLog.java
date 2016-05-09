@@ -4,7 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.model.Booking;
+import com.handy.portal.bookings.model.Booking;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -77,6 +77,35 @@ public abstract class AvailableJobsLog extends EventLog
 
     // Job claim events
 
+    public static class ConfirmClaimShown extends AvailableJobsLog
+    {
+        private static final String EVENT_TYPE = "confirm_claim_shown";
+
+        public ConfirmClaimShown()
+        {
+            super(EVENT_TYPE);
+        }
+    }
+
+    public static class ConfirmClaimDetailsShown extends AvailableJobsLog
+    {
+        private static final String EVENT_TYPE = "confirm_claim_details_shown";
+
+        public ConfirmClaimDetailsShown()
+        {
+            super(EVENT_TYPE);
+        }
+    }
+
+    public static class ConfirmClaimConfirmed extends AvailableJobsLog
+    {
+        private static final String EVENT_TYPE = "confirm_claim_confirmed";
+
+        public ConfirmClaimConfirmed()
+        {
+            super(EVENT_TYPE);
+        }
+    }
 
     public static abstract class AvailableJobsBookingClaimLog extends JobsLog
     {
