@@ -465,7 +465,6 @@
     <string name="yes_supply_kit">Yes, I Want a Starter Kit</string>
     <string name="no_supply_kit">No, I Have My Own</string>
     <string name="enter_payment_information">Enter payment information</string>
-    <string name="wont_charge_until_two_weeks">We won\u2019t charge your card until two weeks after activation.</string>
     <string name="continue_to_confirmation">Continue to Confirmation</string>
     <string name="supply_starter_kit">Supply Starter Kit</string>
     <string name="order_total_formatted">Order Total: %1$s</string>

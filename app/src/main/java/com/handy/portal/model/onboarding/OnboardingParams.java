@@ -1,4 +1,4 @@
-package com.handy.portal.model;
+package com.handy.portal.model.onboarding;
 
 import android.support.annotation.Nullable;
 
@@ -15,6 +15,9 @@ public class OnboardingParams
 
     @SerializedName("onboarding_complete_web_url")
     private String mOnboardingCompleteWebUrl;
+
+    @SerializedName("onboarding_supplies")
+    private OnboardingSuppliesParams mOnboardingSuppliesParams;
 
     @Override
     public boolean equals(Object obj)
@@ -62,5 +65,10 @@ public class OnboardingParams
     public boolean shouldShowOnboarding()
     {
         return isOnboardingEnabled() && !TextUtils.isNullOrEmpty(getOnboardingCompleteWebUrl());
+    }
+
+    public OnboardingSuppliesParams getOnboardingSuppliesParams()
+    {
+        return mOnboardingSuppliesParams;
     }
 }

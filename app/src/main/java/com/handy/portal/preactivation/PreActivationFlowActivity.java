@@ -7,15 +7,21 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 
 public class PreActivationFlowActivity extends BaseActivity
 {
+    private OnboardingSuppliesInfo mOnboardingSuppliesInfo;
+
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        mOnboardingSuppliesInfo = (OnboardingSuppliesInfo) getIntent()
+                .getSerializableExtra(BundleKeys.ONBOARDING_SUPPLIES);
         setContentView(R.layout.activity_pre_activation_flow);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         goToFirstStep();
@@ -52,6 +58,6 @@ public class PreActivationFlowActivity extends BaseActivity
 
     private void goToFirstStep()
     {
-        next(PurchaseSuppliesFragment.newInstance(), false);
+        next(PurchaseSuppliesFragment.newInstance(mOnboardingSuppliesInfo), false);
     }
 }

@@ -54,4 +54,7 @@ public class BundleKeys
     // Payments
     public static final String CARD_LAST4 = "card_last4";
     public static final String CARD_TYPE = "card_type";
+
+    // Onboarding
+    public static final String ONBOARDING_SUPPLIES = "onboarding_supplies";
 }

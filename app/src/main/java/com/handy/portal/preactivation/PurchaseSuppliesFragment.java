@@ -4,9 +4,14 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
+import com.handy.portal.model.onboarding.OnboardingSuppliesSection;
 import com.handy.portal.ui.view.SimpleContentLayout;
 import com.squareup.otto.Subscribe;
+
+import java.util.List;
 
 import butterknife.Bind;
 
@@ -19,23 +24,51 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
     @Bind(R.id.products_summary)
     SimpleContentLayout mProductsSummary;
 
-    public static PurchaseSuppliesFragment newInstance()
+    private OnboardingSuppliesInfo mOnboardingSuppliesInfo;
+
+    public static PurchaseSuppliesFragment newInstance(
+            final OnboardingSuppliesInfo onboardingSuppliesInfo)
     {
-        return new PurchaseSuppliesFragment();
+        final PurchaseSuppliesFragment fragment = new PurchaseSuppliesFragment();
+        final Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.ONBOARDING_SUPPLIES, onboardingSuppliesInfo);
+        fragment.setArguments(arguments);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        mOnboardingSuppliesInfo = (OnboardingSuppliesInfo) getArguments()
+                .getSerializable(BundleKeys.ONBOARDING_SUPPLIES);
     }
 
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        // FIXME: Pull from server
-        mCostSummary.setContent("What does the kit cost?",
-                "It costs $75, and it\u2019ll be billed to your card.");
-        mDeliverySummary.setContent("When will I get it?",
-                "It should arrive 1 to 3 business days after you\u2019ve been activated.");
-        mProductsSummary.setContent("What does it include?",
-                " ⋅ 2 All purpose cleaner\n ⋅ 2 Tub and tile cleaner\n" +
-                        " ⋅ Handy apron")
+        final OnboardingSuppliesSection costSection =
+                mOnboardingSuppliesInfo.getCostSection();
+        final OnboardingSuppliesSection deliverySection =
+                mOnboardingSuppliesInfo.getDeliverySection();
+        final OnboardingSuppliesSection productsSection =
+                mOnboardingSuppliesInfo.getProductsSection();
+
+        mCostSummary.setContent(costSection.getTitle(), costSection.getDescription());
+        mDeliverySummary.setContent(deliverySection.getTitle(), deliverySection.getDescription());
+
+        final StringBuilder productsStringBuilder = new StringBuilder();
+        final List<String> products = productsSection.getList();
+        for (int i = 0; i < products.size(); i++)
+        {
+            productsStringBuilder.append(" ⋅ ").append(products.get(i));
+            if (i < products.size() - 1)
+            {
+                productsStringBuilder.append("\n");
+            }
+        }
+        mProductsSummary.setContent(productsSection.getTitle(), productsStringBuilder.toString())
                 .collapse(getString(R.string.see_products));
     }
 
@@ -78,7 +111,7 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
     @Override
     protected void onPrimaryButtonClicked()
     {
-        next(PurchaseSuppliesPaymentFragment.newInstance());
+        next(PurchaseSuppliesPaymentFragment.newInstance(mOnboardingSuppliesInfo));
     }
 
     @Override

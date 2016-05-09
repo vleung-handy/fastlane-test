@@ -5,15 +5,19 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.Country;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.event.StripeEvent;
 import com.handy.portal.model.definitions.FieldDefinition;
+import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
 import com.handy.portal.payments.PaymentEvent;
+import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.view.DateFormFieldTableRow;
 import com.handy.portal.ui.view.FormFieldTableRow;
 import com.handy.portal.ui.view.SimpleContentLayout;
+import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
 import com.stripe.android.model.Card;
@@ -34,11 +38,25 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
     SimpleContentLayout mOrderSummary;
 
     private Map<String, FieldDefinition> mFieldDefinitions;
+    private OnboardingSuppliesInfo mOnboardingSuppliesInfo;
     private Card mCard;
 
-    public static PurchaseSuppliesPaymentFragment newInstance()
+    public static PurchaseSuppliesPaymentFragment newInstance(
+            final OnboardingSuppliesInfo onboardingSuppliesInfo)
     {
-        return new PurchaseSuppliesPaymentFragment();
+        final PurchaseSuppliesPaymentFragment fragment = new PurchaseSuppliesPaymentFragment();
+        final Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.ONBOARDING_SUPPLIES, onboardingSuppliesInfo);
+        fragment.setArguments(arguments);
+        return fragment;
+    }
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        mOnboardingSuppliesInfo = (OnboardingSuppliesInfo) getArguments()
+                .getSerializable(BundleKeys.ONBOARDING_SUPPLIES);
     }
 
     @Override
@@ -52,8 +70,9 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        // FIXME: Pull form server
-        final String orderTotalFormatted = getString(R.string.order_total_formatted, "$75");
+        final PaymentInfo cost = mOnboardingSuppliesInfo.getCost();
+        final String orderTotalFormatted = getString(R.string.order_total_formatted,
+                CurrencyUtils.formatPriceWithoutCents(cost.getAmount(), cost.getCurrencySymbol()));
         mOrderSummary.setContent(getString(R.string.supply_starter_kit), orderTotalFormatted)
                 .setImage(getResources().getDrawable(R.drawable.img_supplies));
     }
@@ -97,7 +116,7 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
     @Override
     protected String getSubHeaderText()
     {
-        return getString(R.string.wont_charge_until_two_weeks);
+        return mOnboardingSuppliesInfo.getChargeNotice();
     }
 
     @Override
@@ -153,7 +172,7 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
         mExpirationDateField.getMonthValue().setText(null);
         mExpirationDateField.getYearValue().setText(null);
         mSecurityCodeField.getValue().setText(null);
-        next(PurchaseSuppliesConfirmationFragment.newInstance(mCard));
+        next(PurchaseSuppliesConfirmationFragment.newInstance(mOnboardingSuppliesInfo, mCard));
     }
 
     @Subscribe

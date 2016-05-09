@@ -12,8 +12,11 @@ import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.definitions.FieldDefinition;
+import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
+import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.view.FormFieldTableRow;
 import com.handy.portal.ui.view.SimpleContentLayout;
+import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
 import com.stripe.android.model.Card;
@@ -45,14 +48,18 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     FormFieldTableRow mZipField;
 
     private Map<String, FieldDefinition> mFieldDefinitions;
+    private OnboardingSuppliesInfo mOnboardingSuppliesInfo;
     private String mCardLast4;
     private String mCardType;
 
-    public static PurchaseSuppliesConfirmationFragment newInstance(final Card card)
+    public static PurchaseSuppliesConfirmationFragment newInstance(
+            final OnboardingSuppliesInfo onboardingSuppliesInfo,
+            final Card card)
     {
         final PurchaseSuppliesConfirmationFragment fragment =
                 new PurchaseSuppliesConfirmationFragment();
         final Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.ONBOARDING_SUPPLIES, onboardingSuppliesInfo);
         arguments.putString(BundleKeys.CARD_TYPE, card.getType());
         arguments.putString(BundleKeys.CARD_LAST4, card.getLast4());
         fragment.setArguments(arguments);
@@ -63,6 +70,8 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        mOnboardingSuppliesInfo = (OnboardingSuppliesInfo) getArguments()
+                .getSerializable(BundleKeys.ONBOARDING_SUPPLIES);
         mCardLast4 = getArguments().getString(BundleKeys.CARD_LAST4);
         mCardType = getArguments().getString(BundleKeys.CARD_TYPE);
     }
@@ -92,8 +101,9 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
                 });
         mPaymentSummary.setContent(getString(R.string.payment_method),
                 getString(R.string.card_info_formatted, mCardType, mCardLast4));
-        // FIXME: Pull form server
-        final String orderTotalFormatted = getString(R.string.order_total_formatted, "$75");
+        final PaymentInfo cost = mOnboardingSuppliesInfo.getCost();
+        final String orderTotalFormatted = getString(R.string.order_total_formatted,
+                CurrencyUtils.formatPriceWithoutCents(cost.getAmount(), cost.getCurrencySymbol()));
         mOrderSummary.setContent(getString(R.string.supply_starter_kit), orderTotalFormatted)
                 .setImage(getResources().getDrawable(R.drawable.img_supplies));
     }
