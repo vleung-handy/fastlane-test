@@ -79,7 +79,7 @@ public class BookingCancellationPolicyListItemView extends RelativeLayout
         }
         else
         {
-            colorResourceId = R.color.subtitle_grey;
+            colorResourceId = R.color.tertiary_gray;
             mActiveItemIndicator.setVisibility(GONE);
         }
         final int textColor = ContextCompat.getColor(getContext(), colorResourceId);

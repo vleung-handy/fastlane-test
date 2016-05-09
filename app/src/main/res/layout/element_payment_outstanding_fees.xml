@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/payments_current_week_remaining_fees_row"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/row_margin"
+    android:background="@color/white"
+    android:clickable="true"
+    android:paddingBottom="@dimen/default_padding"
+    android:paddingLeft="@dimen/payment_container_horizontal_padding"
+    android:paddingRight="@dimen/payment_container_horizontal_padding"
+    android:paddingTop="@dimen/default_padding"
+    >
+
+    <ImageButton
+        android:id="@+id/outstanding_fee_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        android:background="@android:color/transparent"
+        android:paddingEnd="@dimen/extra_padding"
+        android:paddingRight="@dimen/extra_padding"
+        android:src="@drawable/ic_fee_balance"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_gravity="center|start"
+        android:layout_toEndOf="@id/outstanding_fee_image"
+        android:layout_toRightOf="@id/outstanding_fee_image"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/outstanding_fees"
+        android:textColor="@color/black"
+        android:textSize="@dimen/default_text_size"
+        />
+
+    <TextView
+        android:id="@+id/payments_current_week_remaining_fees"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:text="@string/no_data"
+        android:textAppearance="@style/HandyTextAppearanceLarge"
+        android:textColor="@color/plumber_red"
+        tools:text="-$40"
+        />
+
+</RelativeLayout>

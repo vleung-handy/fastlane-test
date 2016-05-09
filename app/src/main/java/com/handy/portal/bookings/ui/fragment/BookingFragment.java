@@ -284,8 +284,10 @@ public class BookingFragment extends TimerActionBarFragment
             enableActionsIfNeeded(action);
         }
 
-        int bookingProgress = mBooking.getBookingProgress(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
-        if (bookingProgress == BookingProgress.UNAVAILABLE ||
+        int bookingProgress = mBooking.getBookingProgress();
+        Booking.BookingStatus bookingStatus =
+                mBooking.inferBookingStatus(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
+        if (bookingStatus == Booking.BookingStatus.UNAVAILABLE ||
                 bookingProgress == BookingProgress.READY_FOR_CLAIM ||
                 mBooking.getUser() == null || mFromPaymentsTab)
         {
@@ -325,8 +327,6 @@ public class BookingFragment extends TimerActionBarFragment
             Address address = mBooking.getAddress();
             if (address != null)
             {
-                Booking.BookingStatus bookingStatus = mBooking.inferBookingStatus(
-                        mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
                 if (bookingStatus != Booking.BookingStatus.CLAIMED || mFromPaymentsTab)
                 {
                     mBookingAddressTitleText.setText(mBooking.isUK() ?
@@ -830,7 +830,7 @@ public class BookingFragment extends TimerActionBarFragment
 
     private void setActionBarTitle()
     {
-        int bookingProgress = mBooking.getBookingProgress(getLoggedInUserId());
+        int bookingProgress = mBooking.getBookingProgress();
         if (bookingProgress == BookingProgress.READY_FOR_CLAIM)
         {
             setActionBarTitle(R.string.available_job);

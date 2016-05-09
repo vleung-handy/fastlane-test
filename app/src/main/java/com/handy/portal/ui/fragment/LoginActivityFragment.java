@@ -18,13 +18,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.common.annotations.VisibleForTesting;
 import com.handy.portal.R;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.helpcenter.constants.HelpCenterUrl;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.LoginLog;
 import com.handy.portal.logger.mixpanel.Mixpanel;
@@ -47,9 +47,6 @@ import butterknife.OnClick;
 
 public class LoginActivityFragment extends InjectedFragment
 {
-    @VisibleForTesting
-    static final String HELP_CENTER_URL = "https://prohelp.handy.com/hc/en-us/articles/216733288";
-
     @Bind(R.id.phone_input_layout)
     RelativeLayout phoneInputLayout;
     @Bind(R.id.pin_code_input_layout)
@@ -188,7 +185,7 @@ public class LoginActivityFragment extends InjectedFragment
             public void onClick(final View v)
             {
 
-                goToUrl(HELP_CENTER_URL);
+                goToUrl(HelpCenterUrl.LOGIN_HELP_ABSOLUTE_URL);
             }
         });
         mSlideUpPanelLayout.showPanel(R.string.instructions, instructionView);

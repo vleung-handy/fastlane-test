@@ -8,6 +8,6 @@
     <solid android:color="@color/white"/>
     <stroke
         android:width="@dimen/round_button_stroke"
-        android:color="@color/border_grey"
+        android:color="@color/border_gray"
         />
 </shape>

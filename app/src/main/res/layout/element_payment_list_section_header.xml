@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/year_to_date"
-            android:textColor="@color/tertiary_grey"
+            android:textColor="@color/tertiary_gray"
             />
 
         <TextView
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/extra_margin"
             android:layout_marginStart="@dimen/extra_margin"
-            android:textColor="@color/tertiary_grey"
+            android:textColor="@color/tertiary_gray"
             tools:text="$2,560"
             />
 

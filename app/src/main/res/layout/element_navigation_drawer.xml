@@ -21,7 +21,7 @@
             style="@style/TextView.XLarge"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/tertiary_grey"
+            android:background="@color/tertiary_gray"
             android:paddingBottom="@dimen/default_padding_medium"
             android:paddingLeft="@dimen/default_padding"
             android:paddingRight="@dimen/default_padding"
@@ -52,7 +52,7 @@
         android:paddingLeft="@dimen/default_padding_medium"
         android:paddingRight="@dimen/default_padding_medium"
         android:paddingTop="@dimen/default_padding_medium"
-        android:textColor="@color/tertiary_grey"
+        android:textColor="@color/tertiary_gray"
         android:textSize="@dimen/xsmall_text_size"
         tools:text="v0.11.4"
         />

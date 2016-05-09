@@ -1,7 +1,6 @@
 package com.handy.portal.core;
 
 import android.app.Activity;
-import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -12,10 +11,9 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingManager;
+import com.handy.portal.bookings.BookingModalsManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.helpcenter.HelpManager;
-import com.handy.portal.helpcenter.helpcontact.HelpContactManager;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
@@ -68,6 +66,8 @@ public class BaseApplication extends MultiDexApplication
     @Inject
     BookingManager bookingManager;
     @Inject
+    BookingModalsManager bookingModalsManager;
+    @Inject
     LoginManager loginManager;
     @Inject
     ProviderManager providerManager;
@@ -77,10 +77,6 @@ public class BaseApplication extends MultiDexApplication
     TermsManager termsManager;
     @Inject
     ConfigManager configManager;
-    @Inject
-    HelpManager helpManager;
-    @Inject
-    HelpContactManager helpContactManager;
     @Inject
     PrefsManager prefsManager;
     @Inject
@@ -174,12 +170,6 @@ public class BaseApplication extends MultiDexApplication
             @Override
             public void onActivityDestroyed(final Activity activity) { }
         });
-    }
-
-    @Override
-    protected void attachBaseContext(Context base)
-    {
-        super.attachBaseContext(base);
     }
 
     protected void startNewRelic()

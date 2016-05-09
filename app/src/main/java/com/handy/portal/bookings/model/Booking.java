@@ -446,6 +446,7 @@ public class Booking implements Comparable<Booking>, Serializable
             return mDetailsBody;
         }
     }
+
     public enum ArrivalTimeOption //TODO: better system to enforce values in sync with server?
     {
         /* KEEP IN SYNC WITH SERVER VALUES */
@@ -521,30 +522,18 @@ public class Booking implements Comparable<Booking>, Serializable
         }
     }
 
-    public int getBookingProgress(final String providerId)
+    public int getBookingProgress()
     {
-        final boolean isClaimable = getAction(Action.ACTION_CLAIM) != null;
-        final String assignedProviderId = getProviderId();
-        final boolean isClaimedByMe = isProxy() ? isClaimedByMe() : assignedProviderId.equals(providerId);
-        if (!isClaimable && !isClaimedByMe)
-        {
-            return BookingProgress.UNAVAILABLE;
-        }
-        else if (isClaimable)
-        {
-            return BookingProgress.READY_FOR_CLAIM;
-        }
+        if (getAction(Action.ACTION_CLAIM) != null)
+        { return BookingProgress.READY_FOR_CLAIM; }
+        else if (getAction(Action.ACTION_ON_MY_WAY) != null)
+        { return BookingProgress.READY_FOR_ON_MY_WAY; }
+        else if (getAction(Action.ACTION_CHECK_IN) != null)
+        { return BookingProgress.READY_FOR_CHECK_IN; }
+        else if (getAction(Action.ACTION_CHECK_OUT) != null)
+        { return BookingProgress.READY_FOR_CHECK_OUT; }
         else
-        {
-            if (getAction(Action.ACTION_ON_MY_WAY) != null)
-            { return BookingProgress.READY_FOR_ON_MY_WAY; }
-            else if (getAction(Action.ACTION_CHECK_IN) != null)
-            { return BookingProgress.READY_FOR_CHECK_IN; }
-            else if (getAction(Action.ACTION_CHECK_OUT) != null)
-            { return BookingProgress.READY_FOR_CHECK_OUT; }
-            else
-            { return BookingProgress.FINISHED; }
-        }
+        { return BookingProgress.FINISHED; }
     }
 
     public List<Action> getAllowedActions()
@@ -677,6 +666,7 @@ public class Booking implements Comparable<Booking>, Serializable
             private KeepRate mKeepRate;
 
             public int getFeeAmount() { return mFeeAmount; }
+
             public String getHeaderText()
             {
                 return mHeaderText;
@@ -750,6 +740,7 @@ public class Booking implements Comparable<Booking>, Serializable
                     }
                 }
             }
+
 
             public static class KeepRate implements Serializable
             {

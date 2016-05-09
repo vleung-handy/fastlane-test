@@ -105,7 +105,7 @@ public class ConfigurationResponse
 
     public boolean shouldUseHelpCenterWebView()
     {
-        return mHelpCenterInfo == null ? false : mHelpCenterInfo.shouldUseHelpCenterWebView();
+        return mHelpCenterInfo != null && mHelpCenterInfo.shouldUseHelpCenterWebView();
     }
 
     public String getHelpCenterUrl()

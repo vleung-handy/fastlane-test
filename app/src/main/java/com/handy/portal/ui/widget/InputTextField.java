@@ -55,8 +55,8 @@ public abstract class InputTextField extends EditText
     public final void highlight()
     {
         isHighlighted = true;
-        setHintTextColor(ContextCompat.getColor(getContext(), R.color.error_red));
-        setTextColor(ContextCompat.getColor(getContext(), R.color.error_red));
+        setHintTextColor(ContextCompat.getColor(getContext(), R.color.plumber_red));
+        setTextColor(ContextCompat.getColor(getContext(), R.color.plumber_red));
     }
 
     public final void unHighlight()

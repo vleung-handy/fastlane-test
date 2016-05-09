@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.PartnerNames;
+import com.handy.portal.model.Address;
 import com.handy.portal.util.UIUtils;
 
 import butterknife.Bind;
@@ -72,7 +73,14 @@ public class AvailableBookingElementView extends BookingElementView
         }
         else
         {
-            mBookingAreaTextView.setText(booking.getAddress().getShortRegion());
+            Address address = booking.getAddress();
+            if (address != null)
+            {
+                mBookingAreaTextView.setText(booking.isUK() ?
+                        parentContext.getString(R.string.comma_formatted,
+                                address.getShortRegion(), address.getZip()) :
+                        address.getShortRegion());
+            }
         }
 
         //Service or frequency for home cleaning jobs

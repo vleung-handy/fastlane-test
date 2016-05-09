@@ -3,6 +3,7 @@ package com.handy.portal.notification;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.pm.ApplicationInfo;
+import android.os.Build;
 import android.support.annotation.IntDef;
 
 import java.lang.reflect.Field;
@@ -14,8 +15,10 @@ public class NotificationUtils
     public static final int NOTIFICATION_DISABLED = 2;
     public static final int NOTIFICATION_UNKNOWN = 3;
 
+
     @IntDef({NOTIFICATION_ENABLED, NOTIFICATION_DISABLED, NOTIFICATION_UNKNOWN})
     public @interface NotificationStatus {}
+
 
     private static final String CHECK_OP_NO_THROW = "checkOpNoThrow";
     private static final String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
@@ -23,7 +26,11 @@ public class NotificationUtils
     @NotificationStatus
     public static int isNotificationEnabled(Context context)
     {
-        Object service = context.getSystemService(Context.APP_OPS_SERVICE);
+        Object service = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+        {
+            service = context.getSystemService(Context.APP_OPS_SERVICE);
+        }
 
         if (service == null) { return NOTIFICATION_UNKNOWN; }
 

@@ -184,31 +184,25 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     @Subscribe
     public void onReceiveNotifyJobCheckOutSuccess(final HandyEvent.ReceiveNotifyJobCheckOutSuccess event)
     {
-        if (!event.isAutoCheckIn)
-        {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOutSuccess(
-                    mBooking, getLocationData())));
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOutSuccess(
+                mBooking, getLocationData())));
 
-            mPrefsManager.setBookingInstructions(mBooking.getId(), null);
+        mPrefsManager.setBookingInstructions(mBooking.getId(), null);
 
-            //return to schedule page
-            returnToTab(MainViewTab.SCHEDULED_JOBS, mBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
+        //return to schedule page
+        returnToTab(MainViewTab.SCHEDULED_JOBS, mBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
 
-            showToast(R.string.check_out_success, Toast.LENGTH_LONG);
-        }
+        showToast(R.string.check_out_success, Toast.LENGTH_LONG);
     }
 
     @Subscribe
     public void onReceiveNotifyJobCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
     {
-        if (!event.isAuto)
-        {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOutSuccess(
-                    mBooking, getLocationData())));
-            handleNotifyCheckOutError(event);
-        }
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOutSuccess(
+                mBooking, getLocationData())));
+        handleNotifyCheckOutError(event);
     }
 
     private void initialize()

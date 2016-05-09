@@ -14,6 +14,7 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 public final class TextUtils
@@ -93,7 +94,7 @@ public final class TextUtils
     {
         if (date == null) { return null; }
 
-        final SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        final SimpleDateFormat dateFormat = new SimpleDateFormat(format, Locale.getDefault());
         final DateFormatSymbols symbols = new DateFormatSymbols();
         symbols.setAmPmStrings(new String[]{"am", "pm"});
         dateFormat.setDateFormatSymbols(symbols);

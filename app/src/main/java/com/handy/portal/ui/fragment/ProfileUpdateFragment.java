@@ -238,7 +238,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
     {
         if (!TextUtils.validateText(text, pattern))
         {
-            textView.setTextColor(ContextCompat.getColor(getContext(), R.color.error_red));
+            textView.setTextColor(ContextCompat.getColor(getContext(), R.color.plumber_red));
             errorIndicator.setVisibility(View.VISIBLE);
             return false;
         }
@@ -265,7 +265,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
         @Override
         public void afterTextChanged(Editable s)
         {
-            mText.setTextColor(ContextCompat.getColor(mText.getContext(), R.color.dark_grey));
+            mText.setTextColor(ContextCompat.getColor(mText.getContext(), R.color.dark_gray));
             mErrorIndicator.setVisibility(View.INVISIBLE);
         }
     }

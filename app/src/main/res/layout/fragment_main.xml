@@ -15,7 +15,7 @@
         android:orientation="vertical"
         >
 
-        <LinearLayout
+        <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_top_padding"
             android:background="?attr/colorPrimary"
@@ -48,7 +48,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:background="@color/light_grey"
+                android:background="@color/light_gray"
                 android:orientation="horizontal"
                 />
 

@@ -12,24 +12,24 @@
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/round_button_radius" />
             <stroke android:width="@dimen/round_button_stroke"
-                    android:color="@color/error_red" />
-            <solid android:color="@color/error_red" />
+                    android:color="@color/plumber_red"/>
+            <solid android:color="@color/plumber_red"/>
         </shape>
     </item>
     <item android:state_pressed="true">
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/round_button_radius" />
             <stroke android:width="@dimen/round_button_stroke"
-                    android:color="@color/error_red_pressed" />
-            <solid android:color="@color/error_red_pressed" />
+                    android:color="@color/plumber_red_pressed"/>
+            <solid android:color="@color/plumber_red_pressed"/>
         </shape>
     </item>
     <item android:state_enabled="true">
         <shape android:shape="rectangle">
             <corners android:radius="@dimen/round_button_radius" />
             <stroke android:width="@dimen/round_button_stroke"
-                    android:color="@color/error_red" />
-            <solid android:color="@color/error_red" />
+                    android:color="@color/plumber_red"/>
+            <solid android:color="@color/plumber_red"/>
         </shape>
     </item>
 </selector>

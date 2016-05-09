@@ -79,12 +79,13 @@ public class PaymentDetailExpandableListAdapter extends BaseExpandableListAdapte
     public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent)
     {
         PaymentGroup paymentGroup = getGroup(groupPosition);
-        if(convertView==null)
+        if (convertView == null)
         {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            convertView = inflater.inflate(R.layout.element_payments_detail_list_group_header, null);
+            convertView = inflater.inflate(R.layout.element_payments_detail_list_group_header,
+                    parent, false);
         }
-        ((PaymentsDetailGroupView)convertView).updateDisplay(paymentGroup, neoPaymentBatch);
+        ((PaymentsDetailGroupView) convertView).updateDisplay(paymentGroup, neoPaymentBatch);
 
         //TODO: see if these are all necessary
         convertView.setEnabled(false);
@@ -98,12 +99,13 @@ public class PaymentDetailExpandableListAdapter extends BaseExpandableListAdapte
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent)
     {
         Payment payment = getChild(groupPosition, childPosition);
-        if(convertView==null)
+        if (convertView == null)
         {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
-            convertView = inflater.inflate(R.layout.element_payments_detail_list_entry, null);
+            convertView = inflater.inflate(R.layout.element_payments_detail_list_entry,
+                    parent, false);
         }
-        ((PaymentsDetailItemView)convertView).updateDisplay(payment, neoPaymentBatch);
+        ((PaymentsDetailItemView) convertView).updateDisplay(payment, neoPaymentBatch);
 
         return convertView;
     }

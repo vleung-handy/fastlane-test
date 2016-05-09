@@ -9,7 +9,6 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
-import com.handy.portal.helpcenter.model.HelpNodeWrapper;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.model.ConfigurationResponse;
@@ -186,16 +185,6 @@ class TermsDetailsGroupResponseHandyRetroFitCallback extends TypedHandyRetrofitC
         super(callback);
     }
 }
-
-
-class HelpNodeResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<HelpNodeWrapper>
-{
-    HelpNodeResponseHandyRetroFitCallback(DataManager.Callback callback)
-    {
-        super(callback);
-    }
-}
-
 
 class EmptyHandyRetroFitCallback extends TypedHandyRetrofitCallback<Void>
 {

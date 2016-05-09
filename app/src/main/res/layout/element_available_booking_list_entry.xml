@@ -98,7 +98,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/extra_margin"
-            android:textColor="@color/subtitle_grey"
+            android:textColor="@color/tertiary_gray"
             tools:text="One Time · 2-3.5 hour job"
             />
 
@@ -122,7 +122,7 @@
             style="@style/TextView.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/subtitle_grey"
+            android:textColor="@color/tertiary_gray"
             android:visibility="gone"
             tools:text="0.5 miles"
             tools:visibility="gone"

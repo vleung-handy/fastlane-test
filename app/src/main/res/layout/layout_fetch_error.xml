@@ -22,7 +22,7 @@
         android:layout_marginRight="@dimen/error_margin_side"
         android:layout_marginTop="@dimen/error_margin_top"
         android:gravity="center_horizontal"
-        android:textColor="@color/subtitle_grey"
+        android:textColor="@color/tertiary_gray"
         android:textSize="@dimen/error_text"
         />
 

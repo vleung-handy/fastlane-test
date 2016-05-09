@@ -51,7 +51,7 @@
                 android:nextFocusDown="@+id/provider_email_edit_text"
                 android:padding="@dimen/default_padding"
                 android:singleLine="true"
-                android:textColor="@color/dark_grey"
+                android:textColor="@color/dark_gray"
                 />
 
         </LinearLayout>
@@ -94,7 +94,7 @@
                 android:nextFocusDown="@+id/provider_address_edit_text"
                 android:padding="@dimen/default_padding"
                 android:singleLine="true"
-                android:textColor="@color/dark_grey"
+                android:textColor="@color/dark_gray"
                 />
 
         </LinearLayout>
@@ -144,7 +144,7 @@
                     android:nextFocusDown="@+id/provider_address2_edit_text"
                     android:padding="@dimen/default_padding"
                     android:singleLine="true"
-                    android:textColor="@color/dark_grey"
+                    android:textColor="@color/dark_gray"
                     />
 
                 <EditText
@@ -156,7 +156,7 @@
                     android:nextFocusDown="@+id/provider_city_edit_text"
                     android:padding="@dimen/default_padding"
                     android:singleLine="true"
-                    android:textColor="@color/dark_grey"
+                    android:textColor="@color/dark_gray"
                     />
 
             </LinearLayout>
@@ -206,7 +206,7 @@
                     android:nextFocusDown="@+id/provider_state_edit_text"
                     android:padding="@dimen/default_padding"
                     android:singleLine="true"
-                    android:textColor="@color/dark_grey"
+                    android:textColor="@color/dark_gray"
                     />
 
                 <EditText
@@ -218,7 +218,7 @@
                     android:nextFocusDown="@+id/provider_zip_code_edit_text"
                     android:padding="@dimen/default_padding"
                     android:singleLine="true"
-                    android:textColor="@color/dark_grey"
+                    android:textColor="@color/dark_gray"
                     />
 
                 <EditText
@@ -230,7 +230,7 @@
                     android:nextFocusDown="@+id/provider_phone_edit_text"
                     android:padding="@dimen/default_padding"
                     android:singleLine="true"
-                    android:textColor="@color/dark_grey"
+                    android:textColor="@color/dark_gray"
                     />
 
             </LinearLayout>
@@ -273,7 +273,7 @@
                 android:inputType="phone"
                 android:padding="@dimen/default_padding"
                 android:singleLine="true"
-                android:textColor="@color/dark_grey"
+                android:textColor="@color/dark_gray"
                 />
 
         </LinearLayout>

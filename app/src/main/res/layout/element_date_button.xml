@@ -14,7 +14,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="1dp"
         android:textAllCaps="true"
-        android:textColor="@color/text_light_grey"
+        android:textColor="@color/text_light_gray"
         android:textSize="@dimen/xsmall_text_size"
         />
 

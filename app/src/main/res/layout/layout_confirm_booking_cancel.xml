@@ -34,7 +34,7 @@
             android:gravity="center"
             android:text="@string/keep_rate_negatively_impacted"
             android:textAppearance="@style/TextView.Medium"
-            android:textColor="@color/subtitle_grey"
+            android:textColor="@color/tertiary_gray"
             android:visibility="gone"
             />
 
@@ -44,7 +44,7 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:textAppearance="@style/TextView.Medium"
-            android:textColor="@color/subtitle_grey"
+            android:textColor="@color/tertiary_gray"
             android:visibility="gone"
             tools:text="You will incur a $10.00 fee and reduce your keep rate:"
             tools:visibility="visible"
@@ -139,7 +139,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/no_keep_rate"
                 android:textAppearance="@style/TextView.Small"
-                android:textColor="@color/subtitle_grey"
+                android:textColor="@color/tertiary_gray"
                 />
         </LinearLayout>
     </LinearLayout>

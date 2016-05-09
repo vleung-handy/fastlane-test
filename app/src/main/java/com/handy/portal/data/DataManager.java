@@ -9,7 +9,6 @@ import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.NoShowKey;
-import com.handy.portal.helpcenter.model.HelpNodeWrapper;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
@@ -50,8 +49,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-
-import retrofit.mime.TypedInput;
 
 public class DataManager
 {
@@ -177,14 +174,14 @@ public class DataManager
         mService.notifyOnMyWay(bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
-    public void notifyCheckInBooking(String bookingId, boolean isAuto, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
+    public void notifyCheckInBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
     {
-        mService.checkIn(bookingId, isAuto, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
+        mService.checkIn(bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
-    public void notifyCheckOutBooking(String bookingId, boolean isAuto, CheckoutRequest request, final Callback<Booking> cb)
+    public void notifyCheckOutBooking(String bookingId, CheckoutRequest request, final Callback<Booking> cb)
     {
-        mService.checkOut(bookingId, isAuto, request, new BookingHandyRetroFitCallback(cb));
+        mService.checkOut(bookingId, request, new BookingHandyRetroFitCallback(cb));
     }
 
     public void notifyUpdateArrivalTimeBooking(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption, final Callback<Booking> cb)
@@ -234,32 +231,6 @@ public class DataManager
         });
     }
 
-    //********Help Center********
-    public void getHelpInfo(String nodeId,
-                            String bookingId,
-                            final Callback<HelpNodeWrapper> cb)
-    {
-        mService.getHelpInfo(nodeId, bookingId, new HelpNodeResponseHandyRetroFitCallback(cb));
-    }
-
-    public void getHelpBookingsInfo(String nodeId,
-                                    String bookingId,
-                                    final Callback<HelpNodeWrapper> cb)
-    {
-        mService.getHelpBookingsInfo(nodeId, bookingId, new HelpNodeResponseHandyRetroFitCallback(cb));
-    }
-
-    public void getHelpPaymentsInfo(final Callback<HelpNodeWrapper> cb)
-    {
-        mService.getHelpPayments(new HelpNodeResponseHandyRetroFitCallback(cb));
-    }
-
-    public void createHelpCase(TypedInput body, final Callback<Void> cb)
-    {
-        mService.createHelpCase(body, new EmptyHandyRetroFitCallback(cb));
-    }
-
-    //********End Help Center********
     public void createBankAccount(Map<String, String> params, final Callback<SuccessWrapper> cb)
     {
         mService.createBankAccount(params, new CreateBankAccountRetroFitCallback(cb));

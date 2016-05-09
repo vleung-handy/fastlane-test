@@ -7,7 +7,6 @@ import java.lang.annotation.RetentionPolicy;
 
 public interface BookingProgress
 {
-    int UNAVAILABLE = 1;
     int READY_FOR_CLAIM = 2;
     int READY_FOR_ON_MY_WAY = 3;
     int READY_FOR_CHECK_IN = 4;
@@ -16,7 +15,7 @@ public interface BookingProgress
 
 
     //Define the list of accepted constants
-    @IntDef({UNAVAILABLE, READY_FOR_CLAIM, READY_FOR_ON_MY_WAY, READY_FOR_CHECK_IN, READY_FOR_CHECK_OUT, FINISHED})
+    @IntDef({READY_FOR_CLAIM, READY_FOR_ON_MY_WAY, READY_FOR_CHECK_IN, READY_FOR_CHECK_OUT, FINISHED})
     //Tell the compiler not to store annotation data in the .class file
     @Retention(RetentionPolicy.SOURCE)
     @interface Progress {}

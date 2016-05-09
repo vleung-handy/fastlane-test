@@ -34,9 +34,9 @@ public class BookingManager
     private final Bus mBus;
     private final DataManager mDataManager;
 
-    private final Cache<Date, List<Booking>> availableBookingsCache;
-    private final Cache<Date, List<Booking>> scheduledBookingsCache;
-    private final Cache<Date, List<Booking>> complementaryBookingsCache;
+    private final Cache<Date, BookingsWrapper> availableBookingsCache;
+    private final Cache<Date, BookingsWrapper> scheduledBookingsCache;
+    private final Cache<Date, BookingsWrapper> complementaryBookingsCache;
 
     @Inject
     public BookingManager(final Bus bus, final DataManager dataManager)
@@ -103,7 +103,7 @@ public class BookingManager
             final Date day = DateTimeUtils.getDateWithoutTime(date);
             if (event.useCachedIfPresent)
             {
-                final List<Booking> cachedBookings = availableBookingsCache.getIfPresent(day);
+                final BookingsWrapper cachedBookings = availableBookingsCache.getIfPresent(day);
                 if (cachedBookings != null)
                 {
                     mBus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(cachedBookings, day));
@@ -131,9 +131,8 @@ public class BookingManager
                             {
                                 Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
                                 Crashlytics.log("Received available bookings for " + day);
-                                List<Booking> bookings = bookingsWrapper.getBookings();
-                                availableBookingsCache.put(day, bookings);
-                                mBus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(bookings, day));
+                                availableBookingsCache.put(day, bookingsWrapper);
+                                mBus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(bookingsWrapper, day));
                             }
                         }
 
@@ -151,8 +150,6 @@ public class BookingManager
      * TODO: need to detect when pull to fresh happens, and make sure this is called again
      * unlike onRequestScheduledBookings, this will not fire events containing bookings for a specific date,
      * but rather for a batch of dates, not in any particular order. currently used by location scheduler manager
-     *
-     * @param event
      */
     @Subscribe
     public void onRequestScheduledBookingsBatch(final HandyEvent.RequestScheduledBookingsBatch event)
@@ -164,11 +161,11 @@ public class BookingManager
             final Date day = DateTimeUtils.getDateWithoutTime(date);
             if (event.useCachedIfPresent)
             {
-                final List<Booking> cachedBookings = scheduledBookingsCache.getIfPresent(day);
+                final BookingsWrapper cachedBookings = scheduledBookingsCache.getIfPresent(day);
                 if (cachedBookings != null)
                 {
                     Log.d(getClass().getName(), "received scheduled bookings: " + day.toString());
-                    resultMap.put(day, cachedBookings);
+                    resultMap.put(day, cachedBookings.getBookings());
                 }
                 else
                 {
@@ -195,7 +192,7 @@ public class BookingManager
                                 Log.d(getClass().getName(), "batch received scheduled bookings: " + day.toString());
                                 Crashlytics.log("Received scheduled bookings for " + day);
                                 List<Booking> bookings = bookingsWrapper.getBookings();
-                                scheduledBookingsCache.put(day, bookings);
+                                scheduledBookingsCache.put(day, bookingsWrapper);
                                 resultMap.put(day, bookings);
                             }
                             mBus.post(new HandyEvent.ReceiveScheduledBookingsBatchSuccess(resultMap));
@@ -224,7 +221,7 @@ public class BookingManager
             final Date day = DateTimeUtils.getDateWithoutTime(date);
             if (event.useCachedIfPresent)
             {
-                final List<Booking> cachedBookings = scheduledBookingsCache.getIfPresent(day);
+                final BookingsWrapper cachedBookings = scheduledBookingsCache.getIfPresent(day);
                 if (cachedBookings != null)
                 {
                     Log.d(getClass().getName(), "received scheduled bookings: " + day.toString());
@@ -255,8 +252,8 @@ public class BookingManager
                                 Log.d(getClass().getName(), "received scheduled bookings: " + day.toString());
                                 Crashlytics.log("Received scheduled bookings for " + day);
                                 List<Booking> bookings = bookingsWrapper.getBookings();
-                                scheduledBookingsCache.put(day, bookings);
-                                mBus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(bookings, day));
+                                scheduledBookingsCache.put(day, bookingsWrapper);
+                                mBus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(bookingsWrapper, day));
                             }
 
                             /*
@@ -305,10 +302,10 @@ public class BookingManager
     public void onRequestComplementaryBookings(HandyEvent.RequestComplementaryBookings event)
     {
         final Date day = DateTimeUtils.getDateWithoutTime(event.date);
-        final List<Booking> cachedComplementaryBookings = complementaryBookingsCache.getIfPresent(day);
+        final BookingsWrapper cachedComplementaryBookings = complementaryBookingsCache.getIfPresent(day);
         if (cachedComplementaryBookings != null)
         {
-            mBus.post(new HandyEvent.ReceiveComplementaryBookingsSuccess(cachedComplementaryBookings));
+            mBus.post(new HandyEvent.ReceiveComplementaryBookingsSuccess(cachedComplementaryBookings.getBookings()));
         }
         else
         {
@@ -318,7 +315,7 @@ public class BookingManager
                 public void onSuccess(BookingsWrapper bookingsWrapper)
                 {
                     List<Booking> bookings = bookingsWrapper.getBookings();
-                    complementaryBookingsCache.put(day, bookings);
+                    complementaryBookingsCache.put(day, bookingsWrapper);
                     mBus.post(new HandyEvent.ReceiveComplementaryBookingsSuccess(bookings));
                 }
 
@@ -343,7 +340,10 @@ public class BookingManager
             @Override
             public void onSuccess(BookingClaimDetails bookingClaimDetails)
             {
-                invalidateCachesForDay(day);
+                //have to invalidate cache for all days because we need updated priority access info
+                //TODO investigate something better
+                invalidateCachesForAllDays();
+
                 mBus.post(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, event.source));
 
                 /*
@@ -376,7 +376,10 @@ public class BookingManager
             @Override
             public void onSuccess(Booking booking)
             {
-                invalidateCachesForDay(day);
+                //have to invalidate cache for all days because we need updated priority access info
+                //TODO investigate something better
+                invalidateCachesForAllDays();
+
                 mBus.post(new HandyEvent.ReceiveRemoveJobSuccess(booking));
 
                 /*
@@ -422,19 +425,19 @@ public class BookingManager
     {
         LocationData locationData = event.locationData;
 
-        mDataManager.notifyCheckInBooking(event.bookingId, event.isAuto, locationData.getLocationMap(), new DataManager.Callback<Booking>()
+        mDataManager.notifyCheckInBooking(event.bookingId, locationData.getLocationMap(), new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
             {
-                mBus.post(new HandyEvent.ReceiveNotifyJobCheckInSuccess(booking, event.isAuto));
+                mBus.post(new HandyEvent.ReceiveNotifyJobCheckInSuccess(booking));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
                 //still need to invalidate so we don't allow them to click on same booking
-                mBus.post(new HandyEvent.ReceiveNotifyJobCheckInError(error, event.isAuto));
+                mBus.post(new HandyEvent.ReceiveNotifyJobCheckInError(error));
             }
         });
     }
@@ -442,18 +445,18 @@ public class BookingManager
     @Subscribe
     public void onRequestNotifyCheckOut(final HandyEvent.RequestNotifyJobCheckOut event)
     {
-        mDataManager.notifyCheckOutBooking(event.bookingId, event.isAuto, event.checkoutRequest, new DataManager.Callback<Booking>()
+        mDataManager.notifyCheckOutBooking(event.bookingId, event.checkoutRequest, new DataManager.Callback<Booking>()
         {
             @Override
             public void onSuccess(Booking booking)
             {
-                mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(booking, event.isAuto));
+                mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(booking));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutError(error, event.isAuto));
+                mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutError(error));
             }
         });
     }
@@ -526,6 +529,13 @@ public class BookingManager
         noShowParams.put(NoShowKey.ACCURACY, locationParamsMap.get(LocationKey.ACCURACY));
         noShowParams.put(NoShowKey.ACTIVE, Boolean.toString(active));
         return noShowParams;
+    }
+
+    private void invalidateCachesForAllDays()
+    {
+        availableBookingsCache.invalidateAll();
+        scheduledBookingsCache.invalidateAll();
+        complementaryBookingsCache.invalidateAll();
     }
 
     private void invalidateCachesForDay(Date day)

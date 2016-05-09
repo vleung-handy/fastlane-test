@@ -121,7 +121,8 @@ public class NearbyBookingsMapFragment extends SupportMapFragment implements OnM
             }
         }
         // click the first maker
-        clickMarker(mMarkerBookingMap.keySet().toArray(new Marker[0])[0]);
+        Set<Marker> markers = mMarkerBookingMap.keySet();
+        clickMarker(markers.toArray(new Marker[markers.size()])[0]);
     }
 
     private void clickMarker(final Marker marker)

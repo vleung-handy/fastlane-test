@@ -8,8 +8,6 @@ import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.TestDataManager;
-import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
-import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
 import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
@@ -63,8 +61,6 @@ import static org.mockito.Mockito.when;
         PleaseUpdateFragment.class,
         AvailableBookingsFragment.class,
         ScheduledBookingsFragment.class,
-        HelpFragment.class,
-        HelpContactFragment.class,
         UrbanAirshipManager.class,
         PaymentsFragment.class,
         PaymentsDetailFragment.class,

@@ -1,15 +1,12 @@
 package com.handy.portal.payments.ui.fragment;
 
 import android.os.Bundle;
-import android.support.annotation.VisibleForTesting;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ListView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -19,13 +16,9 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.helpcenter.HelpEvent;
-import com.handy.portal.helpcenter.model.HelpNode;
-import com.handy.portal.helpcenter.ui.adapter.HelpNodesAdapter;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
 import com.handy.portal.payments.model.NeoPaymentBatch;
@@ -72,9 +65,6 @@ public final class PaymentsFragment extends ActionBarFragment
     @Bind(R.id.fetch_error_view)
     ViewGroup fetchErrorView;
 
-    @VisibleForTesting
-    ListView helpNodesListView;
-
     //TODO: refactor request protocols when we can use new pagination API that allows us to get the N next batches
 
     private View fragmentView;
@@ -90,9 +80,6 @@ public final class PaymentsFragment extends ActionBarFragment
 
         ButterKnife.bind(this, fragmentView);
 
-        helpNodesListView = new ListView(getActivity());
-        helpNodesListView.setDivider(null);
-
         return fragmentView;
     }
 
@@ -107,7 +94,6 @@ public final class PaymentsFragment extends ActionBarFragment
     {
         super.onResume();
         setActionBar(R.string.payments, false);
-        bus.post(new HelpEvent.RequestHelpPaymentsNode());
 
         if (paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData())//if initial batch has not been received yet
         {
@@ -244,15 +230,7 @@ public final class PaymentsFragment extends ActionBarFragment
         {
             case R.id.action_help:
                 bus.post(new LogEvent.AddLogEvent(new PaymentsLog.HelpSelected()));
-                final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
-                if (configuration != null && configuration.shouldUseHelpCenterWebView())
-                {
-                    goToHelpCenterWebView();
-                }
-                else
-                {
-                    showHelpOptions();
-                }
+                goToHelpCenterWebView();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -264,18 +242,6 @@ public final class PaymentsFragment extends ActionBarFragment
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, HELP_PAYMENTS_SECTION_REDIRECT_PATH);
         bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP_WEBVIEW, arguments, true));
-    }
-
-    private void showHelpOptions()
-    {
-        if (helpNodesListView.getCount() > 0)
-        {
-            mSlideUpPanelLayout.showPanel(R.string.payment_help, helpNodesListView);
-        }
-        else
-        {
-            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, true));
-        }
     }
 
     @Subscribe
@@ -337,33 +303,4 @@ public final class PaymentsFragment extends ActionBarFragment
     {
         //TODO: handle annual payments summary error
     }
-
-    @Subscribe
-    public void onReceiveHelpPaymentsNodeSuccess(final HelpEvent.ReceiveHelpPaymentsNodeSuccess event)
-    {
-        HelpNodesAdapter adapter =
-                new HelpNodesAdapter(getActivity(), R.layout.list_item_support_action, event.helpNode.getChildren());
-        helpNodesListView.setAdapter(adapter);
-        helpNodesListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-            {
-                final HelpNode childNode = event.helpNode.getChildren().get(position);
-                if (childNode == null || childNode.getType() == null)
-                {
-                    return;
-                }
-
-                mSlideUpPanelLayout.hidePanel();
-
-                bus.post(new LogEvent.AddLogEvent(
-                        new PaymentsLog.HelpItemSelected(childNode.getLabel())));
-                Bundle arguments = new Bundle();
-                arguments.putString(BundleKeys.HELP_NODE_ID, Integer.toString(childNode.getId()));
-                bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments, true));
-            }
-        });
-    }
-
 }

@@ -41,7 +41,6 @@ import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
@@ -255,29 +254,23 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     @Subscribe
     public void onReceiveNotifyJobCheckInSuccess(final HandyEvent.ReceiveNotifyJobCheckInSuccess event)
     {
-        if (!event.isAuto)
-        {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSuccess(
-                    mBooking, getLocationData())));
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSuccess(
+                mBooking, getLocationData())));
 
-            //refresh the page with the new booking
-            mBooking = event.booking;
-            updateDisplay();
-        }
+        //refresh the page with the new booking
+        mBooking = event.booking;
+        updateDisplay();
     }
 
     @Subscribe
     public void onReceiveNotifyJobCheckInError(final HandyEvent.ReceiveNotifyJobCheckInError event)
     {
-        if (!event.isAuto)
-        {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInError(
-                    mBooking, getLocationData())));
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInError(
+                mBooking, getLocationData())));
 
-            handleNotifyCheckInError(event);
-        }
+        handleNotifyCheckInError(event);
     }
 
     @Subscribe
@@ -553,7 +546,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     {
         mSlideUpPanelContainer.removeAllViews();
 
-        int bookingProgress = mBooking.getBookingProgress(getLoggedInUserId());
+        int bookingProgress = mBooking.getBookingProgress();
         if (bookingProgress == BookingProgress.READY_FOR_CHECK_OUT
                 && mBooking.getCustomerPreferences().size() > 0)
         //in progress booking (after check in and before check out)
@@ -652,19 +645,9 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
 
     private void goToHelpCenter(final Booking.Action action)
     {
-        final ConfigurationResponse configuration = configManager.getConfigurationResponse();
-        if (configuration != null && configuration.shouldUseHelpCenterWebView())
-        {
-            final Bundle arguments = new Bundle();
-            arguments.putString(BundleKeys.HELP_REDIRECT_PATH, action.getHelpRedirectPath());
-            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP_WEBVIEW, arguments, true));
-        }
-        else
-        {
-            final Bundle arguments = new Bundle();
-            arguments.putString(BundleKeys.HELP_NODE_ID, action.getDeepLinkData());
-            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP, arguments, true));
-        }
+        final Bundle arguments = new Bundle();
+        arguments.putString(BundleKeys.HELP_REDIRECT_PATH, action.getHelpRedirectPath());
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP_WEBVIEW, arguments, true));
     }
 
     private void unassignJob(@NonNull Booking.Action removeAction)
