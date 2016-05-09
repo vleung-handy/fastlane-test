@@ -78,12 +78,6 @@ public class SimpleContentLayout extends FrameLayout
         return this;
     }
 
-    public SimpleContentLayout setDescription(final String descriptionText)
-    {
-        mDescription.setText(descriptionText);
-        return this;
-    }
-
     public SimpleContentLayout setImage(final Drawable drawable)
     {
         mImage.setImageDrawable(drawable);

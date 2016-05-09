@@ -6,11 +6,13 @@ import android.view.View;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.Country;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.model.Address;
+import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
 import com.handy.portal.payments.model.PaymentInfo;
@@ -46,8 +48,11 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     FormFieldTableRow mStateField;
     @Bind(R.id.zip_field)
     FormFieldTableRow mZipField;
+    @Bind(R.id.cancel_edit)
+    View mCancelEdit;
 
     private Map<String, FieldDefinition> mFieldDefinitions;
+    private ProviderPersonalInfo mProviderPersonalInfo;
     private OnboardingSuppliesInfo mOnboardingSuppliesInfo;
     private String mCardLast4;
     private String mCardType;
@@ -87,18 +92,6 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        // FIXME: Pull from server
-        mShippingSummary.setContent(getString(R.string.shipping_address),
-                "John Doe\n123 Penny Lane\nBrooklyn, NY 12345")
-                .setAction(getString(R.string.edit), new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(final View v)
-                    {
-                        mEditAddressForm.setVisibility(View.VISIBLE);
-                        mShippingSummary.setVisibility(View.GONE);
-                    }
-                });
         mPaymentSummary.setContent(getString(R.string.payment_method),
                 getString(R.string.card_info_formatted, mCardType, mCardLast4));
         final PaymentInfo cost = mOnboardingSuppliesInfo.getCost();
@@ -112,7 +105,59 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     public void onResume()
     {
         super.onResume();
-        bus.post(new RegionDefinitionEvent.RequestFormDefinitions("US", getActivity()));
+        if (mFieldDefinitions == null)
+        {
+            bus.post(new RegionDefinitionEvent.RequestFormDefinitions(Country.US, getActivity()));
+        }
+
+        if (mProviderPersonalInfo != null)
+        {
+            populateShippingSummary();
+        }
+        else
+        {
+            showLoadingOverlay();
+            bus.post(new ProfileEvent.RequestProviderProfile());
+        }
+    }
+
+    @Subscribe
+    void onReceiveProviderInfoSuccess(final ProfileEvent.ReceiveProviderProfileSuccess event)
+    {
+        mProviderPersonalInfo = event.providerProfile.getProviderPersonalInfo();
+        populateShippingSummary();
+        hideLoadingOverlay();
+    }
+
+    @Subscribe
+    void onReceiveProviderInfoError(final ProfileEvent.ReceiveProviderProfileError event)
+    {
+        showEditAddressForm();
+        mCancelEdit.setVisibility(View.GONE);
+        hideLoadingOverlay();
+    }
+
+    private void populateShippingSummary()
+    {
+        final Address address = mProviderPersonalInfo.getAddress();
+        mShippingSummary.setContent(getString(R.string.shipping_address),
+                mProviderPersonalInfo.getFirstName() + " " +
+                        mProviderPersonalInfo.getLastName() + "\n" + address.getStreetAddress() +
+                        "\n" + address.getCityStateZip())
+                .setAction(getString(R.string.edit), new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(final View v)
+                    {
+                        showEditAddressForm();
+                    }
+                });
+    }
+
+    private void showEditAddressForm()
+    {
+        mEditAddressForm.setVisibility(View.VISIBLE);
+        mShippingSummary.setVisibility(View.GONE);
     }
 
     @Subscribe
@@ -196,10 +241,8 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     @Subscribe
     void onReceiveProfileUpdateSuccess(final ProfileEvent.ReceiveProfileUpdateSuccess event)
     {
-        final Address address = event.providerPersonalInfo.getAddress();
-        mShippingSummary.setDescription(event.providerPersonalInfo.getFirstName() + " " +
-                event.providerPersonalInfo.getLastName() + "\n" + address.getStreetAddress() +
-                "\n" + address.getCityStateZip());
+        mProviderPersonalInfo = event.providerPersonalInfo;
+        populateShippingSummary();
         bus.post(new HandyEvent.RequestOnboardingSupplies(true));
     }
 
