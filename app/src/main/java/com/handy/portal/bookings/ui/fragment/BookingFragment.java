@@ -137,17 +137,15 @@ public class BookingFragment extends TimerActionBarFragment
     private Bundle mSourceExtras;
     private Intent mGetDirectionsIntent;
     private View.OnClickListener mOnSupportClickListener;
-    private boolean mFromPaymentsTab;
     private boolean mHideActionButtons;
 
     public static BookingFragment newInstance(@NonNull final Booking booking, final String source,
-                                              boolean fromPaymentsTab, boolean hideActionButtons)
+                                              boolean hideActionButtons)
     {
         BookingFragment fragment = new BookingFragment();
         Bundle args = new Bundle();
         args.putSerializable(BundleKeys.BOOKING, booking);
         args.putString(BundleKeys.BOOKING_SOURCE, source);
-        args.putBoolean(BundleKeys.BOOKING_FROM_PAYMENT_TAB, fromPaymentsTab);
         args.putBoolean(BundleKeys.BOOKING_SHOULD_HIDE_ACTION_BUTTONS, hideActionButtons);
 
         fragment.setArguments(args);
@@ -169,7 +167,6 @@ public class BookingFragment extends TimerActionBarFragment
         mSource = getArguments().getString(BundleKeys.BOOKING_SOURCE);
         mSourceExtras = getArguments();
 
-        mFromPaymentsTab = getArguments().getBoolean(BundleKeys.BOOKING_FROM_PAYMENT_TAB);
         mHideActionButtons = getArguments().getBoolean(BundleKeys.BOOKING_SHOULD_HIDE_ACTION_BUTTONS);
 
         MapsInitializer.initialize(getContext());
@@ -269,8 +266,7 @@ public class BookingFragment extends TimerActionBarFragment
         setActionButtonVisibility();
         mSupportButton.setOnClickListener(mOnSupportClickListener);
 
-        if (!mFromPaymentsTab)
-        { initMapLayout(); }
+        initMapLayout();
 
         mCallCustomerView.setEnabled(false);
         mCallCustomerView.setAlpha(0.5f);
@@ -289,7 +285,7 @@ public class BookingFragment extends TimerActionBarFragment
                 mBooking.inferBookingStatus(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
         if (bookingStatus == Booking.BookingStatus.UNAVAILABLE ||
                 bookingProgress == BookingProgress.READY_FOR_CLAIM ||
-                mBooking.getUser() == null || mFromPaymentsTab)
+                mBooking.getUser() == null)
         {
             mBookingCustomerContactLayout.setVisibility(View.GONE);
         }
@@ -327,7 +323,7 @@ public class BookingFragment extends TimerActionBarFragment
             Address address = mBooking.getAddress();
             if (address != null)
             {
-                if (bookingStatus != Booking.BookingStatus.CLAIMED || mFromPaymentsTab)
+                if (bookingStatus != Booking.BookingStatus.CLAIMED)
                 {
                     mBookingAddressTitleText.setText(mBooking.isUK() ?
                             getResources().getString(R.string.comma_formatted,
@@ -450,7 +446,7 @@ public class BookingFragment extends TimerActionBarFragment
         }
 
         // Booking Instructions
-        if (mFromPaymentsTab || !isHomeCleaning ||
+        if (!isHomeCleaning ||
                 mBooking.inferBookingStatus(getLoggedInUserId()) == Booking.BookingStatus.CLAIMED)
         {
             List<Booking.BookingInstructionGroup> bookingInstructionGroups =
@@ -475,12 +471,6 @@ public class BookingFragment extends TimerActionBarFragment
         if (noShowReported)
         {
             mNoShowBanner.setVisibility(View.VISIBLE);
-        }
-
-        // Hide map and customer contact if coming from payments tab
-        if (mFromPaymentsTab)
-        {
-            mBookingMapView.setVisibility(View.GONE);
         }
 
         setActionBarTitle();
@@ -796,7 +786,7 @@ public class BookingFragment extends TimerActionBarFragment
     {
         Booking.BookingStatus bookingStatus =
                 mBooking.inferBookingStatus(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
-        return !mFromPaymentsTab && bookingStatus == Booking.BookingStatus.CLAIMED;
+        return bookingStatus == Booking.BookingStatus.CLAIMED;
     }
 
     private void setRevealNoticeText(

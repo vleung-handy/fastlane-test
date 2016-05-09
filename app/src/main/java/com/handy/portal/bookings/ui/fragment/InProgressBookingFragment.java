@@ -225,7 +225,6 @@ public class InProgressBookingFragment extends TimerActionBarFragment
         Bundle args = new Bundle();
         args.putSerializable(BundleKeys.BOOKING, mBooking);
         args.putString(BundleKeys.BOOKING_SOURCE, mSource);
-        args.putBoolean(BundleKeys.BOOKING_FROM_PAYMENT_TAB, false);
         args.putBoolean(BundleKeys.BOOKING_SHOULD_HIDE_ACTION_BUTTONS, true);
 
         bus.post(new NavigationEvent.NavigateToTab(MainViewTab.NOT_IN_PROGRESS_JOB_DETAILS, args, true));

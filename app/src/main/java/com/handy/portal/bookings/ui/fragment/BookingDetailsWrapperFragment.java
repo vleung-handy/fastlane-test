@@ -83,7 +83,6 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     private Date mAssociatedBookingDate;
     private String mSource;
     private Bundle mSourceExtras;
-    private boolean mFromPaymentsTab;
     private MainViewTab mCurrentTab;
 
 
@@ -122,7 +121,6 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
             mSource = SOURCE_LATE_DISPATCH;
             mSourceExtras = arguments;
         }
-        mFromPaymentsTab = arguments.getBoolean(BundleKeys.IS_FOR_PAYMENTS, false);
         mCurrentTab = (MainViewTab) arguments.getSerializable(BundleKeys.TAB);
     }
 
@@ -169,7 +167,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         mBooking = event.booking;
         final Booking.BookingStatus bookingStatus = mBooking.inferBookingStatus(getLoggedInUserId());
-        if (!mFromPaymentsTab && bookingStatus == Booking.BookingStatus.UNAVAILABLE)
+        if (bookingStatus == Booking.BookingStatus.UNAVAILABLE)
         {
             final Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.MESSAGE, getString(R.string.job_no_longer_available));
@@ -558,7 +556,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         {
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.replace(mSlideUpPanelContainer.getId(),
-                    BookingFragment.newInstance(mBooking, mSource, mFromPaymentsTab, false))
+                    BookingFragment.newInstance(mBooking, mSource, false))
                     .commit();
         }
     }
