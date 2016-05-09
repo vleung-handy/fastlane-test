@@ -18,7 +18,7 @@
         />
 
     <TextView
-        style="@style/TextView.Medium.Bold"
+        style="@style/TextView.Small.Bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/requested_green"

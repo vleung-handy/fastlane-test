@@ -55,6 +55,7 @@ public class BookingDetailsDisplayMessageView extends FrameLayout
     {
         inflate(getContext(), R.layout.element_booking_details_display_message, this);
         ButterKnife.bind(this);
+        mBookingMessageTitleView.setTextSize(R.dimen.medium_text_size);
     }
 
     /**

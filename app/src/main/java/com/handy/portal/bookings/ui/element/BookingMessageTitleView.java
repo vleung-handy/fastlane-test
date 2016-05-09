@@ -37,6 +37,7 @@ public class BookingMessageTitleView extends LeftIndicatorTextView
 
         //set specific styles for this view
         setTextColorResourceId(R.color.requested_green)
-                .setImageResourceId(R.drawable.circle_green);
+                .setImageResourceId(R.drawable.circle_green)
+                .setTextSize(R.dimen.small_text_size);
     }
 }
