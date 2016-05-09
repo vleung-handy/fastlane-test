@@ -260,6 +260,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     void onReceiveOnboardingSuppliesSuccess(final HandyEvent.ReceiveOnboardingSuppliesSuccess event)
     {
         hideLoadingOverlay();
+        showToast(R.string.supplies_will_arrive_after_activation);
         terminate();
     }
 
