@@ -211,7 +211,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     @Override
     protected String getSubHeaderText()
     {
-        return null;
+        return mOnboardingSuppliesInfo.getChargeNotice();
     }
 
     @Override
