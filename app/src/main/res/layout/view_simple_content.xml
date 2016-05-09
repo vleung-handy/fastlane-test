@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="center"
         android:padding="@dimen/default_padding_half"
-        android:textColor="@color/handy_blue"
+        android:textColor="@drawable/text_blue"
         android:visibility="gone"
         tools:text="See full list"
         tools:visibility="visible"
