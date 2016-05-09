@@ -257,14 +257,14 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     void onReceiveProfileUpdateError(final ProfileEvent.ReceiveProfileUpdateError event)
     {
         hideLoadingOverlay();
-        // FIXME: Show toast
+        showError(event.error.getMessage());
     }
 
     @Subscribe
     void onReceiveOnboardingSuppliesError(final HandyEvent.ReceiveOnboardingSuppliesError event)
     {
         hideLoadingOverlay();
-        // FIXME: Show toast
+        showError(event.error.getMessage());
     }
 
     private boolean validate()

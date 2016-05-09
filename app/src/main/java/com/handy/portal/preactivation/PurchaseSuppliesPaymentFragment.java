@@ -179,13 +179,13 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
     void onReceiveStripeChargeTokenError(final StripeEvent.ReceiveStripeChargeTokenError event)
     {
         hideLoadingOverlay();
-        // FIXME: Show toast
+        showError(event.getError().getMessage());
     }
 
     @Subscribe
     void onReceiveUpdateCreditCardError(final PaymentEvent.ReceiveUpdateCreditCardError event)
     {
         hideLoadingOverlay();
-        // FIXME: Show toast
+        showError(event.error.getMessage());
     }
 }

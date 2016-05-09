@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.handy.portal.util.TextUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -161,5 +162,15 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
             mActionButtonGroup.setVisibility(View.GONE);
             mSingleActionButton.setText(getPrimaryButtonText());
         }
+    }
+
+    public void showError(@Nullable final String message)
+    {
+        String errorMessage = message;
+        if (TextUtils.isNullOrEmpty(errorMessage))
+        {
+            errorMessage = getString(R.string.an_error_has_occurred);
+        }
+        showToast(errorMessage);
     }
 }

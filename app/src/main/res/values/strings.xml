@@ -190,7 +190,7 @@
     <string name="check_out_success">Thanks for checking out!</string>
 
     <string name="send_update">Send Update</string>
-    <string name="an_error_has_occurred">An error has occurred, please try again</string>
+    <string name="an_error_has_occurred">An error has occurred, please try again.</string>
 
     <string name="install">Install</string>
     <string name="need_google_play">To view maps, please install Google Play Services</string>

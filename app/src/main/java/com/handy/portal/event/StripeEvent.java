@@ -93,7 +93,7 @@ public abstract class StripeEvent extends HandyEvent
 
     public static class ReceiveStripeChargeTokenSuccess extends ReceiveSuccessEvent
     {
-        private Token mToken;
+        private final Token mToken;
 
         public ReceiveStripeChargeTokenSuccess(final Token token)
         {
@@ -106,5 +106,18 @@ public abstract class StripeEvent extends HandyEvent
         }
     }
 
-    public static class ReceiveStripeChargeTokenError {}
+    public static class ReceiveStripeChargeTokenError
+    {
+        private final Exception mError;
+
+        public ReceiveStripeChargeTokenError(final Exception error)
+        {
+            mError = error;
+        }
+
+        public Exception getError()
+        {
+            return mError;
+        }
+    }
 }

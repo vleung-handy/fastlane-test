@@ -119,7 +119,7 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
             @Override
             public void onError(final Exception error)
             {
-                bus.post(new StripeEvent.ReceiveStripeChargeTokenError());
+                bus.post(new StripeEvent.ReceiveStripeChargeTokenError(error));
             }
         });
     }
