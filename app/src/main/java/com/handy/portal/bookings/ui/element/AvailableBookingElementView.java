@@ -86,13 +86,7 @@ public class AvailableBookingElementView extends BookingElementView
             mFormattedDistanceText.setVisibility(View.VISIBLE);
         }
 
-        //Requested Provider
-//        mTitleLayout.setVisibility(isRequested ? View.VISIBLE : View.GONE);
-        //todo do we need backwards compatibility for the "is_requested" booking attr?
-
         //Honor display attributes
-        boolean isRequested = booking.isRequested();
-
         Booking.DisplayAttributes displayAttributes = booking.getDisplayAttributes();
         if(displayAttributes != null)
         {
@@ -105,6 +99,7 @@ public class AvailableBookingElementView extends BookingElementView
         }
 
         //apply styles specific to pro requested status
+        boolean isRequested = booking.isRequested();
         if(isRequested)
         {
             //show the green strip indicator on the left of this entry

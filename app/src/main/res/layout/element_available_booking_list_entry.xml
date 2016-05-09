@@ -9,7 +9,7 @@
     >
 
     <ImageView
-        android:layout_width="5dp"
+        android:layout_width="@dimen/job_cell_left_strip_indicator_width"
         android:layout_height="match_parent"
         android:scaleType="fitXY"
         android:background="@color/requested_green"
@@ -32,6 +32,7 @@
             android:id="@+id/booking_entry_listing_message_title_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin_half"
             tools:visibility="visible"
             android:visibility="gone"
             />

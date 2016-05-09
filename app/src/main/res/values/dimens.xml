@@ -5,6 +5,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="row_margin">8dp</dimen>
+    <dimen name="default_margin_half">8dp</dimen>
     <dimen name="default_margin">16dp</dimen>
     <dimen name="default_margin_medium">24dp</dimen>
     <dimen name="extra_margin_xsmall">3dp</dimen>
@@ -89,6 +90,7 @@
     <dimen name="job_cell_min_height">128dp</dimen>
     <dimen name="job_cell_icon_size">40dp</dimen>
     <dimen name="job_cell_dot_size">8dp</dimen>
+    <dimen name="job_cell_left_strip_indicator_width">5dp</dimen>
 
     <!-- Dividers -->
     <dimen name="divider_height">1dp</dimen>
