@@ -23,7 +23,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.OnClick;
 
-public class PurchaseSuppliesConfirmationFragment extends PreActivationSetupStepFragment
+public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragment
 {
     @Bind(R.id.shipping_summary)
     SimpleContentLayout mShippingSummary;

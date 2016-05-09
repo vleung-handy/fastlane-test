@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:background="@color/handy_bg"
     android:orientation="vertical"
-    tools:context=".preactivation.PreActivationSetupActivity"
+    tools:context=".preactivation.PreActivationFlowActivity"
     >
 
     <com.handy.portal.ui.widget.HandyToolbar

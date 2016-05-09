@@ -10,18 +10,18 @@ import com.handy.portal.R;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 
-public class PreActivationSetupActivity extends BaseActivity
+public class PreActivationFlowActivity extends BaseActivity
 {
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_pre_activation_setup);
+        setContentView(R.layout.activity_pre_activation_flow);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         goToFirstStep();
     }
 
-    public void next(@Nullable final PreActivationSetupStepFragment fragment,
+    public void next(@Nullable final PreActivationFlowFragment fragment,
                      final boolean allowBackNavigation)
     {
         if (fragment != null)

@@ -22,7 +22,7 @@ import java.util.Map;
 
 import butterknife.Bind;
 
-public class PurchaseSuppliesPaymentFragment extends PreActivationSetupStepFragment
+public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
 {
     @Bind(R.id.credit_card_number_field)
     FormFieldTableRow mCreditCardNumberField;

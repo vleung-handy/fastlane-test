@@ -15,7 +15,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public abstract class PreActivationSetupStepFragment extends ActionBarFragment
+public abstract class PreActivationFlowFragment extends ActionBarFragment
 {
     @Bind(R.id.loading_overlay)
     View mLoadingOverlay;
@@ -69,15 +69,15 @@ public abstract class PreActivationSetupStepFragment extends ActionBarFragment
         // do nothing
     }
 
-    protected void next(@Nullable final PreActivationSetupStepFragment step)
+    protected void next(@Nullable final PreActivationFlowFragment step)
     {
         next(step, true);
     }
 
-    protected void next(@Nullable final PreActivationSetupStepFragment step,
+    protected void next(@Nullable final PreActivationFlowFragment step,
                         boolean allowBackNavigation)
     {
-        ((PreActivationSetupActivity) getActivity()).next(step, allowBackNavigation);
+        ((PreActivationFlowActivity) getActivity()).next(step, allowBackNavigation);
     }
 
     protected void showLoadingOverlay()
@@ -96,7 +96,7 @@ public abstract class PreActivationSetupStepFragment extends ActionBarFragment
                              @Nullable final ViewGroup container,
                              @Nullable final Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_pre_activation_setup, container, false);
+        View view = inflater.inflate(R.layout.fragment_pre_activation_flow, container, false);
         inflateMainContent(inflater, container, view);
 
         ButterKnife.bind(this, view);

@@ -6,7 +6,7 @@ import dagger.Module;
         library = true,
         complete = false,
         injects = {
-                PreActivationSetupActivity.class,
+                PreActivationFlowActivity.class,
                 PurchaseSuppliesFragment.class,
                 PurchaseSuppliesPaymentFragment.class,
                 PurchaseSuppliesConfirmationFragment.class,

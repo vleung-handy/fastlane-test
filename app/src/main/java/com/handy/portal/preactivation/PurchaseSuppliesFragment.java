@@ -10,7 +10,7 @@ import com.squareup.otto.Subscribe;
 
 import butterknife.Bind;
 
-public class PurchaseSuppliesFragment extends PreActivationSetupStepFragment
+public class PurchaseSuppliesFragment extends PreActivationFlowFragment
 {
     @Bind(R.id.cost_summary)
     SimpleContentLayout mCostSummary;
