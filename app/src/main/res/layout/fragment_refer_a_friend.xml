@@ -82,13 +82,12 @@
                     />
 
                 <TextView
-                    android:id="@+id/subtitle"
                     style="@style/TextView.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/default_margin"
                     android:gravity="center"
-                    tools:text="Give your friends $35 off their first Handy booking, and you get $35!"
+                    android:text="@string/referral_subtitle"
                     />
 
             </LinearLayout>
