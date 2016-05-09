@@ -9,6 +9,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import butterknife.Bind;
@@ -112,7 +113,9 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        setActionBarTitle(getTitle());
+        final boolean allowBackNavigation =
+                getArguments().getBoolean(BundleKeys.ALLOW_BACK_NAVIGATION, false);
+        setActionBar(getTitle(), allowBackNavigation);
     }
 
     private void inflateMainContent(final LayoutInflater inflater,

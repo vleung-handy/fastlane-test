@@ -36,6 +36,9 @@ public class PreActivationFlowActivity extends BaseActivity
                     getSupportFragmentManager().beginTransaction();
             if (allowBackNavigation)
             {
+                final Bundle arguments = fragment.getArguments();
+                arguments.putBoolean(BundleKeys.ALLOW_BACK_NAVIGATION, true);
+                fragment.setArguments(arguments);
                 fragmentTransaction.addToBackStack(null);
             }
             fragmentTransaction.setCustomAnimations(
