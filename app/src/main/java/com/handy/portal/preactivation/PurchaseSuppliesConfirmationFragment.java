@@ -167,6 +167,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
         }
         mEditAddressForm.setVisibility(View.VISIBLE);
         mShippingSummary.setVisibility(View.GONE);
+        mAddress1Field.requestFocus();
     }
 
     @Subscribe

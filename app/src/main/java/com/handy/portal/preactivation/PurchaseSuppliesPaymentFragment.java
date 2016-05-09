@@ -64,6 +64,7 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
     {
         super.onResume();
         bus.post(new RegionDefinitionEvent.RequestFormDefinitions(Country.US, getActivity()));
+        mCreditCardNumberField.requestFocus();
     }
 
     @Override
