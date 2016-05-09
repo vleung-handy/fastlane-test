@@ -55,7 +55,7 @@ public class Booking implements Comparable<Booking>, Serializable
     private Address mAddress;
 
     @SerializedName("is_requested")
-    private boolean mIsRequested;
+    private boolean mIsRequested; //true if a customer related to this proxy/booking requested the pro
     @SerializedName("payment_to_provider")
     private PaymentInfo mPaymentToProvider;
     @SerializedName("bonus")
@@ -105,14 +105,16 @@ public class Booking implements Comparable<Booking>, Serializable
 
     @SerializedName("region_id")
     private int mRegionId;
-    @SerializedName("display_attributes")
-    private DisplayAttributes mDisplayAttributes;
+
+    //TODO ugly, would rather have this be more generic
+    @SerializedName("provider_request_attributes")
+    private DisplayAttributes mProviderRequestDisplayAttributes;
 
     private List<BookingInstructionUpdateRequest> mCustomerPreferences;
 
-    public DisplayAttributes getDisplayAttributes()
+    public DisplayAttributes getProviderRequestDisplayAttributes()
     {
-        return mDisplayAttributes;
+        return mProviderRequestDisplayAttributes;
     }
 
     public int compareTo(@NonNull Booking other)

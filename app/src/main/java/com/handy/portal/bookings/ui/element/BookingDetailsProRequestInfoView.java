@@ -15,28 +15,28 @@ import butterknife.ButterKnife;
 
 /**
  * the view in the booking details that displays
- * a message title/body using the booking's display attributes model
+ * a message title/body using the booking's pro request display attributes model
  */
-public class BookingDetailsDisplayMessageView extends FrameLayout
+public class BookingDetailsProRequestInfoView extends FrameLayout
 {
     @Bind(R.id.booking_details_display_message_title_layout)
     BookingMessageTitleView mBookingMessageTitleView;
     @Bind(R.id.booking_details_display_message_body_text)
     TextView mMessageBodyText;
 
-    public BookingDetailsDisplayMessageView(final Context context)
+    public BookingDetailsProRequestInfoView(final Context context)
     {
         super(context);
         init();
     }
 
-    public BookingDetailsDisplayMessageView(final Context context, final AttributeSet attrs)
+    public BookingDetailsProRequestInfoView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
         init();
     }
 
-    public BookingDetailsDisplayMessageView(final Context context, final AttributeSet attrs,
+    public BookingDetailsProRequestInfoView(final Context context, final AttributeSet attrs,
                                             final int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
@@ -44,7 +44,7 @@ public class BookingDetailsDisplayMessageView extends FrameLayout
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public BookingDetailsDisplayMessageView(final Context context, final AttributeSet attrs,
+    public BookingDetailsProRequestInfoView(final Context context, final AttributeSet attrs,
                                             final int defStyleAttr, final int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);

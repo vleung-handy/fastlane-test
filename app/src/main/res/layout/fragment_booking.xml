@@ -46,7 +46,7 @@
                     android:layout_height="@dimen/on_my_way_booking_details_map_height"
                     />
 
-                <com.handy.portal.bookings.ui.element.BookingDetailsDisplayMessageView
+                <com.handy.portal.bookings.ui.element.BookingDetailsProRequestInfoView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:background="@color/white"

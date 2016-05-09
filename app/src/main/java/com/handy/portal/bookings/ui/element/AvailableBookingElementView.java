@@ -86,22 +86,22 @@ public class AvailableBookingElementView extends BookingElementView
             mFormattedDistanceText.setVisibility(View.VISIBLE);
         }
 
-        //Honor display attributes
-        Booking.DisplayAttributes displayAttributes = booking.getDisplayAttributes();
-        if(displayAttributes != null)
+        //Honor pro request display attributes
+        //TODO ugly! would be nice if the display attributes were generic but
+        //since there's not enough time to fully generalize this
+        //we're making it specific to pro request for now
+        Booking.DisplayAttributes proRequestDisplayAttributes = booking.getProviderRequestDisplayAttributes();
+        boolean isRequested = booking.isRequested();
+
+        if(isRequested && proRequestDisplayAttributes != null)
         {
-            if(displayAttributes.getListingTitle() != null)
+            if(proRequestDisplayAttributes.getListingTitle() != null)
             {
                 mBookingMessageTitleView
-                        .setBodyText(displayAttributes.getListingTitle())
+                        .setBodyText(proRequestDisplayAttributes.getListingTitle())
                         .setVisibility(View.VISIBLE); //the layout is GONE by default
             }
-        }
 
-        //apply styles specific to pro requested status
-        boolean isRequested = booking.isRequested();
-        if(isRequested)
-        {
             //show the green strip indicator on the left of this entry
             mLeftStripIndicator.setVisibility(View.VISIBLE);
         }
