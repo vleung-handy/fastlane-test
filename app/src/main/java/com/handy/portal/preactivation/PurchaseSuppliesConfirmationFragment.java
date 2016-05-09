@@ -156,6 +156,15 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
 
     private void showEditAddressForm()
     {
+        if (mProviderPersonalInfo != null)
+        {
+            final Address address = mProviderPersonalInfo.getAddress();
+            mAddress1Field.getValue().setText(address.getAddress1());
+            mAddress2Field.getValue().setText(address.getAddress2());
+            mCityField.getValue().setText(address.getCity());
+            mStateField.getValue().setText(address.getState());
+            mZipField.getValue().setText(address.getZip());
+        }
         mEditAddressForm.setVisibility(View.VISIBLE);
         mShippingSummary.setVisibility(View.GONE);
     }
