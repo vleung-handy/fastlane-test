@@ -732,7 +732,7 @@ public class BookingFragment extends TimerActionBarFragment
                 {
                     ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mBooking);
                     confirmBookingDialogFragment.setTargetFragment(BookingFragment.this, RequestCode.CONFIRM_REQUEST);
-                    FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, getActivity(), ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
+                    FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, this, ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
                 }
                 return true;
             }
