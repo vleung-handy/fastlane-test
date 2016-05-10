@@ -122,7 +122,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     }
 
     @Subscribe
-    void onReceiveProviderInfoSuccess(final ProfileEvent.ReceiveProviderProfileSuccess event)
+    public void onReceiveProviderInfoSuccess(final ProfileEvent.ReceiveProviderProfileSuccess event)
     {
         mProviderPersonalInfo = event.providerProfile.getProviderPersonalInfo();
         populateShippingSummary();
@@ -130,7 +130,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     }
 
     @Subscribe
-    void onReceiveProviderInfoError(final ProfileEvent.ReceiveProviderProfileError event)
+    public void onReceiveProviderInfoError(final ProfileEvent.ReceiveProviderProfileError event)
     {
         showEditAddressForm();
         mCancelEdit.setVisibility(View.GONE);
@@ -249,7 +249,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     }
 
     @Subscribe
-    void onReceiveProfileUpdateSuccess(final ProfileEvent.ReceiveProfileUpdateSuccess event)
+    public void onReceiveProfileUpdateSuccess(final ProfileEvent.ReceiveProfileUpdateSuccess event)
     {
         mProviderPersonalInfo = event.providerPersonalInfo;
         populateShippingSummary();
@@ -257,7 +257,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     }
 
     @Subscribe
-    void onReceiveOnboardingSuppliesSuccess(final HandyEvent.ReceiveOnboardingSuppliesSuccess event)
+    public void onReceiveOnboardingSuppliesSuccess(final HandyEvent.ReceiveOnboardingSuppliesSuccess event)
     {
         hideLoadingOverlay();
         showToast(R.string.supplies_will_arrive_after_activation);
@@ -265,14 +265,14 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     }
 
     @Subscribe
-    void onReceiveProfileUpdateError(final ProfileEvent.ReceiveProfileUpdateError event)
+    public void onReceiveProfileUpdateError(final ProfileEvent.ReceiveProfileUpdateError event)
     {
         hideLoadingOverlay();
         showError(event.error.getMessage());
     }
 
     @Subscribe
-    void onReceiveOnboardingSuppliesError(final HandyEvent.ReceiveOnboardingSuppliesError event)
+    public void onReceiveOnboardingSuppliesError(final HandyEvent.ReceiveOnboardingSuppliesError event)
     {
         hideLoadingOverlay();
         showError(event.error.getMessage());

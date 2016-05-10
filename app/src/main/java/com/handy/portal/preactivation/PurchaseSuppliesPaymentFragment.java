@@ -160,13 +160,13 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
     }
 
     @Subscribe
-    void onReceiveStripeChargeTokenSuccess(final StripeEvent.ReceiveStripeChargeTokenSuccess event)
+    public void onReceiveStripeChargeTokenSuccess(final StripeEvent.ReceiveStripeChargeTokenSuccess event)
     {
         bus.post(new PaymentEvent.RequestUpdateCreditCard(event.getToken()));
     }
 
     @Subscribe
-    void onReceiveUpdateCreditCardSuccess(final PaymentEvent.ReceiveUpdateCreditCardSuccess event)
+    public void onReceiveUpdateCreditCardSuccess(final PaymentEvent.ReceiveUpdateCreditCardSuccess event)
     {
         hideLoadingOverlay();
         mCreditCardNumberField.getValue().setText(null);
@@ -177,14 +177,14 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
     }
 
     @Subscribe
-    void onReceiveStripeChargeTokenError(final StripeEvent.ReceiveStripeChargeTokenError event)
+    public void onReceiveStripeChargeTokenError(final StripeEvent.ReceiveStripeChargeTokenError event)
     {
         hideLoadingOverlay();
         showError(event.getError().getMessage());
     }
 
     @Subscribe
-    void onReceiveUpdateCreditCardError(final PaymentEvent.ReceiveUpdateCreditCardError event)
+    public void onReceiveUpdateCreditCardError(final PaymentEvent.ReceiveUpdateCreditCardError event)
     {
         hideLoadingOverlay();
         showError(event.error.getMessage());
