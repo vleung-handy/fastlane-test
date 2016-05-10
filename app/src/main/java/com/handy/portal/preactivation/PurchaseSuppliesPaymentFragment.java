@@ -10,6 +10,8 @@ import com.handy.portal.constant.Country;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.event.StripeEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.OnboardingSuppliesLog;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
 import com.handy.portal.payments.PaymentEvent;
@@ -76,6 +78,9 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
                 CurrencyUtils.formatPriceWithoutCents(cost.getAmount(), cost.getCurrencySymbol()));
         mOrderSummary.setContent(getString(R.string.supply_starter_kit), orderTotalFormatted)
                 .setImage(getResources().getDrawable(R.drawable.img_supplies));
+
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.Types.PAYMENT_SCREEN_SHOWN)));
     }
 
     @Subscribe
@@ -129,6 +134,9 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
     @Override
     protected void onPrimaryButtonClicked()
     {
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.Types.CONTINUE_TO_CONFIRMATION_SELECTED)));
+
         UIUtils.dismissKeyboard(getActivity());
 
         if (!validate())
@@ -145,6 +153,8 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
                 mSecurityCodeField.getValue().getText().toString()
         );
         bus.post(new StripeEvent.RequestStripeChargeToken(mCard, Country.US));
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.ServerTypes.GET_STRIPE_TOKEN.submitted())));
     }
 
     private boolean validate()
@@ -162,12 +172,18 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
     @Subscribe
     public void onReceiveStripeChargeTokenSuccess(final StripeEvent.ReceiveStripeChargeTokenSuccess event)
     {
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.ServerTypes.GET_STRIPE_TOKEN.success())));
         bus.post(new PaymentEvent.RequestUpdateCreditCard(event.getToken()));
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.ServerTypes.UPDATE_CREDIT_CARD.submitted())));
     }
 
     @Subscribe
     public void onReceiveUpdateCreditCardSuccess(final PaymentEvent.ReceiveUpdateCreditCardSuccess event)
     {
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.ServerTypes.UPDATE_CREDIT_CARD.success())));
         hideLoadingOverlay();
         mCreditCardNumberField.getValue().setText(null);
         mExpirationDateField.getMonthValue().setText(null);
@@ -179,6 +195,8 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
     @Subscribe
     public void onReceiveStripeChargeTokenError(final StripeEvent.ReceiveStripeChargeTokenError event)
     {
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.ServerTypes.GET_STRIPE_TOKEN.error())));
         hideLoadingOverlay();
         showError(event.getError().getMessage());
     }
@@ -186,6 +204,8 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
     @Subscribe
     public void onReceiveUpdateCreditCardError(final PaymentEvent.ReceiveUpdateCreditCardError event)
     {
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.ServerTypes.UPDATE_CREDIT_CARD.error())));
         hideLoadingOverlay();
         showError(event.error.getMessage());
     }

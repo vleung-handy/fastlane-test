@@ -10,6 +10,8 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.OnboardingSuppliesLog;
 import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
 import com.handy.portal.model.onboarding.OnboardingSuppliesSection;
 import com.handy.portal.ui.view.SimpleContentLayout;
@@ -21,6 +23,8 @@ import butterknife.Bind;
 
 public class PurchaseSuppliesFragment extends PreActivationFlowFragment
 {
+    private static final int TERMINATION_DELAY_MILLIS = 500;
+
     @Bind(R.id.cost_summary)
     SimpleContentLayout mCostSummary;
     @Bind(R.id.delivery_summary)
@@ -73,7 +77,19 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
             }
         }
         mProductsSummary.setContent(productsSection.getTitle(), productsStringBuilder.toString())
-                .collapse(getString(R.string.see_products));
+                .collapse(getString(R.string.see_products), new Runnable()
+                {
+
+                    @Override
+                    public void run()
+                    {
+                        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                                OnboardingSuppliesLog.Types.PRODUCTS_LIST_SHOWN)));
+                    }
+                });
+
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.Types.LANDING_SCREEN_SHOWN)));
     }
 
     @Override
@@ -115,12 +131,16 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
     @Override
     protected void onPrimaryButtonClicked()
     {
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.Types.PURCHASE_SUPPLIES_SELECTED)));
         next(PurchaseSuppliesPaymentFragment.newInstance(mOnboardingSuppliesInfo));
     }
 
     @Override
     protected void onSecondaryButtonClicked()
     {
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.Types.DECLINE_SUPPLIES_SELECTED)));
         final DeclineSuppliesDialogFragment fragment = DeclineSuppliesDialogFragment.newInstance();
         fragment.setTargetFragment(this, RequestCode.DECLINE_SUPPLIES);
         FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), null);
@@ -134,18 +154,25 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
             switch (requestCode)
             {
                 case RequestCode.DECLINE_SUPPLIES:
-                    bus.post(new HandyEvent.RequestOnboardingSupplies(false));
-                    // no need to wait for response
-                    new Handler().postDelayed(new Runnable()
-                    {
-                        @Override
-                        public void run()
-                        {
-                            terminate();
-                        }
-                    }, 500);
+                    declineSupplies();
                     break;
             }
         }
+    }
+
+    private void declineSupplies()
+    {
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.Types.DECLINES_SUPPLIES_CONFIRMED)));
+        bus.post(new HandyEvent.RequestOnboardingSupplies(false));
+        // no need to wait for response
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                terminate();
+            }
+        }, TERMINATION_DELAY_MILLIS);
     }
 }
