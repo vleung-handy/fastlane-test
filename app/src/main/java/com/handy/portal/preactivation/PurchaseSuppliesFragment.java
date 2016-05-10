@@ -23,6 +23,8 @@ import butterknife.Bind;
 
 public class PurchaseSuppliesFragment extends PreActivationFlowFragment
 {
+    private static final int TERMINATION_DELAY_MILLIS = 500;
+
     @Bind(R.id.cost_summary)
     SimpleContentLayout mCostSummary;
     @Bind(R.id.delivery_summary)
@@ -171,6 +173,6 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
             {
                 terminate();
             }
-        }, 500);
+        }, TERMINATION_DELAY_MILLIS);
     }
 }

@@ -153,6 +153,8 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
                 mSecurityCodeField.getValue().getText().toString()
         );
         bus.post(new StripeEvent.RequestStripeChargeToken(mCard, Country.US));
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.ServerTypes.GET_STRIPE_TOKEN.submitted())));
     }
 
     private boolean validate()
@@ -170,12 +172,18 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
     @Subscribe
     public void onReceiveStripeChargeTokenSuccess(final StripeEvent.ReceiveStripeChargeTokenSuccess event)
     {
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.ServerTypes.GET_STRIPE_TOKEN.success())));
         bus.post(new PaymentEvent.RequestUpdateCreditCard(event.getToken()));
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.ServerTypes.UPDATE_CREDIT_CARD.submitted())));
     }
 
     @Subscribe
     public void onReceiveUpdateCreditCardSuccess(final PaymentEvent.ReceiveUpdateCreditCardSuccess event)
     {
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.ServerTypes.UPDATE_CREDIT_CARD.success())));
         hideLoadingOverlay();
         mCreditCardNumberField.getValue().setText(null);
         mExpirationDateField.getMonthValue().setText(null);
@@ -187,6 +195,8 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
     @Subscribe
     public void onReceiveStripeChargeTokenError(final StripeEvent.ReceiveStripeChargeTokenError event)
     {
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.ServerTypes.GET_STRIPE_TOKEN.error())));
         hideLoadingOverlay();
         showError(event.getError().getMessage());
     }
@@ -194,6 +204,8 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
     @Subscribe
     public void onReceiveUpdateCreditCardError(final PaymentEvent.ReceiveUpdateCreditCardError event)
     {
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.ServerTypes.UPDATE_CREDIT_CARD.error())));
         hideLoadingOverlay();
         showError(event.error.getMessage());
     }

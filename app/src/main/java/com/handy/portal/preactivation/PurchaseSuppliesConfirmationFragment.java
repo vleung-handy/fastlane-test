@@ -257,26 +257,36 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
                         mZipField.getValue().getText()
                 ));
                 showLoadingOverlay();
+                bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                        OnboardingSuppliesLog.ServerTypes.UPDATE_ADDRESS.submitted())));
             }
         }
         else
         {
             bus.post(new HandyEvent.RequestOnboardingSupplies(true));
             showLoadingOverlay();
+            bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                    OnboardingSuppliesLog.ServerTypes.REQUEST_SUPPLIES.submitted())));
         }
     }
 
     @Subscribe
     public void onReceiveProfileUpdateSuccess(final ProfileEvent.ReceiveProfileUpdateSuccess event)
     {
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.ServerTypes.UPDATE_ADDRESS.success())));
         mProviderPersonalInfo = event.providerPersonalInfo;
         populateShippingSummary();
         bus.post(new HandyEvent.RequestOnboardingSupplies(true));
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.ServerTypes.REQUEST_SUPPLIES.submitted())));
     }
 
     @Subscribe
     public void onReceiveOnboardingSuppliesSuccess(final HandyEvent.ReceiveOnboardingSuppliesSuccess event)
     {
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.ServerTypes.REQUEST_SUPPLIES.success())));
         hideLoadingOverlay();
         final TransientOverlayDialogFragment fragment = TransientOverlayDialogFragment.newInstance(
                 R.anim.overlay_fade_in_then_out,
@@ -297,6 +307,8 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     @Subscribe
     public void onReceiveProfileUpdateError(final ProfileEvent.ReceiveProfileUpdateError event)
     {
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.ServerTypes.UPDATE_ADDRESS.error())));
         hideLoadingOverlay();
         showError(event.error.getMessage());
     }
@@ -304,6 +316,8 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     @Subscribe
     public void onReceiveOnboardingSuppliesError(final HandyEvent.ReceiveOnboardingSuppliesError event)
     {
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.ServerTypes.REQUEST_SUPPLIES.error())));
         hideLoadingOverlay();
         showError(event.error.getMessage());
     }

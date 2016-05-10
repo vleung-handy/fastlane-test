@@ -4,6 +4,7 @@ public class OnboardingSuppliesLog extends EventLog
 {
     private static final String EVENT_CONTEXT = "onboarding_supplies";
 
+
     public static class Types
     {
         public static final String LANDING_SCREEN_SHOWN = "landing_screen_shown";
@@ -16,6 +17,34 @@ public class OnboardingSuppliesLog extends EventLog
         public static final String CONFIRMATION_SCREEN_SHOWN = "confirmation_screen_shown";
         public static final String EDIT_ADDRESS_SHOWN = "edit_address_shown";
         public static final String CONFIRM_PURCHASE_SELECTED = "confirm_purchase_selected";
+    }
+
+
+    public enum ServerTypes
+    {
+        REQUEST_SUPPLIES,
+        GET_STRIPE_TOKEN,
+        UPDATE_CREDIT_CARD,
+        UPDATE_ADDRESS,;
+
+        private static final String SUFFIX_SUBMITTED = "_submitted";
+        private static final String SUFFIX_SUCCESS = "_success";
+        private static final String SUFFIX_ERROR = "_error";
+
+        public String submitted()
+        {
+            return this.toString().toUpperCase() + SUFFIX_SUBMITTED;
+        }
+
+        public String success()
+        {
+            return this.toString().toUpperCase() + SUFFIX_SUCCESS;
+        }
+
+        public String error()
+        {
+            return this.toString().toUpperCase() + SUFFIX_ERROR;
+        }
     }
 
     public OnboardingSuppliesLog(final String eventType)
