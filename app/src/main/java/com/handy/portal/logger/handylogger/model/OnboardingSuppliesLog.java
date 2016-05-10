@@ -33,17 +33,17 @@ public class OnboardingSuppliesLog extends EventLog
 
         public String submitted()
         {
-            return this.toString().toUpperCase() + SUFFIX_SUBMITTED;
+            return this.toString().toLowerCase() + SUFFIX_SUBMITTED;
         }
 
         public String success()
         {
-            return this.toString().toUpperCase() + SUFFIX_SUCCESS;
+            return this.toString().toLowerCase() + SUFFIX_SUCCESS;
         }
 
         public String error()
         {
-            return this.toString().toUpperCase() + SUFFIX_ERROR;
+            return this.toString().toLowerCase() + SUFFIX_ERROR;
         }
     }
 
