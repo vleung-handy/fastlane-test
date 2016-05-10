@@ -12,6 +12,8 @@ import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.OnboardingSuppliesLog;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.definitions.FieldDefinition;
@@ -106,6 +108,9 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
                 CurrencyUtils.formatPriceWithoutCents(cost.getAmount(), cost.getCurrencySymbol()));
         mOrderSummary.setContent(getString(R.string.supply_starter_kit), orderTotalFormatted)
                 .setImage(getResources().getDrawable(R.drawable.img_supplies));
+
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.Types.CONFIRMATION_SCREEN_SHOWN)));
     }
 
     @Override
@@ -175,6 +180,9 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
         mEditAddressForm.setVisibility(View.VISIBLE);
         mShippingSummary.setVisibility(View.GONE);
         mAddress1Field.requestFocus();
+
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.Types.EDIT_ADDRESS_SHOWN)));
     }
 
     @Subscribe
@@ -230,6 +238,9 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     @Override
     protected void onPrimaryButtonClicked()
     {
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.Types.CONFIRM_PURCHASE_SELECTED)));
+
         UIUtils.dismissKeyboard(getActivity());
 
         if (mEditAddressForm.getVisibility() == View.VISIBLE)

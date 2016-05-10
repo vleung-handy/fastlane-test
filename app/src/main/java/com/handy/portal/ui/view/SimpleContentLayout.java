@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -33,11 +34,18 @@ public class SimpleContentLayout extends FrameLayout
     @Bind(R.id.content_holder)
     View mContentHolder;
 
+    @Nullable
+    private Runnable mExpandCallback;
+
     @OnClick(R.id.expand_button)
     void onExpandButtonClicked()
     {
         mContentHolder.setVisibility(VISIBLE);
         mExpandButton.setVisibility(GONE);
+        if (mExpandCallback != null)
+        {
+            mExpandCallback.run();
+        }
     }
 
     public SimpleContentLayout(final Context context)
@@ -94,8 +102,10 @@ public class SimpleContentLayout extends FrameLayout
         return this;
     }
 
-    public SimpleContentLayout collapse(final String expandButtonText)
+    public SimpleContentLayout collapse(final String expandButtonText,
+                                        @Nullable final Runnable expandCallback)
     {
+        mExpandCallback = expandCallback;
         mExpandButton.setText(expandButtonText);
         mExpandButton.setVisibility(VISIBLE);
         mContentHolder.setVisibility(GONE);

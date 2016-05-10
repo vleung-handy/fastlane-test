@@ -10,6 +10,8 @@ import com.handy.portal.constant.Country;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.event.StripeEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.OnboardingSuppliesLog;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
 import com.handy.portal.payments.PaymentEvent;
@@ -76,6 +78,9 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
                 CurrencyUtils.formatPriceWithoutCents(cost.getAmount(), cost.getCurrencySymbol()));
         mOrderSummary.setContent(getString(R.string.supply_starter_kit), orderTotalFormatted)
                 .setImage(getResources().getDrawable(R.drawable.img_supplies));
+
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.Types.PAYMENT_SCREEN_SHOWN)));
     }
 
     @Subscribe
@@ -129,6 +134,9 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
     @Override
     protected void onPrimaryButtonClicked()
     {
+        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
+                OnboardingSuppliesLog.Types.CONTINUE_TO_CONFIRMATION_SELECTED)));
+
         UIUtils.dismissKeyboard(getActivity());
 
         if (!validate())
