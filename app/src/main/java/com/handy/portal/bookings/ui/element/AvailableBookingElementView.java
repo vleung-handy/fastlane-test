@@ -4,7 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -33,8 +33,8 @@ public class AvailableBookingElementView extends BookingElementView
     @Bind(R.id.booking_entry_partner_text)
     TextView mPartnerText;
 
-    @Bind(R.id.booking_entry_requested_indicator_layout)
-    LinearLayout mRequestedIndicatorLayout;
+    @Bind(R.id.booking_entry_listing_message_title_view)
+    BookingMessageTitleView mBookingMessageTitleView;
 
     @Bind(R.id.booking_entry_start_date_text)
     TextView mStartTimeText;
@@ -45,10 +45,11 @@ public class AvailableBookingElementView extends BookingElementView
     @Bind(R.id.booking_entry_distance_text)
     TextView mFormattedDistanceText;
 
+    @Bind(R.id.booking_list_entry_left_strip_indicator)
+    ImageView mLeftStripIndicator;
+
     public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent)
     {
-        boolean isRequested = booking.isRequested();
-
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null)
         {
@@ -93,8 +94,25 @@ public class AvailableBookingElementView extends BookingElementView
             mFormattedDistanceText.setVisibility(View.VISIBLE);
         }
 
-        //Requested Provider
-        mRequestedIndicatorLayout.setVisibility(isRequested ? View.VISIBLE : View.GONE);
+        //Honor pro request display attributes
+        //TODO ugly! would be nice if the display attributes were generic but
+        //since there's not enough time to fully generalize this
+        //we're making it specific to pro request for now
+        Booking.DisplayAttributes proRequestDisplayAttributes = booking.getProviderRequestDisplayAttributes();
+        boolean isRequested = booking.isRequested();
+
+        if(isRequested && proRequestDisplayAttributes != null)
+        {
+            if(proRequestDisplayAttributes.getListingTitle() != null)
+            {
+                mBookingMessageTitleView
+                        .setBodyText(proRequestDisplayAttributes.getListingTitle())
+                        .setVisibility(View.VISIBLE); //the layout is GONE by default
+            }
+
+            //show the green strip indicator on the left of this entry
+            mLeftStripIndicator.setVisibility(View.VISIBLE);
+        }
 
         //Partner
         setPartnerText(booking.getPartner());
@@ -118,7 +136,7 @@ public class AvailableBookingElementView extends BookingElementView
             mPartnerText.setVisibility(View.VISIBLE);
 
             // if the partner text is present, "you're requested" should not show up
-            mRequestedIndicatorLayout.setVisibility(View.GONE);
+            mBookingMessageTitleView.setVisibility(View.GONE);
         }
         else
         {

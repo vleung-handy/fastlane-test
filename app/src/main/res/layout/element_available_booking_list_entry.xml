@@ -1,55 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/background_list_entry"
     android:minHeight="@dimen/job_cell_min_height"
-    android:padding="@dimen/default_padding"
     >
 
+    <ImageView
+        android:layout_width="@dimen/job_cell_left_strip_indicator_width"
+        android:layout_height="match_parent"
+        android:scaleType="fitXY"
+        android:background="@color/requested_green"
+        android:id="@+id/booking_list_entry_left_strip_indicator"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
+
     <LinearLayout
+        android:padding="@dimen/default_padding"
         android:id="@+id/booking_entry_details_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/booking_entry_payment_layout"
-        android:layout_toStartOf="@+id/booking_entry_payment_layout"
+        android:layout_gravity="center_vertical"
         android:gravity="center_vertical"
         android:orientation="vertical"
         >
 
-        <LinearLayout
-            android:id="@+id/booking_entry_requested_indicator_layout"
+        <com.handy.portal.bookings.ui.element.BookingMessageTitleView
+            android:id="@+id/booking_entry_listing_message_title_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:layout_marginBottom="@dimen/default_margin_half"
             tools:visibility="visible"
-            >
-
-            <ImageView
-                android:layout_width="@dimen/job_cell_dot_size"
-                android:layout_height="@dimen/job_cell_dot_size"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="@dimen/extra_margin"
-                android:layout_marginRight="@dimen/extra_margin"
-                android:src="@drawable/circle_green"
-                />
-
-            <TextView
-                style="@style/TextView.XSmall.Bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/youre_requested"
-                android:textAllCaps="true"
-                android:textColor="@color/cleaner_green"
-                tools:text="You're Requested"
-                />
-
-        </LinearLayout>
+            android:visibility="gone"
+            />
 
         <TextView
             android:id="@+id/booking_entry_partner_text"
@@ -119,12 +105,12 @@
     </LinearLayout>
 
     <LinearLayout
+        android:padding="@dimen/default_padding"
         android:id="@+id/booking_entry_payment_layout"
-        android:layout_width="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
         android:layout_marginLeft="@dimen/default_margin"
         android:layout_marginStart="@dimen/default_margin"
         android:gravity="center_vertical|end"
@@ -159,4 +145,4 @@
             />
     </LinearLayout>
 
-</RelativeLayout>
+</LinearLayout>

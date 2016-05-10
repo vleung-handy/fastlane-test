@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/booking_details_display_message_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/default_margin"
+    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <com.handy.portal.bookings.ui.element.BookingMessageTitleView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin_half"
+        android:id="@+id/booking_details_display_message_title_layout"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/booking_details_display_message_body_text"
+        style="@style/TextView.Medium"
+        tools:text="One of your past customers requested you for this job. If the match fails for any reason, we'll try to replace it with a similar job."
+        />
+
+
+</LinearLayout>

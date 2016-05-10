@@ -30,6 +30,7 @@ import com.handy.portal.bookings.constant.BookingActionButtonType;
 import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.element.BookingDetailsJobInstructionsSectionView;
+import com.handy.portal.bookings.ui.element.BookingDetailsProRequestInfoView;
 import com.handy.portal.bookings.ui.element.BookingMapView;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
@@ -78,6 +79,8 @@ public class BookingFragment extends TimerActionBarFragment
     @Inject
     PrefsManager mPrefsManager;
 
+    @Bind(R.id.booking_details_display_message_layout)
+    BookingDetailsProRequestInfoView mBookingDetailsProRequestInfoView;
     @Bind(R.id.booking_scroll_view)
     ScrollView mScrollView;
     @Bind(R.id.booking_no_show_banner_text)
@@ -188,6 +191,32 @@ public class BookingFragment extends TimerActionBarFragment
         mBookingMapView.disableParentScrolling(mScrollView);
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
+
+        updateDisplayWithBookingProRequestDisplayAttributes();
+    }
+
+    /**
+     * shows the booking details message view
+     * with the message in the booking's pro request display model
+     * if the message is present and someone in the proxy/booking requested the pro
+     *
+     * TODO ugly! would be nice if the display attributes were generic but
+     * since there's not enough time to fully generalize this
+     * we're making it specific to pro request for now
+     */
+    private void updateDisplayWithBookingProRequestDisplayAttributes()
+    {
+        if(mBooking.isRequested()) //ideally should be decoupled
+        {
+            Booking.DisplayAttributes displayAttributes = mBooking.getProviderRequestDisplayAttributes();
+            if (displayAttributes != null
+                    && (displayAttributes.getDetailsBody() != null
+                    || displayAttributes.getDetailsTitle() != null))
+            {
+                mBookingDetailsProRequestInfoView.setVisibility(View.VISIBLE); //GONE by default
+                mBookingDetailsProRequestInfoView.setDisplayModel(displayAttributes);
+            }
+        }
     }
 
     @Override

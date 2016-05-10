@@ -92,6 +92,7 @@
     <dimen name="job_cell_min_height">128dp</dimen>
     <dimen name="job_cell_icon_size">40dp</dimen>
     <dimen name="job_cell_dot_size">8dp</dimen>
+    <dimen name="job_cell_left_strip_indicator_width">5dp</dimen>
 
     <!-- Dividers -->
     <dimen name="divider_height">1dp</dimen>

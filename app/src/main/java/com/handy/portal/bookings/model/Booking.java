@@ -55,7 +55,7 @@ public class Booking implements Comparable<Booking>, Serializable
     private Address mAddress;
 
     @SerializedName("is_requested")
-    private boolean mIsRequested;
+    private boolean mIsRequested; //true if a customer related to this proxy/booking requested the pro
     @SerializedName("payment_to_provider")
     private PaymentInfo mPaymentToProvider;
     @SerializedName("bonus")
@@ -106,7 +106,16 @@ public class Booking implements Comparable<Booking>, Serializable
     @SerializedName("region_id")
     private int mRegionId;
 
+    //TODO ugly, would rather have this be more generic
+    @SerializedName("provider_request_attributes")
+    private DisplayAttributes mProviderRequestDisplayAttributes;
+
     private List<BookingInstructionUpdateRequest> mCustomerPreferences;
+
+    public DisplayAttributes getProviderRequestDisplayAttributes()
+    {
+        return mProviderRequestDisplayAttributes;
+    }
 
     public int compareTo(@NonNull Booking other)
     {
@@ -412,6 +421,31 @@ public class Booking implements Comparable<Booking>, Serializable
         UNAVAILABLE,
     }
 
+    public static class DisplayAttributes
+    {
+        @SerializedName("listing_title")
+        private String mListingTitle;
+        @SerializedName("details_title")
+        private String mDetailsTitle;
+        @SerializedName("details_body")
+        private String mDetailsBody;
+
+
+        public String getListingTitle()
+        {
+            return mListingTitle;
+        }
+
+        public String getDetailsTitle()
+        {
+            return mDetailsTitle;
+        }
+
+        public String getDetailsBody()
+        {
+            return mDetailsBody;
+        }
+    }
 
     public enum ArrivalTimeOption //TODO: better system to enforce values in sync with server?
     {
