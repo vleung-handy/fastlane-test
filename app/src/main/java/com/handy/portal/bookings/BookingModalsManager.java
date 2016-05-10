@@ -28,33 +28,34 @@ public class BookingModalsManager
         mPrefsManager = prefsManager;
     }
 
-    public BookingsForDayModalsManager getBookingsForDayModalsManager(
-            @NonNull BookingsForDayModalsManager.BookingsForDayModalType modalType,
-            @NonNull Date bookingDay)
+    public BookingsForDaysAheadModalsManager getBookingsForDayModalsManager(
+            @NonNull BookingsForDaysAheadModalsManager.BookingsForDaysAheadModalType modalType,
+            @NonNull Date bookingsDay)
     {
-        return new BookingsForDayModalsManager(modalType, bookingDay, mPrefsManager);
+        Date currentDate = new Date();
+        int numDaysAhead = DateTimeUtils.daysBetween(currentDate, bookingsDay) + 1;
+        return new BookingsForDaysAheadModalsManager(modalType, numDaysAhead, mPrefsManager);
     }
 
-    public static class BookingsForDayModalsManager
+    public static class BookingsForDaysAheadModalsManager
     {
-        public enum BookingsForDayModalType
+        public enum BookingsForDaysAheadModalType
         {
-            BOOKINGS_FOR_DAY_UNLOCKED_MODAL,
-            BOOKINGS_FOR_DAY_UNLOCKED_TRIAL_MODAL
+            BOOKINGS_FOR_DAYS_AHEAD_UNLOCKED_MODAL,
+            BOOKINGS_FOR_DAYS_AHEAD_UNLOCKED_TRIAL_MODAL
         }
 
-        private final BookingsForDayModalType mBookingsForDayModalType;
-        private final Date mBookingDay;
+        private final BookingsForDaysAheadModalType mBookingsForDaysAheadModalType;
+        private final int mNumDaysAhead;
         private final PrefsManager mPrefsManager;
-        private static final String MODAL_SHOWN_PREFS_KEY_SUFFIX = "_SHOWN";
 
-        public BookingsForDayModalsManager(
-                @NonNull BookingsForDayModalType bookingsForDayModalType,
-                @NonNull Date bookingDay,
+        public BookingsForDaysAheadModalsManager(
+                @NonNull BookingsForDaysAheadModalType bookingsForDaysAheadModalType,
+                @NonNull int numDaysAhead,
                 @NonNull PrefsManager prefsManager)
         {
-            mBookingsForDayModalType = bookingsForDayModalType;
-            mBookingDay = bookingDay;
+            mBookingsForDaysAheadModalType = bookingsForDaysAheadModalType;
+            mNumDaysAhead = numDaysAhead;
             mPrefsManager = prefsManager;
         }
 
@@ -66,8 +67,7 @@ public class BookingModalsManager
 
         private String getModalShownPrefsKey()
         {
-            String datePrefsKey = DateTimeUtils.NUMERIC_YEAR_MONTH_DATE_FORMATTER.format(mBookingDay);
-            return datePrefsKey + "_" + mBookingsForDayModalType + MODAL_SHOWN_PREFS_KEY_SUFFIX;
+            return mNumDaysAhead + "_DAYS_AHEAD_" + mBookingsForDaysAheadModalType + "_SHOWN";
         }
 
         public boolean bookingsForDayModalPreviouslyShown()
