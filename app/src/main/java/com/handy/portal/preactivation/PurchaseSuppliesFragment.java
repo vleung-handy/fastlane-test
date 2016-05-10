@@ -3,6 +3,7 @@ package com.handy.portal.preactivation;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 
 import com.handy.portal.R;
@@ -13,7 +14,6 @@ import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
 import com.handy.portal.model.onboarding.OnboardingSuppliesSection;
 import com.handy.portal.ui.view.SimpleContentLayout;
 import com.handy.portal.util.FragmentUtils;
-import com.squareup.otto.Subscribe;
 
 import java.util.List;
 
@@ -134,24 +134,18 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
             switch (requestCode)
             {
                 case RequestCode.DECLINE_SUPPLIES:
-                    showLoadingOverlay();
                     bus.post(new HandyEvent.RequestOnboardingSupplies(false));
+                    // no need to wait for response
+                    new Handler().postDelayed(new Runnable()
+                    {
+                        @Override
+                        public void run()
+                        {
+                            terminate();
+                        }
+                    }, 500);
                     break;
             }
         }
-    }
-
-    @Subscribe
-    void onReceiveOnboardingSuppliesSuccess(final HandyEvent.ReceiveOnboardingSuppliesSuccess event)
-    {
-        hideLoadingOverlay();
-        terminate();
-    }
-
-    @Subscribe
-    void onReceiveOnboardingSuppliesError(final HandyEvent.ReceiveOnboardingSuppliesError event)
-    {
-        hideLoadingOverlay();
-        terminate();
     }
 }
