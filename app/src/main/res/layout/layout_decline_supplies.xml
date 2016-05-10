@@ -13,7 +13,7 @@
     >
 
     <TextView
-        style="@style/TextView.XLarge.Bold"
+        style="@style/TextView.Large.Bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/default_margin"
@@ -22,7 +22,7 @@
         />
 
     <TextView
-        style="@style/TextView.Large"
+        style="@style/TextView.Medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/default_margin"
