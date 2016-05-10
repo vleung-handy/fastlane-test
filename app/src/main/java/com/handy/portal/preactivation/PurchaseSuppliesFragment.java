@@ -166,6 +166,8 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
                 OnboardingSuppliesLog.Types.DECLINE_SUPPLIES_CONFIRMED)));
         bus.post(new HandyEvent.RequestOnboardingSupplies(false));
         // no need to wait for response
+        bus.post(new LogEvent.AddLogEvent(
+                new OnboardingSuppliesLog.RequestSupplies.Submitted(false)));
         new Handler().postDelayed(new Runnable()
         {
             @Override

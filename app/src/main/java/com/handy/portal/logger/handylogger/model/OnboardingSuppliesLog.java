@@ -1,5 +1,7 @@
 package com.handy.portal.logger.handylogger.model;
 
+import com.google.gson.annotations.SerializedName;
+
 public class OnboardingSuppliesLog extends EventLog
 {
     private static final String EVENT_CONTEXT = "onboarding_supplies";
@@ -22,14 +24,13 @@ public class OnboardingSuppliesLog extends EventLog
 
     public enum ServerTypes
     {
-        REQUEST_SUPPLIES,
         GET_STRIPE_TOKEN,
         UPDATE_CREDIT_CARD,
         UPDATE_ADDRESS,;
 
-        private static final String SUFFIX_SUBMITTED = "_submitted";
-        private static final String SUFFIX_SUCCESS = "_success";
-        private static final String SUFFIX_ERROR = "_error";
+        public static final String SUFFIX_SUBMITTED = "_submitted";
+        public static final String SUFFIX_SUCCESS = "_success";
+        public static final String SUFFIX_ERROR = "_error";
 
         public String submitted()
         {
@@ -44,6 +45,50 @@ public class OnboardingSuppliesLog extends EventLog
         public String error()
         {
             return this.toString().toLowerCase() + SUFFIX_ERROR;
+        }
+    }
+
+
+    public static class RequestSupplies extends OnboardingSuppliesLog
+    {
+        private static final String EVENT_TYPE = "request_supplies";
+
+        @SerializedName("requested")
+        protected boolean mRequested;
+
+        public RequestSupplies(final String suffix)
+        {
+            super(EVENT_TYPE + suffix);
+        }
+
+        public static class Submitted extends RequestSupplies
+        {
+
+            public Submitted(final boolean requested)
+            {
+                super(ServerTypes.SUFFIX_SUBMITTED);
+                mRequested = requested;
+            }
+        }
+
+
+        public static class Success extends RequestSupplies
+        {
+            public Success(final boolean requested)
+            {
+                super(ServerTypes.SUFFIX_SUCCESS);
+                mRequested = requested;
+            }
+        }
+
+
+        public static class Error extends RequestSupplies
+        {
+            public Error(final boolean requested)
+            {
+                super(ServerTypes.SUFFIX_ERROR);
+                mRequested = requested;
+            }
         }
     }
 
