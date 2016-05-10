@@ -479,7 +479,7 @@
     <string name="i_have_my_own_supplies">I Have My Own Supplies</string>
     <string name="are_you_sure_no_kit">Are you sure you don’t want to order the kit?</string>
     <string name="supplies_expectation">Handy customers expect you to arrive prepared with supplies to get the job done right.</string>
-    <string name="supplies_will_arrive_after_activation">Your supplies will arrive after activation.</string>
     <string name="loading">Loading…</string>
+    <string name="supplies_ordered">Supplies ordered!</string>
 
 </resources>

@@ -1,6 +1,7 @@
 package com.handy.portal.preactivation;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.view.View;
 
@@ -16,9 +17,11 @@ import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
 import com.handy.portal.payments.model.PaymentInfo;
+import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.handy.portal.ui.view.FormFieldTableRow;
 import com.handy.portal.ui.view.SimpleContentLayout;
 import com.handy.portal.util.CurrencyUtils;
+import com.handy.portal.util.FragmentUtils;
 import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
 import com.stripe.android.model.Card;
@@ -30,6 +33,8 @@ import butterknife.OnClick;
 
 public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragment
 {
+    private static final int SUCCESS_OVERLAY_DELAY_MILLIS = 1000;
+
     @Bind(R.id.shipping_summary)
     SimpleContentLayout mShippingSummary;
     @Bind(R.id.edit_address_form)
@@ -262,8 +267,20 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     public void onReceiveOnboardingSuppliesSuccess(final HandyEvent.ReceiveOnboardingSuppliesSuccess event)
     {
         hideLoadingOverlay();
-        showToast(R.string.supplies_will_arrive_after_activation);
-        terminate();
+        final TransientOverlayDialogFragment fragment = TransientOverlayDialogFragment.newInstance(
+                R.anim.overlay_fade_in_then_out,
+                R.drawable.ic_success_circle,
+                R.string.supplies_ordered
+        );
+        FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), null);
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                terminate();
+            }
+        }, SUCCESS_OVERLAY_DELAY_MILLIS);
     }
 
     @Subscribe
