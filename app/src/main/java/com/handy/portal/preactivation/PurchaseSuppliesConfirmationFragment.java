@@ -92,6 +92,8 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+        mShippingSummary.setContent(getString(R.string.shipping_address),
+                getString(R.string.loading));
         mPaymentSummary.setContent(getString(R.string.payment_method),
                 getString(R.string.card_info_formatted, mCardType, mCardLast4));
         final PaymentInfo cost = mOnboardingSuppliesInfo.getCost();
