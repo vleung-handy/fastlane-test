@@ -2,6 +2,7 @@
 <com.handy.portal.payments.ui.element.PaymentsBatchListHeaderView
     android:id="@+id/payments_batch_list_header"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:descendantFocusability="blocksDescendants"
@@ -181,13 +182,13 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/dark_grey_border_top_light_background"
         android:paddingBottom="@dimen/extra_padding_medium"
         android:paddingLeft="@dimen/payment_container_horizontal_padding"
         android:paddingRight="@dimen/payment_container_horizontal_padding"
         android:paddingTop="@dimen/default_padding"
         android:text="@string/previous_pay_weeks"
         android:textAppearance="@style/HandyTextAppearanceListHeader"
+        tools:background="@drawable/dark_grey_border_top_light_background"
         />
 
 </com.handy.portal.payments.ui.element.PaymentsBatchListHeaderView>

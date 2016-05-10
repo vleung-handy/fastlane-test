@@ -3,11 +3,11 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/dark_grey_border_bottom_light_background"
                 android:paddingBottom="@dimen/default_padding"
                 android:paddingLeft="@dimen/payment_container_horizontal_padding"
                 android:paddingRight="@dimen/payment_container_horizontal_padding"
                 android:paddingTop="@dimen/default_padding"
+                tools:background="@drawable/dark_grey_border_bottom_light_background"
     >
 
     <TextView
