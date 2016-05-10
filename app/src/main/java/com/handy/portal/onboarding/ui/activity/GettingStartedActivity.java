@@ -329,7 +329,7 @@ public class GettingStartedActivity extends AppCompatActivity
             //model could be null, if it's just a header
             if (model != null)
             {
-                for (BookingViewModel bookingView : model.mBookingViewModels)
+                for (BookingViewModel bookingView : model.getBookingViewModels())
                 {
                     if (bookingView.isSelected())
                     {
@@ -341,7 +341,7 @@ public class GettingStartedActivity extends AppCompatActivity
 
         if (sum > 0)
         {
-            String symbol = mAdapter.getBookingsWrapperViewModels().get(1).mBookingViewModels.get(0).getCurrencySymbol();
+            String symbol = mAdapter.getBookingsWrapperViewModels().get(1).getBookingViewModels().get(0).getCurrencySymbol();
             String formattedPrice = String.format("%.0f", sum);
             if (symbol != null)
             {
@@ -368,7 +368,7 @@ public class GettingStartedActivity extends AppCompatActivity
             //model could be null, if it's just a header
             if (model != null)
             {
-                for (BookingViewModel bookingView : model.mBookingViewModels)
+                for (BookingViewModel bookingView : model.getBookingViewModels())
                 {
                     if (bookingView.isSelected())
                     {
