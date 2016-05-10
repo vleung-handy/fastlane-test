@@ -119,6 +119,11 @@ public interface HandyRetrofitService
     void createDebitCardForCharge(@Field("token") String stripeToken,
                                   HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
+    @PUT(STRIPE_PATH + "update_credit_card")
+    void updateCreditCard(@Field("token") String token,
+                          HandyRetrofitCallback cb);
+
     @GET(PROVIDERS_PATH + "{id}/payment_flow")
     void getPaymentFlow(@Path("id") String providerId,
                         HandyRetrofitCallback cb);
@@ -252,6 +257,11 @@ public interface HandyRetrofitService
 
     @GET(PROVIDERS_PATH + "{id}/feedback")
     void getProviderFeedback(@Path("id") String providerId, HandyRetrofitCallback cb);
+
+    @POST(PROVIDERS_PATH + "{id}/onboarding_supplies")
+    void requestOnboardingSupplies(@Path("id") String providerId,
+                                   @Query("onboarding_supplies") Boolean value,
+                                   HandyRetrofitCallback cb);
 
     @GET(PAYMENTS_PATH + "outstanding_fees")
     void getPaymentOutstandingFees(HandyRetrofitCallback cb);

@@ -13,6 +13,7 @@ import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+import com.stripe.android.model.Token;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -207,6 +208,26 @@ public class PaymentsManager
             public void onError(DataManager.DataManagerError error)
             {
                 mBus.post(new PaymentEvent.ReceiveCreateDebitCardForChargeError(error));
+            }
+        });
+    }
+
+    @Subscribe
+    public void onRequestUpdateCreditCard(final PaymentEvent.RequestUpdateCreditCard event)
+    {
+        final Token token = event.getToken();
+        mDataManager.updateCreditCard(token.getId(), new DataManager.Callback<SuccessWrapper>()
+        {
+            @Override
+            public void onSuccess(final SuccessWrapper response)
+            {
+                mBus.post(new PaymentEvent.ReceiveUpdateCreditCardSuccess());
+            }
+
+            @Override
+            public void onError(final DataManager.DataManagerError error)
+            {
+                mBus.post(new PaymentEvent.ReceiveUpdateCreditCardError(error));
             }
         });
     }

@@ -190,7 +190,7 @@
     <string name="check_out_success">Thanks for checking out!</string>
 
     <string name="send_update">Send Update</string>
-    <string name="an_error_has_occurred">An error has occurred, please try again</string>
+    <string name="an_error_has_occurred">An error has occurred, please try again.</string>
 
     <string name="install">Install</string>
     <string name="need_google_play">To view maps, please install Google Play Services</string>
@@ -459,5 +459,27 @@
     <string name="job_access_early_access_popup_action_button">Start Claiming</string>
     <string name="job_access_locked_learn_more">Learn more about\u0020</string>
     <string name="job_access_locked_keep_rate_info_button">Keep Rate</string>
+
+    <!-- Pre-activation -->
+    <string name="supply_kit_purchase_inquiry">Would you like to buy a starter supply kit?</string>
+    <string name="yes_supply_kit">Yes, I Want a Starter Kit</string>
+    <string name="no_supply_kit">No, I Have My Own</string>
+    <string name="enter_payment_information">Enter payment information</string>
+    <string name="continue_to_confirmation">Continue to Confirmation</string>
+    <string name="supply_starter_kit">Supply Starter Kit</string>
+    <string name="order_total_formatted">Order Total: %1$s</string>
+    <string name="confirm_your_purchase">Confirm your purchase</string>
+    <string name="confirm_purchase">Confirm Purchase</string>
+    <string name="shipping_address">Shipping Address</string>
+    <string name="payment_method">Payment Method</string>
+    <string name="edit">Edit</string>
+    <string name="cannot_ship_to_po_box">We cannot ship to a PO Box</string>
+    <string name="see_products">See full list of products</string>
+    <string name="card_info_formatted">%1$s ending in %2$s</string>
+    <string name="i_have_my_own_supplies">I Have My Own Supplies</string>
+    <string name="are_you_sure_no_kit">Are you sure you don’t want to order the kit?</string>
+    <string name="supplies_expectation">Handy customers expect you to arrive prepared with supplies to get the job done right.</string>
+    <string name="supplies_will_arrive_after_activation">Your supplies will arrive after activation.</string>
+    <string name="loading">Loading…</string>
 
 </resources>

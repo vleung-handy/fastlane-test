@@ -74,8 +74,6 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
         View view = inflater.inflate(R.layout.fragment_payments_update_debit_card, container, false);
         ButterKnife.bind(this, view);
 
-        setFormFieldErrorStateRemovers();
-
         return view;
     }
 
@@ -121,15 +119,6 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
         }
 
         return allFieldsValid;
-    }
-
-    private void setFormFieldErrorStateRemovers()
-    {
-        debitCardNumberField.getValue().addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(debitCardNumberField));
-        expirationDateField.getMonthValue().addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(expirationDateField));
-        expirationDateField.getYearValue().addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(expirationDateField));
-        securityCodeField.getValue().addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(securityCodeField));
-        taxIdField.getValue().addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(taxIdField));
     }
 
     @OnClick(R.id.payments_update_info_debit_card_submit_button)

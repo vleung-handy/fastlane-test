@@ -36,6 +36,7 @@ import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.notification.NotificationModule;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsModule;
+import com.handy.portal.preactivation.PreActivationModule;
 import com.handy.portal.receiver.HandyPushReceiver;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
@@ -130,7 +131,8 @@ import retrofit.converter.GsonConverter;
                 NotificationModule.class,
                 LocationModule.class,
                 PaymentsModule.class,
-                BookingsModule.class
+                BookingsModule.class,
+                PreActivationModule.class,
         }
 )
 public final class ApplicationModule

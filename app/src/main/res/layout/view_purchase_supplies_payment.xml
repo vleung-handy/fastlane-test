@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/default_margin"
+    android:orientation="vertical"
+    >
+
+    <TableLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:stretchColumns="2"
+        >
+
+        <com.handy.portal.ui.view.FormFieldTableRow
+            android:id="@+id/credit_card_number_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_gray_no_side"
+            />
+
+        <com.handy.portal.ui.view.DateFormFieldTableRow
+            android:id="@+id/expiration_date_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_gray_bottom"
+            />
+
+        <com.handy.portal.ui.view.FormFieldTableRow
+            android:id="@+id/security_code_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_gray_bottom"
+            />
+    </TableLayout>
+
+    <com.handy.portal.ui.view.SimpleContentLayout
+        android:id="@+id/order_summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin_half"
+        android:background="@drawable/border_gray_no_side"
+        />
+
+</LinearLayout>
