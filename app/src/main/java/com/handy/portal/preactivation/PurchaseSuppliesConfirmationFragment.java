@@ -265,8 +265,8 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
         {
             bus.post(new HandyEvent.RequestOnboardingSupplies(true));
             showLoadingOverlay();
-            bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
-                    OnboardingSuppliesLog.ServerTypes.REQUEST_SUPPLIES.submitted())));
+            bus.post(new LogEvent.AddLogEvent(
+                    new OnboardingSuppliesLog.RequestSupplies.Submitted(true)));
         }
     }
 
@@ -278,15 +278,15 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
         mProviderPersonalInfo = event.providerPersonalInfo;
         populateShippingSummary();
         bus.post(new HandyEvent.RequestOnboardingSupplies(true));
-        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
-                OnboardingSuppliesLog.ServerTypes.REQUEST_SUPPLIES.submitted())));
+        bus.post(new LogEvent.AddLogEvent(
+                new OnboardingSuppliesLog.RequestSupplies.Submitted(true)));
     }
 
     @Subscribe
     public void onReceiveOnboardingSuppliesSuccess(final HandyEvent.ReceiveOnboardingSuppliesSuccess event)
     {
-        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
-                OnboardingSuppliesLog.ServerTypes.REQUEST_SUPPLIES.success())));
+        bus.post(new LogEvent.AddLogEvent(
+                new OnboardingSuppliesLog.RequestSupplies.Success(true)));
         hideLoadingOverlay();
         final TransientOverlayDialogFragment fragment = TransientOverlayDialogFragment.newInstance(
                 R.anim.overlay_fade_in_then_out,
@@ -316,8 +316,8 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     @Subscribe
     public void onReceiveOnboardingSuppliesError(final HandyEvent.ReceiveOnboardingSuppliesError event)
     {
-        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
-                OnboardingSuppliesLog.ServerTypes.REQUEST_SUPPLIES.error())));
+        bus.post(new LogEvent.AddLogEvent(
+                new OnboardingSuppliesLog.RequestSupplies.Error(true)));
         hideLoadingOverlay();
         showError(event.error.getMessage());
     }
