@@ -41,8 +41,8 @@ public class BookingModalsManager
     {
         public enum BookingsForDaysAheadModalType
         {
-            BOOKINGS_FOR_DAYS_AHEAD_UNLOCKED_MODAL,
-            BOOKINGS_FOR_DAYS_AHEAD_UNLOCKED_TRIAL_MODAL
+            UNLOCKED_MODAL,
+            UNLOCKED_TRIAL_MODAL
         }
 
         private final BookingsForDaysAheadModalType mBookingsForDaysAheadModalType;

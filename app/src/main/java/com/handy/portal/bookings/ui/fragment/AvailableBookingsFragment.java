@@ -45,8 +45,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 
-import static com.handy.portal.bookings.BookingModalsManager.BookingsForDaysAheadModalsManager.BookingsForDaysAheadModalType.BOOKINGS_FOR_DAYS_AHEAD_UNLOCKED_MODAL;
-import static com.handy.portal.bookings.BookingModalsManager.BookingsForDaysAheadModalsManager.BookingsForDaysAheadModalType.BOOKINGS_FOR_DAYS_AHEAD_UNLOCKED_TRIAL_MODAL;
+import static com.handy.portal.bookings.BookingModalsManager.BookingsForDaysAheadModalsManager.BookingsForDaysAheadModalType;
 
 public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.ReceiveAvailableBookingsSuccess>
 {
@@ -282,7 +281,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
                                                                      @NonNull Date dateOfBookings)
     {
         BookingsForDaysAheadModalsManager bookingsForDaysAheadModalsManager
-                = mBookingModalsManager.getBookingsForDayModalsManager(BOOKINGS_FOR_DAYS_AHEAD_UNLOCKED_TRIAL_MODAL, dateOfBookings);
+                = mBookingModalsManager.getBookingsForDayModalsManager(BookingsForDaysAheadModalType.UNLOCKED_TRIAL_MODAL, dateOfBookings);
 
         //show the banner
         String title = getString(R.string.job_access_early_access_banner_title);
@@ -309,7 +308,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
                                                              @NonNull Date dateOfBookings)
     {
         BookingsForDaysAheadModalsManager bookingsForDaysAheadModalsManager
-                = mBookingModalsManager.getBookingsForDayModalsManager(BOOKINGS_FOR_DAYS_AHEAD_UNLOCKED_MODAL, dateOfBookings);
+                = mBookingModalsManager.getBookingsForDayModalsManager(BookingsForDaysAheadModalType.UNLOCKED_MODAL, dateOfBookings);
 
         //show the banner
         String title = getString(R.string.job_access_unlocked_banner_title_formatted,
@@ -471,11 +470,11 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 BookingsWrapper.PriorityAccessInfo.BookingsForDayPriorityAccessStatus.LOCKED)
         {
             mBookingModalsManager
-                    .getBookingsForDayModalsManager(BOOKINGS_FOR_DAYS_AHEAD_UNLOCKED_MODAL, date)
+                    .getBookingsForDayModalsManager(BookingsForDaysAheadModalType.UNLOCKED_MODAL, date)
                     .resetModalShownStatus();
 
             mBookingModalsManager
-                    .getBookingsForDayModalsManager(BOOKINGS_FOR_DAYS_AHEAD_UNLOCKED_TRIAL_MODAL, date)
+                    .getBookingsForDayModalsManager(BookingsForDaysAheadModalType.UNLOCKED_TRIAL_MODAL, date)
                     .resetModalShownStatus();
         }
     }
