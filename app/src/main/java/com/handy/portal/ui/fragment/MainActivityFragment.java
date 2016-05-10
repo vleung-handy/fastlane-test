@@ -259,12 +259,20 @@ public class MainActivityFragment extends InjectedFragment
     @Override
     public void onSaveInstanceState(Bundle outState)
     {
-        if (outState == null)
+        try
         {
-            outState = new Bundle();
+            if (outState == null)
+            {
+                outState = new Bundle();
+            }
+            outState.putBoolean(BundleKeys.DEEPLINK_HANDLED, mDeeplinkHandled);
+            super.onSaveInstanceState(outState);
         }
-        outState.putBoolean(BundleKeys.DEEPLINK_HANDLED, mDeeplinkHandled);
-        super.onSaveInstanceState(outState);
+        catch (IllegalArgumentException e)
+        {
+            // Non fatal
+            Crashlytics.logException(e);
+        }
     }
 
     @Override
