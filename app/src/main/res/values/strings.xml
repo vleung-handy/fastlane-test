@@ -462,7 +462,7 @@
 
     <!-- Pre-activation -->
     <string name="supply_kit_purchase_inquiry">Would you like to buy a starter supply kit?</string>
-    <string name="yes_supply_kit">Yes, I Want a Starter Kit</string>
+    <string name="yes_supply_kit">Yes, I Want Supplies</string>
     <string name="no_supply_kit">No, I Have My Own</string>
     <string name="enter_payment_information">Enter payment information</string>
     <string name="continue_to_confirmation">Continue to Confirmation</string>
@@ -479,7 +479,7 @@
     <string name="i_have_my_own_supplies">I Have My Own Supplies</string>
     <string name="are_you_sure_no_kit">Are you sure you don’t want to order the kit?</string>
     <string name="supplies_expectation">Handy customers expect you to arrive prepared with supplies to get the job done right.</string>
-    <string name="supplies_will_arrive_after_activation">Your supplies will arrive after activation.</string>
     <string name="loading">Loading…</string>
+    <string name="supplies_ordered">Supplies ordered!</string>
 
 </resources>
