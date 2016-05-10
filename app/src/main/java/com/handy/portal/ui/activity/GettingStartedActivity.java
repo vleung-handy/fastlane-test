@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,16 +19,18 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.model.BookingClaimDetails;
+import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
-import com.handy.portal.model.Booking;
-import com.handy.portal.model.BookingClaimDetails;
-import com.handy.portal.model.BookingsListWrapper;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.onboarding.BookingViewModel;
 import com.handy.portal.model.onboarding.BookingsWrapperViewModel;
 import com.handy.portal.model.onboarding.JobClaim;
@@ -79,11 +82,15 @@ public class GettingStartedActivity extends AppCompatActivity
     @Inject
     Bus mBus;
 
+    @Inject
+    PrefsManager mPrefsManager;
+
     private OnboardLoadingDialog mLoadingDialog;
     private OnboardJobClaimConfirmDialog mOnboardJobClaimConfirmDialog;
 
     private JobsRecyclerAdapter mAdapter;
     private BookingsListWrapper mJobs2;
+    private boolean mJobLoaded;
     private String mNoThanks;
 
     private Drawable mGreenDrawable;
@@ -91,6 +98,9 @@ public class GettingStartedActivity extends AppCompatActivity
     private long mRequestTime;
     private int mWaitTime;
     private boolean mDestroyed;
+
+    @NonNull
+    private String mProviderId;
 
     /**
      * mainly used for logging error of the booking ids that weren't claimed properly
@@ -111,7 +121,7 @@ public class GettingStartedActivity extends AppCompatActivity
 
         mWaitTime = getResources().getInteger(R.integer.onboarding_dialog_load_min_time);
 
-
+        mProviderId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
 
@@ -119,7 +129,6 @@ public class GettingStartedActivity extends AppCompatActivity
 
         mGreenDrawable = ContextCompat.getDrawable(this, R.drawable.button_green);
         mGrayDrawable = ContextCompat.getDrawable(this, R.drawable.button_gray);
-
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(getString(R.string.onboard_getting_started));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -143,6 +152,7 @@ public class GettingStartedActivity extends AppCompatActivity
     private void loadJobs()
     {
         mJobs2 = null;
+        mJobLoaded = false;
         mRequestTime = System.currentTimeMillis();
         mFetchErrorView.setVisibility(View.GONE);
         mBus.post(new HandyEvent.RequestOnboardingJobs());
@@ -226,22 +236,15 @@ public class GettingStartedActivity extends AppCompatActivity
     {
         Log.d(TAG, "onJobLoaded: ");
         mLoadingOverlayView.setVisibility(View.GONE);
+        mJobLoaded = true;
         mJobs2 = event.bookings;
-        if (!hasJobs(mJobs2))
-        {
-            mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NoJobsLoaded()));
-            goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
-        }
-        else
-        {
-            bindJobsAndRemoveDialog();
-        }
+        bindJobsAndRemoveDialog();
     }
 
     @Subscribe
     public void onJobLoadError(HandyEvent.ReceiveOnboardingJobsError event)
     {
-        if (dialogDismissable())
+        if (dialogVisible())
         {
             mLoadingDialog.dismiss();
         }
@@ -263,21 +266,36 @@ public class GettingStartedActivity extends AppCompatActivity
     private void bindJobsAndRemoveDialog()
     {
         long elapsedTime = System.currentTimeMillis() - mRequestTime;
-        if (mJobs2 != null && (elapsedTime >= mWaitTime) && dialogDismissable())
+
+        if (mJobLoaded && (elapsedTime >= mWaitTime))
         {
             Log.d(TAG, "bindJobs: ");
-            mAdapter = new JobsRecyclerAdapter(
-                    mJobs2.getBookingsWrappers(),
-                    getString(R.string.onboard_getting_started_title),
-                    GettingStartedActivity.this
-            );
-            mRecyclerView.setAdapter(mAdapter);
-            updateButton();
 
-            if (mLoadingDialog.isVisible())
+            if (!hasJobs(mJobs2))
             {
-                mLoadingDialog.dismiss();
-                mRecyclerView.startLayoutAnimation();
+                //there are no jobs, so..., go to the available jobs fragment
+                if (dialogVisible())
+                {
+                    mLoadingDialog.dismiss();
+                    mBtnNext.setVisibility(View.GONE);
+                }
+                mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NoJobsLoaded()));
+                goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
+            }
+            else
+            {
+                mAdapter = new JobsRecyclerAdapter(
+                        mJobs2.getBookingsWrappers(),
+                        getString(R.string.onboard_getting_started_title),
+                        GettingStartedActivity.this
+                );
+                mRecyclerView.setAdapter(mAdapter);
+                updateButton();
+                if (dialogVisible())
+                {
+                    mLoadingDialog.dismiss();
+                    mRecyclerView.startLayoutAnimation();
+                }
             }
         }
     }
@@ -287,9 +305,9 @@ public class GettingStartedActivity extends AppCompatActivity
      *
      * @return
      */
-    private boolean dialogDismissable()
+    private boolean dialogVisible()
     {
-        return mLoadingDialog != null && !isFinishing() && !mDestroyed;
+        return mLoadingDialog != null && !isFinishing() && !mDestroyed && mLoadingDialog.isVisible();
     }
 
     @Override
@@ -443,7 +461,7 @@ public class GettingStartedActivity extends AppCompatActivity
         List<Booking> bookings = new ArrayList<>();
         for (BookingClaimDetails bcd : event.mJobClaimResponse.getJobs())
         {
-            if (bcd.getBooking().isClaimedByMe())
+            if (bcd.getBooking().isClaimedByMe() || mProviderId.equals(bcd.getBooking().getProviderId()))
             {
                 bookings.add(bcd.getBooking());
                 mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimSuccess(

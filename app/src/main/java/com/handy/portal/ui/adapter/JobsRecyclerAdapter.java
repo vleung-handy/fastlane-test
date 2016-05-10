@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.model.BookingsWrapper;
+import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.model.onboarding.BookingsWrapperViewModel;
 import com.handy.portal.ui.view.OnboardJobGroupView;
 

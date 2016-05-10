@@ -29,7 +29,7 @@
         android:orientation="vertical"
         >
 
-        <com.handy.portal.ui.element.BookingDetailsPaymentView
+        <com.handy.portal.bookings.ui.element.BookingDetailsPaymentView
             android:id="@+id/onboard_payment"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -75,7 +75,7 @@
             android:layout_height="wrap_content"
             tools:text="1:00pm - 4:00pm"
             android:textSize="@dimen/small_text_size"
-            android:textColor="@color/dark_grey"
+            android:textColor="@color/dark_gray"
             />
     </LinearLayout>
 

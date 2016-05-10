@@ -2,8 +2,8 @@ package com.handy.portal.model.onboarding;
 
 import android.text.TextUtils;
 
-import com.handy.portal.model.Booking;
-import com.handy.portal.model.PaymentInfo;
+import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
 

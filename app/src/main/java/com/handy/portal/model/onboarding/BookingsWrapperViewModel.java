@@ -1,7 +1,8 @@
 package com.handy.portal.model.onboarding;
 
-import com.handy.portal.model.Booking;
-import com.handy.portal.model.BookingsWrapper;
+
+import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.model.BookingsWrapper;
 
 import java.util.ArrayList;
 import java.util.List;

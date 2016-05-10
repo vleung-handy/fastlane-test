@@ -11,9 +11,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.model.PaymentInfo;
+import com.handy.portal.bookings.ui.element.BookingDetailsPaymentView;
 import com.handy.portal.model.onboarding.BookingViewModel;
-import com.handy.portal.ui.element.BookingDetailsPaymentView;
+import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.util.UIUtils;
 
 import butterknife.Bind;

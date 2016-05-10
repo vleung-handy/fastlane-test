@@ -1,7 +1,7 @@
 package com.handy.portal.model.onboarding;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.model.BookingClaimDetails;
+import com.handy.portal.bookings.model.BookingClaimDetails;
 
 import java.io.Serializable;
 import java.util.List;

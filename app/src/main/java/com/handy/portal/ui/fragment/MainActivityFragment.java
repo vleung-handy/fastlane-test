@@ -193,7 +193,7 @@ public class MainActivityFragment extends InjectedFragment
                 startActivity(new Intent(getContext(), OnboardWelcomeActivity.class));
             }
             else if (currentTab != null && currentTab != MainViewTab.ONBOARDING_WEBVIEW &&
-                    doesCachedProviderNeedOnboarding())
+                    doesCachedProviderNeedWebOnboarding())
             {
                 switchToTab(MainViewTab.ONBOARDING_WEBVIEW, false);
             }
@@ -255,7 +255,6 @@ public class MainActivityFragment extends InjectedFragment
     public void onPause()
     {
         super.onPause();
-        mConfigAlreadyReceivedThisSession = false;
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(false));
         mDrawerLayout.removeDrawerListener(mActionBarDrawerToggle);
     }
@@ -610,10 +609,10 @@ public class MainActivityFragment extends InjectedFragment
         return mConfigManager.getConfigurationResponse();
     }
 
-    private boolean doesCachedProviderNeedOnboarding()
+    private boolean doesCachedProviderNeedWebOnboarding()
     {
         return (getConfigurationResponse() != null &&
-                getConfigurationResponse().shouldShowOnboarding());
+                getConfigurationResponse().shouldShowWebOnboarding());
     }
 
     @SuppressWarnings("deprecation")
