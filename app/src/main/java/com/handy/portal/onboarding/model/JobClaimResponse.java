@@ -20,19 +20,8 @@ public class JobClaimResponse implements Serializable
     {
         return mJobs;
     }
-
-    public void setJobs(final List<BookingClaimDetails> jobs)
-    {
-        mJobs = jobs;
-    }
-
     public String getMessage()
     {
         return mMessage;
-    }
-
-    public void setMessage(final String message)
-    {
-        mMessage = message;
     }
 }

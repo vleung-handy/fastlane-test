@@ -61,7 +61,7 @@ public class OnboardJobGroupView extends LinearLayout implements CompoundButton.
     {
         mViewModel = model;
 
-        mTitle.setText(Html.fromHtml(DateTimeUtils.getHtmlFormattedDateString(mViewModel.getSanitizedDate())));
+        mTitle.setText(Html.fromHtml(DateTimeUtils.getHtmlFormattedDateString(mViewModel.sanitizedDate)));
 
         for (BookingViewModel bookingViewModel : mViewModel.mBookingViewModels)
         {
