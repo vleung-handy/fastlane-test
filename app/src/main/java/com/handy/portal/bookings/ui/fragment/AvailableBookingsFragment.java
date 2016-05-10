@@ -39,7 +39,7 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.ProviderProfile;
-import com.handy.portal.ui.activity.GettingStartedActivity;
+import com.handy.portal.onboarding.ui.activity.GettingStartedActivity;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.FragmentUtils;

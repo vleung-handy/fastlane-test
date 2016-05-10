@@ -23,8 +23,8 @@ import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.TermsDetailsGroup;
-import com.handy.portal.model.onboarding.JobClaimRequest;
-import com.handy.portal.model.onboarding.JobClaimResponse;
+import com.handy.portal.onboarding.model.JobClaimRequest;
+import com.handy.portal.onboarding.model.JobClaimResponse;
 
 import java.util.Date;
 import java.util.List;

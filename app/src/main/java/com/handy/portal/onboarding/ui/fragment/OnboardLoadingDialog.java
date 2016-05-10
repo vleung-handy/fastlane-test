@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.onboarding.ui.fragment;
 
 import android.app.Activity;
 import android.app.Dialog;

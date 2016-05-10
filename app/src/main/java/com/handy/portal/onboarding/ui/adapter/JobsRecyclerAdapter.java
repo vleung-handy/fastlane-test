@@ -1,4 +1,4 @@
-package com.handy.portal.ui.adapter;
+package com.handy.portal.onboarding.ui.adapter;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,8 +8,8 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.BookingsWrapper;
-import com.handy.portal.model.onboarding.BookingsWrapperViewModel;
-import com.handy.portal.ui.view.OnboardJobGroupView;
+import com.handy.portal.onboarding.model.BookingsWrapperViewModel;
+import com.handy.portal.onboarding.ui.view.OnboardJobGroupView;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.handy.portal.ui.activity;
+package com.handy.portal.onboarding.ui.activity;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,14 +31,14 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.model.onboarding.BookingViewModel;
-import com.handy.portal.model.onboarding.BookingsWrapperViewModel;
-import com.handy.portal.model.onboarding.JobClaim;
-import com.handy.portal.model.onboarding.JobClaimRequest;
-import com.handy.portal.ui.adapter.JobsRecyclerAdapter;
-import com.handy.portal.ui.fragment.OnboardLoadingDialog;
+import com.handy.portal.onboarding.model.BookingViewModel;
+import com.handy.portal.onboarding.model.BookingsWrapperViewModel;
+import com.handy.portal.onboarding.model.JobClaim;
+import com.handy.portal.onboarding.model.JobClaimRequest;
+import com.handy.portal.onboarding.ui.adapter.JobsRecyclerAdapter;
+import com.handy.portal.onboarding.ui.fragment.OnboardLoadingDialog;
+import com.handy.portal.onboarding.ui.view.OnboardJobGroupView;
 import com.handy.portal.ui.fragment.dialog.OnboardJobClaimConfirmDialog;
-import com.handy.portal.ui.view.OnboardJobGroupView;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;

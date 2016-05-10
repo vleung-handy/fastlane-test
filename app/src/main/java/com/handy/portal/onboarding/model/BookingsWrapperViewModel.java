@@ -1,4 +1,4 @@
-package com.handy.portal.model.onboarding;
+package com.handy.portal.onboarding.model;
 
 
 import com.handy.portal.bookings.model.Booking;

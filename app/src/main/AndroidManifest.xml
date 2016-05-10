@@ -288,12 +288,12 @@
         </receiver>
 
         <activity
-            android:name=".ui.activity.OnboardWelcomeActivity"
+            android:name=".onboarding.ui.activity.OnboardWelcomeActivity"
             android:theme="@style/AppTheme.Translucent"
             android:screenOrientation="portrait"
             />
         <activity
-            android:name=".ui.activity.GettingStartedActivity"
+            android:name=".onboarding.ui.activity.GettingStartedActivity"
             android:screenOrientation="portrait"
             >
         </activity>

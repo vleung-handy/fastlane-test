@@ -1,4 +1,4 @@
-package com.handy.portal.ui.view;
+package com.handy.portal.onboarding.ui.view;
 
 import android.content.Context;
 import android.text.Html;
@@ -8,8 +8,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.model.onboarding.BookingViewModel;
-import com.handy.portal.model.onboarding.BookingsWrapperViewModel;
+import com.handy.portal.onboarding.model.BookingViewModel;
+import com.handy.portal.onboarding.model.BookingsWrapperViewModel;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.FontUtils;
 

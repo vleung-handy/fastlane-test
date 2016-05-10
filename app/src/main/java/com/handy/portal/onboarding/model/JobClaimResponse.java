@@ -1,4 +1,4 @@
-package com.handy.portal.model.onboarding;
+package com.handy.portal.onboarding.model;
 
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.BookingClaimDetails;

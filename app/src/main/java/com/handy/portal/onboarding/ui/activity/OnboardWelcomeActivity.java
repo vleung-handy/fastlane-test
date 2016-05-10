@@ -1,4 +1,4 @@
-package com.handy.portal.ui.activity;
+package com.handy.portal.onboarding.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;

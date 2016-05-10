@@ -16,7 +16,7 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.TypeSafeMap;
-import com.handy.portal.model.onboarding.JobClaimResponse;
+import com.handy.portal.onboarding.model.JobClaimResponse;
 import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;

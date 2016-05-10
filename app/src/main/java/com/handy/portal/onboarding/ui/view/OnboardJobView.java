@@ -1,4 +1,4 @@
-package com.handy.portal.ui.view;
+package com.handy.portal.onboarding.ui.view;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.ui.element.BookingDetailsPaymentView;
-import com.handy.portal.model.onboarding.BookingViewModel;
+import com.handy.portal.onboarding.model.BookingViewModel;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.util.UIUtils;
 
