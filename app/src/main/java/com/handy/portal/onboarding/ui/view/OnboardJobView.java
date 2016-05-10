@@ -27,7 +27,7 @@ import butterknife.ButterKnife;
 public class OnboardJobView extends FrameLayout implements CompoundButton.OnCheckedChangeListener
 {
 
-    int mCornerRadius;
+    private int mCornerRadius;
 
     @Bind(R.id.check_box)
     CheckBox mCheckBox;
@@ -44,12 +44,12 @@ public class OnboardJobView extends FrameLayout implements CompoundButton.OnChec
     @Bind(R.id.tv_subtitle)
     TextView mSubTitle;
 
-    Drawable mCheckedDrawable;
-    Drawable mUncheckedDrawable;
+    private Drawable mCheckedDrawable;
+    private Drawable mUncheckedDrawable;
 
-    CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener;
+    private CompoundButton.OnCheckedChangeListener mOnCheckedChangeListener;
 
-    BookingViewModel mBookingViewModel;
+    private BookingViewModel mBookingViewModel;
 
     public OnboardJobView(Context context)
     {

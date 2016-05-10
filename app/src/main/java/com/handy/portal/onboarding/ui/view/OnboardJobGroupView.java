@@ -13,9 +13,6 @@ import com.handy.portal.onboarding.model.BookingsWrapperViewModel;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.FontUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * This is a custom view that holds a collection of HandyJobView. It has a title to label
  * the group
@@ -94,26 +91,6 @@ public class OnboardJobGroupView extends LinearLayout implements CompoundButton.
         {
             mOnJobChangeListener.onPriceChanged();
         }
-    }
-
-    /**
-     * Returns a copy of all the jobs that are selected
-     *
-     * @return
-     */
-    public List<BookingViewModel> getSelectedJobs()
-    {
-        List<BookingViewModel> rval = new ArrayList<>(mViewModel.mBookingViewModels);
-
-        for (BookingViewModel j : rval)
-        {
-            if (!j.selected)
-            {
-                rval.remove(j);
-            }
-        }
-
-        return rval;
     }
 
     public interface OnJobChangeListener
