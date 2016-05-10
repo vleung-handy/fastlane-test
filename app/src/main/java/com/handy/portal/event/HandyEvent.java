@@ -938,16 +938,16 @@ public abstract class HandyEvent
 
     public static class RequestOnboardingSupplies extends RequestEvent
     {
-        private final boolean mValue;
+        private final boolean mOptIn;
 
-        public RequestOnboardingSupplies(final boolean value)
+        public RequestOnboardingSupplies(final boolean optIn)
         {
-            mValue = value;
+            mOptIn = optIn;
         }
 
-        public boolean getValue()
+        public boolean getOptIn()
         {
-            return mValue;
+            return mOptIn;
         }
     }
 

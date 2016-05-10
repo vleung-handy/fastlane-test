@@ -325,7 +325,7 @@ public class ProviderManager
     @Subscribe
     public void onRequestOnboardingSupplies(final HandyEvent.RequestOnboardingSupplies event)
     {
-        mDataManager.requestOnboardingSupplies(getLastProviderId(), event.getValue(),
+        mDataManager.requestOnboardingSupplies(getLastProviderId(), event.getOptIn(),
                 new DataManager.Callback<SuccessWrapper>()
                 {
                     @Override
