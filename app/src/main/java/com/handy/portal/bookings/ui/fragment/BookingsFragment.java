@@ -57,6 +57,8 @@ import butterknife.OnClick;
 
 public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSuccess> extends ActionBarFragment
 {
+    private static int SNACK_BAR_DURATION = 500;
+
     @Inject
     ConfigManager mConfigManager;
     @Inject
@@ -121,7 +123,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 {
                     snackbar.show();
                 }
-            }, 500);
+            }, SNACK_BAR_DURATION);
 
             if (mMessage.equals(getString(R.string.job_no_longer_available)))
             {

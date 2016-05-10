@@ -27,7 +27,8 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
     private OnboardJobGroupView.OnJobChangeListener mOnJobChangeListener;
 
     public JobsRecyclerAdapter(List<BookingsWrapper> bookings, String title,
-                               OnboardJobGroupView.OnJobChangeListener mListener)
+                               OnboardJobGroupView.OnJobChangeListener mListener,
+                               String defaultSubtitle)
     {
 
         mBookingsWrapperViewModels = new ArrayList<>();
@@ -43,7 +44,7 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
                 continue;
             }
 
-            mBookingsWrapperViewModels.add(new BookingsWrapperViewModel(booking));
+            mBookingsWrapperViewModels.add(new BookingsWrapperViewModel(booking, defaultSubtitle));
         }
 
         mOnJobChangeListener = mListener;

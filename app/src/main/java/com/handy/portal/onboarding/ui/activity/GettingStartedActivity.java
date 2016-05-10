@@ -287,7 +287,8 @@ public class GettingStartedActivity extends AppCompatActivity
                 mAdapter = new JobsRecyclerAdapter(
                         mJobs2.getBookingsWrappers(),
                         getString(R.string.onboard_getting_started_title),
-                        GettingStartedActivity.this
+                        GettingStartedActivity.this,
+                        getResources().getString(R.string.onboard_no_time_available)
                 );
                 mRecyclerView.setAdapter(mAdapter);
                 updateButton();
@@ -372,10 +373,10 @@ public class GettingStartedActivity extends AppCompatActivity
                     if (bookingView.selected)
                     {
                         mJobClaimRequest.mJobs.add(new JobClaim(
-                                bookingView.booking.getId(),
-                                bookingView.booking.getType().name().toLowerCase())
+                                bookingView.getBooking().getId(),
+                                bookingView.getBooking().getType().name().toLowerCase())
                         );
-                        mBookingIdsToClaim.add(bookingView.booking.getId());
+                        mBookingIdsToClaim.add(bookingView.getBooking().getId());
                     }
                 }
             }

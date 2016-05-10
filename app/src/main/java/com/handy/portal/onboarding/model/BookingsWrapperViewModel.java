@@ -18,13 +18,13 @@ public class BookingsWrapperViewModel
 
     public final String sanitizedDate;
 
-    public BookingsWrapperViewModel(BookingsWrapper bookings)
+    public BookingsWrapperViewModel(BookingsWrapper bookings, String defaultSubTitle)
     {
         mBookingViewModels = new ArrayList<>();
 
         for (Booking b : bookings.getBookings())
         {
-            mBookingViewModels.add(new BookingViewModel(b));
+            mBookingViewModels.add(new BookingViewModel(b, defaultSubTitle));
         }
 
         sanitizedDate = bookings.getSanitizedDate();

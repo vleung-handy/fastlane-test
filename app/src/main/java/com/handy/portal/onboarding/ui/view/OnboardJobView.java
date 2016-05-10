@@ -102,10 +102,10 @@ public class OnboardJobView extends FrameLayout implements CompoundButton.OnChec
         mBookingViewModel = bookingViewModel;
 
         //Payment
-        mPayment.init(bookingViewModel.booking);
+        mPayment.init(bookingViewModel.getBooking());
 
         //Bonus Payment
-        PaymentInfo paymentInfo = bookingViewModel.booking.getBonusPaymentToProvider();
+        PaymentInfo paymentInfo = bookingViewModel.getBooking().getBonusPaymentToProvider();
         if (paymentInfo != null && paymentInfo.getAmount() > 0)
         {
             UIUtils.setPaymentInfo(mBonusPaymentText, null, paymentInfo,

@@ -17,13 +17,14 @@ import com.handy.portal.util.DateTimeUtils;
 public class BookingViewModel
 {
 
-    private static final String NO_TIME_AVAILABLE = "No Time Available";
-    public final Booking booking;
+    private Booking mBooking;
     public boolean selected;
+    private String mDefaultSubTitle;
 
-    public BookingViewModel(final Booking booking)
+    public BookingViewModel(final Booking booking, String defaultSubtitle)
     {
-        this.booking = booking;
+        mBooking = booking;
+        mDefaultSubTitle = defaultSubtitle;
 
         //we want to default the jobs to selected, and allow the user to unselect
         selected = true;
@@ -31,20 +32,20 @@ public class BookingViewModel
 
     public String getTitle()
     {
-        if (booking.isProxy())
+        if (mBooking.isProxy())
         {
-            return booking.getLocationName();
+            return mBooking.getLocationName();
         }
         else
         {
-            return booking.getAddress().getShortRegion();
+            return mBooking.getAddress().getShortRegion();
         }
     }
 
     public String getSubTitle()
     {
-        String startTime = DateTimeUtils.formatDateTo12HourClock(booking.getStartDate());
-        String endTime = DateTimeUtils.formatDateTo12HourClock(booking.getEndDate());
+        String startTime = DateTimeUtils.formatDateTo12HourClock(mBooking.getStartDate());
+        String endTime = DateTimeUtils.formatDateTo12HourClock(mBooking.getEndDate());
 
         if (!TextUtils.isEmpty(startTime) && !TextUtils.isEmpty(endTime))
         {
@@ -52,13 +53,18 @@ public class BookingViewModel
         }
         else
         {
-            return NO_TIME_AVAILABLE;
+            return mDefaultSubTitle;
         }
+    }
+
+    public Booking getBooking()
+    {
+        return mBooking;
     }
 
     public String getFormattedPrice()
     {
-        PaymentInfo p = booking.getPaymentToProvider();
+        PaymentInfo p = mBooking.getPaymentToProvider();
 
         if (p != null)
         {
@@ -72,11 +78,11 @@ public class BookingViewModel
 
     public float getBookingAmount()
     {
-        return booking.getPaymentToProvider().getAdjustedAmount();
+        return mBooking.getPaymentToProvider().getAdjustedAmount();
     }
 
     public String getCurrencySymbol()
     {
-        return booking.getPaymentToProvider().getCurrencySymbol();
+        return mBooking.getPaymentToProvider().getCurrencySymbol();
     }
 }
