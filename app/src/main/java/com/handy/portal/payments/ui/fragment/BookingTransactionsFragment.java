@@ -3,8 +3,8 @@ package com.handy.portal.payments.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.text.Html;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +14,8 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.CompletedJobsLog;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.Transaction;
 import com.handy.portal.payments.ui.element.TransactionView;
@@ -21,6 +23,7 @@ import com.handy.portal.ui.element.bookings.BookingResultBannerTextView;
 import com.handy.portal.ui.fragment.InjectedFragment;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.TextUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -143,8 +146,17 @@ public class BookingTransactionsFragment extends InjectedFragment
                 mBookingTransactions.getNetEarnings(), mBookingTransactions.getCurrencySymbol()));
 
         mJobNumberText.setText(getString(R.string.job_number_formatted, mBooking.getId()));
-        mHelpText.setText(Html.fromHtml(getString(R.string.question_about_payment)));
+
         mHelpText.setLinkTextColor(ContextCompat.getColor(getContext(), R.color.partner_blue));
         mHelpText.setMovementMethod(LinkMovementMethod.getInstance());
+
+        TextUtils.setTextViewHTML(mHelpText, getString(R.string.question_about_payment), new ClickableSpan()
+        {
+            @Override
+            public void onClick(final View widget)
+            {
+                bus.post(new LogEvent.AddLogEvent(new CompletedJobsLog.HelpClicked(mBooking)));
+            }
+        });
     }
 }
