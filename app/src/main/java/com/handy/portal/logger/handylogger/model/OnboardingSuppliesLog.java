@@ -11,7 +11,7 @@ public class OnboardingSuppliesLog extends EventLog
         public static final String PRODUCTS_LIST_SHOWN = "products_list_shown";
         public static final String PURCHASE_SUPPLIES_SELECTED = "purchase_supplies_selected";
         public static final String DECLINE_SUPPLIES_SELECTED = "decline_supplies_selected";
-        public static final String DECLINES_SUPPLIES_CONFIRMED = "decline_supplies_confirmed";
+        public static final String DECLINE_SUPPLIES_CONFIRMED = "decline_supplies_confirmed";
         public static final String PAYMENT_SCREEN_SHOWN = "payment_screen_shown";
         public static final String CONTINUE_TO_CONFIRMATION_SELECTED = "continue_to_confirmation_selected";
         public static final String CONFIRMATION_SCREEN_SHOWN = "confirmation_screen_shown";

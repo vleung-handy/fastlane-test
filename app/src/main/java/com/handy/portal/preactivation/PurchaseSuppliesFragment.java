@@ -163,7 +163,7 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
     private void declineSupplies()
     {
         bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
-                OnboardingSuppliesLog.Types.DECLINES_SUPPLIES_CONFIRMED)));
+                OnboardingSuppliesLog.Types.DECLINE_SUPPLIES_CONFIRMED)));
         bus.post(new HandyEvent.RequestOnboardingSupplies(false));
         // no need to wait for response
         new Handler().postDelayed(new Runnable()
