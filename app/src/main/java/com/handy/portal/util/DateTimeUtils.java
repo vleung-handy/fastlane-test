@@ -231,7 +231,7 @@ public final class DateTimeUtils
     {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        return getLocalTime12HoursFormatter().format(cal.getTime());
+        return getLocalTime12HoursFormatter().format(cal.getTime()).toLowerCase();
     }
 
     public static CountDownTimer setCountDownTimer(final TextView textView, long timeRemainMillis)

@@ -26,6 +26,7 @@ import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.notification.model.NotificationMessages;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
+import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.model.PaymentFlow;
@@ -109,6 +110,15 @@ class PaymentOutstandingFeesRetroFitCallback extends TypedHandyRetrofitCallback<
 class NeedsToUpdatePaymentInfoRetroFitCallback extends TypedHandyRetrofitCallback<RequiresPaymentInfoUpdate>
 {
     NeedsToUpdatePaymentInfoRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+
+class BookingTransactionsRetroFitCallback extends TypedHandyRetrofitCallback<BookingTransactions>
+{
+    BookingTransactionsRetroFitCallback(DataManager.Callback callback)
     {
         super(callback);
     }

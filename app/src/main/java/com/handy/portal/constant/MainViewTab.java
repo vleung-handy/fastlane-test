@@ -13,6 +13,7 @@ import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.notification.ui.fragment.NotificationsFragment;
+import com.handy.portal.payments.ui.fragment.BookingTransactionsWrapperFragment;
 import com.handy.portal.payments.ui.fragment.OutstandingFeesFragment;
 import com.handy.portal.payments.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsDetailFragment;
@@ -43,6 +44,7 @@ public enum MainViewTab implements Serializable
     COMPLEMENTARY_JOBS(ComplementaryBookingsFragment.class),
     NEARBY_JOBS(NearbyBookingsFragment.class),
     JOB_DETAILS(BookingDetailsWrapperFragment.class),
+    JOB_PAYMENT_DETAILS(BookingTransactionsWrapperFragment.class),
     CANCELLATION_REQUEST(CancellationRequestFragment.class),
     NOT_IN_PROGRESS_JOB_DETAILS(BookingFragment.class),
     SEND_RECEIPT_CHECKOUT(SendReceiptCheckoutFragment.class),

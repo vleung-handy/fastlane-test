@@ -16,6 +16,9 @@
     <color name="handy_green_pressed">#71A230</color>
     <color name="handyman_teal_pressed">#39B9A3</color>
     <color name="plumber_red_pressed">#F25757</color>
+    <color name="plumber_red_trans_10">#16FF5C5C</color>
+    <color name="electrician_yellow_trans_10">#16FFB600</color>
+    <color name="cleaner_green_trans_10">#168BC53E</color>
     <color name="tertiary_gray_disabled">#BFC8CE</color>
     <color name="disabled">#4D9CABB5</color>
     <color name="handy_bg">#F4F4F4</color>

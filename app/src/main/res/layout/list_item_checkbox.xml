@@ -9,8 +9,8 @@
     android:layout_marginBottom="@dimen/extra_margin"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/tab_bottom_padding"
-    android:paddingTop="@dimen/tab_bottom_padding"
+    android:paddingBottom="@dimen/tab_padding"
+    android:paddingTop="@dimen/tab_padding"
     tools:background="@drawable/border_gray_bg_white"
     >
 

@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
+import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
@@ -80,6 +81,26 @@ public class PaymentsManager
                 }
             });
         }
+    }
+
+    @Subscribe
+    public void onRequestBookingPaymentDetails(final PaymentEvent.RequestBookingPaymentDetails event)
+    {
+
+        mDataManager.getBookingTransactions(event.bookingId, event.bookingType.toLowerCase(), new DataManager.Callback<BookingTransactions>()
+        {
+            @Override
+            public void onSuccess(BookingTransactions response)
+            {
+                mBus.post(new PaymentEvent.ReceiveBookingPaymentDetailsSuccess(response));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                mBus.post(new PaymentEvent.ReceiveBookingPaymentDetailsError(error));
+            }
+        });
     }
 
     @Subscribe

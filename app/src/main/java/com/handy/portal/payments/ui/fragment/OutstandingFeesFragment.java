@@ -7,8 +7,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.Payment;
 import com.handy.portal.payments.model.PaymentOutstandingFees;
@@ -100,10 +102,23 @@ public class OutstandingFeesFragment extends ActionBarFragment
         else
         {
             mOutstandingFeeBreakdownLayout.removeAllViews();
-            for (Payment payment : paymentOutstandingFeesList)
+            for (final Payment payment : paymentOutstandingFeesList)
             {
                 PaymentFeeBreakdownView paymentFeeBreakdownView = new PaymentFeeBreakdownView(getContext());
                 paymentFeeBreakdownView.setDisplay(payment);
+                paymentFeeBreakdownView.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(final View v)
+                    {
+                        Bundle arguments = new Bundle();
+                        arguments.putString(BundleKeys.BOOKING_ID, payment.getBookingId());
+                        arguments.putString(BundleKeys.BOOKING_TYPE, payment.getBookingType());
+                        NavigationEvent.NavigateToTab event =
+                                new NavigationEvent.NavigateToTab(MainViewTab.JOB_PAYMENT_DETAILS, arguments, true);
+                        bus.post(event);
+                    }
+                });
                 mOutstandingFeeBreakdownLayout.addView(paymentFeeBreakdownView);
             }
         }

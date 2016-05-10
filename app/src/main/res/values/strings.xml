@@ -1,4 +1,10 @@
 <resources>
+
+    <!--\u0020 space-->
+    <!--\u2013 dash-->
+    <!--\u2019 single quote-->
+    <!--\u22C5 dot-->
+
     <string name="app_name">Handy Pro</string>
 
     <!-- Utils -->
@@ -329,6 +335,24 @@
     <string name="job_number_formatted">Job # %1$s</string>
     <string name="frequency">Frequency</string>
     <string name="completed_job">Completed Job</string>
+
+    <!-- Booking Transaction Summary-->
+    <string name="completed_job_2">Completed job</string>
+    <string name="customer_no_show">Customer no show</string>
+    <string name="customer_cancelled">Customer cancelled</string>
+    <string name="cancelled_on_customer">Cancelled on customer</string>
+    <string name="check_in_2">Check-in:\u0020</string>
+    <string name="check_out_2">Check-out:\u0020</string>
+    <string name="left_early">left early</string>
+    <string name="unassigned">Unassigned:</string>
+    <string name="you_cancelled">You cancelled the job</string>
+    <string name="transaction_summary">Transaction Summary</string>
+    <string name="get_help">Get Help</string>
+    <string name="net_earnings">Net earnings</string>
+    <string name="payment_batch_formatted">Payment: %1$s \u2013 %2$s</string>
+    <string name="policy_description_formatted"><![CDATA[%1$s <a href="%2$s">View Policy</a>]]></string>
+    <string name="question_about_payment"><![CDATA[Questions about your payments? <a href="http://prohelp.handy.com/hc/en-us/categories/202579757-Payments-Fees">Get Help</a>]]></string>
+    <string name="outstanding">Outstanding: Resolved with next payment</string>
 
     <!-- Booking Cancellation -->
     <string name="cancellation_request">Cancellation Request</string>
