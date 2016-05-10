@@ -87,7 +87,7 @@ public class OnboardJobView extends FrameLayout implements CompoundButton.OnChec
             @Override
             public void onClick(View v)
             {
-                mCheckBox.setChecked(!mBookingViewModel.selected);
+                mCheckBox.setChecked(!mBookingViewModel.isSelected());
             }
         });
     }
@@ -114,13 +114,13 @@ public class OnboardJobView extends FrameLayout implements CompoundButton.OnChec
 
         mTitle.setText(bookingViewModel.getTitle());
         mSubTitle.setText(bookingViewModel.getSubTitle());
-        mCheckBox.setChecked(bookingViewModel.selected);
+        mCheckBox.setChecked(bookingViewModel.isSelected());
     }
 
     @Override
     public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
     {
-        mBookingViewModel.selected = isChecked;
+        mBookingViewModel.setSelected(isChecked);
         if (isChecked)
         {
             this.setBackground(mCheckedDrawable);

@@ -331,7 +331,7 @@ public class GettingStartedActivity extends AppCompatActivity
             {
                 for (BookingViewModel bookingView : model.mBookingViewModels)
                 {
-                    if (bookingView.selected)
+                    if (bookingView.isSelected())
                     {
                         sum += bookingView.getBookingAmount();
                     }
@@ -370,7 +370,7 @@ public class GettingStartedActivity extends AppCompatActivity
             {
                 for (BookingViewModel bookingView : model.mBookingViewModels)
                 {
-                    if (bookingView.selected)
+                    if (bookingView.isSelected())
                     {
                         mJobClaimRequest.mJobs.add(new JobClaim(
                                 bookingView.getBooking().getId(),

@@ -18,7 +18,7 @@ public class BookingViewModel
 {
 
     private Booking mBooking;
-    public boolean selected;
+    public boolean mSelected;
     private String mDefaultSubTitle;
 
     public BookingViewModel(final Booking booking, String defaultSubtitle)
@@ -27,7 +27,17 @@ public class BookingViewModel
         mDefaultSubTitle = defaultSubtitle;
 
         //we want to default the jobs to selected, and allow the user to unselect
-        selected = true;
+        mSelected = true;
+    }
+
+    public boolean isSelected()
+    {
+        return mSelected;
+    }
+
+    public void setSelected(final boolean selected)
+    {
+        this.mSelected = selected;
     }
 
     public String getTitle()
