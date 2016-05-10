@@ -36,44 +36,29 @@
         >
 
         <TextView
-            android:id="@+id/transaction_period_text"
+            android:id="@+id/transaction_outstanding_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:text="@string/outstanding"
             android:textColor="@color/tertiary_gray"
             android:visibility="gone"
-            tools:text="Payment Aug 31 - Sept 7"
             tools:visibility="visible"
             />
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/transaction_policy_layout"
+    <TextView
+        android:id="@+id/transaction_policy_description_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/transaction_batches_layout"
         android:layout_marginTop="@dimen/default_margin_small"
+        android:drawableLeft="@drawable/ic_question_gray"
+        android:drawablePadding="@dimen/default_padding"
+        android:lineSpacingExtra="@dimen/lineSpacing"
+        android:textSize="@dimen/small_text_size"
         android:visibility="gone"
-        android:orientation="horizontal"
+        tools:text="Fee applies for being more than 30 minutes late to the job. View Policy."
         tools:visibility="visible"
-        >
-
-        <ImageView
-            android:layout_gravity="center_vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_question_gray"
-            />
-
-        <TextView
-            android:id="@+id/transaction_policy_description_text"
-            android:layout_marginLeft="@dimen/default_margin"
-            android:lineSpacingExtra="@dimen/lineSpacing"
-            android:textSize="@dimen/small_text_size"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="Fee applies for being more than 30 minutes late to the job. View Policy."
-            />
-
-    </LinearLayout>
+        />
 
 </RelativeLayout>

@@ -17,6 +17,7 @@ import com.handy.portal.R;
 import com.handy.portal.payments.model.Transaction;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.FontUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -29,10 +30,10 @@ public class TransactionView extends FrameLayout
     TextView mAmountText;
     @Bind(R.id.transaction_batches_layout)
     ViewGroup mBatchesLayout;
-    @Bind(R.id.transaction_policy_layout)
-    ViewGroup mPolicyLayout;
     @Bind(R.id.transaction_policy_description_text)
     TextView mPolicyDescriptionText;
+    @Bind(R.id.transaction_outstanding_text)
+    TextView mOutstandingText;
 
     public TransactionView(final Context context)
     {
@@ -78,17 +79,25 @@ public class TransactionView extends FrameLayout
             String startDate = DateTimeUtils.formatDateMonthDay(batch.getDateStart());
             String endDate = DateTimeUtils.formatDateMonthDay(batch.getDateEnd());
             textView.setText(getResources().getString(R.string.payment_batch_formatted, startDate, endDate));
+            textView.setTypeface(FontUtils.getFont(getContext(), FontUtils.CIRCULAR_BOOK));
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.default_text_size));
             textView.setTextColor(ContextCompat.getColor(getContext(), R.color.tertiary_gray));
             mBatchesLayout.addView(textView);
         }
 
+        if (transaction.getPaymentBatches().length == 0)
+        {
+            mOutstandingText.setVisibility(VISIBLE);
+        }
+
         if (transaction.getPolicy() != null)
         {
             Transaction.Policy policy = transaction.getPolicy();
-            mPolicyLayout.setVisibility(VISIBLE);
-            String description = getResources().getString(R.string.policy_description_formatted, policy.getDescription(), policy.getPolicyUrl());
+            mPolicyDescriptionText.setVisibility(VISIBLE);
+            String description = getResources().getString(
+                    R.string.policy_description_formatted, policy.getDescription(), policy.getPolicyUrl());
             mPolicyDescriptionText.setText(Html.fromHtml(description));
+            mPolicyDescriptionText.setLinkTextColor(ContextCompat.getColor(getContext(), R.color.partner_blue));
             mPolicyDescriptionText.setMovementMethod(LinkMovementMethod.getInstance());
         }
 

@@ -2,7 +2,6 @@ package com.handy.portal.payments.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +63,6 @@ public class BookingTransactionsWrapperFragment extends ActionBarFragment
     {
         super.onResume();
         requestBookingPaymentDetails();
-        Log.d("xizz", "Booking id: " + mRequestedBookingId);
     }
 
     @OnClick(R.id.try_again_button)

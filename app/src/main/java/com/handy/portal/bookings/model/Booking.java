@@ -452,7 +452,14 @@ public class Booking implements Comparable<Booking>, Serializable
 
     public String getRegionName()
     {
-        return mAddress != null ? mAddress.getShortRegion() : "";
+        if (isProxy())
+        {
+            return getLocationName();
+        }
+        else
+        {
+            return mAddress != null ? mAddress.getShortRegion() : "";
+        }
     }
 
     //Basic booking statuses inferrable from mProviderId

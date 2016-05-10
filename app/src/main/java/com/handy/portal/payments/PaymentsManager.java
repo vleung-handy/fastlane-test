@@ -87,7 +87,7 @@ public class PaymentsManager
     public void onRequestBookingPaymentDetails(final PaymentEvent.RequestBookingPaymentDetails event)
     {
 
-        mDataManager.getBookingTransactions(event.bookingId, event.bookingType, new DataManager.Callback<BookingTransactions>()
+        mDataManager.getBookingTransactions(event.bookingId, event.bookingType.toLowerCase(), new DataManager.Callback<BookingTransactions>()
         {
             @Override
             public void onSuccess(BookingTransactions response)
@@ -101,30 +101,6 @@ public class PaymentsManager
                 mBus.post(new PaymentEvent.ReceiveBookingPaymentDetailsError(error));
             }
         });
-//
-//        long currentTime = System.currentTimeMillis();
-//
-//        Booking booking = new Booking(event.bookingId, "Midtown East",
-//                new Date(currentTime - 5 * DateUtils.HOUR_IN_MILLIS),
-//                new Date(currentTime - 2 * DateUtils.HOUR_IN_MILLIS),
-//                new Date(currentTime - 5 * DateUtils.HOUR_IN_MILLIS - 10 * DateUtils.MINUTE_IN_MILLIS),
-//                new Date(currentTime - 2 * DateUtils.HOUR_IN_MILLIS - 10 * DateUtils.MINUTE_IN_MILLIS),
-//                4500);
-//
-//        ArrayList<Transaction> transactions = new ArrayList<>();
-//        Transaction.Batch[] batches = new Transaction.Batch[]
-//                {
-//                        new Transaction.Batch(new Date(currentTime - 7 * DateUtils.DAY_IN_MILLIS), new Date(currentTime - 14 * DateUtils.DAY_IN_MILLIS)),
-//                        new Transaction.Batch(new Date(currentTime - 7 * DateUtils.DAY_IN_MILLIS), new Date(currentTime - 14 * DateUtils.DAY_IN_MILLIS)),
-//                };
-//        Transaction.Policy policy = new Transaction.Policy("no-show", "Fee applies for being more than 30 minutes late to the job.", "http://www.google.com");
-//        transactions.add(new Transaction("Base earnings", "base_pay", batches, 3500, "$", null));
-//        transactions.add(new Transaction("Tip", "tip", batches, 1000, "$", null));
-//        transactions.add(new Transaction("Customer no show", "base_pay", batches, 1000, "$", policy));
-//
-//        BookingTransactions bookingTransactions = new BookingTransactions(booking, transactions.toArray(new Transaction[0]), 5500, "$");
-//
-//        mBus.post(new BookingEvent.ReceiveBookingPaymentDetailsSuccess(bookingTransactions));
     }
 
     @Subscribe

@@ -2,6 +2,7 @@ package com.handy.portal.payments.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
@@ -43,10 +44,14 @@ public class BookingTransactionsFragment extends InjectedFragment
     TextView mUnassignedHelpText;
     @Bind(R.id.booking_transactions_check_in_time_text)
     TextView mCheckInTimeText;
+    @Bind(R.id.booking_transactions_check_in_label)
+    TextView mCheckInLabelText;
     @Bind(R.id.booking_transactions_late_text)
     TextView mLateText;
     @Bind(R.id.booking_transactions_check_out_time_text)
     TextView mCheckOutTimeText;
+    @Bind(R.id.booking_transactions_check_out_label)
+    TextView mCheckOutLabelText;
     @Bind(R.id.booking_transactions_check_out_help_text)
     TextView mCheckOutHelpText;
     @Bind(R.id.booking_transactions_transactions_layout)
@@ -115,9 +120,17 @@ public class BookingTransactionsFragment extends InjectedFragment
         {
             mCheckInTimeText.setText(DateTimeUtils.getTimeWithoutDate(mBooking.getCheckInTime()));
         }
+        else
+        {
+            mCheckInLabelText.setTextColor(ContextCompat.getColor(getContext(), R.color.text_light_gray));
+        }
         if (mBooking.getCheckOutTime() != null)
         {
             mCheckOutTimeText.setText(DateTimeUtils.getTimeWithoutDate(mBooking.getCheckOutTime()));
+        }
+        else
+        {
+            mCheckOutLabelText.setTextColor(ContextCompat.getColor(getContext(), R.color.text_light_gray));
         }
 
         for (int i = 0; i < mTransactions.length; ++i)
@@ -131,6 +144,7 @@ public class BookingTransactionsFragment extends InjectedFragment
 
         mJobNumberText.setText(getString(R.string.job_number_formatted, mBooking.getId()));
         mHelpText.setText(Html.fromHtml(getString(R.string.question_about_payment)));
+        mHelpText.setLinkTextColor(ContextCompat.getColor(getContext(), R.color.partner_blue));
         mHelpText.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }
