@@ -15,11 +15,9 @@ import com.handy.portal.logger.handylogger.model.OnboardingSuppliesLog;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
 import com.handy.portal.payments.PaymentEvent;
-import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.view.DateFormFieldTableRow;
 import com.handy.portal.ui.view.FormFieldTableRow;
 import com.handy.portal.ui.view.SimpleContentLayout;
-import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
 import com.stripe.android.model.Card;
@@ -73,9 +71,8 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        final PaymentInfo cost = mOnboardingSuppliesInfo.getCost();
         final String orderTotalFormatted = getString(R.string.order_total_formatted,
-                CurrencyUtils.formatPriceWithoutCents(cost.getAmount(), cost.getCurrencySymbol()));
+                mOnboardingSuppliesInfo.getSuppliesCost());
         mOrderSummary.setContent(getString(R.string.supply_starter_kit), orderTotalFormatted)
                 .setImage(getResources().getDrawable(R.drawable.img_supplies));
 
