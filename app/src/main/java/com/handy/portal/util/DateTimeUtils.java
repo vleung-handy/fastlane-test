@@ -46,8 +46,6 @@ public final class DateTimeUtils
             new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
     public final static SimpleDateFormat LOCAL_TIME_12_HOURS =
             new SimpleDateFormat("hh:mm a", Locale.getDefault());
-    public final static SimpleDateFormat NUMERIC_YEAR_MONTH_DATE_FORMATTER
-            = new SimpleDateFormat("yyyyMMdd");
 
     public final static int HOURS_IN_DAY = 24;
     public final static int HOURS_IN_SIX_DAYS = HOURS_IN_DAY * 6;
