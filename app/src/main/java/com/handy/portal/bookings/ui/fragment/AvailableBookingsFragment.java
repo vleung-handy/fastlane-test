@@ -50,7 +50,7 @@ import static com.handy.portal.bookings.BookingModalsManager.BookingsForDayModal
 
 public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.ReceiveAvailableBookingsSuccess>
 {
-    private final static int DEFAULT_NUM_DAYS_SPANNING_AVAILABLE_BOOKINGS = 6;
+    private final static int DEFAULT_NUM_DAYS_SPANNING_AVAILABLE_BOOKINGS = 7; //includes Today
     private static final String SOURCE_AVAILABLE_JOBS_LIST = "available_jobs_list";
 
     @Bind(R.id.available_jobs_list_view)
@@ -92,7 +92,8 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         getBookingListView().addHeaderView(mJobAccessUnlockedBannerLayout);
         //hacky: need to add the banner as booking list header view so it will scroll with the bookings list
 
-        mJobAccessLockedLayout.setKeepRateInfoButtonClickListener(new View.OnClickListener() {
+        mJobAccessLockedLayout.setKeepRateInfoButtonClickListener(new View.OnClickListener()
+        {
             @Override
             public void onClick(final View v)
             {
@@ -180,9 +181,10 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         int daysSpanningAvailableBookings = DEFAULT_NUM_DAYS_SPANNING_AVAILABLE_BOOKINGS;
         if (configManager.getConfigurationResponse() != null)
         {
-            daysSpanningAvailableBookings = configManager.getConfigurationResponse().getHoursSpanningAvailableBookings() / DateTimeUtils.HOURS_IN_DAY;
+            daysSpanningAvailableBookings = configManager.getConfigurationResponse()
+                    .getNumberOfDaysForAvailableJobs();
         }
-        return daysSpanningAvailableBookings + 1; // plus today
+        return daysSpanningAvailableBookings;
     }
 
     @Override
@@ -234,6 +236,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     /**
      * TODO needs better naming
      * populates the booking content view. may show a locked screen, banners and/or the booking list
+     *
      * @param bookingsWrapper
      * @param dateOfBookings
      */
@@ -246,7 +249,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     /**
      * shows any popups based on the given bookings/date selected
-     *
+     * <p/>
      * shows any banners based on the given bookings/date selected
      *
      * @param bookingsWrapper
@@ -257,10 +260,10 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         mJobAccessUnlockedBannerLayout.setContentVisible(false);
         mJobAccessLockedLayout.setVisibility(View.GONE);
         BookingsWrapper.PriorityAccessInfo priorityAccessInfo = bookingsWrapper.getPriorityAccessInfo();
-        if(priorityAccessInfo != null)
+        if (priorityAccessInfo != null)
         {
             BookingsWrapper.PriorityAccessInfo.BookingsForDayPriorityAccessStatus bookingsForDayPriorityAccessStatus = priorityAccessInfo.getBookingsForDayStatus();
-            if(bookingsForDayPriorityAccessStatus != null)
+            if (bookingsForDayPriorityAccessStatus != null)
             {
                 switch (bookingsForDayPriorityAccessStatus)
                 {
@@ -447,7 +450,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         super.handleBookingsRetrieved(event);
 
-        if(event.bookingsWrapper == null || event.day == null)
+        if (event.bookingsWrapper == null || event.day == null)
         {
             Crashlytics.logException(new Exception("received available bookings event with null bookings wrapper or day"));
             return;
@@ -459,6 +462,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     /**
      * resets the modal shown status for the given day if the priority access status
      * is not explicitly "unlocked" or "new_pro", so is either not present or "locked"
+     *
      * @param bookingsWrapper
      * @param date
      */
