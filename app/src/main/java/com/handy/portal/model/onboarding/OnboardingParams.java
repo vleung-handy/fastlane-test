@@ -70,16 +70,13 @@ public class OnboardingParams
         return isOnboardingEnabled() && !TextUtils.isNullOrEmpty(getOnboardingCompleteWebUrl());
     }
 
-<<<<<<< HEAD:app/src/main/java/com/handy/portal/model/OnboardingParams.java
     public boolean shouldShowNativeOnboarding()
     {
         return isOnboardingEnabled() && mOnboardingUseNativeFlow;
     }
 
-=======
     public OnboardingSuppliesParams getOnboardingSuppliesParams()
     {
         return mOnboardingSuppliesParams;
     }
->>>>>>> onboarding:app/src/main/java/com/handy/portal/model/onboarding/OnboardingParams.java
 }

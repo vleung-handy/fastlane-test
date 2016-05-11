@@ -63,7 +63,6 @@
     <color name="shadow_gray">#9CA7B2</color>
     <color name="helper_text_gray">#A1A1A1</color>
     <color name="border_mid_gray">#CCCCCC</color>
-    <color name="requested_green">#8BC53E</color>
     <color name="list_divider">#E2E2E2</color>
     <color name="form_label">#999999</color>
     <color name="payments_batch_list_entry_subtitle">#999999</color>

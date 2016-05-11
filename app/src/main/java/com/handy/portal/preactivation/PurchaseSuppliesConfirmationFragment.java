@@ -129,7 +129,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
         else
         {
             showLoadingOverlay();
-            bus.post(new ProfileEvent.RequestProviderProfile());
+            bus.post(new ProfileEvent.RequestProviderProfile(true));
         }
     }
 
