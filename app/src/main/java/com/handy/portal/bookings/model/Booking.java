@@ -470,7 +470,7 @@ public class Booking implements Comparable<Booking>, Serializable
         UNAVAILABLE,
     }
 
-    public static class DisplayAttributes
+    public static class DisplayAttributes implements Serializable
     {
         @SerializedName("listing_title")
         private String mListingTitle;
