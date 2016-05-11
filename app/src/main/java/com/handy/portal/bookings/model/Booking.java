@@ -141,8 +141,7 @@ public class Booking implements Comparable<Booking>, Serializable
 
     public int compareTo(@NonNull Booking other)
     {
-        boolean isComparingWithProxy = this.isProxy() || other.isProxy();
-        if (!isComparingWithProxy && getProviderId().equals(NO_PROVIDER_ASSIGNED))
+        if (getProviderId().equals(NO_PROVIDER_ASSIGNED))
         {
             if (this.isRequested() && !other.isRequested())
             {
