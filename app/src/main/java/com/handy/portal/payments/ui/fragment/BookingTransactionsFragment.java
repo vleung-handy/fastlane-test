@@ -25,7 +25,7 @@ import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.Transaction;
 import com.handy.portal.payments.ui.element.TransactionView;
 import com.handy.portal.ui.element.bookings.BookingResultBannerTextView;
-import com.handy.portal.ui.fragment.InjectedFragment;
+import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
 
@@ -35,7 +35,7 @@ import butterknife.ButterKnife;
 /**
  * fragment for handling bookings that are viewed for payment details
  */
-public class BookingTransactionsFragment extends InjectedFragment
+public class BookingTransactionsFragment extends ActionBarFragment
 {
     @Bind(R.id.booking_transactions_banner_text)
     BookingResultBannerTextView mBannerText;
@@ -113,6 +113,7 @@ public class BookingTransactionsFragment extends InjectedFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+        setActionBar(getString(R.string.job_details), true);
         setDisplay();
     }
 
@@ -148,6 +149,10 @@ public class BookingTransactionsFragment extends InjectedFragment
         }
         mNetEarningAmountText.setText(CurrencyUtils.formatPriceWithCents(
                 mBookingTransactions.getNetEarnings(), mBookingTransactions.getCurrencySymbol()));
+        if (mBookingTransactions.getNetEarnings() < 0)
+        {
+            mNetEarningAmountText.setTextColor(ContextCompat.getColor(getContext(), R.color.plumber_red));
+        }
 
         mJobNumberText.setText(getString(R.string.job_number_formatted, mBooking.getId()));
 

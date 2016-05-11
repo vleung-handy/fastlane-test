@@ -337,6 +337,7 @@
     <string name="completed_job">Completed Job</string>
 
     <!-- Booking Transaction Summary-->
+    <string name="job_details">Job Details</string>
     <string name="completed_job_2">Completed job</string>
     <string name="customer_no_show">Customer no show</string>
     <string name="customer_cancelled">Customer cancelled</string>
