@@ -169,8 +169,8 @@ public class BookingTransactionsFragment extends ActionBarFragment
 
         setTextViewHTML(mHelpText, getString(R.string.question_about_payment));
 
-        if (mConfigManager.getConfigurationResponse() != null &&
-                mConfigManager.getConfigurationResponse().showBookingTransactionSummary())
+        if (mConfigManager.getConfigurationResponse() == null ||
+                !mConfigManager.getConfigurationResponse().showBookingTransactionSummary())
         {
             mTransactionSummary.setVisibility(View.GONE);
         }
