@@ -43,6 +43,9 @@ public class ConfigurationResponse
     @SerializedName("help_center")
     private HelpCenterInfo mHelpCenterInfo;
 
+    @SerializedName("number_of_days_for_available_jobs")
+    private int mNumberOfDaysForAvailableJobs;
+
     public boolean isLocationScheduleServiceEnabled()
     {
         return mLocationScheduleServiceEnabled;
@@ -112,6 +115,11 @@ public class ConfigurationResponse
     public boolean shouldUseHelpCenterWebView()
     {
         return mHelpCenterInfo != null && mHelpCenterInfo.shouldUseHelpCenterWebView();
+    }
+
+    public int getNumberOfDaysForAvailableJobs()
+    {
+        return mNumberOfDaysForAvailableJobs;
     }
 
     public String getHelpCenterUrl()
