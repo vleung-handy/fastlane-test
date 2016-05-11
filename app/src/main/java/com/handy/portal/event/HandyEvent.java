@@ -10,6 +10,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.Booking.Action;
 import com.handy.portal.bookings.model.Booking.BookingType;
 import com.handy.portal.bookings.model.BookingClaimDetails;
+import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.data.DataManager;
@@ -22,6 +23,8 @@ import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.model.TermsDetailsGroup;
+import com.handy.portal.onboarding.model.JobClaimRequest;
+import com.handy.portal.onboarding.model.JobClaimResponse;
 
 import java.util.Date;
 import java.util.List;
@@ -250,6 +253,11 @@ public abstract class HandyEvent
     }
 
 
+    public static class RequestOnboardingJobs extends RequestEvent
+    {
+    }
+
+
     public static class RequestScheduledBookings extends RequestBookingsEvent
     {
         public final List<Date> dates;
@@ -313,6 +321,17 @@ public abstract class HandyEvent
     }
 
 
+    public static class ReceiveOnboardingJobsSuccess extends ReceiveSuccessEvent
+    {
+        public BookingsListWrapper bookings;
+
+        public ReceiveOnboardingJobsSuccess(BookingsListWrapper bookings)
+        {
+            this.bookings = bookings;
+        }
+    }
+
+
     public static class ReceiveScheduledBookingsSuccess extends ReceiveBookingsSuccess
     {
         public ReceiveScheduledBookingsSuccess(BookingsWrapper bookingsWrapper, Date day)
@@ -334,6 +353,15 @@ public abstract class HandyEvent
         public ReceiveAvailableBookingsError(DataManager.DataManagerError error, List<Date> days)
         {
             this.days = days;
+            this.error = error;
+        }
+    }
+
+
+    public static class ReceiveOnboardingJobsError extends ReceiveErrorEvent
+    {
+        public ReceiveOnboardingJobsError(DataManager.DataManagerError error)
+        {
             this.error = error;
         }
     }
@@ -408,6 +436,16 @@ public abstract class HandyEvent
         }
     }
 
+
+    public static class RequestClaimJobs extends RequestEvent
+    {
+        public final JobClaimRequest mJobClaimRequest;
+
+        public RequestClaimJobs(JobClaimRequest jobClaimRequests)
+        {
+            mJobClaimRequest = jobClaimRequests;
+        }
+    }
 
     @Track("cancel claim confirmation accepted")
     public static class RequestRemoveJob extends RequestBookingActionEvent
@@ -501,6 +539,15 @@ public abstract class HandyEvent
         }
     }
 
+    public static class ReceiveClaimJobsSuccess extends ReceiveSuccessEvent
+    {
+        public JobClaimResponse mJobClaimResponse;
+
+        public ReceiveClaimJobsSuccess(JobClaimResponse jobClaimResponse)
+        {
+            mJobClaimResponse = jobClaimResponse;
+        }
+    }
 
     @Track("remove job")
     public static class ReceiveRemoveJobSuccess extends ReceiveBookingSuccessEvent
@@ -567,6 +614,14 @@ public abstract class HandyEvent
         }
     }
 
+
+    public static class ReceiveClaimJobsError extends ReceiveErrorEvent
+    {
+        public ReceiveClaimJobsError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 
     public static class ReceiveRemoveJobError extends ReceiveErrorEvent
     {
