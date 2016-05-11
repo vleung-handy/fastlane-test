@@ -169,9 +169,9 @@
 
                 <LinearLayout
                     android:id="@+id/booking_transactions_check_in_out_layout"
-                    android:baselineAligned="false"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:baselineAligned="false"
                     android:divider="?android:attr/dividerHorizontal"
                     android:dividerPadding="@dimen/horizontal_divider_padding"
                     android:orientation="horizontal"
@@ -275,55 +275,63 @@
         </LinearLayout>
 
         <LinearLayout
-            android:id="@+id/booking_transactions_transactions_layout"
+            android:id="@+id/booking_transactions_transactions_summary_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/row_margin"
-            android:background="@color/white"
-            android:divider="?android:attr/dividerHorizontal"
-            android:dividerPadding="@dimen/horizontal_divider_padding"
             android:orientation="vertical"
-            android:showDividers="middle|end"
             >
 
-            <TextView
-                style="@style/CircularBold"
+            <LinearLayout
+                android:id="@+id/booking_transactions_transactions_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/row_margin"
+                android:background="@color/white"
+                android:divider="?android:attr/dividerHorizontal"
+                android:dividerPadding="@dimen/horizontal_divider_padding"
+                android:orientation="vertical"
+                android:showDividers="middle|end"
+                >
+
+                <TextView
+                    style="@style/CircularBold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:padding="@dimen/default_padding"
+                    android:text="@string/transaction_summary"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/large_text_size"
+                    />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
                 android:padding="@dimen/default_padding"
-                android:text="@string/transaction_summary"
-                android:textColor="@color/black"
-                android:textSize="@dimen/large_text_size"
-                />
+                >
+
+                <TextView
+                    style="@style/CircularBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/net_earnings"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/default_text_size"
+                    />
+
+                <TextView
+                    android:id="@+id/booking_transactions_net_earnings_amount_text"
+                    style="@style/CircularBold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/large_text_size"
+                    tools:text="$32.50"
+                    />
+            </RelativeLayout>
         </LinearLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:padding="@dimen/default_padding"
-            >
-
-            <TextView
-                style="@style/CircularBold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/net_earnings"
-                android:textColor="@color/black"
-                android:textSize="@dimen/default_text_size"
-                />
-
-            <TextView
-                android:id="@+id/booking_transactions_net_earnings_amount_text"
-                style="@style/CircularBold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:textColor="@color/black"
-                android:textSize="@dimen/large_text_size"
-                tools:text="$32.50"
-                />
-        </RelativeLayout>
 
         <TextView
             android:id="@+id/booking_transactions_job_number_text"

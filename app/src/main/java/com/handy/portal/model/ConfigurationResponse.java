@@ -46,6 +46,9 @@ public class ConfigurationResponse
     @SerializedName("number_of_days_for_available_jobs")
     private int mNumberOfDaysForAvailableJobs;
 
+    @SerializedName("show_payment_transactions")
+    private boolean mShowBookingTransactionSummary;
+
     public boolean isLocationScheduleServiceEnabled()
     {
         return mLocationScheduleServiceEnabled;
@@ -125,6 +128,11 @@ public class ConfigurationResponse
     public String getHelpCenterUrl()
     {
         return mHelpCenterInfo == null ? null : mHelpCenterInfo.getHelpCenterUrl();
+    }
+
+    public boolean showBookingTransactionSummary()
+    {
+        return mShowBookingTransactionSummary;
     }
 
     public static class HelpCenterInfo
