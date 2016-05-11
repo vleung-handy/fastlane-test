@@ -60,7 +60,7 @@
                 android:textColor="@color/handy_green"
                 android:textSize="@dimen/xlarge_text_size"
                 android:visibility="gone"
-                tools:text=" + $5 BONUS"
+                tools:text=" + $5 REWARD"
                 tools:visibility="visible"
                 />
 
