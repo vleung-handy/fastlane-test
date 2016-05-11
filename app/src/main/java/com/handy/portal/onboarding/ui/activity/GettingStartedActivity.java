@@ -89,7 +89,7 @@ public class GettingStartedActivity extends AppCompatActivity
     private OnboardJobClaimConfirmDialog mOnboardJobClaimConfirmDialog;
 
     private JobsRecyclerAdapter mAdapter;
-    private BookingsListWrapper mJobs2;
+    private BookingsListWrapper mJobs;
     private boolean mJobLoaded;
     private String mNoThanks;
 
@@ -142,7 +142,7 @@ public class GettingStartedActivity extends AppCompatActivity
         super.onResume();
         mBus.register(this);
 
-        if (!hasJobs(mJobs2))
+        if (!hasJobs(mJobs))
         {
             showLoadingDialog();
             loadJobs();
@@ -151,7 +151,7 @@ public class GettingStartedActivity extends AppCompatActivity
 
     private void loadJobs()
     {
-        mJobs2 = null;
+        mJobs = null;
         mJobLoaded = false;
         mRequestTime = System.currentTimeMillis();
         mFetchErrorView.setVisibility(View.GONE);
@@ -237,7 +237,7 @@ public class GettingStartedActivity extends AppCompatActivity
         Log.d(TAG, "onJobLoaded: ");
         mLoadingOverlayView.setVisibility(View.GONE);
         mJobLoaded = true;
-        mJobs2 = event.bookings;
+        mJobs = event.bookings;
         bindJobsAndRemoveDialog();
     }
 
@@ -271,7 +271,7 @@ public class GettingStartedActivity extends AppCompatActivity
         {
             Log.d(TAG, "bindJobs: ");
 
-            if (!hasJobs(mJobs2))
+            if (!hasJobs(mJobs))
             {
                 //there are no jobs, so..., go to the available jobs fragment
                 if (dialogVisible())
@@ -285,7 +285,7 @@ public class GettingStartedActivity extends AppCompatActivity
             else
             {
                 mAdapter = new JobsRecyclerAdapter(
-                        mJobs2.getBookingsWrappers(),
+                        mJobs.getBookingsWrappers(),
                         getString(R.string.onboard_getting_started_title),
                         GettingStartedActivity.this,
                         getResources().getString(R.string.onboard_no_time_available)
