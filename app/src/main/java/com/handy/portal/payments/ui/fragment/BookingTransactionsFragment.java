@@ -21,6 +21,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.CompletedJobsLog;
+import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.Transaction;
 import com.handy.portal.payments.ui.element.TransactionView;
@@ -28,6 +29,8 @@ import com.handy.portal.ui.element.bookings.BookingResultBannerTextView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -37,6 +40,9 @@ import butterknife.ButterKnife;
  */
 public class BookingTransactionsFragment extends ActionBarFragment
 {
+    @Inject
+    ConfigManager mConfigManager;
+
     @Bind(R.id.booking_transactions_banner_text)
     BookingResultBannerTextView mBannerText;
     @Bind(R.id.booking_transactions_location_text)
@@ -69,6 +75,8 @@ public class BookingTransactionsFragment extends ActionBarFragment
     TextView mJobNumberText;
     @Bind(R.id.booking_transactions_help_text)
     TextView mHelpText;
+    @Bind(R.id.booking_transactions_transactions_summary_layout)
+    ViewGroup mTransactionSummary;
 
 
     private BookingTransactions mBookingTransactions;
@@ -160,6 +168,12 @@ public class BookingTransactionsFragment extends ActionBarFragment
         mHelpText.setMovementMethod(LinkMovementMethod.getInstance());
 
         setTextViewHTML(mHelpText, getString(R.string.question_about_payment));
+
+        if (mConfigManager.getConfigurationResponse() != null &&
+                mConfigManager.getConfigurationResponse().showBookingTransactionSummary())
+        {
+            mTransactionSummary.setVisibility(View.GONE);
+        }
     }
 
 
