@@ -5,4 +5,8 @@
         <item name="android:windowTranslucentStatus">false</item>
         <item name="colorControlActivated">@color/handy_blue</item>
     </style>
+
+    <style name="AppTheme.Translucent">
+        <item name="android:windowTranslucentStatus">true</item>
+    </style>
 </resources>

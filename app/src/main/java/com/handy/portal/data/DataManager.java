@@ -27,6 +27,8 @@ import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.notification.model.NotificationMessages;
+import com.handy.portal.onboarding.model.JobClaimRequest;
+import com.handy.portal.onboarding.model.JobClaimResponse;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
@@ -88,6 +90,11 @@ public class DataManager
         mService.getAvailableBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
     }
 
+    public void getOnboardingJobs(final Callback<BookingsListWrapper> cb)
+    {
+        mService.getOnboardingJobs(new BookingsListWrapperHandyRetroFitCallback(cb));
+    }
+
     public void getScheduledBookings(Date[] dates, final Callback<BookingsListWrapper> cb)
     {
         mService.getScheduledBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
@@ -108,6 +115,11 @@ public class DataManager
     public void claimBooking(String bookingId, BookingType type, final Callback<BookingClaimDetails> cb)
     {
         mService.claimBooking(bookingId, type.toString().toLowerCase(), new BookingClaimHandyRetroFitCallback(cb));
+    }
+
+    public void claimBookings(JobClaimRequest jobClaimRequest, final Callback<JobClaimResponse> cb)
+    {
+        mService.claimBookings(jobClaimRequest, new BookingsClaimHandyRetroFitCallback(cb));
     }
 
     public void removeBooking(String bookingId, BookingType type, final Callback<Booking> cb)

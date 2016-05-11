@@ -16,6 +16,9 @@ public class OnboardingParams
     @SerializedName("onboarding_complete_web_url")
     private String mOnboardingCompleteWebUrl;
 
+    @SerializedName("onboarding_use_native_flow")
+    private boolean mOnboardingUseNativeFlow;
+
     @SerializedName("onboarding_supplies")
     private OnboardingSuppliesParams mOnboardingSuppliesParams;
 
@@ -62,9 +65,14 @@ public class OnboardingParams
         return mOnboardingBlocking;
     }
 
-    public boolean shouldShowOnboarding()
+    public boolean shouldShowWebOnboarding()
     {
         return isOnboardingEnabled() && !TextUtils.isNullOrEmpty(getOnboardingCompleteWebUrl());
+    }
+
+    public boolean shouldShowNativeOnboarding()
+    {
+        return isOnboardingEnabled() && mOnboardingUseNativeFlow;
     }
 
     public OnboardingSuppliesParams getOnboardingSuppliesParams()

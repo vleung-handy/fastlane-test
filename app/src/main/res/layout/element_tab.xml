@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:gravity="center"
     android:padding="@dimen/extra_padding"
-    tools:background="@color/light_gray"
+    tools:background="@color/black"
     >
 
     <ImageView
