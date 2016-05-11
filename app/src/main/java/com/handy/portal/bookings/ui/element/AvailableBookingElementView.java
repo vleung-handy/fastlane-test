@@ -101,17 +101,22 @@ public class AvailableBookingElementView extends BookingElementView
         Booking.DisplayAttributes proRequestDisplayAttributes = booking.getProviderRequestDisplayAttributes();
         boolean isRequested = booking.isRequested();
 
-        if(isRequested && proRequestDisplayAttributes != null)
+        if (isRequested
+                && proRequestDisplayAttributes != null
+                && proRequestDisplayAttributes.getListingTitle() != null)
         {
-            if(proRequestDisplayAttributes.getListingTitle() != null)
-            {
-                mBookingMessageTitleView
-                        .setBodyText(proRequestDisplayAttributes.getListingTitle())
-                        .setVisibility(View.VISIBLE); //the layout is GONE by default
-            }
+            mBookingMessageTitleView
+                    .setBodyText(proRequestDisplayAttributes.getListingTitle())
+                    .setVisibility(View.VISIBLE); //the layout is GONE by default
 
-            //show the green strip indicator on the left of this entry
+            //show the green strip indicator on the left of this entry.
+            //if no listing title don't show this because it doesn't convey any information by itself
             mLeftStripIndicator.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mLeftStripIndicator.setVisibility(View.GONE);
+            mBookingMessageTitleView.setVisibility(View.GONE);
         }
 
         //Partner
