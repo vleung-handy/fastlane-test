@@ -25,6 +25,7 @@ import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.notification.model.NotificationMessages;
+import com.handy.portal.onboarding.model.JobClaimResponse;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
@@ -128,6 +129,15 @@ class BookingTransactionsRetroFitCallback extends TypedHandyRetrofitCallback<Boo
 class BookingClaimHandyRetroFitCallback extends TypedHandyRetrofitCallback<BookingClaimDetails>
 {
     BookingClaimHandyRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+
+class BookingsClaimHandyRetroFitCallback extends TypedHandyRetrofitCallback<JobClaimResponse>
+{
+    BookingsClaimHandyRetroFitCallback(DataManager.Callback callback)
     {
         super(callback);
     }

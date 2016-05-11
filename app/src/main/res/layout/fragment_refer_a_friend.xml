@@ -73,7 +73,7 @@
 
                 <TextView
                     android:id="@+id/title"
-                    style="@style/TextView.XXLarge.Bold"
+                    style="@style/TextView.Headline.XLarge.Bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/row_margin"
