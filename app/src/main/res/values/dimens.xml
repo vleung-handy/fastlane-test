@@ -5,6 +5,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="row_margin">8dp</dimen>
+    <dimen name="default_margin_small">12dp</dimen>
+    <dimen name="default_margin_half">8dp</dimen>
     <dimen name="default_margin">16dp</dimen>
     <dimen name="default_margin_medium">24dp</dimen>
     <dimen name="extra_margin_xsmall">3dp</dimen>
@@ -37,14 +39,18 @@
     <dimen name="dashboard_header_padding">20dp</dimen>
     <dimen name="default_padding_xlarge">48dp</dimen>
     <dimen name="options_wheel_padding">10dp</dimen>
+    <dimen name="inner_field_padding">12dp</dimen>
+    <dimen name="tab_padding">8dp</dimen>
+    <dimen name="tab_side_padding">4dp</dimen>
     <dimen name="inner_text_field_padding">12dp</dimen>
-    <dimen name="tab_bottom_padding">8dp</dimen>
     <dimen name="toolbar_top_padding">24dp</dimen>
     <dimen name="form_field_left_padding">11dp</dimen>
     <dimen name="terms_side_padding">8dp</dimen>
+    <dimen name="horizontal_divider_padding">8dp</dimen>
 
     <!-- line spacing -->
     <dimen name="lineSpacing">2dp</dimen>
+    <dimen name="lineSpacing_x2">4dp</dimen>
     <dimen name="markerPriceSpacing">18dp</dimen>
 
     <!-- text sizes -->
@@ -77,6 +83,7 @@
     <dimen name="negative_complete_button_height_half">-32dp</dimen>
     <dimen name="complete_button_height">64dp</dimen>
     <dimen name="navigation_drawer_width">264dp</dimen>
+    <dimen name="default_image_size">80dp</dimen>
 
     <!--notifications-->
     <dimen name="notification_list_entry_vertical_padding">14dp</dimen>
@@ -101,6 +108,7 @@
     <dimen name="job_cell_min_height">128dp</dimen>
     <dimen name="job_cell_icon_size">40dp</dimen>
     <dimen name="job_cell_dot_size">8dp</dimen>
+    <dimen name="job_cell_left_strip_indicator_width">5dp</dimen>
 
     <!-- Dividers -->
     <dimen name="divider_height">1dp</dimen>

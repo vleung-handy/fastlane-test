@@ -10,6 +10,8 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
@@ -137,13 +139,14 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
         {
             if (convertView == null || !(convertView instanceof PaymentsBatchListHeaderView))
             {
-                v = inflater.inflate(R.layout.element_payments_batch_list_current_week_header, null);
+                v = inflater.inflate(R.layout.element_payments_batch_list_current_week_header, parent, false);
                 v.findViewById(R.id.payments_current_week_remaining_fees_row).setOnClickListener(new View.OnClickListener()
                 {
                     @Override
                     public void onClick(final View v)
                     {
                         mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.OUTSTANDING_FEES, true));
+                        mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.FeeDetailSelected()));
                     }
                 });
             }
@@ -158,7 +161,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
         {
             if (convertView == null || !(convertView instanceof PaymentsBatchListItemView))
             {
-                v = inflater.inflate(R.layout.element_payments_batch_list_entry, null);
+                v = inflater.inflate(R.layout.element_payments_batch_list_entry, parent, false);
             }
             else
             {
@@ -180,7 +183,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
 
         if (convertView == null)
         {
-            v = inflater.inflate(R.layout.element_payment_list_section_header, null);
+            v = inflater.inflate(R.layout.element_payment_list_section_header, parent, false);
         }
         else
         {

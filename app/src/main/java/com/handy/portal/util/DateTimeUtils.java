@@ -46,8 +46,6 @@ public final class DateTimeUtils
             new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
     public final static SimpleDateFormat LOCAL_TIME_12_HOURS =
             new SimpleDateFormat("hh:mm a", Locale.getDefault());
-    public final static SimpleDateFormat NUMERIC_YEAR_MONTH_DATE_FORMATTER
-            = new SimpleDateFormat("yyyyMMdd");
 
     public final static SimpleDateFormat DAY_OF_WEEK_FORMATTER = new SimpleDateFormat("EEEE");
     public final static SimpleDateFormat DAY_OF_YEAR_FORMATTER = new SimpleDateFormat("D");
@@ -346,7 +344,7 @@ public final class DateTimeUtils
     {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        return getLocalTime12HoursFormatter().format(cal.getTime());
+        return getLocalTime12HoursFormatter().format(cal.getTime()).toLowerCase();
     }
 
     public static CountDownTimer setCountDownTimer(final TextView textView, long timeRemainMillis)

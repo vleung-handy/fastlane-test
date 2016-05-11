@@ -2,6 +2,7 @@ package com.handy.portal.bookings.model;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -55,7 +56,7 @@ public class Booking implements Comparable<Booking>, Serializable
     private Address mAddress;
 
     @SerializedName("is_requested")
-    private boolean mIsRequested;
+    private boolean mIsRequested; //true if a customer related to this proxy/booking requested the pro
     @SerializedName("payment_to_provider")
     private PaymentInfo mPaymentToProvider;
     @SerializedName("bonus")
@@ -106,7 +107,37 @@ public class Booking implements Comparable<Booking>, Serializable
     @SerializedName("region_id")
     private int mRegionId;
 
+    //TODO ugly, would rather have this be more generic
+    @SerializedName("provider_request_attributes")
+    private DisplayAttributes mProviderRequestDisplayAttributes;
+
+    // Payment booking
+    @SerializedName("check_in_time")
+    private Date mCheckInTime;
+    @SerializedName("check_out_time")
+    private Date mCheckOutTime;
+    @SerializedName("total_earings")
+    private int mTotalEarningsInCents;
+
     private List<BookingInstructionUpdateRequest> mCustomerPreferences;
+
+    public DisplayAttributes getProviderRequestDisplayAttributes()
+    {
+        return mProviderRequestDisplayAttributes;
+    }
+
+    public Booking() { }
+
+    @VisibleForTesting
+    public Booking(final String id, final Date startDate, final Date endDate, final Date checkInTime, final Date checkOutTime, final int totalEarningsInCents)
+    {
+        mId = id;
+        mStartDate = startDate;
+        mEndDate = endDate;
+        mCheckInTime = checkInTime;
+        mCheckOutTime = checkOutTime;
+        mTotalEarningsInCents = totalEarningsInCents;
+    }
 
     public int compareTo(@NonNull Booking other)
     {
@@ -404,6 +435,33 @@ public class Booking implements Comparable<Booking>, Serializable
         return getHourlyRate() != null && hasFlexibleHours();
     }
 
+    public Date getCheckInTime()
+    {
+        return mCheckInTime;
+    }
+
+    public Date getCheckOutTime()
+    {
+        return mCheckOutTime;
+    }
+
+    public int getTotalEarningsInCents()
+    {
+        return mTotalEarningsInCents;
+    }
+
+    public String getRegionName()
+    {
+        if (isProxy())
+        {
+            return getLocationName();
+        }
+        else
+        {
+            return mAddress != null ? mAddress.getShortRegion() : "";
+        }
+    }
+
     //Basic booking statuses inferrable from mProviderId
     public enum BookingStatus
     {
@@ -412,6 +470,31 @@ public class Booking implements Comparable<Booking>, Serializable
         UNAVAILABLE,
     }
 
+    public static class DisplayAttributes
+    {
+        @SerializedName("listing_title")
+        private String mListingTitle;
+        @SerializedName("details_title")
+        private String mDetailsTitle;
+        @SerializedName("details_body")
+        private String mDetailsBody;
+
+
+        public String getListingTitle()
+        {
+            return mListingTitle;
+        }
+
+        public String getDetailsTitle()
+        {
+            return mDetailsTitle;
+        }
+
+        public String getDetailsBody()
+        {
+            return mDetailsBody;
+        }
+    }
 
     public enum ArrivalTimeOption //TODO: better system to enforce values in sync with server?
     {

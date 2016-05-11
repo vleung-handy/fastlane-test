@@ -5,6 +5,7 @@ import com.google.common.cache.CacheBuilder;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
+import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
@@ -13,6 +14,7 @@ import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+import com.stripe.android.model.Token;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -79,6 +81,26 @@ public class PaymentsManager
                 }
             });
         }
+    }
+
+    @Subscribe
+    public void onRequestBookingPaymentDetails(final PaymentEvent.RequestBookingPaymentDetails event)
+    {
+
+        mDataManager.getBookingTransactions(event.bookingId, event.bookingType.toLowerCase(), new DataManager.Callback<BookingTransactions>()
+        {
+            @Override
+            public void onSuccess(BookingTransactions response)
+            {
+                mBus.post(new PaymentEvent.ReceiveBookingPaymentDetailsSuccess(response));
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                mBus.post(new PaymentEvent.ReceiveBookingPaymentDetailsError(error));
+            }
+        });
     }
 
     @Subscribe
@@ -207,6 +229,26 @@ public class PaymentsManager
             public void onError(DataManager.DataManagerError error)
             {
                 mBus.post(new PaymentEvent.ReceiveCreateDebitCardForChargeError(error));
+            }
+        });
+    }
+
+    @Subscribe
+    public void onRequestUpdateCreditCard(final PaymentEvent.RequestUpdateCreditCard event)
+    {
+        final Token token = event.getToken();
+        mDataManager.updateCreditCard(token.getId(), new DataManager.Callback<SuccessWrapper>()
+        {
+            @Override
+            public void onSuccess(final SuccessWrapper response)
+            {
+                mBus.post(new PaymentEvent.ReceiveUpdateCreditCardSuccess());
+            }
+
+            @Override
+            public void onError(final DataManager.DataManagerError error)
+            {
+                mBus.post(new PaymentEvent.ReceiveUpdateCreditCardError(error));
             }
         });
     }

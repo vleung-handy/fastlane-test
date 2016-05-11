@@ -136,6 +136,7 @@
             android:name=".ui.activity.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
+            android:theme="@style/LoginTheme"
             >
         </activity>
         <activity
@@ -148,6 +149,13 @@
             android:name=".updater.ui.PleaseUpdateActivity"
             android:label="@string/title_activity_please_update"
             android:screenOrientation="portrait"
+            >
+        </activity>
+        <activity
+            android:name=".preactivation.PreActivationFlowActivity"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize"
             >
         </activity>
 

@@ -58,6 +58,35 @@
         }
       }
     },
+    "update_credit_card_info": {
+      "field_definitions": {
+        "credit_card_number": {
+          "display_name": "Card #",
+          "input_type": "number",
+          "hint_text": "",
+          "pattern": "^[0-9]{15,17}$"
+        },
+        "expiration_date":{
+          "display_name": "Expiration Date"
+        },
+        "expiration_month":{
+          "input_type": "number",
+          "hint_text": "MM",
+          "pattern": "^(([1][0-2])|([0]?[1-9]))$"
+        },
+        "expiration_year":{
+          "input_type": "number",
+          "hint_text": "YYYY",
+          "pattern": "^[0-9]{4}$"
+        },
+        "security_code": {
+          "display_name": "CVC Code",
+          "input_type": "number",
+          "hint_text": "",
+          "pattern": "^[0-9]{3,4}$"
+        }
+      }
+    },
     "update_provider_info": {
       "field_definitions": {
         "email": {
@@ -86,6 +115,35 @@
         "zip_code": {
           "hint_text": "ZIP code",
           "pattern": "^.*[^\\s].*$",
+          "input_type": "number"
+        }
+      }
+    },
+    "update_address": {
+      "field_definitions": {
+        "address": {
+          "display_name": "Address 1",
+          "hint_text": "",
+          "pattern": "^.*[^\\s].*$"
+        },
+        "address2": {
+          "display_name": "Address 2",
+          "hint_text": ""
+        },
+        "city": {
+          "display_name": "City",
+          "hint_text": "",
+          "pattern": "^.*[^\\s].*$"
+        },
+        "state": {
+          "display_name": "State",
+          "hint_text": "",
+          "pattern": "^[A-Za-z]{2}$"
+        },
+        "zip_code": {
+          "display_name": "Zip",
+          "hint_text": "",
+          "pattern": "^[0-9]{5}$",
           "input_type": "number"
         }
       }

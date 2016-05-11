@@ -3,6 +3,7 @@ package com.handy.portal.model;
 import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.model.onboarding.OnboardingParams;
 
 public class ConfigurationResponse
 {

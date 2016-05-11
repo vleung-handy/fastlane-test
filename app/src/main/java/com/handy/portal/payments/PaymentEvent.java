@@ -1,12 +1,16 @@
 package com.handy.portal.payments;
 
+import android.support.annotation.NonNull;
+
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
+import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.model.PaymentFlow;
 import com.handy.portal.payments.model.PaymentOutstandingFees;
+import com.stripe.android.model.Token;
 
 import java.util.Date;
 
@@ -294,4 +298,65 @@ public abstract class PaymentEvent extends HandyEvent
 
 
     public static class RequestPaymentFlow extends RequestEvent {}
+
+
+    public static class RequestUpdateCreditCard extends RequestEvent
+    {
+        private Token mToken;
+
+        public RequestUpdateCreditCard(final Token token)
+        {
+            mToken = token;
+        }
+
+        public Token getToken()
+        {
+            return mToken;
+        }
+    }
+
+
+    public static class ReceiveUpdateCreditCardSuccess extends ReceiveSuccessEvent {}
+
+
+    public static class ReceiveUpdateCreditCardError extends ReceiveErrorEvent
+    {
+        public ReceiveUpdateCreditCardError(final DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
+
+    public static class RequestBookingPaymentDetails extends RequestEvent
+    {
+        public final String bookingId;
+        public final String bookingType;
+
+        public RequestBookingPaymentDetails(@NonNull final String bookingId, @NonNull String bookingType)
+        {
+            this.bookingId = bookingId;
+            this.bookingType = bookingType;
+        }
+    }
+
+
+    public static class ReceiveBookingPaymentDetailsSuccess extends ReceiveSuccessEvent
+    {
+        public final BookingTransactions mBookingTransactions;
+
+        public ReceiveBookingPaymentDetailsSuccess(@NonNull final BookingTransactions bookingTransactions)
+        {
+            this.mBookingTransactions = bookingTransactions;
+        }
+    }
+
+
+    public static class ReceiveBookingPaymentDetailsError extends ReceiveErrorEvent
+    {
+        public ReceiveBookingPaymentDetailsError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 }

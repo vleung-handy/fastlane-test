@@ -68,8 +68,6 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
         View view = inflater.inflate(R.layout.fragment_payments_update_bank_account, container, false);
         ButterKnife.bind(this, view);
 
-        setFormFieldErrorStateRemovers();
-
         return view;
     }
 
@@ -151,13 +149,6 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
     {
         this.formDefinitionWrapper = event.formDefinitionWrapper;
         updateFormWithDefinitions(formDefinitionWrapper);
-    }
-
-    private void setFormFieldErrorStateRemovers()
-    {
-        routingNumberField.getValue().addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(routingNumberField));
-        accountNumberField.getValue().addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(accountNumberField));
-        taxIdField.getValue().addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(taxIdField));
     }
 
     private void updateFormWithDefinitions(FormDefinitionWrapper formDefinitionWrapper)

@@ -192,6 +192,9 @@ dependencies {
     // Sticky list header
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
 
+    //Stripe payment processing
+    compile 'com.stripe:stripe-android:1.0.4'
+
     //Testing
     testCompile 'org.robolectric:robolectric:3.0'
     testCompile 'org.robolectric:shadows-support-v4:3.0'

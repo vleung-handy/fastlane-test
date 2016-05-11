@@ -991,6 +991,34 @@ public abstract class HandyEvent
     }
 
 
+    public static class RequestOnboardingSupplies extends RequestEvent
+    {
+        private final boolean mOptIn;
+
+        public RequestOnboardingSupplies(final boolean optIn)
+        {
+            mOptIn = optIn;
+        }
+
+        public boolean getOptIn()
+        {
+            return mOptIn;
+        }
+    }
+
+
+    public static class ReceiveOnboardingSuppliesSuccess extends ReceiveSuccessEvent {}
+
+
+    public static class ReceiveOnboardingSuppliesError extends ReceiveErrorEvent
+    {
+        public ReceiveOnboardingSuppliesError(final DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
+
     //Request that Urban Airship takes off
     public static class StartUrbanAirship extends HandyEvent {}
 

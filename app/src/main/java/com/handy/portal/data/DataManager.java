@@ -8,7 +8,7 @@ import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.constant.LocationKey;
-import com.handy.portal.constant.NoShowKey;
+import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
@@ -30,6 +30,7 @@ import com.handy.portal.notification.model.NotificationMessages;
 import com.handy.portal.onboarding.model.JobClaimRequest;
 import com.handy.portal.onboarding.model.JobClaimResponse;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
+import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.model.PaymentFlow;
@@ -136,7 +137,7 @@ public class DataManager
         mService.getProviderProfile(providerId, new ProviderProfileRetrofitCallback(cb));
     }
 
-    public void updateProviderProfile(String providerId, TypeSafeMap<NoShowKey> params, Callback<ProviderPersonalInfo> cb)
+    public void updateProviderProfile(String providerId, TypeSafeMap<ProviderKey> params, Callback<ProviderPersonalInfo> cb)
     {
         mService.updateProviderProfile(providerId, params.toStringMap(), new ProviderPersonalInfoHandyRetroFitCallback(cb));
     }
@@ -181,6 +182,11 @@ public class DataManager
         mService.getNeedsToUpdatePaymentInfo(new NeedsToUpdatePaymentInfoRetroFitCallback(cb));
     }
 
+    public void getBookingTransactions(String bookingId, String bookingType, Callback<BookingTransactions> cb)
+    {
+        mService.getBookingTransactions(bookingId, bookingType, new BookingTransactionsRetroFitCallback(cb));
+    }
+
     public void notifyOnMyWayBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
     {
         mService.notifyOnMyWay(bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
@@ -201,7 +207,7 @@ public class DataManager
         mService.updateArrivalTime(bookingId, arrivalTimeOption.getValue(), new BookingHandyRetroFitCallback(cb));
     }
 
-    public void reportNoShow(String bookingId, TypeSafeMap<NoShowKey> params, Callback<Booking> cb)
+    public void reportNoShow(String bookingId, TypeSafeMap<ProviderKey> params, Callback<Booking> cb)
     {
         mService.reportNoShow(bookingId, params.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
@@ -256,6 +262,11 @@ public class DataManager
     public void createDebitCardForCharge(String stripeToken, final Callback<CreateDebitCardResponse> cb)
     {
         mService.createDebitCardForCharge(stripeToken, new CreateDebitCardRetroFitCallback(cb));
+    }
+
+    public void updateCreditCard(final String token, final Callback<SuccessWrapper> cb)
+    {
+        mService.updateCreditCard(token, new CreateBankAccountRetroFitCallback(cb));
     }
 
     public void getPaymentFlow(String providerId, final Callback<PaymentFlow> cb)
@@ -315,6 +326,14 @@ public class DataManager
     public void getProviderFeedback(final String providerId, final Callback<List<ProviderFeedback>> cb)
     {
         mService.getProviderFeedback(providerId, new GetProviderFeedbackRetrofitCallback(cb));
+    }
+
+    public void requestOnboardingSupplies(final String providerId,
+                                          final boolean value,
+                                          final Callback<SuccessWrapper> cb)
+    {
+        mService.requestOnboardingSupplies(providerId, value,
+                new SuccessWrapperRetroFitCallback(cb));
     }
 
 

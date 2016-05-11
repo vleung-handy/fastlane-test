@@ -18,6 +18,12 @@
     <style name="AppTheme.PopupOverlay"
            parent="ThemeOverlay.AppCompat.Light"/>
 
+    <!-- Screen themes -->
+    <style name="LoginTheme"
+           parent="AppTheme">
+        <item name="android:windowBackground">@drawable/ic_portal_login_bg</item>
+    </style>
+
     <style name="ToolbarOverFlowIcon">
         <item name="android:src">@drawable/ic_gear</item>
         <item name="android:paddingRight">@dimen/options_wheel_padding</item>

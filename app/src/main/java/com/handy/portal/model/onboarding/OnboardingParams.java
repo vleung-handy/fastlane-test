@@ -1,4 +1,4 @@
-package com.handy.portal.model;
+package com.handy.portal.model.onboarding;
 
 import android.support.annotation.Nullable;
 
@@ -18,6 +18,9 @@ public class OnboardingParams
 
     @SerializedName("onboarding_use_native_flow")
     private boolean mOnboardingUseNativeFlow;
+
+    @SerializedName("onboarding_supplies")
+    private OnboardingSuppliesParams mOnboardingSuppliesParams;
 
     @Override
     public boolean equals(Object obj)
@@ -67,9 +70,16 @@ public class OnboardingParams
         return isOnboardingEnabled() && !TextUtils.isNullOrEmpty(getOnboardingCompleteWebUrl());
     }
 
+<<<<<<< HEAD:app/src/main/java/com/handy/portal/model/OnboardingParams.java
     public boolean shouldShowNativeOnboarding()
     {
         return isOnboardingEnabled() && mOnboardingUseNativeFlow;
     }
 
+=======
+    public OnboardingSuppliesParams getOnboardingSuppliesParams()
+    {
+        return mOnboardingSuppliesParams;
+    }
+>>>>>>> onboarding:app/src/main/java/com/handy/portal/model/onboarding/OnboardingParams.java
 }

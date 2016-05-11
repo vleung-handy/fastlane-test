@@ -112,6 +112,14 @@ public interface HandyRetrofitService
     @GET(PAYMENTS_PATH + "requires_update")
     void getNeedsToUpdatePaymentInfo(HandyRetrofitCallback cb);
 
+    @GET(PAYMENTS_PATH + "outstanding_fees")
+    void getPaymentOutstandingFees(HandyRetrofitCallback cb);
+
+    @GET(PAYMENTS_PATH + "booking_details")
+    void getBookingTransactions(@Query("booking_id") String bookingId,
+                                @Query("booking_type") String bookingType,
+                                HandyRetrofitCallback cb);
+
     @FormUrlEncoded
     @POST(STRIPE_PATH + "create_bank_account")
     void createBankAccount(@FieldMap Map<String, String> params,
@@ -126,6 +134,11 @@ public interface HandyRetrofitService
     @POST(STRIPE_PATH + "create_debit_card_for_charge")
     void createDebitCardForCharge(@Field("token") String stripeToken,
                                   HandyRetrofitCallback cb);
+
+    @FormUrlEncoded
+    @PUT(STRIPE_PATH + "update_credit_card")
+    void updateCreditCard(@Field("token") String token,
+                          HandyRetrofitCallback cb);
 
     @GET(PROVIDERS_PATH + "{id}/payment_flow")
     void getPaymentFlow(@Path("id") String providerId,
@@ -261,8 +274,10 @@ public interface HandyRetrofitService
     @GET(PROVIDERS_PATH + "{id}/feedback")
     void getProviderFeedback(@Path("id") String providerId, HandyRetrofitCallback cb);
 
-    @GET(PAYMENTS_PATH + "outstanding_fees")
-    void getPaymentOutstandingFees(HandyRetrofitCallback cb);
+    @POST(PROVIDERS_PATH + "{id}/onboarding_supplies")
+    void requestOnboardingSupplies(@Path("id") String providerId,
+                                   @Query("onboarding_supplies") Boolean value,
+                                   HandyRetrofitCallback cb);
 
     @POST("/events")
     void postLogs(@Body JsonObject eventLogBundle, HandyRetrofitCallback cb);

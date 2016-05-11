@@ -30,6 +30,7 @@ import com.handy.portal.bookings.constant.BookingActionButtonType;
 import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.element.BookingDetailsJobInstructionsSectionView;
+import com.handy.portal.bookings.ui.element.BookingDetailsProRequestInfoView;
 import com.handy.portal.bookings.ui.element.BookingMapView;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
@@ -78,6 +79,8 @@ public class BookingFragment extends TimerActionBarFragment
     @Inject
     PrefsManager mPrefsManager;
 
+    @Bind(R.id.booking_details_display_message_layout)
+    BookingDetailsProRequestInfoView mBookingDetailsProRequestInfoView;
     @Bind(R.id.booking_scroll_view)
     ScrollView mScrollView;
     @Bind(R.id.booking_no_show_banner_text)
@@ -134,17 +137,15 @@ public class BookingFragment extends TimerActionBarFragment
     private Bundle mSourceExtras;
     private Intent mGetDirectionsIntent;
     private View.OnClickListener mOnSupportClickListener;
-    private boolean mFromPaymentsTab;
     private boolean mHideActionButtons;
 
     public static BookingFragment newInstance(@NonNull final Booking booking, final String source,
-                                              boolean fromPaymentsTab, boolean hideActionButtons)
+                                              boolean hideActionButtons)
     {
         BookingFragment fragment = new BookingFragment();
         Bundle args = new Bundle();
         args.putSerializable(BundleKeys.BOOKING, booking);
         args.putString(BundleKeys.BOOKING_SOURCE, source);
-        args.putBoolean(BundleKeys.BOOKING_FROM_PAYMENT_TAB, fromPaymentsTab);
         args.putBoolean(BundleKeys.BOOKING_SHOULD_HIDE_ACTION_BUTTONS, hideActionButtons);
 
         fragment.setArguments(args);
@@ -166,7 +167,6 @@ public class BookingFragment extends TimerActionBarFragment
         mSource = getArguments().getString(BundleKeys.BOOKING_SOURCE);
         mSourceExtras = getArguments();
 
-        mFromPaymentsTab = getArguments().getBoolean(BundleKeys.BOOKING_FROM_PAYMENT_TAB);
         mHideActionButtons = getArguments().getBoolean(BundleKeys.BOOKING_SHOULD_HIDE_ACTION_BUTTONS);
 
         MapsInitializer.initialize(getContext());
@@ -188,6 +188,32 @@ public class BookingFragment extends TimerActionBarFragment
         mBookingMapView.disableParentScrolling(mScrollView);
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
+
+        updateDisplayWithBookingProRequestDisplayAttributes();
+    }
+
+    /**
+     * shows the booking details message view
+     * with the message in the booking's pro request display model
+     * if the message is present and someone in the proxy/booking requested the pro
+     *
+     * TODO ugly! would be nice if the display attributes were generic but
+     * since there's not enough time to fully generalize this
+     * we're making it specific to pro request for now
+     */
+    private void updateDisplayWithBookingProRequestDisplayAttributes()
+    {
+        if(mBooking.isRequested()) //ideally should be decoupled
+        {
+            Booking.DisplayAttributes displayAttributes = mBooking.getProviderRequestDisplayAttributes();
+            if (displayAttributes != null
+                    && (displayAttributes.getDetailsBody() != null
+                    || displayAttributes.getDetailsTitle() != null))
+            {
+                mBookingDetailsProRequestInfoView.setVisibility(View.VISIBLE); //GONE by default
+                mBookingDetailsProRequestInfoView.setDisplayModel(displayAttributes);
+            }
+        }
     }
 
     @Override
@@ -240,8 +266,7 @@ public class BookingFragment extends TimerActionBarFragment
         setActionButtonVisibility();
         mSupportButton.setOnClickListener(mOnSupportClickListener);
 
-        if (!mFromPaymentsTab)
-        { initMapLayout(); }
+        initMapLayout();
 
         mCallCustomerView.setEnabled(false);
         mCallCustomerView.setAlpha(0.5f);
@@ -260,7 +285,7 @@ public class BookingFragment extends TimerActionBarFragment
                 mBooking.inferBookingStatus(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
         if (bookingStatus == Booking.BookingStatus.UNAVAILABLE ||
                 bookingProgress == BookingProgress.READY_FOR_CLAIM ||
-                mBooking.getUser() == null || mFromPaymentsTab)
+                mBooking.getUser() == null)
         {
             mBookingCustomerContactLayout.setVisibility(View.GONE);
         }
@@ -298,7 +323,7 @@ public class BookingFragment extends TimerActionBarFragment
             Address address = mBooking.getAddress();
             if (address != null)
             {
-                if (bookingStatus != Booking.BookingStatus.CLAIMED || mFromPaymentsTab)
+                if (bookingStatus != Booking.BookingStatus.CLAIMED)
                 {
                     mBookingAddressTitleText.setText(mBooking.isUK() ?
                             getResources().getString(R.string.comma_formatted,
@@ -421,7 +446,7 @@ public class BookingFragment extends TimerActionBarFragment
         }
 
         // Booking Instructions
-        if (mFromPaymentsTab || !isHomeCleaning ||
+        if (!isHomeCleaning ||
                 mBooking.inferBookingStatus(getLoggedInUserId()) == Booking.BookingStatus.CLAIMED)
         {
             List<Booking.BookingInstructionGroup> bookingInstructionGroups =
@@ -446,12 +471,6 @@ public class BookingFragment extends TimerActionBarFragment
         if (noShowReported)
         {
             mNoShowBanner.setVisibility(View.VISIBLE);
-        }
-
-        // Hide map and customer contact if coming from payments tab
-        if (mFromPaymentsTab)
-        {
-            mBookingMapView.setVisibility(View.GONE);
         }
 
         setActionBarTitle();
@@ -732,7 +751,7 @@ public class BookingFragment extends TimerActionBarFragment
                 {
                     ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mBooking);
                     confirmBookingDialogFragment.setTargetFragment(BookingFragment.this, RequestCode.CONFIRM_REQUEST);
-                    FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, getActivity(), ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
+                    FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, this, ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
                 }
                 return true;
             }
@@ -767,7 +786,7 @@ public class BookingFragment extends TimerActionBarFragment
     {
         Booking.BookingStatus bookingStatus =
                 mBooking.inferBookingStatus(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
-        return !mFromPaymentsTab && bookingStatus == Booking.BookingStatus.CLAIMED;
+        return bookingStatus == Booking.BookingStatus.CLAIMED;
     }
 
     private void setRevealNoticeText(
