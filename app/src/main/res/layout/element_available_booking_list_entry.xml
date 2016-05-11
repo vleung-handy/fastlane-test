@@ -145,7 +145,7 @@
             android:layout_height="wrap_content"
             android:textAllCaps="true"
             android:textColor="@color/handy_green"
-            tools:text="+$5 bonus"
+            tools:text="+$5 reward"
             />
     </LinearLayout>
 

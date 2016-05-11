@@ -137,7 +137,7 @@
     <string name="payment_help">Payment Help</string>
     <string name="payments">Payments</string>
     <string name="payments_details">Payment Details</string>
-    <string name="bonus_payment_value">+ %s BONUS</string>
+    <string name="bonus_payment_value">+ %s REWARD</string>
     <string name="booking_frequency">Every %1$d weeks</string>
     <string name="booking_frequency_every_week">Every week</string>
     <string name="booking_frequency_non_recurring">One-time</string>
@@ -377,7 +377,7 @@
     <string name="rate_booking_comment_text_hint">Any additional comments?</string>
     <string name="rate_booking_need_rating">You must select a rating to check out</string>
     <string name="you_earned_money_formatted">You made %1$s</string>
-    <string name="bonus_formatted">\u0020+ %s BONUS</string>
+    <string name="bonus_formatted">\u0020+ %s REWARD</string>
     <string name="how_was_experience_formatted">How was your experience at %1$s’s home?</string>
 
     <!-- Nearby Booking -->
