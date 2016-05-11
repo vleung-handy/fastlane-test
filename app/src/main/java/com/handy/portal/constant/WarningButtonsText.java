@@ -1,6 +1,7 @@
 package com.handy.portal.constant;
 
 import com.handy.portal.R;
+import com.handy.portal.bookings.constant.BookingActionButtonType;
 
 public enum WarningButtonsText
 {

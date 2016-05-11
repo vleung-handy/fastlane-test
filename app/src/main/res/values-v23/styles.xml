@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- This deals with the weird spacing issue happening only on M-->
+    <style name="TextView">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/default_text_size</item>
+        <item name="android:freezesText">true</item>
+        <item name="android:lineSpacingMultiplier">1.2</item>
+    </style>
+</resources>

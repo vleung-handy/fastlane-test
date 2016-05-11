@@ -42,7 +42,7 @@
             android:layout_marginBottom="@dimen/payment_container_vertical_padding"
             android:lineSpacingExtra="@dimen/lineSpacing"
             android:textAppearance="@style/HandyTextAppearanceMedium"
-            android:textColor="@color/dark_grey"
+            android:textColor="@color/dark_gray"
             tools:text="@string/payments_bill_blocker_content_formatted"
             />
 
@@ -63,7 +63,7 @@
             android:text="@string/payments_bill_blocker_remind_me_later_button"
             android:textAllCaps="true"
             android:textAppearance="@style/TextView.Bold"
-            android:textColor="@color/tertiary_grey"
+            android:textColor="@color/tertiary_gray"
             android:textSize="@dimen/small_text_size"
             />
 

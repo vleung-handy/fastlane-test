@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/default_padding"
+    >
+
+    <TextView
+        android:id="@+id/transaction_title_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="@dimen/default_text_size"
+        tools:text="Base earnings"
+        />
+
+    <TextView
+        android:id="@+id/transaction_amount_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:textColor="@color/black"
+        android:textSize="@dimen/default_text_size"
+        tools:text="$37.50"
+        />
+
+    <LinearLayout
+        android:id="@+id/transaction_batches_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/transaction_title_text"
+        android:layout_marginTop="@dimen/lineSpacing_x2"
+        android:orientation="vertical"
+        >
+
+        <TextView
+            android:id="@+id/transaction_outstanding_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/outstanding"
+            android:textColor="@color/tertiary_gray"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/transaction_policy_description_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/transaction_batches_layout"
+        android:layout_marginTop="@dimen/default_margin_small"
+        android:drawableLeft="@drawable/ic_question_gray"
+        android:drawablePadding="@dimen/default_padding"
+        android:lineSpacingExtra="@dimen/lineSpacing"
+        android:textSize="@dimen/small_text_size"
+        android:visibility="gone"
+        tools:text="Fee applies for being more than 30 minutes late to the job. View Policy."
+        tools:visibility="visible"
+        />
+
+</RelativeLayout>

@@ -65,7 +65,7 @@
         android:layout_marginStart="@dimen/notification_list_entry_time_margin_left"
         android:layout_marginTop="@dimen/notification_list_entry_time_margin_top"
         android:duplicateParentState="true"
-        android:textColor="@color/bg_inactive_grey"
+        android:textColor="@color/tertiary_gray"
         android:textSize="@dimen/xsmall_text_size"
         tools:text="10:35am"
         />

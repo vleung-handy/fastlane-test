@@ -3,6 +3,7 @@ package com.handy.portal.model;
 import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.model.onboarding.OnboardingParams;
 
 public class ConfigurationResponse
 {
@@ -41,6 +42,12 @@ public class ConfigurationResponse
 
     @SerializedName("help_center")
     private HelpCenterInfo mHelpCenterInfo;
+
+    @SerializedName("number_of_days_for_available_jobs")
+    private int mNumberOfDaysForAvailableJobs;
+
+    @SerializedName("show_payment_transactions")
+    private boolean mShowBookingTransactionSummary;
 
     public boolean isLocationScheduleServiceEnabled()
     {
@@ -98,19 +105,34 @@ public class ConfigurationResponse
         return mOnboardingParams;
     }
 
-    public boolean shouldShowOnboarding()
+    public boolean shouldShowWebOnboarding()
     {
-        return getOnboardingParams() != null && mOnboardingParams.shouldShowOnboarding();
+        return getOnboardingParams() != null && mOnboardingParams.shouldShowWebOnboarding();
+    }
+
+    public boolean shouldShowNativeOnboarding()
+    {
+        return getOnboardingParams() != null && mOnboardingParams.shouldShowNativeOnboarding();
     }
 
     public boolean shouldUseHelpCenterWebView()
     {
-        return mHelpCenterInfo == null ? false : mHelpCenterInfo.shouldUseHelpCenterWebView();
+        return mHelpCenterInfo != null && mHelpCenterInfo.shouldUseHelpCenterWebView();
+    }
+
+    public int getNumberOfDaysForAvailableJobs()
+    {
+        return mNumberOfDaysForAvailableJobs;
     }
 
     public String getHelpCenterUrl()
     {
         return mHelpCenterInfo == null ? null : mHelpCenterInfo.getHelpCenterUrl();
+    }
+
+    public boolean showBookingTransactionSummary()
+    {
+        return mShowBookingTransactionSummary;
     }
 
     public static class HelpCenterInfo

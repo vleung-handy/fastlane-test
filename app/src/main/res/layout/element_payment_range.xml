@@ -6,7 +6,7 @@
     android:orientation="horizontal"
     >
 
-    <com.handy.portal.ui.element.BookingDetailsSinglePaymentView
+    <com.handy.portal.bookings.ui.element.BookingDetailsSinglePaymentView
         android:id="@+id/minimum_payment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -22,7 +22,7 @@
         android:text="@string/dash"
         />
 
-    <com.handy.portal.ui.element.BookingDetailsSinglePaymentView
+    <com.handy.portal.bookings.ui.element.BookingDetailsSinglePaymentView
         android:id="@+id/maximum_payment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

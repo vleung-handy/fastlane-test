@@ -1,29 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/handy_bg"
-    tools:context=".HelpFragment">
+    >
 
-    <LinearLayout
+    <include layout="@layout/layout_fetch_error"/>
+
+    <ScrollView
+        android:id="@+id/scroll_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        >
 
-        <include layout="@layout/layout_fetch_error"/>
+        <include
+            android:id="@+id/help_node_view"
+            layout="@layout/element_help_node"
+            />
 
-        <ScrollView
-            android:id="@+id/scroll_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@color/white">
+    </ScrollView>
 
-            <include
-                android:id="@+id/help_node_view"
-                layout="@layout/element_help_node"/>
-
-        </ScrollView>
-    </LinearLayout>
-
-</RelativeLayout>
+</LinearLayout>

@@ -8,19 +8,13 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
-import com.handy.portal.model.OnboardingParams;
+import com.handy.portal.model.onboarding.OnboardingParams;
 import com.squareup.otto.Subscribe;
 
 public class OnboardingFragment extends PortalWebViewFragment
 {
     //retain these to compare with latest version from config response, to determine if we need to change
     private OnboardingParams mLastOnboardingParams;
-
-    @Override
-    protected MainViewTab getTab()
-    {
-        return MainViewTab.ONBOARDING_WEBVIEW;
-    }
 
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState)

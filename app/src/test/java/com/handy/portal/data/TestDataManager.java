@@ -1,6 +1,6 @@
 package com.handy.portal.data;
 
-import com.handy.portal.constant.NoShowKey;
+import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
@@ -15,6 +15,6 @@ public class TestDataManager extends DataManager
     }
 
     @Override
-    public void updateProviderProfile(final String providerId, final TypeSafeMap<NoShowKey> params, final Callback<ProviderPersonalInfo> cb) { }
+    public void updateProviderProfile(final String providerId, final TypeSafeMap<ProviderKey> params, final Callback<ProviderPersonalInfo> cb) { }
 }
 

@@ -60,8 +60,8 @@ public class CirclePageIndicatorView extends View implements DashboardViewPagerL
     private void init()
     {
         final int defaultPageColor = ContextCompat.getColor(getContext(), R.color.white);
-        final int defaultFillColor = ContextCompat.getColor(getContext(), R.color.tertiary_grey);
-        final int defaultStrokeColor = ContextCompat.getColor(getContext(), R.color.tertiary_grey);
+        final int defaultFillColor = ContextCompat.getColor(getContext(), R.color.tertiary_gray);
+        final int defaultStrokeColor = ContextCompat.getColor(getContext(), R.color.tertiary_gray);
 
         int stroke = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, STROKE_WIDTH_DP, getResources().getDisplayMetrics());

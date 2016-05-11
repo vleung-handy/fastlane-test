@@ -31,8 +31,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="left"
-            android:textColor="@color/subtitle_grey"
+            android:gravity="start"
+            android:textColor="@color/tertiary_gray"
             tools:text="Under 48 hours"
             />
 
@@ -42,11 +42,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:gravity="right"
-            android:textColor="@color/subtitle_grey"
+            android:gravity="end"
+            android:textColor="@color/tertiary_gray"
             tools:text="$10"
             />
     </LinearLayout>
 
-    <include android:id="@+id/cancellation_policy_list_item_divider" layout="@layout/divider"/>
+    <include
+        android:id="@+id/cancellation_policy_list_item_divider"
+        layout="@layout/divider"
+        />
 </LinearLayout>

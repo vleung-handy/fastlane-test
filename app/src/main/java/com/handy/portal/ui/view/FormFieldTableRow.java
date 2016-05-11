@@ -8,42 +8,63 @@ import android.widget.TableRow;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.util.UIUtils;
+
+import butterknife.Bind;
+import butterknife.ButterKnife;
 
 public class FormFieldTableRow extends TableRow implements Errorable
 {
+    @Bind(R.id.label_text)
+    TextView mLabelText;
+    @Bind(R.id.value_text)
+    TextView mValueText;
+    @Bind(R.id.error_indicator)
+    View mErrorIndicator;
+
     public FormFieldTableRow(Context context)
     {
         super(context);
+        init();
     }
 
     public FormFieldTableRow(Context context, AttributeSet attrs)
     {
         super(context, attrs);
+        init();
+    }
+
+    private void init()
+    {
+        inflate(getContext(), R.layout.element_form_field, this);
+        ButterKnife.bind(this);
+        mValueText.addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(this));
     }
 
     public TextView getLabel()
     {
-        return (TextView) findViewById(R.id.label_text);
+        return mLabelText;
     }
 
     public TextView getValue()
     {
-        return (TextView) findViewById(R.id.value_text);
+        return mValueText;
     }
 
     public View getErrorIndicator()
     {
-        return findViewById(R.id.error_indicator);
+        return mErrorIndicator;
     }
 
     @Override
     public void setErrorState(boolean error)
     {
-        int errorColor = ContextCompat.getColor(getContext(), R.color.error_red);
-        int normalColor = ContextCompat.getColor(getContext(), R.color.black);
+        int errorColor = ContextCompat.getColor(getContext(), R.color.plumber_red);
+        int normalLabelColor = ContextCompat.getColor(getContext(), R.color.form_label);
+        int normalValueColor = ContextCompat.getColor(getContext(), R.color.black);
 
         getErrorIndicator().setVisibility(error ? VISIBLE : INVISIBLE);
-        getLabel().setTextColor(error ? errorColor : normalColor);
-        getValue().setTextColor(error ? errorColor : normalColor);
+        getLabel().setTextColor(error ? errorColor : normalLabelColor);
+        getValue().setTextColor(error ? errorColor : normalValueColor);
     }
 }

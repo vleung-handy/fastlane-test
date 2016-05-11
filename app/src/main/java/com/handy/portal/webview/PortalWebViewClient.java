@@ -29,7 +29,7 @@ public class PortalWebViewClient extends WebViewClient
     private Fragment parentFragment;
     private WebView webView;
     private GoogleManager googleManager;
-    private Bus bus;
+    protected Bus bus;
 
     public PortalWebViewClient(Fragment parentFragment,
                                WebView webView,

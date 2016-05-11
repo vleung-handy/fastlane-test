@@ -3,8 +3,8 @@ package com.handy.portal.ui.element;
 import android.view.View;
 
 import com.handy.portal.BuildConfig;
-import com.handy.portal.model.Booking;
-import com.handy.portal.util.SupportActionUtils;
+import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.util.SupportActionUtils;
 
 import org.junit.Before;
 import org.junit.Test;

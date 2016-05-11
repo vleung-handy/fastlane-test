@@ -2,6 +2,7 @@ package com.handy.portal.ui.activity;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -42,6 +43,7 @@ public class SplashActivity extends BaseActivity
     @Inject
     BuildConfigWrapper buildConfigWrapper;
 
+    @SuppressWarnings("deprecation")
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
@@ -64,9 +66,18 @@ public class SplashActivity extends BaseActivity
                 prefsManager.setString(PrefsKey.AUTH_TOKEN, authToken);
 
                 //For use with WebView
-                CookieSyncManager.createInstance(this);
-                CookieManager.getInstance().setCookie(endpoint.getBaseUrl(), "user_credentials=" + authToken);
-                CookieSyncManager.getInstance().sync();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                {
+                    CookieManager.getInstance().setCookie(endpoint.getBaseUrl(),
+                            "user_credentials=" + authToken);
+                    CookieManager.getInstance().flush();
+                }
+                else
+                {
+                    CookieSyncManager.createInstance(this);
+                    CookieManager.getInstance().setCookie(endpoint.getBaseUrl(), "user_credentials=" + authToken);
+                    CookieSyncManager.getInstance().sync();
+                }
             }
         }
     }
@@ -143,11 +154,21 @@ public class SplashActivity extends BaseActivity
         }
     }
 
+    @SuppressWarnings("deprecation")
     private String getAuthTokenFromCookieManager()
     {
-        CookieSyncManager.createInstance(this);
-        String allCookies = CookieManager.getInstance().getCookie(endpoint.getBaseUrl());
-        CookieSyncManager.getInstance().sync();
+        String allCookies;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            allCookies = CookieManager.getInstance().getCookie(endpoint.getBaseUrl());
+            CookieManager.getInstance().flush();
+        }
+        else
+        {
+            CookieSyncManager.createInstance(this);
+            allCookies = CookieManager.getInstance().getCookie(endpoint.getBaseUrl());
+            CookieSyncManager.getInstance().sync();
+        }
 
         if (allCookies != null)
         {
@@ -197,12 +218,6 @@ public class SplashActivity extends BaseActivity
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    @Override
     public final void onSaveInstanceState(final Bundle outState)
     {
         try
@@ -225,7 +240,7 @@ public class SplashActivity extends BaseActivity
     @Subscribe
     public void onReceiveCheckTermsSuccess(HandyEvent.ReceiveCheckTermsSuccess event) //TODO: we check terms in MainActivity also! need to consolidate
     {
-        if (event.termsDetailsGroup != null && event.termsDetailsGroup.hasTerms())
+        if (event.termsDetailsGroup.hasTerms())
         {
             launchActivity(TermsActivity.class);
         }

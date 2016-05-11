@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:background="@color/handy_bg"
     android:orientation="vertical"
     >
 
@@ -16,9 +15,10 @@
         android:layout_height="wrap_content"
         >
 
-        <RelativeLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="vertical"
             >
 
             <LinearLayout
@@ -73,7 +73,7 @@
 
                 <TextView
                     android:id="@+id/title"
-                    style="@style/TextView.XXLarge.Bold"
+                    style="@style/TextView.Headline.XLarge.Bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/row_margin"
@@ -81,13 +81,12 @@
                     />
 
                 <TextView
-                    android:id="@+id/subtitle"
                     style="@style/TextView.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/default_margin"
                     android:gravity="center"
-                    tools:text="Give your friends $35 off their first Handy booking, and you get $35!"
+                    android:text="@string/referral_subtitle"
                     />
 
             </LinearLayout>
@@ -95,57 +94,49 @@
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/referral_description_layout"
-                android:layout_centerHorizontal="true"
+                android:layout_gravity="center_horizontal"
                 android:src="@drawable/img_point"
                 />
 
-            <LinearLayout
+            <RelativeLayout
+                android:id="@+id/referral_code_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/referral_description_layout"
-                android:orientation="vertical"
+                android:layout_marginBottom="@dimen/default_margin_large"
+                android:layout_marginEnd="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginStart="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin_large"
+                android:background="@color/white"
+                android:padding="@dimen/default_padding"
                 >
 
-                <RelativeLayout
-                    android:id="@+id/referral_code_layout"
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/referral_code_text"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/default_margin_large"
-                    android:layout_marginEnd="@dimen/default_margin"
-                    android:layout_marginLeft="@dimen/default_margin"
-                    android:layout_marginRight="@dimen/default_margin"
-                    android:layout_marginStart="@dimen/default_margin"
-                    android:layout_marginTop="@dimen/default_margin_large"
-                    android:background="@color/white"
-                    android:padding="@dimen/default_padding"
-                    >
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_centerVertical="true"
+                    android:textAppearance="@style/TextView.Bold"
+                    android:textColor="@color/handy_green"
+                    android:textSize="@dimen/xlarge_text_size"
+                    />
 
-                    <TextView
-                        android:id="@+id/referral_code_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerVertical="true"
-                        android:textAppearance="@style/TextView.Bold"
-                        android:textColor="@color/handy_green"
-                        android:textSize="@dimen/xlarge_text_size"
-                        />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/ic_share"
+                    />
 
-                    <ImageView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/ic_share"
-                        />
+            </RelativeLayout>
 
-                </RelativeLayout>
+        </LinearLayout>
 
-            </LinearLayout>
-
-        </RelativeLayout>
     </ScrollView>
+
 </LinearLayout>

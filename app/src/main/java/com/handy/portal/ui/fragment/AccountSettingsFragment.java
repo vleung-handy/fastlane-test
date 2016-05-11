@@ -20,7 +20,6 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.event.PaymentEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
@@ -30,6 +29,7 @@ import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.util.DeeplinkUtils;
 import com.squareup.otto.Bus;
@@ -140,7 +140,7 @@ public class AccountSettingsFragment extends ActionBarFragment
     {
         mPrefsManager.clear();
 
-        if (Build.VERSION.SDK_INT >= 21)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         {
             CookieManager.getInstance().removeAllCookies(null);
             CookieManager.getInstance().flush();
@@ -240,6 +240,6 @@ public class AccountSettingsFragment extends ActionBarFragment
     private void requestProviderProfile()
     {
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        mBus.post(new ProfileEvent.RequestProviderProfile());
+        mBus.post(new ProfileEvent.RequestProviderProfile(true));
     }
 }

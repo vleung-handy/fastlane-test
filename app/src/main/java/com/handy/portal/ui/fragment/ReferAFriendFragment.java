@@ -45,8 +45,6 @@ public class ReferAFriendFragment extends ActionBarFragment
 
     @Bind(R.id.title)
     TextView mTitleText;
-    @Bind(R.id.subtitle)
-    TextView mSubtitleText;
     @Bind(R.id.referral_code_text)
     TextView mReferralCodeText;
 
@@ -114,7 +112,7 @@ public class ReferAFriendFragment extends ActionBarFragment
     public void requestProviderProfile()
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new ProfileEvent.RequestProviderProfile());
+        bus.post(new ProfileEvent.RequestProviderProfile(true));
     }
 
     @Subscribe
@@ -153,8 +151,7 @@ public class ReferAFriendFragment extends ActionBarFragment
 
     private void populateText()
     {
-        mTitleText.setText(getContext().getString(R.string.earn_a_bonus, mReferralInfo.getBonusAmount()));
-        mSubtitleText.setText(R.string.refer_a_pro);
+        mTitleText.setText(getContext().getString(R.string.earn_a_reward, mReferralInfo.getBonusAmount()));
         mReferralCodeText.setText(mReferralInfo.getReferralCode());
     }
 

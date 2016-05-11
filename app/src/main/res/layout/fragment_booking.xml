@@ -23,7 +23,6 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:orientation="vertical"
                 >
 
@@ -35,20 +34,30 @@
                     android:background="@color/pink"
                     android:gravity="center"
                     android:text="@string/customer_no_show_reported"
-                    android:textColor="@color/error_red"
+                    android:textColor="@color/plumber_red"
                     android:textSize="@dimen/default_text_size"
                     android:visibility="gone"
                     tools:visibility="visible"
                     />
 
-                <com.handy.portal.ui.element.bookings.BookingMapView
+                <com.handy.portal.bookings.ui.element.BookingMapView
                     android:id="@+id/booking_map_view"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/on_my_way_booking_details_map_height"
                     />
 
+                <com.handy.portal.bookings.ui.element.BookingDetailsProRequestInfoView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
+                    android:id="@+id/booking_details_display_message_layout"
+                    android:layout_marginBottom="@dimen/default_margin"
+                    android:visibility="gone"
+                    />
+
                 <RelativeLayout
                     android:id="@+id/booking_customer_contact_layout"
+                    android:background="@color/white"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:padding="@dimen/default_padding"
@@ -104,6 +113,7 @@
                     android:divider="?android:attr/dividerHorizontal"
                     android:dividerPadding="@dimen/default_padding"
                     android:orientation="vertical"
+                    android:background="@color/white"
                     android:showDividers="middle"
                     >
 
@@ -149,7 +159,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/row_margin"
                                 android:lineSpacingMultiplier="1.2"
-                                android:textColor="@color/tertiary_grey"
+                                android:textColor="@color/tertiary_gray"
                                 android:textSize="@dimen/small_text_size"
                                 android:visibility="gone"
                                 tools:text="Includes all neighborhoods above Central Park in Manhattan - including Harlem, Upper Manhattan, Washington Heights and Inwood"
@@ -298,7 +308,7 @@
                             android:textColor="@color/handy_green"
                             android:textSize="@dimen/small_text_size"
                             android:textStyle="bold"
-                            tools:text=" +$5 BONUS"
+                            tools:text=" +$5 REWARD"
                             />
 
                     </LinearLayout>
@@ -346,43 +356,36 @@
                         android:visibility="gone"
                         />
 
+
                     <LinearLayout
                         android:id="@+id/booking_nearby_transit_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="vertical"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/default_padding"
                         android:visibility="gone"
                         tools:visibility="visible"
                         >
 
+                        <TextView
+                            style="@style/CircularBold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/nearby_transit"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/default_text_size"
+                            />
+
                         <LinearLayout
+                            android:id="@+id/nearby_transits"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:padding="@dimen/default_padding"
-                            >
-
-                            <TextView
-                                style="@style/CircularBold"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/nearby_transit"
-                                android:textColor="@color/black"
-                                android:textSize="@dimen/default_text_size"
-                                />
-
-                            <LinearLayout
-                                android:id="@+id/nearby_transits"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:orientation="horizontal"
-                                android:paddingEnd="@dimen/extra_padding"
-                                android:paddingLeft="@dimen/extra_padding"
-                                android:paddingRight="@dimen/extra_padding"
-                                android:paddingStart="@dimen/extra_padding"
-                                />
-
-                        </LinearLayout>
+                            android:paddingEnd="@dimen/extra_padding"
+                            android:paddingLeft="@dimen/extra_padding"
+                            android:paddingRight="@dimen/extra_padding"
+                            android:paddingStart="@dimen/extra_padding"
+                            />
 
                     </LinearLayout>
 
@@ -404,7 +407,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:padding="@dimen/default_padding"
-                        android:textColor="@color/tertiary_grey"
+                        android:textColor="@color/tertiary_gray"
                         android:textSize="@dimen/small_text_size"
                         tools:text="Job # 123456"
                         />
@@ -440,7 +443,7 @@
                     android:layout_marginBottom="@dimen/default_margin"
                     android:layout_marginTop="@dimen/default_margin"
                     android:gravity="center_horizontal"
-                    android:textColor="@color/tertiary_grey"
+                    android:textColor="@color/tertiary_gray"
                     android:textSize="@dimen/small_text_size"
                     android:visibility="gone"
                     tools:text="Helper text yo"
@@ -457,7 +460,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/complete_button_height"
         android:layout_alignParentBottom="true"
-        android:background="@color/requested_green"
+        android:background="@color/cleaner_green"
         android:text="@string/on_my_way"
         android:textAllCaps="false"
         android:textColor="@color/white"

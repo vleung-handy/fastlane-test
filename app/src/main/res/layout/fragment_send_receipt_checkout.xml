@@ -174,7 +174,7 @@
                     android:minLines="1"
                     android:padding="@dimen/default_padding"
                     android:textColor="@color/black"
-                    android:textColorHint="@color/subtitle_grey"
+                    android:textColorHint="@color/tertiary_gray"
                     android:textSize="@dimen/default_text_size"
                     />
 
@@ -266,7 +266,7 @@
                     android:layout_marginTop="@dimen/sign_helper_text_margin_top"
                     android:gravity="center_horizontal"
                     android:text="@string/use_finger_to_sign"
-                    android:textColor="@color/subtitle_grey"
+                    android:textColor="@color/tertiary_gray"
                     android:textSize="@dimen/xsmall_text_size"
                     />
 

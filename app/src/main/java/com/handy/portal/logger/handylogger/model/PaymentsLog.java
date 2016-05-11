@@ -55,17 +55,13 @@ public class PaymentsLog extends EventLog
     }
 
 
-    public static class HelpItemSelected extends PaymentsLog
+    public static class FeeDetailSelected extends PaymentsLog
     {
-        private static final String EVENT_TYPE = "help_item_selected";
+        private static final String EVENT_TYPE = "fee_detail_selected";
 
-        @SerializedName("help_item_label")
-        private String mHelpItemLabel;
-
-        public HelpItemSelected(String helpLabelLabel)
+        public FeeDetailSelected()
         {
             super(EVENT_TYPE);
-            mHelpItemLabel = helpLabelLabel;
         }
     }
 

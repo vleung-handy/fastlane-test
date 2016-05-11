@@ -60,7 +60,7 @@
                 android:textColor="@color/handy_green"
                 android:textSize="@dimen/xlarge_text_size"
                 android:visibility="gone"
-                tools:text=" + $5 BONUS"
+                tools:text=" + $5 REWARD"
                 tools:visibility="visible"
                 />
 
@@ -68,7 +68,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="!"
+                android:text="@string/exclamation_point"
                 android:textColor="@color/black"
                 android:textSize="@dimen/xlarge_text_size"
                 />
@@ -172,8 +172,8 @@
         android:maxLength="160"
         android:padding="@dimen/default_padding"
         android:textAppearance="@style/HandyTextAppearanceMedium"
-        android:textColor="@color/dark_grey"
-        android:textColorHint="@color/subtitle_grey"
+        android:textColor="@color/dark_gray"
+        android:textColorHint="@color/tertiary_gray"
         />
 
     <Button

@@ -51,7 +51,7 @@ public class FieldDefinition
     }
 
     public Pattern getCompiledPattern() {
-        if(compiledPattern==null)
+        if (compiledPattern == null && pattern != null)
         {
             compiledPattern = Pattern.compile(pattern);
         }

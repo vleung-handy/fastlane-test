@@ -26,7 +26,7 @@
             android:layout_marginLeft="@dimen/extra_padding_xlarge"
             android:layout_marginStart="@dimen/extra_padding_xlarge"
             android:gravity="center_vertical"
-            android:textColor="@color/tertiary_grey"
+            android:textColor="@color/tertiary_gray"
             android:textSize="@dimen/large_text_size"
             />
 

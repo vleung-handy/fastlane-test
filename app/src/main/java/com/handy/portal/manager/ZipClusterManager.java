@@ -2,8 +2,8 @@ package com.handy.portal.manager;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.BookingEvent;
 import com.handy.portal.model.ZipClusterPolygons;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;

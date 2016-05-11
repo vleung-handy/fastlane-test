@@ -12,9 +12,9 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
+import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.util.SupportActionUtils;
 import com.handy.portal.constant.SupportActionType;
-import com.handy.portal.model.Booking;
-import com.handy.portal.util.SupportActionUtils;
 
 import java.util.Collection;
 import java.util.Collections;

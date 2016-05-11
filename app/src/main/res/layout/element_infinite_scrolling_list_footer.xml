@@ -7,7 +7,7 @@
     android:layout_margin="@dimen/default_margin"
     android:gravity="center"
     android:padding="@dimen/default_padding"
-    android:textColor="@color/helper_text_grey"
+    android:textColor="@color/helper_text_gray"
     android:textSize="@dimen/small_text_size"
     android:visibility="gone"
     />

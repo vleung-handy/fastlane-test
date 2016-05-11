@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/lineSpacing"
                 android:text="@string/fee_formatted"
-                android:textColor="@color/error_red"
+                android:textColor="@color/plumber_red"
                 android:textSize="@dimen/default_text_size"
                 />
         </LinearLayout>
