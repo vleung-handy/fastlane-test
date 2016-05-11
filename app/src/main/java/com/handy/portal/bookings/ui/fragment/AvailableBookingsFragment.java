@@ -1,15 +1,11 @@
 package com.handy.portal.bookings.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SwitchCompat;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -32,14 +28,11 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.helpcenter.constants.HelpCenterUrl;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.ProviderProfile;
-import com.handy.portal.onboarding.ui.activity.GettingStartedActivity;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.FragmentUtils;
@@ -75,8 +68,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Inject
     BookingModalsManager mBookingModalsManager;
 
-    private MenuItem mMenuSchedule;
-    private ProviderProfile mProviderProfile;
+    private String mMessage;
 
     @Override
     protected MainViewTab getTab()
@@ -88,7 +80,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        mMessage = getArguments().getString(BundleKeys.MESSAGE);
     }
 
     @Override
@@ -114,8 +106,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         super.onResume();
         setActionBar(R.string.available_jobs, false);
 
-        bus.post(new ProfileEvent.RequestProviderProfile(false));
-
         if (!MainActivityFragment.clearingBackStack)
         {
             if (shouldShowAvailableBookingsToggle())
@@ -125,28 +115,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
             setLateDispatchOptInToggleListener();
         }
-    }
-
-    @Override
-    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
-    {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_available_bookings, menu);
-        mMenuSchedule = menu.findItem(R.id.action_initial_jobs);
-
-        updateMenuItems();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item)
-    {
-        if (item.getItemId() == R.id.action_initial_jobs)
-        {
-            startActivity(new Intent(getContext(), GettingStartedActivity.class));
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     protected BookingListView getBookingListView()
@@ -244,35 +212,22 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
     {
         bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.DateClicked(dateOfBookings, bookingsForDay.size())));
-        super.afterDisplayBookings(bookingsForDay, dateOfBookings);
-    }
 
-    private void updateMenuItems()
-    {
-
-        if (mMenuSchedule == null)
+        if (mMessage != null)
         {
-            return;
+            Snackbar.make(
+                    mBookingsContent,
+                    mMessage,
+                    Snackbar.LENGTH_LONG
+            ).show();
+            if (mMessage.equals(getString(R.string.job_no_longer_available)))
+            {
+                final Bundle extras = getArguments().getBundle(BundleKeys.EXTRAS);
+                bus.post(new LogEvent.AddLogEvent(
+                        new AvailableJobsLog.UnavailableJobNoticeShown(extras)));
+            }
+            mMessage = null; // this is a one-off
         }
-
-        if (mProviderProfile != null
-                && mProviderProfile.getPerformanceInfo() != null
-                && mProviderProfile.getPerformanceInfo().getTotalJobsCount() <= 0)
-        {
-            mMenuSchedule.setVisible(true);
-        }
-        else
-        {
-            mMenuSchedule.setVisible(false);
-        }
-    }
-
-    @Subscribe
-    public void onReceiveProviderProfileSuccess(ProfileEvent.ReceiveProviderProfileSuccess event)
-    {
-        //show the menu option if the pro haven't claimed jobs before.
-        mProviderProfile = event.providerProfile;
-        updateMenuItems();
     }
 
     /**

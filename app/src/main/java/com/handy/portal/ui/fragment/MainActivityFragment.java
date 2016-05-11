@@ -36,7 +36,6 @@ import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.onboarding.ui.activity.OnboardWelcomeActivity;
 import com.handy.portal.model.onboarding.OnboardingParams;
 import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
 import com.handy.portal.model.onboarding.OnboardingSuppliesParams;
@@ -210,17 +209,10 @@ public class MainActivityFragment extends InjectedFragment
 
     private void handleOnboardingFlow()
     {
-        if (configManager.getConfigurationResponse() != null)
+        if (currentTab != null && currentTab != MainViewTab.ONBOARDING_WEBVIEW &&
+                doesCachedProviderNeedOnboarding())
         {
-            if (configManager.getConfigurationResponse().shouldShowNativeOnboarding())
-            {
-                startActivity(new Intent(getContext(), OnboardWelcomeActivity.class));
-            }
-            else if (currentTab != null && currentTab != MainViewTab.ONBOARDING_WEBVIEW &&
-                    doesCachedProviderNeedWebOnboarding())
-            {
-                switchToTab(MainViewTab.ONBOARDING_WEBVIEW, false);
-            }
+            switchToTab(MainViewTab.ONBOARDING_WEBVIEW, false);
         }
     }
 
@@ -287,6 +279,7 @@ public class MainActivityFragment extends InjectedFragment
     public void onPause()
     {
         super.onPause();
+        mConfigAlreadyReceivedThisSession = false;
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(false));
         mDrawerLayout.removeDrawerListener(mActionBarDrawerToggle);
     }
@@ -641,10 +634,10 @@ public class MainActivityFragment extends InjectedFragment
         return mConfigManager.getConfigurationResponse();
     }
 
-    private boolean doesCachedProviderNeedWebOnboarding()
+    private boolean doesCachedProviderNeedOnboarding()
     {
         return (getConfigurationResponse() != null &&
-                getConfigurationResponse().shouldShowWebOnboarding());
+                getConfigurationResponse().shouldShowOnboarding());
     }
 
     @SuppressWarnings("deprecation")

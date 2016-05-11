@@ -15,11 +15,7 @@
     <dimen name="extra_margin_large">15dp</dimen>
     <dimen name="extra_margin_xlarge">20dp</dimen>
     <dimen name="section_item_margin">20dp</dimen>
-    <dimen name="default_margin_half">8dp</dimen>
     <dimen name="default_margin_x2">32dp</dimen>
-    <dimen name="default_margin_x3">48dp</dimen>
-    <dimen name="default_margin_x4">64dp</dimen>
-    <dimen name="default_margin_x5">80dp</dimen>
     <dimen name="default_margin_large">32dp</dimen>
     <dimen name="default_margin_xlarge">48dp</dimen>
     <dimen name="payment_detail_date_margin">3dp</dimen>
@@ -62,10 +58,6 @@
     <dimen name="dashboard_header_text_size">21sp</dimen>
     <dimen name="xlarge_text_size">22sp</dimen>
     <dimen name="hero_text_size">28sp</dimen>
-
-    <!--According to Jaclyn, we should not have anything bigger than 24sp ..., so
-        going forward, this will replace the xxlarge_text_size -->
-    <dimen name="xxlarge_text_size_new">24sp</dimen>
     <dimen name="xxlarge_text_size">32sp</dimen>
     <dimen name="title_text_size">25sp</dimen>
     <dimen name="accept_terms_button_text_size">20sp</dimen>
@@ -76,11 +68,8 @@
     <dimen name="thin_padding">1dp</dimen>
     <dimen name="x_icon_size">60dp</dimen>
     <dimen name="default_elevation">2dp</dimen>
-    <dimen name="medium_elevation">4dp</dimen>
-    <dimen name="medium_corner_radius">4dp</dimen>
 
     <!-- Generic -->
-    <dimen name="negative_complete_button_height_half">-32dp</dimen>
     <dimen name="complete_button_height">64dp</dimen>
     <dimen name="navigation_drawer_width">264dp</dimen>
     <dimen name="default_image_size">80dp</dimen>
@@ -177,15 +166,6 @@
     <dimen name="notification_image_margin_left">3dp</dimen>
     <dimen name="notification_image_margin_top">10dp</dimen>
     <dimen name="notification_unread_count_min_width">20dp</dimen>
-
-    <!-- Pro Onboarding-->
-    <dimen name="onboard_particle_view_width">20dp</dimen>
-    <dimen name="onboard_particle_view_width_margin">-60dp</dimen>
-    <dimen name="onboard_search_animation_top_offset">-150dp</dimen>
-    <dimen name="onboard_search_animation_width_height">160dp</dimen>
-    <dimen name="onboard_list_header_padding">28dp</dimen>
-    <dimen name="onboard_claim_button_margin">20dp</dimen>
-    <dimen name="onboard_checkbox_width_height">32dp</dimen>
 
     <!-- Payments -->
     <dimen name="outstanding_week_question_mark_width_height">72dp</dimen>

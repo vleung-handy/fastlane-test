@@ -2,11 +2,7 @@ package com.handy.portal.bookings.ui.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -40,7 +36,6 @@ import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.UIUtils;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -57,8 +52,6 @@ import butterknife.OnClick;
 
 public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSuccess> extends ActionBarFragment
 {
-    private static int SNACK_BAR_DURATION = 500;
-
     @Inject
     ConfigManager mConfigManager;
     @Inject
@@ -71,11 +64,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     SwipeRefreshLayout mRefreshLayout;
     @Bind(R.id.bookings_content)
     LinearLayout mBookingsContent;
-
-    protected String mMessage;
-
-    @DrawableRes
-    protected int mMessageIconRes = Integer.MIN_VALUE;
 
     protected abstract int getFragmentResourceId();
 
@@ -98,42 +86,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected abstract void beforeRequestBookings();
 
-    protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
-    {
-        if (mMessage != null)
-        {
-            final Snackbar snackbar = Snackbar.make(
-                    mBookingsContent,
-                    mMessage, Snackbar.LENGTH_LONG
-            );
-
-            snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.snack_bar_gray));
-
-            //set the snack bar image
-            if (mMessageIconRes > Integer.MIN_VALUE)
-            {
-                int padding = getResources().getDimensionPixelOffset(R.dimen.default_padding);
-                UIUtils.setSnackbarImage(snackbar, mMessageIconRes, padding);
-            }
-
-            new Handler().postDelayed(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    snackbar.show();
-                }
-            }, SNACK_BAR_DURATION);
-
-            if (mMessage.equals(getString(R.string.job_no_longer_available)))
-            {
-                final Bundle extras = getArguments().getBundle(BundleKeys.EXTRAS);
-                bus.post(new LogEvent.AddLogEvent(
-                        new AvailableJobsLog.UnavailableJobNoticeShown(extras)));
-            }
-            mMessage = null; // this is a one-off
-        }
-    }
+    protected abstract void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings);
 
     protected abstract Class<? extends BookingElementView> getBookingElementViewClass();
 
@@ -147,15 +100,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     protected Date mSelectedDay;
     protected List<Booking> mBookingsForSelectedDay;
     protected ProviderSettings mProviderSettings;
-
-    @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-
-        mMessage = getArguments().getString(BundleKeys.MESSAGE);
-        mMessageIconRes = getArguments().getInt(BundleKeys.MESSAGE_ICON);
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,

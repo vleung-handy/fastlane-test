@@ -112,7 +112,7 @@ public class ReferAFriendFragment extends ActionBarFragment
     public void requestProviderProfile()
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new ProfileEvent.RequestProviderProfile(true));
+        bus.post(new ProfileEvent.RequestProviderProfile());
     }
 
     @Subscribe

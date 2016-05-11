@@ -13,10 +13,6 @@ public class BookingsWrapper
 {
     @SerializedName("date")
     private Date date;
-
-    @SerializedName("sanitized_date")
-    private String sanitizedDate;
-
     @SerializedName("priority_access")
     private PriorityAccessInfo mPriorityAccessInfo;
     @SerializedName("jobs")
@@ -94,11 +90,6 @@ public class BookingsWrapper
     public final Date getDate()
     {
         return date;
-    }
-
-    public String getSanitizedDate()
-    {
-        return sanitizedDate;
     }
 
     public PriorityAccessInfo getPriorityAccessInfo()

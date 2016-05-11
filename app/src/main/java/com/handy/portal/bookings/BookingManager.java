@@ -16,7 +16,6 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.TypeSafeMap;
-import com.handy.portal.onboarding.model.JobClaimResponse;
 import com.handy.portal.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -145,26 +144,6 @@ public class BookingManager
                     }
             );
         }
-    }
-
-    @Subscribe
-    public void onRequestOnboardingJobs(HandyEvent.RequestOnboardingJobs event)
-    {
-        mDataManager.getOnboardingJobs(new DataManager.Callback<BookingsListWrapper>()
-                                       {
-                                           @Override
-                                           public void onSuccess(final BookingsListWrapper bookingsListWrapper)
-                                           {
-                                               mBus.post(new HandyEvent.ReceiveOnboardingJobsSuccess(bookingsListWrapper));
-                                           }
-
-                                           @Override
-                                           public void onError(final DataManager.DataManagerError error)
-                                           {
-                                               mBus.post(new HandyEvent.ReceiveOnboardingJobsError(error));
-                                           }
-                                       }
-        );
     }
 
     /**
@@ -383,27 +362,6 @@ public class BookingManager
                 mBus.post(new HandyEvent.ReceiveClaimJobError(event.booking, event.source, error));
             }
         });
-    }
-
-
-    @Subscribe
-    public void onRequestClaimJobs(final HandyEvent.RequestClaimJobs event)
-    {
-        mDataManager.claimBookings(event.mJobClaimRequest, new DataManager.Callback<JobClaimResponse>()
-        {
-            @Override
-            public void onSuccess(JobClaimResponse response)
-            {
-                mBus.post(new HandyEvent.ReceiveClaimJobsSuccess(response));
-            }
-
-            @Override
-            public void onError(DataManager.DataManagerError error)
-            {
-                mBus.post(new HandyEvent.ReceiveClaimJobsError(error));
-            }
-        });
-
     }
 
     @Subscribe

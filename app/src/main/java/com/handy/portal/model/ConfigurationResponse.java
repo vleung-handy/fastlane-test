@@ -99,14 +99,9 @@ public class ConfigurationResponse
         return mOnboardingParams;
     }
 
-    public boolean shouldShowWebOnboarding()
+    public boolean shouldShowOnboarding()
     {
-        return getOnboardingParams() != null && mOnboardingParams.shouldShowWebOnboarding();
-    }
-
-    public boolean shouldShowNativeOnboarding()
-    {
-        return getOnboardingParams() != null && mOnboardingParams.shouldShowNativeOnboarding();
+        return getOnboardingParams() != null && mOnboardingParams.shouldShowOnboarding();
     }
 
     public boolean shouldUseHelpCenterWebView()

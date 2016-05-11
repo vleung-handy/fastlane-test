@@ -73,7 +73,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/default_text_size"
                 tools:text="10:00 am"
-                android:textColor="@color/dark_gray"
                 />
 
             <TextView
@@ -82,7 +81,6 @@
                 android:layout_marginLeft="@dimen/extra_margin"
                 android:layout_marginRight="@dimen/extra_margin"
                 android:text="@string/dash"
-                android:textColor="@color/dark_gray"
                 />
 
             <TextView
@@ -91,7 +89,6 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/default_text_size"
                 tools:text="1:00 pm"
-                android:textColor="@color/dark_gray"
                 />
         </LinearLayout>
 

@@ -16,9 +16,6 @@ public class OnboardingParams
     @SerializedName("onboarding_complete_web_url")
     private String mOnboardingCompleteWebUrl;
 
-    @SerializedName("onboarding_use_native_flow")
-    private boolean mOnboardingUseNativeFlow;
-
     @SerializedName("onboarding_supplies")
     private OnboardingSuppliesParams mOnboardingSuppliesParams;
 
@@ -65,21 +62,13 @@ public class OnboardingParams
         return mOnboardingBlocking;
     }
 
-    public boolean shouldShowWebOnboarding()
+    public boolean shouldShowOnboarding()
     {
         return isOnboardingEnabled() && !TextUtils.isNullOrEmpty(getOnboardingCompleteWebUrl());
     }
 
-<<<<<<< HEAD:app/src/main/java/com/handy/portal/model/OnboardingParams.java
-    public boolean shouldShowNativeOnboarding()
-    {
-        return isOnboardingEnabled() && mOnboardingUseNativeFlow;
-    }
-
-=======
     public OnboardingSuppliesParams getOnboardingSuppliesParams()
     {
         return mOnboardingSuppliesParams;
     }
->>>>>>> onboarding:app/src/main/java/com/handy/portal/model/onboarding/OnboardingParams.java
 }

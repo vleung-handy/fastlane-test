@@ -192,12 +192,7 @@ public class ProviderManager
     @Subscribe
     public void onRequestProviderProfile(ProfileEvent.RequestProviderProfile event)
     {
-        ProviderProfile cachedProviderProfile = null;
-
-        if (event.useCache)
-        {
-            cachedProviderProfile = getCachedProviderProfile();
-        }
+        final ProviderProfile cachedProviderProfile = getCachedProviderProfile();
 
         if (cachedProviderProfile != null)
         {

@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,6 +20,7 @@ public final class DateTimeUtils
 {
     //TODO: refactor code throughout the app to put date formats here
     //TODO: rename these fields & methods to something better
+
     public final static SimpleDateFormat CLOCK_FORMATTER_12HR =
             new SimpleDateFormat("h:mm a", Locale.getDefault());
     public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DAY_FORMATTER =
@@ -46,10 +46,6 @@ public final class DateTimeUtils
             new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
     public final static SimpleDateFormat LOCAL_TIME_12_HOURS =
             new SimpleDateFormat("hh:mm a", Locale.getDefault());
-
-    public final static SimpleDateFormat DAY_OF_WEEK_FORMATTER = new SimpleDateFormat("EEEE");
-    public final static SimpleDateFormat DAY_OF_YEAR_FORMATTER = new SimpleDateFormat("D");
-    public final static SimpleDateFormat YEAR_MONTH_DAY_FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
 
     public final static int HOURS_IN_DAY = 24;
     public final static int HOURS_IN_SIX_DAYS = HOURS_IN_DAY * 6;
@@ -99,29 +95,6 @@ public final class DateTimeUtils
         return c.get(Calendar.YEAR);
     }
 
-    /**
-     * Day of the week/
-     * Monday, Tuesday, Wednesday, etc.
-     *
-     * @param date
-     * @return
-     */
-    public static String getDayOfWeek(Date date)
-    {
-        return DAY_OF_WEEK_FORMATTER.format(date);
-    }
-
-    /**
-     * Day of the year. If today was new year's eve, it would return 365
-     *
-     * @param date
-     * @return
-     */
-    public static int getDayOfYear(Date date)
-    {
-        return Integer.parseInt(DAY_OF_YEAR_FORMATTER.format(date));
-    }
-
     public static int getDayOfMonth(Date date)
     {
         Calendar c = Calendar.getInstance();
@@ -155,92 +128,6 @@ public final class DateTimeUtils
     {
         if (date == null) { return null; }
         return getDetailedDateFormatter().format(date);
-    }
-
-    @Nullable
-    public static String formatMonthDate(Date date)
-    {
-        if (date == null) { return null; }
-        return getMonthDateFormatter().format(date);
-    }
-
-
-    /**
-     * Takes in a date of 2016-04-09 format and converted to
-     * <p/>
-     * SATURDAY, April 9, 2016
-     * TODAY, April 9, 2016
-     * TOMORROW, April 9, 2016
-     * <p/>
-     * format, with the first word bolded.
-     *
-     * @param date
-     * @return
-     */
-    public static String getHtmlFormattedDateString(String date)
-    {
-        String rval = DateTimeUtils.toJobViewDateString(date);
-        if (rval == null)
-        {
-            return "";
-        }
-        else
-        {
-            int idx = rval.indexOf(" ");
-            if (idx < 0)
-            {
-                return "";
-            }
-            else
-            {
-                return "<b>" + rval.substring(0, idx) + "</b>" + rval.substring(idx, rval.length());
-            }
-        }
-    }
-
-    /**
-     * Incoming date is in format: 2016-04-08
-     * Returns string in the formats:
-     * <p/>
-     * Friday, April 8, 2016
-     * Tomorrow, April 8, 2016
-     *
-     * @return
-     */
-    @Nullable
-    public static String toJobViewDateString(String date)
-    {
-        if (android.text.TextUtils.isEmpty(date)) { return null; }
-
-        try
-        {
-            Date d = YEAR_MONTH_DAY_FORMATTER.parse(date);
-            String rval = MONTH_DATE_YEAR_FORMATTER.format(d);
-
-            int jobDate = getDayOfYear(d);
-            int today = getDayOfYear(new Date());
-
-            String prefix = "";
-            if (jobDate - today == 0)
-            {
-                prefix = "TODAY, ";
-            }
-            else if (jobDate - today == 1)
-            {
-                prefix = "TOMORROW, ";
-            }
-            else
-            {
-                prefix = getDayOfWeek(d).toUpperCase() + ", ";
-            }
-
-            return prefix + rval;
-        }
-        catch (ParseException e)
-        {
-            e.printStackTrace();
-            return null;
-        }
     }
 
     @Nullable

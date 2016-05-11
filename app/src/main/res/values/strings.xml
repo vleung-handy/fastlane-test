@@ -484,24 +484,6 @@
     <string name="job_access_locked_learn_more">Learn more about\u0020</string>
     <string name="job_access_locked_keep_rate_info_button">Keep Rate</string>
 
-    <!-- Onboarding -->
-    <string name="onboard_congratulations_formatted">Congratulations,\n%1$s</string>
-    <string name="onboard_congratulations">Congratulations!</string>
-    <string name="onboard_get_started">Let\'s Get Started</string>
-    <string name="onboard_getting_started">Getting Started</string>
-    <string name="onboard_welcome">You\'ve been activated! We\'re excited for you to join our global community of professionals using the Handy platform.</string>
-    <string name="onboard_getting_started_title">Start building your schedule with these jobs.</string>
-    <string name="onboard_claim_and_earn_formatted">Claim &amp; Earn %s</string>
-    <string name="onboard_no_thanks">No thanks, I\'ll find my own jobs</string>
-    <string name="onboard_loading">Choosing jobs\nin your city...</string>
-    <string name="onboard_no_longer_available">Looks like these job(s) are no longer available. Try these jobs.</string>
-    <string name="onboard_job_claim_error">"There was an error claiming job(s), please try again"</string>
-    <string name="onboard_job_load_error">"There was an error finding jobs, please try again"</string>
-    <string name="onboard_claim_no_job">"Want to see those preselected jobs again? Tap the schedule help button in the top right."</string>
-    <string name="onboard_claim_job_confirmation">"Are you sure you want to\nclaim all of these jobs?"</string>
-    <string name="onboard_confirm_claim">"Confirm Claim"</string>
-    <string name="onboard_no_time_available">No Time Available</string>
-
     <!-- Pre-activation -->
     <string name="supply_kit_purchase_inquiry">Would you like to buy a starter supply kit?</string>
     <string name="yes_supply_kit">Yes, I Want Supplies</string>
