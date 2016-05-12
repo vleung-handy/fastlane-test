@@ -4,6 +4,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.GeolocationPermissions;
@@ -21,7 +22,7 @@ import java.util.List;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public abstract class PortalWebViewFragment extends ActionBarFragment
+public class PortalWebViewFragment extends ActionBarFragment
 {
     @Bind(R.id.portal_web_view)
     WebView webView;
@@ -50,11 +51,33 @@ public abstract class PortalWebViewFragment extends ActionBarFragment
     }
 
     @Override
+    public void onViewCreated(final View view, final Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        setOptionsMenuEnabled(true);
+        setBackButtonEnabled(true);
+    }
+
+    @Override
     protected List<String> requiredArguments()
     {
         List<String> requiredArguments = new ArrayList<>();
         requiredArguments.add(BundleKeys.TARGET_URL);
         return requiredArguments;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item)
+    {
+        if (item.getItemId() == android.R.id.home && webView.canGoBack())
+        {
+            webView.goBack();
+            return true;
+        }
+        else
+        {
+            return super.onOptionsItemSelected(item);
+        }
     }
 
     public void openPortalUrl(String url)
@@ -77,12 +100,8 @@ public abstract class PortalWebViewFragment extends ActionBarFragment
     {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setGeolocationEnabled(true);
+        webView.getSettings().setBuiltInZoomControls(true);
         webView.setWebViewClient(new PortalWebViewClient(this, webView, googleManager, bus));
-    }
-
-    protected void initResupplyKitWebViewClient()
-    {
-        webView.setWebViewClient(new RequestSuppliesWebViewClient(this, webView, googleManager, bus));
     }
 
     private void loadUrlWithFromAppParam(String url)

@@ -1,15 +1,9 @@
 package com.handy.portal.payments.ui.fragment;
 
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
-import android.text.Html;
-import android.text.SpannableStringBuilder;
 import android.text.method.LinkMovementMethod;
-import android.text.style.ClickableSpan;
-import android.text.style.URLSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +13,8 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.CompletedJobsLog;
 import com.handy.portal.manager.ConfigManager;
@@ -29,6 +25,7 @@ import com.handy.portal.ui.element.bookings.BookingResultBannerTextView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.util.CurrencyUtils;
 import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.util.TextUtils;
 
 import javax.inject.Inject;
 
@@ -82,6 +79,18 @@ public class BookingTransactionsFragment extends ActionBarFragment
     private BookingTransactions mBookingTransactions;
     private Booking mBooking;
     private Transaction[] mTransactions;
+    // Used to handle link clicked events when parsing html strings for text view
+    private TextUtils.LaunchWebViewCallback mLaunchWebViewCallback = new TextUtils.LaunchWebViewCallback()
+    {
+        @Override
+        public void launchUrl(final String url)
+        {
+            Bundle arguments = new Bundle();
+            arguments.putString(BundleKeys.TARGET_URL, url);
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.WEB_PAGE, arguments, true));
+            bus.post(new LogEvent.AddLogEvent(new CompletedJobsLog.HelpClicked(mBooking)));
+        }
+    };
 
     public static BookingTransactionsFragment newInstance(
             @NonNull final BookingTransactions bookingTransactions)
@@ -152,7 +161,7 @@ public class BookingTransactionsFragment extends ActionBarFragment
         for (int i = 0; i < mTransactions.length; ++i)
         {
             TransactionView transactionView = new TransactionView(getContext());
-            transactionView.setDisplay(mTransactions[i]);
+            transactionView.setDisplay(mTransactions[i], mLaunchWebViewCallback);
             mTransactionsLayout.addView(transactionView);
         }
         mNetEarningAmountText.setText(CurrencyUtils.formatPriceWithCents(
@@ -166,40 +175,12 @@ public class BookingTransactionsFragment extends ActionBarFragment
 
         mHelpText.setLinkTextColor(ContextCompat.getColor(getContext(), R.color.partner_blue));
         mHelpText.setMovementMethod(LinkMovementMethod.getInstance());
-
-        setTextViewHTML(mHelpText, getString(R.string.question_about_payment));
+        TextUtils.setTextViewHTML(mHelpText, getString(R.string.question_about_payment), mLaunchWebViewCallback);
 
         if (mConfigManager.getConfigurationResponse() == null ||
                 !mConfigManager.getConfigurationResponse().showBookingTransactionSummary())
         {
             mTransactionSummary.setVisibility(View.GONE);
         }
-    }
-
-
-    private void setTextViewHTML(final TextView text, final String html)
-    {
-        CharSequence sequence = Html.fromHtml(html);
-        SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
-        URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
-        for (final URLSpan span : urls)
-        {
-            int start = strBuilder.getSpanStart(span);
-            int end = strBuilder.getSpanEnd(span);
-            int flags = strBuilder.getSpanFlags(span);
-            ClickableSpan clickable = new ClickableSpan()
-            {
-                @Override
-                public void onClick(final View widget)
-                {
-                    bus.post(new LogEvent.AddLogEvent(new CompletedJobsLog.HelpClicked(mBooking)));
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(span.getURL()));
-                    startActivity(intent);
-                }
-            };
-            strBuilder.setSpan(clickable, start, end, flags);
-            strBuilder.removeSpan(span);
-        }
-        text.setText(strBuilder);
     }
 }
