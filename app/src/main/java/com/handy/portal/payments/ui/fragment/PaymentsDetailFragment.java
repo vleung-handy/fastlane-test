@@ -9,7 +9,6 @@ import android.widget.ExpandableListView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
-import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.NavigationEvent;
@@ -99,13 +98,10 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
                 new PaymentsLog.DetailSelected(paymentGroup.getMachineName())));
 
         final Payment payment = (Payment) parentListAdapter.getChild(groupPosition, childPosition);
-        final String bookingId = payment.getBookingId();
-        final String bookingType = payment.getBookingType() != null ?
-                payment.getBookingType().toUpperCase() : Booking.BookingType.BOOKING.toString();
-        if (bookingId != null)
-        {
-            showBookingDetails(bookingId, bookingType);
-        }
+
+        if (payment.getBookingId() == null || payment.getBookingType() == null) { return false; }
+
+        showBookingDetails(payment.getBookingId(), payment.getBookingType());
         return true;
     }
 
