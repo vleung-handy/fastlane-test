@@ -93,7 +93,7 @@ public class BookingTransactionsWrapperFragment extends ActionBarFragment
     public void onReceiveBookingDetailsError(PaymentEvent.ReceiveBookingPaymentDetailsError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        if (event != null && event.error != null && TextUtils.isNullOrEmpty(event.error.getMessage()))
+        if (event != null && event.error != null && !TextUtils.isNullOrEmpty(event.error.getMessage()))
         {
             mErrorText.setText(event.error.getMessage());
         }
