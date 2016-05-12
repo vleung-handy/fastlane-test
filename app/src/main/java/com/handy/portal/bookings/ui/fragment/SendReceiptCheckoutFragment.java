@@ -239,6 +239,9 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
 
     private void addTaskItem(String taskText)
     {
+        // 6 total items, 3 on the left and 3 on the right. Anytime there are more, we replace the
+        // last item in the second column with a string of the number of items that aren't being
+        // shown
         CheckoutCompletedTaskView checkoutCompletedTaskView = new CheckoutCompletedTaskView(getContext());
         checkoutCompletedTaskView.setTaskText(taskText);
 
@@ -257,7 +260,10 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
             if (mHiddenTasksCount != 1)
             {
                 checkoutCompletedTaskView.setTaskText(getResources().getString(R.string.more_tasks_formatted, mHiddenTasksCount));
-                mChecklistSecondColumn.removeViewAt(2); // Remove 3rd item and replace with count
+                if (mChecklistSecondColumn.getChildCount() == 3)
+                {
+                    mChecklistSecondColumn.removeViewAt(2); // Remove 3rd item(replaced with count below)
+                }
             }
 
             mChecklistSecondColumn.addView(checkoutCompletedTaskView);
