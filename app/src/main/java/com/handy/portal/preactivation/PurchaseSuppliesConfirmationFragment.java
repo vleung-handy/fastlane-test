@@ -244,6 +244,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
         {
             if (validate())
             {
+                showLoadingOverlay();
                 bus.post(new ProfileEvent.RequestProfileUpdate(
                         "",
                         "",
@@ -253,15 +254,14 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
                         mStateField.getValue().getText(),
                         mZipField.getValue().getText()
                 ));
-                showLoadingOverlay();
                 bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
                         OnboardingSuppliesLog.ServerTypes.UPDATE_ADDRESS.submitted())));
             }
         }
         else
         {
-            bus.post(new HandyEvent.RequestOnboardingSupplies(true));
             showLoadingOverlay();
+            bus.post(new HandyEvent.RequestOnboardingSupplies(true));
             bus.post(new LogEvent.AddLogEvent(
                     new OnboardingSuppliesLog.RequestSupplies.Submitted(true)));
         }
