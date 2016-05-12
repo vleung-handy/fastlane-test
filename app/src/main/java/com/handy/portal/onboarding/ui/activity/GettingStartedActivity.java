@@ -148,7 +148,7 @@ public class GettingStartedActivity extends AppCompatActivity
             showLoadingDialog();
             loadJobs();
         }
-        else if (dialogVisible())
+        else if (isLoadingDialogVisible())
         {
             mLoadingDialog.dismiss();
             mRecyclerView.startLayoutAnimation();
@@ -251,7 +251,7 @@ public class GettingStartedActivity extends AppCompatActivity
     @Subscribe
     public void onJobLoadError(HandyEvent.ReceiveOnboardingJobsError event)
     {
-        if (dialogVisible())
+        if (isLoadingDialogVisible())
         {
             mLoadingDialog.dismiss();
         }
@@ -281,7 +281,7 @@ public class GettingStartedActivity extends AppCompatActivity
             if (!hasJobs(mJobs))
             {
                 //there are no jobs, so..., go to the available jobs fragment
-                if (dialogVisible())
+                if (isLoadingDialogVisible())
                 {
                     mLoadingDialog.dismiss();
                     mBtnNext.setVisibility(View.GONE);
@@ -299,7 +299,7 @@ public class GettingStartedActivity extends AppCompatActivity
                 );
                 mRecyclerView.setAdapter(mAdapter);
                 updateButton();
-                if (dialogVisible())
+                if (isLoadingDialogVisible())
                 {
                     mLoadingDialog.dismiss();
                     mRecyclerView.startLayoutAnimation();
@@ -313,7 +313,7 @@ public class GettingStartedActivity extends AppCompatActivity
      *
      * @return
      */
-    private boolean dialogVisible()
+    private boolean isLoadingDialogVisible()
     {
         return mIsResumed && mLoadingDialog != null && mLoadingDialog.isVisible();
     }
