@@ -111,6 +111,9 @@ public class OutstandingFeesFragment extends ActionBarFragment
                     @Override
                     public void onClick(final View v)
                     {
+                        if (payment.getBookingId() == null || payment.getBookingType() == null)
+                        { return; }
+
                         Bundle arguments = new Bundle();
                         arguments.putString(BundleKeys.BOOKING_ID, payment.getBookingId());
                         arguments.putString(BundleKeys.BOOKING_TYPE, payment.getBookingType());
@@ -125,7 +128,6 @@ public class OutstandingFeesFragment extends ActionBarFragment
     }
 
     @Subscribe
-
     public void onReceivePaymentOutstandingFeesError(
             PaymentEvent.ReceivePaymentOutstandingFeesError event)
     {
