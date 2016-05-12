@@ -524,5 +524,6 @@
     <string name="supplies_expectation">Handy customers expect you to arrive prepared with supplies to get the job done right.</string>
     <string name="loading">Loading…</string>
     <string name="supplies_ordered">Supplies ordered!</string>
+    <string name="card">Card</string>
 
 </resources>
