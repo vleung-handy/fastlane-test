@@ -2,10 +2,15 @@ package com.handy.portal.util;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.annotation.Nullable;
+import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
+import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
+import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
+import android.view.View;
 import android.widget.TextView;
 
 import java.text.DateFormatSymbols;
@@ -173,6 +178,34 @@ public final class TextUtils
         return pattern == null || pattern.matcher(text).matches();
     }
 
+    public static void setTextViewHTML(final TextView text, final String html,
+                                       @Nullable final LaunchWebViewCallback launchWebViewCallback)
+    {
+        CharSequence sequence = Html.fromHtml(html);
+        SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
+        URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
+        for (final URLSpan span : urls)
+        {
+            int start = strBuilder.getSpanStart(span);
+            int end = strBuilder.getSpanEnd(span);
+            int flags = strBuilder.getSpanFlags(span);
+            ClickableSpan clickable = new ClickableSpan()
+            {
+                @Override
+                public void onClick(final View widget)
+                {
+                    if (launchWebViewCallback != null)
+                    {
+                        launchWebViewCallback.launchUrl(span.getURL());
+                    }
+                }
+            };
+            strBuilder.setSpan(clickable, start, end, flags);
+            strBuilder.removeSpan(span);
+        }
+        text.setText(strBuilder);
+    }
+
     private static final class URLSpanNoUnderline extends URLSpan
     {
         URLSpanNoUnderline(String url)
@@ -186,5 +219,11 @@ public final class TextUtils
             super.updateDrawState(ds);
             ds.setUnderlineText(false);
         }
+    }
+
+
+    public interface LaunchWebViewCallback
+    {
+        void launchUrl(String url);
     }
 }

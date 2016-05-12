@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
@@ -95,9 +96,9 @@ public class GettingStartedActivity extends AppCompatActivity
 
     private Drawable mGreenDrawable;
     private Drawable mGrayDrawable;
-    private long mRequestTime;
+    private long mLoadingDialogDisplayTime;
     private int mWaitTime;
-    private boolean mDestroyed;
+    private boolean mIsResumed;
 
     @NonNull
     private String mProviderId;
@@ -139,6 +140,7 @@ public class GettingStartedActivity extends AppCompatActivity
     @Override
     protected void onResume()
     {
+        mIsResumed = true;
         super.onResume();
         mBus.register(this);
 
@@ -147,13 +149,17 @@ public class GettingStartedActivity extends AppCompatActivity
             showLoadingDialog();
             loadJobs();
         }
+        else if (isLoadingDialogVisible())
+        {
+            mLoadingDialog.dismiss();
+            mRecyclerView.startLayoutAnimation();
+        }
     }
 
     private void loadJobs()
     {
         mJobs = null;
         mJobLoaded = false;
-        mRequestTime = System.currentTimeMillis();
         mFetchErrorView.setVisibility(View.GONE);
         mBus.post(new HandyEvent.RequestOnboardingJobs());
 
@@ -181,8 +187,21 @@ public class GettingStartedActivity extends AppCompatActivity
     @Override
     protected void onPause()
     {
+        mIsResumed = false;
+        try
+        {
+             /*
+                 on mostly Samsung Android 5.0 devices (responsible for ~97% of crashes here),
+                 Activity.onPause() can be called without Activity.onResume()
+                 so unregistering the bus here can cause an exception
+              */
+            mBus.unregister(this);
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e); //want more info for now
+        }
         super.onPause();
-        mBus.unregister(this);
     }
 
     /**
@@ -191,6 +210,7 @@ public class GettingStartedActivity extends AppCompatActivity
      */
     public void showLoadingDialog()
     {
+        mLoadingDialogDisplayTime = System.currentTimeMillis();
         mLoadingDialog = new OnboardLoadingDialog();
         mLoadingDialog.show(getFragmentManager(), OnboardLoadingDialog.TAG);
 
@@ -200,7 +220,7 @@ public class GettingStartedActivity extends AppCompatActivity
             public void run()
             {
                 Log.d(TAG, "run: DialogRunCompleted");
-                bindJobsAndRemoveDialog();
+                bindJobsAndRemoveLoadingDialog();
             }
         }, mWaitTime);
 
@@ -238,13 +258,13 @@ public class GettingStartedActivity extends AppCompatActivity
         mLoadingOverlayView.setVisibility(View.GONE);
         mJobLoaded = true;
         mJobs = event.bookings;
-        bindJobsAndRemoveDialog();
+        bindJobsAndRemoveLoadingDialog();
     }
 
     @Subscribe
     public void onJobLoadError(HandyEvent.ReceiveOnboardingJobsError event)
     {
-        if (dialogVisible())
+        if (isLoadingDialogVisible())
         {
             mLoadingDialog.dismiss();
         }
@@ -263,9 +283,9 @@ public class GettingStartedActivity extends AppCompatActivity
     /**
      * dismiss the dialog after the jobs have loaded, or 4 seconds, whichever one is slowest
      */
-    private void bindJobsAndRemoveDialog()
+    private void bindJobsAndRemoveLoadingDialog()
     {
-        long elapsedTime = System.currentTimeMillis() - mRequestTime;
+        long elapsedTime = System.currentTimeMillis() - mLoadingDialogDisplayTime;
 
         if (mJobLoaded && (elapsedTime >= mWaitTime))
         {
@@ -274,7 +294,7 @@ public class GettingStartedActivity extends AppCompatActivity
             if (!hasJobs(mJobs))
             {
                 //there are no jobs, so..., go to the available jobs fragment
-                if (dialogVisible())
+                if (isLoadingDialogVisible())
                 {
                     mLoadingDialog.dismiss();
                     mBtnNext.setVisibility(View.GONE);
@@ -292,7 +312,7 @@ public class GettingStartedActivity extends AppCompatActivity
                 );
                 mRecyclerView.setAdapter(mAdapter);
                 updateButton();
-                if (dialogVisible())
+                if (isLoadingDialogVisible())
                 {
                     mLoadingDialog.dismiss();
                     mRecyclerView.startLayoutAnimation();
@@ -306,9 +326,9 @@ public class GettingStartedActivity extends AppCompatActivity
      *
      * @return
      */
-    private boolean dialogVisible()
+    private boolean isLoadingDialogVisible()
     {
-        return mLoadingDialog != null && !isFinishing() && !mDestroyed && mLoadingDialog.isVisible();
+        return mIsResumed && mLoadingDialog != null && mLoadingDialog.isVisible();
     }
 
     @Override
@@ -513,13 +533,6 @@ public class GettingStartedActivity extends AppCompatActivity
         {
             mErrorText.setText(getString(R.string.onboard_job_claim_error));
         }
-    }
-
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-        mDestroyed = true;
     }
 
     @Override

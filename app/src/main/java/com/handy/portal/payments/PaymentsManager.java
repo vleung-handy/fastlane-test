@@ -86,7 +86,6 @@ public class PaymentsManager
     @Subscribe
     public void onRequestBookingPaymentDetails(final PaymentEvent.RequestBookingPaymentDetails event)
     {
-
         mDataManager.getBookingTransactions(event.bookingId, event.bookingType.toLowerCase(), new DataManager.Callback<BookingTransactions>()
         {
             @Override
