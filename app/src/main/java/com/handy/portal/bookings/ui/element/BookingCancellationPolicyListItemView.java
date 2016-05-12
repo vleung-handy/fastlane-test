@@ -20,10 +20,10 @@ public class BookingCancellationPolicyListItemView extends RelativeLayout
 {
     @Bind(R.id.cancellation_policy_list_item_left_text)
     TextView mLeftText;
-    @Bind(R.id.cancellation_policy_list_item_right_text_1)
-    TextView mRightText1;
-    @Bind(R.id.cancellation_policy_list_item_right_text_2)
-    TextView mRightText2;
+    @Bind(R.id.cancellation_policy_list_item_waived_fee_text)
+    TextView mWaivedFeeText;
+    @Bind(R.id.cancellation_policy_list_item_fee_text)
+    TextView mFeeText;
     @Bind(R.id.cancellation_policy_list_item_active_indicator)
     ImageView mActiveItemIndicator;
     @Bind(R.id.cancellation_policy_list_item_divider)
@@ -58,7 +58,7 @@ public class BookingCancellationPolicyListItemView extends RelativeLayout
     {
         inflate(getContext(), R.layout.element_cancellation_policy_list_item, this);
         ButterKnife.bind(this);
-        mRightText1.setPaintFlags(mRightText1.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
+        mWaivedFeeText.setPaintFlags(mWaivedFeeText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
     }
 
     public BookingCancellationPolicyListItemView setLeftText(String leftText)
@@ -67,23 +67,23 @@ public class BookingCancellationPolicyListItemView extends RelativeLayout
         return this;
     }
 
-    public BookingCancellationPolicyListItemView setRightText1(final String rightText1)
+    public BookingCancellationPolicyListItemView setWaivedFeeText(final String waivedFeeText)
     {
-        if (rightText1 != null)
+        if (waivedFeeText != null)
         {
-            mRightText1.setText(rightText1);
-            mRightText1.setVisibility(VISIBLE);
+            mWaivedFeeText.setText(waivedFeeText);
+            mWaivedFeeText.setVisibility(VISIBLE);
         }
         else
         {
-            mRightText1.setVisibility(GONE);
+            mWaivedFeeText.setVisibility(GONE);
         }
         return this;
     }
 
-    public BookingCancellationPolicyListItemView setRightText2(String rightText2)
+    public BookingCancellationPolicyListItemView setFeeText(String feeText)
     {
-        mRightText2.setText(rightText2);
+        mFeeText.setText(feeText);
         return this;
     }
 
@@ -102,7 +102,7 @@ public class BookingCancellationPolicyListItemView extends RelativeLayout
         }
         final int textColor = ContextCompat.getColor(getContext(), colorResourceId);
         mLeftText.setTextColor(textColor);
-        mRightText2.setTextColor(textColor);
+        mFeeText.setTextColor(textColor);
         return this;
     }
 

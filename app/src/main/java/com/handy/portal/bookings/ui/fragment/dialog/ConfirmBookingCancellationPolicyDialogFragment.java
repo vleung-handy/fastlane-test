@@ -114,8 +114,8 @@ public abstract class ConfirmBookingCancellationPolicyDialogFragment
                     BookingCancellationPolicyListItemView policyListItemView =
                             new BookingCancellationPolicyListItemView(getContext())
                                     .setLeftText(cancellationPolicy.getDisplayText())
-                                    .setRightText1(waivedFeeAmountFormatted)
-                                    .setRightText2(feeAmountFormatted)
+                                    .setWaivedFeeText(waivedFeeAmountFormatted)
+                                    .setFeeText(feeAmountFormatted)
                                     .setHighlighted(cancellationPolicy.isActive())
                                     .setDividerVisible(i != (cancellationPolicies.length - 1));
                     mCancellationPolicyContent.addView(policyListItemView);
