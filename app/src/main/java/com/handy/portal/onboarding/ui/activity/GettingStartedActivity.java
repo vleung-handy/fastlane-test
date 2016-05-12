@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
@@ -181,8 +182,20 @@ public class GettingStartedActivity extends AppCompatActivity
     @Override
     protected void onPause()
     {
+        try
+        {
+             /*
+                 on mostly Samsung Android 5.0 devices (responsible for ~97% of crashes here),
+                 Activity.onPause() can be called without Activity.onResume()
+                 so unregistering the bus here can cause an exception
+              */
+            mBus.unregister(this);
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e); //want more info for now
+        }
         super.onPause();
-        mBus.unregister(this);
     }
 
     /**
