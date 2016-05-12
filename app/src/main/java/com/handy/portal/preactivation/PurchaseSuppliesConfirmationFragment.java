@@ -24,7 +24,6 @@ import com.handy.portal.ui.view.SimpleContentLayout;
 import com.handy.portal.util.FragmentUtils;
 import com.handy.portal.util.UIUtils;
 import com.squareup.otto.Subscribe;
-import com.stripe.android.model.Card;
 
 import java.util.Map;
 
@@ -64,14 +63,15 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
 
     public static PurchaseSuppliesConfirmationFragment newInstance(
             final OnboardingSuppliesInfo onboardingSuppliesInfo,
-            final Card card)
+            final String cardType,
+            final String cardLast4)
     {
         final PurchaseSuppliesConfirmationFragment fragment =
                 new PurchaseSuppliesConfirmationFragment();
         final Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.ONBOARDING_SUPPLIES, onboardingSuppliesInfo);
-        arguments.putString(BundleKeys.CARD_TYPE, card.getType());
-        arguments.putString(BundleKeys.CARD_LAST4, card.getLast4());
+        arguments.putString(BundleKeys.CARD_TYPE, cardType);
+        arguments.putString(BundleKeys.CARD_LAST4, cardLast4);
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -244,6 +244,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
         {
             if (validate())
             {
+                showLoadingOverlay();
                 bus.post(new ProfileEvent.RequestProfileUpdate(
                         "",
                         "",
@@ -253,15 +254,14 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
                         mStateField.getValue().getText(),
                         mZipField.getValue().getText()
                 ));
-                showLoadingOverlay();
                 bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
                         OnboardingSuppliesLog.ServerTypes.UPDATE_ADDRESS.submitted())));
             }
         }
         else
         {
-            bus.post(new HandyEvent.RequestOnboardingSupplies(true));
             showLoadingOverlay();
+            bus.post(new HandyEvent.RequestOnboardingSupplies(true));
             bus.post(new LogEvent.AddLogEvent(
                     new OnboardingSuppliesLog.RequestSupplies.Submitted(true)));
         }
