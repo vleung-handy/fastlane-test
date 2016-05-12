@@ -95,9 +95,9 @@ public class GettingStartedActivity extends AppCompatActivity
 
     private Drawable mGreenDrawable;
     private Drawable mGrayDrawable;
-    private long mRequestTime;
+    private long mDialogDisplayTime;
     private int mWaitTime;
-    private boolean mDestroyed;
+    private boolean mIsResumed;
 
     @NonNull
     private String mProviderId;
@@ -139,6 +139,7 @@ public class GettingStartedActivity extends AppCompatActivity
     @Override
     protected void onResume()
     {
+        mIsResumed = true;
         super.onResume();
         mBus.register(this);
 
@@ -147,13 +148,17 @@ public class GettingStartedActivity extends AppCompatActivity
             showLoadingDialog();
             loadJobs();
         }
+        else if (dialogVisible())
+        {
+            mLoadingDialog.dismiss();
+            mRecyclerView.startLayoutAnimation();
+        }
     }
 
     private void loadJobs()
     {
         mJobs = null;
         mJobLoaded = false;
-        mRequestTime = System.currentTimeMillis();
         mFetchErrorView.setVisibility(View.GONE);
         mBus.post(new HandyEvent.RequestOnboardingJobs());
 
@@ -181,6 +186,7 @@ public class GettingStartedActivity extends AppCompatActivity
     @Override
     protected void onPause()
     {
+        mIsResumed = false;
         super.onPause();
         mBus.unregister(this);
     }
@@ -191,6 +197,7 @@ public class GettingStartedActivity extends AppCompatActivity
      */
     public void showLoadingDialog()
     {
+        mDialogDisplayTime = System.currentTimeMillis();
         mLoadingDialog = new OnboardLoadingDialog();
         mLoadingDialog.show(getFragmentManager(), OnboardLoadingDialog.TAG);
 
@@ -265,7 +272,7 @@ public class GettingStartedActivity extends AppCompatActivity
      */
     private void bindJobsAndRemoveDialog()
     {
-        long elapsedTime = System.currentTimeMillis() - mRequestTime;
+        long elapsedTime = System.currentTimeMillis() - mDialogDisplayTime;
 
         if (mJobLoaded && (elapsedTime >= mWaitTime))
         {
@@ -308,7 +315,7 @@ public class GettingStartedActivity extends AppCompatActivity
      */
     private boolean dialogVisible()
     {
-        return mLoadingDialog != null && !isFinishing() && !mDestroyed && mLoadingDialog.isVisible();
+        return mIsResumed && mLoadingDialog != null && mLoadingDialog.isVisible();
     }
 
     @Override
@@ -513,13 +520,6 @@ public class GettingStartedActivity extends AppCompatActivity
         {
             mErrorText.setText(getString(R.string.onboard_job_claim_error));
         }
-    }
-
-    @Override
-    protected void onDestroy()
-    {
-        super.onDestroy();
-        mDestroyed = true;
     }
 
     @Override
