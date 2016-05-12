@@ -22,61 +22,26 @@ import static org.hamcrest.Matchers.not;
  */
 public class ViewUtil
 {
-    public static final long DEFAULT_QUERY_INTERVAL_MS = 50;
-    public static final long DEFAULT_MAX_WAIT_TIME_MS = 10000;
+    private static final long VIEW_STATE_QUERY_INTERVAL_MS = 50;
+    public static final long LONG_MAX_WAIT_TIME_MS = 10000;
+    public static final long SHORT_MAX_WAIT_TIME_MS = 5000;
 
-    private long mQueryIntervalMs;
-    private long mMaxWaitingTimeMs;
-
-    public ViewUtil()
+    private ViewUtil()
     {
-        mQueryIntervalMs = DEFAULT_QUERY_INTERVAL_MS;
-        mMaxWaitingTimeMs = DEFAULT_MAX_WAIT_TIME_MS;
+        //don't want this instantiated. should use static methods only
     }
 
-    public ViewUtil(long queryIntervalMs, long maxWaitingTimeMs)
+    public static void waitForViewVisible(int viewId, long maxWaitingTimeMs)
     {
-        mQueryIntervalMs = queryIntervalMs;
-        mMaxWaitingTimeMs = maxWaitingTimeMs;
+        waitForViewVisibility(withId(viewId), true, maxWaitingTimeMs);
     }
 
-    public void setQueryIntervalMs(final long queryIntervalMs)
+    public static void waitForViewNotVisible(int viewId, long maxWaitingTimeMs)
     {
-        mQueryIntervalMs = queryIntervalMs;
+        waitForViewVisibility(withId(viewId), false, maxWaitingTimeMs);
     }
 
-    public void setMaxWaitingTimeMs(final long maxWaitingTimeMs)
-    {
-        mMaxWaitingTimeMs = maxWaitingTimeMs;
-    }
-
-    public void waitForViewVisible(@NonNull Matcher<View> viewMatcher)
-    {
-        waitForViewVisibility(viewMatcher, true);
-    }
-
-    public void waitForViewNotVisible(@NonNull Matcher<View> viewMatcher)
-    {
-        waitForViewVisibility(viewMatcher, false);
-    }
-
-    public void waitForViewVisible(int viewId)
-    {
-        waitForViewVisibility(withId(viewId), true);
-    }
-
-    public void waitForViewNotVisible(int viewId)
-    {
-        waitForViewVisibility(withId(viewId), false);
-    }
-
-    public void waitForViewToAppearThenDisappear(int viewId)
-    {
-        waitForViewVisible(viewId);
-        waitForViewNotVisible(viewId);
-    }
-
-    public void checkToastDisplayed(int toastStringResourceId, Activity activity)
+    public static void checkToastDisplayed(int toastStringResourceId, Activity activity)
     {
         onView(withText(toastStringResourceId)).
                 inRoot(withDecorView(not(activity.getWindow().getDecorView()))).
@@ -92,18 +57,20 @@ public class ViewUtil
      * @param viewMatcher
      * @param visible
      */
-    public void waitForViewVisibility(@NonNull Matcher<View> viewMatcher, final boolean visible)
+    public static void waitForViewVisibility(@NonNull Matcher<View> viewMatcher,
+                                      final boolean visible,
+                                      final long maxWaitingTimeMs)
     {
         final long startTime = System.currentTimeMillis();
-        final long endTime = startTime + mMaxWaitingTimeMs;
+        final long endTime = startTime + maxWaitingTimeMs;
         while (System.currentTimeMillis() < endTime)
         {
-            if (visible ? isViewDisplayed(viewMatcher) : !isViewDisplayed(viewMatcher))
+            if (visible == isViewDisplayed(viewMatcher))
             {
                 return;
             }
 
-            sleep(mQueryIntervalMs);
+            sleep(VIEW_STATE_QUERY_INTERVAL_MS);
         }
         throw new PerformException.Builder()
                 .withActionDescription("wait for view visibility " + visible)

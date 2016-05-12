@@ -4,7 +4,7 @@ public class TestUser
 {
     //disable pin request by setting disable_pin_request=true in override.properties
     public static TestUser FIRST_TIME_PROVIDER_NY = new TestUser(
-            "6466466464",
+            "6463339879",
             "123456"
     );
 
