@@ -5,6 +5,7 @@ import android.view.View;
 import android.webkit.WebView;
 
 import com.handy.portal.webview.PortalWebViewFragment;
+import com.handy.portal.webview.RequestSuppliesWebViewClient;
 
 public class RequestSuppliesWebViewFragment extends PortalWebViewFragment
 {
@@ -21,5 +22,10 @@ public class RequestSuppliesWebViewFragment extends PortalWebViewFragment
         requestSuppliesWebView.getSettings().setBuiltInZoomControls(true);
         initResupplyKitWebViewClient();
         requestSuppliesWebView.loadUrl(REQUEST_SUPPLIES_URL);
+    }
+
+    private void initResupplyKitWebViewClient()
+    {
+        getWebView().setWebViewClient(new RequestSuppliesWebViewClient(this, getWebView(), googleManager, bus));
     }
 }

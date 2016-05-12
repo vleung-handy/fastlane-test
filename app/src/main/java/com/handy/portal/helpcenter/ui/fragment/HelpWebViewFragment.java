@@ -3,9 +3,7 @@ package com.handy.portal.helpcenter.ui.fragment;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
@@ -50,20 +48,5 @@ public class HelpWebViewFragment extends PortalWebViewFragment
             getWebView().loadUrl(helpCenterUrl);
         }
         // TODO: Handle null configuration
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item)
-    {
-        final WebView webView = getWebView();
-        if (webView.canGoBack())
-        {
-            webView.goBack();
-            return true;
-        }
-        else
-        {
-            return super.onOptionsItemSelected(item);
-        }
     }
 }
