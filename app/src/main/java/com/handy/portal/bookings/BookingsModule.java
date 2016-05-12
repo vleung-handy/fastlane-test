@@ -9,7 +9,8 @@ import com.handy.portal.bookings.ui.fragment.InProgressBookingFragment;
 import com.handy.portal.bookings.ui.fragment.NearbyBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
-import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingCancelDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingCancelCancellationPolicyDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingCancelKeepRateDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.EarlyAccessTrialDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.JobAccessUnlockedDialogFragment;
@@ -34,7 +35,8 @@ import dagger.Provides;
                 NearbyBookingsFragment.class,
                 CancellationRequestFragment.class,
                 ConfirmBookingClaimDialogFragment.class,
-                ConfirmBookingCancelDialogFragment.class,
+                ConfirmBookingCancelKeepRateDialogFragment.class,
+                ConfirmBookingCancelCancellationPolicyDialogFragment.class,
                 BookingFragment.class,
                 InProgressBookingFragment.class,
                 SendReceiptCheckoutFragment.class,
