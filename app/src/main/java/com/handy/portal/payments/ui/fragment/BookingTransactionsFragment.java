@@ -121,7 +121,7 @@ public class BookingTransactionsFragment extends ActionBarFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        setActionBar(getString(R.string.job_details), true);
+        setActionBarTitle(R.string.job_details);
         setDisplay();
     }
 
