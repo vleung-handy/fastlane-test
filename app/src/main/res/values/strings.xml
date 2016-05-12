@@ -25,6 +25,8 @@
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="error">Error</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Navigation drawer opened</string>
@@ -137,7 +139,7 @@
     <string name="payment_help">Payment Help</string>
     <string name="payments">Payments</string>
     <string name="payments_details">Payment Details</string>
-    <string name="bonus_payment_value">+ %s BONUS</string>
+    <string name="bonus_payment_value">+ %s REWARD</string>
     <string name="booking_frequency">Every %1$d weeks</string>
     <string name="booking_frequency_every_week">Every week</string>
     <string name="booking_frequency_non_recurring">One-time</string>
@@ -337,6 +339,7 @@
     <string name="completed_job">Completed Job</string>
 
     <!-- Booking Transaction Summary-->
+    <string name="job_details">Job Details</string>
     <string name="completed_job_2">Completed job</string>
     <string name="customer_no_show">Customer no show</string>
     <string name="customer_cancelled">Customer cancelled</string>
@@ -376,7 +379,7 @@
     <string name="rate_booking_comment_text_hint">Any additional comments?</string>
     <string name="rate_booking_need_rating">You must select a rating to check out</string>
     <string name="you_earned_money_formatted">You made %1$s</string>
-    <string name="bonus_formatted">\u0020+ %s BONUS</string>
+    <string name="bonus_formatted">\u0020+ %s REWARD</string>
     <string name="how_was_experience_formatted">How was your experience at %1$s’s home?</string>
 
     <!-- Nearby Booking -->
@@ -424,6 +427,7 @@
     <string name="cleaning_solutions">Cleaning solutions for all surfaces</string>
     <string name="apron">Apron</string>
     <string name="log_out">Log out</string>
+    <string name="are_you_sure_log_out">Are you sure you want to log out?</string>
 
     <!-- Referrals -->
     <string name="chevron_description">Chevron</string>
@@ -491,7 +495,7 @@
     <string name="onboard_getting_started">Getting Started</string>
     <string name="onboard_welcome">You\'ve been activated! We\'re excited for you to join our global community of professionals using the Handy platform.</string>
     <string name="onboard_getting_started_title">Start building your schedule with these jobs.</string>
-    <string name="onboard_claim_and_earn_formatted">Claim &amp; Earn %s</string>
+    <string name="onboard_claim_and_earn_formatted">%s Claim</string>
     <string name="onboard_no_thanks">No thanks, I\'ll find my own jobs</string>
     <string name="onboard_loading">Choosing jobs\nin your city...</string>
     <string name="onboard_no_longer_available">Looks like these job(s) are no longer available. Try these jobs.</string>

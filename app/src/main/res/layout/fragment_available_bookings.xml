@@ -36,7 +36,7 @@
 
             <include layout="@layout/layout_fetch_error"/>
 
-            <include layout="@layout/element_same_day_notification_toggle"/>
+            <include tools:visibility="visible" layout="@layout/element_same_day_notification_toggle"/>
 
             <com.handy.portal.bookings.ui.element.BookingsAccessLockedView
                 android:layout_width="match_parent"
@@ -45,37 +45,30 @@
                 android:visibility="gone"
                 />
 
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+            <!--must put the empty view above the swipe refresh layout, otherwise it gets pushed down
+            even though the refresh layout has 0 height-->
+            <include tools:visibility="visible" layout="@layout/layout_available_bookings_empty"/>
+
+            <com.handy.portal.ui.widget.SafeSwipeRefreshLayout
+                android:id="@+id/refresh_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:layout_weight="1"
                 >
 
-                <com.handy.portal.ui.widget.SafeSwipeRefreshLayout
-                    android:id="@+id/refresh_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    >
+                <com.handy.portal.bookings.ui.element.BookingListView
+                    android:id="@+id/available_jobs_list_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:divider="@color/white_trans"
+                    android:dividerHeight="1dp"
+                    android:paddingTop="1dp"
+                    />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="vertical"
-                        >
-                        <com.handy.portal.bookings.ui.element.BookingListView
-                            android:id="@+id/available_jobs_list_view"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:divider="@color/white_trans"
-                            android:dividerHeight="1dp"
-                            android:paddingTop="1dp"
-                            />
-                        <include tools:visibility="visible" layout="@layout/layout_available_bookings_empty"/>
+            </com.handy.portal.ui.widget.SafeSwipeRefreshLayout>
 
-                    </LinearLayout>
-
-                </com.handy.portal.ui.widget.SafeSwipeRefreshLayout>
-
-            </RelativeLayout>
+            <!--<include tools:visibility="visible" layout="@layout/layout_available_bookings_empty"/>-->
+            <!--TODO the empty bookings layout should ideally show below the job access banner which is the header of the booking list view-->
 
         </LinearLayout>
 

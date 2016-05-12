@@ -308,7 +308,7 @@
                             android:textColor="@color/handy_green"
                             android:textSize="@dimen/small_text_size"
                             android:textStyle="bold"
-                            tools:text=" +$5 BONUS"
+                            tools:text=" +$5 REWARD"
                             />
 
                     </LinearLayout>

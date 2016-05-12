@@ -2,12 +2,9 @@ package com.handy.portal.util;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
-import android.text.SpannableStringBuilder;
 import android.text.TextPaint;
-import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
 import android.widget.TextView;
 
@@ -174,22 +171,6 @@ public final class TextUtils
     public static boolean validateText(CharSequence text, Pattern pattern)
     {
         return pattern == null || pattern.matcher(text).matches();
-    }
-
-    public static void setTextViewHTML(final TextView text, String html, final ClickableSpan clickable)
-    {
-        CharSequence sequence = Html.fromHtml(html);
-        SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
-        URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
-        for (URLSpan span : urls)
-        {
-            int start = strBuilder.getSpanStart(span);
-            int end = strBuilder.getSpanEnd(span);
-            int flags = strBuilder.getSpanFlags(span);
-            strBuilder.setSpan(clickable, start, end, flags);
-            strBuilder.removeSpan(span);
-        }
-        text.setText(strBuilder);
     }
 
     private static final class URLSpanNoUnderline extends URLSpan

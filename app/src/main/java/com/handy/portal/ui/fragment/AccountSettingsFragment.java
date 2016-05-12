@@ -1,6 +1,8 @@
 package com.handy.portal.ui.fragment;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -138,31 +140,53 @@ public class AccountSettingsFragment extends ActionBarFragment
     @OnClick(R.id.log_out_button)
     public void logOut()
     {
-        mPrefsManager.clear();
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder
+                .setTitle(R.string.log_out)
+                .setMessage(R.string.are_you_sure_log_out)
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(final DialogInterface dialog, final int which)
+                    {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        mPrefsManager.clear();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        {
-            CookieManager.getInstance().removeAllCookies(null);
-            CookieManager.getInstance().flush();
-        }
-        else
-        {
-            CookieSyncManager.createInstance(getActivity());
-            CookieManager.getInstance().removeAllCookie();
-            CookieSyncManager.getInstance().sync();
-        }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                        {
+                            CookieManager.getInstance().removeAllCookies(null);
+                            CookieManager.getInstance().flush();
+                        }
+                        else
+                        {
+                            CookieSyncManager.createInstance(getActivity());
+                            CookieManager.getInstance().removeAllCookie();
+                            CookieSyncManager.getInstance().sync();
+                        }
 
-        final Intent intent = new Intent(getActivity(), LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        final Uri data = getActivity().getIntent().getData();
-        final Bundle deeplinkBundle = DeeplinkUtils.createDeeplinkBundleFromUri(data);
-        if (deeplinkBundle != null)
-        {
-            intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkBundle);
-            intent.putExtra(BundleKeys.DEEPLINK_SOURCE, DeeplinkLog.Source.LINK);
-        }
-        startActivity(intent);
-        getActivity().finish();
+                        final Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        final Uri data = getActivity().getIntent().getData();
+                        final Bundle deeplinkBundle = DeeplinkUtils.createDeeplinkBundleFromUri(data);
+                        if (deeplinkBundle != null)
+                        {
+                            intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkBundle);
+                            intent.putExtra(BundleKeys.DEEPLINK_SOURCE, DeeplinkLog.Source.LINK);
+                        }
+                        startActivity(intent);
+                        getActivity().finish();
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     @Subscribe

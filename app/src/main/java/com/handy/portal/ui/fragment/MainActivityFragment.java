@@ -36,10 +36,10 @@ import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.onboarding.ui.activity.OnboardWelcomeActivity;
 import com.handy.portal.model.onboarding.OnboardingParams;
 import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
 import com.handy.portal.model.onboarding.OnboardingSuppliesParams;
+import com.handy.portal.onboarding.ui.activity.OnboardWelcomeActivity;
 import com.handy.portal.preactivation.PreActivationFlowActivity;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
@@ -109,11 +109,19 @@ public class MainActivityFragment extends InjectedFragment
     private boolean mDeeplinkHandled;
     private String mDeeplinkSource;
 
+    private boolean mNativeOnboardingLaunched = false;
+
     @Override
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setDeeplinkData(savedInstanceState);
+
+        if (savedInstanceState != null)
+        {
+            mNativeOnboardingLaunched =
+                    savedInstanceState.getBoolean(BundleKeys.NATIVE_ONBOARDING_LAUNCHED, false);
+        }
 
         mActionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), mDrawerLayout,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -141,6 +149,11 @@ public class MainActivityFragment extends InjectedFragment
     {
         super.onViewStateRestored(savedInstanceState);
         setDeeplinkData(savedInstanceState);
+        if (savedInstanceState != null)
+        {
+            mNativeOnboardingLaunched =
+                    savedInstanceState.getBoolean(BundleKeys.NATIVE_ONBOARDING_LAUNCHED, false);
+        }
     }
 
     @Override
@@ -180,7 +193,7 @@ public class MainActivityFragment extends InjectedFragment
             mConfigAlreadyReceivedThisSession = true;
             final ConfigurationResponse configuration = event.getConfigurationResponse();
             launchPreActivationFlowIfNeeded(configuration);
-            handleOnboardingFlow();
+            handleOnboardingFlow(configuration);
         }
     }
 
@@ -208,13 +221,17 @@ public class MainActivityFragment extends InjectedFragment
         mNotificationsButton.setUnreadCount(event.getUnreadCount());
     }
 
-    private void handleOnboardingFlow()
+    private void handleOnboardingFlow(final ConfigurationResponse configuration)
     {
-        if (configManager.getConfigurationResponse() != null)
+        if (configuration != null)
         {
-            if (configManager.getConfigurationResponse().shouldShowNativeOnboarding())
+            if (configuration.shouldShowNativeOnboarding())
             {
-                startActivity(new Intent(getContext(), OnboardWelcomeActivity.class));
+                if (!mNativeOnboardingLaunched)
+                {
+                    mNativeOnboardingLaunched = true;
+                    startActivity(new Intent(getContext(), OnboardWelcomeActivity.class));
+                }
             }
             else if (currentTab != null && currentTab != MainViewTab.ONBOARDING_WEBVIEW &&
                     doesCachedProviderNeedWebOnboarding())
@@ -274,6 +291,7 @@ public class MainActivityFragment extends InjectedFragment
                 outState = new Bundle();
             }
             outState.putBoolean(BundleKeys.DEEPLINK_HANDLED, mDeeplinkHandled);
+            outState.putBoolean(BundleKeys.NATIVE_ONBOARDING_LAUNCHED, mNativeOnboardingLaunched);
             super.onSaveInstanceState(outState);
         }
         catch (IllegalArgumentException e)
