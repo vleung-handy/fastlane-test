@@ -25,6 +25,8 @@
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="error">Error</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Navigation drawer opened</string>
@@ -425,6 +427,7 @@
     <string name="cleaning_solutions">Cleaning solutions for all surfaces</string>
     <string name="apron">Apron</string>
     <string name="log_out">Log Out</string>
+    <string name="are_you_sure_log_out">Are you sure you want to log out?</string>
 
     <!-- Referrals -->
     <string name="chevron_description">Chevron</string>
