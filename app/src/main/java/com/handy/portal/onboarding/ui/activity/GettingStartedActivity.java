@@ -95,7 +95,7 @@ public class GettingStartedActivity extends AppCompatActivity
 
     private Drawable mGreenDrawable;
     private Drawable mGrayDrawable;
-    private long mDialogDisplayTime;
+    private long mLoadingDialogDisplayTime;
     private int mWaitTime;
     private boolean mIsResumed;
 
@@ -197,7 +197,7 @@ public class GettingStartedActivity extends AppCompatActivity
      */
     public void showLoadingDialog()
     {
-        mDialogDisplayTime = System.currentTimeMillis();
+        mLoadingDialogDisplayTime = System.currentTimeMillis();
         mLoadingDialog = new OnboardLoadingDialog();
         mLoadingDialog.show(getFragmentManager(), OnboardLoadingDialog.TAG);
 
@@ -207,7 +207,7 @@ public class GettingStartedActivity extends AppCompatActivity
             public void run()
             {
                 Log.d(TAG, "run: DialogRunCompleted");
-                bindJobsAndRemoveDialog();
+                bindJobsAndRemoveLoadingDialog();
             }
         }, mWaitTime);
 
@@ -245,7 +245,7 @@ public class GettingStartedActivity extends AppCompatActivity
         mLoadingOverlayView.setVisibility(View.GONE);
         mJobLoaded = true;
         mJobs = event.bookings;
-        bindJobsAndRemoveDialog();
+        bindJobsAndRemoveLoadingDialog();
     }
 
     @Subscribe
@@ -270,9 +270,9 @@ public class GettingStartedActivity extends AppCompatActivity
     /**
      * dismiss the dialog after the jobs have loaded, or 4 seconds, whichever one is slowest
      */
-    private void bindJobsAndRemoveDialog()
+    private void bindJobsAndRemoveLoadingDialog()
     {
-        long elapsedTime = System.currentTimeMillis() - mDialogDisplayTime;
+        long elapsedTime = System.currentTimeMillis() - mLoadingDialogDisplayTime;
 
         if (mJobLoaded && (elapsedTime >= mWaitTime))
         {
