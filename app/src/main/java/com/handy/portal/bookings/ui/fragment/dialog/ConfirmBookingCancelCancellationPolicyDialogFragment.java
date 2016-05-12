@@ -38,6 +38,7 @@ public class ConfirmBookingCancelCancellationPolicyDialogFragment
     @Override
     public void afterShowCancellationPolicyButtonClicked()
     {
+        // do nothing
     }
 
     @Override
