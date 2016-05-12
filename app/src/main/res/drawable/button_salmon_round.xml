@@ -3,15 +3,17 @@
 <item android:state_pressed="true" android:state_enabled="true">
     <shape android:shape="rectangle">
         <corners android:radius="@dimen/round_button_radius" />
-        <stroke android:width="@dimen/round_button_stroke" android:color="@color/handy_salmon" />
-        <solid android:color="@color/handy_salmon" />
+        <stroke android:width="@dimen/round_button_stroke"
+                android:color="@color/plumber_red"/>
+        <solid android:color="@color/plumber_red"/>
     </shape>
 </item>
 <item android:state_pressed="false" android:state_enabled="true">
     <shape android:shape="rectangle">
         <corners android:radius="@dimen/round_button_radius" />
-        <stroke android:width="@dimen/round_button_stroke" android:color="@color/handy_salmon" />
-        <solid android:color="@color/handy_salmon" />
+        <stroke android:width="@dimen/round_button_stroke"
+                android:color="@color/plumber_red"/>
+        <solid android:color="@color/plumber_red"/>
     </shape>
 </item>
 <item android:state_pressed="true" android:state_enabled="false">

@@ -10,28 +10,18 @@ import android.util.Base64;
 import com.google.gson.GsonBuilder;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.action.CustomDeepLinkAction;
+import com.handy.portal.bookings.BookingsModule;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.helpcenter.HelpManager;
-import com.handy.portal.helpcenter.helpcontact.ui.fragment.HelpContactFragment;
-import com.handy.portal.helpcenter.ui.fragment.HelpFragment;
-import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
-import com.handy.portal.location.LocationPingService;
-import com.handy.portal.location.manager.LocationManager;
-import com.handy.portal.location.scheduler.LocationScheduleService;
-import com.handy.portal.location.scheduler.geofences.handler.BookingGeofenceScheduleHandler;
-import com.handy.portal.location.scheduler.tracking.handler.LocationTrackingScheduleHandler;
-import com.handy.portal.location.ui.LocationPermissionsBlockerDialogFragment;
-import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
+import com.handy.portal.helpcenter.HelpModule;
+import com.handy.portal.location.LocationModule;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
-import com.handy.portal.manager.BookingManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
-import com.handy.portal.manager.PaymentsManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.RegionDefinitionsManager;
@@ -43,18 +33,18 @@ import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.UserInterfaceUpdateManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
-import com.handy.portal.notification.NotificationMessageManager;
-import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragment;
-import com.handy.portal.notification.ui.fragment.NotificationsFragment;
-import com.handy.portal.notification.ui.view.NotificationsListEntryView;
-import com.handy.portal.notification.ui.view.NotificationsListView;
+import com.handy.portal.notification.NotificationModule;
+import com.handy.portal.onboarding.ui.activity.GettingStartedActivity;
+import com.handy.portal.onboarding.ui.activity.OnboardWelcomeActivity;
+import com.handy.portal.payments.PaymentsManager;
+import com.handy.portal.payments.PaymentsModule;
+import com.handy.portal.preactivation.PreActivationModule;
 import com.handy.portal.receiver.HandyPushReceiver;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitEndpoint;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
-import com.handy.portal.service.AutoCheckInService;
 import com.handy.portal.service.DeepLinkService;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
@@ -62,44 +52,22 @@ import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.element.SupportActionView;
-import com.handy.portal.ui.element.bookings.BookingDetailsJobInstructionsView;
-import com.handy.portal.ui.element.bookings.BookingView;
-import com.handy.portal.ui.element.bookings.InProgressBookingView;
 import com.handy.portal.ui.element.dashboard.DashboardFeedbackView;
 import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.FiveStarRatingPercentageView;
-import com.handy.portal.ui.element.payments.PaymentsBatchListView;
 import com.handy.portal.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.handy.portal.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesWebViewFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
-import com.handy.portal.ui.fragment.bookings.AvailableBookingsFragment;
-import com.handy.portal.ui.fragment.bookings.BookingDetailsFragment;
-import com.handy.portal.ui.fragment.bookings.CancellationRequestFragment;
-import com.handy.portal.ui.fragment.bookings.CheckoutJobDetailsFragment;
-import com.handy.portal.ui.fragment.bookings.ComplementaryBookingsFragment;
-import com.handy.portal.ui.fragment.bookings.NearbyBookingsFragment;
-import com.handy.portal.ui.fragment.bookings.NewBookingDetailsFragment;
-import com.handy.portal.ui.fragment.bookings.ScheduledBookingsFragment;
-import com.handy.portal.ui.fragment.bookings.SendReceiptCheckoutFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardVideoLibraryFragment;
 import com.handy.portal.ui.fragment.dashboard.RatingsAndFeedbackFragment;
-import com.handy.portal.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
-import com.handy.portal.ui.fragment.dialog.RateBookingDialogFragment;
-import com.handy.portal.ui.fragment.payments.PaymentsDetailFragment;
-import com.handy.portal.ui.fragment.payments.PaymentsFragment;
-import com.handy.portal.ui.fragment.payments.PaymentsUpdateBankAccountFragment;
-import com.handy.portal.ui.fragment.payments.PaymentsUpdateDebitCardFragment;
-import com.handy.portal.ui.fragment.payments.SelectPaymentMethodFragment;
-import com.handy.portal.ui.view.InjectedBusView;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateActivity;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
@@ -126,12 +94,8 @@ import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
 @Module(injects = {
-        BookingDetailsFragment.class,
-        NewBookingDetailsFragment.class,
         LoginActivityFragment.class,
         LoginActivity.class,
-        ScheduledBookingsFragment.class,
-        AvailableBookingsFragment.class,
         MainActivityFragment.class,
         BaseApplication.class,
         BaseActivity.class,
@@ -141,44 +105,18 @@ import retrofit.converter.GsonConverter;
         PleaseUpdateFragment.class,
         TermsActivity.class,
         TermsFragment.class,
-        HelpFragment.class,
-        HelpWebViewFragment.class,
-        HelpContactFragment.class,
         UrbanAirshipManager.class,
         DeepLinkService.class,
         MainActivityFragmentNavigationHelper.class,
-        ComplementaryBookingsFragment.class,
-        PaymentsFragment.class,
-        PaymentsDetailFragment.class,
-        PaymentBillBlockerDialogFragment.class,
-        NotificationBlockerDialogFragment.class,
-        LocationSettingsBlockerDialogFragment.class,
-        PaymentsUpdateBankAccountFragment.class,
-        PaymentsUpdateDebitCardFragment.class,
-        AutoCheckInService.class,
-        SelectPaymentMethodFragment.class,
         PortalWebViewFragment.class,
         BlockScheduleFragment.class,
         RequestSuppliesFragment.class,
         ProfileUpdateFragment.class,
-        RateBookingDialogFragment.class,
-        PaymentsBatchListView.class,
-        NearbyBookingsFragment.class,
-        PaymentBlockingFragment.class,
-        CancellationRequestFragment.class,
         SupportActionView.class,
-        NotificationsFragment.class,
-        NotificationsListView.class,
-        NotificationsListEntryView.class,
         DashboardTiersFragment.class,
         DashboardFeedbackFragment.class,
         DashboardReviewsFragment.class,
         DashboardOptionsPerformanceView.class,
-        LocationTrackingScheduleHandler.class,
-        BookingGeofenceScheduleHandler.class,
-        LocationScheduleService.class,
-        LocationPingService.class,
-        BookingDetailsJobInstructionsView.class,
         HandyPushReceiver.class,
         AccountSettingsFragment.class,
         RatingsAndFeedbackFragment.class,
@@ -186,15 +124,21 @@ import retrofit.converter.GsonConverter;
         FiveStarRatingPercentageView.class,
         OnboardingFragment.class,
         DashboardVideoLibraryFragment.class,
-        LocationPermissionsBlockerDialogFragment.class,
         DashboardFeedbackView.class,
-        SendReceiptCheckoutFragment.class,
-        BookingView.class,
-        InProgressBookingView.class,
-        InjectedBusView.class,
-        CheckoutJobDetailsFragment.class,
         RequestSuppliesWebViewFragment.class,
-})
+        GettingStartedActivity.class,
+        OnboardWelcomeActivity.class,
+        RequestSuppliesWebViewFragment.class,
+},
+        includes = {
+                HelpModule.class,
+                NotificationModule.class,
+                LocationModule.class,
+                PaymentsModule.class,
+                BookingsModule.class,
+                PreActivationModule.class,
+        }
+)
 public final class ApplicationModule
 {
     private final Application application;
@@ -354,27 +298,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final BookingManager provideBookingManager(final Bus bus,
-                                               final DataManager dataManager)
-    {
-        return new BookingManager(bus, dataManager);
-    }
-
-    @Provides
-    @Singleton
     final SystemManager provideSystemManager(final Bus bus)
     {
         return new SystemManager(context, bus);
-    }
-
-    @Provides
-    @Singleton
-    final LocationManager provideLocationManager(final Bus bus,
-                                                 final DataManager dataManager,
-                                                 final ProviderManager providerManager,
-                                                 final PrefsManager prefsManager)
-    {
-        return new LocationManager(bus, dataManager, providerManager, prefsManager);
     }
 
     @Provides
@@ -425,14 +351,6 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final HelpManager provideHelpManager(final Bus bus,
-                                         final DataManager dataManager)
-    {
-        return new HelpManager(bus, dataManager);
-    }
-
-    @Provides
-    @Singleton
     final Mixpanel provideMixpanel(final PrefsManager prefsManager)
     {
         return new Mixpanel(this.context, prefsManager);
@@ -468,13 +386,6 @@ public final class ApplicationModule
     final MainActivityFragmentNavigationHelper provideFragmentNavigationManager(Bus bus)
     {
         return new MainActivityFragmentNavigationHelper(bus);
-    }
-
-    @Provides
-    @Singleton
-    final PaymentsManager providePaymentsManager(Bus bus, final DataManager dataManager)
-    {
-        return new PaymentsManager(bus, dataManager);
     }
 
     @Provides
@@ -548,12 +459,5 @@ public final class ApplicationModule
             }
         }
         return "";
-    }
-
-    @Provides
-    @Singleton
-    final NotificationMessageManager provideNotificationMessageManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager)
-    {
-        return new NotificationMessageManager(bus, dataManager, prefsManager);
     }
 }

@@ -2,19 +2,14 @@
 <LinearLayout
     android:id="@+id/no_result_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
     android:visibility="gone"
-    xmlns:tools="http://schemas.android.com/tools"
+    tools:visibility="visible"
     >
-
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_cup"
-        />
 
     <TextView
         android:id="@+id/no_result_text"
@@ -24,11 +19,12 @@
         android:layout_marginLeft="@dimen/error_margin_side"
         android:layout_marginRight="@dimen/error_margin_side"
         android:layout_marginTop="@dimen/error_margin_top"
+        android:drawablePadding="@dimen/error_margin_top"
+        android:drawableTop="@drawable/ic_cup"
         android:gravity="center_horizontal"
-        android:textColor="@color/subtitle_grey"
+        android:textColor="@color/tertiary_gray"
         android:textSize="@dimen/error_text"
         tools:text="@string/no_feedback"
         />
-
 
 </LinearLayout>

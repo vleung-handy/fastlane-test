@@ -2,13 +2,17 @@ package com.handy.portal.constant;
 
 public class BundleKeys
 {
+    //TODO consider not having all these keys at this scope
     public static final String BOOKING = "booking";
     public static final String BOOKING_ID = "booking_id";
     public static final String BOOKING_TYPE = "booking_type";
     public static final String BOOKING_DATE = "booking_date";
     public static final String BOOKING_SOURCE = "booking_source";
-    public static final String BOOKING_STATUS = "booking_status";
     public static final String BOOKING_ACTION = "booking_action";
+    public static final String BOOKING_SHOULD_HIDE_ACTION_BUTTONS = "booking_should_hide_action_buttons";
+    public static final String BOOKING_PRIORITY_ACCESS = "BUNDLE_KEY_PRIORITIY_ACCESS";
+    public static final String BOOKING_TRANSACTIONS = "booking_transactions";
+
     public static final String DATE_EPOCH_TIME = "date_epoch_time";
     public static final String HELP_NODE = "help_node";
     public static final String HELP_NODE_ID = "help_node_id";
@@ -16,13 +20,10 @@ public class BundleKeys
     public static final String PATH = "path";
     public static final String TAB = "tab";
     public static final String PAYMENT_BATCH = "payment_batch";
-    public static final String IS_FOR_PAYMENTS = "is_for_payments";
-    public static final String UPDATE_TAB_CALLBACK = "update_tab_callback";
-    public static final String ZIP_CLUSTER_POLYGONS = "zip_cluster_polygons";
-    public static final String PROVIDER_PROFILE = "provider_profile";
     public static final String BOOKINGS = "bookings";
     public static final String MAP_CENTER = "map_center";
     public static final String MESSAGE = "message";
+    public static final String MESSAGE_ICON = "message_icon";
     public static final String EXTRAS = "extras";
 
     // UrbanAirship
@@ -49,4 +50,13 @@ public class BundleKeys
 
     // New Checkout
     public static final String NOTE_TO_CUSTOMER = "note_to_customer";
+
+    // Payments
+    public static final String CARD_LAST4 = "card_last4";
+    public static final String CARD_TYPE = "card_type";
+
+    // Onboarding
+    public static final String ONBOARDING_SUPPLIES = "onboarding_supplies";
+    public static final String ALLOW_BACK_NAVIGATION = "allow_back_navigation";
+    public static final String NATIVE_ONBOARDING_LAUNCHED = "native_onboarding_launched";
 }

@@ -36,16 +36,43 @@
             android:textSize="@dimen/hero_text_size"
             />
 
-        <TextView
-            android:id="@+id/rate_booking_amount_text"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:gravity="center_horizontal"
             android:layout_marginBottom="@dimen/default_margin_medium"
-            android:textColor="@color/black"
-            android:textSize="@dimen/xlarge_text_size"
-            tools:text="You made $45!"
-            />
+            android:orientation="horizontal"
+            >
+
+            <TextView
+                android:id="@+id/rate_booking_amount_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="@dimen/xlarge_text_size"
+                tools:text="You made $45"
+                />
+
+            <TextView
+                android:id="@+id/rate_booking_bonus_amount_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/handy_green"
+                android:textSize="@dimen/xlarge_text_size"
+                android:visibility="gone"
+                tools:text=" + $5 REWARD"
+                tools:visibility="visible"
+                />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/exclamation_point"
+                android:textColor="@color/black"
+                android:textSize="@dimen/xlarge_text_size"
+                />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -145,8 +172,8 @@
         android:maxLength="160"
         android:padding="@dimen/default_padding"
         android:textAppearance="@style/HandyTextAppearanceMedium"
-        android:textColor="@color/dark_grey"
-        android:textColorHint="@color/subtitle_grey"
+        android:textColor="@color/dark_gray"
+        android:textColorHint="@color/tertiary_gray"
         />
 
     <Button

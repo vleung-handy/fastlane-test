@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:color="@color/shadow_grey"
+    <item android:color="@color/shadow_gray"
           android:state_enabled="true"/>
-    <item android:color="@color/subtitle_grey_disabled"
+    <item android:color="@color/tertiary_gray_disabled"
           android:state_enabled="false"/>
 </selector>

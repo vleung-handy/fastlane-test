@@ -1,10 +1,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
-              tools:context=".ScheduledBookingsFragment"
-              >
+    >
 
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -45,7 +43,7 @@
                 android:layout_height="wrap_content"
                 >
 
-                <com.handy.portal.ui.element.BookingListView
+                <com.handy.portal.bookings.ui.element.BookingListView
                     android:id="@+id/scheduled_jobs_list_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -82,7 +80,7 @@
                     android:layout_marginTop="16dp"
                     android:gravity="center_horizontal"
                     android:text="@string/find_jobs_close_to_your_claimed_job"
-                    android:textColor="@color/subtitle_grey"
+                    android:textColor="@color/tertiary_gray"
                     />
 
             </LinearLayout>

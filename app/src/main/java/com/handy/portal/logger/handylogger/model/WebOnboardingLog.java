@@ -1,7 +1,7 @@
 package com.handy.portal.logger.handylogger.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.model.OnboardingParams;
+import com.handy.portal.model.onboarding.OnboardingParams;
 
 public abstract class WebOnboardingLog extends EventLog
 {

@@ -7,11 +7,14 @@ import com.handy.portal.constant.Country;
 import com.handy.portal.core.PropertiesReader;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.StripeEvent;
-import com.handy.portal.model.payments.BankAccountInfo;
-import com.handy.portal.model.payments.DebitCardInfo;
-import com.handy.portal.model.payments.StripeTokenResponse;
+import com.handy.portal.payments.model.BankAccountInfo;
+import com.handy.portal.payments.model.DebitCardInfo;
+import com.handy.portal.payments.model.StripeTokenResponse;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
+import com.stripe.android.Stripe;
+import com.stripe.android.TokenCallback;
+import com.stripe.android.model.Token;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -101,6 +104,26 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
         });
     }
 
+    @Subscribe
+    public void onRequestStripeChargeToken(final StripeEvent.RequestStripeChargeToken event)
+    {
+        final String stripeApiKey = pickStripeApiKey(event.getCountry().toLowerCase());
+        new Stripe().createToken(event.getCard(), stripeApiKey, new TokenCallback()
+        {
+            @Override
+            public void onSuccess(final Token token)
+            {
+                bus.post(new StripeEvent.ReceiveStripeChargeTokenSuccess(token));
+            }
+
+            @Override
+            public void onError(final Exception error)
+            {
+                bus.post(new StripeEvent.ReceiveStripeChargeTokenError(error));
+            }
+        });
+    }
+
     private Map<String, String> buildParamsFromDebitCardInfo(DebitCardInfo debitCardInfo)
     {
         Map<String, String> params = new HashMap<>();
@@ -123,7 +146,8 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
         return params;
     }
 
-    private String pickStripeApiKey(String country) {
+    private String pickStripeApiKey(final String country)
+    {
         if (Country.GB.equalsIgnoreCase(country)) { return STRIPE_API_KEY_GB; }
         else if (Country.CA.equalsIgnoreCase(country)) { return STRIPE_API_KEY_CA; }
         else { return STRIPE_API_KEY_US; }

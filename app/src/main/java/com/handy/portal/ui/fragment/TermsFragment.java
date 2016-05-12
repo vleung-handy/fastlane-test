@@ -96,7 +96,7 @@ public class TermsFragment extends InjectedFragment
         }
         else
         {
-            acceptCheckbox.setTextColor(ContextCompat.getColor(getContext(), R.color.error_red));
+            acceptCheckbox.setTextColor(ContextCompat.getColor(getContext(), R.color.plumber_red));
         }
     }
 

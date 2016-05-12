@@ -3,6 +3,7 @@ package com.handy.portal.ui.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
@@ -17,13 +18,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.common.annotations.VisibleForTesting;
 import com.handy.portal.R;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.helpcenter.constants.HelpCenterUrl;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.LoginLog;
 import com.handy.portal.logger.mixpanel.Mixpanel;
@@ -46,9 +47,6 @@ import butterknife.OnClick;
 
 public class LoginActivityFragment extends InjectedFragment
 {
-    @VisibleForTesting
-    static final String HELP_CENTER_URL = "https://help.handy.com/hc/en-us/articles/215593648";
-
     @Bind(R.id.phone_input_layout)
     RelativeLayout phoneInputLayout;
     @Bind(R.id.pin_code_input_layout)
@@ -187,7 +185,7 @@ public class LoginActivityFragment extends InjectedFragment
             public void onClick(final View v)
             {
 
-                goToUrl(HELP_CENTER_URL);
+                goToUrl(HelpCenterUrl.LOGIN_HELP_ABSOLUTE_URL);
             }
         });
         mSlideUpPanelLayout.showPanel(R.string.instructions, instructionView);
@@ -308,13 +306,13 @@ public class LoginActivityFragment extends InjectedFragment
         if (currentLoginState == LoginState.WAITING_FOR_LOGIN_RESPONSE)
         {
             DataManager.DataManagerError.Type errorType = event.error == null ? null : event.error.getType();
-            if(errorType != null)
+            if (errorType != null)
             {
-                if(errorType.equals(DataManager.DataManagerError.Type.NETWORK))
+                if (errorType.equals(DataManager.DataManagerError.Type.NETWORK))
                 {
                     showToast(R.string.error_connectivity);
                 }
-                else if(errorType.equals(DataManager.DataManagerError.Type.CLIENT))
+                else if (errorType.equals(DataManager.DataManagerError.Type.CLIENT))
                 {
                     showToast(R.string.login_error_bad_login);
                 }
@@ -355,6 +353,7 @@ public class LoginActivityFragment extends InjectedFragment
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void beginLogin(LoginDetails loginDetails)
     {
         changeState(LoginState.COMPLETE);
@@ -362,9 +361,18 @@ public class LoginActivityFragment extends InjectedFragment
         //Set cookies to enable seamless access in our webview
         if (loginDetails.getAuthToken() != null)
         {
-            CookieSyncManager.createInstance(getActivity());
-            CookieManager.getInstance().setCookie(dataManager.getBaseUrl(), loginDetails.getUserCredentialsCookie());
-            CookieSyncManager.getInstance().sync();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            {
+                CookieManager.getInstance().setCookie(dataManager.getBaseUrl(),
+                        loginDetails.getUserCredentialsCookie());
+                CookieManager.getInstance().flush();
+            }
+            else
+            {
+                CookieSyncManager.createInstance(getActivity());
+                CookieManager.getInstance().setCookie(dataManager.getBaseUrl(), loginDetails.getUserCredentialsCookie());
+                CookieSyncManager.getInstance().sync();
+            }
         }
 
         String providerId = loginDetails.getProviderId();

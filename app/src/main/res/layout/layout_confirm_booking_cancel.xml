@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/default_padding"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/need_to_cancel"
+        android:textAppearance="@style/TextView.Large.Bold"
+        />
+
+    <FrameLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:paddingEnd="@dimen/default_padding_large"
+        android:paddingLeft="@dimen/default_padding_large"
+        android:paddingRight="@dimen/default_padding_large"
+        android:paddingStart="@dimen/default_padding_large"
+        >
+
+        <TextView
+            android:id="@+id/no_fee_notice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/keep_rate_negatively_impacted"
+            android:textAppearance="@style/TextView.Medium"
+            android:textColor="@color/tertiary_gray"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/withholding_fee_notice"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:textAppearance="@style/TextView.Medium"
+            android:textColor="@color/tertiary_gray"
+            android:visibility="gone"
+            tools:text="You will incur a $10.00 fee and reduce your keep rate:"
+            tools:visibility="visible"
+            />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        >
+
+        <LinearLayout
+            android:id="@+id/keep_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            tools:visibility="gone"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/extra_margin_medium"
+                android:layout_marginRight="@dimen/extra_margin_medium"
+                android:text="@string/keep_rate"
+                android:textAppearance="@style/TextView.Medium"
+                />
+
+            <TextView
+                android:id="@+id/old_keep_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextView.Large"
+                tools:text="88%"
+                />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/extra_margin"
+                android:layout_marginLeft="@dimen/extra_margin"
+                android:layout_marginRight="@dimen/extra_margin"
+                android:layout_marginStart="@dimen/extra_margin"
+                android:src="@drawable/ic_arrow_solid"
+                />
+
+            <TextView
+                android:id="@+id/new_keep_rate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="@style/TextView.Large.Bold"
+                tools:text="87%"
+                />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/no_keep_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:visibility="gone"
+            tools:visibility="visible"
+            >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/extra_margin"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/extra_margin_medium"
+                    android:layout_marginRight="@dimen/extra_margin_medium"
+                    android:text="@string/keep_rate"
+                    android:textAppearance="@style/TextView.Medium"
+                    />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/empty_keep_rate_percent"
+                    android:textAppearance="@style/TextView.Large"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/no_keep_rate"
+                android:textAppearance="@style/TextView.Small"
+                android:textColor="@color/tertiary_gray"
+                />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

@@ -22,7 +22,7 @@
         android:layout_marginTop="10dp"
         android:gravity="center_horizontal"
         android:text="@string/no_matching_jobs_message"
-        android:textColor="@color/subtitle_grey"
+        android:textColor="@color/tertiary_gray"
         android:textSize="20sp"/>
 
     <Button

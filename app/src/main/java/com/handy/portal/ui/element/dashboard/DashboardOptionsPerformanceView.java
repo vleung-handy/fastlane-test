@@ -105,12 +105,12 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         if (feedbackList != null && feedbackList.size() > 0)
         {
             mFirstFeedbackTitleText.setText(feedbackList.get(0).getTitle());
-            mFirstFeedbackTitleText.setTextColor(ContextCompat.getColor(getContext(), R.color.error_red));
+            mFirstFeedbackTitleText.setTextColor(ContextCompat.getColor(getContext(), R.color.plumber_red));
         }
         else
         {
             mFirstFeedbackTitleText.setText(getResources().getString(R.string.none));
-            mFirstFeedbackTitleText.setTextColor(ContextCompat.getColor(getContext(), R.color.tertiary_grey));
+            mFirstFeedbackTitleText.setTextColor(ContextCompat.getColor(getContext(), R.color.tertiary_gray));
         }
 
         List<ProviderRating> ratings = mProviderEvaluation.getFiveStarRatingsWithComments();

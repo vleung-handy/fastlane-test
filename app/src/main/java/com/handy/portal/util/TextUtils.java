@@ -14,12 +14,11 @@ import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Hashtable;
+import java.util.Locale;
 import java.util.regex.Pattern;
 
 public final class TextUtils
 {
-    public static final DecimalFormat DECIMAL_FORMAT_NO_ZERO = new DecimalFormat("#.##");
-
     private static final String URL_PATTERN = "(https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])";
     private static final Format TIME_WINDOW_HOURS_FORMAT = new DecimalFormat("0.#");
 
@@ -95,7 +94,7 @@ public final class TextUtils
     {
         if (date == null) { return null; }
 
-        final SimpleDateFormat dateFormat = new SimpleDateFormat(format);
+        final SimpleDateFormat dateFormat = new SimpleDateFormat(format, Locale.getDefault());
         final DateFormatSymbols symbols = new DateFormatSymbols();
         symbols.setAmPmStrings(new String[]{"am", "pm"});
         dateFormat.setDateFormatSymbols(symbols);

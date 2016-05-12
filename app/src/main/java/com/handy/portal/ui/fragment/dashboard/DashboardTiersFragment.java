@@ -9,7 +9,6 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
@@ -26,12 +25,6 @@ public class DashboardTiersFragment extends ActionBarFragment
     TextView mTrailingRateText;
 
     private ProviderEvaluation mEvaluation;
-
-    @Override
-    protected MainViewTab getTab()
-    {
-        return MainViewTab.DASHBOARD_TIERS;
-    }
 
     @Override
     public void onCreate(final Bundle savedInstanceState)

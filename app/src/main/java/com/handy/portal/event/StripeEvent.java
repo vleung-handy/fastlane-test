@@ -1,9 +1,11 @@
 package com.handy.portal.event;
 
 import com.handy.portal.data.DataManager;
-import com.handy.portal.model.payments.BankAccountInfo;
-import com.handy.portal.model.payments.DebitCardInfo;
-import com.handy.portal.model.payments.StripeTokenResponse;
+import com.handy.portal.payments.model.BankAccountInfo;
+import com.handy.portal.payments.model.DebitCardInfo;
+import com.handy.portal.payments.model.StripeTokenResponse;
+import com.stripe.android.model.Card;
+import com.stripe.android.model.Token;
 
 public abstract class StripeEvent extends HandyEvent
 {
@@ -64,6 +66,58 @@ public abstract class StripeEvent extends HandyEvent
         public ReceiveStripeTokenFromDebitCardError(DataManager.DataManagerError error)
         {
             this.error = error;
+        }
+    }
+
+    public static class RequestStripeChargeToken extends  RequestEvent
+    {
+        private final Card mCard;
+        private String mCountry;
+
+        public RequestStripeChargeToken(final Card card, final String country)
+        {
+            mCard = card;
+            mCountry = country;
+        }
+
+        public Card getCard()
+        {
+            return mCard;
+        }
+
+        public String getCountry()
+        {
+            return mCountry;
+        }
+    }
+
+    public static class ReceiveStripeChargeTokenSuccess extends ReceiveSuccessEvent
+    {
+        private final Token mToken;
+
+        public ReceiveStripeChargeTokenSuccess(final Token token)
+        {
+            mToken = token;
+        }
+
+        public Token getToken()
+        {
+            return mToken;
+        }
+    }
+
+    public static class ReceiveStripeChargeTokenError
+    {
+        private final Exception mError;
+
+        public ReceiveStripeChargeTokenError(final Exception error)
+        {
+            mError = error;
+        }
+
+        public Exception getError()
+        {
+            return mError;
         }
     }
 }

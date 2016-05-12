@@ -1,6 +1,8 @@
 package com.handy.portal.event;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
@@ -11,6 +13,7 @@ public abstract class NavigationEvent extends HandyEvent
     {
         public final MainViewTab targetTab;
         public final boolean addToBackStack;
+        @NonNull
         public final Bundle arguments;
         public final TransitionStyle transitionStyle;
 
@@ -39,11 +42,11 @@ public abstract class NavigationEvent extends HandyEvent
             this(targetTab, arguments, transitionStyle, false);
         }
 
-        public NavigateToTab(MainViewTab targetTab, Bundle arguments, TransitionStyle transitionStyle, boolean addToBackStack)
+        public NavigateToTab(MainViewTab targetTab, @Nullable Bundle arguments, TransitionStyle transitionStyle, boolean addToBackStack)
         {
             this.targetTab = targetTab;
             this.addToBackStack = addToBackStack;
-            this.arguments = arguments;
+            this.arguments = (arguments != null) ? arguments : new Bundle();
             this.transitionStyle = transitionStyle;
         }
     }
@@ -68,7 +71,7 @@ public abstract class NavigationEvent extends HandyEvent
 
 
     //show hide the tabs restrict navigation, also need to block the drawer?
-    public static class SetNavigationTabVisibility extends HandyEvent
+    public static class SetNavigationTabVisibility extends NavigationEvent
     {
         public final boolean isVisible;
 
@@ -80,7 +83,7 @@ public abstract class NavigationEvent extends HandyEvent
 
 
     //Disable the drawer to block navigation
-    public static class SetNavigationDrawerActive extends HandyEvent
+    public static class SetNavigationDrawerActive extends NavigationEvent
     {
         public final boolean isActive;
 
@@ -88,6 +91,15 @@ public abstract class NavigationEvent extends HandyEvent
         {
             this.isActive = isActive;
         }
+    }
+
+
+    //Highlight the navigation tab
+    public static class SelectTab extends NavigationEvent
+    {
+        public final MainViewTab tab;
+
+        public SelectTab(@Nullable final MainViewTab tab) { this.tab = tab; }
     }
 
 }

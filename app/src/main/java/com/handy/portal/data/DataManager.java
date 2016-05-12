@@ -1,18 +1,17 @@
 package com.handy.portal.data;
 
 import com.google.gson.JsonObject;
+import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.model.Booking.BookingType;
+import com.handy.portal.bookings.model.BookingClaimDetails;
+import com.handy.portal.bookings.model.BookingsListWrapper;
+import com.handy.portal.bookings.model.BookingsWrapper;
+import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.constant.LocationKey;
-import com.handy.portal.constant.NoShowKey;
-import com.handy.portal.helpcenter.model.HelpNodeWrapper;
+import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
-import com.handy.portal.model.Booking;
-import com.handy.portal.model.Booking.BookingType;
-import com.handy.portal.model.BookingClaimDetails;
-import com.handy.portal.model.BookingsListWrapper;
-import com.handy.portal.model.BookingsWrapper;
-import com.handy.portal.model.CheckoutRequest;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
@@ -27,13 +26,17 @@ import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
-import com.handy.portal.model.payments.AnnualPaymentSummaries;
-import com.handy.portal.model.payments.CreateDebitCardResponse;
-import com.handy.portal.model.payments.PaymentBatches;
-import com.handy.portal.model.payments.PaymentFlow;
-import com.handy.portal.model.payments.RequiresPaymentInfoUpdate;
-import com.handy.portal.model.payments.StripeTokenResponse;
 import com.handy.portal.notification.model.NotificationMessages;
+import com.handy.portal.onboarding.model.JobClaimRequest;
+import com.handy.portal.onboarding.model.JobClaimResponse;
+import com.handy.portal.payments.model.AnnualPaymentSummaries;
+import com.handy.portal.payments.model.BookingTransactions;
+import com.handy.portal.payments.model.CreateDebitCardResponse;
+import com.handy.portal.payments.model.PaymentBatches;
+import com.handy.portal.payments.model.PaymentFlow;
+import com.handy.portal.payments.model.PaymentOutstandingFees;
+import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
+import com.handy.portal.payments.model.StripeTokenResponse;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -49,8 +52,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
-
-import retrofit.mime.TypedInput;
 
 public class DataManager
 {
@@ -89,6 +90,11 @@ public class DataManager
         mService.getAvailableBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
     }
 
+    public void getOnboardingJobs(final Callback<BookingsListWrapper> cb)
+    {
+        mService.getOnboardingJobs(new BookingsListWrapperHandyRetroFitCallback(cb));
+    }
+
     public void getScheduledBookings(Date[] dates, final Callback<BookingsListWrapper> cb)
     {
         mService.getScheduledBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
@@ -111,6 +117,11 @@ public class DataManager
         mService.claimBooking(bookingId, type.toString().toLowerCase(), new BookingClaimHandyRetroFitCallback(cb));
     }
 
+    public void claimBookings(JobClaimRequest jobClaimRequest, final Callback<JobClaimResponse> cb)
+    {
+        mService.claimBookings(jobClaimRequest, new BookingsClaimHandyRetroFitCallback(cb));
+    }
+
     public void removeBooking(String bookingId, BookingType type, final Callback<Booking> cb)
     {
         mService.removeBooking(bookingId, type.toString().toLowerCase(), new BookingHandyRetroFitCallback(cb));
@@ -126,7 +137,7 @@ public class DataManager
         mService.getProviderProfile(providerId, new ProviderProfileRetrofitCallback(cb));
     }
 
-    public void updateProviderProfile(String providerId, TypeSafeMap<NoShowKey> params, Callback<ProviderPersonalInfo> cb)
+    public void updateProviderProfile(String providerId, TypeSafeMap<ProviderKey> params, Callback<ProviderPersonalInfo> cb)
     {
         mService.updateProviderProfile(providerId, params.toStringMap(), new ProviderPersonalInfoHandyRetroFitCallback(cb));
     }
@@ -161,9 +172,19 @@ public class DataManager
         mService.getAnnualPaymentSummaries(new AnnualPaymentSummariesRetroFitCallback(cb));
     }
 
+    public void getPaymentOutstandingFees(final Callback<PaymentOutstandingFees> cb)
+    {
+        mService.getPaymentOutstandingFees(new PaymentOutstandingFeesRetroFitCallback(cb));
+    }
+
     public void getNeedsToUpdatePaymentInfo(Callback<RequiresPaymentInfoUpdate> cb)
     {
         mService.getNeedsToUpdatePaymentInfo(new NeedsToUpdatePaymentInfoRetroFitCallback(cb));
+    }
+
+    public void getBookingTransactions(String bookingId, String bookingType, Callback<BookingTransactions> cb)
+    {
+        mService.getBookingTransactions(bookingId, bookingType, new BookingTransactionsRetroFitCallback(cb));
     }
 
     public void notifyOnMyWayBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
@@ -171,14 +192,14 @@ public class DataManager
         mService.notifyOnMyWay(bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
-    public void notifyCheckInBooking(String bookingId, boolean isAuto, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
+    public void notifyCheckInBooking(String bookingId, TypeSafeMap<LocationKey> locationParams, final Callback<Booking> cb)
     {
-        mService.checkIn(bookingId, isAuto, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
+        mService.checkIn(bookingId, locationParams.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
-    public void notifyCheckOutBooking(String bookingId, boolean isAuto, CheckoutRequest request, final Callback<Booking> cb)
+    public void notifyCheckOutBooking(String bookingId, CheckoutRequest request, final Callback<Booking> cb)
     {
-        mService.checkOut(bookingId, isAuto, request, new BookingHandyRetroFitCallback(cb));
+        mService.checkOut(bookingId, request, new BookingHandyRetroFitCallback(cb));
     }
 
     public void notifyUpdateArrivalTimeBooking(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption, final Callback<Booking> cb)
@@ -186,7 +207,7 @@ public class DataManager
         mService.updateArrivalTime(bookingId, arrivalTimeOption.getValue(), new BookingHandyRetroFitCallback(cb));
     }
 
-    public void reportNoShow(String bookingId, TypeSafeMap<NoShowKey> params, Callback<Booking> cb)
+    public void reportNoShow(String bookingId, TypeSafeMap<ProviderKey> params, Callback<Booking> cb)
     {
         mService.reportNoShow(bookingId, params.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
@@ -228,32 +249,6 @@ public class DataManager
         });
     }
 
-    //********Help Center********
-    public void getHelpInfo(String nodeId,
-                            String bookingId,
-                            final Callback<HelpNodeWrapper> cb)
-    {
-        mService.getHelpInfo(nodeId, bookingId, new HelpNodeResponseHandyRetroFitCallback(cb));
-    }
-
-    public void getHelpBookingsInfo(String nodeId,
-                                    String bookingId,
-                                    final Callback<HelpNodeWrapper> cb)
-    {
-        mService.getHelpBookingsInfo(nodeId, bookingId, new HelpNodeResponseHandyRetroFitCallback(cb));
-    }
-
-    public void getHelpPaymentsInfo(final Callback<HelpNodeWrapper> cb)
-    {
-        mService.getHelpPayments(new HelpNodeResponseHandyRetroFitCallback(cb));
-    }
-
-    public void createHelpCase(TypedInput body, final Callback<Void> cb)
-    {
-        mService.createHelpCase(body, new EmptyHandyRetroFitCallback(cb));
-    }
-
-    //********End Help Center********
     public void createBankAccount(Map<String, String> params, final Callback<SuccessWrapper> cb)
     {
         mService.createBankAccount(params, new CreateBankAccountRetroFitCallback(cb));
@@ -267,6 +262,11 @@ public class DataManager
     public void createDebitCardForCharge(String stripeToken, final Callback<CreateDebitCardResponse> cb)
     {
         mService.createDebitCardForCharge(stripeToken, new CreateDebitCardRetroFitCallback(cb));
+    }
+
+    public void updateCreditCard(final String token, final Callback<SuccessWrapper> cb)
+    {
+        mService.updateCreditCard(token, new CreateBankAccountRetroFitCallback(cb));
     }
 
     public void getPaymentFlow(String providerId, final Callback<PaymentFlow> cb)
@@ -326,6 +326,14 @@ public class DataManager
     public void getProviderFeedback(final String providerId, final Callback<List<ProviderFeedback>> cb)
     {
         mService.getProviderFeedback(providerId, new GetProviderFeedbackRetrofitCallback(cb));
+    }
+
+    public void requestOnboardingSupplies(final String providerId,
+                                          final boolean value,
+                                          final Callback<SuccessWrapper> cb)
+    {
+        mService.requestOnboardingSupplies(providerId, value,
+                new SuccessWrapperRetroFitCallback(cb));
     }
 
 

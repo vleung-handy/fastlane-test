@@ -44,7 +44,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/claimed"
                 android:textAllCaps="true"
-                android:textColor="@color/handy_teal"
+                android:textColor="@color/handyman_teal"
                 />
 
         </LinearLayout>
@@ -84,6 +84,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/default_text_size"
                 tools:text="10:00 am"
+                android:textColor="@color/dark_gray"
                 />
 
             <TextView
@@ -92,6 +93,7 @@
                 android:layout_marginLeft="@dimen/extra_margin"
                 android:layout_marginRight="@dimen/extra_margin"
                 android:text="@string/dash"
+                android:textColor="@color/dark_gray"
                 />
 
             <TextView
@@ -100,6 +102,7 @@
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/default_text_size"
                 tools:text="1:00 pm"
+                android:textColor="@color/dark_gray"
                 />
         </LinearLayout>
 
@@ -109,7 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/extra_margin"
-            android:textColor="@color/subtitle_grey"
+            android:textColor="@color/tertiary_gray"
             tools:text="One Time · 2-3.5 hour job"
             />
     </LinearLayout>

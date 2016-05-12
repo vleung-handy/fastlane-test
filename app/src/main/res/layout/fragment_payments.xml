@@ -2,10 +2,9 @@
 <com.handy.portal.ui.layout.SlideUpPanelLayout
     android:id="@+id/slide_up_panel_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PaymentsFragment">
+    >
 
     <include layout="@layout/layout_fetch_error"/>
 
@@ -14,18 +13,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:overScrollMode="always">
+        android:overScrollMode="always"
+        >
 
         <LinearLayout
-            xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/payments_content_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white_pressed"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            >
 
             <include layout="@layout/element_payments_batch_list"/>
 
         </LinearLayout>
+
     </ScrollView>
+
 </com.handy.portal.ui.layout.SlideUpPanelLayout>

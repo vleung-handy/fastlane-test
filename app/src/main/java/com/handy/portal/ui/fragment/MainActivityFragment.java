@@ -1,8 +1,8 @@
 package com.handy.portal.ui.fragment;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.os.Parcel;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -14,16 +14,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
-import android.widget.LinearLayout;
+import android.webkit.CookieSyncManager;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -35,6 +36,11 @@ import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ConfigurationResponse;
+import com.handy.portal.model.onboarding.OnboardingParams;
+import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
+import com.handy.portal.model.onboarding.OnboardingSuppliesParams;
+import com.handy.portal.onboarding.ui.activity.OnboardWelcomeActivity;
+import com.handy.portal.preactivation.PreActivationFlowActivity;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
@@ -79,14 +85,17 @@ public class MainActivityFragment extends InjectedFragment
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @Bind(R.id.navigation_drawer)
-    LinearLayout mNavigationDrawer;
+    RelativeLayout mNavigationDrawer;
     @Bind(R.id.nav_tray_links)
     RadioGroup mNavTrayLinks;
     @Bind(R.id.navigation_header)
     TextView mNavigationHeader;
     @Bind(R.id.content_frame)
     TabbedLayout mContentFrame;
+    @Bind(R.id.build_version_text)
+    TextView mBuildVersionText;
 
+    private ActionBarDrawerToggle mActionBarDrawerToggle;
     private MainViewTab currentTab = null;
 
     //Are we currently clearing out the backstack?
@@ -95,40 +104,26 @@ public class MainActivityFragment extends InjectedFragment
 
     private boolean mOnResumeTransitionToMainTab; //need to catch and hold until onResume so we can catch the response from the bus
 
-    private boolean mFirstTimeConfigReturned = true; //the first time we get config response back we may need to navigate away
+    private boolean mConfigAlreadyReceivedThisSession = false; //the first time we get config response back we may need to navigate away
     private Bundle mDeeplinkData;
     private boolean mDeeplinkHandled;
     private String mDeeplinkSource;
+
+    private boolean mNativeOnboardingLaunched = false;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setDeeplinkData(savedInstanceState);
-    }
 
-    @Override
-    public void onViewStateRestored(final Bundle savedInstanceState)
-    {
-        super.onViewStateRestored(savedInstanceState);
-        setDeeplinkData(savedInstanceState);
-    }
+        if (savedInstanceState != null)
+        {
+            mNativeOnboardingLaunched =
+                    savedInstanceState.getBoolean(BundleKeys.NATIVE_ONBOARDING_LAUNCHED, false);
+        }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
-        super.onCreateView(inflater, container, savedInstanceState);
-        View view = inflater.inflate(R.layout.fragment_main, container);
-        ButterKnife.bind(this, view);
-        registerButtonListeners();
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
-        mDrawerLayout.setDrawerListener(new ActionBarDrawerToggle(getActivity(), mDrawerLayout,
+        mActionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), mDrawerLayout,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close)
         {
             @Override
@@ -146,13 +141,38 @@ public class MainActivityFragment extends InjectedFragment
                 bus.post(new LogEvent.AddLogEvent(new SideMenuLog.Closed()));
                 setDrawerActive(false);
             }
-        });
+        };
+    }
+
+    @Override
+    public void onViewStateRestored(final Bundle savedInstanceState)
+    {
+        super.onViewStateRestored(savedInstanceState);
+        setDeeplinkData(savedInstanceState);
+        if (savedInstanceState != null)
+        {
+            mNativeOnboardingLaunched =
+                    savedInstanceState.getBoolean(BundleKeys.NATIVE_ONBOARDING_LAUNCHED, false);
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState)
+    {
+        super.onCreateView(inflater, container, savedInstanceState);
+        View view = inflater.inflate(R.layout.fragment_main, container);
+        ButterKnife.bind(this, view);
+        registerButtonListeners();
+        mBuildVersionText.setText(BuildConfig.VERSION_NAME);
+        return view;
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
+
         bus.post(new NotificationEvent.RequestUnreadCount());
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
         if (currentTab == null)
@@ -160,6 +180,7 @@ public class MainActivityFragment extends InjectedFragment
             switchToTab(MainViewTab.AVAILABLE_JOBS, false);
         }
         handleDeeplink();
+        mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
     }
 
     @Subscribe
@@ -167,10 +188,30 @@ public class MainActivityFragment extends InjectedFragment
     {
         //If the config response came back for the first time may need to navigate away
         //Normally the fragment would take care of itself, but this would launch the fragment if needed
-        if (mFirstTimeConfigReturned)
+        if (!mConfigAlreadyReceivedThisSession)
         {
-            mFirstTimeConfigReturned = false;
-            handleOnboardingFlow();
+            mConfigAlreadyReceivedThisSession = true;
+            final ConfigurationResponse configuration = event.getConfigurationResponse();
+            launchPreActivationFlowIfNeeded(configuration);
+            handleOnboardingFlow(configuration);
+        }
+    }
+
+    private void launchPreActivationFlowIfNeeded(final ConfigurationResponse configuration)
+    {
+        OnboardingParams onboardingParams;
+        OnboardingSuppliesParams onboardingSuppliesParams;
+        if (configuration != null
+                && (onboardingParams = configuration.getOnboardingParams()) != null
+                && (onboardingSuppliesParams = onboardingParams.getOnboardingSuppliesParams()) != null
+                && onboardingSuppliesParams.isEnabled())
+        {
+            final OnboardingSuppliesInfo onboardingSuppliesParamsInfo =
+                    onboardingSuppliesParams.getInfo();
+            final Intent intent = new Intent(getActivity(), PreActivationFlowActivity.class);
+            intent.putExtra(BundleKeys.ONBOARDING_SUPPLIES, onboardingSuppliesParamsInfo);
+            startActivity(intent);
+            getActivity().finish();
         }
     }
 
@@ -180,16 +221,23 @@ public class MainActivityFragment extends InjectedFragment
         mNotificationsButton.setUnreadCount(event.getUnreadCount());
     }
 
-    private void handleOnboardingFlow()
+    private void handleOnboardingFlow(final ConfigurationResponse configuration)
     {
-        if (currentTab != null &&
-                currentTab != MainViewTab.ONBOARDING_WEBVIEW &&
-                configManager.getConfigurationResponse() != null &&
-                configManager.getConfigurationResponse().shouldShowOnboarding()
-                )
+        if (configuration != null)
         {
-            //We can be lazy here with params, TabNavigationManager will do all the work for us, we are just firing it up
-            switchToTab(MainViewTab.ONBOARDING_WEBVIEW, false);
+            if (configuration.shouldShowNativeOnboarding())
+            {
+                if (!mNativeOnboardingLaunched)
+                {
+                    mNativeOnboardingLaunched = true;
+                    startActivity(new Intent(getContext(), OnboardWelcomeActivity.class));
+                }
+            }
+            else if (currentTab != null && currentTab != MainViewTab.ONBOARDING_WEBVIEW &&
+                    doesCachedProviderNeedWebOnboarding())
+            {
+                switchToTab(MainViewTab.ONBOARDING_WEBVIEW, false);
+            }
         }
     }
 
@@ -236,12 +284,21 @@ public class MainActivityFragment extends InjectedFragment
     @Override
     public void onSaveInstanceState(Bundle outState)
     {
-        if (outState == null)
+        try
         {
-            outState = new Bundle();
+            if (outState == null)
+            {
+                outState = new Bundle();
+            }
+            outState.putBoolean(BundleKeys.DEEPLINK_HANDLED, mDeeplinkHandled);
+            outState.putBoolean(BundleKeys.NATIVE_ONBOARDING_LAUNCHED, mNativeOnboardingLaunched);
+            super.onSaveInstanceState(outState);
         }
-        outState.putBoolean(BundleKeys.DEEPLINK_HANDLED, mDeeplinkHandled);
-        super.onSaveInstanceState(outState);
+        catch (IllegalArgumentException e)
+        {
+            // Non fatal
+            Crashlytics.logException(e);
+        }
     }
 
     @Override
@@ -249,6 +306,7 @@ public class MainActivityFragment extends InjectedFragment
     {
         super.onPause();
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(false));
+        mDrawerLayout.removeDrawerListener(mActionBarDrawerToggle);
     }
 
 //Event Listeners
@@ -289,12 +347,10 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onSwapFragment(NavigationEvent.SwapFragmentEvent event)
     {
-        addUpdateTabCallback(event.arguments);
         trackSwitchToTab(event.targetTab);
         setTabVisibility(true);
         setDrawerActive(false);
         swapFragment(event);
-        updateSelectedTabButton(event.targetTab);
         ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
         currentTab = event.targetTab;
     }
@@ -316,6 +372,66 @@ public class MainActivityFragment extends InjectedFragment
     {
         logOutProvider();
         showToast(R.string.handy_account_no_longer_active);
+    }
+
+    @Subscribe
+    public void updateSelectedTabButton(NavigationEvent.SelectTab event)
+    {
+        if (event.tab == null) { return; }
+        switch (event.tab)
+        {
+            case AVAILABLE_JOBS:
+            case BLOCK_PRO_WEBVIEW:
+            {
+                mJobsButton.toggle();
+                mNavTrayLinks.clearCheck();
+            }
+            break;
+            case SEND_RECEIPT_CHECKOUT:
+            case SCHEDULED_JOBS:
+            {
+                mScheduleButton.toggle();
+                mNavTrayLinks.clearCheck();
+            }
+            break;
+            case NOTIFICATIONS:
+            {
+                mNotificationsButton.toggle();
+                mNavTrayLinks.clearCheck();
+            }
+            break;
+            case PAYMENTS:
+            {
+                mButtonMore.toggle();
+                mNavLinkPayments.toggle();
+            }
+            break;
+            case YOUTUBE_PLAYER:
+            case DASHBOARD:
+            {
+                mButtonMore.toggle();
+                mNavLinkRatingsAndFeedback.toggle();
+            }
+            break;
+            case REFER_A_FRIEND:
+            {
+                mButtonMore.toggle();
+                mNavLinkReferAFriend.toggle();
+            }
+            break;
+            case ACCOUNT_SETTINGS:
+            {
+                mButtonMore.toggle();
+                mNavAccountSettings.toggle();
+            }
+            break;
+            case HELP_WEBVIEW:
+            {
+                mButtonMore.toggle();
+                mNavLinkHelp.toggle();
+            }
+            break;
+        }
     }
 
 //Click Listeners
@@ -362,14 +478,7 @@ public class MainActivityFragment extends InjectedFragment
         mNavLinkRatingsAndFeedback.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.DASHBOARD, null));
         mNavLinkReferAFriend.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.REFER_A_FRIEND, null));
         mNavAccountSettings.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.ACCOUNT_SETTINGS, null));
-
-        final ConfigurationResponse configuration = getConfigurationResponse();
-        final boolean shouldUseHelpCenterWebview =
-                configuration != null && getConfigurationResponse().shouldUseHelpCenterWebView();
-        final MainViewTab helpTab =
-                shouldUseHelpCenterWebview ?
-                        MainViewTab.HELP_WEBVIEW : MainViewTab.HELP;
-        mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(helpTab, null));
+        mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.HELP_WEBVIEW, null));
     }
 
     private class TabOnClickListener implements View.OnClickListener
@@ -480,88 +589,6 @@ public class MainActivityFragment extends InjectedFragment
         bus.post(new HandyEvent.Navigation(targetTab.toString().toLowerCase()));
     }
 
-    private void addUpdateTabCallback(Bundle argumentsBundle)
-    {
-        argumentsBundle.putParcelable(BundleKeys.UPDATE_TAB_CALLBACK, new ActionBarFragment.UpdateTabsCallback()
-        {
-            @Override
-            public int describeContents() { return 0; }
-
-            @Override
-            public void writeToParcel(Parcel parcel, int i) { }
-
-            @Override
-            public void updateTabs(MainViewTab tab)
-            {
-                if (mTabs != null) { updateSelectedTabButton(tab); }
-            }
-        });
-    }
-
-    //Update the visuals to show the correct selected button
-    private void updateSelectedTabButton(MainViewTab targetTab)
-    {
-        //Somewhat ugly mapping right now, is there a more elegant way to do this? Tabs as a model should not know about their buttons
-        if (targetTab != MainViewTab.JOB_DETAILS)
-        {
-            switch (targetTab)
-            {
-                case AVAILABLE_JOBS:
-                case BLOCK_PRO_WEBVIEW:
-                {
-                    mJobsButton.toggle();
-                    mNavTrayLinks.clearCheck();
-                }
-                break;
-                case SEND_RECEIPT_CHECKOUT:
-                case SCHEDULED_JOBS:
-                {
-                    mScheduleButton.toggle();
-                    mNavTrayLinks.clearCheck();
-                }
-                break;
-                case NOTIFICATIONS:
-                {
-                    mNotificationsButton.toggle();
-                    mNavTrayLinks.clearCheck();
-                }
-                break;
-                case PAYMENTS:
-                {
-                    mButtonMore.toggle();
-                    mNavLinkPayments.toggle();
-                }
-                break;
-                case YOUTUBE_PLAYER:
-                case DASHBOARD:
-                {
-                    mButtonMore.toggle();
-                    mNavLinkRatingsAndFeedback.toggle();
-                }
-                break;
-                case REFER_A_FRIEND:
-                {
-                    mButtonMore.toggle();
-                    mNavLinkReferAFriend.toggle();
-                }
-                break;
-                case ACCOUNT_SETTINGS:
-                {
-                    mButtonMore.toggle();
-                    mNavAccountSettings.toggle();
-                }
-                break;
-                case HELP:
-                case HELP_WEBVIEW:
-                {
-                    mButtonMore.toggle();
-                    mNavLinkHelp.toggle();
-                }
-                break;
-            }
-        }
-    }
-
     private void swapFragment(NavigationEvent.SwapFragmentEvent swapFragmentEvent)
     {
         if (!swapFragmentEvent.addToBackStack)
@@ -632,12 +659,29 @@ public class MainActivityFragment extends InjectedFragment
         return mConfigManager.getConfigurationResponse();
     }
 
+    private boolean doesCachedProviderNeedWebOnboarding()
+    {
+        return (getConfigurationResponse() != null &&
+                getConfigurationResponse().shouldShowWebOnboarding());
+    }
+
+    @SuppressWarnings("deprecation")
     private void logOutProvider()
     {
-        mPrefsManager.setString(PrefsKey.AUTH_TOKEN, null);
-        mPrefsManager.setString(PrefsKey.LAST_PROVIDER_ID, null);
+        mPrefsManager.clear();
         clearFragmentBackStack();
-        CookieManager.getInstance().removeAllCookie();
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            CookieManager.getInstance().removeAllCookies(null);
+            CookieManager.getInstance().flush();
+        }
+        else
+        {
+            CookieSyncManager.createInstance(getActivity());
+            CookieManager.getInstance().removeAllCookie();
+            CookieSyncManager.getInstance().sync();
+        }
         startActivity(new Intent(getActivity(), LoginActivity.class));
         getActivity().finish();
     }

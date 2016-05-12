@@ -35,8 +35,8 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/name"
                 android:paddingBottom="@dimen/default_padding"
-                android:paddingLeft="@dimen/inner_text_field_padding"
-                android:paddingStart="@dimen/inner_text_field_padding"
+                android:paddingLeft="@dimen/inner_field_padding"
+                android:paddingStart="@dimen/inner_field_padding"
                 android:paddingTop="@dimen/default_padding"
                 android:src="@drawable/ic_profile"
                 />
@@ -51,7 +51,7 @@
                 android:nextFocusDown="@+id/provider_email_edit_text"
                 android:padding="@dimen/default_padding"
                 android:singleLine="true"
-                android:textColor="@color/dark_grey"
+                android:textColor="@color/dark_gray"
                 />
 
         </LinearLayout>
@@ -59,7 +59,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_bottom_form_option"
+            android:background="@drawable/border_gray_bottom"
             android:orientation="horizontal"
             >
 
@@ -78,8 +78,8 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/email"
                 android:paddingBottom="@dimen/default_padding"
-                android:paddingLeft="@dimen/inner_text_field_padding"
-                android:paddingStart="@dimen/inner_text_field_padding"
+                android:paddingLeft="@dimen/inner_field_padding"
+                android:paddingStart="@dimen/inner_field_padding"
                 android:paddingTop="@dimen/default_padding"
                 android:src="@drawable/ic_email"
                 />
@@ -94,7 +94,7 @@
                 android:nextFocusDown="@+id/provider_address_edit_text"
                 android:padding="@dimen/default_padding"
                 android:singleLine="true"
-                android:textColor="@color/dark_grey"
+                android:textColor="@color/dark_gray"
                 />
 
         </LinearLayout>
@@ -102,7 +102,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_bottom_form_option"
+            android:background="@drawable/border_gray_bottom"
             android:orientation="horizontal"
             >
 
@@ -121,8 +121,8 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/address"
                 android:paddingBottom="@dimen/default_padding"
-                android:paddingLeft="@dimen/inner_text_field_padding"
-                android:paddingStart="@dimen/inner_text_field_padding"
+                android:paddingLeft="@dimen/inner_field_padding"
+                android:paddingStart="@dimen/inner_field_padding"
                 android:paddingTop="@dimen/default_padding"
                 android:src="@drawable/ic_location"
                 />
@@ -144,7 +144,7 @@
                     android:nextFocusDown="@+id/provider_address2_edit_text"
                     android:padding="@dimen/default_padding"
                     android:singleLine="true"
-                    android:textColor="@color/dark_grey"
+                    android:textColor="@color/dark_gray"
                     />
 
                 <EditText
@@ -156,7 +156,7 @@
                     android:nextFocusDown="@+id/provider_city_edit_text"
                     android:padding="@dimen/default_padding"
                     android:singleLine="true"
-                    android:textColor="@color/dark_grey"
+                    android:textColor="@color/dark_gray"
                     />
 
             </LinearLayout>
@@ -165,7 +165,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_bottom_form_option"
+            android:background="@drawable/border_gray_bottom"
             android:orientation="horizontal"
             >
 
@@ -184,8 +184,8 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/address"
                 android:paddingBottom="@dimen/default_padding"
-                android:paddingLeft="@dimen/inner_text_field_padding"
-                android:paddingStart="@dimen/inner_text_field_padding"
+                android:paddingLeft="@dimen/inner_field_padding"
+                android:paddingStart="@dimen/inner_field_padding"
                 android:paddingTop="@dimen/default_padding"
                 android:src="@drawable/ic_location"
                 />
@@ -206,7 +206,7 @@
                     android:nextFocusDown="@+id/provider_state_edit_text"
                     android:padding="@dimen/default_padding"
                     android:singleLine="true"
-                    android:textColor="@color/dark_grey"
+                    android:textColor="@color/dark_gray"
                     />
 
                 <EditText
@@ -218,7 +218,7 @@
                     android:nextFocusDown="@+id/provider_zip_code_edit_text"
                     android:padding="@dimen/default_padding"
                     android:singleLine="true"
-                    android:textColor="@color/dark_grey"
+                    android:textColor="@color/dark_gray"
                     />
 
                 <EditText
@@ -230,7 +230,7 @@
                     android:nextFocusDown="@+id/provider_phone_edit_text"
                     android:padding="@dimen/default_padding"
                     android:singleLine="true"
-                    android:textColor="@color/dark_grey"
+                    android:textColor="@color/dark_gray"
                     />
 
             </LinearLayout>
@@ -239,7 +239,7 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_bottom_form_option"
+            android:background="@drawable/border_gray_bottom"
             android:orientation="horizontal"
             >
 
@@ -258,8 +258,8 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/phone"
                 android:paddingBottom="@dimen/default_padding"
-                android:paddingLeft="@dimen/inner_text_field_padding"
-                android:paddingStart="@dimen/inner_text_field_padding"
+                android:paddingLeft="@dimen/inner_field_padding"
+                android:paddingStart="@dimen/inner_field_padding"
                 android:paddingTop="@dimen/default_padding"
                 android:src="@drawable/ic_phone"
                 />
@@ -273,7 +273,7 @@
                 android:inputType="phone"
                 android:padding="@dimen/default_padding"
                 android:singleLine="true"
-                android:textColor="@color/dark_grey"
+                android:textColor="@color/dark_gray"
                 />
 
         </LinearLayout>

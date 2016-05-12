@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/default_padding"
+    android:paddingEnd="@dimen/default_padding_large"
+    android:paddingLeft="@dimen/default_padding_large"
+    android:paddingRight="@dimen/default_padding_large"
+    android:paddingStart="@dimen/default_padding_large"
+    android:paddingTop="@dimen/default_padding_large"
+    >
+
+    <TextView
+        style="@style/TextView.Large.Bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:gravity="center"
+        android:text="@string/are_you_sure_no_kit"
+        />
+
+    <TextView
+        style="@style/TextView.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:gravity="center"
+        android:text="@string/supplies_expectation"
+        android:textColor="@color/tertiary_gray"
+        />
+
+    <Button
+        android:id="@+id/decline_supplies_button"
+        style="@style/Button.Green.Round"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:text="@string/i_have_my_own_supplies"
+        android:textColor="@color/white"
+        android:textSize="@dimen/large_text_size"
+        />
+</LinearLayout>

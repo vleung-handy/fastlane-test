@@ -35,12 +35,6 @@ public class DashboardFeedbackFragment extends ActionBarFragment
     private ProviderEvaluation mEvaluation;
 
     @Override
-    protected MainViewTab getTab()
-    {
-        return MainViewTab.DASHBOARD_REVIEWS;
-    }
-
-    @Override
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
