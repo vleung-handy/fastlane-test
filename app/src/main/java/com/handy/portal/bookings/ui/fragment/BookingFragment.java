@@ -258,7 +258,18 @@ public class BookingFragment extends TimerActionBarFragment
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
-        mBookingMapView.onSaveInstanceState(outState);
+        try
+        {
+            /*
+                similar to the exception thrown by mBookingMapView.onDestroy()
+                not caused by mBookingMapView = null
+             */
+            mBookingMapView.onSaveInstanceState(outState);
+        }
+        catch(Exception e)
+        {
+            Crashlytics.log("Error while attempting MapView.onSaveInstanceState(). Ignoring exception: " + e.getMessage());
+        }
     }
 
     public void setDisplay()
