@@ -1,6 +1,7 @@
 package com.handy.portal.library.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.VisibleForTesting;
 import android.view.Gravity;
 import android.widget.Toast;
 
@@ -35,6 +36,16 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     {
         super.onCreate(savedInstanceState);
         ((BaseApplication) getActivity().getApplication()).inject(this);
+    }
+
+    /**
+     * should be called by tests only
+     * @return
+     */
+    @VisibleForTesting
+    public Bus getBus()
+    {
+        return bus;
     }
 
     @Override

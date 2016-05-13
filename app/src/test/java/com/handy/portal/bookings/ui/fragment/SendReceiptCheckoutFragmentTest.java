@@ -1,4 +1,4 @@
-package com.handy.portal.ui.fragment;
+package com.handy.portal.bookings.ui.fragment;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -7,7 +7,6 @@ import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.TestUtils;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.core.TestBaseApplication;
@@ -88,7 +87,7 @@ public class SendReceiptCheckoutFragmentTest extends RobolectricGradleTestWrappe
 
     private <T> T getBusCaptorValue(Class<T> classType)
     {
-        verify(fragment.bus, atLeastOnce()).post(captor.capture());
+        verify(fragment.getBus(), atLeastOnce()).post(captor.capture());
         return TestUtils.getBusCaptorValue(captor, classType);
     }
 }
