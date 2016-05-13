@@ -100,7 +100,6 @@ public class PortalWebViewFragment extends ActionBarFragment
     {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setGeolocationEnabled(true);
-        webView.getSettings().setBuiltInZoomControls(true);
         webView.setWebViewClient(new PortalWebViewClient(this, webView, googleManager, bus));
     }
 
