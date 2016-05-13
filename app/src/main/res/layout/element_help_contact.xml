@@ -73,7 +73,7 @@
                 android:src="@drawable/ic_name"
                 />
 
-            <com.handy.portal.ui.widget.FirstNameInputTextView
+            <com.handy.portal.library.ui.widget.FirstNameInputTextView
                 android:id="@+id/help_contact_user_name_text"
                 style="@style/EditText.FirstName"
                 android:layout_width="match_parent"
@@ -108,7 +108,7 @@
                 android:src="@drawable/ic_email"
                 />
 
-            <com.handy.portal.ui.widget.EmailInputTextView
+            <com.handy.portal.library.ui.widget.EmailInputTextView
                 android:id="@+id/help_contact_email_text"
                 style="@style/EditText.Email"
                 android:layout_width="match_parent"
@@ -141,7 +141,7 @@
                 android:src="@drawable/ic_pencil"
                 />
 
-            <com.handy.portal.ui.widget.BasicInputTextView
+            <com.handy.portal.library.ui.widget.BasicInputTextView
                 android:id="@+id/help_contact_comment_text"
                 style="@style/EditText.Last.Comment"
                 android:layout_width="match_parent"

@@ -15,8 +15,8 @@ import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
-import com.handy.portal.ui.widget.InfiniteScrollListView;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.ui.widget.InfiniteScrollListView;
+import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Bus;
 
 import java.util.Date;

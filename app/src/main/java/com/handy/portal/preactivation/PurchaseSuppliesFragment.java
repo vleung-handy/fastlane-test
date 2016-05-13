@@ -14,8 +14,8 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.OnboardingSuppliesLog;
 import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
 import com.handy.portal.model.onboarding.OnboardingSuppliesSection;
-import com.handy.portal.ui.view.SimpleContentLayout;
-import com.handy.portal.util.FragmentUtils;
+import com.handy.portal.library.ui.view.SimpleContentLayout;
+import com.handy.portal.library.util.FragmentUtils;
 
 import java.util.List;
 

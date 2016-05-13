@@ -21,7 +21,7 @@ import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.util.DeeplinkMapper;
 import com.handy.portal.util.DeeplinkUtils;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Bus;
 
 public class PortalWebViewClient extends WebViewClient

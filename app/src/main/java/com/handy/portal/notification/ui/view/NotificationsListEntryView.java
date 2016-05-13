@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.notification.model.NotificationImage;
 import com.handy.portal.notification.model.NotificationMessage;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.util.Utils;
 import com.squareup.picasso.Picasso;
 
 import butterknife.Bind;

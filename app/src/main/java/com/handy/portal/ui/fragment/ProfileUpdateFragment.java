@@ -28,8 +28,8 @@ import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
-import com.handy.portal.util.TextUtils;
-import com.handy.portal.util.UIUtils;
+import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.library.util.UIUtils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Map;

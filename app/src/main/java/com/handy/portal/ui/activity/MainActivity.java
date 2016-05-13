@@ -26,9 +26,9 @@ import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragme
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.ui.fragment.PaymentBillBlockerDialogFragment;
 import com.handy.portal.payments.ui.fragment.PaymentBlockingFragment;
-import com.handy.portal.util.FragmentUtils;
-import com.handy.portal.util.SystemUtils;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.util.FragmentUtils;
+import com.handy.portal.library.util.SystemUtils;
+import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;

@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.event.ProfileEvent;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.util.Utils;
 import com.plattysoft.leonids.ParticleSystem;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;

@@ -11,8 +11,8 @@ import com.handy.portal.payments.model.LegacyPaymentBatch;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentGroup;
-import com.handy.portal.util.CurrencyUtils;
-import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.DateTimeUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

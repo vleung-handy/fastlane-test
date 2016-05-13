@@ -31,10 +31,10 @@ import com.handy.portal.model.LocationData;
 import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
-import com.handy.portal.ui.fragment.dialog.InjectedDialogFragment;
-import com.handy.portal.util.CurrencyUtils;
-import com.handy.portal.util.UIUtils;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
+import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.UIUtils;
+import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;

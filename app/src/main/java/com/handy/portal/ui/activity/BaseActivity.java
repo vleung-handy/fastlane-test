@@ -23,12 +23,12 @@ import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.GoogleApiLog;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.ui.widget.ProgressDialog;
+import com.handy.portal.library.ui.widget.ProgressDialog;
 import com.handy.portal.updater.AppUpdateEvent;
 import com.handy.portal.updater.AppUpdateEventListener;
 import com.handy.portal.updater.AppUpdateFlowLauncher;
 import com.handy.portal.updater.ui.PleaseUpdateActivity;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Bus;
 
 import java.util.Stack;

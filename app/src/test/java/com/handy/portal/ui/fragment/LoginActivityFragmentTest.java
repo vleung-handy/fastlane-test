@@ -17,7 +17,7 @@ import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.SplashActivity;
-import com.handy.portal.ui.widget.InputTextField;
+import com.handy.portal.library.ui.widget.InputTextField;
 import com.squareup.otto.Bus;
 
 import org.junit.Before;

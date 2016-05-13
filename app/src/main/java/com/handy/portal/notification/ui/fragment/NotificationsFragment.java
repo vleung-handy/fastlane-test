@@ -15,7 +15,7 @@ import com.handy.portal.event.NotificationEvent;
 import com.handy.portal.notification.model.NotificationMessage;
 import com.handy.portal.notification.ui.view.NotificationsListView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.ui.widget.InfiniteScrollListView;
+import com.handy.portal.library.ui.widget.InfiniteScrollListView;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;

@@ -18,11 +18,11 @@ import com.handy.portal.model.Address;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
-import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
-import com.handy.portal.ui.view.FormFieldTableRow;
-import com.handy.portal.ui.view.SimpleContentLayout;
-import com.handy.portal.util.FragmentUtils;
-import com.handy.portal.util.UIUtils;
+import com.handy.portal.library.ui.fragment.dialog.TransientOverlayDialogFragment;
+import com.handy.portal.library.ui.view.FormFieldTableRow;
+import com.handy.portal.library.ui.view.SimpleContentLayout;
+import com.handy.portal.library.util.FragmentUtils;
+import com.handy.portal.library.util.UIUtils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Map;

@@ -4,7 +4,7 @@ import android.os.CountDownTimer;
 import android.text.format.DateUtils;
 
 import com.handy.portal.R;
-import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.library.util.DateTimeUtils;
 
 import java.util.Date;
 

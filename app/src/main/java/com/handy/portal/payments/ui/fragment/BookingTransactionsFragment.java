@@ -23,9 +23,9 @@ import com.handy.portal.payments.model.Transaction;
 import com.handy.portal.payments.ui.element.TransactionView;
 import com.handy.portal.ui.element.bookings.BookingResultBannerTextView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.util.CurrencyUtils;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.TextUtils;
+import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.TextUtils;
 
 import javax.inject.Inject;
 

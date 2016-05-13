@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.handy.portal.ui.widget.SafeSwipeRefreshLayout
+<com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout
     android:id="@+id/available_bookings_empty"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -34,4 +34,4 @@
             android:textSize="@dimen/large_text_size"
             />
     </LinearLayout>
-</com.handy.portal.ui.widget.SafeSwipeRefreshLayout>
+</com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout>

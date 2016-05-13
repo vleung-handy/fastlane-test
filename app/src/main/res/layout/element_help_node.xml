@@ -14,7 +14,7 @@
         android:paddingBottom="26dp"
         android:visibility="invisible">
 
-        <com.handy.portal.ui.element.HandyWebView
+        <com.handy.portal.library.ui.view.HandyWebView
             android:id="@+id/help_webview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
