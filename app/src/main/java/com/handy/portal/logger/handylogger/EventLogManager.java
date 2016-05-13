@@ -127,6 +127,13 @@ public class EventLogManager
 
     private int getProviderId()
     {
-        return Integer.parseInt(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID, "0"));
+        try
+        {
+            return Integer.parseInt(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID, "0"));
+        }
+        catch (Exception e)
+        {
+            return 0;
+        }
     }
 }
