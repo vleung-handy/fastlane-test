@@ -220,7 +220,7 @@ public final class DateTimeUtils
             int jobDate = getDayOfYear(d);
             int today = getDayOfYear(new Date());
 
-            String prefix = "";
+            String prefix;
             if (jobDate - today == 0)
             {
                 prefix = "TODAY, ";

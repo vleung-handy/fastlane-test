@@ -275,7 +275,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     protected void handleBookingsRetrieved(T event)
     {
         BookingsWrapper bookingsWrapper = event.bookingsWrapper;
-        if(bookingsWrapper == null || event.day == null)
+        if (bookingsWrapper == null || event.day == null)
         {
             Crashlytics.logException(new Exception("on receive bookings success bookings wrapper or day is null"));
             return;
@@ -369,7 +369,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 }
             });
 
-
             mDateDateButtonViewMap.put(day, dateButtonView);
         }
     }
@@ -387,6 +386,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     /**
      * updates the bookings view with the given list of bookings for the given date
+     *
      * @param bookingsWrapper
      * @param dateOfBookings
      */

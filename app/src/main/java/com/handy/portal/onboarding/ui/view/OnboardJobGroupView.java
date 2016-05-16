@@ -1,6 +1,7 @@
 package com.handy.portal.onboarding.ui.view;
 
 import android.content.Context;
+import android.os.Build;
 import android.text.Html;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
@@ -33,6 +34,7 @@ public class OnboardJobGroupView extends LinearLayout implements CompoundButton.
         init();
     }
 
+    @SuppressWarnings("deprecation")
     public void init()
     {
 
@@ -49,7 +51,14 @@ public class OnboardJobGroupView extends LinearLayout implements CompoundButton.
         );
         layoutParams.setMargins(mMargin, 0, mMargin, 0);
         mTitle.setLayoutParams(layoutParams);
-        mTitle.setTextAppearance(getContext(), R.style.TextView_Small);
+        if (Build.VERSION.SDK_INT < 23)
+        {
+            mTitle.setTextAppearance(getContext(), R.style.TextView_Small);
+        }
+        else
+        {
+            mTitle.setTextAppearance(R.style.TextView_Small);
+        }
         mTitle.setTypeface(FontUtils.getFont(getContext(), FontUtils.CIRCULAR_BOOK));
         addView(mTitle);
 
