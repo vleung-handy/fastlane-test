@@ -64,15 +64,15 @@ public class PaymentsBatchListItemView extends TableLayout
             PaymentGroup paymentGroups[] = neoPaymentBatch.getPaymentGroups();
             int numJobs = 0;
             int numFees = 0;
-            for (int i = 0; i < paymentGroups.length; i++)
+            for (PaymentGroup paymentGroup : paymentGroups)
             {
-                if (PaymentGroup.MachineName.completed_jobs.name().equals(paymentGroups[i].getMachineName()))
+                if (PaymentGroup.MachineName.completed_jobs.name().equals(paymentGroup.getMachineName()))
                 {
-                    numJobs = paymentGroups[i].getPayments().length;
+                    numJobs = paymentGroup.getPayments().length;
                 }
-                else if (PaymentGroup.MachineName.withholdings.name().equals(paymentGroups[i].getMachineName()))
+                else if (PaymentGroup.MachineName.withholdings.name().equals(paymentGroup.getMachineName()))
                 {
-                    numFees = paymentGroups[i].getPayments().length;
+                    numFees = paymentGroup.getPayments().length;
                 }
             }
             jobInfoText.setText(getResources().getString(R.string.payment_batch_list_entry_subtitle, numJobs, numFees));

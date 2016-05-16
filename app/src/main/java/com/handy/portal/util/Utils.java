@@ -26,10 +26,10 @@ public final class Utils //TODO: we should reorganize these methods into more sp
     //TODO move somewhere else
     public static boolean areAllPermissionsGranted(@NonNull Context context, @NonNull String[] permissions)
     {
-        for (int i = 0; i < permissions.length; i++)
+        for (String permission : permissions)
         {
             if (ActivityCompat.checkSelfPermission(context,
-                    permissions[i]) != PackageManager.PERMISSION_GRANTED)
+                    permission) != PackageManager.PERMISSION_GRANTED)
             {
                 return false;
             }
@@ -39,12 +39,12 @@ public final class Utils //TODO: we should reorganize these methods into more sp
 
     public static boolean wereAnyPermissionsRequestedPreviously(@NonNull Activity activity, @NonNull String[] permissions)
     {
-        for (int i = 0; i < permissions.length; i++)
+        for (String permission : permissions)
         {
             /**
              *  The method returns true if the app has requested this permission previously and the user denied the request.
              */
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permissions[i]))
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission))
             {
                 return true;
             }
