@@ -381,6 +381,11 @@ public class GettingStartedActivity extends AppCompatActivity
     @OnClick(R.id.btn_next)
     public void buttonClicked()
     {
+        if (mAdapter == null)
+        {
+            Crashlytics.log(TAG + ": The adapter haven't been created yet and the next button was clicked");
+            return;
+        }
         mJobClaimRequest = new JobClaimRequest();
         mBookingIdsToClaim = new ArrayList<>();
         for (BookingsWrapperViewModel model : mAdapter.getBookingsWrapperViewModels())
