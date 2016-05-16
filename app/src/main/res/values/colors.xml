@@ -42,6 +42,7 @@
     <color name="bg_inactive_grey_50">#809CABB5</color>
     <color name="subtitle_grey">#9CABB5</color>
     <color name="requested_green">#8BC53E</color>
+    <color name="error_red">#FF5C5C</color>
     <color name="very_light_gray">#9F9794</color>
     <color name="bg_active_gray">#8A969E</color>
     <color name="text_light_gray">#CCCCCC</color>

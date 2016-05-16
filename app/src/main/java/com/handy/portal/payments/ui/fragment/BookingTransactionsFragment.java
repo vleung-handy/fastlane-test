@@ -158,10 +158,10 @@ public class BookingTransactionsFragment extends ActionBarFragment
             mCheckOutLabelText.setTextColor(ContextCompat.getColor(getContext(), R.color.text_light_gray));
         }
 
-        for (int i = 0; i < mTransactions.length; ++i)
+        for (Transaction t : mTransactions)
         {
             TransactionView transactionView = new TransactionView(getContext());
-            transactionView.setDisplay(mTransactions[i], mLaunchWebViewCallback);
+            transactionView.setDisplay(t, mLaunchWebViewCallback);
             mTransactionsLayout.addView(transactionView);
         }
         mNetEarningAmountText.setText(CurrencyUtils.formatPriceWithCents(
