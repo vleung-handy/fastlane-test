@@ -46,6 +46,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -358,7 +359,7 @@ public class GettingStartedActivity extends AppCompatActivity
         if (sum > 0)
         {
             String symbol = mAdapter.getBookingsWrapperViewModels().get(1).getBookingViewModels().get(0).getCurrencySymbol();
-            String formattedPrice = String.format("%.0f", sum);
+            String formattedPrice = String.format(Locale.getDefault(), "%.0f", sum);
             if (symbol != null)
             {
                 formattedPrice = symbol + formattedPrice;

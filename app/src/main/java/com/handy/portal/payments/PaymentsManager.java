@@ -113,18 +113,18 @@ public class PaymentsManager
             {
                 //for now, filter non-legacy payment batches to remove empty groups until server side changes are made
                 NeoPaymentBatch neoPaymentBatches[] = paymentBatches.getNeoPaymentBatches();
-                for (int i = 0; i < neoPaymentBatches.length; i++)
+                for (NeoPaymentBatch neoPaymentBatch : neoPaymentBatches)
                 {
-                    PaymentGroup paymentGroups[] = neoPaymentBatches[i].getPaymentGroups();
+                    PaymentGroup paymentGroups[] = neoPaymentBatch.getPaymentGroups();
                     List<PaymentGroup> paymentGroupList = new LinkedList<>();
-                    for (int j = 0; j < paymentGroups.length; j++)
+                    for (PaymentGroup paymentGroup : paymentGroups)
                     {
-                        if (paymentGroups[j].getPayments() != null && paymentGroups[j].getPayments().length > 0)
+                        if (paymentGroup.getPayments() != null && paymentGroup.getPayments().length > 0)
                         {
-                            paymentGroupList.add(paymentGroups[j]);
+                            paymentGroupList.add(paymentGroup);
                         }
                     }
-                    neoPaymentBatches[i].setPaymentGroups(paymentGroupList.toArray(new PaymentGroup[paymentGroupList.size()]));
+                    neoPaymentBatch.setPaymentGroups(paymentGroupList.toArray(new PaymentGroup[paymentGroupList.size()]));
                 }
                 mBus.post(new PaymentEvent.ReceivePaymentBatchesSuccess(paymentBatches, event.startDate, event.endDate, event.isInitialBatchRequest, event.callerIdentifier));
             }
