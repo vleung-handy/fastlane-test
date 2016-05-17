@@ -1,7 +1,6 @@
 package com.handy.portal.onboarding.ui.activity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.DrawableRes;
 import android.support.v7.app.AppCompatActivity;
@@ -56,7 +55,6 @@ public class OnboardWelcomeActivity extends AppCompatActivity
 
     private boolean mAnchorViewRendered = false;
     private boolean mProfileLoaded = false;
-    private boolean mConfettiFired = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -105,7 +103,6 @@ public class OnboardWelcomeActivity extends AppCompatActivity
     @OnClick(R.id.btn_next)
     public void getStarted()
     {
-        startActivity(new Intent(this, GettingStartedActivity.class));
         finish();
     }
 
@@ -182,8 +179,7 @@ public class OnboardWelcomeActivity extends AppCompatActivity
      */
     public void shootingConfetti()
     {
-
-        if (!mProfileLoaded || !mAnchorViewRendered || mConfettiFired) { return; }
+        if (!mProfileLoaded || !mAnchorViewRendered) { return; }
 
         int partNumPerSecond = 2;
         int emitTime = 1000;

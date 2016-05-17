@@ -1,24 +1,19 @@
 package com.handy.portal.onboarding.ui.activity;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatActivity;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
@@ -39,8 +34,8 @@ import com.handy.portal.onboarding.model.JobClaimRequest;
 import com.handy.portal.onboarding.ui.adapter.JobsRecyclerAdapter;
 import com.handy.portal.onboarding.ui.fragment.OnboardLoadingDialog;
 import com.handy.portal.onboarding.ui.view.OnboardJobGroupView;
+import com.handy.portal.preactivation.PreActivationFlowFragment;
 import com.handy.portal.ui.fragment.dialog.OnboardJobClaimConfirmDialog;
-import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -51,35 +46,29 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import butterknife.Bind;
-import butterknife.ButterKnife;
+import butterknife.BindDrawable;
+import butterknife.BindInt;
 import butterknife.OnClick;
-import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class GettingStartedActivity extends AppCompatActivity
+public class ScheduleBuilderFragment extends PreActivationFlowFragment
         implements OnboardJobGroupView.OnJobChangeListener,
         DialogInterface.OnCancelListener,
         OnboardJobClaimConfirmDialog.ConfirmationDialogListener
 {
-
-    private static final String TAG = GettingStartedActivity.class.getName();
-
-    /**
-     * This is used for logging analytics
-     */
-    private static final String SOURCE = "onboarding";
+    private static final String TAG = ScheduleBuilderFragment.class.getName();
 
     @Bind(R.id.recycler_view)
     RecyclerView mRecyclerView;
-    @Bind(R.id.btn_next)
-    Button mBtnNext;
-    @Bind(R.id.toolbar)
-    Toolbar mToolbar;
-    @Bind(R.id.loading_overlay)
-    View mLoadingOverlayView;
     @Bind(R.id.fetch_error_view)
     View mFetchErrorView;
     @Bind(R.id.fetch_error_text)
     TextView mErrorText;
+    @BindDrawable(R.drawable.button_green)
+    Drawable mGreenDrawable;
+    @BindDrawable(R.drawable.button_gray)
+    Drawable mGrayDrawable;
+    @BindInt(R.integer.onboarding_dialog_load_min_time)
+    int mWaitTime;
 
     @Inject
     Bus mBus;
@@ -93,12 +82,8 @@ public class GettingStartedActivity extends AppCompatActivity
     private JobsRecyclerAdapter mAdapter;
     private BookingsListWrapper mJobs;
     private boolean mJobLoaded;
-    private String mNoThanks;
 
-    private Drawable mGreenDrawable;
-    private Drawable mGrayDrawable;
     private long mLoadingDialogDisplayTime;
-    private int mWaitTime;
     private boolean mIsResumed;
 
     @NonNull
@@ -113,40 +98,24 @@ public class GettingStartedActivity extends AppCompatActivity
 
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
+    public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_getting_started);
-        Utils.inject(this, this);
-
-        ButterKnife.bind(this);
-
-        mWaitTime = getResources().getInteger(R.integer.onboarding_dialog_load_min_time);
-
         mProviderId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
-        mRecyclerView.setLayoutManager(layoutManager);
-
-        mNoThanks = getString(R.string.onboard_no_thanks);
-
-        mGreenDrawable = ContextCompat.getDrawable(this, R.drawable.button_green);
-        mGrayDrawable = ContextCompat.getDrawable(this, R.drawable.button_gray);
-        setSupportActionBar(mToolbar);
-        if (getSupportActionBar() != null)
-        {
-            getSupportActionBar().setTitle(getString(R.string.onboard_getting_started));
-            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_x_white);
-        }
-        mFetchErrorView.setBackgroundColor(ContextCompat.getColor(this, R.color.handy_bg));
     }
 
     @Override
-    protected void onResume()
+    public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
-        mIsResumed = true;
+        super.onViewCreated(view, savedInstanceState);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+    }
+
+    @Override
+    public void onResume()
+    {
         super.onResume();
-        mBus.register(this);
+        mIsResumed = true;
 
         if (!hasJobs(mJobs))
         {
@@ -166,7 +135,6 @@ public class GettingStartedActivity extends AppCompatActivity
         mJobLoaded = false;
         mFetchErrorView.setVisibility(View.GONE);
         mBus.post(new HandyEvent.RequestOnboardingJobs());
-
     }
 
     /**
@@ -182,22 +150,9 @@ public class GettingStartedActivity extends AppCompatActivity
     }
 
     @Override
-    protected void onPause()
+    public void onPause()
     {
         mIsResumed = false;
-        try
-        {
-             /*
-                 on mostly Samsung Android 5.0 devices (responsible for ~97% of crashes here),
-                 Activity.onPause() can be called without Activity.onResume()
-                 so unregistering the bus here can cause an exception
-              */
-            mBus.unregister(this);
-        }
-        catch (Exception e)
-        {
-            Crashlytics.logException(e); //want more info for now
-        }
         super.onPause();
     }
 
@@ -236,12 +191,6 @@ public class GettingStartedActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public void onBackPressed()
-    {
-        skipJobSelection();
-    }
-
     /**
      * When the jobs are loaded, it will check whether the dialog has been up for a specified
      * amount of time. If it has, then dismiss it.
@@ -252,7 +201,7 @@ public class GettingStartedActivity extends AppCompatActivity
     public void onJobLoaded(HandyEvent.ReceiveOnboardingJobsSuccess event)
     {
         Log.d(TAG, "onJobLoaded: ");
-        mLoadingOverlayView.setVisibility(View.GONE);
+        hideLoadingOverlay();
         mJobLoaded = true;
         mJobs = event.bookings;
         bindJobsAndRemoveLoadingDialog();
@@ -294,7 +243,7 @@ public class GettingStartedActivity extends AppCompatActivity
                 if (isLoadingDialogVisible())
                 {
                     mLoadingDialog.dismiss();
-                    mBtnNext.setVisibility(View.GONE);
+                    mSingleActionButton.setVisibility(View.GONE);
                 }
                 mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NoJobsLoaded()));
                 goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
@@ -304,7 +253,7 @@ public class GettingStartedActivity extends AppCompatActivity
                 mAdapter = new JobsRecyclerAdapter(
                         mJobs.getBookingsWrappers(),
                         getString(R.string.onboard_getting_started_title),
-                        GettingStartedActivity.this,
+                        ScheduleBuilderFragment.this,
                         getResources().getString(R.string.onboard_no_time_available)
                 );
                 mRecyclerView.setAdapter(mAdapter);
@@ -365,54 +314,15 @@ public class GettingStartedActivity extends AppCompatActivity
                 formattedPrice = symbol + formattedPrice;
             }
             String text = String.format(getString(R.string.onboard_claim_and_earn_formatted), formattedPrice);
-            mBtnNext.setText(text);
-            mBtnNext.setBackground(mGreenDrawable);
+            mSingleActionButton.setText(text);
+            mSingleActionButton.setBackground(mGreenDrawable);
         }
         else
         {
-            mBtnNext.setText(mNoThanks);
-            mBtnNext.setBackground(mGrayDrawable);
+            mSingleActionButton.setText(R.string.onboard_no_thanks);
+            mSingleActionButton.setBackground(mGrayDrawable);
         }
-    }
-
-    @OnClick(R.id.btn_next)
-    public void buttonClicked()
-    {
-        mJobClaimRequest = new JobClaimRequest();
-        mBookingIdsToClaim = new ArrayList<>();
-        for (BookingsWrapperViewModel model : mAdapter.getBookingsWrapperViewModels())
-        {
-            //model could be null, if it's just a header
-            if (model != null)
-            {
-                for (BookingViewModel bookingView : model.getBookingViewModels())
-                {
-                    if (bookingView.isSelected())
-                    {
-                        mJobClaimRequest.mJobs.add(new JobClaim(
-                                bookingView.getBooking().getId(),
-                                bookingView.getBooking().getType().name().toLowerCase())
-                        );
-                        mBookingIdsToClaim.add(bookingView.getBooking().getId());
-                    }
-                }
-            }
-        }
-
-        if (!mJobClaimRequest.mJobs.isEmpty())
-        {
-            //show confirmation dialog to confirm the selected jobs.
-            mOnboardJobClaimConfirmDialog = new OnboardJobClaimConfirmDialog();
-            mOnboardJobClaimConfirmDialog.show(
-                    getSupportFragmentManager(),
-                    OnboardJobClaimConfirmDialog.class.getSimpleName()
-            );
-        }
-        else
-        {
-            //no jobs were selected, send the user to claim job screen.
-            skipJobSelection();
-        }
+        mSingleActionButton.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -428,14 +338,12 @@ public class GettingStartedActivity extends AppCompatActivity
     private void goToAvailableJobs(Bundle bundle)
     {
         mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS, bundle));
-        finish();
     }
 
 
     private void goToScheduledJobs(Bundle bundle)
     {
         mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, bundle));
-        finish();
     }
 
     private Bundle getBundle(String message, @DrawableRes int imageRes)
@@ -451,7 +359,7 @@ public class GettingStartedActivity extends AppCompatActivity
     public void doRequestBookingsAgain()
     {
         mFetchErrorView.setVisibility(View.GONE);
-        mLoadingOverlayView.setVisibility(View.VISIBLE);
+        showLoadingOverlay();
         loadJobs();
     }
 
@@ -465,7 +373,7 @@ public class GettingStartedActivity extends AppCompatActivity
     @Subscribe
     public void onReceiveClaimJobsSuccess(HandyEvent.ReceiveClaimJobsSuccess event)
     {
-        mLoadingOverlayView.setVisibility(View.GONE);
+        hideLoadingOverlay();
         mFetchErrorView.setVisibility(View.GONE);
 
         mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSuccess(mBookingIdsToClaim)));
@@ -521,7 +429,7 @@ public class GettingStartedActivity extends AppCompatActivity
     {
         mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchError(mBookingIdsToClaim, error.error.getMessage())));
 
-        mLoadingOverlayView.setVisibility(View.GONE);
+        hideLoadingOverlay();
         mFetchErrorView.setVisibility(View.VISIBLE);
         if (error.error.getType() == DataManager.DataManagerError.Type.NETWORK)
         {
@@ -531,12 +439,6 @@ public class GettingStartedActivity extends AppCompatActivity
         {
             mErrorText.setText(getString(R.string.onboard_job_claim_error));
         }
-    }
-
-    @Override
-    protected void attachBaseContext(Context newBase)
-    {
-        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override
@@ -557,8 +459,81 @@ public class GettingStartedActivity extends AppCompatActivity
             mOnboardJobClaimConfirmDialog.dismiss();
         }
 
-        mLoadingOverlayView.setVisibility(View.VISIBLE);
+        showLoadingOverlay();
         mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSubmitted(mBookingIdsToClaim)));
         mBus.post(new HandyEvent.RequestClaimJobs(mJobClaimRequest));
+    }
+
+    @Override
+    protected int getLayoutResId()
+    {
+        return R.layout.view_schedule_builder;
+    }
+
+    @Override
+    protected String getTitle()
+    {
+        return getString(R.string.onboard_getting_started);
+    }
+
+    @Nullable
+    @Override
+    protected String getHeaderText()
+    {
+        return null;
+    }
+
+    @Nullable
+    @Override
+    protected String getSubHeaderText()
+    {
+        return null;
+    }
+
+    @Override
+    protected String getPrimaryButtonText()
+    {
+        // primary button will be activated later, see updateButton() method
+        return null;
+    }
+
+    @Override
+    protected void onPrimaryButtonClicked()
+    {
+        mJobClaimRequest = new JobClaimRequest();
+        mBookingIdsToClaim = new ArrayList<>();
+        for (BookingsWrapperViewModel model : mAdapter.getBookingsWrapperViewModels())
+        {
+            //model could be null, if it's just a header
+            if (model != null)
+            {
+                for (BookingViewModel bookingView : model.getBookingViewModels())
+                {
+                    if (bookingView.isSelected())
+                    {
+                        mJobClaimRequest.mJobs.add(new JobClaim(
+                                bookingView.getBooking().getId(),
+                                bookingView.getBooking().getType().name().toLowerCase())
+                        );
+                        mBookingIdsToClaim.add(bookingView.getBooking().getId());
+                    }
+                }
+            }
+        }
+
+        if (!mJobClaimRequest.mJobs.isEmpty())
+        {
+            //show confirmation dialog to confirm the selected jobs.
+            mOnboardJobClaimConfirmDialog = new OnboardJobClaimConfirmDialog();
+            mOnboardJobClaimConfirmDialog.show(
+                    getFragmentManager(),
+                    OnboardJobClaimConfirmDialog.class.getSimpleName()
+            );
+        }
+        else
+        {
+            //no jobs were selected, send the user to claim job screen.
+            skipJobSelection();
+        }
     }
 }

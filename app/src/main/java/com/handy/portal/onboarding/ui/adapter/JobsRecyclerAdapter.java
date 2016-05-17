@@ -37,14 +37,14 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
         mBookingsWrapperViewModels.add(null);
 
         //We assume there is at least one job. We filter out the wrappers without a job
-        for (BookingsWrapper booking : bookings)
+        for (BookingsWrapper bookingsWrapper : bookings)
         {
-            if (booking.getBookings() == null || booking.getBookings().isEmpty())
+            if (bookingsWrapper.getBookings() == null || bookingsWrapper.getBookings().isEmpty())
             {
                 continue;
             }
 
-            mBookingsWrapperViewModels.add(new BookingsWrapperViewModel(booking, defaultSubtitle));
+            mBookingsWrapperViewModels.add(new BookingsWrapperViewModel(bookingsWrapper, defaultSubtitle));
         }
 
         mOnJobChangeListener = mListener;
