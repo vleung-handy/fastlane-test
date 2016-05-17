@@ -8,52 +8,67 @@
     >
 
     <TextView
-        android:id="@+id/transaction_title_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/black"
-        android:textSize="@dimen/default_text_size"
-        tools:text="Base earnings"
-        />
-
-    <TextView
         android:id="@+id/transaction_amount_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
         android:textColor="@color/black"
         android:textSize="@dimen/default_text_size"
         tools:text="$37.50"
         />
 
     <LinearLayout
-        android:id="@+id/transaction_batches_layout"
-        android:layout_width="match_parent"
+        android:id="@+id/transaction_description"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/transaction_title_text"
-        android:layout_marginTop="@dimen/lineSpacing_x2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_toLeftOf="@id/transaction_amount_text"
+        android:layout_toStartOf="@id/transaction_amount_text"
         android:orientation="vertical"
         >
 
         <TextView
-            android:id="@+id/transaction_outstanding_text"
+            android:id="@+id/transaction_title_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/outstanding"
-            android:textColor="@color/tertiary_gray"
-            android:visibility="gone"
-            tools:visibility="visible"
+            android:textColor="@color/black"
+            android:textSize="@dimen/default_text_size"
+            tools:text="Base earnings"
             />
+
+        <LinearLayout
+            android:id="@+id/transaction_batches_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/lineSpacing_x2"
+            android:orientation="vertical"
+            >
+
+            <TextView
+                android:id="@+id/transaction_outstanding_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/outstanding"
+                android:textColor="@color/tertiary_gray"
+                android:visibility="gone"
+                tools:visibility="visible"
+                />
+        </LinearLayout>
     </LinearLayout>
 
     <TextView
         android:id="@+id/transaction_policy_description_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/transaction_batches_layout"
+        android:layout_below="@id/transaction_description"
         android:layout_marginTop="@dimen/default_margin_small"
         android:drawableLeft="@drawable/ic_question_gray"
         android:drawablePadding="@dimen/default_padding"
+        android:drawableStart="@drawable/ic_question_gray"
         android:lineSpacingExtra="@dimen/lineSpacing"
         android:textSize="@dimen/small_text_size"
         android:visibility="gone"
