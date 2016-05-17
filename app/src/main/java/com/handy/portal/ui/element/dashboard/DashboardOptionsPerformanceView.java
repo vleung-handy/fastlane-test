@@ -134,6 +134,8 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
         mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.TierSelected()));
+
+        // TODO: switch to new tiers for specific regions
         mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_TIERS, arguments, true));
     }
 
