@@ -1,6 +1,5 @@
 package com.handy.portal.bookings.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -39,7 +38,6 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.ProviderProfile;
-import com.handy.portal.onboarding.ui.activity.GettingStartedActivity;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FragmentUtils;
@@ -143,7 +141,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         if (item.getItemId() == R.id.action_initial_jobs)
         {
-            startActivity(new Intent(getContext(), GettingStartedActivity.class));
+            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULE_BUILDER, true));
             return true;
         }
 
@@ -259,7 +257,9 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
         if (mProviderProfile != null
                 && mProviderProfile.getPerformanceInfo() != null
-                && mProviderProfile.getPerformanceInfo().getTotalJobsCount() <= 0)
+                && mProviderProfile.getPerformanceInfo().getTotalJobsCount() <= 0
+                && getConfigurationResponse() != null
+                && getConfigurationResponse().shouldShowNativeOnboarding())
         {
             mMenuSchedule.setVisible(true);
         }

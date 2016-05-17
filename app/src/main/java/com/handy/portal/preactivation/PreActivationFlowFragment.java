@@ -21,19 +21,19 @@ import butterknife.OnClick;
 public abstract class PreActivationFlowFragment extends ActionBarFragment
 {
     @Bind(R.id.loading_overlay)
-    View mLoadingOverlay;
+    protected View mLoadingOverlay;
     @Bind(R.id.action_button_group)
-    ViewGroup mActionButtonGroup;
+    protected ViewGroup mActionButtonGroup;
     @Bind(R.id.single_action_button)
-    Button mSingleActionButton;
+    protected Button mSingleActionButton;
     @Bind(R.id.group_primary_button)
-    Button mGroupPrimaryButton;
+    protected Button mGroupPrimaryButton;
     @Bind(R.id.group_secondary_button)
-    Button mGroupSecondaryButton;
+    protected Button mGroupSecondaryButton;
     @Bind(R.id.header)
-    TextView mHeader;
+    protected TextView mHeader;
     @Bind(R.id.sub_header)
-    TextView mSubHeader;
+    protected TextView mSubHeader;
 
     @OnClick({R.id.group_primary_button, R.id.single_action_button})
     void triggerPrimaryButton()
@@ -156,7 +156,7 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
             mGroupPrimaryButton.setText(getPrimaryButtonText());
             mGroupSecondaryButton.setText(getSecondaryButtonText());
         }
-        else
+        else if (getPrimaryButtonText() != null)
         {
             mSingleActionButton.setVisibility(View.VISIBLE);
             mActionButtonGroup.setVisibility(View.GONE);

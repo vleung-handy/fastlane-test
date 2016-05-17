@@ -302,11 +302,6 @@
             android:theme="@style/AppTheme.Translucent"
             android:screenOrientation="portrait"
             />
-        <activity
-            android:name=".onboarding.ui.activity.GettingStartedActivity"
-            android:screenOrientation="portrait"
-            >
-        </activity>
     </application>
 
 </manifest>
