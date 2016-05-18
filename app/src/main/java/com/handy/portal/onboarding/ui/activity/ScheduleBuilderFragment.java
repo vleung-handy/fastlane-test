@@ -4,7 +4,6 @@ import android.content.DialogInterface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -19,14 +18,13 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
 import com.handy.portal.onboarding.model.BookingViewModel;
 import com.handy.portal.onboarding.model.BookingsWrapperViewModel;
 import com.handy.portal.onboarding.model.JobClaim;
@@ -35,6 +33,7 @@ import com.handy.portal.onboarding.ui.adapter.JobsRecyclerAdapter;
 import com.handy.portal.onboarding.ui.fragment.OnboardLoadingDialog;
 import com.handy.portal.onboarding.ui.view.OnboardJobGroupView;
 import com.handy.portal.preactivation.PreActivationFlowFragment;
+import com.handy.portal.preactivation.PurchaseSuppliesFragment;
 import com.handy.portal.ui.fragment.dialog.OnboardJobClaimConfirmDialog;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -95,12 +94,24 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     private ArrayList<String> mBookingIdsToClaim;
 
     private JobClaimRequest mJobClaimRequest;
+    private OnboardingSuppliesInfo mOnboardingSuppliesInfo;
 
+    public static ScheduleBuilderFragment newInstance(
+            final OnboardingSuppliesInfo onboardingSuppliesInfo)
+    {
+        final ScheduleBuilderFragment fragment = new ScheduleBuilderFragment();
+        final Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.ONBOARDING_SUPPLIES, onboardingSuppliesInfo);
+        fragment.setArguments(arguments);
+        return fragment;
+    }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
+    public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        mOnboardingSuppliesInfo = (OnboardingSuppliesInfo) getArguments()
+                .getSerializable(BundleKeys.ONBOARDING_SUPPLIES);
         mProviderId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
     }
 
@@ -239,14 +250,13 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
 
             if (!hasJobs(mJobs))
             {
-                //there are no jobs, so..., go to the available jobs fragment
                 if (isLoadingDialogVisible())
                 {
                     mLoadingDialog.dismiss();
                     mSingleActionButton.setVisibility(View.GONE);
                 }
                 mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NoJobsLoaded()));
-                goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
+                terminate();
             }
             else
             {
@@ -332,27 +342,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     private void skipJobSelection()
     {
         mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.Skipped()));
-        goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
-    }
-
-    private void goToAvailableJobs(Bundle bundle)
-    {
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS, bundle));
-    }
-
-
-    private void goToScheduledJobs(Bundle bundle)
-    {
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, bundle));
-    }
-
-    private Bundle getBundle(String message, @DrawableRes int imageRes)
-    {
-        Bundle bundle = new Bundle();
-        bundle.putString(BundleKeys.MESSAGE, message);
-        bundle.putInt(BundleKeys.MESSAGE_ICON, imageRes);
-
-        return bundle;
+        terminate();
     }
 
     @OnClick(R.id.try_again_button)
@@ -382,7 +372,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         if (event.mJobClaimResponse == null || event.mJobClaimResponse.getJobs() == null)
         {
             //this should never happen, but just in case.
-            goToAvailableJobs(getBundle(message, R.drawable.snack_bar_error));
+            terminate();
         }
 
         List<Booking> bookings = new ArrayList<>();
@@ -407,19 +397,18 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         if (bookings.isEmpty())
         {
             //nothing was claimed.
-            goToAvailableJobs(getBundle(message, R.drawable.snack_bar_error));
+            terminate();
         }
         else
         {
             if (bookings.size() == event.mJobClaimResponse.getJobs().size())
             {
                 //I was able to claim 100% of the jobs I wanted.
-                goToScheduledJobs(getBundle(message, R.drawable.snack_bar_check));
+                next();
             }
             else
             {
-                goToScheduledJobs(getBundle(message, R.drawable.snack_bar_schedule));
-                //I was only able to claim partially what I wanted.
+                next();
             }
         }
     }
@@ -445,7 +434,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     public void onCancel(final DialogInterface dialog)
     {
         mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.Skipped()));
-        goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
+        terminate();
     }
 
     /**
@@ -473,7 +462,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     @Override
     protected String getTitle()
     {
-        return getString(R.string.onboard_getting_started);
+        return getString(R.string.claim_your_first_jobs);
     }
 
     @Nullable
@@ -535,5 +524,10 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
             //no jobs were selected, send the user to claim job screen.
             skipJobSelection();
         }
+    }
+
+    private void next()
+    {
+        next(PurchaseSuppliesFragment.newInstance(mOnboardingSuppliesInfo));
     }
 }
