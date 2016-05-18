@@ -1,6 +1,8 @@
 package com.handy.portal.onboarding.ui.activity;
 
+import android.app.Activity;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,6 +21,7 @@ import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.constant.RequestCode;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
@@ -34,7 +37,8 @@ import com.handy.portal.onboarding.ui.fragment.OnboardLoadingDialog;
 import com.handy.portal.onboarding.ui.view.OnboardJobGroupView;
 import com.handy.portal.preactivation.PreActivationFlowFragment;
 import com.handy.portal.preactivation.PurchaseSuppliesFragment;
-import com.handy.portal.ui.fragment.dialog.OnboardJobClaimConfirmDialog;
+import com.handy.portal.ui.fragment.dialog.OnboardingJobClaimConfirmDialog;
+import com.handy.portal.util.FragmentUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -51,8 +55,7 @@ import butterknife.OnClick;
 
 public class ScheduleBuilderFragment extends PreActivationFlowFragment
         implements OnboardJobGroupView.OnJobChangeListener,
-        DialogInterface.OnCancelListener,
-        OnboardJobClaimConfirmDialog.ConfirmationDialogListener
+        DialogInterface.OnCancelListener
 {
     private static final String TAG = ScheduleBuilderFragment.class.getName();
 
@@ -76,7 +79,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     PrefsManager mPrefsManager;
 
     private OnboardLoadingDialog mLoadingDialog;
-    private OnboardJobClaimConfirmDialog mOnboardJobClaimConfirmDialog;
 
     private JobsRecyclerAdapter mAdapter;
     private BookingsListWrapper mJobs;
@@ -442,17 +444,23 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         terminate();
     }
 
-    /**
-     * This happens if the user confirms the job claims via the confirmation dialog
-     */
-    @Override
-    public void confirmJobClaims()
-    {
-        if (mOnboardJobClaimConfirmDialog != null)
-        {
-            mOnboardJobClaimConfirmDialog.dismiss();
-        }
 
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
+    {
+        if (resultCode == Activity.RESULT_OK)
+        {
+            switch (requestCode)
+            {
+                case RequestCode.CONFIRM_REQUEST:
+                    confirmJobClaims();
+                    break;
+            }
+        }
+    }
+
+    private void confirmJobClaims()
+    {
         showLoadingOverlay();
         mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSubmitted(mBookingIdsToClaim)));
         mBus.post(new HandyEvent.RequestClaimJobs(mJobClaimRequest));
@@ -518,10 +526,13 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         if (!mJobClaimRequest.mJobs.isEmpty())
         {
             //show confirmation dialog to confirm the selected jobs.
-            mOnboardJobClaimConfirmDialog = new OnboardJobClaimConfirmDialog();
-            mOnboardJobClaimConfirmDialog.show(
-                    getFragmentManager(),
-                    OnboardJobClaimConfirmDialog.class.getSimpleName()
+            final OnboardingJobClaimConfirmDialog fragment =
+                    OnboardingJobClaimConfirmDialog.newInstance();
+            fragment.setTargetFragment(this, RequestCode.CONFIRM_REQUEST);
+            FragmentUtils.safeLaunchDialogFragment(
+                    fragment,
+                    getActivity(),
+                    null
             );
         }
         else

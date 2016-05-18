@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
@@ -10,12 +9,13 @@
     android:padding="@dimen/default_padding"
     >
 
-
     <TextView
-        style="@style/TextView.Bold"
         android:id="@+id/text_title"
+        style="@style/TextView.Bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin_half"
+        android:layout_marginTop="@dimen/default_margin_half"
         android:gravity="center"
         android:text="@string/onboard_claim_job_confirmation"
         android:textColor="@color/black"
@@ -27,11 +27,9 @@
         android:id="@+id/booking_info_claim_button"
         style="@style/Button.Green.Round"
         android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/default_margin"
         android:text="@string/onboard_confirm_claim"
         android:textColor="@color/white"
-        android:layout_marginTop="@dimen/default_margin"
         />
 
 </LinearLayout>
-
-
