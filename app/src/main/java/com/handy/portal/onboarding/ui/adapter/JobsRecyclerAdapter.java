@@ -1,12 +1,9 @@
 package com.handy.portal.onboarding.ui.adapter;
 
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.handy.portal.R;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.onboarding.model.BookingsWrapperViewModel;
 import com.handy.portal.onboarding.ui.view.OnboardJobGroupView;
@@ -18,12 +15,7 @@ import java.util.List;
  */
 public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapter.RecyclerViewHolder>
 {
-    private static final int TYPE_HEADER = 0;
-    private static final int TYPE_ITEM = 1;
-
-    //this is the view model
     private List<BookingsWrapperViewModel> mBookingsWrapperViewModels;
-    private String mTitle;
     private OnboardJobGroupView.OnJobChangeListener mOnJobChangeListener;
 
     public JobsRecyclerAdapter(List<BookingsWrapper> bookings, String title,
@@ -32,9 +24,6 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
     {
 
         mBookingsWrapperViewModels = new ArrayList<>();
-
-        //adding place holders for the header position
-        mBookingsWrapperViewModels.add(null);
 
         //We assume there is at least one job. We filter out the wrappers without a job
         for (BookingsWrapper bookingsWrapper : bookings)
@@ -48,28 +37,13 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
         }
 
         mOnJobChangeListener = mListener;
-        mTitle = title;
     }
 
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        View layoutView = null;
-        switch (viewType)
-        {
-            case TYPE_HEADER:
-                layoutView = LayoutInflater.from(parent.getContext()).inflate(
-                        R.layout.getting_started_header, parent, false);
-
-                ((TextView) layoutView).setText(mTitle);
-
-                break;
-            case TYPE_ITEM:
-                layoutView = new OnboardJobGroupView(parent.getContext());
-                ((OnboardJobGroupView) layoutView).setOnJobChangeListener(mOnJobChangeListener);
-                break;
-        }
-
+        OnboardJobGroupView layoutView = new OnboardJobGroupView(parent.getContext());
+        layoutView.setOnJobChangeListener(mOnJobChangeListener);
         return new RecyclerViewHolder(layoutView);
     }
 
@@ -81,23 +55,13 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position)
     {
-        if (holder.getItemViewType() == TYPE_ITEM)
-        {
-            holder.mJobView.bind(mBookingsWrapperViewModels.get(position));
-        }
+        holder.mJobView.bind(mBookingsWrapperViewModels.get(position));
     }
 
     @Override
     public int getItemViewType(int position)
     {
-        if (position == 0)
-        {
-            return TYPE_HEADER;
-        }
-        else
-        {
-            return TYPE_ITEM;
-        }
+        return 0;
     }
 
     @Override
