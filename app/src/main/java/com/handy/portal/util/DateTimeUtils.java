@@ -47,9 +47,12 @@ public final class DateTimeUtils
     public final static SimpleDateFormat LOCAL_TIME_12_HOURS =
             new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
-    public final static SimpleDateFormat DAY_OF_WEEK_FORMATTER = new SimpleDateFormat("EEEE");
-    public final static SimpleDateFormat DAY_OF_YEAR_FORMATTER = new SimpleDateFormat("D");
-    public final static SimpleDateFormat YEAR_MONTH_DAY_FORMATTER = new SimpleDateFormat("yyyy-MM-dd");
+    public final static SimpleDateFormat DAY_OF_WEEK_FORMATTER =
+            new SimpleDateFormat("EEEE", Locale.getDefault());
+    public final static SimpleDateFormat DAY_OF_YEAR_FORMATTER =
+            new SimpleDateFormat("D", Locale.getDefault());
+    public final static SimpleDateFormat YEAR_MONTH_DAY_FORMATTER =
+            new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     public final static int HOURS_IN_DAY = 24;
     public final static int HOURS_IN_SIX_DAYS = HOURS_IN_DAY * 6;
@@ -220,7 +223,7 @@ public final class DateTimeUtils
             int jobDate = getDayOfYear(d);
             int today = getDayOfYear(new Date());
 
-            String prefix = "";
+            String prefix;
             if (jobDate - today == 0)
             {
                 prefix = "TODAY, ";

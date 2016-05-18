@@ -70,8 +70,7 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
                 break;
         }
 
-        RecyclerViewHolder rcv = new RecyclerViewHolder(layoutView);
-        return rcv;
+        return new RecyclerViewHolder(layoutView);
     }
 
     public List<BookingsWrapperViewModel> getBookingsWrapperViewModels()

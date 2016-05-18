@@ -642,7 +642,7 @@ public class BookingFragment extends TimerActionBarFragment
         {
             case CLAIM:
             {
-                mActionButton.setText(R.string.claim);
+                mActionButton.setText(R.string.claim_job);
                 mActionButton.setVisibility(action.isEnabled() ? View.VISIBLE : View.GONE);
                 mActionButton.setOnClickListener(new View.OnClickListener()
                 {

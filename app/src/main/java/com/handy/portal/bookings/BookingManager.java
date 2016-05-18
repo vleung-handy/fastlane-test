@@ -272,7 +272,6 @@ public class BookingManager
                                 Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
                                 Log.d(getClass().getName(), "received scheduled bookings: " + day.toString());
                                 Crashlytics.log("Received scheduled bookings for " + day);
-                                List<Booking> bookings = bookingsWrapper.getBookings();
                                 scheduledBookingsCache.put(day, bookingsWrapper);
                                 mBus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(bookingsWrapper, day));
                             }

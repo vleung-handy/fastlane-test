@@ -25,6 +25,8 @@
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="error">Error</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Navigation drawer opened</string>
@@ -54,6 +56,7 @@
     <string name="claim">Claim</string>
     <string name="claimed">Claimed</string>
     <string name="claim_job">Claim Job</string>
+    <string name="confirm_claim">Confirm Claim</string>
     <string name="claim_series">Claim Series</string>
     <string name="on_my_way">On My Way</string>
 
@@ -72,32 +75,16 @@
     <string name="log_in">Log In</string>
     <string name="email">Email</string>
     <string name="name">Name</string>
-    <string name="full_name">Full Name</string>
     <string name="phone">Phone</string>
-    <string name="password">Password</string>
     <string name="loading_more_payments">Loading more payments…</string>
     <string name="are_you_sure">Are you sure?</string>
     <string name="job_num">Job #</string>
     <string name="address">Address</string>
-    <string name="zip_code">ZIP Code</string>
     <string name="time">Time</string>
-    <string name="street_addr">Street Address</string>
-    <string name="apt_num">Apt #</string>
-    <string name="credit_card_num">Credit Card Number</string>
-    <string name="mm_yy">MM/YY</string>
-    <string name="cvc">CVC</string>
     <string name="confirm">Confirm</string>
     <string name="save">Save</string>
     <string name="description">Description</string>
-    <string name="promo_code_opt">Promo Code (optional)</string>
-    <string name="promo_code">Promo Code</string>
-    <string name="i_still_need_help">I Still Need Help</string>
-    <string name="contact_us">Contact Us</string>
-    <string name="send_message">Send Message</string>
-    <string name="contact_form_hint">Help us serve you faster by including as many details as you have. Please note that Handy performs our support via email, and aims to respond to urgent issues as soon as possible.</string>
-    <string name="please_login">Please log in</string>
     <string name="back">Back</string>
-    <string name="contact_received">Message sent! \nWe\u2019ll follow up shortly.</string>
 
     <!-- TODO: Update Screen Copy -->
     <string name="update_header">Time for an update!</string>
@@ -115,11 +102,6 @@
     <string name="error_update_failed_unwritable">Update failed. Your external storage is not writable. Please make sure USB storage mode is off.</string>
     <string name="app_update_later_button">Update Later</string>
 
-    <plurals name="hour">
-        <item quantity="one">hour</item>
-        <item quantity="other">hours</item>
-    </plurals>
-
     <!-- TODO: Remove or change this placeholder text -->
     <string name="tab_claim">Claim</string>
     <string name="tab_schedule">Schedule</string>
@@ -131,10 +113,8 @@
     <string name="scheduled_jobs">Scheduled Jobs</string>
     <string name="scheduled_job">Scheduled Job</string>
     <string name="block_jobs_schedule">Block Jobs Schedule</string>
-    <string name="youre_requested">YOU\u2019RE REQUESTED!</string>
     <string name="time_window_formatted">\u22C5 %1$s\u2013%2$s hour job</string>
     <string name="payment_value">%s</string>
-    <string name="payment_help">Payment Help</string>
     <string name="payments">Payments</string>
     <string name="payments_details">Payment Details</string>
     <string name="bonus_payment_value">+ %s REWARD</string>
@@ -222,10 +202,6 @@
     <string name="remove_customer_no_show_question">Remove customer no show report?</string>
 
     <string name="unable_to_fetch_user">Unable to fetch your information. Please try again.</string>
-    <string name="help_center_subject">Subject: </string>
-    <string name="your_email">Your Email</string>
-
-    <string name="ensure_fields_valid">Please ensure all fields are filled out correctly</string>
 
     <string name="find_jobs_close_to_your_claimed_job">Find jobs close to your claimed job</string>
     <string name="find_matching_jobs">Find Matching Jobs</string>
@@ -348,7 +324,6 @@
     <string name="unassigned">Unassigned:</string>
     <string name="you_cancelled">You cancelled the job</string>
     <string name="transaction_summary">Transaction Summary</string>
-    <string name="get_help">Get Help</string>
     <string name="net_earnings">Net earnings</string>
     <string name="payment_batch_formatted">Payment: %1$s \u2013 %2$s</string>
     <string name="policy_description_formatted"><![CDATA[%1$s <a href="%2$s">View Policy</a>]]></string>
@@ -424,7 +399,8 @@
     <string name="duster">Duster</string>
     <string name="cleaning_solutions">Cleaning solutions for all surfaces</string>
     <string name="apron">Apron</string>
-    <string name="log_out">Log Out</string>
+    <string name="log_out">Log out</string>
+    <string name="are_you_sure_log_out">Are you sure you want to log out?</string>
 
     <!-- Referrals -->
     <string name="chevron_description">Chevron</string>
@@ -459,8 +435,6 @@
 
     <string name="job_no_longer_available">That job is no longer available.</string>
     <string name="environment">Environment</string>
-    <string name="navigation">Navigation</string>
-    <string name="service">Service</string>
     <string name="date">Date</string>
     <string name="progress">Progress</string>
 
@@ -495,7 +469,6 @@
     <string name="onboard_claim_and_earn_formatted">%s Claim</string>
     <string name="onboard_no_thanks">No thanks, I\'ll find my own jobs</string>
     <string name="onboard_loading">Choosing jobs\nin your city...</string>
-    <string name="onboard_no_longer_available">Looks like these job(s) are no longer available. Try these jobs.</string>
     <string name="onboard_job_claim_error">"There was an error claiming job(s), please try again"</string>
     <string name="onboard_job_load_error">"There was an error finding jobs, please try again"</string>
     <string name="onboard_claim_no_job">"Want to see those preselected jobs again? Tap the schedule help button in the top right."</string>

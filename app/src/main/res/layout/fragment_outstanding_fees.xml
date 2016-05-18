@@ -79,7 +79,7 @@
                 android:layout_height="@dimen/outstanding_week_question_mark_width_height"
                 android:layout_marginBottom="@dimen/default_margin_medium"
                 android:layout_marginTop="@dimen/default_margin_xlarge"
-                android:src="@drawable/ic_question_mark"
+                android:src="@drawable/ic_question_blue"
                 />
 
             <TextView

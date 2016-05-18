@@ -6,7 +6,6 @@ import android.test.suitebuilder.annotation.LargeTest;
 
 import com.handy.portal.ui.activity.SplashActivity;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -24,11 +23,6 @@ public class SampleTest
     @Rule
     public ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<>(
             SplashActivity.class);
-
-    @Before
-    public void init() {
-    }
-
 
     /**
      * TODO: super simple test for making sure Espresso works with AWS only

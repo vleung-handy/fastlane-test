@@ -25,7 +25,8 @@ import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.ui.fragment.dialog.ClaimTargetDialogFragment;
-import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingCancelDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingCancelCancellationPolicyDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingCancelKeepRateDialogFragment;
 import com.handy.portal.bookings.util.SupportActionUtils;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
@@ -672,14 +673,24 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
         if (removeAction != null)
         {
-            final Booking.Action.Extras.KeepRate keepRate = removeAction.getKeepRate();
-            if (keepRate != null)
+            if (removeAction.getExtras() != null
+                    && removeAction.getExtras().getCancellationPolicy() != null)
             {
-                if (getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingCancelDialogFragment.FRAGMENT_TAG) == null)
+                if (getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingCancelCancellationPolicyDialogFragment.FRAGMENT_TAG) == null)
                 {
-                    final DialogFragment fragment = ConfirmBookingCancelDialogFragment.newInstance(mBooking);
+                    final DialogFragment fragment = ConfirmBookingCancelCancellationPolicyDialogFragment.newInstance(mBooking);
                     fragment.setTargetFragment(BookingDetailsWrapperFragment.this, RequestCode.REMOVE_BOOKING);
-                    FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), ConfirmBookingCancelDialogFragment.FRAGMENT_TAG);
+                    FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), ConfirmBookingCancelCancellationPolicyDialogFragment.FRAGMENT_TAG);
+                }
+                return true;
+            }
+            else if (removeAction.getKeepRate() != null)
+            {
+                if (getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingCancelKeepRateDialogFragment.FRAGMENT_TAG) == null)
+                {
+                    final DialogFragment fragment = ConfirmBookingCancelKeepRateDialogFragment.newInstance(mBooking);
+                    fragment.setTargetFragment(BookingDetailsWrapperFragment.this, RequestCode.REMOVE_BOOKING);
+                    FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), ConfirmBookingCancelKeepRateDialogFragment.FRAGMENT_TAG);
                 }
                 return true;
             }

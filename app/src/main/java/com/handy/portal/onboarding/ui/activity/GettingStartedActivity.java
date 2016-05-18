@@ -46,6 +46,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -131,9 +132,12 @@ public class GettingStartedActivity extends AppCompatActivity
         mGreenDrawable = ContextCompat.getDrawable(this, R.drawable.button_green);
         mGrayDrawable = ContextCompat.getDrawable(this, R.drawable.button_gray);
         setSupportActionBar(mToolbar);
-        getSupportActionBar().setTitle(getString(R.string.onboard_getting_started));
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_x_white);
+        if (getSupportActionBar() != null)
+        {
+            getSupportActionBar().setTitle(getString(R.string.onboard_getting_started));
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_x_white);
+        }
         mFetchErrorView.setBackgroundColor(ContextCompat.getColor(this, R.color.handy_bg));
     }
 
@@ -174,14 +178,7 @@ public class GettingStartedActivity extends AppCompatActivity
      */
     private boolean hasJobs(BookingsListWrapper wrapper)
     {
-        if (wrapper == null)
-        {
-            return false;
-        }
-        else
-        {
-            return wrapper.hasJobs();
-        }
+        return wrapper != null && wrapper.hasJobs();
     }
 
     @Override
@@ -362,7 +359,7 @@ public class GettingStartedActivity extends AppCompatActivity
         if (sum > 0)
         {
             String symbol = mAdapter.getBookingsWrapperViewModels().get(1).getBookingViewModels().get(0).getCurrencySymbol();
-            String formattedPrice = String.format("%.0f", sum);
+            String formattedPrice = String.format(Locale.getDefault(), "%.0f", sum);
             if (symbol != null)
             {
                 formattedPrice = symbol + formattedPrice;
@@ -422,7 +419,8 @@ public class GettingStartedActivity extends AppCompatActivity
      * Post an analytics event that the user decided to not select a job. Navigate to the
      * Available Jobs section
      */
-    private void skipJobSelection() {
+    private void skipJobSelection()
+    {
         mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.Skipped()));
         goToAvailableJobs(getBundle(getString(R.string.onboard_claim_no_job), R.drawable.snack_bar_schedule));
     }
@@ -554,7 +552,8 @@ public class GettingStartedActivity extends AppCompatActivity
     @Override
     public void confirmJobClaims()
     {
-        if (mOnboardJobClaimConfirmDialog != null) {
+        if (mOnboardJobClaimConfirmDialog != null)
+        {
             mOnboardJobClaimConfirmDialog.dismiss();
         }
 

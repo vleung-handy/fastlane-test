@@ -149,9 +149,7 @@ public class OnboardWelcomeActivity extends AppCompatActivity
     {
         mLoadingOverlay.setVisibility(View.GONE);
         mProfileLoaded = true;
-
-        String name;
-
+        
         if (event.providerProfile != null
                 && event.providerProfile.getProviderPersonalInfo() != null
                 && !TextUtils.isEmpty(event.providerProfile.getProviderPersonalInfo().getFirstName()))

@@ -2,6 +2,7 @@ package com.handy.portal.preactivation;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
@@ -132,7 +133,7 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
         final String orderTotalFormatted = getString(R.string.order_total_formatted,
                 mOnboardingSuppliesInfo.getSuppliesCost());
         mOrderSummary.setContent(getString(R.string.supply_starter_kit), orderTotalFormatted)
-                .setImage(getResources().getDrawable(R.drawable.img_supplies));
+                .setImage(ContextCompat.getDrawable(getContext(), R.drawable.img_supplies));
 
         bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
                 OnboardingSuppliesLog.Types.PAYMENT_SCREEN_SHOWN)));
