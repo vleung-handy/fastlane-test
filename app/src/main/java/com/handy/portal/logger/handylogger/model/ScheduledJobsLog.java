@@ -54,6 +54,7 @@ public class ScheduledJobsLog extends EventLog
         public static final String REASON_FLOW = "reason_flow";
         public static final String POPUP = "popup";
         public static final String KEEP_RATE = "keep_rate";
+        public static final String CANCELLATION_POLICY = "cancellation_policy";
 
         @SerializedName("removal_type")
         private String mRemovalType;

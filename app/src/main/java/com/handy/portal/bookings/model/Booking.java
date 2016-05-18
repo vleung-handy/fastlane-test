@@ -771,6 +771,8 @@ public class Booking implements Comparable<Booking>, Serializable
                     private boolean mActive;
                     @SerializedName("fee")
                     private PaymentInfo mPaymentInfo;
+                    @SerializedName("waived_fee")
+                    private PaymentInfo mWaivedPaymentInfo;
 
                     public String getDisplayText()
                     {
@@ -785,6 +787,11 @@ public class Booking implements Comparable<Booking>, Serializable
                     public PaymentInfo getPaymentInfo()
                     {
                         return mPaymentInfo;
+                    }
+
+                    public PaymentInfo getWaivedPaymentInfo()
+                    {
+                        return mWaivedPaymentInfo;
                     }
                 }
             }

@@ -130,7 +130,7 @@ public class BookingTransactionsFragment extends ActionBarFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        setActionBar(getString(R.string.job_details), true);
+        setActionBarTitle(R.string.job_details);
         setDisplay();
     }
 
@@ -158,10 +158,10 @@ public class BookingTransactionsFragment extends ActionBarFragment
             mCheckOutLabelText.setTextColor(ContextCompat.getColor(getContext(), R.color.text_light_gray));
         }
 
-        for (int i = 0; i < mTransactions.length; ++i)
+        for (Transaction t : mTransactions)
         {
             TransactionView transactionView = new TransactionView(getContext());
-            transactionView.setDisplay(mTransactions[i], mLaunchWebViewCallback);
+            transactionView.setDisplay(t, mLaunchWebViewCallback);
             mTransactionsLayout.addView(transactionView);
         }
         mNetEarningAmountText.setText(CurrencyUtils.formatPriceWithCents(
