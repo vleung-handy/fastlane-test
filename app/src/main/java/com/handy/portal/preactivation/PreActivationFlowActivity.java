@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
+import com.handy.portal.onboarding.ui.activity.ScheduleBuilderFragment;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.MainActivity;
 
@@ -63,6 +64,6 @@ public class PreActivationFlowActivity extends BaseActivity
 
     private void goToFirstStep()
     {
-        next(PurchaseSuppliesFragment.newInstance(mOnboardingSuppliesInfo), false);
+        next(ScheduleBuilderFragment.newInstance(mOnboardingSuppliesInfo), false);
     }
 }
