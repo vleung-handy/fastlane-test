@@ -469,7 +469,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     @Override
     protected String getHeaderText()
     {
-        return null;
+        return getString(R.string.onboard_getting_started_title);
     }
 
     @Nullable
