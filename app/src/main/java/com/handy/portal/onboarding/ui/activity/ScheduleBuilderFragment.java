@@ -256,6 +256,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
                     mSingleActionButton.setVisibility(View.GONE);
                 }
                 mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NoJobsLoaded()));
+                // FIXME: Do not terminate, do something else
                 terminate();
             }
             else
@@ -342,6 +343,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     private void skipJobSelection()
     {
         mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.Skipped()));
+        // FIXME: Do not terminate, do something else
         terminate();
     }
 
@@ -372,6 +374,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         if (event.mJobClaimResponse == null || event.mJobClaimResponse.getJobs() == null)
         {
             //this should never happen, but just in case.
+            // FIXME: Do not terminate, do something else
             terminate();
         }
 
@@ -397,6 +400,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         if (bookings.isEmpty())
         {
             //nothing was claimed.
+            // FIXME: Do not terminate, do something else
             terminate();
         }
         else
@@ -434,6 +438,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     public void onCancel(final DialogInterface dialog)
     {
         mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.Skipped()));
+        // FIXME: Do not terminate, do something else
         terminate();
     }
 
