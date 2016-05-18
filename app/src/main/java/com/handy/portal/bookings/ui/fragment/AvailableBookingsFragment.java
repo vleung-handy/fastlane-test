@@ -31,13 +31,11 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.helpcenter.constants.HelpCenterUrl;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FragmentUtils;
@@ -72,9 +70,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     @Inject
     BookingModalsManager mBookingModalsManager;
-
-    private MenuItem mMenuSchedule;
-    private ProviderProfile mProviderProfile;
 
     @Override
     protected MainViewTab getTab()
@@ -113,8 +108,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         super.onResume();
         setActionBar(R.string.available_jobs, false);
 
-        bus.post(new ProfileEvent.RequestProviderProfile(false));
-
         if (!MainActivityFragment.clearingBackStack)
         {
             if (shouldShowAvailableBookingsToggle())
@@ -131,21 +124,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_available_bookings, menu);
-        mMenuSchedule = menu.findItem(R.id.action_initial_jobs);
-
-        updateMenuItems();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item)
-    {
-        if (item.getItemId() == R.id.action_initial_jobs)
-        {
-            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULE_BUILDER, true));
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     protected BookingListView getBookingListView()
@@ -245,36 +223,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.DateClicked(dateOfBookings, bookingsForDay.size())));
         super.afterDisplayBookings(bookingsForDay, dateOfBookings);
-    }
-
-    private void updateMenuItems()
-    {
-
-        if (mMenuSchedule == null)
-        {
-            return;
-        }
-
-        if (mProviderProfile != null
-                && mProviderProfile.getPerformanceInfo() != null
-                && mProviderProfile.getPerformanceInfo().getTotalJobsCount() <= 0
-                && getConfigurationResponse() != null
-                && getConfigurationResponse().shouldShowNativeOnboarding())
-        {
-            mMenuSchedule.setVisible(true);
-        }
-        else
-        {
-            mMenuSchedule.setVisible(false);
-        }
-    }
-
-    @Subscribe
-    public void onReceiveProviderProfileSuccess(ProfileEvent.ReceiveProviderProfileSuccess event)
-    {
-        //show the menu option if the pro haven't claimed jobs before.
-        mProviderProfile = event.providerProfile;
-        updateMenuItems();
     }
 
     /**
