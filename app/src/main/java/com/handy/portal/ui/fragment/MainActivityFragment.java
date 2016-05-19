@@ -43,6 +43,7 @@ import com.handy.portal.onboarding.ui.activity.OnboardWelcomeActivity;
 import com.handy.portal.preactivation.PreActivationFlowActivity;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
+import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.handy.portal.ui.layout.TabbedLayout;
 import com.handy.portal.ui.widget.TabButton;
@@ -186,6 +187,17 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onConfigurationResponseRetrieved(HandyEvent.ReceiveConfigurationSuccess event)
     {
+        // this is a hotfix for a spike on missing location data
+        try
+        {
+            ((MainActivity) getActivity()).showNecessaryLocationSettingsAndPermissionsBlockers();
+            ((MainActivity) getActivity()).startLocationServiceIfNecessary();
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e);
+        }
+
         //If the config response came back for the first time may need to navigate away
         //Normally the fragment would take care of itself, but this would launch the fragment if needed
         if (!mConfigAlreadyReceivedThisSession)
