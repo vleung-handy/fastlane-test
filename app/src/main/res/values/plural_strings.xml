@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Performance Dashboard -->
+    <plurals name="complete_jobs_unlock_higher_rate_formatted">
+        <item quantity="one">Complete %1$s more job this week to unlock higher rates in %2$s!</item>
+        <item quantity="other">Complete %1$s more jobs this week to unlock higher rates in %2$s!</item>
+    </plurals>
+</resources>

@@ -20,7 +20,6 @@
         >
 
         <TextView
-            android:id="@+id/tier_title"
             style="@style/TextView.Medium.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -29,14 +28,15 @@
             />
 
         <TextView
-            android:id="@+id/tier_description_hourly_rate"
+            android:id="@+id/tier_hourly_rate"
+            style="@style/CircularBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/video_chevron"
             android:layout_toStartOf="@+id/video_chevron"
             android:textColor="@color/tertiary_gray"
-            android:textSize="@dimen/large_text_size"
+            android:textSize="@dimen/default_text_size"
             tools:text="Tier 1: $15/hour"
             />
 

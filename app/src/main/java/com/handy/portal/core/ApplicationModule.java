@@ -134,6 +134,7 @@ import retrofit.converter.GsonConverter;
         GettingStartedActivity.class,
         OnboardWelcomeActivity.class,
         RequestSuppliesWebViewFragment.class,
+        DashboardNewTiersFragment.class,
 },
         includes = {
                 HelpModule.class,

@@ -18,6 +18,7 @@
     <string name="dash_formatted">%1$s \u2013 %2$s</string>
     <string name="space_formatted">%1$s %2$s</string>
     <string name="exclamation_point">!</string>
+    <string name="parentheses_formatted">(%1$s)</string>
 
     <!-- Generic Single Word -->
     <string name="success">Success</string>
@@ -27,6 +28,7 @@
     <string name="error">Error</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="current_colon">Current:</string>
     <string name="note_colon">Note:</string>
 
     <!-- Navigation Drawer -->
@@ -293,6 +295,17 @@
     <string name="feedback">Feedback</string>
     <string name="percentage">%</string>
     <string name="my_tier">My Tier</string>
+    <string name="tiers">Tiers</string>
+    <string name="weekly_tier">Weekly Tier</string>
+    <string name="how_it_works">How it works</string>
+    <string name="tiers_description">Once you\'ve completed the jobs, your remaining bookings for the week and the claim jobs tab will be updated with the new rate.</string>
+    <string name="tier_job_region_description">Jobs completed each week count for every region.</string>
+    <string name="tiers_reset">Tiers reset every Monday.</string>
+    <string name="tier_hourly_rate_formatted">%1$s: %2$s/hour</string>
+    <string name="jobs_completed">Jobs completed</string>
+    <string name="tier_one">Tier 1</string>
+    <string name="tier_two">Tier 2</string>
+    <string name="tier_three">Tier 3</string>
     <string name="current_28_days">Current\n 28 DAYS</string>
     <string name="payment_tier_info">Your payment tier is determined by the total number of jobs you have completed in the last 28 days, and your average rating over the last 28 days. This means that your job count only includes jobs that were completed in the previous 28 days.</string>
     <string name="tips_for_success">Tips for success</string>
@@ -305,11 +318,6 @@
     <string name="new_weekly_tiers">Weekly Tiers (New)</string>
     <string name="tier_description">As you complete jobs each week, your job pay rate will increase. When you hit a new tier, all of your future jobs, and all available jobs for the current week, will update to reflect the higher rate.</string>
     <string name="tier_reset_note">Tiers reset at 12:01am every Monday</string>
-    <string name="tiers">Tiers</string>
-    <string name="weekly_tier">Weekly Tier</string>
-    <string name="tier_one">Tier 1</string>
-    <string name="tier_two">Tier 2</string>
-    <string name="tier_three">Tier 3</string>
     <string name="current_week">Current week:</string>
     <string name="current_week_description">(Monday \u2013 Sunday)</string>
 

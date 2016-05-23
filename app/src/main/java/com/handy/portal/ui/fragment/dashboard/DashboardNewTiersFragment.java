@@ -2,71 +2,61 @@ package com.handy.portal.ui.fragment.dashboard;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.ContextCompat;
+import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.model.ProviderPersonalInfo;
+import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
+import com.handy.portal.ui.adapter.DashboardTiersPagerAdapter;
+import com.handy.portal.ui.element.dashboard.CirclePageIndicatorView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class DashboardNewTiersFragment extends ActionBarFragment
 {
+    @Inject
+    ProviderManager mProviderManager;
 
-    @Bind(R.id.jobs_text)
-    TextView mJobsText;
-    @Bind(R.id.rate_text)
-    TextView mRateText;
-    @Bind(R.id.tier_one_text)
-    TextView mTierOneText;
-    @Bind(R.id.tier_two_text)
-    TextView mTierTwoText;
-    @Bind(R.id.tier_three_text)
-    TextView mTierThreeText;
-    @Bind(R.id.tier_one_dot)
-    ImageView mTierOneDot;
-    @Bind(R.id.tier_two_dot)
-    ImageView mTierTwoDot;
-    @Bind(R.id.tier_three_dot)
-    ImageView mTierThreeDot;
-    @Bind(R.id.tier_one_jobs_text)
-    TextView mTierOneJobsText;
-    @Bind(R.id.tier_two_jobs_text)
-    TextView mTierTwoJobsText;
-    @Bind(R.id.tier_three_jobs_text)
-    TextView mTierThreeJobsText;
-    @Bind(R.id.tier_one_rate_text)
-    TextView mTierOneRateText;
-    @Bind(R.id.tier_two_rate_text)
-    TextView mTierTwoRateText;
-    @Bind(R.id.tier_three_rate_text)
-    TextView mTierThreeRateText;
+    @Bind(R.id.current_week_completed_jobs_text)
+    TextView mCurrentWeekCompletedJobsText;
+    @Bind(R.id.current_week_text)
+    TextView mCurrentWeekText;
+    @Bind(R.id.complete_jobs_unlock_text)
+    TextView mCompleteJobsUnlockText;
+    @Bind(R.id.region_tiers_view_pager)
+    ViewPager mRegionTiersViewPager;
+    @Bind(R.id.region_tiers_view_pager_indicator_view)
+    CirclePageIndicatorView mRegionTiersIndicatorView;
 
     private ProviderEvaluation mEvaluation;
     private String mRegion;
-    private int mTier;
-    private int mWeeklyJobs;
-    private String mTierRate;
-
-    private static final String BOSTON_OPERATING_REGION = "boston_ma";
-
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         mEvaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.PROVIDER_EVALUATION);
-        mRegion = getArguments().getString(BundleKeys.PROVIDER_OPERATING_REGION);
-        mTier = getArguments().getInt(BundleKeys.PROVIDER_TIER);
-        mWeeklyJobs = getArguments().getInt(BundleKeys.PROVIDER_WEEKLY_JOBS_COUNT);
-        mTierRate = getArguments().getString(BundleKeys.PROVIDER_TIER_HOURLY_RATE);
+
+        ProviderProfile providerProfile = mProviderManager.getCachedProviderProfile();
+        if (providerProfile != null)
+        {
+            ProviderPersonalInfo personalInfo = providerProfile.getProviderPersonalInfo();
+            if (personalInfo != null)
+            {
+                mRegion = personalInfo.getOperatingRegion();
+            }
+        }
     }
 
     @Nullable
@@ -75,7 +65,7 @@ public class DashboardNewTiersFragment extends ActionBarFragment
     {
         super.onCreateView(inflater, container, savedInstanceState);
 
-        View view = inflater.inflate(R.layout.fragment_dashboard_new_tiers, container, false);
+        View view = inflater.inflate(R.layout.fragment_new_dashboard_tiers, container, false);
         ButterKnife.bind(this, view);
 
         return view;
@@ -87,48 +77,36 @@ public class DashboardNewTiersFragment extends ActionBarFragment
         super.onViewCreated(view, savedInstanceState);
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
-        setActionBarTitle(R.string.my_tier);
+        setActionBarTitle(R.string.tiers);
 
-        if (mEvaluation == null) { return; }
+//        if (mEvaluation == null) { return; }
 
-        mJobsText.setText(String.valueOf(mWeeklyJobs));
-        mRateText.setText(mTierRate);
+//        ProviderEvaluation.Rating rolling = mEvaluation.getRolling();
+//        if (rolling == null || mRegion == null) { return; }
 
-        if(mTier == 0){
-            mTierOneDot.setVisibility(View.VISIBLE);
-            mTierOneText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-            mTierOneJobsText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-            mTierOneRateText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-        }
-        else if(mTier == 1){
-            mTierTwoDot.setVisibility(View.VISIBLE);
-            mTierTwoText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-            mTierTwoJobsText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-            mTierTwoRateText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-        }
-        else if(mTier == 2){
-            mTierThreeDot.setVisibility(View.VISIBLE);
-            mTierThreeText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-            mTierThreeJobsText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-            mTierThreeRateText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-        }
+//        mCurrentWeekCompletedJobsText.setText(String.valueOf(rolling.getTotalBookingCount()));
 
-        // TODO: Hardcoded new Tiers
-        if (mRegion.equals(BOSTON_OPERATING_REGION))
-        {
-            mTierOneRateText.setText("$17");
-            mTierTwoRateText.setText("$18");
-            mTierThreeRateText.setText("$19");
-        }
-        else
-        {
-            mTierOneRateText.setText("$16");
-            mTierTwoRateText.setText("$17");
-            mTierThreeRateText.setText("$18");
-        }
+        // TODO: set the current week
+//        mCurrentWeekText.setText(getString(R.string.parentheses_formatted, DateTimeUtils.formatDateRange(
+//                DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER,
+//                rolling.getStartDate(), rolling.getEndDate())));
 
-        mTierOneJobsText.setText("1 \u2013 3");
-        mTierTwoJobsText.setText("4 \u2013 6");
-        mTierThreeJobsText.setText("7+");
+//        int count = rolling.getTotalBookingCount();
+//        int jobsToComplete = 5; //TODO: fix this by getting region specific tier rates
+//        mCompleteJobsUnlockText.setText(getResources().getQuantityString(
+//                R.plurals.complete_jobs_unlock_higher_rate_formatted, count, jobsToComplete - count,
+//                mRegion));
+
+        mRegionTiersViewPager.setAdapter(new DashboardTiersPagerAdapter(getContext(), 1,
+                mProviderManager.getCachedProviderProfile().getProviderPersonalInfo()));
+        mRegionTiersViewPager.setClipToPadding(false);
+        mRegionTiersViewPager.setPageMargin((int) getResources().getDimension(R.dimen.ratings_view_pager_margin));
+
+        mRegionTiersIndicatorView.setViewPager(mRegionTiersViewPager);
+
+        //TODO: Hardcoding
+        mCurrentWeekCompletedJobsText.setText("2");
+        mCurrentWeekText.setText("(Mon, May 9 \u2013 Sun, May 16)");
+        mCompleteJobsUnlockText.setText("Complete 1 more job this week to unlock higher rates in New York!");
     }
 }
