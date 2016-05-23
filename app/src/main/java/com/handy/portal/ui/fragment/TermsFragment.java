@@ -17,6 +17,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.model.TermsDetails;
+import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.library.ui.view.HandyWebView;
 import com.squareup.otto.Subscribe;
@@ -74,9 +75,10 @@ public class TermsFragment extends InjectedFragment
 
     private TermsDetails getActiveTermsDetails()
     {
-        if (termsManager.getNewestTermsDetailsGroup() != null && activeTermsIndex < termsManager.getNewestTermsDetailsGroup().getTermsDetails().length)
+        final TermsDetailsGroup newestTermsDetailsGroup = termsManager.getNewestTermsDetailsGroup();
+        if (newestTermsDetailsGroup != null && activeTermsIndex < newestTermsDetailsGroup.getTermsDetails().size())
         {
-            return termsManager.getNewestTermsDetailsGroup().getTermsDetails()[activeTermsIndex];
+            return newestTermsDetailsGroup.getTermsDetails().get(activeTermsIndex);
         }
         return null;
     }

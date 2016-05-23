@@ -4,9 +4,9 @@ public abstract class FlowStep
 {
     private Flow mFlow;
 
-    abstract boolean shouldExecute();
+    public abstract boolean shouldExecute();
 
-    abstract void execute();
+    public abstract void execute();
 
     void setFlow(final Flow flow)
     {

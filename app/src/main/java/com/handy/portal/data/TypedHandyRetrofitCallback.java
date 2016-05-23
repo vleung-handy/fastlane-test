@@ -35,6 +35,7 @@ import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
 import com.handy.portal.payments.model.StripeTokenResponse;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
+import com.handy.portal.setup.SetupData;
 import com.handy.portal.updater.model.UpdateDetails;
 
 import org.json.JSONObject;
@@ -388,6 +389,14 @@ class GetProviderFeedbackRetrofitCallback extends TypedHandyRetrofitCallback<Pro
 class GetLocationScheduleRetrofitCallback extends TypedHandyRetrofitCallback<LocationScheduleStrategies>
 {
     GetLocationScheduleRetrofitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+class SetupDataRetrofitCallback extends TypedHandyRetrofitCallback<SetupData>
+{
+    SetupDataRetrofitCallback(DataManager.Callback callback)
     {
         super(callback);
     }
