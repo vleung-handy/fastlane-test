@@ -1,11 +1,15 @@
 package com.handy.portal.ui.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.widget.ImageView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
@@ -29,6 +33,10 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
+import butterknife.BindInt;
+import butterknife.ButterKnife;
+
 public class SplashActivity extends BaseActivity
 {
     @Inject
@@ -38,18 +46,45 @@ public class SplashActivity extends BaseActivity
     @Inject
     BuildConfigWrapper buildConfigWrapper;
 
+    @Bind(R.id.progress_spinner)
+    ImageView mProgressSpinner;
+    @BindInt(R.integer.minimum_services_animation_duration_millis)
+    int mMinimumAnimationDurationMillis;
+
     private Flow mSetupFlow;
+
+    private boolean mSetupComplete = false;
+    private boolean mLoadingAnimationComplete = false;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        ButterKnife.bind(this);
+
+        startLoadingAnimation();
 
         if (buildConfigWrapper.isDebug())
         {
             processInjectedCredentials();
         }
+    }
+
+    private void startLoadingAnimation()
+    {
+        final AnimationDrawable animation = (AnimationDrawable) mProgressSpinner.getBackground();
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                mLoadingAnimationComplete = true;
+                complete();
+            }
+        }, mMinimumAnimationDurationMillis);
+        mProgressSpinner.setVisibility(View.VISIBLE);
+        animation.start();
     }
 
     @Override
@@ -90,8 +125,8 @@ public class SplashActivity extends BaseActivity
                     @Override
                     public void onFlowComplete()
                     {
-                        launchActivity(MainActivity.class);
-                        finish();
+                        mSetupComplete = true;
+                        complete();
                     }
                 })
                 .start();
@@ -100,7 +135,8 @@ public class SplashActivity extends BaseActivity
     @Subscribe
     public void onReceiveSetupDataError(final SetupEvent.ReceiveSetupDataError event)
     {
-        // FIXME: Implement
+        mSetupComplete = true;
+        complete();
     }
 
     @Override
@@ -142,6 +178,15 @@ public class SplashActivity extends BaseActivity
         {
             // Non fatal
             Crashlytics.logException(e);
+        }
+    }
+
+    private void complete()
+    {
+        if (mSetupComplete && mLoadingAnimationComplete)
+        {
+            launchActivity(MainActivity.class);
+            finish();
         }
     }
 
