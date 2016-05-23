@@ -31,6 +31,10 @@ public class BundleKeys
     public static final String MESSAGE_ICON = "message_icon";
     public static final String EXTRAS = "extras";
 
+    // Terms
+    public static final String TERMS_GROUP = "terms_group";
+    public static final String TERMS = "terms";
+
     // UrbanAirship
     public static final String HANDY_PUSH_TYPE = "type_id";
     public static final String HANDY_PUSH_UUID = "handy_push_uuid";
@@ -64,4 +68,7 @@ public class BundleKeys
     public static final String ONBOARDING_SUPPLIES = "onboarding_supplies";
     public static final String ALLOW_BACK_NAVIGATION = "allow_back_navigation";
     public static final String NATIVE_ONBOARDING_LAUNCHED = "native_onboarding_launched";
+
+    // Flow
+    public static final String FLOW_STEP_ID = "flow_step_id";
 }

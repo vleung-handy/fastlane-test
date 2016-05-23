@@ -245,7 +245,7 @@ public class MainActivity extends BaseActivity
         //if the code is null we don't need to to show anything
         if (event.termsDetailsGroup.hasTerms())
         {
-            startActivity(new Intent(this, TermsActivity.class));
+//            startActivity(new Intent(this, TermsActivity.class));
         }
         else //this is gross and can be resolved after we have a state manager - have to make these requests effectively synchronous because
         // we must guarantee the shouldUpdatePaymentInfo response comes after the terms response, else activity might be launched and obscure the update payment info prompt
@@ -278,6 +278,6 @@ public class MainActivity extends BaseActivity
     @Subscribe
     public void onReceiveCheckTermsError(HandyEvent.ReceiveCheckTermsError event)
     {
-        startActivity(new Intent(this, TermsActivity.class));
+//        startActivity(new Intent(this, TermsActivity.class));
     }
 }

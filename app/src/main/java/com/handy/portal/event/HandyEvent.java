@@ -1038,4 +1038,20 @@ public abstract class HandyEvent
     // tracking with iOS.
     @Track("portal authentication error shown")
     public static class LogOutProvider extends HandyEvent {}
+
+
+    public static class StepCompleted
+    {
+        private final int mStepId;
+
+        public StepCompleted(final int stepId)
+        {
+            mStepId = stepId;
+        }
+
+        public int getStepId()
+        {
+            return mStepId;
+        }
+    }
 }

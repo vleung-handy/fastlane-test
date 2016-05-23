@@ -1,14 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/handy_bg"
-              android:orientation="vertical"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/handy_bg"
     >
-
-    <include layout="@layout/overlay_loading"/>
-
-    <include layout="@layout/layout_fetch_error"/>
 
     <RelativeLayout
         android:id="@+id/terms_layout"
@@ -17,7 +13,6 @@
         android:background="@color/white"
         android:orientation="vertical"
         >
-
 
         <LinearLayout
             android:id="@+id/layout_header"
@@ -85,7 +80,7 @@
         </LinearLayout>
 
         <com.handy.portal.library.ui.view.HandyWebView
-            android:id="@+id/terms_webview"
+            android:id="@+id/terms_web_view"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@id/layout_footer"
@@ -93,4 +88,6 @@
             />
 
     </RelativeLayout>
-</LinearLayout>
+
+    <include layout="@layout/overlay_loading"/>
+</FrameLayout>

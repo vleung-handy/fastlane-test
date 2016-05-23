@@ -2,12 +2,13 @@ package com.handy.portal.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class TermsDetailsGroup
+public class TermsDetailsGroup implements Serializable
 {
     @SerializedName("terms")
-    List<TermsDetails> termsDetails;
+    private List<TermsDetails> termsDetails;
 
     public List<TermsDetails> getTermsDetails()
     {
