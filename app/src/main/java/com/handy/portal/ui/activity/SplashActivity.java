@@ -16,6 +16,8 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.flow.Flow;
+import com.handy.portal.flow.SetupSteps;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
@@ -30,10 +32,6 @@ import javax.inject.Inject;
 
 public class SplashActivity extends BaseActivity
 {
-    private static final String STATE_LAUNCHED_NEXT = "LAUNCHED_NEXT";
-
-    private boolean launchedNext;
-
     @Inject
     PrefsManager prefsManager;
     @Inject
@@ -42,6 +40,8 @@ public class SplashActivity extends BaseActivity
     HandyRetrofitEndpoint endpoint;
     @Inject
     BuildConfigWrapper buildConfigWrapper;
+
+    private Flow mSetupFlow;
 
     @SuppressWarnings("deprecation")
     @Override
@@ -112,6 +112,22 @@ public class SplashActivity extends BaseActivity
                 requestProviderInfo();
             }
 
+        }
+
+        if (mSetupFlow != null)
+        {
+            mSetupFlow = new Flow()
+                    .addStep(new SetupSteps.SaveProviderProfile())
+                    .setOnFlowCompleteListener(new Flow.OnFlowCompleteListener()
+                    {
+                        @Override
+                        public void onFlowComplete()
+                        {
+                            launchActivity(MainActivity.class);
+                            finish();
+                        }
+                    })
+                    .start();
         }
     }
 
@@ -198,8 +214,6 @@ public class SplashActivity extends BaseActivity
                 | Intent.FLAG_ACTIVITY_CLEAR_TOP);
 
         super.startActivity(intent);
-
-        launchedNext = true;
         finish();
     }
 
@@ -223,18 +237,10 @@ public class SplashActivity extends BaseActivity
     }
 
     @Override
-    public void startActivityForResult(final Intent intent, final int resultCode)
-    {
-        super.startActivityForResult(intent, resultCode);
-        launchedNext = true;
-    }
-
-    @Override
     public final void onSaveInstanceState(final Bundle outState)
     {
         try
         {
-            outState.putBoolean(STATE_LAUNCHED_NEXT, launchedNext);
             super.onSaveInstanceState(outState);
         }
         catch (IllegalArgumentException e)
