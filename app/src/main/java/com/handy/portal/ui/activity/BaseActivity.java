@@ -54,14 +54,12 @@ public abstract class BaseActivity extends AppCompatActivity
     private AppUpdateEventListener mAppUpdateEventListener;
     protected boolean allowCallbacks;
     private Stack<OnBackPressedListener> onBackPressedListenerStack;
-    protected ProgressDialog progressDialog;
 
     //According to android docs this is the preferred way of accessing location instead of using LocationManager
     //will also let us do geofencing and reverse address lookup which is nice
     //This is a clear instance where a service would be great but it is too tightly coupled to an activity to break out
     protected static GoogleApiClient googleApiClient;
     protected static Location lastLocation;
-    private SetupHandler mSetupHandler;
 
     abstract protected boolean shouldTriggerSetup();
 
@@ -134,7 +132,7 @@ public abstract class BaseActivity extends AppCompatActivity
     protected void onPostResume()
     {
         super.onPostResume();
-        if (!isFinishing() && shouldTriggerSetup() && mSetupHandler == null)
+        if (!isFinishing() && shouldTriggerSetup())
         {
             triggerSetup();
         }
@@ -142,8 +140,7 @@ public abstract class BaseActivity extends AppCompatActivity
 
     protected void triggerSetup()
     {
-        mSetupHandler = new SetupHandler(this);
-        mSetupHandler.start();
+        new SetupHandler(this).start();
     }
 
     @VisibleForTesting
@@ -392,6 +389,7 @@ public abstract class BaseActivity extends AppCompatActivity
         @Subscribe
         public void onReceiveSetupDataError(final SetupEvent.ReceiveSetupDataError event)
         {
+            bus.unregister(this);
             mBaseActivity.onSetupFailure();
         }
     }
