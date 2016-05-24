@@ -11,12 +11,17 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PerformanceLog;
+import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.model.ProviderPersonalInfo;
+import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
@@ -36,6 +41,10 @@ public class DashboardOptionsPerformanceView extends FrameLayout
 {
     @Inject
     Bus mBus;
+    @Inject
+    ProviderManager mProviderManager;
+    @Inject
+    ConfigManager mConfigManager;
 
     @Bind(R.id.tier_title)
     TextView mTierTitleText;
@@ -52,7 +61,15 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     @Bind(R.id.review_date)
     TextView mReviewDate;
 
+    private String mOperatingRegion;
     private ProviderEvaluation mProviderEvaluation;
+
+    // TODO: these hardcoded regions are not part of the next build
+    private static final String BOSTON_OPERATING_REGION = "boston_ma";
+    private static final String DENVER_OPERATING_REGION = "denver";
+    private static final String ATLANTA_OPERATING_REGION = "atlanta";
+    private static final String SANDIEGO_OPERATING_REGION = "san_diego";
+
 
     public DashboardOptionsPerformanceView(final Context context)
     {
@@ -85,6 +102,24 @@ public class DashboardOptionsPerformanceView extends FrameLayout
 
         inflate(getContext(), R.layout.view_dashboard_options_performance, this);
         ButterKnife.bind(this);
+
+        ProviderProfile providerProfile = mProviderManager.getCachedProviderProfile();
+        if (providerProfile != null)
+        {
+            ProviderPersonalInfo personalInfo = providerProfile.getProviderPersonalInfo();
+            if (personalInfo != null)
+            {
+                mOperatingRegion = personalInfo.getOperatingRegion();
+            }
+            else
+            {
+                Crashlytics.logException(new Exception("Personal info is null"));
+            }
+        }
+        else
+        {
+            Crashlytics.logException(new Exception("Provider profile is null"));
+        }
     }
 
     public void setDisplay(ProviderEvaluation evaluation)
@@ -134,7 +169,21 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
         mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.TierSelected()));
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_TIERS, arguments, true));
+
+        // TODO: switch to new tiers for specific regions
+        if (mConfigManager.getConfigurationResponse() != null &&
+                mConfigManager.getConfigurationResponse().shouldShowWeeklyPaymentTiers() &&
+                mOperatingRegion != null && (mOperatingRegion.equals(BOSTON_OPERATING_REGION) ||
+                mOperatingRegion.equals(DENVER_OPERATING_REGION) || mOperatingRegion.equals(ATLANTA_OPERATING_REGION) ||
+                mOperatingRegion.equals(SANDIEGO_OPERATING_REGION)))
+        {
+            arguments.putString(BundleKeys.PROVIDER_OPERATING_REGION, mOperatingRegion);
+            mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_NEW_TIERS, arguments, true));
+        }
+        else
+        {
+            mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_TIERS, arguments, true));
+        }
     }
 
     @OnClick(R.id.feedback_option)
