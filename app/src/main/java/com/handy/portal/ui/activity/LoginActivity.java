@@ -7,13 +7,6 @@ import com.handy.portal.R;
 
 public class LoginActivity extends BaseActivity
 {
-
-    @Override
-    protected boolean shouldTriggerSetup()
-    {
-        return false;
-    }
-
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {

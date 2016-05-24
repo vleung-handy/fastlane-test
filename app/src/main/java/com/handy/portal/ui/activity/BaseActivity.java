@@ -61,16 +61,20 @@ public abstract class BaseActivity extends AppCompatActivity
     protected static GoogleApiClient googleApiClient;
     protected static Location lastLocation;
 
-    abstract protected boolean shouldTriggerSetup();
-
-    protected void onSetupComplete()
+    // this is meant to be optionally overridden
+    protected boolean shouldTriggerSetup()
     {
-        // this is meant to be optionally overridden
+        return false;
     }
 
+    // this is meant to be optionally overridden
+    protected void onSetupComplete()
+    {
+    }
+
+    // this is meant to be optionally overridden
     protected void onSetupFailure()
     {
-        // this is meant to be optionally overridden
     }
 
     //Public Properties

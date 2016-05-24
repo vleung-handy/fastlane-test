@@ -19,7 +19,7 @@ public class PreActivationFlowActivity extends BaseActivity
     @Override
     protected boolean shouldTriggerSetup()
     {
-        return false;
+        return true;
     }
 
     @Override

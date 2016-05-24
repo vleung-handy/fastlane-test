@@ -8,12 +8,6 @@ import com.handy.portal.ui.activity.BaseActivity;
 public class PleaseUpdateActivity extends BaseActivity
 {
     @Override
-    protected boolean shouldTriggerSetup()
-    {
-        return false;
-    }
-
-    @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
