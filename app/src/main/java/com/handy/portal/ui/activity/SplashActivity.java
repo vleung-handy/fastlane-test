@@ -182,7 +182,7 @@ public class SplashActivity extends BaseActivity
 
     private void complete()
     {
-        if (hasUser() && mSetupComplete && mLoadingAnimationComplete)
+        if (mSetupComplete && mLoadingAnimationComplete)
         {
             launchActivity(MainActivity.class);
             finish();
