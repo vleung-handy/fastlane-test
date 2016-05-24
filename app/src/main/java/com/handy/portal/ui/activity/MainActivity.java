@@ -106,7 +106,7 @@ public class MainActivity extends BaseActivity
         //Check config params every time we resume mainactivity, may have changes which result in flow changes on open
         configManager.prefetch();
         providerManager.prefetch();
-        checkForTerms();
+        checkIfUserShouldUpdatePaymentInfo();
         /*
         because this is called each time this resumes,
         putting it in a try/catch block to be super safe to prevent crashes
@@ -148,11 +148,6 @@ public class MainActivity extends BaseActivity
     private void checkIfUserShouldUpdatePaymentInfo()
     {
         bus.post(new PaymentEvent.RequestShouldUserUpdatePaymentInfo());
-    }
-
-    private void checkForTerms()
-    {
-        bus.post(new HandyEvent.RequestCheckTerms());
     }
 
     public void checkIfNotificationIsEnabled()
@@ -245,22 +240,6 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    @Subscribe
-    public void onReceiveCheckTermsSuccess(HandyEvent.ReceiveCheckTermsSuccess event)
-    {
-        //if the code is null we don't need to to show anything
-        if (event.termsDetailsGroup.hasTerms())
-        {
-//            startActivity(new Intent(this, TermsActivity.class));
-        }
-        else //this is gross and can be resolved after we have a state manager - have to make these requests effectively synchronous because
-        // we must guarantee the shouldUpdatePaymentInfo response comes after the terms response, else activity might be launched and obscure the update payment info prompt
-        {
-            checkIfUserShouldUpdatePaymentInfo();
-            //have to put this check here due to weird startup flow - after terms are accepted, app switches back to SplashActivity and this activity is relaunched and this function will be called again
-        }
-    }
-
     /**
      * TODO: this is temporary to handle case in which config response comes back later
      * ideally, we should probably block the app until the config response is received
@@ -279,11 +258,5 @@ public class MainActivity extends BaseActivity
         {
             Crashlytics.logException(e);
         }
-    }
-
-    @Subscribe
-    public void onReceiveCheckTermsError(HandyEvent.ReceiveCheckTermsError event)
-    {
-//        startActivity(new Intent(this, TermsActivity.class));
     }
 }

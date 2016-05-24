@@ -19,7 +19,6 @@ import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.SuccessWrapper;
-import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
@@ -198,14 +197,6 @@ class UpdateDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallb
     }
 }
 
-
-class TermsDetailsGroupResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<TermsDetailsGroup>
-{
-    TermsDetailsGroupResponseHandyRetroFitCallback(DataManager.Callback callback)
-    {
-        super(callback);
-    }
-}
 
 class EmptyHandyRetroFitCallback extends TypedHandyRetrofitCallback<Void>
 {

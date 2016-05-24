@@ -51,9 +51,6 @@ public interface HandyRetrofitService
                       @Query("version_code") int versionCode,
                       HandyRetrofitCallback cb);
 
-    @GET("/check_all_pending_terms")
-    void checkAllPendingTerms(HandyRetrofitCallback cb);
-
     @Multipart
     @POST("/accept_terms")
     void acceptTerms(@Part("code") String termsCode,

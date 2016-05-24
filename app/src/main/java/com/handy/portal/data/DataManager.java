@@ -238,11 +238,6 @@ public class DataManager
         mService.checkUpdates(appFlavor, versionCode, new UpdateDetailsResponseHandyRetroFitCallback(cb));
     }
 
-    public void checkForAllPendingTerms(final Callback<TermsDetailsGroup> cb)
-    {
-        mService.checkAllPendingTerms(new TermsDetailsGroupResponseHandyRetroFitCallback(cb));
-    }
-
     public void acceptTerms(String termsCode, final Callback<Void> cb)
     {
         mService.acceptTerms(termsCode, new HandyRetrofitCallback(cb)
