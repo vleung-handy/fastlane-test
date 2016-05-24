@@ -44,6 +44,8 @@ public class SplashActivity extends BaseActivity
 
     private boolean mSetupComplete = false;
     private boolean mLoadingAnimationComplete = false;
+    private String mAuthToken;
+    private String mProviderId;
 
     @Override
     protected void onCreate(final Bundle savedInstanceState)
@@ -58,6 +60,9 @@ public class SplashActivity extends BaseActivity
         {
             processInjectedCredentials();
         }
+
+        mAuthToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
+        mProviderId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID, null);
     }
 
     private void startLoadingAnimation()
@@ -82,16 +87,21 @@ public class SplashActivity extends BaseActivity
         super.onResume();
         bus.register(this);
 
-        final String authToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
-        final String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID, null);
-        if (authToken != null && providerId != null)
+        if (hasUser())
         {
-            Crashlytics.setUserIdentifier(providerId);
+            Crashlytics.setUserIdentifier(mProviderId);
         }
         else
         {
-            launchActivity(LoginActivity.class);
-            finish();
+            new Handler().postDelayed(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    launchActivity(LoginActivity.class);
+                    finish();
+                }
+            }, mMinimumAnimationDurationMillis);
         }
     }
 
@@ -125,7 +135,7 @@ public class SplashActivity extends BaseActivity
     @Override
     protected boolean shouldTriggerSetup()
     {
-        return true;
+        return hasUser();
     }
 
     @Override
@@ -172,7 +182,7 @@ public class SplashActivity extends BaseActivity
 
     private void complete()
     {
-        if (mSetupComplete && mLoadingAnimationComplete)
+        if (hasUser() && mSetupComplete && mLoadingAnimationComplete)
         {
             launchActivity(MainActivity.class);
             finish();
@@ -228,5 +238,10 @@ public class SplashActivity extends BaseActivity
                 CookieSyncManager.getInstance().sync();
             }
         }
+    }
+
+    private boolean hasUser()
+    {
+        return !TextUtils.isNullOrEmpty(mAuthToken) && !TextUtils.isNullOrEmpty(mProviderId);
     }
 }
