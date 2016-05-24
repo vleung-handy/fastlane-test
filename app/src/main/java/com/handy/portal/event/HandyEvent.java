@@ -1020,7 +1020,7 @@ public abstract class HandyEvent
     public static class LogOutProvider extends HandyEvent {}
 
 
-    public static class StepCompleted
+    public static class StepCompleted extends HandyEvent
     {
         private final int mStepId;
 
