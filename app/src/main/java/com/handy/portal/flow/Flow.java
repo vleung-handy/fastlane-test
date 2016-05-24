@@ -3,6 +3,7 @@ package com.handy.portal.flow;
 import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -14,13 +15,12 @@ import java.util.List;
 public class Flow
 {
     private List<FlowStep> mSteps;
-    private int mCurrentStepIndex;
     private OnFlowCompleteListener mOnFlowCompleteListener;
+    private Iterator<FlowStep> mStepsIterator;
 
     public Flow()
     {
         mSteps = new ArrayList<>();
-        mCurrentStepIndex = -1;
     }
 
     public Flow addStep(@NonNull final FlowStep step)
@@ -39,48 +39,29 @@ public class Flow
 
     public Flow start()
     {
+        mStepsIterator = mSteps.iterator();
         goForward();
         return this;
     }
 
-    public boolean goForward()
+    public void goForward()
     {
-        final boolean wentForward = move(1);
-        if (!wentForward && mOnFlowCompleteListener != null)
+        if (mStepsIterator.hasNext())
+        {
+            final FlowStep nextStep = mStepsIterator.next();
+            if (nextStep.shouldExecute())
+            {
+                nextStep.execute();
+            }
+            else
+            {
+                goForward();
+            }
+        }
+        else if (mOnFlowCompleteListener != null)
         {
             mOnFlowCompleteListener.onFlowComplete();
         }
-        return wentForward;
-    }
-
-    public boolean goBack()
-    {
-        return move(-1);
-    }
-
-    private boolean move(final int direction)
-    {
-        int directionMultiplier = 1;
-        int nextPotentialIndex;
-        while (isIndexWithinBounds(
-                nextPotentialIndex = mCurrentStepIndex + direction * directionMultiplier
-        ))
-        {
-            final FlowStep nextStep = mSteps.get(nextPotentialIndex);
-            if (nextStep.shouldExecute())
-            {
-                mCurrentStepIndex = nextPotentialIndex;
-                nextStep.execute();
-                return true;
-            }
-            directionMultiplier++;
-        }
-        return false;
-    }
-
-    private boolean isIndexWithinBounds(final int index)
-    {
-        return index >= 0 && index < mSteps.size();
     }
 
     public interface OnFlowCompleteListener
