@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TableLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:stretchColumns="2"
+    tools:showIn="@layout/view_purchase_supplies_confirmation"
+    >
+
+    <com.handy.portal.ui.view.FormFieldTableRow
+        android:id="@+id/credit_card_number_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_gray_no_side"
+        />
+
+    <com.handy.portal.ui.view.DateFormFieldTableRow
+        android:id="@+id/expiration_date_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_gray_bottom"
+        />
+
+    <com.handy.portal.ui.view.FormFieldTableRow
+        android:id="@+id/security_code_field"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_gray_bottom"
+        />
+</TableLayout>
