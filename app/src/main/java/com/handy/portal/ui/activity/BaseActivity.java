@@ -60,6 +60,7 @@ public abstract class BaseActivity extends AppCompatActivity
     //This is a clear instance where a service would be great but it is too tightly coupled to an activity to break out
     protected static GoogleApiClient googleApiClient;
     protected static Location lastLocation;
+    private SetupHandler mSetupHandler;
 
     // this is meant to be optionally overridden
     protected boolean shouldTriggerSetup()
@@ -144,7 +145,11 @@ public abstract class BaseActivity extends AppCompatActivity
 
     protected void triggerSetup()
     {
-        new SetupHandler(this).start();
+        if (mSetupHandler == null || !mSetupHandler.isOngoing())
+        {
+            mSetupHandler = new SetupHandler(this);
+            mSetupHandler.start();
+        }
     }
 
     @VisibleForTesting
@@ -352,6 +357,7 @@ public abstract class BaseActivity extends AppCompatActivity
         Bus bus;
 
         private BaseActivity mBaseActivity;
+        private Flow mSetupFlow;
 
         public SetupHandler(final BaseActivity baseActivity)
         {
@@ -365,11 +371,16 @@ public abstract class BaseActivity extends AppCompatActivity
             bus.post(new SetupEvent.RequestSetupData());
         }
 
+        public boolean isOngoing()
+        {
+            return mSetupFlow != null && !mSetupFlow.isComplete();
+        }
+
         @Subscribe
         public void onReceiveSetupDataSuccess(final SetupEvent.ReceiveSetupDataSuccess event)
         {
             final SetupData setupData = event.getSetupData();
-            new Flow()
+            mSetupFlow = new Flow()
                     .addStep(new AppUpdateStep()) // this does NOTHING for now
                     .addStep(new AcceptTermsStep(mBaseActivity,
                             setupData.getTermsDetails()))

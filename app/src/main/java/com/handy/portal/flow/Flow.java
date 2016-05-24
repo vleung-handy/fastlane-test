@@ -14,12 +14,14 @@ import java.util.List;
  */
 public class Flow
 {
+    private boolean mIsComplete;
     private List<FlowStep> mSteps;
     private OnFlowCompleteListener mOnFlowCompleteListener;
     private Iterator<FlowStep> mStepsIterator;
 
     public Flow()
     {
+        mIsComplete = false;
         mSteps = new ArrayList<>();
     }
 
@@ -44,6 +46,11 @@ public class Flow
         return this;
     }
 
+    public boolean isComplete()
+    {
+        return mIsComplete;
+    }
+
     public void goForward()
     {
         if (mStepsIterator.hasNext())
@@ -58,9 +65,13 @@ public class Flow
                 goForward();
             }
         }
-        else if (mOnFlowCompleteListener != null)
+        else
         {
-            mOnFlowCompleteListener.onFlowComplete();
+            mIsComplete = true;
+            if (mOnFlowCompleteListener != null)
+            {
+                mOnFlowCompleteListener.onFlowComplete();
+            }
         }
     }
 
