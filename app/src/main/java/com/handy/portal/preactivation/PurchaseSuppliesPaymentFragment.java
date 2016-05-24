@@ -216,7 +216,7 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
         else if (mCardLast4 != null)
         {
             next(PurchaseSuppliesConfirmationFragment
-                    .newInstance(mOnboardingSuppliesInfo, getString(R.string.card), mCardLast4));
+                    .newInstance(mOnboardingSuppliesInfo));
         }
         else
         {
@@ -260,7 +260,7 @@ public class PurchaseSuppliesPaymentFragment extends PreActivationFlowFragment
         mExpirationDateField.getYearValue().setText(null);
         mSecurityCodeField.getValue().setText(null);
         next(PurchaseSuppliesConfirmationFragment
-                .newInstance(mOnboardingSuppliesInfo, mCard.getType(), mCard.getLast4()));
+                .newInstance(mOnboardingSuppliesInfo));
     }
 
     @Subscribe

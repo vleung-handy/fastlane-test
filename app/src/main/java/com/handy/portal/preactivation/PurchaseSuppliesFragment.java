@@ -133,7 +133,7 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
     {
         bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
                 OnboardingSuppliesLog.Types.PURCHASE_SUPPLIES_SELECTED)));
-        next(PurchaseSuppliesPaymentFragment.newInstance(mOnboardingSuppliesInfo));
+        next(PurchaseSuppliesConfirmationFragment.newInstance(mOnboardingSuppliesInfo));
     }
 
     @Override
