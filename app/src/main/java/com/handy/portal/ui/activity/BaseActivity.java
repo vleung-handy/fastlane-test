@@ -61,6 +61,7 @@ public abstract class BaseActivity extends AppCompatActivity
     //This is a clear instance where a service would be great but it is too tightly coupled to an activity to break out
     protected static GoogleApiClient googleApiClient;
     protected static Location lastLocation;
+    private SetupHandler mSetupHandler;
 
     abstract protected boolean shouldTriggerSetup();
 
@@ -123,19 +124,26 @@ public abstract class BaseActivity extends AppCompatActivity
         super.onCreate(savedInstanceState);
         Utils.inject(this, this);
 
-        if (shouldTriggerSetup())
-        {
-            triggerSetup();
-        }
         mAppUpdateEventListener = new AppUpdateEventListener(this);
         onBackPressedListenerStack = new Stack<>();
 
         buildGoogleApiClient();
     }
 
+    @Override
+    protected void onPostResume()
+    {
+        super.onPostResume();
+        if (!isFinishing() && shouldTriggerSetup() && mSetupHandler == null)
+        {
+            triggerSetup();
+        }
+    }
+
     protected void triggerSetup()
     {
-        new SetupHandler(this).start();
+        mSetupHandler = new SetupHandler(this);
+        mSetupHandler.start();
     }
 
     @VisibleForTesting
