@@ -16,20 +16,11 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
-import com.handy.portal.flow.Flow;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
-import com.handy.portal.setup.SetupData;
-import com.handy.portal.setup.SetupEvent;
-import com.handy.portal.setup.step.AcceptTermsStep;
-import com.handy.portal.setup.step.AppUpdateStep;
-import com.handy.portal.setup.step.OnboardingStep;
-import com.handy.portal.setup.step.SetConfigurationStep;
-import com.handy.portal.setup.step.SetProviderProfileStep;
 import com.handy.portal.util.DeeplinkUtils;
 import com.handy.portal.util.TextUtils;
-import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
@@ -50,8 +41,6 @@ public class SplashActivity extends BaseActivity
     ImageView mProgressSpinner;
     @BindInt(R.integer.minimum_services_animation_duration_millis)
     int mMinimumAnimationDurationMillis;
-
-    private Flow mSetupFlow;
 
     private boolean mSetupComplete = false;
     private boolean mLoadingAnimationComplete = false;
@@ -98,10 +87,6 @@ public class SplashActivity extends BaseActivity
         if (authToken != null && providerId != null)
         {
             Crashlytics.setUserIdentifier(providerId);
-            if (mSetupFlow == null)
-            {
-                bus.post(new SetupEvent.RequestSetupData());
-            }
         }
         else
         {
@@ -110,33 +95,37 @@ public class SplashActivity extends BaseActivity
         }
     }
 
-    @Subscribe
-    public void onReceiveSetupDataSuccess(final SetupEvent.ReceiveSetupDataSuccess event)
+    @Override
+    protected void triggerSetup()
     {
-        final SetupData setupData = event.getSetupData();
-        mSetupFlow = new Flow()
-                .addStep(new AppUpdateStep()) // this does NOTHING for now
-                .addStep(new AcceptTermsStep(this, setupData.getTermsDetails()))
-                .addStep(new SetConfigurationStep(this, setupData.getConfigurationResponse()))
-                .addStep(new SetProviderProfileStep(this, setupData.getProviderProfile()))
-                .addStep(new OnboardingStep())
-                .setOnFlowCompleteListener(new Flow.OnFlowCompleteListener()
-                {
-                    @Override
-                    public void onFlowComplete()
-                    {
-                        mSetupComplete = true;
-                        complete();
-                    }
-                })
-                .start();
+        new Handler().postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                SplashActivity.super.triggerSetup();
+            }
+        }, mMinimumAnimationDurationMillis);
     }
 
-    @Subscribe
-    public void onReceiveSetupDataError(final SetupEvent.ReceiveSetupDataError event)
+    @Override
+    protected void onSetupComplete()
     {
         mSetupComplete = true;
         complete();
+    }
+
+    @Override
+    protected void onSetupFailure()
+    {
+        mSetupComplete = true;
+        complete();
+    }
+
+    @Override
+    protected boolean shouldTriggerSetup()
+    {
+        return true;
     }
 
     @Override

@@ -48,6 +48,12 @@ public class MainActivity extends BaseActivity
     private static final int ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE = 10;
 
     @Override
+    protected boolean shouldTriggerSetup()
+    {
+        return true;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);

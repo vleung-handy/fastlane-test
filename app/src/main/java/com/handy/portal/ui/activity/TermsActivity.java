@@ -17,6 +17,12 @@ public class TermsActivity extends BaseActivity
     private int mStepIdentifier;
 
     @Override
+    protected boolean shouldTriggerSetup()
+    {
+        return false;
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);

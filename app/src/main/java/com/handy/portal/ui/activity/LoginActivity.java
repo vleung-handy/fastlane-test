@@ -9,11 +9,16 @@ public class LoginActivity extends BaseActivity
 {
 
     @Override
+    protected boolean shouldTriggerSetup()
+    {
+        return false;
+    }
+
+    @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
     }
 
     @Override
