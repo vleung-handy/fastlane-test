@@ -167,6 +167,29 @@ public class BookingManager
         );
     }
 
+    @Subscribe
+    public void onRequestProRequestedJobs(BookingEvent.RequestProRequestedJobs event)
+    {
+        //TODO this doesn't actually just get requested jobs. need to fully integrate with new endpoint
+            mDataManager.getAvailableBookings(event.getDatesForBookings().toArray(new Date[event.getDatesForBookings().size()]),
+                    new DataManager.Callback<BookingsListWrapper>()
+                    {
+                        @Override
+                        public void onSuccess(final BookingsListWrapper bookingsListWrapper)
+                        {
+                            mBus.post(new BookingEvent.ReceiveProRequestedJobsSuccess(bookingsListWrapper.getBookingsWrappers()));
+                        }
+
+                        @Override
+                        public void onError(final DataManager.DataManagerError error)
+                        {
+                            //TODO handle this
+                        }
+                    }
+            );
+
+    }
+
     /**
      * TODO: need to detect when pull to fresh happens, and make sure this is called again
      * unlike onRequestScheduledBookings, this will not fire events containing bookings for a specific date,

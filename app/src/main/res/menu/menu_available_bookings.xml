@@ -9,4 +9,11 @@
         android:title=""
         android:visible="false"
         />
+    <item
+        android:id="@+id/action_requested_jobs"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_nav_requested_inbox"
+        android:title=""
+        android:visible="false"
+        />
 </menu>

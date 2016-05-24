@@ -15,6 +15,7 @@ import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
+import com.handy.portal.ui.listener.OnDataItemClickListener;
 import com.handy.portal.ui.widget.InfiniteScrollListView;
 import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
@@ -29,7 +30,7 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
     Bus mBus;
 
     private TextView footerView;
-    private OnDataItemClickListener onDataItemClickListener; //TODO: WIP. refine
+    private OnDataItemClickListener<PaymentBatch> onDataItemClickListener; //TODO: WIP. refine
 
     /*
     we need dataItemClick listener because the lists header data is linked to adapter data
@@ -81,11 +82,6 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
         getWrappedAdapter().clear();
     }
 
-    public interface OnDataItemClickListener
-    { //TODO: put this somewhere else and make type generic?
-        void onDataItemClicked(PaymentBatch paymentBatch);
-    }
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id)
     {
@@ -103,7 +99,7 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
         }
     }
 
-    public void setOnDataItemClickListener(OnDataItemClickListener onDataItemClickListener)
+    public void setOnDataItemClickListener(OnDataItemClickListener<PaymentBatch> onDataItemClickListener)
     {
         this.onDataItemClickListener = onDataItemClickListener;
     }

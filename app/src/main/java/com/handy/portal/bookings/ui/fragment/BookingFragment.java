@@ -60,7 +60,6 @@ import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -360,7 +359,7 @@ public class BookingFragment extends TimerActionBarFragment
         String formattedDate = DateTimeUtils.DAY_OF_WEEK_MONTH_DAY_FORMATTER.format(startDate);
         String formattedTime = getResources().getString(R.string.dash_formatted,
                 DateTimeUtils.formatDateTo12HourClock(startDate), DateTimeUtils.formatDateTo12HourClock(endDate));
-        String dateTimeText = getTodayTomorrowStringByStartDate(startDate) + formattedDate;
+        String dateTimeText = DateTimeUtils.getTodayTomorrowStringByStartDate(startDate, getContext()) + formattedDate;
         mJobDateText.setText(dateTimeText);
         mJobTimeText.setText(formattedTime.toLowerCase());
 
@@ -595,30 +594,6 @@ public class BookingFragment extends TimerActionBarFragment
     private String getLoggedInUserId()
     {
         return mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
-    }
-
-    //returns a today or tomorrow prepend as needed
-    private String getTodayTomorrowStringByStartDate(Date bookingStartDate)
-    {
-        String prepend = "";
-
-        Calendar calendar = Calendar.getInstance();
-
-        Date currentTime = calendar.getTime();
-
-        if (DateTimeUtils.equalCalendarDates(currentTime, bookingStartDate))
-        {
-            prepend = (getContext().getString(R.string.today) + ", ");
-        }
-
-        calendar.add(Calendar.DATE, 1);
-        Date tomorrowTime = calendar.getTime();
-        if (DateTimeUtils.equalCalendarDates(tomorrowTime, bookingStartDate))
-        {
-            prepend = (getContext().getString(R.string.tomorrow) + ", ");
-        }
-
-        return prepend;
     }
 
     private void requestClaimJob()

@@ -27,6 +27,7 @@ import com.handy.portal.bookings.ui.element.BookingsAccessLockedView;
 import com.handy.portal.bookings.ui.element.BookingsBannerView;
 import com.handy.portal.bookings.ui.fragment.dialog.EarlyAccessTrialDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.JobAccessUnlockedDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.ProRequestedJobsDialogFragment;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
@@ -76,6 +77,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     BookingModalsManager mBookingModalsManager;
 
     private MenuItem mMenuSchedule;
+    private MenuItem mMenuRequestedJobs;
     private ProviderProfile mProviderProfile;
 
     @Override
@@ -134,6 +136,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_available_bookings, menu);
         mMenuSchedule = menu.findItem(R.id.action_initial_jobs);
+        mMenuRequestedJobs = menu.findItem(R.id.action_requested_jobs);
 
         updateMenuItems();
     }
@@ -141,10 +144,18 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     public boolean onOptionsItemSelected(final MenuItem item)
     {
-        if (item.getItemId() == R.id.action_initial_jobs)
+        switch(item.getItemId())
         {
-            startActivity(new Intent(getContext(), GettingStartedActivity.class));
-            return true;
+            case R.id.action_initial_jobs:
+                startActivity(new Intent(getContext(), GettingStartedActivity.class));
+                return true;
+            case R.id.action_requested_jobs:
+                if(getChildFragmentManager().findFragmentByTag(ProRequestedJobsDialogFragment.FRAGMENT_TAG) == null)
+                {
+                    ProRequestedJobsDialogFragment fragment = ProRequestedJobsDialogFragment.newInstance();
+                    FragmentUtils.safeLaunchDialogFragment(fragment, this, ProRequestedJobsDialogFragment.FRAGMENT_TAG);
+                }
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
@@ -252,21 +263,27 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     private void updateMenuItems()
     {
 
-        if (mMenuSchedule == null)
+        if (mMenuSchedule != null)
         {
-            return;
+            if (mProviderProfile != null
+                    && mProviderProfile.getPerformanceInfo() != null
+                    && mProviderProfile.getPerformanceInfo().getTotalJobsCount() <= 0)
+            {
+                mMenuSchedule.setVisible(true);
+            }
+            else
+            {
+                mMenuSchedule.setVisible(false);
+            }
         }
 
-        if (mProviderProfile != null
-                && mProviderProfile.getPerformanceInfo() != null
-                && mProviderProfile.getPerformanceInfo().getTotalJobsCount() <= 0)
+        if(mMenuRequestedJobs != null)
         {
-            mMenuSchedule.setVisible(true);
+            //TODO add condition for visibility
+            mMenuRequestedJobs.setVisible(true);
         }
-        else
-        {
-            mMenuSchedule.setVisible(false);
-        }
+
+
     }
 
     @Subscribe

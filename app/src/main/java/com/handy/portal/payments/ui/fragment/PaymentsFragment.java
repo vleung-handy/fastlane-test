@@ -28,6 +28,7 @@ import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.payments.ui.element.PaymentsBatchListView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.layout.SlideUpPanelLayout;
+import com.handy.portal.ui.listener.OnDataItemClickListener;
 import com.handy.portal.ui.widget.InfiniteScrollListView;
 import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.Utils;
@@ -116,12 +117,11 @@ public final class PaymentsFragment extends ActionBarFragment
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        paymentsBatchListView.setOnDataItemClickListener(new PaymentsBatchListView.OnDataItemClickListener()
-        {
+        paymentsBatchListView.setOnDataItemClickListener(new OnDataItemClickListener<PaymentBatch>() {
             @Override
-            public void onDataItemClicked(PaymentBatch paymentBatch)
+            public void onDataItemClicked(final PaymentBatch dataItem)
             {
-                showPaymentDetailsForBatch(paymentBatch);
+                showPaymentDetailsForBatch(dataItem);
             }
         });
     }

@@ -58,6 +58,31 @@ public final class DateTimeUtils
     public final static int HOURS_IN_SIX_DAYS = HOURS_IN_DAY * 6;
     public final static String UTC_TIMEZONE = "UTC";
 
+
+    //returns a today or tomorrow prepend as needed
+    public static String getTodayTomorrowStringByStartDate(Date startDate, Context context)
+    {
+        String prepend = "";
+
+        Calendar calendar = Calendar.getInstance();
+
+        Date currentTime = calendar.getTime();
+
+        if (DateTimeUtils.equalCalendarDates(currentTime, startDate))
+        {
+            prepend = (context.getString(R.string.today) + ", ");
+        }
+
+        calendar.add(Calendar.DATE, 1);
+        Date tomorrowTime = calendar.getTime();
+        if (DateTimeUtils.equalCalendarDates(tomorrowTime, startDate))
+        {
+            prepend = (context.getString(R.string.tomorrow) + ", ");
+        }
+
+        return prepend;
+    }
+
     public static boolean isDateWithinXHoursFromNow(Date date, int hours)
     {
         long currentTime = DateTimeUtils.getDateWithoutTime(new Date()).getTime();
