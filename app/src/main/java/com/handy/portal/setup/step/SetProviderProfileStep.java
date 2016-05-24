@@ -25,7 +25,7 @@ public class SetProviderProfileStep extends FlowStep
     @Override
     public boolean shouldExecute()
     {
-        return true;
+        return mProviderProfile != null;
     }
 
     @Override

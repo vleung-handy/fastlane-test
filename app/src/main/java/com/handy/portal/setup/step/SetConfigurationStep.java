@@ -25,7 +25,7 @@ public class SetConfigurationStep extends FlowStep
     @Override
     public boolean shouldExecute()
     {
-        return true;
+        return mConfiguration != null;
     }
 
     @Override
