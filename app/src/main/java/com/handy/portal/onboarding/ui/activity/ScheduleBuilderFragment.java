@@ -305,22 +305,18 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         float sum = 0;
         for (BookingsWrapperViewModel model : mAdapter.getBookingsWrapperViewModels())
         {
-            //model could be null, if it's just a header
-            if (model != null)
+            for (BookingViewModel bookingView : model.getBookingViewModels())
             {
-                for (BookingViewModel bookingView : model.getBookingViewModels())
+                if (bookingView.isSelected())
                 {
-                    if (bookingView.isSelected())
-                    {
-                        sum += bookingView.getBookingAmount();
-                    }
+                    sum += bookingView.getBookingAmount();
                 }
             }
         }
 
         if (sum > 0)
         {
-            String symbol = mAdapter.getBookingsWrapperViewModels().get(1).getBookingViewModels().get(0).getCurrencySymbol();
+            String symbol = mAdapter.getBookingsWrapperViewModels().get(0).getBookingViewModels().get(0).getCurrencySymbol();
             String formattedPrice = String.format(Locale.getDefault(), "%.0f", sum);
             if (symbol != null)
             {
@@ -506,19 +502,15 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         mBookingIdsToClaim = new ArrayList<>();
         for (BookingsWrapperViewModel model : mAdapter.getBookingsWrapperViewModels())
         {
-            //model could be null, if it's just a header
-            if (model != null)
+            for (BookingViewModel bookingView : model.getBookingViewModels())
             {
-                for (BookingViewModel bookingView : model.getBookingViewModels())
+                if (bookingView.isSelected())
                 {
-                    if (bookingView.isSelected())
-                    {
-                        mJobClaimRequest.mJobs.add(new JobClaim(
-                                bookingView.getBooking().getId(),
-                                bookingView.getBooking().getType().name().toLowerCase())
-                        );
-                        mBookingIdsToClaim.add(bookingView.getBooking().getId());
-                    }
+                    mJobClaimRequest.mJobs.add(new JobClaim(
+                            bookingView.getBooking().getId(),
+                            bookingView.getBooking().getType().name().toLowerCase())
+                    );
+                    mBookingIdsToClaim.add(bookingView.getBooking().getId());
                 }
             }
         }
