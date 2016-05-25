@@ -305,6 +305,7 @@
     <string name="tier_description">As you complete more jobs during the week, your hourly rate will increase! Available jobs and any uncompleted jobs in your schedule will automatically update to the new tier</string>
     <string name="tier_reset_note">Tiers reset on Mondays.</string>
     <string name="tiers">Tiers</string>
+    <string name="weekly_tier">Weekly Tier</string>
     <string name="tier_one">Tier 1</string>
     <string name="tier_two">Tier 2</string>
     <string name="tier_three">Tier 3</string>

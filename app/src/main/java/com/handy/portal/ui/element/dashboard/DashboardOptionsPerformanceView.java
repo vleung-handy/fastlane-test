@@ -48,8 +48,8 @@ public class DashboardOptionsPerformanceView extends FrameLayout
 
     @Bind(R.id.tier_title)
     TextView mTierTitleText;
-    @Bind(R.id.tier_hourly_rate)
-    TextView mTierHourlyRateText;
+    @Bind(R.id.tier_description_hourly_rate)
+    TextView mTierDescriptionHourlyRate;
     @Bind(R.id.first_feedback_title)
     TextView mFirstFeedbackTitleText;
     @Bind(R.id.dashboard_first_review)
@@ -62,6 +62,9 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     TextView mReviewDate;
 
     private String mOperatingRegion;
+    private int mTier;
+    private int mWeeklyJobs;
+    private String mTierRateText;
     private ProviderEvaluation mProviderEvaluation;
 
     // TODO: these hardcoded regions are not part of the next build
@@ -126,16 +129,89 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     {
         mProviderEvaluation = evaluation;
         ProviderEvaluation.Tier tier = mProviderEvaluation.getTier();
-        mTierTitleText.setText(tier.getName());
-        if (tier.getHourlyRateInCents() > 0)
+
+        ProviderEvaluation.Rating rolling = mProviderEvaluation.getRolling();
+        if (rolling != null && mOperatingRegion != null &&
+                (mOperatingRegion.equals(BOSTON_OPERATING_REGION) ||
+                        mOperatingRegion.equals(DENVER_OPERATING_REGION) ||
+                        mOperatingRegion.equals(ATLANTA_OPERATING_REGION) ||
+                        mOperatingRegion.equals(SANDIEGO_OPERATING_REGION)))
         {
-            String dollarAmount = tier.getCurrencySymbol() + tier.getHourlyRateInCents() / 100;
-            mTierHourlyRateText.setText(dollarAmount);
+            StringBuilder builder = new StringBuilder();
+            String tierRateText = "";
+
+            int totalBookingCount = rolling.getTotalBookingCount();
+            mWeeklyJobs = totalBookingCount;
+            if (totalBookingCount >= 7)
+            {
+                mTier = 2;
+
+                builder.append("Tier 3: ");
+                if (mOperatingRegion.equals(BOSTON_OPERATING_REGION))
+                {
+                    tierRateText = "$19";
+                }
+                else
+                {
+                    tierRateText = "$18";
+                }
+            }
+            else if (totalBookingCount >= 4)
+            {
+                mTier = 1;
+
+                builder.append("Tier 2: ");
+                if (mOperatingRegion.equals(BOSTON_OPERATING_REGION))
+                {
+                    tierRateText = "$18";
+                }
+                else
+                {
+                    tierRateText = "$17";
+                }
+            }
+            else if (totalBookingCount >= 1)
+            {
+                mTier = 0;
+
+                builder.append("Tier 1: ");
+                if (mOperatingRegion.equals(BOSTON_OPERATING_REGION))
+                {
+                    tierRateText = "$17";
+                }
+                else
+                {
+                    tierRateText = "$16";
+                }
+            }
+            else
+            {
+                builder.append(R.string.no_data);
+            }
+
+            if (!tierRateText.isEmpty())
+            {
+                mTierRateText = tierRateText;
+
+                builder.append(tierRateText);
+                builder.append("/hour");
+            }
+            mTierDescriptionHourlyRate.setText(builder.toString());
         }
         else
         {
-            mTierHourlyRateText.setText(getResources().getString(R.string.no_data));
+            mTierTitleText.setText(tier.getName());
+            if (tier.getHourlyRateInCents() > 0)
+            {
+                String dollarAmount = tier.getCurrencySymbol() + tier.getHourlyRateInCents() / 100;
+                mTierDescriptionHourlyRate.setText(dollarAmount);
+            }
+            else
+            {
+                mTierDescriptionHourlyRate.setText(getResources().getString(R.string.no_data));
+            }
         }
+
         List<ProviderFeedback> feedbackList = mProviderEvaluation.getProviderFeedback();
         if (feedbackList != null && feedbackList.size() > 0)
         {
@@ -173,11 +249,15 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         // TODO: switch to new tiers for specific regions
         if (mConfigManager.getConfigurationResponse() != null &&
                 mConfigManager.getConfigurationResponse().shouldShowWeeklyPaymentTiers() &&
-                mOperatingRegion != null && (mOperatingRegion.equals(BOSTON_OPERATING_REGION) ||
-                mOperatingRegion.equals(DENVER_OPERATING_REGION) || mOperatingRegion.equals(ATLANTA_OPERATING_REGION) ||
-                mOperatingRegion.equals(SANDIEGO_OPERATING_REGION)))
+                mTierRateText != null && mOperatingRegion != null &&
+                (mOperatingRegion.equals(BOSTON_OPERATING_REGION) ||
+                        mOperatingRegion.equals(DENVER_OPERATING_REGION) || mOperatingRegion.equals(ATLANTA_OPERATING_REGION) ||
+                        mOperatingRegion.equals(SANDIEGO_OPERATING_REGION)))
         {
             arguments.putString(BundleKeys.PROVIDER_OPERATING_REGION, mOperatingRegion);
+            arguments.putString(BundleKeys.PROVIDER_TIER_RATE, mTierRateText);
+            arguments.putInt(BundleKeys.PROVIDER_TIER, mTier);
+            arguments.putInt(BundleKeys.PROVIDER_WEEKLY_JOBS, mWeeklyJobs);
             mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_NEW_TIERS, arguments, true));
         }
         else
