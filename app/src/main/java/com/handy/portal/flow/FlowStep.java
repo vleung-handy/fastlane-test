@@ -1,16 +1,16 @@
 package com.handy.portal.flow;
 
-public abstract class FlowStep implements FlowResolver
+public abstract class FlowStep
 {
-    private Flow mFlow;
+    private Forwardable mForwardable;
 
     public abstract boolean shouldExecute();
 
     public abstract void execute();
 
-    void setFlow(final Flow flow)
+    void setFlow(final Forwardable forwardable)
     {
-        mFlow = flow;
+        mForwardable = forwardable;
     }
 
     protected int getId()
@@ -18,9 +18,8 @@ public abstract class FlowStep implements FlowResolver
         return System.identityHashCode(this);
     }
 
-    @Override
     public void complete()
     {
-        mFlow.goForward();
+        mForwardable.goForward();
     }
 }

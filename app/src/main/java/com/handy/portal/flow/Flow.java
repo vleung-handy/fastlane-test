@@ -12,7 +12,7 @@ import java.util.List;
  *
  * @see com.handy.portal.ui.activity.BaseActivity.SetupHandler
  */
-public class Flow
+public class Flow implements Forwardable
 {
     private boolean mIsComplete;
     private List<FlowStep> mSteps;
@@ -51,6 +51,7 @@ public class Flow
         return mIsComplete;
     }
 
+    @Override
     public void goForward()
     {
         if (mStepsIterator.hasNext())
