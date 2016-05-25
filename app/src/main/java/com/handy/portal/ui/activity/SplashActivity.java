@@ -43,6 +43,20 @@ public class SplashActivity extends BaseActivity
 
     private String mAuthToken;
     private String mProviderId;
+    private Runnable mLoadingAnimationStarter = new Runnable()
+    {
+        @Override
+        public void run()
+        {
+            if (mProgressSpinner != null)
+            {
+                mProgressSpinner.setVisibility(View.VISIBLE);
+                final AnimationDrawable animation =
+                        (AnimationDrawable) mProgressSpinner.getBackground();
+                animation.start();
+            }
+        }
+    };
 
     @Override
     protected void onCreate(final Bundle savedInstanceState)
@@ -51,14 +65,7 @@ public class SplashActivity extends BaseActivity
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
 
-        mProgressSpinner.postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                startLoadingAnimation();
-            }
-        }, mProgressSpinnerStartOffsetMillis);
+        mProgressSpinner.postDelayed(mLoadingAnimationStarter, mProgressSpinnerStartOffsetMillis);
 
         if (buildConfigWrapper.isDebug())
         {
@@ -67,13 +74,6 @@ public class SplashActivity extends BaseActivity
 
         mAuthToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
         mProviderId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID, null);
-    }
-
-    private void startLoadingAnimation()
-    {
-        mProgressSpinner.setVisibility(View.VISIBLE);
-        final AnimationDrawable animation = (AnimationDrawable) mProgressSpinner.getBackground();
-        animation.start();
     }
 
     @Override
@@ -137,6 +137,7 @@ public class SplashActivity extends BaseActivity
         {
             Crashlytics.logException(e); //want more info for now
         }
+        mProgressSpinner.removeCallbacks(mLoadingAnimationStarter);
         super.onPause();
     }
 
