@@ -10,13 +10,12 @@
     android:orientation="vertical"
     >
 
-    <include layout="@layout/layout_fetch_error"/>
-
     <ImageView
         android:id="@+id/progress_spinner"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/anim_services"
+        android:visibility="gone"
         />
 
 </LinearLayout>

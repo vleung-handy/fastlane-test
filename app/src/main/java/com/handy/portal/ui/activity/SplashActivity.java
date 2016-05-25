@@ -5,7 +5,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Handler;
+import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.ImageView;
@@ -38,11 +38,9 @@ public class SplashActivity extends BaseActivity
 
     @Bind(R.id.progress_spinner)
     ImageView mProgressSpinner;
-    @BindInt(R.integer.minimum_services_animation_duration_millis)
-    int mMinimumAnimationDurationMillis;
+    @BindInt(R.integer.progress_spinner_start_offset_millis)
+    int mProgressSpinnerStartOffsetMillis;
 
-    private boolean mSetupComplete = false;
-    private boolean mLoadingAnimationComplete = false;
     private String mAuthToken;
     private String mProviderId;
 
@@ -53,7 +51,14 @@ public class SplashActivity extends BaseActivity
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
 
-        startLoadingAnimation();
+        mProgressSpinner.postDelayed(new Runnable()
+        {
+            @Override
+            public void run()
+            {
+                startLoadingAnimation();
+            }
+        }, mProgressSpinnerStartOffsetMillis);
 
         if (buildConfigWrapper.isDebug())
         {
@@ -66,17 +71,9 @@ public class SplashActivity extends BaseActivity
 
     private void startLoadingAnimation()
     {
+        mProgressSpinner.setVisibility(View.VISIBLE);
         final AnimationDrawable animation = (AnimationDrawable) mProgressSpinner.getBackground();
         animation.start();
-        new Handler().postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                mLoadingAnimationComplete = true;
-                complete();
-            }
-        }, mMinimumAnimationDurationMillis);
     }
 
     @Override
@@ -91,43 +88,22 @@ public class SplashActivity extends BaseActivity
         }
         else
         {
-            new Handler().postDelayed(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    launchActivity(LoginActivity.class);
-                    finish();
-                }
-            }, mMinimumAnimationDurationMillis);
+            launchActivity(LoginActivity.class);
+            finish();
         }
-    }
-
-    @Override
-    protected void triggerSetup()
-    {
-        new Handler().postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                SplashActivity.super.triggerSetup();
-            }
-        }, mMinimumAnimationDurationMillis);
     }
 
     @Override
     protected void onSetupComplete()
     {
-        mSetupComplete = true;
-        complete();
+        launchActivity(MainActivity.class);
+        finish();
     }
 
     @Override
     protected void onSetupFailure()
     {
-        mSetupComplete = true;
-        complete();
+        onSetupComplete();
     }
 
     @Override
@@ -175,15 +151,6 @@ public class SplashActivity extends BaseActivity
         {
             // Non fatal
             Crashlytics.logException(e);
-        }
-    }
-
-    private void complete()
-    {
-        if (mSetupComplete && mLoadingAnimationComplete)
-        {
-            launchActivity(MainActivity.class);
-            finish();
         }
     }
 
