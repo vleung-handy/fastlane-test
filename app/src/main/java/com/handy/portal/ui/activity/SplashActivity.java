@@ -6,7 +6,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.ImageView;
@@ -68,6 +67,7 @@ public class SplashActivity extends BaseActivity
     private void startLoadingAnimation()
     {
         final AnimationDrawable animation = (AnimationDrawable) mProgressSpinner.getBackground();
+        animation.start();
         new Handler().postDelayed(new Runnable()
         {
             @Override
@@ -77,8 +77,6 @@ public class SplashActivity extends BaseActivity
                 complete();
             }
         }, mMinimumAnimationDurationMillis);
-        mProgressSpinner.setVisibility(View.VISIBLE);
-        animation.start();
     }
 
     @Override

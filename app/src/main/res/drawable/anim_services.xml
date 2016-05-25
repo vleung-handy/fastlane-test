@@ -4,6 +4,30 @@
     android:oneshot="false"
     >
     <item
+        android:drawable="@drawable/frame_services_20"
+        android:duration="120"
+        />
+    <item
+        android:drawable="@drawable/frame_services_21"
+        android:duration="120"
+        />
+    <item
+        android:drawable="@drawable/frame_services_22"
+        android:duration="120"
+        />
+    <item
+        android:drawable="@drawable/frame_services_23"
+        android:duration="120"
+        />
+    <item
+        android:drawable="@drawable/frame_services_24"
+        android:duration="120"
+        />
+    <item
+        android:drawable="@drawable/frame_services_25"
+        android:duration="250"
+        />
+    <item
         android:drawable="@drawable/frame_services_0"
         android:duration="120"
         />
@@ -81,30 +105,6 @@
         />
     <item
         android:drawable="@drawable/frame_services_19"
-        android:duration="250"
-        />
-    <item
-        android:drawable="@drawable/frame_services_20"
-        android:duration="120"
-        />
-    <item
-        android:drawable="@drawable/frame_services_21"
-        android:duration="120"
-        />
-    <item
-        android:drawable="@drawable/frame_services_22"
-        android:duration="120"
-        />
-    <item
-        android:drawable="@drawable/frame_services_23"
-        android:duration="120"
-        />
-    <item
-        android:drawable="@drawable/frame_services_24"
-        android:duration="120"
-        />
-    <item
-        android:drawable="@drawable/frame_services_25"
         android:duration="250"
         />
 </animation-list>
