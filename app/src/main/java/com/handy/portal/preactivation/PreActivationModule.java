@@ -8,7 +8,6 @@ import dagger.Module;
         injects = {
                 PreActivationFlowActivity.class,
                 PurchaseSuppliesFragment.class,
-                PurchaseSuppliesPaymentFragment.class,
                 PurchaseSuppliesConfirmationFragment.class,
                 DeclineSuppliesDialogFragment.class,
         })

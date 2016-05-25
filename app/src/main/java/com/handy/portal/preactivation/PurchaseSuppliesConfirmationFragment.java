@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.handy.portal.R;
@@ -74,8 +75,6 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     private Map<String, FieldDefinition> mAddressFieldDefinitions;
     private ProviderPersonalInfo mProviderPersonalInfo;
     private OnboardingSuppliesInfo mOnboardingSuppliesInfo;
-    private Card mCard;
-    private String mCardLast4;
 
     /**
      * These signifies whether the address/payments ready for the confirm purchase step.
@@ -175,13 +174,16 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     private void onProviderLoaded()
     {
         populateShippingSummary();
-        if ((mCardLast4 = mProviderPersonalInfo.getCardLast4()) != null)
+        String cardLast4 = mProviderPersonalInfo.getCardLast4();
+        if (!TextUtils.isEmpty(cardLast4))
         {
-            mPaymentSummary
-                    .setContent(getString(R.string.payment_method),
-                            getString(R.string.card_info_formatted,
-                                    getString(R.string.card), mCardLast4))
-                    .setAction(getString(R.string.edit), new View.OnClickListener()
+            mPaymentSummary.setContent(
+                    getString(R.string.payment_method),
+                    getString(R.string.card_info_formatted,
+                            getString(R.string.card), cardLast4)
+            ).setAction(
+                    getString(R.string.edit),
+                    new View.OnClickListener()
                     {
                         @Override
                         public void onClick(final View v)
@@ -189,6 +191,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
                             unfreezeEditPaymentForm();
                         }
                     });
+
             freezeEditPaymentForm();
         }
         else
@@ -361,7 +364,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
         {
             mPaymentReady = false;
 
-            mCard = new Card(
+            Card card = new Card(
                     mCreditCardNumberField.getValue().getText().toString(),
                     Integer.parseInt(mExpirationDateField.getMonthValue().getText().toString()),
                     Integer.parseInt(mExpirationDateField.getYearValue().getText().toString()),
@@ -369,7 +372,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
             );
             showLoadingOverlay();
             mPaymentLoading = true;
-            bus.post(new StripeEvent.RequestStripeChargeToken(mCard, Country.US));
+            bus.post(new StripeEvent.RequestStripeChargeToken(card, Country.US));
             bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
                     OnboardingSuppliesLog.ServerTypes.GET_STRIPE_TOKEN.submitted())));
         }
