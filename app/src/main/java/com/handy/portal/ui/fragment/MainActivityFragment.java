@@ -30,6 +30,10 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.NotificationEvent;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
+import com.handy.portal.library.ui.fragment.dialog.TransientOverlayDialogFragment;
+import com.handy.portal.library.ui.layout.TabbedLayout;
+import com.handy.portal.library.ui.widget.TabButton;
+import com.handy.portal.library.ui.widget.TabButtonGroup;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
@@ -44,10 +48,7 @@ import com.handy.portal.onboarding.ui.activity.OnboardWelcomeActivity;
 import com.handy.portal.preactivation.PreActivationFlowActivity;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
-import com.handy.portal.library.ui.fragment.dialog.TransientOverlayDialogFragment;
-import com.handy.portal.library.ui.layout.TabbedLayout;
-import com.handy.portal.library.ui.widget.TabButton;
-import com.handy.portal.library.ui.widget.TabButtonGroup;
+import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.util.DeeplinkMapper;
 import com.squareup.otto.Subscribe;
 
@@ -187,6 +188,17 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onConfigurationResponseRetrieved(HandyEvent.ReceiveConfigurationSuccess event)
     {
+        // this is a hotfix for a spike on missing location data
+        try
+        {
+            ((MainActivity) getActivity()).showNecessaryLocationSettingsAndPermissionsBlockers();
+            ((MainActivity) getActivity()).startLocationServiceIfNecessary();
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e);
+        }
+
         //If the config response came back for the first time may need to navigate away
         //Normally the fragment would take care of itself, but this would launch the fragment if needed
         if (!mConfigAlreadyReceivedThisSession)

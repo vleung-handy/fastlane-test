@@ -181,7 +181,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                     @Override
                     public void onRefresh()
                     {
-                        requestBookingsForSelectedDay(false);
+                        requestBookingsForSelectedDay(false, false);
                     }
                 };
         final SwipeRefreshLayout noBookingsSwipeRefreshLayout = getNoBookingsSwipeRefreshLayout();
@@ -222,19 +222,19 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     @OnClick(R.id.try_again_button)
     public void doRequestBookingsAgain()
     {
-        requestBookingsForSelectedDay(true);
+        requestBookingsForSelectedDay(true, true);
     }
 
     private void requestAllBookings()
     {
-        requestBookingsForSelectedDay(true);
+        requestBookingsForSelectedDay(true, true);
 
         requestBookingsForOtherDays(mSelectedDay);
     }
 
-    private void requestBookingsForSelectedDay(boolean showOverlay)
+    private void requestBookingsForSelectedDay(boolean showOverlay, boolean useCachedIfPresent)
     {
-        requestBookings(Lists.newArrayList(mSelectedDay), showOverlay, true);
+        requestBookings(Lists.newArrayList(mSelectedDay), showOverlay, useCachedIfPresent);
     }
 
     private void requestBookingsForOtherDays(Date dayToExclude)

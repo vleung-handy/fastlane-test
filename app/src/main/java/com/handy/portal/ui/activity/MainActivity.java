@@ -62,7 +62,7 @@ public class MainActivity extends BaseActivity
      * and the startLocationServiceIfNecessary may launch the permissions dialog
      * TODO see if we can clean this up
      */
-    private void startLocationServiceIfNecessary()
+    public void startLocationServiceIfNecessary()
     {
         if (LocationUtils.hasRequiredLocationPermissions(this) && LocationUtils.hasRequiredLocationSettings(this))
         {
@@ -86,7 +86,7 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    private void showNecessaryLocationSettingsAndPermissionsBlockers()
+    public void showNecessaryLocationSettingsAndPermissionsBlockers()
     {
         showLocationPermissionsBlockerIfNecessary();
         showLocationSettingsBlockerIfNecessary();
@@ -264,7 +264,15 @@ public class MainActivity extends BaseActivity
     @Subscribe
     public void onReceiveConfigurationResponse(HandyEvent.ReceiveConfigurationSuccess event)
     {
-        startLocationServiceIfNecessary();
+        try
+        {
+            showNecessaryLocationSettingsAndPermissionsBlockers();
+            startLocationServiceIfNecessary();
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e);
+        }
     }
 
     @Subscribe

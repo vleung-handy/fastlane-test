@@ -276,16 +276,8 @@ public class BookingManager
                                 mBus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(bookingsWrapper, day));
                             }
 
-                            /*
-                            this will be true when the user pulls to refresh
-
-                            BUT it is also true onResume()! need to compensate by not firing this event on claim/cancel
-                            TODO
-                             */
-                            if (!event.useCachedIfPresent)
-                            {
-                                mBus.post(new HandyEvent.BookingChangedOrCreated());
-                            }
+                            // always fire this whenever we request schedule form the server
+                            mBus.post(new HandyEvent.BookingChangedOrCreated());
                         }
 
                         @Override

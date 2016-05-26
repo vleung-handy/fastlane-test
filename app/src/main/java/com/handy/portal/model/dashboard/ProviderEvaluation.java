@@ -93,6 +93,8 @@ public class ProviderEvaluation implements Serializable
         private static final String NEGATIVE = "negative";
         private static final String NA = "n_a";
 
+        @SerializedName("current_week_booking_count")
+        private int mCurrentWeekBookingCount;
         @SerializedName("rated_booking_count")
         private int mRatedBookingCount;
         @SerializedName("total_booking_count")
@@ -113,11 +115,13 @@ public class ProviderEvaluation implements Serializable
         private Date mEndDate;
 
         public Rating(
+                final int currentWeekBookingCount,
                 final int ratedBookingCount, final int totalBookingCount,
                 final int fiveStarRatedBookingCount, final double proRating, final String status,
                 final String ratingEvaluation, final String feedback, final Date startDate,
                 final Date endDate)
         {
+            mCurrentWeekBookingCount = currentWeekBookingCount;
             mRatedBookingCount = ratedBookingCount;
             mTotalBookingCount = totalBookingCount;
             mFiveStarRatedBookingCount = fiveStarRatedBookingCount;
@@ -152,6 +156,11 @@ public class ProviderEvaluation implements Serializable
         public String getStatus()
         {
             return mStatus;
+        }
+
+        public int getCurrentWeekBookingCount()
+        {
+            return mCurrentWeekBookingCount;
         }
 
         public int getStatusColorId()
