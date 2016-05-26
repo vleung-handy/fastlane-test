@@ -51,8 +51,12 @@ public class DashboardNewTiersFragment extends ActionBarFragment
 
     private ProviderEvaluation mEvaluation;
     private String mRegion;
+    private int mTier;
+    private int mWeeklyJobs;
+    private String mTierRate;
 
     private static final String BOSTON_OPERATING_REGION = "boston_ma";
+
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
@@ -60,6 +64,9 @@ public class DashboardNewTiersFragment extends ActionBarFragment
         super.onCreate(savedInstanceState);
         mEvaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.PROVIDER_EVALUATION);
         mRegion = getArguments().getString(BundleKeys.PROVIDER_OPERATING_REGION);
+        mTier = getArguments().getInt(BundleKeys.PROVIDER_TIER);
+        mWeeklyJobs = getArguments().getInt(BundleKeys.PROVIDER_WEEKLY_JOBS_COUNT);
+        mTierRate = getArguments().getString(BundleKeys.PROVIDER_TIER_HOURLY_RATE);
     }
 
     @Nullable
@@ -84,58 +91,26 @@ public class DashboardNewTiersFragment extends ActionBarFragment
 
         if (mEvaluation == null) { return; }
 
-        ProviderEvaluation.Rating rolling = mEvaluation.getRolling();
-        if (rolling != null)
-        {
-            int totalBookingCount = rolling.getTotalBookingCount();
+        mJobsText.setText(String.valueOf(mWeeklyJobs));
+        mRateText.setText(mTierRate);
 
-            // TODO: Hardcoded new tiers
-            mJobsText.setText(String.valueOf(totalBookingCount));
-            if (totalBookingCount >= 7)
-            {
-                if (mRegion.equals(BOSTON_OPERATING_REGION))
-                {
-                    mRateText.setText("$19");
-                }
-                else
-                {
-                    mRateText.setText("$18");
-                }
-                mTierThreeDot.setVisibility(View.VISIBLE);
-                mTierThreeText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-                mTierThreeJobsText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-                mTierThreeRateText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-            }
-            else if (totalBookingCount >= 4)
-            {
-                if (mRegion.equals(BOSTON_OPERATING_REGION))
-                {
-                    mRateText.setText("$18");
-                }
-                else
-                {
-                    mRateText.setText("$17");
-                }
-                mTierTwoDot.setVisibility(View.VISIBLE);
-                mTierTwoText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-                mTierTwoJobsText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-                mTierTwoRateText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-            }
-            else if (totalBookingCount >= 1)
-            {
-                if (mRegion.equals(BOSTON_OPERATING_REGION))
-                {
-                    mRateText.setText("$17");
-                }
-                else
-                {
-                    mRateText.setText("$16");
-                }
-                mTierOneDot.setVisibility(View.VISIBLE);
-                mTierOneText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-                mTierOneJobsText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-                mTierOneRateText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-            }
+        if(mTier == 0){
+            mTierOneDot.setVisibility(View.VISIBLE);
+            mTierOneText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
+            mTierOneJobsText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
+            mTierOneRateText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
+        }
+        else if(mTier == 1){
+            mTierTwoDot.setVisibility(View.VISIBLE);
+            mTierTwoText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
+            mTierTwoJobsText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
+            mTierTwoRateText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
+        }
+        else if(mTier == 2){
+            mTierThreeDot.setVisibility(View.VISIBLE);
+            mTierThreeText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
+            mTierThreeJobsText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
+            mTierThreeRateText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
         }
 
         // TODO: Hardcoded new Tiers
