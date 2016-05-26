@@ -7,6 +7,7 @@
         <item name="colorPrimaryDark">@color/handy_blue_pressed</item>
         <item name="colorControlActivated">@color/handy_blue</item>
         <item name="background">@color/handy_bg</item>
+        <item name="android:datePickerDialogTheme">@style/HandyPickerDialogTheme</item>
     </style>
 
     <style name="Button">
@@ -22,5 +23,22 @@
         <item name="fontPath">fonts/CircularStd-Book.otf</item>
         <item name="android:textColor">@drawable/button_text_white_trans</item>
         <item name="android:stateListAnimator">@null</item>
+    </style>
+
+    <style name="AlertDialogStyle"
+           parent="Theme.AppCompat.Light.Dialog.Alert">
+        <item name="colorAccent">@color/handy_blue</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="HandyPickerDialogTheme"
+           parent="android:Theme.Material.Light.Dialog">
+        <item name="android:colorAccent">@color/handy_blue</item>
+        <item name="android:datePickerStyle">@style/HandyDatePickerStyle</item>
+    </style>
+
+    <style name="HandyDatePickerStyle"
+           parent="@android:style/Widget.Material.Light.DatePicker">
+        <item name="android:headerBackground">@color/handy_blue</item>
     </style>
 </resources>
