@@ -140,9 +140,8 @@ public class DashboardOptionsPerformanceView extends FrameLayout
             StringBuilder builder = new StringBuilder();
             String tierRateText = "";
 
-            int totalBookingCount = rolling.getTotalBookingCount();
-            mWeeklyJobs = totalBookingCount;
-            if (totalBookingCount >= 7)
+            mWeeklyJobs = rolling.getCurrentWeekBookingCount();
+            if (mWeeklyJobs >= 7)
             {
                 mTier = 2;
 
@@ -156,7 +155,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
                     tierRateText = "$18";
                 }
             }
-            else if (totalBookingCount >= 4)
+            else if (mWeeklyJobs >= 4)
             {
                 mTier = 1;
 
@@ -170,7 +169,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
                     tierRateText = "$17";
                 }
             }
-            else if (totalBookingCount >= 1)
+            else if (mWeeklyJobs >= 1)
             {
                 mTier = 0;
 
@@ -255,9 +254,9 @@ public class DashboardOptionsPerformanceView extends FrameLayout
                         mOperatingRegion.equals(SANDIEGO_OPERATING_REGION)))
         {
             arguments.putString(BundleKeys.PROVIDER_OPERATING_REGION, mOperatingRegion);
-            arguments.putString(BundleKeys.PROVIDER_TIER_RATE, mTierRateText);
+            arguments.putString(BundleKeys.PROVIDER_TIER_HOURLY_RATE, mTierRateText);
             arguments.putInt(BundleKeys.PROVIDER_TIER, mTier);
-            arguments.putInt(BundleKeys.PROVIDER_WEEKLY_JOBS, mWeeklyJobs);
+            arguments.putInt(BundleKeys.PROVIDER_WEEKLY_JOBS_COUNT, mWeeklyJobs);
             mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_NEW_TIERS, arguments, true));
         }
         else

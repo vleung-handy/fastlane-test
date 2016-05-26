@@ -14,8 +14,8 @@ public class BundleKeys
     public static final String BOOKING_TRANSACTIONS = "booking_transactions";
 
     public static final String PROVIDER_OPERATING_REGION = "provider_operating_region";
-    public static final String PROVIDER_WEEKLY_JOBS = "provider_weekly_jobs";
-    public static final String PROVIDER_TIER_RATE = "provider_tier_rate";
+    public static final String PROVIDER_WEEKLY_JOBS_COUNT = "provider_weekly_jobs_count";
+    public static final String PROVIDER_TIER_HOURLY_RATE = "provider_tier_hourly_rate";
     public static final String PROVIDER_TIER = "provider_tier"; // 0, 1, 2
 
     public static final String DATE_EPOCH_TIME = "date_epoch_time";

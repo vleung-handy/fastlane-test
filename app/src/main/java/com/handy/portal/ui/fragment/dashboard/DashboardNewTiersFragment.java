@@ -65,8 +65,8 @@ public class DashboardNewTiersFragment extends ActionBarFragment
         mEvaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.PROVIDER_EVALUATION);
         mRegion = getArguments().getString(BundleKeys.PROVIDER_OPERATING_REGION);
         mTier = getArguments().getInt(BundleKeys.PROVIDER_TIER);
-        mWeeklyJobs = getArguments().getInt(BundleKeys.PROVIDER_WEEKLY_JOBS);
-        mTierRate = getArguments().getString(BundleKeys.PROVIDER_TIER_RATE);
+        mWeeklyJobs = getArguments().getInt(BundleKeys.PROVIDER_WEEKLY_JOBS_COUNT);
+        mTierRate = getArguments().getString(BundleKeys.PROVIDER_TIER_HOURLY_RATE);
     }
 
     @Nullable
