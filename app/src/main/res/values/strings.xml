@@ -301,9 +301,9 @@
     <string name="rating_lifetime_formatted">Lifetime Rating %1$s</string>
     <string name="rating_threshold_formatted">*must maintain at least a %1$s</string>
     <string name="video_library">Video Library</string>
-    <string name="new_weekly_tiers">NEW Weekly Tiers!</string>
-    <string name="tier_description">As you complete more jobs during the week, your hourly rate will increase! Available jobs and any uncompleted jobs in your schedule will automatically update to the new tier</string>
-    <string name="tier_reset_note">Tiers reset on Mondays.</string>
+    <string name="new_weekly_tiers">Weekly Tiers(New)</string>
+    <string name="tier_description">As you complete jobs each week, your job pay rate will increase. When you hit a new tier, all of your future jobs, and all available jobs for the current week, will update to reflect the higher rate.</string>
+    <string name="tier_reset_note">Tiers reset at 12:01am every Monday</string>
     <string name="tiers">Tiers</string>
     <string name="weekly_tier">Weekly Tier</string>
     <string name="tier_one">Tier 1</string>
