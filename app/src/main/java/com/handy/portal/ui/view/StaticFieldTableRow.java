@@ -5,14 +5,14 @@ import android.util.AttributeSet;
 
 import com.handy.portal.R;
 
-public class FormFieldTableRow extends FieldTableRow
+public class StaticFieldTableRow extends FieldTableRow
 {
-    public FormFieldTableRow(final Context context)
+    public StaticFieldTableRow(final Context context)
     {
         super(context);
     }
 
-    public FormFieldTableRow(final Context context, final AttributeSet attrs)
+    public StaticFieldTableRow(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
     }
@@ -20,6 +20,6 @@ public class FormFieldTableRow extends FieldTableRow
     @Override
     protected int getLayoutResId()
     {
-        return R.layout.element_form_field;
+        return R.layout.element_static_field;
     }
 }
