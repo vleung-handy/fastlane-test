@@ -7,7 +7,7 @@ import com.google.gson.Gson;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BaseApplication;
-import com.handy.portal.core.PropertiesReader;
+import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.EventLog;
 import com.handy.portal.logger.mixpanel.annotation.Track;

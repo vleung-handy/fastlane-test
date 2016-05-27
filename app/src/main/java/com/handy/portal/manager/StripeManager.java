@@ -4,7 +4,7 @@ package com.handy.portal.manager;
 import android.content.Context;
 
 import com.handy.portal.constant.Country;
-import com.handy.portal.core.PropertiesReader;
+import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.StripeEvent;
 import com.handy.portal.payments.model.BankAccountInfo;

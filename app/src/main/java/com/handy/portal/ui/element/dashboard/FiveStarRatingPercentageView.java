@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.event.ProviderDashboardEvent;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.util.Utils;
 import com.hookedonplay.decoviewlib.DecoView;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
 import com.hookedonplay.decoviewlib.events.DecoEvent;

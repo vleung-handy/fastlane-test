@@ -3,7 +3,7 @@ package com.handy.portal.bookings;
 import android.support.annotation.NonNull;
 
 import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.library.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 
 import java.util.Date;

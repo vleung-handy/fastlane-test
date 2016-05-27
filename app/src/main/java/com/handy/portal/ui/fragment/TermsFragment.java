@@ -14,10 +14,11 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.ui.activity.SplashActivity;
-import com.handy.portal.ui.element.HandyWebView;
+import com.handy.portal.library.ui.view.HandyWebView;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;

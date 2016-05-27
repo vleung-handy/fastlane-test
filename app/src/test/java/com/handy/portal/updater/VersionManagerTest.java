@@ -11,7 +11,7 @@ import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.updater.model.UpdateDetails;
-import com.handy.portal.util.CheckApplicationCapabilitiesUtils;
+import com.handy.portal.library.util.CheckApplicationCapabilitiesUtils;
 import com.squareup.otto.Bus;
 
 import org.junit.Before;

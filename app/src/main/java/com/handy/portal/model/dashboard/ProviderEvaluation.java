@@ -3,7 +3,7 @@ package com.handy.portal.model.dashboard;
 
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.R;
-import com.handy.portal.util.TextUtils;
+import com.handy.portal.library.util.TextUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;

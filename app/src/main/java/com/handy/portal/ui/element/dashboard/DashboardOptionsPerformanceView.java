@@ -25,8 +25,8 @@ import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Bus;
 
 import java.util.List;

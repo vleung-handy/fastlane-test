@@ -18,7 +18,7 @@ import com.handy.portal.location.scheduler.handler.LocationScheduleStrategiesHan
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
