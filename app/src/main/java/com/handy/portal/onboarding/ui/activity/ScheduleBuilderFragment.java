@@ -381,12 +381,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
                 new NativeOnboardingLog.ClaimBatchSuccess(mBookingIdsToClaim)));
 
         String message = event.getJobClaimResponse().getMessage();
-        if (event.getJobClaimResponse() == null || event.getJobClaimResponse().getJobs() == null)
-        {
-            //this should never happen, but just in case.
-            // FIXME: Do not terminate, do something else
-            terminate();
-        }
 
         List<Booking> bookings = new ArrayList<>();
         for (BookingClaimDetails bcd : event.getJobClaimResponse().getJobs())

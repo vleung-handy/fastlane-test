@@ -6,8 +6,6 @@ import com.handy.portal.bookings.model.BookingClaimDetails;
 import java.io.Serializable;
 import java.util.List;
 
-/**
- */
 public class JobClaimResponse implements Serializable
 {
     @SerializedName("jobs")
@@ -20,6 +18,7 @@ public class JobClaimResponse implements Serializable
     {
         return mJobs;
     }
+
     public String getMessage()
     {
         return mMessage;
