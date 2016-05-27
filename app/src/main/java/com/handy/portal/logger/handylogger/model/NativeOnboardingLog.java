@@ -82,21 +82,6 @@ public class NativeOnboardingLog extends EventLog
 
 
     /**
-     * User skips the native onboarding scheduler flow (either from the X in nav bar or by
-     * unselecting all bookings)
-     */
-    public static class Skipped extends NativeOnboardingLog
-    {
-        private static final String EVENT_TYPE = "skipped";
-
-        public Skipped()
-        {
-            super(EVENT_TYPE);
-        }
-    }
-
-
-    /**
      * No bookings are returned from the server to display to the user, essentially skipping the flow
      */
     public static class NoJobsLoaded extends NativeOnboardingLog

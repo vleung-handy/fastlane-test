@@ -343,11 +343,16 @@ public abstract class HandyEvent
 
     public static class ReceiveOnboardingJobsSuccess extends ReceiveSuccessEvent
     {
-        public BookingsListWrapper bookings;
+        private BookingsListWrapper mBookingsListWrapper;
 
-        public ReceiveOnboardingJobsSuccess(BookingsListWrapper bookings)
+        public ReceiveOnboardingJobsSuccess(final BookingsListWrapper bookingsListWrapper)
         {
-            this.bookings = bookings;
+            mBookingsListWrapper = bookingsListWrapper;
+        }
+
+        public BookingsListWrapper getBookingsListWrapper()
+        {
+            return mBookingsListWrapper;
         }
     }
 
