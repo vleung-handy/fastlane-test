@@ -244,8 +244,16 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     public void onReceiveNotifyJobOnMyWayError(final HandyEvent.ReceiveNotifyJobOnMyWayError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWayError(
-                mBooking, getLocationData())));
+        if(mBooking != null)
+        {
+            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWayError(
+                    mBooking, getLocationData())));
+        }
+        /*
+            else, mBooking hasn't been set yet.
+            one obvious case in which this could happen
+            is when this event is the result of a previous instance of this fragment
+         */
 
         handleNotifyOnMyWayError(event);
     }
