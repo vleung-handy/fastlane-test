@@ -131,8 +131,11 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         ProviderEvaluation.Tier tier = mProviderEvaluation.getTier();
 
         ProviderEvaluation.Rating rolling = mProviderEvaluation.getRolling();
-        if (rolling != null && mOperatingRegion != null &&
-                (mOperatingRegion.equals(BOSTON_OPERATING_REGION) ||
+        if (    rolling != null &&
+                (mConfigManager.getConfigurationResponse() != null &&
+                        mConfigManager.getConfigurationResponse().shouldShowWeeklyPaymentTiers()) &&
+                mOperatingRegion != null &&
+                        (mOperatingRegion.equals(BOSTON_OPERATING_REGION) ||
                         mOperatingRegion.equals(DENVER_OPERATING_REGION) ||
                         mOperatingRegion.equals(ATLANTA_OPERATING_REGION) ||
                         mOperatingRegion.equals(SANDIEGO_OPERATING_REGION)))
