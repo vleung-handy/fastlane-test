@@ -377,10 +377,11 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         hideLoadingOverlay();
         mFetchErrorView.setVisibility(View.GONE);
 
-        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSuccess(mBookingIdsToClaim)));
+        mBus.post(new LogEvent.AddLogEvent(
+                new NativeOnboardingLog.ClaimBatchSuccess(mBookingIdsToClaim)));
 
-        String message = event.mJobClaimResponse.getMessage();
-        if (event.mJobClaimResponse == null || event.mJobClaimResponse.getJobs() == null)
+        String message = event.getJobClaimResponse().getMessage();
+        if (event.getJobClaimResponse() == null || event.getJobClaimResponse().getJobs() == null)
         {
             //this should never happen, but just in case.
             // FIXME: Do not terminate, do something else
@@ -388,21 +389,19 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         }
 
         List<Booking> bookings = new ArrayList<>();
-        for (BookingClaimDetails bcd : event.mJobClaimResponse.getJobs())
+        for (BookingClaimDetails bcd : event.getJobClaimResponse().getJobs())
         {
-            if (bcd.getBooking().isClaimedByMe() || mProviderId.equals(bcd.getBooking().getProviderId()))
+            if (bcd.getBooking().isClaimedByMe()
+                    || mProviderId.equals(bcd.getBooking().getProviderId()))
             {
                 bookings.add(bcd.getBooking());
-                mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimSuccess(
-                        bcd.getBooking()
-                )));
+                mBus.post(new LogEvent.AddLogEvent(
+                        new NativeOnboardingLog.ClaimSuccess(bcd.getBooking())));
             }
             else
             {
-                mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimError(
-                        bcd.getBooking(),
-                        message
-                )));
+                mBus.post(new LogEvent.AddLogEvent(
+                        new NativeOnboardingLog.ClaimError(bcd.getBooking(), message)));
             }
         }
 
@@ -414,7 +413,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         }
         else
         {
-            if (bookings.size() == event.mJobClaimResponse.getJobs().size())
+            if (bookings.size() == event.getJobClaimResponse().getJobs().size())
             {
                 //I was able to claim 100% of the jobs I wanted.
                 next();
@@ -429,7 +428,8 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     @Subscribe
     public void onReceiveClaimJobsError(HandyEvent.ReceiveClaimJobsError error)
     {
-        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchError(mBookingIdsToClaim, error.error.getMessage())));
+        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchError(
+                mBookingIdsToClaim, error.error.getMessage())));
 
         hideLoadingOverlay();
         mFetchErrorView.setVisibility(View.VISIBLE);
@@ -469,7 +469,8 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     private void confirmJobClaims()
     {
         showLoadingOverlay();
-        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSubmitted(mBookingIdsToClaim)));
+        mBus.post(new LogEvent.AddLogEvent(
+                new NativeOnboardingLog.ClaimBatchSubmitted(mBookingIdsToClaim)));
         mBus.post(new HandyEvent.RequestClaimJobs(mJobClaimRequest));
     }
 
@@ -508,7 +509,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     @Override
     protected void onPrimaryButtonClicked()
     {
-        mJobClaimRequest = new JobClaimRequest();
+        final ArrayList<JobClaim> jobs = new ArrayList<>();
         mBookingIdsToClaim = new ArrayList<>();
         for (BookingsWrapperViewModel model : mAdapter.getBookingsWrapperViewModels())
         {
@@ -516,7 +517,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
             {
                 if (bookingView.isSelected())
                 {
-                    mJobClaimRequest.mJobs.add(new JobClaim(
+                    jobs.add(new JobClaim(
                             bookingView.getBooking().getId(),
                             bookingView.getBooking().getType().name().toLowerCase())
                     );
@@ -524,8 +525,9 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
                 }
             }
         }
+        mJobClaimRequest = new JobClaimRequest(jobs);
 
-        if (!mJobClaimRequest.mJobs.isEmpty())
+        if (!jobs.isEmpty())
         {
             //show confirmation dialog to confirm the selected jobs.
             final OnboardingJobClaimConfirmDialog fragment =

@@ -563,11 +563,16 @@ public abstract class HandyEvent
 
     public static class ReceiveClaimJobsSuccess extends ReceiveSuccessEvent
     {
-        public JobClaimResponse mJobClaimResponse;
+        private JobClaimResponse mJobClaimResponse;
 
         public ReceiveClaimJobsSuccess(JobClaimResponse jobClaimResponse)
         {
             mJobClaimResponse = jobClaimResponse;
+        }
+
+        public JobClaimResponse getJobClaimResponse()
+        {
+            return mJobClaimResponse;
         }
     }
 
