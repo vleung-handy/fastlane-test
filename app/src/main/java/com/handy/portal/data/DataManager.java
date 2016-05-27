@@ -90,9 +90,12 @@ public class DataManager
         mService.getAvailableBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
     }
 
-    public void getOnboardingJobs(final Callback<BookingsListWrapper> cb)
+    public void getOnboardingJobs(final Date startDate,
+                                  final ArrayList<Integer> preferredZipclusterIds,
+                                  final Callback<BookingsListWrapper> cb)
     {
-        mService.getOnboardingJobs(new BookingsListWrapperHandyRetroFitCallback(cb));
+        mService.getOnboardingJobs(startDate, preferredZipclusterIds,
+                new BookingsListWrapperHandyRetroFitCallback(cb));
     }
 
     public void getScheduledBookings(Date[] dates, final Callback<BookingsListWrapper> cb)
