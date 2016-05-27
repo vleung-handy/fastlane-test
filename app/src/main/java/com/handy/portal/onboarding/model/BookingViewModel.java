@@ -25,9 +25,6 @@ public class BookingViewModel
     {
         mBooking = booking;
         mDefaultSubTitle = defaultSubtitle;
-
-        //we want to default the jobs to selected, and allow the user to unselect
-        mSelected = true;
     }
 
     public boolean isSelected()
