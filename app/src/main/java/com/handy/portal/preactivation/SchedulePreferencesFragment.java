@@ -147,8 +147,10 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        mDateField.setLabel(R.string.start_date).setHint(R.string.choose_start_date);
-        mLocationField.setLabel(R.string.locations).setHint(R.string.choose_locations);
+        mDateField.setLabel(R.string.start_date);
+        mLocationField.setLabel(R.string.locations);
+        displaySelectedStartDate();
+        displaySelectedLocations();
     }
 
     @Override
@@ -217,29 +219,45 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
     public void updateSelectedStartedDate(final Date date)
     {
         mSelectedStartDate = date;
-        final String dateString = DateTimeUtils.DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER
-                .format(mSelectedStartDate.getTime());
-        mDateField.setValue(dateString);
+        displaySelectedStartDate();
+    }
+
+    private void displaySelectedStartDate()
+    {
+        if (mSelectedStartDate != null)
+        {
+            final String dateString = DateTimeUtils.DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER
+                    .format(mSelectedStartDate.getTime());
+            mDateField.setValue(dateString);
+        }
+        else
+        {
+            mDateField.setValue(null).setHint(R.string.choose_start_date);
+        }
     }
 
     public void updateSelectedLocations(final CheckBoxListAdapter.CheckBoxListItem[] items)
     {
         mSelectedZipclusterIds.clear();
         mLocationViewModels = items;
-        int checkedCount = 0;
         for (CheckBoxListAdapter.CheckBoxListItem item : mLocationViewModels)
         {
             if (item.isChecked())
             {
-                checkedCount++;
                 // FIXME: Actually set this properly
                 mSelectedZipclusterIds.add(1);
             }
         }
-        if (checkedCount > 0)
+        displaySelectedLocations();
+    }
+
+    private void displaySelectedLocations()
+    {
+        final int count = mSelectedZipclusterIds != null ? mSelectedZipclusterIds.size() : 0;
+        if (count > 0)
         {
             mLocationField.setValue(getResources().getQuantityString(
-                    R.plurals.locations_selected_count_formatted, checkedCount, checkedCount));
+                    R.plurals.locations_selected_count_formatted, count, count));
         }
         else
         {
