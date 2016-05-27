@@ -49,6 +49,9 @@ public class ConfigurationResponse
     @SerializedName("show_payment_transactions")
     private boolean mShowBookingTransactionSummary;
 
+    @SerializedName("weekly_payment_tiers_enabled")
+    private boolean mWeeklyPaymentTiersEnabled;
+
     public boolean isLocationScheduleServiceEnabled()
     {
         return mLocationScheduleServiceEnabled;
@@ -97,6 +100,11 @@ public class ConfigurationResponse
     public boolean shouldShowLateDispatchOptIn()
     {
         return mShowLateDispatchOptIn;
+    }
+
+    public boolean shouldShowWeeklyPaymentTiers()
+    {
+        return mWeeklyPaymentTiersEnabled;
     }
 
     @Nullable
