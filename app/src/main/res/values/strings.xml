@@ -27,6 +27,7 @@
     <string name="error">Error</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="note_colon">Note:</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Navigation drawer opened</string>
@@ -300,6 +301,16 @@
     <string name="rating_lifetime_formatted">Lifetime Rating %1$s</string>
     <string name="rating_threshold_formatted">*must maintain at least a %1$s</string>
     <string name="video_library">Video Library</string>
+    <string name="new_weekly_tiers">NEW Weekly Tiers!</string>
+    <string name="tier_description">As you complete more jobs during the week, your hourly rate will increase! Available jobs and any uncompleted jobs in your schedule will automatically update to the new tier</string>
+    <string name="tier_reset_note">Tiers reset on Mondays.</string>
+    <string name="tiers">Tiers</string>
+    <string name="weekly_tier">Weekly Tier</string>
+    <string name="tier_one">Tier 1</string>
+    <string name="tier_two">Tier 2</string>
+    <string name="tier_three">Tier 3</string>
+    <string name="current_week">Current week:</string>
+    <string name="current_week_description">(Monday \u2013 Sunday)</string>
 
     <!-- Booking Details-->
     <string name="nearby_transit">Nearby Transit</string>
