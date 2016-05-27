@@ -148,7 +148,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
             {
                 mTier = 2;
 
-                builder.append("Tier 3: ");
+                mTierTitleText.setText("Tier 3");
                 if (mOperatingRegion.equals(BOSTON_OPERATING_REGION))
                 {
                     tierRateText = "$19";
@@ -162,7 +162,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
             {
                 mTier = 1;
 
-                builder.append("Tier 2: ");
+                mTierTitleText.setText("Tier 2");
                 if (mOperatingRegion.equals(BOSTON_OPERATING_REGION))
                 {
                     tierRateText = "$18";
@@ -176,7 +176,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
             {
                 mTier = 0;
 
-                builder.append("Tier 1: ");
+                mTierTitleText.setText("Tier 1");
                 if (mOperatingRegion.equals(BOSTON_OPERATING_REGION))
                 {
                     tierRateText = "$17";
@@ -196,7 +196,6 @@ public class DashboardOptionsPerformanceView extends FrameLayout
                 mTierRateText = tierRateText;
 
                 builder.append(tierRateText);
-                builder.append("/hour");
             }
             mTierDescriptionHourlyRate.setText(builder.toString());
         }
