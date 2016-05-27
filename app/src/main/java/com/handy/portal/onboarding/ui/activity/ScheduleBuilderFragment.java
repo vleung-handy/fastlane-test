@@ -3,7 +3,6 @@ package com.handy.portal.onboarding.ui.activity;
 import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -50,7 +49,6 @@ import java.util.Locale;
 import javax.inject.Inject;
 
 import butterknife.Bind;
-import butterknife.BindDrawable;
 import butterknife.BindInt;
 import butterknife.OnClick;
 
@@ -70,10 +68,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     View mFetchErrorView;
     @Bind(R.id.fetch_error_text)
     TextView mErrorText;
-    @BindDrawable(R.drawable.button_green)
-    Drawable mGreenDrawable;
-    @BindDrawable(R.drawable.button_gray)
-    Drawable mGrayDrawable;
     @BindInt(R.integer.onboarding_dialog_load_min_time)
     int mWaitTime;
 
@@ -340,14 +334,15 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
             }
             String text = String.format(getString(R.string.onboard_claim_and_earn_formatted), formattedPrice);
             mSingleActionButton.setText(text);
-            mSingleActionButton.setBackground(mGreenDrawable);
+            mSingleActionButton.setAlpha(1.0f);
+            mSingleActionButton.setEnabled(true);
         }
         else
         {
-            mSingleActionButton.setText(R.string.onboard_no_thanks);
-            mSingleActionButton.setBackground(mGrayDrawable);
+            mSingleActionButton.setText(R.string.continue_to_next_step);
+            mSingleActionButton.setAlpha(0.5f);
+            mSingleActionButton.setEnabled(false);
         }
-        mSingleActionButton.setVisibility(View.VISIBLE);
     }
 
     /**
@@ -507,8 +502,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     @Override
     protected String getPrimaryButtonText()
     {
-        // primary button will be activated later, see updateButton() method
-        return null;
+        return getString(R.string.continue_to_next_step);
     }
 
     @Override
