@@ -34,8 +34,8 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
     @Bind(R.id.location_field)
     StaticFieldTableRow mLocationField;
 
-    private Date mSelectedStartDate; // FIXME: Pass to next fragment
-    private ArrayList<Integer> mSelectedZipclusterIds; // FIXME: Pass to next fragment
+    private Date mSelectedStartDate;
+    private ArrayList<Integer> mSelectedZipclusterIds;
     private CheckBoxListAdapter.CheckBoxListItem[] mLocationViewModels;
     private OnboardingSuppliesInfo mOnboardingSuppliesInfo;
 
@@ -194,7 +194,8 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
             return;
         }
 
-        next(ScheduleBuilderFragment.newInstance(mOnboardingSuppliesInfo));
+        next(ScheduleBuilderFragment.newInstance(mOnboardingSuppliesInfo, mSelectedStartDate,
+                mSelectedZipclusterIds));
     }
 
     private boolean validate()
@@ -215,10 +216,10 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
 
     public void updateSelectedStartedDate(final Date date)
     {
-        final String dateString = DateTimeUtils.DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER
-                .format(date.getTime());
-        mDateField.setValue(dateString);
         mSelectedStartDate = date;
+        final String dateString = DateTimeUtils.DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER
+                .format(mSelectedStartDate.getTime());
+        mDateField.setValue(dateString);
     }
 
     public void updateSelectedLocations(final CheckBoxListAdapter.CheckBoxListItem[] items)

@@ -11,7 +11,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -38,11 +37,13 @@ import com.handy.portal.onboarding.ui.view.OnboardJobGroupView;
 import com.handy.portal.preactivation.PreActivationFlowFragment;
 import com.handy.portal.preactivation.PurchaseSuppliesFragment;
 import com.handy.portal.ui.fragment.dialog.OnboardingJobClaimConfirmDialog;
+import com.handy.portal.util.DateTimeUtils;
 import com.handy.portal.util.FragmentUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -61,6 +62,10 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
 
     @Bind(R.id.recycler_view)
     RecyclerView mRecyclerView;
+    @Bind(R.id.start_date_view)
+    TextView mStartDateView;
+    @Bind(R.id.locations_view)
+    TextView mLocationsView;
     @Bind(R.id.fetch_error_view)
     View mFetchErrorView;
     @Bind(R.id.fetch_error_text)
@@ -95,25 +100,35 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
      */
     private ArrayList<String> mBookingIdsToClaim;
 
+    private Date mSelectedStartDate;
+    private ArrayList<Integer> mSelectedZipclusterIds;
     private JobClaimRequest mJobClaimRequest;
     private OnboardingSuppliesInfo mOnboardingSuppliesInfo;
 
     public static ScheduleBuilderFragment newInstance(
-            final OnboardingSuppliesInfo onboardingSuppliesInfo)
+            final OnboardingSuppliesInfo onboardingSuppliesInfo,
+            final Date selectedStartDate,
+            final ArrayList<Integer> selectedZipclusterIds)
     {
         final ScheduleBuilderFragment fragment = new ScheduleBuilderFragment();
         final Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.ONBOARDING_SUPPLIES, onboardingSuppliesInfo);
+        arguments.putSerializable(BundleKeys.START_DATE, selectedStartDate);
+        arguments.putSerializable(BundleKeys.ZIPCLUSTERS_IDS, selectedZipclusterIds);
         fragment.setArguments(arguments);
         return fragment;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         mOnboardingSuppliesInfo = (OnboardingSuppliesInfo) getArguments()
                 .getSerializable(BundleKeys.ONBOARDING_SUPPLIES);
+        mSelectedStartDate = (Date) getArguments().getSerializable(BundleKeys.START_DATE);
+        mSelectedZipclusterIds = (ArrayList<Integer>) getArguments()
+                .getSerializable(BundleKeys.ZIPCLUSTERS_IDS);
         mProviderId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
     }
 
@@ -122,6 +137,21 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     {
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        displaySelectedStartDate();
+        displaySelectedLocations();
+    }
+
+    private void displaySelectedStartDate()
+    {
+        mStartDateView.setText(DateTimeUtils.DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER
+                .format(mSelectedStartDate.getTime()));
+    }
+
+    private void displaySelectedLocations()
+    {
+        final int count = mSelectedZipclusterIds.size();
+        mLocationsView.setText(getResources().getQuantityString(
+                R.plurals.locations_selected_count_formatted, count, count));
     }
 
     @Override
@@ -188,20 +218,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
                 bindJobsAndRemoveLoadingDialog();
             }
         }, mWaitTime);
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case android.R.id.home:
-                skipJobSelection();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     /**

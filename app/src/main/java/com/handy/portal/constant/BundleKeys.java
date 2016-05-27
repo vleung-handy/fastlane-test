@@ -59,4 +59,6 @@ public class BundleKeys
     public static final String ONBOARDING_SUPPLIES = "onboarding_supplies";
     public static final String ALLOW_BACK_NAVIGATION = "allow_back_navigation";
     public static final String NATIVE_ONBOARDING_LAUNCHED = "native_onboarding_launched";
+    public static final String ZIPCLUSTERS_IDS = "zipcluster_ids";
+    public static final String START_DATE = "start_date";
 }
