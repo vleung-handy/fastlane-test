@@ -88,7 +88,10 @@ public class SplashActivity extends BaseActivity
         }
         else
         {
-            launchActivity(LoginActivity.class);
+            final Intent loginActivityIntent = getActivityIntent(LoginActivity.class);
+            loginActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(loginActivityIntent);
             finish();
         }
     }
@@ -96,7 +99,10 @@ public class SplashActivity extends BaseActivity
     @Override
     protected void onSetupComplete()
     {
-        launchActivity(MainActivity.class);
+        final Intent mainActivityIntent = getActivityIntent(MainActivity.class);
+        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(mainActivityIntent);
         finish();
     }
 
@@ -110,15 +116,6 @@ public class SplashActivity extends BaseActivity
     protected boolean shouldTriggerSetup()
     {
         return hasUser();
-    }
-
-    @Override
-    public void startActivity(final Intent intent)
-    {
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        super.startActivity(intent);
-        finish();
     }
 
     @Override
@@ -155,7 +152,7 @@ public class SplashActivity extends BaseActivity
         }
     }
 
-    private void launchActivity(Class<? extends BaseActivity> activityClass)
+    private Intent getActivityIntent(Class<? extends BaseActivity> activityClass)
     {
         final Intent intent = new Intent(this, activityClass);
         final Uri data = getIntent().getData();
@@ -165,7 +162,7 @@ public class SplashActivity extends BaseActivity
             intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkBundle);
             intent.putExtra(BundleKeys.DEEPLINK_SOURCE, DeeplinkLog.Source.LINK);
         }
-        startActivity(intent);
+        return intent;
     }
 
     @Override

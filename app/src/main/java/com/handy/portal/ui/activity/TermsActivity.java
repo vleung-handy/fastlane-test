@@ -55,4 +55,10 @@ public class TermsActivity extends BaseActivity
                 .replace(R.id.main_content, TermsFragment.newInstance(termsDetails))
                 .commit();
     }
+
+    @Override
+    public void onBackPressed()
+    {
+        moveTaskToBack(true);
+    }
 }
