@@ -11,8 +11,8 @@
 
     <CheckBox
         android:id="@+id/check_box"
-        android:layout_width="@dimen/onboard_checkbox_width_height"
-        android:layout_height="@dimen/onboard_checkbox_width_height"
+        android:layout_width="@dimen/green_checkbox_width_height"
+        android:layout_height="@dimen/green_checkbox_width_height"
         android:layout_alignParentLeft="true"
         android:layout_centerInParent="true"
         android:button="@drawable/selector_green_checkbox"

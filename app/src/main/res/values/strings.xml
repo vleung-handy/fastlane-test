@@ -499,5 +499,13 @@
     <string name="supplies_ordered">Supplies ordered!</string>
     <string name="card">Card</string>
     <string name="claim_your_first_jobs">Claim Your First Jobs</string>
-
+    <string name="continue_to_next_step">Continue</string>
+    <string name="start_date">Start Date</string>
+    <string name="locations">Locations</string>
+    <string name="choose_start_date">Choose your start date</string>
+    <string name="choose_locations">Choose locations</string>
+    <plurals name="locations_selected_count_formatted">
+        <item quantity="one">%1$d location selected</item>
+        <item quantity="other">%1$d locations selected</item>
+    </plurals>
 </resources>
