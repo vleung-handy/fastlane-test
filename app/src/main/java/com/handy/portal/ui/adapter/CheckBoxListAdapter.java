@@ -29,6 +29,9 @@ public class CheckBoxListAdapter extends ArrayAdapter<CheckBoxListAdapter.CheckB
         else
         {
             view = (HandyCheckBox) convertView;
+            // The following line is required to prevent unexpected calls to the existing listener
+            // attached to the view. Given that setChecked() is called to initialize the state of
+            // the checkbox, this is necessary.
             view.setOnCheckedChangeListener(null);
         }
         view.setLabel(mItems[position].getLabel());
