@@ -1,7 +1,6 @@
 package com.handy.portal.onboarding.ui.activity;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -55,8 +54,7 @@ import butterknife.BindInt;
 import butterknife.OnClick;
 
 public class ScheduleBuilderFragment extends PreActivationFlowFragment
-        implements OnboardJobGroupView.OnJobChangeListener,
-        DialogInterface.OnCancelListener
+        implements OnboardJobGroupView.OnJobChangeListener
 {
     private static final String TAG = ScheduleBuilderFragment.class.getName();
 
@@ -156,7 +154,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         super.onResume();
         mIsResumed = true;
 
-        if (!hasJobs())
+        if (getBookingsWrappers().isEmpty())
         {
             showLoadingDialog();
             loadJobs();
@@ -176,13 +174,8 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         mBus.post(new HandyEvent.RequestOnboardingJobs(mSelectedStartDate, mSelectedZipclusterIds));
     }
 
-    private boolean hasJobs()
-    {
-        return !getJobs().isEmpty();
-    }
-
     @NonNull
-    private List<BookingsWrapper> getJobs()
+    private List<BookingsWrapper> getBookingsWrappers()
     {
         if (mBookingsListWrapper != null && mBookingsListWrapper.hasBookings())
         {
@@ -207,6 +200,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         mLoadingDialogDisplayTime = System.currentTimeMillis();
         mLoadingDialog = new OnboardLoadingDialog();
         mLoadingDialog.show(getFragmentManager(), OnboardLoadingDialog.TAG);
+        mLoadingDialog.setCancelable(false);
 
         new Handler().postDelayed(new Runnable()
         {
@@ -265,30 +259,27 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         {
             Log.d(TAG, "bindJobs: ");
 
-            if (!hasJobs())
+            final List<BookingsWrapper> bookingsWrappers = getBookingsWrappers();
+            if (bookingsWrappers.isEmpty())
             {
-                if (isLoadingDialogVisible())
-                {
-                    mLoadingDialog.dismiss();
-                }
                 mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NoJobsLoaded()));
             }
             else
             {
                 mAdapter = new JobsRecyclerAdapter(
-                        getJobs(),
+                        bookingsWrappers,
                         getString(R.string.onboard_getting_started_title),
                         ScheduleBuilderFragment.this,
                         getResources().getString(R.string.onboard_no_time_available)
                 );
                 mRecyclerView.setAdapter(mAdapter);
-                updateButton();
-                if (isLoadingDialogVisible())
-                {
-                    mLoadingDialog.dismiss();
-                    mRecyclerView.startLayoutAnimation();
-                }
+                mRecyclerView.startLayoutAnimation();
             }
+            if (isLoadingDialogVisible())
+            {
+                mLoadingDialog.dismiss();
+            }
+            updateButton();
         }
     }
 
@@ -315,27 +306,28 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     {
         //one of the jobs changed price, re-calculate
         float sum = 0;
-        for (BookingsWrapperViewModel model : mAdapter.getBookingsWrapperViewModels())
+        if (mAdapter != null)
         {
-            for (BookingViewModel bookingView : model.getBookingViewModels())
+            for (BookingsWrapperViewModel model : mAdapter.getBookingsWrapperViewModels())
             {
-                if (bookingView.isSelected())
+                for (BookingViewModel bookingView : model.getBookingViewModels())
                 {
-                    sum += bookingView.getBookingAmount();
+                    if (bookingView.isSelected())
+                    {
+                        sum += bookingView.getBookingAmount();
+                    }
                 }
             }
         }
 
         if (sum > 0)
         {
-            String symbol = mAdapter.getBookingsWrapperViewModels().get(0).getBookingViewModels().get(0).getCurrencySymbol();
-            String formattedPrice = String.format(Locale.getDefault(), "%.0f", sum);
-            if (symbol != null)
-            {
-                formattedPrice = symbol + formattedPrice;
-            }
-            String text = String.format(getString(R.string.onboard_claim_and_earn_formatted), formattedPrice);
-            mSingleActionButton.setText(text);
+            final String symbol = mAdapter.getBookingsWrapperViewModels().get(0)
+                    .getBookingViewModels().get(0).getCurrencySymbol();
+            final String formattedPrice = symbol + String.format(Locale.getDefault(), "%.0f", sum);
+            final String claimText = String.format(getString(
+                    R.string.onboard_claim_and_earn_formatted), formattedPrice);
+            mSingleActionButton.setText(claimText);
             mSingleActionButton.setAlpha(1.0f);
             mSingleActionButton.setEnabled(true);
         }
@@ -429,13 +421,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
             mErrorText.setText(getString(R.string.onboard_job_claim_error));
         }
     }
-
-    @Override
-    public void onCancel(final DialogInterface dialog)
-    {
-        getActivity().onBackPressed();
-    }
-
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
