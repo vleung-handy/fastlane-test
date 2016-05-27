@@ -684,21 +684,21 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
             if (removeAction.getExtras() != null
                     && removeAction.getExtras().getCancellationPolicy() != null)
             {
-                if (getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingCancelCancellationPolicyDialogFragment.FRAGMENT_TAG) == null)
+                if (getChildFragmentManager().findFragmentByTag(ConfirmBookingCancelCancellationPolicyDialogFragment.FRAGMENT_TAG) == null)
                 {
                     final DialogFragment fragment = ConfirmBookingCancelCancellationPolicyDialogFragment.newInstance(mBooking);
                     fragment.setTargetFragment(BookingDetailsWrapperFragment.this, RequestCode.REMOVE_BOOKING);
-                    FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), ConfirmBookingCancelCancellationPolicyDialogFragment.FRAGMENT_TAG);
+                    FragmentUtils.safeLaunchDialogFragment(fragment, this, ConfirmBookingCancelCancellationPolicyDialogFragment.FRAGMENT_TAG);
                 }
                 return true;
             }
             else if (removeAction.getKeepRate() != null)
             {
-                if (getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingCancelKeepRateDialogFragment.FRAGMENT_TAG) == null)
+                if (getChildFragmentManager().findFragmentByTag(ConfirmBookingCancelKeepRateDialogFragment.FRAGMENT_TAG) == null)
                 {
                     final DialogFragment fragment = ConfirmBookingCancelKeepRateDialogFragment.newInstance(mBooking);
                     fragment.setTargetFragment(BookingDetailsWrapperFragment.this, RequestCode.REMOVE_BOOKING);
-                    FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), ConfirmBookingCancelKeepRateDialogFragment.FRAGMENT_TAG);
+                    FragmentUtils.safeLaunchDialogFragment(fragment, this, ConfirmBookingCancelKeepRateDialogFragment.FRAGMENT_TAG);
                 }
                 return true;
             }
