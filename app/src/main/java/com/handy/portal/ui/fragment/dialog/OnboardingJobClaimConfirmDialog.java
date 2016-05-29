@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.handy.portal.R;
+import com.handy.portal.library.ui.fragment.dialog.SlideUpDialogFragment;
 
 import butterknife.OnClick;
 

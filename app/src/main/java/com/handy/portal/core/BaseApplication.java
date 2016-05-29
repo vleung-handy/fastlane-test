@@ -14,6 +14,7 @@ import com.handy.portal.bookings.BookingManager;
 import com.handy.portal.bookings.BookingModalsManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
@@ -35,8 +36,9 @@ import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.notification.NotificationMessageManager;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
+import com.handy.portal.setup.SetupManager;
 import com.handy.portal.updater.VersionManager;
-import com.handy.portal.util.FontUtils;
+import com.handy.portal.library.util.FontUtils;
 import com.newrelic.agent.android.NewRelic;
 import com.squareup.otto.Bus;
 
@@ -105,6 +107,8 @@ public class BaseApplication extends MultiDexApplication
     SystemManager systemManager;
     @Inject
     UserInterfaceUpdateManager userInterfaceUpdateManager;
+    @Inject
+    SetupManager setupManager;
 
     @Inject
     Bus bus;

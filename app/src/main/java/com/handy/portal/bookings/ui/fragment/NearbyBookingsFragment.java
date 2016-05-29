@@ -34,8 +34,8 @@ import com.handy.portal.model.Address;
 import com.handy.portal.model.Provider;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.MathUtils;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.MathUtils;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;

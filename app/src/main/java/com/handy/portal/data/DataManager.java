@@ -41,6 +41,7 @@ import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
+import com.handy.portal.setup.SetupData;
 import com.handy.portal.updater.model.UpdateDetails;
 
 import org.json.JSONObject;
@@ -68,6 +69,11 @@ public class DataManager
         mService = service;
         mEndpoint = endpoint;
         mStripeService = stripeService;
+    }
+
+    public void getSetupData(final Callback<SetupData> cb)
+    {
+        mService.getSetupData(new SetupDataRetrofitCallback(cb));
     }
 
     public void getLocationStrategies(String providerId, Callback<LocationScheduleStrategies> cb)
@@ -233,11 +239,6 @@ public class DataManager
     public void checkForUpdates(String appFlavor, int versionCode, final Callback<UpdateDetails> cb)
     {
         mService.checkUpdates(appFlavor, versionCode, new UpdateDetailsResponseHandyRetroFitCallback(cb));
-    }
-
-    public void checkForAllPendingTerms(final Callback<TermsDetailsGroup> cb)
-    {
-        mService.checkAllPendingTerms(new TermsDetailsGroupResponseHandyRetroFitCallback(cb));
     }
 
     public void acceptTerms(String termsCode, final Callback<Void> cb)

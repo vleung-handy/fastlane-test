@@ -13,6 +13,11 @@ public class BundleKeys
     public static final String BOOKING_PRIORITY_ACCESS = "BUNDLE_KEY_PRIORITIY_ACCESS";
     public static final String BOOKING_TRANSACTIONS = "booking_transactions";
 
+    public static final String PROVIDER_OPERATING_REGION = "provider_operating_region";
+    public static final String PROVIDER_WEEKLY_JOBS_COUNT = "provider_weekly_jobs_count";
+    public static final String PROVIDER_TIER_HOURLY_RATE = "provider_tier_hourly_rate";
+    public static final String PROVIDER_TIER = "provider_tier"; // 0, 1, 2
+
     public static final String DATE_EPOCH_TIME = "date_epoch_time";
     public static final String HELP_NODE = "help_node";
     public static final String HELP_NODE_ID = "help_node_id";
@@ -25,6 +30,10 @@ public class BundleKeys
     public static final String MESSAGE = "message";
     public static final String MESSAGE_ICON = "message_icon";
     public static final String EXTRAS = "extras";
+
+    // Terms
+    public static final String TERMS_GROUP = "terms_group";
+    public static final String TERMS = "terms";
 
     // UrbanAirship
     public static final String HANDY_PUSH_TYPE = "type_id";
@@ -61,4 +70,7 @@ public class BundleKeys
     public static final String NATIVE_ONBOARDING_LAUNCHED = "native_onboarding_launched";
     public static final String ZIPCLUSTERS_IDS = "zipcluster_ids";
     public static final String START_DATE = "start_date";
+
+    // Flow
+    public static final String FLOW_STEP_ID = "flow_step_id";
 }

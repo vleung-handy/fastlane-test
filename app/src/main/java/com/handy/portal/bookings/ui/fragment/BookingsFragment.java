@@ -39,8 +39,8 @@ import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.UIUtils;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.UIUtils;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -181,7 +181,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                     @Override
                     public void onRefresh()
                     {
-                        requestBookingsForSelectedDay(false);
+                        requestBookingsForSelectedDay(false, false);
                     }
                 };
         final SwipeRefreshLayout noBookingsSwipeRefreshLayout = getNoBookingsSwipeRefreshLayout();
@@ -222,19 +222,19 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     @OnClick(R.id.try_again_button)
     public void doRequestBookingsAgain()
     {
-        requestBookingsForSelectedDay(true);
+        requestBookingsForSelectedDay(true, true);
     }
 
     private void requestAllBookings()
     {
-        requestBookingsForSelectedDay(true);
+        requestBookingsForSelectedDay(true, true);
 
         requestBookingsForOtherDays(mSelectedDay);
     }
 
-    private void requestBookingsForSelectedDay(boolean showOverlay)
+    private void requestBookingsForSelectedDay(boolean showOverlay, boolean useCachedIfPresent)
     {
-        requestBookings(Lists.newArrayList(mSelectedDay), showOverlay, true);
+        requestBookings(Lists.newArrayList(mSelectedDay), showOverlay, useCachedIfPresent);
     }
 
     private void requestBookingsForOtherDays(Date dayToExclude)

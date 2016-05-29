@@ -9,7 +9,7 @@
     android:orientation="vertical"
     >
 
-    <com.handy.portal.ui.view.SimpleContentLayout
+    <com.handy.portal.library.ui.view.SimpleContentLayout
         android:id="@+id/shipping_summary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -71,7 +71,7 @@
         <include layout="@layout/view_edit_address"/>
     </LinearLayout>
 
-    <com.handy.portal.ui.view.SimpleContentLayout
+    <com.handy.portal.library.ui.view.SimpleContentLayout
         android:id="@+id/payment_summary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -118,7 +118,7 @@
     </LinearLayout>
 
 
-    <com.handy.portal.ui.view.SimpleContentLayout
+    <com.handy.portal.library.ui.view.SimpleContentLayout
         android:id="@+id/order_summary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

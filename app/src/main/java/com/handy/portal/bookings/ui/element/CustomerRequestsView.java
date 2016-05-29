@@ -8,7 +8,7 @@ import android.widget.LinearLayout;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.ui.widget.InstructionCheckItemView;
+import com.handy.portal.library.ui.widget.InstructionCheckItemView;
 
 import java.util.LinkedList;
 import java.util.List;

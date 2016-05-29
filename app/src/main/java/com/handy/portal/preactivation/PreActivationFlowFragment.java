@@ -12,7 +12,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.util.TextUtils;
+import com.handy.portal.library.util.TextUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

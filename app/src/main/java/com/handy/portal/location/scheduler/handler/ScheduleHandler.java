@@ -13,8 +13,8 @@ import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.location.scheduler.model.ScheduleStrategy;
-import com.handy.portal.util.ParcelableUtils;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.util.ParcelableUtils;
+import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Bus;
 
 import java.util.HashSet;

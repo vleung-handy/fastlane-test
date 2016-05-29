@@ -4,8 +4,8 @@ import android.text.TextUtils;
 
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.payments.model.PaymentInfo;
-import com.handy.portal.util.CurrencyUtils;
-import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.DateTimeUtils;
 
 /**
  * <p/>

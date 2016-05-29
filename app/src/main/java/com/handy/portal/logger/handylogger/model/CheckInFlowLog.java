@@ -1,11 +1,13 @@
 package com.handy.portal.logger.handylogger.model;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.LocationData;
-import com.handy.portal.util.MathUtils;
+import com.handy.portal.library.util.MathUtils;
 
 public class CheckInFlowLog extends EventLog
 {
@@ -26,7 +28,9 @@ public class CheckInFlowLog extends EventLog
     @SerializedName("distance_to_job")
     private double mDistance;
 
-    public CheckInFlowLog(final String eventType, final Booking booking, final LocationData location)
+    public CheckInFlowLog(final String eventType,
+                          @NonNull final Booking booking,
+                          final LocationData location)
     {
         super(eventType, EVENT_CONTEXT);
         mBookingId = booking.getId();

@@ -25,11 +25,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            tools:text="Tier 1"
+            android:text="@string/weekly_tier"
             />
 
         <TextView
-            android:id="@+id/tier_hourly_rate"
+            android:id="@+id/tier_description_hourly_rate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
@@ -37,7 +37,7 @@
             android:layout_toStartOf="@+id/video_chevron"
             android:textColor="@color/tertiary_gray"
             android:textSize="@dimen/large_text_size"
-            tools:text="$15"
+            tools:text="Tier 1: $15/hour"
             />
 
         <ImageView

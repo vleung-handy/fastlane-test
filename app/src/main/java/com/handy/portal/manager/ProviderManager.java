@@ -22,7 +22,7 @@ import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.PaymentFlow;
-import com.handy.portal.util.TextUtils;
+import com.handy.portal.library.util.TextUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -67,6 +67,11 @@ public class ProviderManager
     public void prefetch()
     {
         requestProviderInfo();
+    }
+
+    public void setProviderProfile(final ProviderProfile providerProfile)
+    {
+        mProviderProfileCache.put(PROVIDER_PROFILE_CACHE_KEY, providerProfile);
     }
 
     @Subscribe

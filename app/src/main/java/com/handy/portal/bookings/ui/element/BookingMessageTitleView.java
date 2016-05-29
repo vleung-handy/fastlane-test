@@ -4,7 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import com.handy.portal.R;
-import com.handy.portal.ui.element.LeftIndicatorTextView;
+import com.handy.portal.library.ui.view.LeftIndicatorTextView;
 
 /**
  * the view that displays the message listing or details title

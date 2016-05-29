@@ -13,6 +13,7 @@ import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.notification.ui.fragment.NotificationsFragment;
+import com.handy.portal.onboarding.ui.activity.ScheduleBuilderFragment;
 import com.handy.portal.payments.ui.fragment.BookingTransactionsWrapperFragment;
 import com.handy.portal.payments.ui.fragment.OutstandingFeesFragment;
 import com.handy.portal.payments.ui.fragment.PaymentBlockingFragment;
@@ -27,6 +28,7 @@ import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesWebViewFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
+import com.handy.portal.ui.fragment.dashboard.DashboardNewTiersFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardVideoLibraryFragment;
@@ -49,6 +51,7 @@ public enum MainViewTab implements Serializable
     CANCELLATION_REQUEST(CancellationRequestFragment.class),
     NOT_IN_PROGRESS_JOB_DETAILS(BookingFragment.class),
     SEND_RECEIPT_CHECKOUT(SendReceiptCheckoutFragment.class),
+    SCHEDULE_BUILDER(ScheduleBuilderFragment.class),
 
     NOTIFICATIONS(NotificationsFragment.class),
 
@@ -61,6 +64,7 @@ public enum MainViewTab implements Serializable
 
     DASHBOARD(RatingsAndFeedbackFragment.class),
     DASHBOARD_TIERS(DashboardTiersFragment.class),
+    DASHBOARD_NEW_TIERS(DashboardNewTiersFragment.class),
     DASHBOARD_REVIEWS(DashboardReviewsFragment.class),
     DASHBOARD_FEEDBACK(DashboardFeedbackFragment.class),
     DASHBOARD_VIDEO_LIBRARY(DashboardVideoLibraryFragment.class),

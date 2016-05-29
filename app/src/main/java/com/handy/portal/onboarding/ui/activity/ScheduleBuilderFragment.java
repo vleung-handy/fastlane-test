@@ -22,6 +22,8 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.manager.PrefsManager;
@@ -36,8 +38,6 @@ import com.handy.portal.onboarding.ui.view.OnboardJobGroupView;
 import com.handy.portal.preactivation.PreActivationFlowFragment;
 import com.handy.portal.preactivation.PurchaseSuppliesFragment;
 import com.handy.portal.ui.fragment.dialog.OnboardingJobClaimConfirmDialog;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.FragmentUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

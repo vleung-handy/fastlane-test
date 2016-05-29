@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.onboarding.model.BookingViewModel;
 import com.handy.portal.onboarding.model.BookingsWrapperViewModel;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.FontUtils;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.FontUtils;
 
 /**
  * This is a custom view that holds a collection of HandyJobView. It has a title to label

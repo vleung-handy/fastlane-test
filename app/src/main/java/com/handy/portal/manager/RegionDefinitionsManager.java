@@ -10,7 +10,7 @@ import com.google.gson.JsonSyntaxException;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
-import com.handy.portal.util.IOUtils;
+import com.handy.portal.library.util.IOUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
