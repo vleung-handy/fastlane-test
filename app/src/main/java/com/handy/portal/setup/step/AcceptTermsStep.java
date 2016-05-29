@@ -6,9 +6,9 @@ import android.content.Intent;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.flow.FlowStep;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.ui.activity.TermsActivity;
-import com.handy.portal.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

@@ -15,11 +15,11 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
+import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.util.DeeplinkUtils;
-import com.handy.portal.util.TextUtils;
 
 import javax.inject.Inject;
 
