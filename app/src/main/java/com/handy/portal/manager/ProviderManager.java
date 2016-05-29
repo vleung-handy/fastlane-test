@@ -69,6 +69,11 @@ public class ProviderManager
         requestProviderInfo();
     }
 
+    public void setProviderProfile(final ProviderProfile providerProfile)
+    {
+        mProviderProfileCache.put(PROVIDER_PROFILE_CACHE_KEY, providerProfile);
+    }
+
     @Subscribe
     public void onRequestProviderInfo(HandyEvent.RequestProviderInfo event)
     {

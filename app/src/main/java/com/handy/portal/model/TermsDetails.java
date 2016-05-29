@@ -2,7 +2,9 @@ package com.handy.portal.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class TermsDetails
+import java.io.Serializable;
+
+public class TermsDetails implements Serializable
 {
     @SerializedName("terms_code") private String code;
     @SerializedName("instructions") private String instructions;

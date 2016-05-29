@@ -30,6 +30,7 @@ import com.handy.portal.payments.ui.fragment.PaymentsFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsFragmentTest;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
+import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.TestActivity;
@@ -73,6 +74,7 @@ import static org.mockito.Mockito.when;
         SendReceiptCheckoutFragment.class,
         SendReceiptCheckoutFragmentTest.class,
         PaymentBatchListAdapter.class,
+        BaseActivity.SetupHandler.class,
 }, library = true)
 public class TestApplicationModule
 {

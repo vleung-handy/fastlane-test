@@ -22,7 +22,6 @@ import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.TermsDetails;
-import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.onboarding.model.JobClaimRequest;
 import com.handy.portal.onboarding.model.JobClaimResponse;
 
@@ -214,25 +213,6 @@ public abstract class HandyEvent
             this.available = available;
         }
     }
-
-
-    public static class RequestCheckTerms extends RequestEvent {}
-
-
-    public static class ReceiveCheckTermsSuccess extends ReceiveSuccessEvent
-    {
-        public final TermsDetailsGroup termsDetailsGroup;
-
-        public ReceiveCheckTermsSuccess(@NonNull TermsDetailsGroup termsDetailsGroup)
-        {
-            this.termsDetailsGroup = termsDetailsGroup;
-        }
-    }
-
-
-    public static class ReceiveCheckTermsError extends ReceiveErrorEvent {}
-
-    //Booking Lists
 
 
     public static class RequestBookingsEvent extends RequestEvent
@@ -1038,4 +1018,20 @@ public abstract class HandyEvent
     // tracking with iOS.
     @Track("portal authentication error shown")
     public static class LogOutProvider extends HandyEvent {}
+
+
+    public static class StepCompleted extends HandyEvent
+    {
+        private final int mStepId;
+
+        public StepCompleted(final int stepId)
+        {
+            mStepId = stepId;
+        }
+
+        public int getStepId()
+        {
+            return mStepId;
+        }
+    }
 }

@@ -17,12 +17,20 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.flow.Flow;
 import com.handy.portal.location.LocationUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.GoogleApiLog;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.setup.SetupData;
+import com.handy.portal.setup.SetupEvent;
+import com.handy.portal.setup.step.AcceptTermsStep;
+import com.handy.portal.setup.step.AppUpdateStep;
+import com.handy.portal.setup.step.OnboardingStep;
+import com.handy.portal.setup.step.SetConfigurationStep;
+import com.handy.portal.setup.step.SetProviderProfileStep;
 import com.handy.portal.library.ui.widget.ProgressDialog;
 import com.handy.portal.updater.AppUpdateEvent;
 import com.handy.portal.updater.AppUpdateEventListener;
@@ -30,6 +38,7 @@ import com.handy.portal.updater.AppUpdateFlowLauncher;
 import com.handy.portal.updater.ui.PleaseUpdateActivity;
 import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Bus;
+import com.squareup.otto.Subscribe;
 
 import java.util.Stack;
 
@@ -45,13 +54,29 @@ public abstract class BaseActivity extends AppCompatActivity
     private AppUpdateEventListener mAppUpdateEventListener;
     protected boolean allowCallbacks;
     private Stack<OnBackPressedListener> onBackPressedListenerStack;
-    protected ProgressDialog progressDialog;
 
     //According to android docs this is the preferred way of accessing location instead of using LocationManager
     //will also let us do geofencing and reverse address lookup which is nice
     //This is a clear instance where a service would be great but it is too tightly coupled to an activity to break out
     protected static GoogleApiClient googleApiClient;
     protected static Location lastLocation;
+    private SetupHandler mSetupHandler;
+
+    // this is meant to be optionally overridden
+    protected boolean shouldTriggerSetup()
+    {
+        return false;
+    }
+
+    // this is meant to be optionally overridden
+    protected void onSetupComplete()
+    {
+    }
+
+    // this is meant to be optionally overridden
+    protected void onSetupFailure()
+    {
+    }
 
     //Public Properties
     public boolean getAllowCallbacks()
@@ -106,6 +131,25 @@ public abstract class BaseActivity extends AppCompatActivity
         onBackPressedListenerStack = new Stack<>();
 
         buildGoogleApiClient();
+    }
+
+    @Override
+    protected void onPostResume()
+    {
+        super.onPostResume();
+        if (!isFinishing() && shouldTriggerSetup())
+        {
+            triggerSetup();
+        }
+    }
+
+    protected void triggerSetup()
+    {
+        if (mSetupHandler == null || !mSetupHandler.isOngoing())
+        {
+            mSetupHandler = new SetupHandler(this);
+            mSetupHandler.start();
+        }
     }
 
     @VisibleForTesting
@@ -305,5 +349,63 @@ public abstract class BaseActivity extends AppCompatActivity
     public void onConnectionFailed(ConnectionResult var1)
     {
         //TODO: Handle?
+    }
+
+    public static class SetupHandler
+    {
+        @Inject
+        Bus bus;
+
+        private BaseActivity mBaseActivity;
+        private Flow mSetupFlow;
+
+        public SetupHandler(final BaseActivity baseActivity)
+        {
+            Utils.inject(baseActivity, this);
+            bus.register(this);
+            mBaseActivity = baseActivity;
+        }
+
+        public void start()
+        {
+            bus.post(new SetupEvent.RequestSetupData());
+        }
+
+        public boolean isOngoing()
+        {
+            return mSetupFlow != null && !mSetupFlow.isComplete();
+        }
+
+        @Subscribe
+        public void onReceiveSetupDataSuccess(final SetupEvent.ReceiveSetupDataSuccess event)
+        {
+            final SetupData setupData = event.getSetupData();
+            mSetupFlow = new Flow()
+                    .addStep(new AppUpdateStep()) // this does NOTHING for now
+                    .addStep(new AcceptTermsStep(mBaseActivity,
+                            setupData.getTermsDetails()))
+                    .addStep(new SetConfigurationStep(mBaseActivity,
+                            setupData.getConfigurationResponse()))
+                    .addStep(new SetProviderProfileStep(mBaseActivity,
+                            setupData.getProviderProfile()))
+                    .addStep(new OnboardingStep())
+                    .setOnFlowCompleteListener(new Flow.OnFlowCompleteListener()
+                    {
+                        @Override
+                        public void onFlowComplete()
+                        {
+                            bus.unregister(SetupHandler.this);
+                            mBaseActivity.onSetupComplete();
+                        }
+                    })
+                    .start();
+        }
+
+        @Subscribe
+        public void onReceiveSetupDataError(final SetupEvent.ReceiveSetupDataError event)
+        {
+            bus.unregister(this);
+            mBaseActivity.onSetupFailure();
+        }
     }
 }
