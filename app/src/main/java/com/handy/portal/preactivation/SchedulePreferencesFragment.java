@@ -14,7 +14,6 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
-import com.handy.portal.onboarding.ui.activity.ScheduleBuilderFragment;
 import com.handy.portal.ui.adapter.CheckBoxListAdapter;
 import com.handy.portal.library.ui.view.StaticFieldTableRow;
 import com.handy.portal.ui.widget.TitleView;

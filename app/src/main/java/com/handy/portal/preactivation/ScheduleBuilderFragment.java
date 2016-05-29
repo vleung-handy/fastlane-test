@@ -1,4 +1,4 @@
-package com.handy.portal.onboarding.ui.activity;
+package com.handy.portal.preactivation;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -35,8 +35,6 @@ import com.handy.portal.onboarding.model.JobClaimRequest;
 import com.handy.portal.onboarding.ui.adapter.JobsRecyclerAdapter;
 import com.handy.portal.onboarding.ui.fragment.OnboardLoadingDialog;
 import com.handy.portal.onboarding.ui.view.OnboardJobGroupView;
-import com.handy.portal.preactivation.PreActivationFlowFragment;
-import com.handy.portal.preactivation.PurchaseSuppliesFragment;
 import com.handy.portal.ui.fragment.dialog.OnboardingJobClaimConfirmDialog;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
