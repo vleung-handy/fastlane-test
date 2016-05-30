@@ -22,6 +22,7 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.library.ui.view.LabelAndValueView;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
@@ -56,9 +57,9 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     @Bind(R.id.recycler_view)
     RecyclerView mRecyclerView;
     @Bind(R.id.start_date_view)
-    TextView mStartDateView;
+    LabelAndValueView mStartDateView;
     @Bind(R.id.locations_view)
-    TextView mLocationsView;
+    LabelAndValueView mLocationsView;
     @Bind(R.id.locations_view_container)
     View mLocationsViewContainer;
     @Bind(R.id.fetch_error_view)
@@ -128,6 +129,8 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     {
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        mStartDateView.setLabel(getString(R.string.start_date));
+        mLocationsView.setLabel(getString(R.string.locations));
         displaySelectedStartDate();
         if (shouldDisplaySelectedLocations())
         {
@@ -141,14 +144,14 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
 
     private void displaySelectedStartDate()
     {
-        mStartDateView.setText(DateTimeUtils.DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER
+        mStartDateView.setValue(DateTimeUtils.DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER
                 .format(mSelectedStartDate.getTime()));
     }
 
     private void displaySelectedLocations()
     {
         final int count = mSelectedZipclusterIds.size();
-        mLocationsView.setText(getResources().getQuantityString(
+        mLocationsView.setValue(getResources().getQuantityString(
                 R.plurals.locations_selected_count_formatted, count, count));
     }
 

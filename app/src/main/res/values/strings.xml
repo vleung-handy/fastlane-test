@@ -518,6 +518,7 @@
     <string name="ready_to_commit">Ready to commit?</string>
     <string name="about_to_claim_and_order">You\'re about to claim jobs and order supplies. Time to double-check everything.</string>
     <string name="finish_building_schedule">Finish Building Schedule</string>
+    <string name="your_schedule">Your Schedule</string>
     <string name="schedule_preferences_notice">You\'ll have more options if you select multiple locations. If we can\'t find any jobs in your locations, we\'ll search for jobs nearby.</string>
     <plurals name="locations_selected_count_formatted">
         <item quantity="one">%1$d location selected</item>

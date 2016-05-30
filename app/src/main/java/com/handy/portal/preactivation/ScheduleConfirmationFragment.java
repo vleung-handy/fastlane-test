@@ -1,14 +1,39 @@
 package com.handy.portal.preactivation;
 
+import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.handy.portal.R;
+import com.handy.portal.library.ui.view.LabelAndValueView;
+import com.handy.portal.library.ui.view.SimpleContentLayout;
+
+import butterknife.Bind;
 
 public class ScheduleConfirmationFragment extends PreActivationFlowFragment
 {
+    @Bind(R.id.jobs_container)
+    ViewGroup mJobsContainer;
+    @Bind(R.id.shipping_view)
+    SimpleContentLayout mShippingView;
+    @Bind(R.id.payment_view)
+    LabelAndValueView mPaymentView;
+    @Bind(R.id.order_total_view)
+    LabelAndValueView mOrderTotalView;
+
     public static ScheduleConfirmationFragment newInstance()
     {
         return new ScheduleConfirmationFragment();
+    }
+
+    @Override
+    public void onViewCreated(final View view, final Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        mShippingView.setContent("Ship To", "123 Penny Lane\nBrooklyn, NY 11321");
+        mPaymentView.setContent("Payment", "Card ending in 1234");
+        mOrderTotalView.setContent("Order Total", "$50");
     }
 
     @Override
