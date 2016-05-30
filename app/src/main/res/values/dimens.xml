@@ -101,7 +101,6 @@
     <dimen name="customer_no_show_banner_height">48dp</dimen>
 
     <!--job list-->
-    <dimen name="job_cell_min_height">128dp</dimen>
     <dimen name="job_cell_icon_size">40dp</dimen>
     <dimen name="job_cell_dot_size">8dp</dimen>
     <dimen name="job_cell_left_strip_indicator_width">5dp</dimen>

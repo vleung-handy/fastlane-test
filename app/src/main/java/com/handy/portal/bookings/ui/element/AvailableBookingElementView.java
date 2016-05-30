@@ -128,7 +128,7 @@ public class AvailableBookingElementView extends BookingElementView
         mStartTimeText.setText(formattedStartDate.toLowerCase());
         mEndTimeText.setText(formattedEndDate.toLowerCase());
 
-        this.associatedView = convertView;
+        mAssociatedView = convertView;
 
         return convertView;
     }

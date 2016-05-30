@@ -235,9 +235,7 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
     {
         if (mSelectedStartDate != null)
         {
-            final String dateString = DateTimeUtils.DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER
-                    .format(mSelectedStartDate.getTime());
-            mDateField.setValue(dateString);
+            mDateField.setValue(DateTimeUtils.formatDayOfWeekMonthDateYear(mSelectedStartDate));
         }
         else
         {

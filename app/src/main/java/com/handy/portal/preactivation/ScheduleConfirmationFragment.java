@@ -5,9 +5,17 @@ import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.common.base.Function;
+import com.google.common.collect.Collections2;
+import com.google.common.collect.Lists;
 import com.handy.portal.R;
+import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.ui.element.PendingBookingElementView;
 import com.handy.portal.library.ui.view.LabelAndValueView;
 import com.handy.portal.library.ui.view.SimpleContentLayout;
+import com.handy.portal.onboarding.model.JobClaim;
+
+import java.util.ArrayList;
 
 import butterknife.Bind;
 
@@ -31,9 +39,22 @@ public class ScheduleConfirmationFragment extends PreActivationFlowFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+        displayPendingBookings();
+        // FIXME: Pull from server
         mShippingView.setContent("Ship To", "123 Penny Lane\nBrooklyn, NY 11321");
         mPaymentView.setContent("Payment", "Card ending in 1234");
         mOrderTotalView.setContent("Order Total", "$50");
+    }
+
+    private void displayPendingBookings()
+    {
+        mJobsContainer.removeAllViews();
+        for (final Booking booking : getPendingBookings())
+        {
+            final PendingBookingElementView elementView = new PendingBookingElementView();
+            elementView.initView(getActivity(), booking, null, mJobsContainer);
+            mJobsContainer.addView(elementView.getAssociatedView());
+        }
     }
 
     @Override
@@ -71,7 +92,20 @@ public class ScheduleConfirmationFragment extends PreActivationFlowFragment
     @Override
     protected void onPrimaryButtonClicked()
     {
-        // FIXME: Claim jobs here
-        getActivity().finish();
+        final ArrayList<JobClaim> jobClaims = Lists.newArrayList(Collections2.transform(
+                getPendingBookings(),
+                new Function<Booking, JobClaim>()
+                {
+                    @Nullable
+                    @Override
+                    public JobClaim apply(final Booking booking)
+                    {
+                        final String bookingId = booking.getId();
+                        final String bookingType = booking.getType().name().toLowerCase();
+                        return new JobClaim(bookingId, bookingType);
+                    }
+                }));
+
+//        bus.post(new HandyEvent.RequestClaimJobs(new JobClaimRequest(jobClaims)));
     }
 }

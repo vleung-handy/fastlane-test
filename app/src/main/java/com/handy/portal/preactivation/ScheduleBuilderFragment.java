@@ -144,8 +144,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
 
     private void displaySelectedStartDate()
     {
-        mStartDateView.setValue(DateTimeUtils.DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER
-                .format(mSelectedStartDate.getTime()));
+        mStartDateView.setValue(DateTimeUtils.formatDayOfWeekMonthDateYear(mSelectedStartDate));
     }
 
     private void displaySelectedLocations()

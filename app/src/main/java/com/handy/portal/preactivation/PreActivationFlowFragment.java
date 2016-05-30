@@ -10,9 +10,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.ui.fragment.ActionBarFragment;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -176,5 +179,10 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
             errorMessage = getString(R.string.an_error_has_occurred);
         }
         showToast(errorMessage);
+    }
+
+    public List<Booking> getPendingBookings()
+    {
+        return ((PreActivationFlowActivity) getActivity()).getPendingBookings();
     }
 }

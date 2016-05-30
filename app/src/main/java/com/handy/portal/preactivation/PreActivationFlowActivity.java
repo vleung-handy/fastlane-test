@@ -7,14 +7,18 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 
 import com.handy.portal.R;
+import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.MainActivity;
 
+import java.util.List;
+
 public class PreActivationFlowActivity extends BaseActivity
 {
     private OnboardingSuppliesInfo mOnboardingSuppliesInfo;
+    private List<Booking> mPendingBookings;
 
     @Override
     protected boolean shouldTriggerSetup()
@@ -70,5 +74,10 @@ public class PreActivationFlowActivity extends BaseActivity
     private void goToFirstStep()
     {
         next(SchedulePreferencesFragment.newInstance(mOnboardingSuppliesInfo), false);
+    }
+
+    public List<Booking> getPendingBookings()
+    {
+        return mPendingBookings;
     }
 }

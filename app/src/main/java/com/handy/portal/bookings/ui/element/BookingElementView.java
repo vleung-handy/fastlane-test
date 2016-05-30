@@ -15,7 +15,12 @@ public abstract class BookingElementView
     protected static final DateFormat TIME_OF_DAY_FORMAT =
             new SimpleDateFormat("h:mm a", Locale.getDefault());
 
-    public View associatedView;
+    protected View mAssociatedView;
 
     public abstract View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent);
+
+    public View getAssociatedView()
+    {
+        return mAssociatedView;
+    }
 }
