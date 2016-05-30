@@ -114,8 +114,12 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        final boolean allowBackNavigation =
-                getArguments().getBoolean(BundleKeys.ALLOW_BACK_NAVIGATION, false);
+        boolean allowBackNavigation = false;
+        if (getArguments() != null)
+        {
+            allowBackNavigation =
+                    getArguments().getBoolean(BundleKeys.ALLOW_BACK_NAVIGATION, false);
+        }
         setActionBar(getTitle(), allowBackNavigation);
     }
 

@@ -12,6 +12,7 @@ import dagger.Module;
                 DeclineSuppliesDialogFragment.class,
                 ScheduleBuilderFragment.class,
                 SchedulePreferencesFragment.class,
+                ScheduleConfirmationFragment.class,
         })
 public class PreActivationModule
 {
