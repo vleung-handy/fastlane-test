@@ -465,6 +465,7 @@ public class MainActivityFragment extends InjectedFragment
                 .init(R.string.tab_notifications, R.drawable.ic_menu_notifications);
         mButtonMore = new TabButton(getContext())
                 .init(R.string.tab_more, R.drawable.ic_menu_more);
+        mButtonMore.setId(R.id.tab_nav_item_more);
         mTabs.setTabs(mJobsButton, mScheduleButton, mNotificationsButton, mButtonMore);
 
         mJobsButton.setOnClickListener(
