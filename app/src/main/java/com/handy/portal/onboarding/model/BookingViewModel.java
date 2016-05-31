@@ -55,14 +55,4 @@ public class BookingViewModel
     {
         return mBooking;
     }
-
-    public int getBookingAmountCents()
-    {
-        return mBooking.getPaymentToProvider().getAmount();
-    }
-
-    public String getCurrencySymbol()
-    {
-        return mBooking.getPaymentToProvider().getCurrencySymbol();
-    }
 }
