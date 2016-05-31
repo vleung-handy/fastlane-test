@@ -60,8 +60,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     LabelAndValueView mStartDateView;
     @Bind(R.id.locations_view)
     LabelAndValueView mLocationsView;
-    @Bind(R.id.locations_view_container)
-    View mLocationsViewContainer;
     @Bind(R.id.fetch_error_view)
     View mFetchErrorView;
     @Bind(R.id.fetch_error_text)
@@ -138,7 +136,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         }
         else
         {
-            mLocationsViewContainer.setVisibility(View.GONE);
+            mLocationsView.setVisibility(View.GONE);
         }
     }
 
