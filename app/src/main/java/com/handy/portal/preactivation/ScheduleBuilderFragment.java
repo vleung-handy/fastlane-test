@@ -128,15 +128,15 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         super.onResume();
         mIsResumed = true;
 
-        if (getBookingsWrappers().isEmpty())
-        {
-            showLoadingDialog();
-            loadJobs();
-        }
-        else if (isLoadingDialogVisible())
+        if (!getBookingsWrappers().isEmpty() && isLoadingDialogVisible())
         {
             mLoadingDialog.dismiss();
             mRecyclerView.startLayoutAnimation();
+        }
+        else
+        {
+            showLoadingDialog();
+            loadJobs();
         }
     }
 
