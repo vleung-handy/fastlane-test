@@ -13,6 +13,7 @@ import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.MainActivity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class PreActivationFlowActivity extends BaseActivity
@@ -34,6 +35,7 @@ public class PreActivationFlowActivity extends BaseActivity
                 .getSerializableExtra(BundleKeys.ONBOARDING_SUPPLIES);
         setContentView(R.layout.activity_pre_activation_flow);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        mPendingBookings = new ArrayList<>();
         goToFirstStep();
     }
 
@@ -80,12 +82,13 @@ public class PreActivationFlowActivity extends BaseActivity
         next(SchedulePreferencesFragment.newInstance(), false);
     }
 
+    @NonNull
     public List<Booking> getPendingBookings()
     {
         return mPendingBookings;
     }
 
-    public void setPendingBookings(final List<Booking> pendingBookings)
+    public void setPendingBookings(@NonNull final List<Booking> pendingBookings)
     {
         mPendingBookings = pendingBookings;
     }
