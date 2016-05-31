@@ -1,7 +1,5 @@
 package com.handy.portal.preactivation;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -17,18 +15,15 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.RequestCode;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.ui.view.LabelAndValueView;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.onboarding.ui.adapter.JobsRecyclerAdapter;
 import com.handy.portal.onboarding.ui.fragment.OnboardLoadingDialog;
 import com.handy.portal.onboarding.ui.view.OnboardJobGroupView;
-import com.handy.portal.ui.fragment.dialog.OnboardingJobClaimConfirmDialog;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -296,27 +291,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     }
 
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
-    {
-        if (resultCode == Activity.RESULT_OK)
-        {
-            switch (requestCode)
-            {
-                case RequestCode.CONFIRM_REQUEST:
-                    confirmJobClaims();
-                    break;
-            }
-        }
-    }
-
-    private void confirmJobClaims()
-    {
-        showLoadingOverlay();
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSubmitted()));
-        next();
-    }
-
-    @Override
     protected int getLayoutResId()
     {
         return R.layout.view_schedule_builder;
@@ -351,23 +325,14 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     @Override
     protected void onPrimaryButtonClicked()
     {
-        final List<Booking> selectedBookings = mAdapter.getSelectedBookings();
-        if (!selectedBookings.isEmpty())
+        if (mAdapter != null)
         {
-            //show confirmation dialog to confirm the selected jobs.
-            final OnboardingJobClaimConfirmDialog fragment =
-                    OnboardingJobClaimConfirmDialog.newInstance();
-            fragment.setTargetFragment(this, RequestCode.CONFIRM_REQUEST);
-            FragmentUtils.safeLaunchDialogFragment(
-                    fragment,
-                    getActivity(),
-                    null
-            );
+            final List<Booking> selectedBookings = mAdapter.getSelectedBookings();
+            if (!selectedBookings.isEmpty())
+            {
+                bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSubmitted()));
+                next(ScheduleConfirmationFragment.newInstance());
+            }
         }
-    }
-
-    private void next()
-    {
-        next(PurchaseSuppliesFragment.newInstance(mOnboardingSuppliesInfo));
     }
 }
