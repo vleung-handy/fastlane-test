@@ -3,8 +3,6 @@ package com.handy.portal.logger.handylogger.model;
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.Booking;
 
-import java.util.ArrayList;
-
 /**
  * FWIW, this is where the logging docs are:
  * <p/>
@@ -27,13 +25,9 @@ public class NativeOnboardingLog extends EventLog
     {
         private static final String EVENT_TYPE = "claim_batch_submitted";
 
-        @SerializedName("booking_ids")
-        private ArrayList mBookingsIds;
-
-        public ClaimBatchSubmitted(final ArrayList<String> bookingIds)
+        public ClaimBatchSubmitted()
         {
             super(EVENT_TYPE);
-            mBookingsIds = bookingIds;
         }
     }
 
@@ -48,13 +42,9 @@ public class NativeOnboardingLog extends EventLog
     {
         private static final String EVENT_TYPE = "claim_batch_success";
 
-        @SerializedName("booking_ids")
-        private ArrayList mBookingsIds;
-
-        public ClaimBatchSuccess(final ArrayList<String> bookingIds)
+        public ClaimBatchSuccess()
         {
             super(EVENT_TYPE);
-            mBookingsIds = bookingIds;
         }
     }
 
@@ -66,16 +56,12 @@ public class NativeOnboardingLog extends EventLog
     {
         private static final String EVENT_TYPE = "claim_batch_error";
 
-        @SerializedName("booking_ids")
-        private ArrayList mBookingsIds;
-
         @SerializedName("error_message")
         private String mErrorMessage;
 
-        public ClaimBatchError(final ArrayList<String> bookingIds, String errorMessage)
+        public ClaimBatchError(String errorMessage)
         {
             super(EVENT_TYPE);
-            mBookingsIds = bookingIds;
             mErrorMessage = errorMessage;
         }
     }
