@@ -11,16 +11,13 @@ import com.handy.portal.onboarding.ui.view.OnboardJobGroupView;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- */
 public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapter.RecyclerViewHolder>
 {
     private List<BookingsWrapperViewModel> mBookingsWrapperViewModels;
     private OnboardJobGroupView.OnJobChangeListener mOnJobChangeListener;
 
-    public JobsRecyclerAdapter(List<BookingsWrapper> bookings, String title,
-                               OnboardJobGroupView.OnJobChangeListener mListener,
-                               String defaultSubtitle)
+    public JobsRecyclerAdapter(List<BookingsWrapper> bookings,
+                               OnboardJobGroupView.OnJobChangeListener mListener)
     {
 
         mBookingsWrapperViewModels = new ArrayList<>();
@@ -33,7 +30,7 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
                 continue;
             }
 
-            mBookingsWrapperViewModels.add(new BookingsWrapperViewModel(bookingsWrapper, defaultSubtitle));
+            mBookingsWrapperViewModels.add(new BookingsWrapperViewModel(bookingsWrapper));
         }
 
         mOnJobChangeListener = mListener;

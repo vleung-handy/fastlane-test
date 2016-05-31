@@ -264,12 +264,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
             }
             else
             {
-                mAdapter = new JobsRecyclerAdapter(
-                        bookingsWrappers,
-                        getString(R.string.onboard_getting_started_title),
-                        ScheduleBuilderFragment.this,
-                        getResources().getString(R.string.onboard_no_time_available)
-                );
+                mAdapter = new JobsRecyclerAdapter(bookingsWrappers, ScheduleBuilderFragment.this);
                 mRecyclerView.setAdapter(mAdapter);
                 mRecyclerView.startLayoutAnimation();
             }
