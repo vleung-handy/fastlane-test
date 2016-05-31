@@ -22,15 +22,12 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
-import com.handy.portal.onboarding.model.BookingViewModel;
-import com.handy.portal.onboarding.model.BookingsWrapperViewModel;
 import com.handy.portal.onboarding.model.JobClaim;
 import com.handy.portal.onboarding.model.JobClaimRequest;
 import com.handy.portal.onboarding.ui.adapter.JobsRecyclerAdapter;
@@ -183,7 +180,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         mBookingsListWrapper = null;
         mJobLoaded = false;
         mFetchErrorView.setVisibility(View.GONE);
-        mBus.post(new HandyEvent.RequestOnboardingJobs(mSelectedStartDate, mSelectedZipclusterIds));
+        mBus.post(new HandyEvent.RequestOnboardingJobs(null, mSelectedZipclusterIds));
     }
 
     @NonNull
@@ -306,41 +303,15 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         updateButton();
     }
 
-    /**
-     * Calculates the job prices, and updates that information on the button.
-     */
     public void updateButton()
     {
-        //one of the jobs changed price, re-calculate
-        int sumCents = 0;
-        if (mAdapter != null)
+        if (mAdapter != null && !mAdapter.getSelectedBookings().isEmpty())
         {
-            for (BookingsWrapperViewModel model : mAdapter.getBookingsWrapperViewModels())
-            {
-                for (BookingViewModel bookingView : model.getBookingViewModels())
-                {
-                    if (bookingView.isSelected())
-                    {
-                        sumCents += bookingView.getBookingAmountCents();
-                    }
-                }
-            }
-        }
-
-        if (sumCents > 0)
-        {
-            final String symbol = mAdapter.getBookingsWrapperViewModels().get(0)
-                    .getBookingViewModels().get(0).getCurrencySymbol();
-            final String formattedPrice = CurrencyUtils.formatPriceWithoutCents(sumCents, symbol);
-            final String claimText = String.format(getString(
-                    R.string.onboard_claim_and_earn_formatted), formattedPrice);
-            mSingleActionButton.setText(claimText);
             mSingleActionButton.setAlpha(1.0f);
             mSingleActionButton.setEnabled(true);
         }
         else
         {
-            mSingleActionButton.setText(R.string.continue_to_next_step);
             mSingleActionButton.setAlpha(0.5f);
             mSingleActionButton.setEnabled(false);
         }
@@ -489,19 +460,9 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     {
         final ArrayList<JobClaim> jobs = new ArrayList<>();
         mBookingIdsToClaim = new ArrayList<>();
-        for (BookingsWrapperViewModel model : mAdapter.getBookingsWrapperViewModels())
+        for (final Booking booking : mAdapter.getSelectedBookings())
         {
-            for (BookingViewModel bookingView : model.getBookingViewModels())
-            {
-                if (bookingView.isSelected())
-                {
-                    jobs.add(new JobClaim(
-                            bookingView.getBooking().getId(),
-                            bookingView.getBooking().getType().name().toLowerCase())
-                    );
-                    mBookingIdsToClaim.add(bookingView.getBooking().getId());
-                }
-            }
+            mBookingIdsToClaim.add(booking.getId());
         }
         mJobClaimRequest = new JobClaimRequest(jobs);
 
