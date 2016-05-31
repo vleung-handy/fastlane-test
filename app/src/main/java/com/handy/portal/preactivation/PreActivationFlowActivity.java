@@ -73,7 +73,7 @@ public class PreActivationFlowActivity extends BaseActivity
 
     private void goToFirstStep()
     {
-        next(SchedulePreferencesFragment.newInstance(mOnboardingSuppliesInfo), false);
+        next(SchedulePreferencesFragment.newInstance(), false);
     }
 
     public List<Booking> getPendingBookings()

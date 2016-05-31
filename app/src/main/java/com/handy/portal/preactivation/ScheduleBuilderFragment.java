@@ -25,7 +25,6 @@ import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
-import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
 import com.handy.portal.onboarding.ui.adapter.JobsRecyclerAdapter;
 import com.handy.portal.onboarding.ui.fragment.OnboardLoadingDialog;
 import com.handy.portal.onboarding.ui.view.OnboardJobGroupView;
@@ -70,16 +69,13 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
 
     private Date mSelectedStartDate;
     private ArrayList<Integer> mSelectedZipclusterIds;
-    private OnboardingSuppliesInfo mOnboardingSuppliesInfo;
 
     public static ScheduleBuilderFragment newInstance(
-            final OnboardingSuppliesInfo onboardingSuppliesInfo,
             final Date selectedStartDate,
             final ArrayList<Integer> selectedZipclusterIds)
     {
         final ScheduleBuilderFragment fragment = new ScheduleBuilderFragment();
         final Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.ONBOARDING_SUPPLIES, onboardingSuppliesInfo);
         arguments.putSerializable(BundleKeys.PROVIDER_START_DATE, selectedStartDate);
         arguments.putSerializable(BundleKeys.ZIPCLUSTERS_IDS, selectedZipclusterIds);
         fragment.setArguments(arguments);
@@ -91,8 +87,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mOnboardingSuppliesInfo = (OnboardingSuppliesInfo) getArguments()
-                .getSerializable(BundleKeys.ONBOARDING_SUPPLIES);
         mSelectedStartDate = (Date) getArguments().getSerializable(BundleKeys.PROVIDER_START_DATE);
         mSelectedZipclusterIds = (ArrayList<Integer>) getArguments()
                 .getSerializable(BundleKeys.ZIPCLUSTERS_IDS);
