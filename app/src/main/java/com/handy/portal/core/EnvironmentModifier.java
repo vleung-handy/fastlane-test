@@ -11,7 +11,7 @@ import java.util.Properties;
 
 public class EnvironmentModifier
 {
-    private static final String DEFAULT_ENVIRONMENT_PREFIX = "s";
+    private static final String DEFAULT_ENVIRONMENT_PREFIX = "ms";
     private final PrefsManager prefsManager;
     private boolean pinRequestEnabled = true;
 
