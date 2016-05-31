@@ -10,7 +10,6 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.ui.element.PendingBookingElementView;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.ui.view.LabelAndValueView;
@@ -22,7 +21,6 @@ import com.handy.portal.onboarding.model.JobClaimRequest;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 
@@ -99,6 +97,7 @@ public class ScheduleConfirmationFragment extends PreActivationFlowFragment
     @Override
     protected void onPrimaryButtonClicked()
     {
+        showLoadingOverlay();
         final ArrayList<JobClaim> jobClaims = Lists.newArrayList(Collections2.transform(
                 getPendingBookings(),
                 new Function<Booking, JobClaim>()
@@ -112,7 +111,6 @@ public class ScheduleConfirmationFragment extends PreActivationFlowFragment
                         return new JobClaim(bookingId, bookingType);
                     }
                 }));
-
         bus.post(new HandyEvent.RequestClaimJobs(new JobClaimRequest(jobClaims)));
     }
 
@@ -123,32 +121,9 @@ public class ScheduleConfirmationFragment extends PreActivationFlowFragment
     public void onReceiveClaimJobsSuccess(HandyEvent.ReceiveClaimJobsSuccess event)
     {
         hideLoadingOverlay();
-
-        bus.post(new LogEvent.AddLogEvent(
-                new NativeOnboardingLog.ClaimBatchSuccess()));
-
-        final String message = event.getJobClaimResponse().getMessage();
-        final List<BookingClaimDetails> bookingClaims = event.getJobClaimResponse().getJobs();
-
-
-        if (bookingClaims.isEmpty())
-        {
-            // FIXME: Do something else
-            showError("Nothing was claimed.");
-        }
-        else
-        {
-            if (getPendingBookings().size() == bookingClaims.size())
-            {
-                // I was able to claim 100% of the jobs I wanted
-                terminate();
-            }
-            else
-            {
-                // FIXME: Display a message
-                terminate();
-            }
-        }
+        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSuccess()));
+        // FIXME: Handle no claims, partial claims and full claims properly
+        terminate();
     }
 
     @Subscribe
