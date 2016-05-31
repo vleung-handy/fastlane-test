@@ -185,4 +185,9 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
     {
         return ((PreActivationFlowActivity) getActivity()).getPendingBookings();
     }
+
+    public void setPendingBookings(final List<Booking> bookings)
+    {
+        ((PreActivationFlowActivity) getActivity()).setPendingBookings(bookings);
+    }
 }

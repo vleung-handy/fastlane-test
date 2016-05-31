@@ -80,4 +80,9 @@ public class PreActivationFlowActivity extends BaseActivity
     {
         return mPendingBookings;
     }
+
+    public void setPendingBookings(final List<Booking> pendingBookings)
+    {
+        mPendingBookings = pendingBookings;
+    }
 }

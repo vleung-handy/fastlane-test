@@ -331,6 +331,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
             if (!selectedBookings.isEmpty())
             {
                 bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSubmitted()));
+                setPendingBookings(selectedBookings);
                 next(ScheduleConfirmationFragment.newInstance());
             }
         }
