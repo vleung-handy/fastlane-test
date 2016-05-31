@@ -56,12 +56,14 @@
             android:id="@+id/payment_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="@dimen/default_padding"
             />
 
         <com.handy.portal.library.ui.view.LabelAndValueView
             android:id="@+id/order_total_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:padding="@dimen/default_padding"
             />
 
     </LinearLayout>
