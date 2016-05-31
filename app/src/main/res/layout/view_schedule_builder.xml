@@ -12,18 +12,18 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/default_margin"
-        android:background="@color/white"
-        android:divider="?android:attr/dividerHorizontal"
-        android:dividerPadding="@dimen/default_padding"
+        android:background="@drawable/border_gray_no_side"
         android:orientation="vertical"
-        android:showDividers="middle"
+        android:paddingEnd="@dimen/default_padding"
+        android:paddingStart="@dimen/default_padding"
         >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:padding="@dimen/default_padding"
+            android:paddingBottom="@dimen/default_padding"
+            android:paddingTop="@dimen/default_padding"
             >
 
             <TextView
@@ -50,10 +50,14 @@
 
 
         <LinearLayout
+            android:id="@+id/locations_view_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="1dp"
+            android:background="@drawable/border_gray_top"
             android:orientation="horizontal"
-            android:padding="@dimen/default_padding"
+            android:paddingBottom="@dimen/default_padding"
+            android:paddingTop="@dimen/default_padding"
             >
 
             <TextView

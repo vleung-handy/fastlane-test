@@ -32,6 +32,8 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
     StaticFieldTableRow mDateField;
     @Bind(R.id.location_field)
     StaticFieldTableRow mLocationField;
+    @Bind(R.id.schedule_preferences_notice)
+    View mSchedulePreferencesNotice;
 
     private Date mSelectedStartDate;
     private ArrayList<Integer> mSelectedZipclusterIds;
@@ -149,7 +151,15 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
         mDateField.setLabel(R.string.start_date);
         mLocationField.setLabel(R.string.locations);
         displaySelectedStartDate();
-        displaySelectedLocations();
+        if (shouldDisplayLocationField())
+        {
+            displaySelectedLocations();
+        }
+        else
+        {
+            mLocationField.setVisibility(View.GONE);
+            mSchedulePreferencesNotice.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -207,7 +217,7 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
             mDateField.setErrorState(true);
             allFieldsValid = false;
         }
-        if (mSelectedZipclusterIds.isEmpty())
+        if (shouldDisplayLocationField() && mSelectedZipclusterIds.isEmpty())
         {
             mLocationField.setErrorState(true);
             allFieldsValid = false;
@@ -252,7 +262,7 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
 
     private void displaySelectedLocations()
     {
-        final int count = mSelectedZipclusterIds != null ? mSelectedZipclusterIds.size() : 0;
+        final int count = mSelectedZipclusterIds.size();
         if (count > 0)
         {
             mLocationField.setValue(getResources().getQuantityString(
@@ -262,5 +272,10 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
         {
             mLocationField.setValue(null).setHint(R.string.choose_locations);
         }
+    }
+
+    private boolean shouldDisplayLocationField()
+    {
+        return mLocationViewModels != null && mLocationViewModels.length > 0;
     }
 }

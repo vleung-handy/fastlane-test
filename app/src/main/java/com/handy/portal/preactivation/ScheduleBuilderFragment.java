@@ -62,6 +62,8 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     TextView mStartDateView;
     @Bind(R.id.locations_view)
     TextView mLocationsView;
+    @Bind(R.id.locations_view_container)
+    View mLocationsViewContainer;
     @Bind(R.id.fetch_error_view)
     View mFetchErrorView;
     @Bind(R.id.fetch_error_text)
@@ -130,7 +132,14 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         displaySelectedStartDate();
-        displaySelectedLocations();
+        if (shouldDisplaySelectedLocations())
+        {
+            displaySelectedLocations();
+        }
+        else
+        {
+            mLocationsViewContainer.setVisibility(View.GONE);
+        }
     }
 
     private void displaySelectedStartDate()
@@ -144,6 +153,11 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         final int count = mSelectedZipclusterIds.size();
         mLocationsView.setText(getResources().getQuantityString(
                 R.plurals.locations_selected_count_formatted, count, count));
+    }
+
+    private boolean shouldDisplaySelectedLocations()
+    {
+        return mSelectedZipclusterIds != null && !mSelectedZipclusterIds.isEmpty();
     }
 
     @Override
