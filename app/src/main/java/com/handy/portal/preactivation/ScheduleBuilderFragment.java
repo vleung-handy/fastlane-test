@@ -22,6 +22,7 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
@@ -43,7 +44,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -298,7 +298,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     public void updateButton()
     {
         //one of the jobs changed price, re-calculate
-        float sum = 0;
+        int sumCents = 0;
         if (mAdapter != null)
         {
             for (BookingsWrapperViewModel model : mAdapter.getBookingsWrapperViewModels())
@@ -307,17 +307,17 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
                 {
                     if (bookingView.isSelected())
                     {
-                        sum += bookingView.getBookingAmount();
+                        sumCents += bookingView.getBookingAmountCents();
                     }
                 }
             }
         }
 
-        if (sum > 0)
+        if (sumCents > 0)
         {
             final String symbol = mAdapter.getBookingsWrapperViewModels().get(0)
                     .getBookingViewModels().get(0).getCurrencySymbol();
-            final String formattedPrice = symbol + String.format(Locale.getDefault(), "%.0f", sum);
+            final String formattedPrice = CurrencyUtils.formatPriceWithoutCents(sumCents, symbol);
             final String claimText = String.format(getString(
                     R.string.onboard_claim_and_earn_formatted), formattedPrice);
             mSingleActionButton.setText(claimText);

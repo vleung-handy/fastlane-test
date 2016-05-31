@@ -56,9 +56,9 @@ public class BookingViewModel
         return mBooking;
     }
 
-    public float getBookingAmount()
+    public int getBookingAmountCents()
     {
-        return mBooking.getPaymentToProvider().getAdjustedAmount();
+        return mBooking.getPaymentToProvider().getAmount();
     }
 
     public String getCurrencySymbol()
