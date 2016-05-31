@@ -4,23 +4,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
+import com.handy.portal.onboarding.model.BookingViewModel;
 import com.handy.portal.onboarding.model.BookingsWrapperViewModel;
 import com.handy.portal.onboarding.ui.view.OnboardJobGroupView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- */
 public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapter.RecyclerViewHolder>
 {
     private List<BookingsWrapperViewModel> mBookingsWrapperViewModels;
     private OnboardJobGroupView.OnJobChangeListener mOnJobChangeListener;
 
-    public JobsRecyclerAdapter(List<BookingsWrapper> bookings, String title,
-                               OnboardJobGroupView.OnJobChangeListener mListener,
-                               String defaultSubtitle)
+    public JobsRecyclerAdapter(List<BookingsWrapper> bookings,
+                               OnboardJobGroupView.OnJobChangeListener mListener)
     {
 
         mBookingsWrapperViewModels = new ArrayList<>();
@@ -33,7 +32,7 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
                 continue;
             }
 
-            mBookingsWrapperViewModels.add(new BookingsWrapperViewModel(bookingsWrapper, defaultSubtitle));
+            mBookingsWrapperViewModels.add(new BookingsWrapperViewModel(bookingsWrapper));
         }
 
         mOnJobChangeListener = mListener;
@@ -68,6 +67,22 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
     public int getItemCount()
     {
         return mBookingsWrapperViewModels.size();
+    }
+
+    public List<Booking> getSelectedBookings()
+    {
+        final ArrayList<Booking> bookings = new ArrayList<>();
+        for (BookingsWrapperViewModel model : getBookingsWrapperViewModels())
+        {
+            for (BookingViewModel bookingView : model.getBookingViewModels())
+            {
+                if (bookingView.isSelected())
+                {
+                    bookings.add(bookingView.getBooking());
+                }
+            }
+        }
+        return bookings;
     }
 
     static class RecyclerViewHolder extends RecyclerView.ViewHolder

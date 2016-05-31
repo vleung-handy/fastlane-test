@@ -1,9 +1,7 @@
-package com.handy.portal.onboarding.ui.activity;
+package com.handy.portal.preactivation;
 
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -11,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -19,56 +16,55 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.BookingsListWrapper;
+import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
-import com.handy.portal.onboarding.model.BookingViewModel;
-import com.handy.portal.onboarding.model.BookingsWrapperViewModel;
 import com.handy.portal.onboarding.model.JobClaim;
 import com.handy.portal.onboarding.model.JobClaimRequest;
 import com.handy.portal.onboarding.ui.adapter.JobsRecyclerAdapter;
 import com.handy.portal.onboarding.ui.fragment.OnboardLoadingDialog;
 import com.handy.portal.onboarding.ui.view.OnboardJobGroupView;
-import com.handy.portal.preactivation.PreActivationFlowFragment;
-import com.handy.portal.preactivation.PurchaseSuppliesFragment;
 import com.handy.portal.ui.fragment.dialog.OnboardingJobClaimConfirmDialog;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
 import butterknife.Bind;
-import butterknife.BindDrawable;
 import butterknife.BindInt;
 import butterknife.OnClick;
 
 public class ScheduleBuilderFragment extends PreActivationFlowFragment
-        implements OnboardJobGroupView.OnJobChangeListener,
-        DialogInterface.OnCancelListener
+        implements OnboardJobGroupView.OnJobChangeListener
 {
     private static final String TAG = ScheduleBuilderFragment.class.getName();
 
     @Bind(R.id.recycler_view)
     RecyclerView mRecyclerView;
+    @Bind(R.id.start_date_view)
+    TextView mStartDateView;
+    @Bind(R.id.locations_view)
+    TextView mLocationsView;
+    @Bind(R.id.locations_view_container)
+    View mLocationsViewContainer;
     @Bind(R.id.fetch_error_view)
     View mFetchErrorView;
     @Bind(R.id.fetch_error_text)
     TextView mErrorText;
-    @BindDrawable(R.drawable.button_green)
-    Drawable mGreenDrawable;
-    @BindDrawable(R.drawable.button_gray)
-    Drawable mGrayDrawable;
     @BindInt(R.integer.onboarding_dialog_load_min_time)
     int mWaitTime;
 
@@ -81,7 +77,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     private OnboardLoadingDialog mLoadingDialog;
 
     private JobsRecyclerAdapter mAdapter;
-    private BookingsListWrapper mJobs;
+    private BookingsListWrapper mBookingsListWrapper;
     private boolean mJobLoaded;
 
     private long mLoadingDialogDisplayTime;
@@ -95,25 +91,35 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
      */
     private ArrayList<String> mBookingIdsToClaim;
 
+    private Date mSelectedStartDate;
+    private ArrayList<Integer> mSelectedZipclusterIds;
     private JobClaimRequest mJobClaimRequest;
     private OnboardingSuppliesInfo mOnboardingSuppliesInfo;
 
     public static ScheduleBuilderFragment newInstance(
-            final OnboardingSuppliesInfo onboardingSuppliesInfo)
+            final OnboardingSuppliesInfo onboardingSuppliesInfo,
+            final Date selectedStartDate,
+            final ArrayList<Integer> selectedZipclusterIds)
     {
         final ScheduleBuilderFragment fragment = new ScheduleBuilderFragment();
         final Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.ONBOARDING_SUPPLIES, onboardingSuppliesInfo);
+        arguments.putSerializable(BundleKeys.PROVIDER_START_DATE, selectedStartDate);
+        arguments.putSerializable(BundleKeys.ZIPCLUSTERS_IDS, selectedZipclusterIds);
         fragment.setArguments(arguments);
         return fragment;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         mOnboardingSuppliesInfo = (OnboardingSuppliesInfo) getArguments()
                 .getSerializable(BundleKeys.ONBOARDING_SUPPLIES);
+        mSelectedStartDate = (Date) getArguments().getSerializable(BundleKeys.PROVIDER_START_DATE);
+        mSelectedZipclusterIds = (ArrayList<Integer>) getArguments()
+                .getSerializable(BundleKeys.ZIPCLUSTERS_IDS);
         mProviderId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
     }
 
@@ -122,6 +128,33 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     {
         super.onViewCreated(view, savedInstanceState);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        displaySelectedStartDate();
+        if (shouldDisplaySelectedLocations())
+        {
+            displaySelectedLocations();
+        }
+        else
+        {
+            mLocationsViewContainer.setVisibility(View.GONE);
+        }
+    }
+
+    private void displaySelectedStartDate()
+    {
+        mStartDateView.setText(DateTimeUtils.DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER
+                .format(mSelectedStartDate.getTime()));
+    }
+
+    private void displaySelectedLocations()
+    {
+        final int count = mSelectedZipclusterIds.size();
+        mLocationsView.setText(getResources().getQuantityString(
+                R.plurals.locations_selected_count_formatted, count, count));
+    }
+
+    private boolean shouldDisplaySelectedLocations()
+    {
+        return mSelectedZipclusterIds != null && !mSelectedZipclusterIds.isEmpty();
     }
 
     @Override
@@ -130,7 +163,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         super.onResume();
         mIsResumed = true;
 
-        if (!hasJobs(mJobs))
+        if (getBookingsWrappers().isEmpty())
         {
             showLoadingDialog();
             loadJobs();
@@ -144,22 +177,20 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
 
     private void loadJobs()
     {
-        mJobs = null;
+        mBookingsListWrapper = null;
         mJobLoaded = false;
         mFetchErrorView.setVisibility(View.GONE);
-        mBus.post(new HandyEvent.RequestOnboardingJobs());
+        mBus.post(new HandyEvent.RequestOnboardingJobs(null, mSelectedZipclusterIds));
     }
 
-    /**
-     * Checks to see if there is at least one job. It's tricky, because there could be elements
-     * without jobs, so we need to check specifically for the existence of a job
-     *
-     * @param wrapper
-     * @return
-     */
-    private boolean hasJobs(BookingsListWrapper wrapper)
+    @NonNull
+    private List<BookingsWrapper> getBookingsWrappers()
     {
-        return wrapper != null && wrapper.hasJobs();
+        if (mBookingsListWrapper != null && mBookingsListWrapper.hasBookings())
+        {
+            return mBookingsListWrapper.getBookingsWrappers();
+        }
+        return Collections.emptyList();
     }
 
     @Override
@@ -178,6 +209,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         mLoadingDialogDisplayTime = System.currentTimeMillis();
         mLoadingDialog = new OnboardLoadingDialog();
         mLoadingDialog.show(getFragmentManager(), OnboardLoadingDialog.TAG);
+        mLoadingDialog.setCancelable(false);
 
         new Handler().postDelayed(new Runnable()
         {
@@ -188,20 +220,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
                 bindJobsAndRemoveLoadingDialog();
             }
         }, mWaitTime);
-
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case android.R.id.home:
-                skipJobSelection();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     /**
@@ -216,7 +234,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         Log.d(TAG, "onJobLoaded: ");
         hideLoadingOverlay();
         mJobLoaded = true;
-        mJobs = event.bookings;
+        mBookingsListWrapper = event.getBookingsListWrapper();
         bindJobsAndRemoveLoadingDialog();
     }
 
@@ -250,33 +268,22 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         {
             Log.d(TAG, "bindJobs: ");
 
-            if (!hasJobs(mJobs))
+            final List<BookingsWrapper> bookingsWrappers = getBookingsWrappers();
+            if (bookingsWrappers.isEmpty())
             {
-                if (isLoadingDialogVisible())
-                {
-                    mLoadingDialog.dismiss();
-                    mSingleActionButton.setVisibility(View.GONE);
-                }
                 mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NoJobsLoaded()));
-                // FIXME: Do not terminate, do something else
-                terminate();
             }
             else
             {
-                mAdapter = new JobsRecyclerAdapter(
-                        mJobs.getBookingsWrappers(),
-                        getString(R.string.onboard_getting_started_title),
-                        ScheduleBuilderFragment.this,
-                        getResources().getString(R.string.onboard_no_time_available)
-                );
+                mAdapter = new JobsRecyclerAdapter(bookingsWrappers, ScheduleBuilderFragment.this);
                 mRecyclerView.setAdapter(mAdapter);
-                updateButton();
-                if (isLoadingDialogVisible())
-                {
-                    mLoadingDialog.dismiss();
-                    mRecyclerView.startLayoutAnimation();
-                }
+                mRecyclerView.startLayoutAnimation();
             }
+            if (isLoadingDialogVisible())
+            {
+                mLoadingDialog.dismiss();
+            }
+            updateButton();
         }
     }
 
@@ -296,53 +303,18 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         updateButton();
     }
 
-    /**
-     * Calculates the job prices, and updates that information on the button.
-     */
     public void updateButton()
     {
-        //one of the jobs changed price, re-calculate
-        float sum = 0;
-        for (BookingsWrapperViewModel model : mAdapter.getBookingsWrapperViewModels())
+        if (mAdapter != null && !mAdapter.getSelectedBookings().isEmpty())
         {
-            for (BookingViewModel bookingView : model.getBookingViewModels())
-            {
-                if (bookingView.isSelected())
-                {
-                    sum += bookingView.getBookingAmount();
-                }
-            }
-        }
-
-        if (sum > 0)
-        {
-            String symbol = mAdapter.getBookingsWrapperViewModels().get(0).getBookingViewModels().get(0).getCurrencySymbol();
-            String formattedPrice = String.format(Locale.getDefault(), "%.0f", sum);
-            if (symbol != null)
-            {
-                formattedPrice = symbol + formattedPrice;
-            }
-            String text = String.format(getString(R.string.onboard_claim_and_earn_formatted), formattedPrice);
-            mSingleActionButton.setText(text);
-            mSingleActionButton.setBackground(mGreenDrawable);
+            mSingleActionButton.setAlpha(1.0f);
+            mSingleActionButton.setEnabled(true);
         }
         else
         {
-            mSingleActionButton.setText(R.string.onboard_no_thanks);
-            mSingleActionButton.setBackground(mGrayDrawable);
+            mSingleActionButton.setAlpha(0.5f);
+            mSingleActionButton.setEnabled(false);
         }
-        mSingleActionButton.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * Post an analytics event that the user decided to not select a job. Navigate to the
-     * Available Jobs section
-     */
-    private void skipJobSelection()
-    {
-        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.Skipped()));
-        // FIXME: Do not terminate, do something else
-        terminate();
     }
 
     @OnClick(R.id.try_again_button)
@@ -360,38 +332,32 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
      *
      * @param event
      */
+    // FIXME: Remove
     @Subscribe
     public void onReceiveClaimJobsSuccess(HandyEvent.ReceiveClaimJobsSuccess event)
     {
         hideLoadingOverlay();
         mFetchErrorView.setVisibility(View.GONE);
 
-        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSuccess(mBookingIdsToClaim)));
+        mBus.post(new LogEvent.AddLogEvent(
+                new NativeOnboardingLog.ClaimBatchSuccess(mBookingIdsToClaim)));
 
-        String message = event.mJobClaimResponse.getMessage();
-        if (event.mJobClaimResponse == null || event.mJobClaimResponse.getJobs() == null)
-        {
-            //this should never happen, but just in case.
-            // FIXME: Do not terminate, do something else
-            terminate();
-        }
+        String message = event.getJobClaimResponse().getMessage();
 
         List<Booking> bookings = new ArrayList<>();
-        for (BookingClaimDetails bcd : event.mJobClaimResponse.getJobs())
+        for (BookingClaimDetails bcd : event.getJobClaimResponse().getJobs())
         {
-            if (bcd.getBooking().isClaimedByMe() || mProviderId.equals(bcd.getBooking().getProviderId()))
+            if (bcd.getBooking().isClaimedByMe()
+                    || mProviderId.equals(bcd.getBooking().getProviderId()))
             {
                 bookings.add(bcd.getBooking());
-                mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimSuccess(
-                        bcd.getBooking()
-                )));
+                mBus.post(new LogEvent.AddLogEvent(
+                        new NativeOnboardingLog.ClaimSuccess(bcd.getBooking())));
             }
             else
             {
-                mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimError(
-                        bcd.getBooking(),
-                        message
-                )));
+                mBus.post(new LogEvent.AddLogEvent(
+                        new NativeOnboardingLog.ClaimError(bcd.getBooking(), message)));
             }
         }
 
@@ -403,7 +369,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         }
         else
         {
-            if (bookings.size() == event.mJobClaimResponse.getJobs().size())
+            if (bookings.size() == event.getJobClaimResponse().getJobs().size())
             {
                 //I was able to claim 100% of the jobs I wanted.
                 next();
@@ -415,10 +381,12 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         }
     }
 
+    // FIXME: Remove
     @Subscribe
     public void onReceiveClaimJobsError(HandyEvent.ReceiveClaimJobsError error)
     {
-        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchError(mBookingIdsToClaim, error.error.getMessage())));
+        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchError(
+                mBookingIdsToClaim, error.error.getMessage())));
 
         hideLoadingOverlay();
         mFetchErrorView.setVisibility(View.VISIBLE);
@@ -431,15 +399,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
             mErrorText.setText(getString(R.string.onboard_job_claim_error));
         }
     }
-
-    @Override
-    public void onCancel(final DialogInterface dialog)
-    {
-        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.Skipped()));
-        // FIXME: Do not terminate, do something else
-        terminate();
-    }
-
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
@@ -458,7 +417,9 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     private void confirmJobClaims()
     {
         showLoadingOverlay();
-        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSubmitted(mBookingIdsToClaim)));
+        mBus.post(new LogEvent.AddLogEvent(
+                new NativeOnboardingLog.ClaimBatchSubmitted(mBookingIdsToClaim)));
+        // FIXME: Do not claim here, claim in confirmation page.
         mBus.post(new HandyEvent.RequestClaimJobs(mJobClaimRequest));
     }
 
@@ -491,31 +452,21 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     @Override
     protected String getPrimaryButtonText()
     {
-        // primary button will be activated later, see updateButton() method
-        return null;
+        return getString(R.string.continue_to_next_step);
     }
 
     @Override
     protected void onPrimaryButtonClicked()
     {
-        mJobClaimRequest = new JobClaimRequest();
+        final ArrayList<JobClaim> jobs = new ArrayList<>();
         mBookingIdsToClaim = new ArrayList<>();
-        for (BookingsWrapperViewModel model : mAdapter.getBookingsWrapperViewModels())
+        for (final Booking booking : mAdapter.getSelectedBookings())
         {
-            for (BookingViewModel bookingView : model.getBookingViewModels())
-            {
-                if (bookingView.isSelected())
-                {
-                    mJobClaimRequest.mJobs.add(new JobClaim(
-                            bookingView.getBooking().getId(),
-                            bookingView.getBooking().getType().name().toLowerCase())
-                    );
-                    mBookingIdsToClaim.add(bookingView.getBooking().getId());
-                }
-            }
+            mBookingIdsToClaim.add(booking.getId());
         }
+        mJobClaimRequest = new JobClaimRequest(jobs);
 
-        if (!mJobClaimRequest.mJobs.isEmpty())
+        if (!jobs.isEmpty())
         {
             //show confirmation dialog to confirm the selected jobs.
             final OnboardingJobClaimConfirmDialog fragment =
@@ -526,11 +477,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
                     getActivity(),
                     null
             );
-        }
-        else
-        {
-            //no jobs were selected, send the user to claim job screen.
-            skipJobSelection();
         }
     }
 

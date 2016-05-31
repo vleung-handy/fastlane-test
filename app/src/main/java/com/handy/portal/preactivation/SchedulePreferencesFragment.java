@@ -14,9 +14,8 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
-import com.handy.portal.onboarding.ui.activity.ScheduleBuilderFragment;
 import com.handy.portal.ui.adapter.CheckBoxListAdapter;
-import com.handy.portal.ui.view.StaticFieldTableRow;
+import com.handy.portal.library.ui.view.StaticFieldTableRow;
 import com.handy.portal.ui.widget.TitleView;
 
 import java.util.ArrayList;
@@ -33,9 +32,11 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
     StaticFieldTableRow mDateField;
     @Bind(R.id.location_field)
     StaticFieldTableRow mLocationField;
+    @Bind(R.id.schedule_preferences_notice)
+    View mSchedulePreferencesNotice;
 
-    private Date mSelectedStartDate; // FIXME: Pass to next fragment
-    private ArrayList<Integer> mSelectedZipclusterIds; // FIXME: Pass to next fragment
+    private Date mSelectedStartDate;
+    private ArrayList<Integer> mSelectedZipclusterIds;
     private CheckBoxListAdapter.CheckBoxListItem[] mLocationViewModels;
     private OnboardingSuppliesInfo mOnboardingSuppliesInfo;
 
@@ -147,8 +148,18 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        mDateField.setLabel(R.string.start_date).setHint(R.string.choose_start_date);
-        mLocationField.setLabel(R.string.locations).setHint(R.string.choose_locations);
+        mDateField.setLabel(R.string.start_date);
+        mLocationField.setLabel(R.string.locations);
+        displaySelectedStartDate();
+        if (shouldDisplayLocationField())
+        {
+            displaySelectedLocations();
+        }
+        else
+        {
+            mLocationField.setVisibility(View.GONE);
+            mSchedulePreferencesNotice.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -194,7 +205,8 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
             return;
         }
 
-        next(ScheduleBuilderFragment.newInstance(mOnboardingSuppliesInfo));
+        next(ScheduleBuilderFragment.newInstance(mOnboardingSuppliesInfo, mSelectedStartDate,
+                mSelectedZipclusterIds));
     }
 
     private boolean validate()
@@ -205,7 +217,7 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
             mDateField.setErrorState(true);
             allFieldsValid = false;
         }
-        if (mSelectedZipclusterIds.isEmpty())
+        if (shouldDisplayLocationField() && mSelectedZipclusterIds.isEmpty())
         {
             mLocationField.setErrorState(true);
             allFieldsValid = false;
@@ -215,34 +227,55 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
 
     public void updateSelectedStartedDate(final Date date)
     {
-        final String dateString = DateTimeUtils.DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER
-                .format(date.getTime());
-        mDateField.setValue(dateString);
         mSelectedStartDate = date;
+        displaySelectedStartDate();
+    }
+
+    private void displaySelectedStartDate()
+    {
+        if (mSelectedStartDate != null)
+        {
+            final String dateString = DateTimeUtils.DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER
+                    .format(mSelectedStartDate.getTime());
+            mDateField.setValue(dateString);
+        }
+        else
+        {
+            mDateField.setValue(null).setHint(R.string.choose_start_date);
+        }
     }
 
     public void updateSelectedLocations(final CheckBoxListAdapter.CheckBoxListItem[] items)
     {
         mSelectedZipclusterIds.clear();
         mLocationViewModels = items;
-        int checkedCount = 0;
         for (CheckBoxListAdapter.CheckBoxListItem item : mLocationViewModels)
         {
             if (item.isChecked())
             {
-                checkedCount++;
                 // FIXME: Actually set this properly
                 mSelectedZipclusterIds.add(1);
             }
         }
-        if (checkedCount > 0)
+        displaySelectedLocations();
+    }
+
+    private void displaySelectedLocations()
+    {
+        final int count = mSelectedZipclusterIds.size();
+        if (count > 0)
         {
             mLocationField.setValue(getResources().getQuantityString(
-                    R.plurals.locations_selected_count_formatted, checkedCount, checkedCount));
+                    R.plurals.locations_selected_count_formatted, count, count));
         }
         else
         {
             mLocationField.setValue(null).setHint(R.string.choose_locations);
         }
+    }
+
+    private boolean shouldDisplayLocationField()
+    {
+        return mLocationViewModels != null && mLocationViewModels.length > 0;
     }
 }

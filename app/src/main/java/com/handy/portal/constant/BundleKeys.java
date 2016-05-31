@@ -68,6 +68,8 @@ public class BundleKeys
     public static final String ONBOARDING_SUPPLIES = "onboarding_supplies";
     public static final String ALLOW_BACK_NAVIGATION = "allow_back_navigation";
     public static final String NATIVE_ONBOARDING_LAUNCHED = "native_onboarding_launched";
+    public static final String ZIPCLUSTERS_IDS = "zipcluster_ids";
+    public static final String PROVIDER_START_DATE = "provider_start_date";
 
     // Flow
     public static final String FLOW_STEP_ID = "flow_step_id";

@@ -1,33 +1,17 @@
 package com.handy.portal.onboarding.model;
 
-import android.text.TextUtils;
-
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.payments.model.PaymentInfo;
-import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.TextUtils;
 
-/**
- * <p/>
- * This is a view model to bridge the gap between the booking and what needs to be displayed on the
- * onboard claim job screen.
- * <p/>
- * <p/>
- */
 public class BookingViewModel
 {
-
     private Booking mBooking;
     public boolean mSelected;
-    private String mDefaultSubTitle;
 
-    public BookingViewModel(final Booking booking, String defaultSubtitle)
+    public BookingViewModel(final Booking booking)
     {
         mBooking = booking;
-        mDefaultSubTitle = defaultSubtitle;
-
-        //we want to default the jobs to selected, and allow the user to unselect
-        mSelected = true;
     }
 
     public boolean isSelected()
@@ -57,28 +41,9 @@ public class BookingViewModel
         String startTime = DateTimeUtils.formatDateTo12HourClock(mBooking.getStartDate());
         String endTime = DateTimeUtils.formatDateTo12HourClock(mBooking.getEndDate());
 
-        if (!TextUtils.isEmpty(startTime) && !TextUtils.isEmpty(endTime))
+        if (!TextUtils.isNullOrEmpty(startTime) && !TextUtils.isNullOrEmpty(endTime))
         {
             return startTime.toLowerCase() + " - " + endTime.toLowerCase();
-        }
-        else
-        {
-            return mDefaultSubTitle;
-        }
-    }
-
-    public Booking getBooking()
-    {
-        return mBooking;
-    }
-
-    public String getFormattedPrice()
-    {
-        PaymentInfo p = mBooking.getPaymentToProvider();
-
-        if (p != null)
-        {
-            return CurrencyUtils.formatPrice(p.getAdjustedAmount(), p.getCurrencySymbol());
         }
         else
         {
@@ -86,13 +51,8 @@ public class BookingViewModel
         }
     }
 
-    public float getBookingAmount()
+    public Booking getBooking()
     {
-        return mBooking.getPaymentToProvider().getAdjustedAmount();
-    }
-
-    public String getCurrencySymbol()
-    {
-        return mBooking.getPaymentToProvider().getCurrencySymbol();
+        return mBooking;
     }
 }

@@ -478,7 +478,6 @@
     <string name="onboard_welcome">You\'ve been activated! We\'re excited for you to join our global community of professionals using the Handy platform.</string>
     <string name="onboard_getting_started_title">Start building your schedule with these jobs.</string>
     <string name="onboard_claim_and_earn_formatted">%s Claim</string>
-    <string name="onboard_no_thanks">No thanks, I\'ll find my own jobs</string>
     <string name="onboard_loading">Choosing jobs\nin your city...</string>
     <string name="onboard_job_claim_error">"There was an error claiming job(s), please try again"</string>
     <string name="onboard_job_load_error">"There was an error finding jobs, please try again"</string>
@@ -515,6 +514,7 @@
     <string name="locations">Locations</string>
     <string name="choose_start_date">Choose your start date</string>
     <string name="choose_locations">Choose locations</string>
+    <string name="schedule_preferences_notice">You\'ll have more options if you select multiple locations. If we can\'t find any jobs in your locations, we\'ll search for jobs nearby.</string>
     <plurals name="locations_selected_count_formatted">
         <item quantity="one">%1$d location selected</item>
         <item quantity="other">%1$d locations selected</item>

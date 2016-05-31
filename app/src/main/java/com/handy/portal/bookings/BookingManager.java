@@ -150,20 +150,21 @@ public class BookingManager
     @Subscribe
     public void onRequestOnboardingJobs(HandyEvent.RequestOnboardingJobs event)
     {
-        mDataManager.getOnboardingJobs(new DataManager.Callback<BookingsListWrapper>()
-                                       {
-                                           @Override
-                                           public void onSuccess(final BookingsListWrapper bookingsListWrapper)
-                                           {
-                                               mBus.post(new HandyEvent.ReceiveOnboardingJobsSuccess(bookingsListWrapper));
-                                           }
+        mDataManager.getOnboardingJobs(event.getStartDate(), event.getPreferredZipclusterIds(),
+                new DataManager.Callback<BookingsListWrapper>()
+                {
+                    @Override
+                    public void onSuccess(final BookingsListWrapper bookingsListWrapper)
+                    {
+                        mBus.post(new HandyEvent.ReceiveOnboardingJobsSuccess(bookingsListWrapper));
+                    }
 
-                                           @Override
-                                           public void onError(final DataManager.DataManagerError error)
-                                           {
-                                               mBus.post(new HandyEvent.ReceiveOnboardingJobsError(error));
-                                           }
-                                       }
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        mBus.post(new HandyEvent.ReceiveOnboardingJobsError(error));
+                    }
+                }
         );
     }
 

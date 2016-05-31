@@ -7,11 +7,11 @@ import java.util.List;
 public class BookingsListWrapper
 {
     @SerializedName("job_days")
-    private List<BookingsWrapper> bookingsWrappers;
+    private List<BookingsWrapper> mBookingsWrappers;
 
     public final List<BookingsWrapper> getBookingsWrappers()
     {
-        return bookingsWrappers;
+        return mBookingsWrappers;
     }
 
     /**
@@ -20,12 +20,12 @@ public class BookingsListWrapper
      *
      * @return
      */
-    public boolean hasJobs()
+    public boolean hasBookings()
     {
-        if (bookingsWrappers != null && !bookingsWrappers.isEmpty())
+        if (mBookingsWrappers != null && !mBookingsWrappers.isEmpty())
         {
             //we need to check that it has actual jobs, and not just an empty list
-            for (BookingsWrapper booking : bookingsWrappers)
+            for (BookingsWrapper booking : mBookingsWrappers)
             {
                 if (booking.getBookings() != null && !booking.getBookings().isEmpty())
                 {
@@ -33,7 +33,6 @@ public class BookingsListWrapper
                 }
             }
         }
-
         return false;
     }
 }

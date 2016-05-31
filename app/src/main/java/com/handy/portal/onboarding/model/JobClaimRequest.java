@@ -4,17 +4,14 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
-/**
- */
 public class JobClaimRequest implements Serializable
 {
     @SerializedName("jobs")
-    public List<JobClaim> mJobs;
+    private ArrayList<JobClaim> mJobs;
 
-    public JobClaimRequest()
+    public JobClaimRequest(final ArrayList<JobClaim> jobs)
     {
-        mJobs = new ArrayList<>();
+        mJobs = jobs;
     }
 }

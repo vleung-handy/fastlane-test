@@ -1,10 +1,9 @@
-package com.handy.portal.ui.view;
+package com.handy.portal.library.ui.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
 
 import com.handy.portal.R;
-import com.handy.portal.library.ui.view.FieldTableRow;
 
 public class StaticFieldTableRow extends FieldTableRow
 {

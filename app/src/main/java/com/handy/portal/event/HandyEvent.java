@@ -25,6 +25,7 @@ import com.handy.portal.model.TermsDetails;
 import com.handy.portal.onboarding.model.JobClaimRequest;
 import com.handy.portal.onboarding.model.JobClaimResponse;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -235,6 +236,25 @@ public abstract class HandyEvent
 
     public static class RequestOnboardingJobs extends RequestEvent
     {
+        private final Date mStartDate;
+        private final ArrayList<Integer> mPreferredZipclusterIds;
+
+        public RequestOnboardingJobs(final Date startDate,
+                                     final ArrayList<Integer> preferredZipclusterIds)
+        {
+            mStartDate = startDate;
+            mPreferredZipclusterIds = preferredZipclusterIds;
+        }
+
+        public Date getStartDate()
+        {
+            return mStartDate;
+        }
+
+        public ArrayList<Integer> getPreferredZipclusterIds()
+        {
+            return mPreferredZipclusterIds;
+        }
     }
 
 
@@ -303,11 +323,16 @@ public abstract class HandyEvent
 
     public static class ReceiveOnboardingJobsSuccess extends ReceiveSuccessEvent
     {
-        public BookingsListWrapper bookings;
+        private BookingsListWrapper mBookingsListWrapper;
 
-        public ReceiveOnboardingJobsSuccess(BookingsListWrapper bookings)
+        public ReceiveOnboardingJobsSuccess(final BookingsListWrapper bookingsListWrapper)
         {
-            this.bookings = bookings;
+            mBookingsListWrapper = bookingsListWrapper;
+        }
+
+        public BookingsListWrapper getBookingsListWrapper()
+        {
+            return mBookingsListWrapper;
         }
     }
 
@@ -427,6 +452,7 @@ public abstract class HandyEvent
         }
     }
 
+
     @Track("cancel claim confirmation accepted")
     public static class RequestRemoveJob extends RequestBookingActionEvent
     {
@@ -519,15 +545,22 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveClaimJobsSuccess extends ReceiveSuccessEvent
     {
-        public JobClaimResponse mJobClaimResponse;
+        private JobClaimResponse mJobClaimResponse;
 
         public ReceiveClaimJobsSuccess(JobClaimResponse jobClaimResponse)
         {
             mJobClaimResponse = jobClaimResponse;
         }
+
+        public JobClaimResponse getJobClaimResponse()
+        {
+            return mJobClaimResponse;
+        }
     }
+
 
     @Track("remove job")
     public static class ReceiveRemoveJobSuccess extends ReceiveBookingSuccessEvent
@@ -602,6 +635,7 @@ public abstract class HandyEvent
             this.error = error;
         }
     }
+
 
     public static class ReceiveRemoveJobError extends ReceiveErrorEvent
     {
