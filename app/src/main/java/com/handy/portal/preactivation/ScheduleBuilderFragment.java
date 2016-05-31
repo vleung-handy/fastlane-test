@@ -105,7 +105,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         final ScheduleBuilderFragment fragment = new ScheduleBuilderFragment();
         final Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.ONBOARDING_SUPPLIES, onboardingSuppliesInfo);
-        arguments.putSerializable(BundleKeys.START_DATE, selectedStartDate);
+        arguments.putSerializable(BundleKeys.PROVIDER_START_DATE, selectedStartDate);
         arguments.putSerializable(BundleKeys.ZIPCLUSTERS_IDS, selectedZipclusterIds);
         fragment.setArguments(arguments);
         return fragment;
@@ -118,7 +118,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         super.onCreate(savedInstanceState);
         mOnboardingSuppliesInfo = (OnboardingSuppliesInfo) getArguments()
                 .getSerializable(BundleKeys.ONBOARDING_SUPPLIES);
-        mSelectedStartDate = (Date) getArguments().getSerializable(BundleKeys.START_DATE);
+        mSelectedStartDate = (Date) getArguments().getSerializable(BundleKeys.PROVIDER_START_DATE);
         mSelectedZipclusterIds = (ArrayList<Integer>) getArguments()
                 .getSerializable(BundleKeys.ZIPCLUSTERS_IDS);
         mProviderId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
