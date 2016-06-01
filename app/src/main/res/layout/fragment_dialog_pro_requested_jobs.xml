@@ -65,6 +65,9 @@
                 />
             </com.handy.portal.ui.widget.SafeSwipeRefreshLayout>
 
+        <include tools:visibility="visible"
+                 android:visibility="visible"
+                 layout="@layout/layout_fetch_error"/>
 
         <include tools:visibility="visible"
                  android:visibility="visible"

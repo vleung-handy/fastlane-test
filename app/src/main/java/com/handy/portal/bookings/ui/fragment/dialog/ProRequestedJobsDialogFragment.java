@@ -48,6 +48,8 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment //TODO
     SafeSwipeRefreshLayout mJobListSwipeRefreshLayout;
     @Bind(R.id.loading_overlay)
     RelativeLayout mLoadingOverlay;
+    @Bind(R.id.fetch_error_view)
+    LinearLayout mFetchErrorView;
 
     public static final String FRAGMENT_TAG = ProRequestedJobsDialogFragment.class.getName();
 
@@ -140,7 +142,11 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment //TODO
         return inflater.inflate(R.layout.fragment_dialog_pro_requested_jobs, container, false);
     }
 
-    //TODO better name?
+    /**
+     * hides all the content views in this fragment
+     * except the given content view
+     * @param contentView
+     */
     private void showContentViewAndHideOthers(@NonNull View contentView)
     {
         hideAllContentViews();
@@ -151,7 +157,8 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment //TODO
     {
         mJobsEmptyView.setVisibility(View.GONE);
         mJobListSwipeRefreshLayout.setVisibility(View.GONE);
-        //may be more useful when we have more views
+        mFetchErrorView.setVisibility(View.GONE);
+        mLoadingOverlay.setVisibility(View.GONE);
     }
 
     @Override
@@ -172,8 +179,7 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment //TODO
         mJobListSwipeRefreshLayout.setRefreshing(false);
         if(mProRequestedJobsExpandableListView.getExpandableListAdapter() == null)
         {
-            hideAllContentViews();
-            mLoadingOverlay.setVisibility(View.VISIBLE);
+            showContentViewAndHideOthers(mLoadingOverlay);
             requestProRequestedJobs();
         }
     }
@@ -196,8 +202,14 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment //TODO
     public void onReceiveProRequestedJobsSuccess(BookingEvent.ReceiveProRequestedJobsSuccess event)
     {
         mJobListSwipeRefreshLayout.setRefreshing(false);
-        mLoadingOverlay.setVisibility(View.GONE);
         updateJobListView(event.getProRequestedJobs());
+    }
+
+    @Subscribe
+    public void onReceiveProRequestedJobsError(BookingEvent.ReceiveProRequestedError event)
+    {
+        mJobListSwipeRefreshLayout.setRefreshing(false);
+        showContentViewAndHideOthers(mFetchErrorView);
     }
 
 

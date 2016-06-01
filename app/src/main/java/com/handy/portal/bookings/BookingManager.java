@@ -183,7 +183,7 @@ public class BookingManager
                         @Override
                         public void onError(final DataManager.DataManagerError error)
                         {
-                            //TODO handle this
+                            mBus.post(new BookingEvent.ReceiveProRequestedError(error));
                         }
                     }
             );
