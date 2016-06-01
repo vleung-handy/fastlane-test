@@ -279,11 +279,9 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
         if(mMenuRequestedJobs != null)
         {
-            //TODO add condition for visibility
+            //can add condition for visibility like a config param
             mMenuRequestedJobs.setVisible(true);
         }
-
-
     }
 
     @Subscribe

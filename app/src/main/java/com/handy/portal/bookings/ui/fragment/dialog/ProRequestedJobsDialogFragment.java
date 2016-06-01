@@ -201,14 +201,14 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment //TODO
     }
 
 
-    //TODO don't do this, for test only, use a config param
+    //FIXME: get this from a config param from the server instead
     protected int numberOfDaysToDisplay()
     {
-        return 6; //todo test only, remove
+        return 28;
     }
 
     /**
-     * TODO copied out of bookings fragment, can we consolidate
+     * FIXME copied out of bookings fragment, can we consolidate
      * @return
      */
     private List<Date> getDatesForBookings()
