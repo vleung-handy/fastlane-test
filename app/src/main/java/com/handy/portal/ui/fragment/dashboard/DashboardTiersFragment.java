@@ -3,6 +3,7 @@ package com.handy.portal.ui.fragment.dashboard;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -107,6 +108,7 @@ public class DashboardTiersFragment extends ActionBarFragment
         //TODO: Hardcoding
         mCurrentWeekCompletedJobsText.setText("2");
         mCurrentWeekText.setText("(Mon, May 9 \u2013 Sun, May 16)");
-        mCompleteJobsUnlockText.setText("Complete 1 more job this week to unlock higher rates in New York!");
+        mCompleteJobsUnlockText.setText(Html.fromHtml(getResources().getQuantityString(R.plurals.complete_jobs_unlock_higher_rate_formatted, 1, 1, "New York")));
+//        mCompleteJobsUnlockText.setText("Complete 1 more job this week to unlock higher rates in New York!");
     }
 }

@@ -17,8 +17,7 @@
             android:layout_height="wrap_content"
             android:background="@color/white"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/default_padding_medium_large"
-            android:paddingTop="@dimen/default_padding_medium"
+            android:paddingTop="@dimen/default_padding"
             >
 
             <TextView
@@ -26,7 +25,6 @@
                 style="@style/CircularBook"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/default_margin"
                 android:gravity="center_horizontal"
                 android:textColor="@color/handy_blue"
                 android:textSize="@dimen/xxxlarge_text_size"
@@ -59,7 +57,6 @@
 
         <TextView
             android:id="@+id/complete_jobs_unlock_text"
-            style="@style/CircularBold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/default_margin"
@@ -78,7 +75,7 @@
         <android.support.v4.view.ViewPager
             android:id="@+id/region_tiers_view_pager"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="215dp"
             android:paddingLeft="@dimen/default_padding"
             android:paddingRight="@dimen/default_padding"
             />
@@ -88,20 +85,22 @@
             android:id="@+id/region_tiers_view_pager_indicator_view"
             android:layout_width="match_parent"
             android:layout_height="@dimen/circle_page_indicator_height"
-            android:paddingTop="@dimen/circle_indicator_padding"
+            android:layout_marginBottom="@dimen/extra_margin_medium"
+            android:layout_marginTop="@dimen/extra_margin_medium"
             />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/row_margin"
             android:background="@color/white"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/default_padding_large"
+            android:paddingBottom="@dimen/default_padding"
             android:paddingEnd="@dimen/tiers_description_side_padding"
             android:paddingLeft="@dimen/tiers_description_side_padding"
             android:paddingRight="@dimen/tiers_description_side_padding"
             android:paddingStart="@dimen/tiers_description_side_padding"
-            android:paddingTop="@dimen/default_padding_large"
+            android:paddingTop="@dimen/default_padding"
             >
 
             <TextView
@@ -111,7 +110,7 @@
                 android:gravity="center_horizontal"
                 android:text="@string/how_it_works"
                 android:textColor="@color/black"
-                android:textSize="@dimen/default_text_size"
+                android:textSize="@dimen/large_text_size"
                 />
 
             <TextView
@@ -145,7 +144,7 @@
                     android:layout_height="wrap_content"
                     android:text="@string/note_colon"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/small_text_size"
+                    android:textSize="@dimen/default_text_size"
                     />
 
                 <TextView
@@ -158,7 +157,7 @@
                     android:paddingStart="@dimen/extra_padding"
                     android:text="@string/tiers_reset"
                     android:textColor="@color/black"
-                    android:textSize="@dimen/small_text_size"
+                    android:textSize="@dimen/default_text_size"
                     />
 
             </LinearLayout>

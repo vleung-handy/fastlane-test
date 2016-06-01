@@ -2,7 +2,7 @@
 <resources>
     <!-- Performance Dashboard -->
     <plurals name="complete_jobs_unlock_higher_rate_formatted">
-        <item quantity="one">Complete %1$s more job this week to unlock higher rates in %2$s!</item>
-        <item quantity="other">Complete %1$s more jobs this week to unlock higher rates in %2$s!</item>
+        <item quantity="one"><![CDATA[Complete <b>%1$s more job</b> this week to unlock higher rates in %2$s!]]></item>
+        <item quantity="other"><![CDATA[Complete <b>%1$s more jobs</b> this week to unlock higher rates in %2$s!]]></item>
     </plurals>
 </resources>

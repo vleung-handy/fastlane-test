@@ -33,7 +33,6 @@
             android:layout_marginLeft="@dimen/default_margin_medium"
             android:layout_marginRight="@dimen/default_margin_medium"
             android:layout_marginStart="@dimen/default_margin_medium"
-            android:layout_marginTop="@dimen/default_margin_half"
             android:orientation="horizontal"
             >
 
@@ -80,7 +79,6 @@
             android:layout_marginLeft="@dimen/default_margin_medium"
             android:layout_marginRight="@dimen/default_margin_medium"
             android:layout_marginStart="@dimen/default_margin_medium"
-            android:layout_marginTop="@dimen/default_margin_half"
             android:orientation="horizontal"
             >
 
@@ -98,7 +96,6 @@
 
             <TextView
                 android:id="@+id/tier_one_text"
-                style="@style/CircularBold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -111,7 +108,6 @@
 
             <TextView
                 android:id="@+id/tier_one_jobs_text"
-                style="@style/CircularBold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -124,7 +120,6 @@
 
             <TextView
                 android:id="@+id/tier_one_rate_text"
-                style="@style/CircularBold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -144,7 +139,7 @@
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginRight="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
-            android:background="@color/tertiary_gray"
+            android:background="@color/list_divider"
             />
 
         <LinearLayout
@@ -172,7 +167,6 @@
 
             <TextView
                 android:id="@+id/tier_two_text"
-                style="@style/CircularBold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -184,7 +178,6 @@
 
             <TextView
                 android:id="@+id/tier_two_jobs_text"
-                style="@style/CircularBold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -196,7 +189,6 @@
 
             <TextView
                 android:id="@+id/tier_two_rate_text"
-                style="@style/CircularBold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -215,13 +207,12 @@
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginRight="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
-            android:background="@color/tertiary_gray"
+            android:background="@color/list_divider"
             />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_margin_half"
             android:layout_marginEnd="@dimen/default_margin_medium"
             android:layout_marginLeft="@dimen/default_margin_medium"
             android:layout_marginRight="@dimen/default_margin_medium"
@@ -243,7 +234,6 @@
 
             <TextView
                 android:id="@+id/tier_three_text"
-                style="@style/CircularBold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -255,7 +245,6 @@
 
             <TextView
                 android:id="@+id/tier_three_jobs_text"
-                style="@style/CircularBold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -267,7 +256,6 @@
 
             <TextView
                 android:id="@+id/tier_three_rate_text"
-                style="@style/CircularBold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
