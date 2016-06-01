@@ -40,6 +40,7 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
 
     public static final class ButtonTypes
     {
+        public static final int NONE = 0;
         public static final int SINGLE = 1;
         public static final int DOUBLE = 2;
         public static final int SINGLE_FIXED = 3;
@@ -184,6 +185,7 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
                 mActionButtonGroup.setVisibility(View.GONE);
                 mSingleActionButton.setText(getPrimaryButtonText());
                 break;
+            case ButtonTypes.NONE:
             default:
                 break;
         }
@@ -210,6 +212,8 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
                 break;
             case ButtonTypes.SINGLE_FIXED:
                 setButtonEnabled(mSingleActionButton, enabled);
+                break;
+            case ButtonTypes.NONE:
             default:
                 break;
         }

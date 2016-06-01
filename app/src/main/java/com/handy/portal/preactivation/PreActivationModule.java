@@ -13,6 +13,7 @@ import dagger.Module;
                 ScheduleBuilderFragment.class,
                 SchedulePreferencesFragment.class,
                 ScheduleConfirmationFragment.class,
+                OnboardingStatusFragment.class,
         })
 public class PreActivationModule
 {
