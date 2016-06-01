@@ -45,6 +45,7 @@ public class ScheduleConfirmationFragment extends PreActivationFlowFragment
     {
         super.onViewCreated(view, savedInstanceState);
         displayPendingBookings();
+        // FIXME: Only display if pro opted in
         // FIXME: Pull from server
         mShippingView.setContent("Ship To", "123 Penny Lane\nBrooklyn, NY 11321");
         mPaymentView.setContent("Payment", "Card ending in 1234");
