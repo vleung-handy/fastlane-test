@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.notification.model.NotificationMessage;
 import com.handy.portal.notification.ui.view.NotificationsListEntryView;
-import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.library.util.DateTimeUtils;
 
 import java.util.HashSet;
 

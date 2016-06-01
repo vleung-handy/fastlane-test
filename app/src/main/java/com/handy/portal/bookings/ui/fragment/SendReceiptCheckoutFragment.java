@@ -34,9 +34,9 @@ import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.view.CheckoutCompletedTaskView;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.UIUtils;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.UIUtils;
+import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Calendar;

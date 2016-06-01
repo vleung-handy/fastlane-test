@@ -49,14 +49,14 @@ import com.handy.portal.model.LocationData;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.fragment.TimerActionBarFragment;
-import com.handy.portal.ui.view.MapPlaceholderView;
-import com.handy.portal.ui.view.RoundedTextView;
-import com.handy.portal.util.CurrencyUtils;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.FragmentUtils;
-import com.handy.portal.util.TextUtils;
-import com.handy.portal.util.UIUtils;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.ui.view.MapPlaceholderView;
+import com.handy.portal.library.ui.view.RoundedTextView;
+import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.FragmentUtils;
+import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.library.util.UIUtils;
+import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -733,7 +733,7 @@ public class BookingFragment extends TimerActionBarFragment
             Booking.Action.Extras.CancellationPolicy cancellationPolicy = claimAction.getExtras().getCancellationPolicy();
             if (cancellationPolicy != null)
             {
-                if (getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null)
+                if (getChildFragmentManager().findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null)
                 {
                     ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mBooking);
                     confirmBookingDialogFragment.setTargetFragment(BookingFragment.this, RequestCode.CONFIRM_REQUEST);

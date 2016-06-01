@@ -17,8 +17,8 @@ import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.ui.element.PaymentsBatchListHeaderView;
 import com.handy.portal.payments.ui.element.PaymentsBatchListItemView;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Bus;
 
 import java.util.Calendar;

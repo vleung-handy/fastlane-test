@@ -15,7 +15,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.Transaction;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.util.TextUtils;
+import com.handy.portal.library.util.TextUtils;
 import com.squareup.otto.Subscribe;
 
 import butterknife.Bind;

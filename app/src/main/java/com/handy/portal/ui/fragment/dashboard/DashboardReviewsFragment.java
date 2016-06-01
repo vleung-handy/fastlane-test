@@ -14,8 +14,8 @@ import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.ui.adapter.ReviewListAdapter;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.ui.listener.EndlessRecyclerViewScrollListener;
-import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.library.ui.listener.EndlessRecyclerViewScrollListener;
+import com.handy.portal.library.util.DateTimeUtils;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;

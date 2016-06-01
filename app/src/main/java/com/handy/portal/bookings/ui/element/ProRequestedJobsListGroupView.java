@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.BookingsWrapper;
-import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.library.util.DateTimeUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

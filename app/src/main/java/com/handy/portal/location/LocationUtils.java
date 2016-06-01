@@ -6,8 +6,8 @@ import android.provider.Settings;
 import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
-import com.handy.portal.util.TextUtils;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.library.util.Utils;
 
 /**
  * utility class for location-related stuff

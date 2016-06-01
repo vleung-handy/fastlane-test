@@ -21,10 +21,10 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.ui.fragment.dialog.SlideUpDialogFragment;
-import com.handy.portal.ui.widget.SafeSwipeRefreshLayout;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.ui.fragment.dialog.SlideUpDialogFragment;
+import com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

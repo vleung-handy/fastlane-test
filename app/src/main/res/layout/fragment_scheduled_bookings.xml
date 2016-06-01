@@ -37,7 +37,7 @@
 
             <include layout="@layout/layout_scheduled_bookings_empty"/>
 
-            <com.handy.portal.ui.widget.SafeSwipeRefreshLayout
+            <com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout
                 android:id="@+id/refresh_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -51,7 +51,7 @@
                     android:dividerHeight="1dp"
                     android:paddingTop="1dp"
                     />
-            </com.handy.portal.ui.widget.SafeSwipeRefreshLayout>
+            </com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout>
 
             <LinearLayout
                 android:id="@+id/find_matching_jobs_button_container"

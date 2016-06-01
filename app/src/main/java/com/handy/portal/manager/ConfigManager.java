@@ -61,4 +61,9 @@ public class ConfigManager
     {
         return mConfigurationResponse;
     }
+
+    public void setConfigurationResponse(final ConfigurationResponse configurationResponse)
+    {
+        mConfigurationResponse = configurationResponse;
+    }
 }

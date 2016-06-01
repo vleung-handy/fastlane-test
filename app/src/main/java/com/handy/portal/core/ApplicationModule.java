@@ -15,6 +15,7 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpModule;
+import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.location.LocationModule;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
@@ -46,6 +47,8 @@ import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitEndpoint;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.service.DeepLinkService;
+import com.handy.portal.setup.SetupManager;
+import com.handy.portal.setup.SetupModule;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
@@ -64,6 +67,7 @@ import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesWebViewFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
+import com.handy.portal.ui.fragment.dashboard.DashboardNewTiersFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardVideoLibraryFragment;
@@ -114,6 +118,7 @@ import retrofit.converter.GsonConverter;
         ProfileUpdateFragment.class,
         SupportActionView.class,
         DashboardTiersFragment.class,
+        DashboardNewTiersFragment.class,
         DashboardFeedbackFragment.class,
         DashboardReviewsFragment.class,
         DashboardOptionsPerformanceView.class,
@@ -137,6 +142,7 @@ import retrofit.converter.GsonConverter;
                 PaymentsModule.class,
                 BookingsModule.class,
                 PreActivationModule.class,
+                SetupModule.class,
         }
 )
 public final class ApplicationModule
@@ -438,6 +444,14 @@ public final class ApplicationModule
     )
     {
         return new TabNavigationManager(bus, providerManager, webUrlManager, paymentsManager, configManager);
+    }
+
+    @Provides
+    @Singleton
+    final SetupManager provideApplicationSetupManager(final Bus bus,
+                                                      final DataManager dataManager)
+    {
+        return new SetupManager(bus, dataManager);
     }
 
     private String getDeviceId()

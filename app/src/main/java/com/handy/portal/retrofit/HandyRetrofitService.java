@@ -43,13 +43,13 @@ public interface HandyRetrofitService
             @Body LocationBatchUpdate locationBatchUpdate,
             HandyRetrofitCallback cb);
 
+    @GET("/setup")
+    void getSetupData(HandyRetrofitCallback cb);
+
     @GET("/check_for_update")
     void checkUpdates(@Query("app_flavor") String appFlavor,
                       @Query("version_code") int versionCode,
                       HandyRetrofitCallback cb);
-
-    @GET("/check_all_pending_terms")
-    void checkAllPendingTerms(HandyRetrofitCallback cb);
 
     @Multipart
     @POST("/accept_terms")

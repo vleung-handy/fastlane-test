@@ -40,7 +40,7 @@ import com.handy.portal.onboarding.ui.adapter.JobsRecyclerAdapter;
 import com.handy.portal.onboarding.ui.fragment.OnboardLoadingDialog;
 import com.handy.portal.onboarding.ui.view.OnboardJobGroupView;
 import com.handy.portal.ui.fragment.dialog.OnboardJobClaimConfirmDialog;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

@@ -23,6 +23,8 @@ public class ProviderPersonalInfo implements Serializable
     private Date mActivationDate;
     @SerializedName("cc_4")
     private String mCardLast4;
+    @SerializedName("operating_region")
+    private String mOperatingRegion;
 
     public String getLastName()
     {
@@ -62,5 +64,10 @@ public class ProviderPersonalInfo implements Serializable
     public String getCardLast4()
     {
         return mCardLast4;
+    }
+
+    public String getOperatingRegion()
+    {
+        return mOperatingRegion;
     }
 }

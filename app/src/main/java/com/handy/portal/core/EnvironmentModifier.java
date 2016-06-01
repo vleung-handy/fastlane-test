@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.manager.PrefsManager;
 
 import java.util.Properties;

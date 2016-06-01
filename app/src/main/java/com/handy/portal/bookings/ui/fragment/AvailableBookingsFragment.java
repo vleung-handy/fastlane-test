@@ -42,8 +42,8 @@ import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.onboarding.ui.activity.GettingStartedActivity;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.FragmentUtils;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.FragmentUtils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;

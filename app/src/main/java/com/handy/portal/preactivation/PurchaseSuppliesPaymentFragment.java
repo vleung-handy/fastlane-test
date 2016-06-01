@@ -19,10 +19,10 @@ import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
 import com.handy.portal.payments.PaymentEvent;
-import com.handy.portal.ui.view.DateFormFieldTableRow;
-import com.handy.portal.ui.view.FormFieldTableRow;
-import com.handy.portal.ui.view.SimpleContentLayout;
-import com.handy.portal.util.UIUtils;
+import com.handy.portal.library.ui.view.DateFormFieldTableRow;
+import com.handy.portal.library.ui.view.FormFieldTableRow;
+import com.handy.portal.library.ui.view.SimpleContentLayout;
+import com.handy.portal.library.util.UIUtils;
 import com.squareup.otto.Subscribe;
 import com.stripe.android.model.Card;
 

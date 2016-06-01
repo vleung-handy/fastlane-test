@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.model.dashboard.ProviderRating;
-import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.library.util.DateTimeUtils;
 
 import java.util.Date;
 import java.util.List;
