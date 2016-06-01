@@ -292,6 +292,12 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     }
 
     @Override
+    protected int getButtonType()
+    {
+        return ButtonTypes.SINGLE_FIXED;
+    }
+
+    @Override
     protected int getLayoutResId()
     {
         return R.layout.view_purchase_supplies_confirmation;
@@ -315,12 +321,6 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     protected String getSubHeaderText()
     {
         return mOnboardingSuppliesInfo.getChargeNotice();
-    }
-
-    @Override
-    protected String getPrimaryButtonText()
-    {
-        return getString(R.string.confirm_purchase);
     }
 
     @Override

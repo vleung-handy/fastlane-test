@@ -63,6 +63,12 @@ public class ScheduleConfirmationFragment extends PreActivationFlowFragment
     }
 
     @Override
+    protected int getButtonType()
+    {
+        return ButtonTypes.SINGLE;
+    }
+
+    @Override
     protected int getLayoutResId()
     {
         return R.layout.view_schedule_confirmation;

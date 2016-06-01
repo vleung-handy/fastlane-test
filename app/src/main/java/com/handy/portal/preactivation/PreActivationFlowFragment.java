@@ -38,6 +38,15 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
     @Bind(R.id.sub_header)
     protected TextView mSubHeader;
 
+    public static final class ButtonTypes
+    {
+        public static final int SINGLE = 1;
+        public static final int DOUBLE = 2;
+        public static final int SINGLE_FIXED = 3;
+    }
+
+    protected abstract int getButtonType();
+
     @OnClick({R.id.group_primary_button, R.id.single_action_button})
     void triggerPrimaryButton()
     {
@@ -61,13 +70,16 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
     @Nullable
     abstract protected String getSubHeaderText();
 
-    abstract protected String getPrimaryButtonText();
+    protected String getPrimaryButtonText()
+    {
+        return getString(R.string.continue_to_next_step);
+    }
 
     abstract protected void onPrimaryButtonClicked();
 
     protected String getSecondaryButtonText()
     {
-        return null;
+        return getString(R.string.skip_this_step);
     }
 
     protected void onSecondaryButtonClicked()
@@ -156,19 +168,58 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
 
     private void initActionButtons()
     {
-        if (getSecondaryButtonText() != null)
+        switch (getButtonType())
         {
-            mActionButtonGroup.setVisibility(View.VISIBLE);
-            mSingleActionButton.setVisibility(View.GONE);
-            mGroupPrimaryButton.setText(getPrimaryButtonText());
-            mGroupSecondaryButton.setText(getSecondaryButtonText());
+            case ButtonTypes.DOUBLE:
+                mGroupSecondaryButton.setText(getSecondaryButtonText());
+                mGroupSecondaryButton.setVisibility(View.VISIBLE);
+            case ButtonTypes.SINGLE:
+                mSingleActionButton.setVisibility(View.GONE);
+                mActionButtonGroup.setVisibility(View.VISIBLE);
+                mGroupPrimaryButton.setVisibility(View.VISIBLE);
+                mGroupPrimaryButton.setText(getPrimaryButtonText());
+                break;
+            case ButtonTypes.SINGLE_FIXED:
+                mSingleActionButton.setVisibility(View.VISIBLE);
+                mActionButtonGroup.setVisibility(View.GONE);
+                mSingleActionButton.setText(getPrimaryButtonText());
+                break;
+            default:
+                break;
         }
-        else if (getPrimaryButtonText() != null)
+    }
+
+    public void disableButtons()
+    {
+        setButtonsEnabled(false);
+    }
+
+    public void enableButtons()
+    {
+        setButtonsEnabled(true);
+    }
+
+    private void setButtonsEnabled(final boolean enabled)
+    {
+        switch (getButtonType())
         {
-            mSingleActionButton.setVisibility(View.VISIBLE);
-            mActionButtonGroup.setVisibility(View.GONE);
-            mSingleActionButton.setText(getPrimaryButtonText());
+            case ButtonTypes.DOUBLE:
+                setButtonEnabled(mGroupSecondaryButton, enabled);
+            case ButtonTypes.SINGLE:
+                setButtonEnabled(mGroupPrimaryButton, enabled);
+                break;
+            case ButtonTypes.SINGLE_FIXED:
+                setButtonEnabled(mSingleActionButton, enabled);
+            default:
+                break;
         }
+    }
+
+    private void setButtonEnabled(final Button button, final boolean enabled)
+    {
+        final float alpha = enabled ? 1.0f : 0.5f;
+        button.setAlpha(alpha);
+        button.setEnabled(enabled);
     }
 
     public void showError(@Nullable final String message)

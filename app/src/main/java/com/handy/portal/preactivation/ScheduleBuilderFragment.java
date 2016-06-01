@@ -91,6 +91,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+        disableButtons();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mStartDateView.setLabel(getString(R.string.start_date));
         mLocationsView.setLabel(getString(R.string.locations));
@@ -272,13 +273,11 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     {
         if (mAdapter != null && !mAdapter.getSelectedBookings().isEmpty())
         {
-            mSingleActionButton.setAlpha(1.0f);
-            mSingleActionButton.setEnabled(true);
+            enableButtons();
         }
         else
         {
-            mSingleActionButton.setAlpha(0.5f);
-            mSingleActionButton.setEnabled(false);
+            disableButtons();
         }
     }
 
@@ -288,6 +287,12 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         mFetchErrorView.setVisibility(View.GONE);
         showLoadingOverlay();
         loadJobs();
+    }
+
+    @Override
+    protected int getButtonType()
+    {
+        return ButtonTypes.SINGLE_FIXED;
     }
 
     @Override
@@ -314,12 +319,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     protected String getSubHeaderText()
     {
         return null;
-    }
-
-    @Override
-    protected String getPrimaryButtonText()
-    {
-        return getString(R.string.continue_to_next_step);
     }
 
     @Override

@@ -153,6 +153,12 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
     }
 
     @Override
+    protected int getButtonType()
+    {
+        return ButtonTypes.SINGLE_FIXED;
+    }
+
+    @Override
     protected int getLayoutResId()
     {
         return R.layout.view_schedule_preferences;
@@ -179,12 +185,6 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
     {
         // FIXME: Pull from server
         return "You can start as early as next week!";
-    }
-
-    @Override
-    protected String getPrimaryButtonText()
-    {
-        return getString(R.string.continue_to_next_step);
     }
 
     @Override

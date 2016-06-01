@@ -93,6 +93,12 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
     }
 
     @Override
+    protected int getButtonType()
+    {
+        return ButtonTypes.DOUBLE;
+    }
+
+    @Override
     protected int getLayoutResId()
     {
         return R.layout.view_purchase_supplies;
