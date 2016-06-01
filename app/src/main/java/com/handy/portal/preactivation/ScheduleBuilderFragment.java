@@ -146,7 +146,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         mBookingsListWrapper = null;
         mJobLoaded = false;
         mFetchErrorView.setVisibility(View.GONE);
-        bus.post(new HandyEvent.RequestOnboardingJobs(null, mSelectedZipclusterIds));
+        bus.post(new HandyEvent.RequestOnboardingJobs(mSelectedStartDate, mSelectedZipclusterIds));
     }
 
     @NonNull
