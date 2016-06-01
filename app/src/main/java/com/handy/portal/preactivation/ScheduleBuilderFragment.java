@@ -8,14 +8,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.ui.view.LabelAndValueView;
 import com.handy.portal.library.util.DateTimeUtils;
@@ -33,7 +31,6 @@ import java.util.List;
 
 import butterknife.Bind;
 import butterknife.BindInt;
-import butterknife.OnClick;
 
 public class ScheduleBuilderFragment extends PreActivationFlowFragment
         implements OnboardJobGroupView.OnJobChangeListener
@@ -46,10 +43,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     LabelAndValueView mStartDateView;
     @Bind(R.id.locations_view)
     LabelAndValueView mLocationsView;
-    @Bind(R.id.fetch_error_view)
-    View mFetchErrorView;
-    @Bind(R.id.fetch_error_text)
-    TextView mErrorText;
     @BindInt(R.integer.onboarding_dialog_load_min_time)
     int mWaitTime;
 
@@ -145,7 +138,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     {
         mBookingsListWrapper = null;
         mJobLoaded = false;
-        mFetchErrorView.setVisibility(View.GONE);
         bus.post(new HandyEvent.RequestOnboardingJobs(mSelectedStartDate, mSelectedZipclusterIds));
     }
 
@@ -195,7 +187,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
      * @param event
      */
     @Subscribe
-    public void onJobLoaded(HandyEvent.ReceiveOnboardingJobsSuccess event)
+    public void onReceiveOnboardingJobsSuccess(HandyEvent.ReceiveOnboardingJobsSuccess event)
     {
         Log.d(TAG, "onJobLoaded: ");
         hideLoadingOverlay();
@@ -205,22 +197,13 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     }
 
     @Subscribe
-    public void onJobLoadError(HandyEvent.ReceiveOnboardingJobsError event)
+    public void onReceiveOnboardingJobsError(HandyEvent.ReceiveOnboardingJobsError event)
     {
         if (isLoadingDialogVisible())
         {
             mLoadingDialog.dismiss();
         }
-
-        if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
-        {
-            mErrorText.setText(R.string.error_fetching_connectivity_issue);
-        }
-        else
-        {
-            mErrorText.setText(getString(R.string.onboard_job_load_error));
-        }
-        mFetchErrorView.setVisibility(View.VISIBLE);
+        showError(event.error.getMessage());
     }
 
     /**
@@ -279,14 +262,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         {
             disableButtons();
         }
-    }
-
-    @OnClick(R.id.try_again_button)
-    public void doRequestBookingsAgain()
-    {
-        mFetchErrorView.setVisibility(View.GONE);
-        showLoadingOverlay();
-        loadJobs();
     }
 
     @Override
