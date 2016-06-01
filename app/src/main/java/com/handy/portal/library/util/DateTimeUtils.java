@@ -11,8 +11,10 @@ import com.handy.portal.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -81,6 +83,29 @@ public final class DateTimeUtils
         }
 
         return prepend;
+    }
+
+    /**
+     *
+     * @param inclusiveStartDate
+     * @param numDays
+     * @return a list of dates without time, with numDays elements, inclusively starting from the given start date
+     *
+     * currently used for creating request params
+     */
+    public static List<Date> getDateWithoutTimeList(Date inclusiveStartDate, int numDays)
+    {
+        List<Date> dates = new ArrayList<>();
+        for (int i = 0; i < numDays; i++)
+        {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(inclusiveStartDate);
+            calendar.add(Calendar.DATE, i);
+            final Date day = DateTimeUtils.getDateWithoutTime(calendar.getTime());
+
+            dates.add(day);
+        }
+        return dates;
     }
 
     public static boolean isDateWithinXHoursFromNow(Date date, int hours)

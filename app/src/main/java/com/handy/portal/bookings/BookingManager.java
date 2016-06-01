@@ -14,10 +14,10 @@ import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.onboarding.model.JobClaimResponse;
-import com.handy.portal.library.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -183,7 +183,7 @@ public class BookingManager
                         @Override
                         public void onError(final DataManager.DataManagerError error)
                         {
-                            mBus.post(new BookingEvent.ReceiveProRequestedError(error));
+                            mBus.post(new BookingEvent.ReceiveProRequestedJobsError(error));
                         }
                     }
             );

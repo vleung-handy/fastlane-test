@@ -11,7 +11,6 @@ import com.handy.portal.bookings.ui.adapter.ProRequestedJobsExpandableListAdapte
 import java.util.List;
 
 public class ProRequestedJobsExpandableListView extends ExpandableListView
-    //TODO can we make this generic
 {
     public ProRequestedJobsExpandableListView(final Context context)
     {
@@ -32,6 +31,7 @@ public class ProRequestedJobsExpandableListView extends ExpandableListView
      * use this to set data instead of directly calling setAdapter()
      *
      * because this view is meant to be used with a specific adapter
+     * and has to expand its group headers after data is set
      * @param jobList
      */
     public void setData(@NonNull List<BookingsWrapper> jobList)
@@ -45,6 +45,15 @@ public class ProRequestedJobsExpandableListView extends ExpandableListView
         {
             expandGroup(i);
         }
+    }
+
+    /**
+     * convenience method for determining whether this list view has valid data attached to it
+     * @return true if has valid data, false otherwise
+     */
+    public boolean hasValidData()
+    {
+        return getExpandableListAdapter() != null;
     }
 
 }

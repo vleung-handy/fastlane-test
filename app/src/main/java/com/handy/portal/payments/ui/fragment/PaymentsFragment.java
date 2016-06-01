@@ -31,7 +31,6 @@ import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.payments.ui.element.PaymentsBatchListView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.ui.listener.OnDataItemClickListener;
 import com.squareup.otto.Subscribe;
 
 import java.util.Calendar;
@@ -117,11 +116,12 @@ public final class PaymentsFragment extends ActionBarFragment
     public void onViewCreated(View view, Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        paymentsBatchListView.setOnDataItemClickListener(new OnDataItemClickListener<PaymentBatch>() {
+        paymentsBatchListView.setOnDataItemClickListener(new PaymentsBatchListView.OnDataItemClickListener()
+        {
             @Override
-            public void onDataItemClicked(final PaymentBatch dataItem)
+            public void onDataItemClicked(PaymentBatch paymentBatch)
             {
-                showPaymentDetailsForBatch(dataItem);
+                showPaymentDetailsForBatch(paymentBatch);
             }
         });
     }

@@ -57,9 +57,9 @@ public abstract class BookingEvent extends HandyEvent
         }
     }
 
-    public static class ReceiveProRequestedError extends ReceiveErrorEvent
+    public static class ReceiveProRequestedJobsError extends ReceiveErrorEvent
     {
-        public ReceiveProRequestedError(DataManager.DataManagerError error)
+        public ReceiveProRequestedJobsError(DataManager.DataManagerError error)
         {
             this.error = error;
         }

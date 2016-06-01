@@ -38,7 +38,7 @@ public class ProRequestedJobsListGroupView extends FrameLayout
         View view = inflater.inflate(R.layout.element_pro_requested_jobs_list_group_header,
                 this, false);
         addView(view);
-        setOnClickListener(null);
+        setOnClickListener(null); //don't want this view to be clickable
         ButterKnife.bind(this);
     }
 

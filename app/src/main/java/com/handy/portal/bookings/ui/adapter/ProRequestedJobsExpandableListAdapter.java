@@ -14,11 +14,10 @@ import com.handy.portal.bookings.ui.element.ProRequestedJobsListGroupView;
 import java.util.List;
 
 /**
- * expandable list view adapter
+ * expandable list view adapter for pro requested jobs view
  *
  * group headers are not clickable
  *
- * TODO clean up and refactor!
  */
 public class ProRequestedJobsExpandableListAdapter extends BaseExpandableListAdapter
 {
