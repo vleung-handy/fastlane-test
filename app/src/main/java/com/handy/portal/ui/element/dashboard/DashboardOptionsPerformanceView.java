@@ -133,7 +133,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
         mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.TierSelected()));
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_NEW_TIERS, arguments, true));
+        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_TIERS, arguments, true));
     }
 
     @OnClick(R.id.feedback_option)
