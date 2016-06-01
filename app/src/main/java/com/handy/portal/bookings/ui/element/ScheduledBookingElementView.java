@@ -70,7 +70,7 @@ public class ScheduledBookingElementView extends BookingElementView
         //Service or frequency for home cleaning jobs
         UIUtils.setService(mBookingServiceTextView, booking);
 
-        this.associatedView = convertView;
+        mAssociatedView = convertView;
 
         return convertView;
     }

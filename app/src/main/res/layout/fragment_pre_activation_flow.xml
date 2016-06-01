@@ -25,7 +25,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/extra_margin"
+                android:background="@color/white"
                 android:orientation="vertical"
+                android:paddingBottom="@dimen/extra_padding"
                 >
 
                 <TextView
@@ -73,6 +75,7 @@
                 android:id="@+id/action_button_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin_half"
                 android:orientation="vertical"
                 android:visibility="gone"
                 >
@@ -83,13 +86,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom"
-                    android:layout_marginBottom="@dimen/row_margin"
+                    android:layout_marginBottom="@dimen/default_margin_half"
                     android:layout_marginEnd="@dimen/default_margin"
                     android:layout_marginLeft="@dimen/default_margin"
                     android:layout_marginRight="@dimen/default_margin"
                     android:layout_marginStart="@dimen/default_margin"
                     android:textColor="@color/white"
                     android:textSize="@dimen/large_text_size"
+                    android:visibility="gone"
                     tools:text="@string/yes_supply_kit"
                     />
 
@@ -106,6 +110,7 @@
                     android:layout_marginStart="@dimen/default_margin"
                     android:textColor="@color/white"
                     android:textSize="@dimen/large_text_size"
+                    android:visibility="gone"
                     tools:text="@string/no_supply_kit"
                     />
             </LinearLayout>
@@ -114,10 +119,10 @@
 
     <Button
         android:id="@+id/single_action_button"
+        style="@style/Button.Green"
         android:layout_width="match_parent"
         android:layout_height="@dimen/complete_button_height"
         android:layout_alignParentBottom="true"
-        android:background="@color/handy_green"
         android:textAllCaps="false"
         android:textColor="@color/white"
         android:textSize="@dimen/large_text_size"

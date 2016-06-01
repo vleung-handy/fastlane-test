@@ -11,11 +11,9 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
-import com.handy.portal.ui.adapter.CheckBoxListAdapter;
 import com.handy.portal.library.ui.view.StaticFieldTableRow;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.ui.adapter.CheckBoxListAdapter;
 import com.handy.portal.ui.widget.TitleView;
 
 import java.util.ArrayList;
@@ -38,7 +36,6 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
     private Date mSelectedStartDate;
     private ArrayList<Integer> mSelectedZipclusterIds;
     private CheckBoxListAdapter.CheckBoxListItem[] mLocationViewModels;
-    private OnboardingSuppliesInfo mOnboardingSuppliesInfo;
 
     @OnClick(R.id.date_field)
     public void onDateFieldClicked()
@@ -110,14 +107,9 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
                 .show();
     }
 
-    public static SchedulePreferencesFragment newInstance(
-            final OnboardingSuppliesInfo onboardingSuppliesInfo)
+    public static SchedulePreferencesFragment newInstance()
     {
-        final SchedulePreferencesFragment fragment = new SchedulePreferencesFragment();
-        final Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.ONBOARDING_SUPPLIES, onboardingSuppliesInfo);
-        fragment.setArguments(arguments);
-        return fragment;
+        return new SchedulePreferencesFragment();
     }
 
     @Override
@@ -125,8 +117,6 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
     {
         super.onCreate(savedInstanceState);
         mSelectedZipclusterIds = new ArrayList<>();
-        mOnboardingSuppliesInfo = (OnboardingSuppliesInfo) getArguments()
-                .getSerializable(BundleKeys.ONBOARDING_SUPPLIES);
 
         // FIXME: Pull locations from server
         mLocationViewModels = new CheckBoxListAdapter.CheckBoxListItem[]{
@@ -163,6 +153,12 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
     }
 
     @Override
+    protected int getButtonType()
+    {
+        return ButtonTypes.SINGLE_FIXED;
+    }
+
+    @Override
     protected int getLayoutResId()
     {
         return R.layout.view_schedule_preferences;
@@ -192,12 +188,6 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
     }
 
     @Override
-    protected String getPrimaryButtonText()
-    {
-        return getString(R.string.continue_to_next_step);
-    }
-
-    @Override
     protected void onPrimaryButtonClicked()
     {
         if (!validate())
@@ -205,8 +195,7 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
             return;
         }
 
-        next(ScheduleBuilderFragment.newInstance(mOnboardingSuppliesInfo, mSelectedStartDate,
-                mSelectedZipclusterIds));
+        next(ScheduleBuilderFragment.newInstance(mSelectedStartDate, mSelectedZipclusterIds));
     }
 
     private boolean validate()
@@ -235,9 +224,7 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
     {
         if (mSelectedStartDate != null)
         {
-            final String dateString = DateTimeUtils.DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER
-                    .format(mSelectedStartDate.getTime());
-            mDateField.setValue(dateString);
+            mDateField.setValue(DateTimeUtils.formatDayOfWeekMonthDateYear(mSelectedStartDate));
         }
         else
         {

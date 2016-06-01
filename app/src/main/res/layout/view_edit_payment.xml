@@ -9,21 +9,21 @@
     tools:showIn="@layout/view_purchase_supplies_confirmation"
     >
 
-    <com.handy.portal.ui.view.FormFieldTableRow
+    <com.handy.portal.library.ui.view.FormFieldTableRow
         android:id="@+id/credit_card_number_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/border_gray_bottom"
         />
 
-    <com.handy.portal.ui.view.DateFormFieldTableRow
+    <com.handy.portal.library.ui.view.DateFormFieldTableRow
         android:id="@+id/expiration_date_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/border_gray_bottom"
         />
 
-    <com.handy.portal.ui.view.FormFieldTableRow
+    <com.handy.portal.library.ui.view.FormFieldTableRow
         android:id="@+id/security_code_field"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

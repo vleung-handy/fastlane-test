@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/handy_bg"
@@ -18,69 +17,23 @@
         android:paddingStart="@dimen/default_padding"
         >
 
-        <LinearLayout
+        <com.handy.portal.library.ui.view.LabelAndValueView
+            android:id="@+id/start_date_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
             android:paddingBottom="@dimen/default_padding"
             android:paddingTop="@dimen/default_padding"
-            >
+            />
 
-            <TextView
-                style="@style/CircularBold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/start_date"
-                android:textColor="@color/black"
-                android:textSize="@dimen/default_text_size"
-                />
-
-            <TextView
-                android:id="@+id/start_date_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_half"
-                android:layout_marginStart="@dimen/default_margin_half"
-                android:textColor="@color/black"
-                android:textSize="@dimen/default_text_size"
-                tools:text="Thursday, February 8 2016"
-                />
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/locations_view_container"
+        <com.handy.portal.library.ui.view.LabelAndValueView
+            android:id="@+id/locations_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
             android:layout_marginBottom="1dp"
             android:background="@drawable/border_gray_top"
-            android:orientation="horizontal"
+            android:layout_height="wrap_content"
             android:paddingBottom="@dimen/default_padding"
             android:paddingTop="@dimen/default_padding"
-            >
-
-            <TextView
-                style="@style/CircularBold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/locations"
-                android:textColor="@color/black"
-                android:textSize="@dimen/default_text_size"
-                />
-
-            <TextView
-                android:id="@+id/locations_view"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/default_margin_half"
-                android:layout_marginStart="@dimen/default_margin_half"
-                android:textColor="@color/black"
-                android:textSize="@dimen/default_text_size"
-                tools:text="5 locations selected"
-                />
-
-        </LinearLayout>
+            />
 
     </LinearLayout>
 
@@ -93,12 +46,6 @@
         android:clipToPadding="false"
         android:layoutAnimation="@anim/list_animation"
         android:paddingBottom="@dimen/onboard_claim_button_margin"
-        />
-
-    <include
-        layout="@layout/layout_fetch_error"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
         />
 
 </RelativeLayout>

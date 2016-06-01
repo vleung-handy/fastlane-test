@@ -10,7 +10,6 @@ public class JobClaimResponse implements Serializable
 {
     @SerializedName("jobs")
     private List<BookingClaimDetails> mJobs;
-
     @SerializedName("message")
     private String mMessage;
 

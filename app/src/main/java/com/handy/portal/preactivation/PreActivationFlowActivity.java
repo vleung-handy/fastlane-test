@@ -7,14 +7,19 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 
 import com.handy.portal.R;
+import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.MainActivity;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PreActivationFlowActivity extends BaseActivity
 {
     private OnboardingSuppliesInfo mOnboardingSuppliesInfo;
+    private List<Booking> mPendingBookings;
 
     @Override
     protected boolean shouldTriggerSetup()
@@ -30,6 +35,7 @@ public class PreActivationFlowActivity extends BaseActivity
                 .getSerializableExtra(BundleKeys.ONBOARDING_SUPPLIES);
         setContentView(R.layout.activity_pre_activation_flow);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        mPendingBookings = new ArrayList<>();
         goToFirstStep();
     }
 
@@ -40,7 +46,11 @@ public class PreActivationFlowActivity extends BaseActivity
                 getSupportFragmentManager().beginTransaction();
         if (allowBackNavigation)
         {
-            final Bundle arguments = fragment.getArguments();
+            Bundle arguments = fragment.getArguments();
+            if (arguments == null)
+            {
+                arguments = new Bundle();
+            }
             arguments.putBoolean(BundleKeys.ALLOW_BACK_NAVIGATION, true);
             fragment.setArguments(arguments);
             fragmentTransaction.addToBackStack(null);
@@ -69,6 +79,17 @@ public class PreActivationFlowActivity extends BaseActivity
 
     private void goToFirstStep()
     {
-        next(SchedulePreferencesFragment.newInstance(mOnboardingSuppliesInfo), false);
+        next(SchedulePreferencesFragment.newInstance(), false);
+    }
+
+    @NonNull
+    public List<Booking> getPendingBookings()
+    {
+        return mPendingBookings;
+    }
+
+    public void setPendingBookings(@NonNull final List<Booking> pendingBookings)
+    {
+        mPendingBookings = pendingBookings;
     }
 }

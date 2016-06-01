@@ -74,11 +74,14 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
         final ArrayList<Booking> bookings = new ArrayList<>();
         for (BookingsWrapperViewModel model : getBookingsWrapperViewModels())
         {
-            for (BookingViewModel bookingView : model.getBookingViewModels())
+            if (model != null)
             {
-                if (bookingView.isSelected())
+                for (BookingViewModel bookingView : model.getBookingViewModels())
                 {
-                    bookings.add(bookingView.getBooking());
+                    if (bookingView.isSelected())
+                    {
+                        bookings.add(bookingView.getBooking());
+                    }
                 }
             }
         }
