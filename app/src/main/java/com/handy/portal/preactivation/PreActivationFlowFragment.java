@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -33,6 +34,8 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
     protected Button mGroupPrimaryButton;
     @Bind(R.id.group_secondary_button)
     protected Button mGroupSecondaryButton;
+    @Bind(R.id.header_image)
+    protected ImageView mHeaderImage;
     @Bind(R.id.header)
     protected TextView mHeader;
     @Bind(R.id.sub_header)
@@ -46,7 +49,20 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
         public static final int SINGLE_FIXED = 3;
     }
 
+    public static final class HeaderImageTypes
+    {
+        public static final int NONE = 0;
+        public static final int WELCOME = 1;
+        public static final int COMPLETE = 2;
+        public static final int ERROR = 3;
+    }
+
     protected abstract int getButtonType();
+
+    protected int getHeaderImageType()
+    {
+        return HeaderImageTypes.NONE;
+    }
 
     @OnClick({R.id.group_primary_button, R.id.single_action_button})
     void triggerPrimaryButton()
@@ -121,6 +137,7 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
 
         initOrHideText(mHeader, getHeaderText());
         initOrHideText(mSubHeader, getSubHeaderText());
+        initOrHideImageHeader();
         initActionButtons();
 
         return view;
@@ -164,6 +181,26 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
         else
         {
             textView.setVisibility(View.GONE);
+        }
+    }
+
+    private void initOrHideImageHeader()
+    {
+        switch (getHeaderImageType())
+        {
+            case HeaderImageTypes.WELCOME:
+                mHeaderImage.setImageResource(R.drawable.img_avatar_welcome);
+                break;
+            case HeaderImageTypes.COMPLETE:
+                mHeaderImage.setImageResource(R.drawable.img_avatar_complete);
+                break;
+            case HeaderImageTypes.ERROR:
+                mHeaderImage.setImageResource(R.drawable.img_avatar_error);
+                break;
+            case HeaderImageTypes.NONE:
+            default:
+                mHeaderImage.setVisibility(View.GONE);
+                break;
         }
     }
 

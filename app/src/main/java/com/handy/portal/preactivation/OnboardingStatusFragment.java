@@ -92,6 +92,12 @@ public class OnboardingStatusFragment extends PreActivationFlowFragment
         return getString(R.string.welcome);
     }
 
+    @Override
+    protected int getHeaderImageType()
+    {
+        return HeaderImageTypes.WELCOME;
+    }
+
     @Nullable
     @Override
     protected String getHeaderText()
