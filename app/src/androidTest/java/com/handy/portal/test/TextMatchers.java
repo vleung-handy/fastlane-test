@@ -1,4 +1,4 @@
-package com.handy.portal.testutil;
+package com.handy.portal.test;
 
 import android.support.annotation.NonNull;
 import android.support.test.espresso.matcher.BoundedMatcher;
@@ -11,7 +11,7 @@ import org.hamcrest.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Created by vleung on 5/31/16.
+ * currently not being used but leaving for reference
  */
 public class TextMatchers
 {

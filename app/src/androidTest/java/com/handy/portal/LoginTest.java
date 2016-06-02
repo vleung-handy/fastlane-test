@@ -1,11 +1,15 @@
 package com.handy.portal;
 
+import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
-import com.handy.portal.testdata.TestUser;
-import com.handy.portal.testutil.ViewUtil;
+import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.test.data.TestUsers;
+import com.handy.portal.test.model.TestUser;
+import com.handy.portal.test.util.TextViewUtil;
+import com.handy.portal.test.util.ViewUtil;
 import com.handy.portal.ui.activity.SplashActivity;
 
 import org.junit.Before;
@@ -15,8 +19,6 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 //note that animations should be disabled on the device running these tests
@@ -26,11 +28,25 @@ public class LoginTest
 {
 //    private UiDevice mDevice; //TODO use this to test for system dialogs
 
-    private final TestUser mTestUser = TestUser.FIRST_TIME_PROVIDER_NY;
+    private static final TestUser TEST_USER = TestUsers.FIRST_TIME_NY_PROVIDER;
 
     @Rule
-    public ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<>(
-            SplashActivity.class);
+    public ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<SplashActivity>(
+            SplashActivity.class)
+    {
+        @Override
+        protected Intent getActivityIntent()
+        {
+            Intent intent = super.getActivityIntent();
+            intent.putExtra(PrefsKey.AUTH_TOKEN, "");
+            /*
+            need to make sure user is logged out
+            to work around behavior in which test device
+            does not clear app data after each test
+             */
+            return intent;
+        }
+    };
 
     @Before
     public void init() {
@@ -53,11 +69,12 @@ public class LoginTest
     public void testLogin()
     {
         //TODO: for proof of concept. we should make this more readable/reusable
-        onView(withId(R.id.phone_number_edit_text)).perform(click(), typeText(mTestUser.getPhoneNumber()), closeSoftKeyboard());
+        ViewUtil.waitForViewVisible(R.id.phone_number_edit_text, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+        TextViewUtil.updateEditTextView(R.id.phone_number_edit_text, TEST_USER.getPhoneNumber());
         onView(withId(R.id.login_button)).perform(click());
 
         ViewUtil.waitForViewVisible(R.id.pin_code_edit_text, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
-        onView(withId(R.id.pin_code_edit_text)).perform(click(), typeText(mTestUser.getPinCode()), closeSoftKeyboard());
+        TextViewUtil.updateEditTextView(R.id.pin_code_edit_text, TEST_USER.getPinCode());
         onView(withId(R.id.login_button)).perform(click());
 
         //accept all the terms
