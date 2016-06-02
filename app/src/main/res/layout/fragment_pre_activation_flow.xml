@@ -24,11 +24,19 @@
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/extra_margin"
-                android:background="@color/white"
+                android:background="@drawable/border_gray_bottom"
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/extra_padding"
                 >
+
+                <ImageView
+                    android:id="@+id/header_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/default_margin"
+                    tools:src="@drawable/img_avatar_complete"
+                    />
 
                 <TextView
                     android:id="@+id/header"

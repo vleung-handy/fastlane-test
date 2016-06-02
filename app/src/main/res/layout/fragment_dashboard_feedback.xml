@@ -62,7 +62,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/default_margin"
                     android:layout_marginStart="@dimen/default_margin"
-                    android:src="@drawable/ic_chevron_dashboard_gray"
+                    android:src="@drawable/ic_chevron_gray"
                     />
 
             </RelativeLayout>
