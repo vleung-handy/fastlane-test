@@ -13,10 +13,7 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
-import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.library.ui.view.LabelAndValueView;
-import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.onboarding.ui.adapter.JobsRecyclerAdapter;
@@ -24,9 +21,7 @@ import com.handy.portal.onboarding.ui.fragment.OnboardLoadingDialog;
 import com.handy.portal.onboarding.ui.view.OnboardJobGroupView;
 import com.squareup.otto.Subscribe;
 
-import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -39,10 +34,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
 
     @Bind(R.id.recycler_view)
     RecyclerView mRecyclerView;
-    @Bind(R.id.start_date_view)
-    LabelAndValueView mStartDateView;
-    @Bind(R.id.locations_view)
-    LabelAndValueView mLocationsView;
     @BindInt(R.integer.onboarding_dialog_load_min_time)
     int mWaitTime;
 
@@ -55,19 +46,9 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     private long mLoadingDialogDisplayTime;
     private boolean mIsResumed;
 
-    private Date mSelectedStartDate;
-    private ArrayList<Integer> mSelectedZipclusterIds;
-
-    public static ScheduleBuilderFragment newInstance(
-            final Date selectedStartDate,
-            final ArrayList<Integer> selectedZipclusterIds)
+    public static ScheduleBuilderFragment newInstance()
     {
-        final ScheduleBuilderFragment fragment = new ScheduleBuilderFragment();
-        final Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.PROVIDER_START_DATE, selectedStartDate);
-        arguments.putSerializable(BundleKeys.ZIPCLUSTERS_IDS, selectedZipclusterIds);
-        fragment.setArguments(arguments);
-        return fragment;
+        return new ScheduleBuilderFragment();
     }
 
     @SuppressWarnings("unchecked")
@@ -75,9 +56,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mSelectedStartDate = (Date) getArguments().getSerializable(BundleKeys.PROVIDER_START_DATE);
-        mSelectedZipclusterIds = (ArrayList<Integer>) getArguments()
-                .getSerializable(BundleKeys.ZIPCLUSTERS_IDS);
     }
 
     @Override
@@ -86,34 +64,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         super.onViewCreated(view, savedInstanceState);
         disableButtons();
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mStartDateView.setLabel(getString(R.string.start_date));
-        mLocationsView.setLabel(getString(R.string.locations));
-        displaySelectedStartDate();
-        if (shouldDisplaySelectedLocations())
-        {
-            displaySelectedLocations();
-        }
-        else
-        {
-            mLocationsView.setVisibility(View.GONE);
-        }
-    }
-
-    private void displaySelectedStartDate()
-    {
-        mStartDateView.setValue(DateTimeUtils.formatDayOfWeekMonthDateYear(mSelectedStartDate));
-    }
-
-    private void displaySelectedLocations()
-    {
-        final int count = mSelectedZipclusterIds.size();
-        mLocationsView.setValue(getResources().getQuantityString(
-                R.plurals.locations_selected_count_formatted, count, count));
-    }
-
-    private boolean shouldDisplaySelectedLocations()
-    {
-        return mSelectedZipclusterIds != null && !mSelectedZipclusterIds.isEmpty();
     }
 
     @Override
@@ -138,7 +88,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     {
         mBookingsListWrapper = null;
         mJobLoaded = false;
-        bus.post(new HandyEvent.RequestOnboardingJobs(mSelectedStartDate, mSelectedZipclusterIds));
     }
 
     @NonNull

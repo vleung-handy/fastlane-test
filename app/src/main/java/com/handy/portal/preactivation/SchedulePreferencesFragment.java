@@ -195,7 +195,7 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
             return;
         }
 
-        next(ScheduleBuilderFragment.newInstance(mSelectedStartDate, mSelectedZipclusterIds));
+        next(ScheduleBuilderFragment.newInstance());
     }
 
     private boolean validate()
