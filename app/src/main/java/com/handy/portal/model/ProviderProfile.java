@@ -8,6 +8,8 @@ import java.io.Serializable;
 
 public class ProviderProfile implements Serializable
 {
+    @SerializedName("provider_id")
+    private String mProviderId;
     @SerializedName("personal_info")
     private ProviderPersonalInfo mProviderPersonalInfo;
     @SerializedName("referral_info")
@@ -16,6 +18,12 @@ public class ProviderProfile implements Serializable
     private PerformanceInfo mPerformanceInfo;
     @SerializedName("resupply_info")
     private ResupplyInfo mResupplyInfo;
+
+    @Nullable
+    public String getProviderId()
+    {
+        return mProviderId;
+    }
 
     @Nullable
     public ProviderPersonalInfo getProviderPersonalInfo()
