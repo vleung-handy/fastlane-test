@@ -42,7 +42,7 @@ public class SplashActivity extends BaseActivity
     int mProgressSpinnerStartOffsetMillis;
 
     private String mAuthToken;
-    private String mProviderId;
+
     private Runnable mLoadingAnimationStarter = new Runnable()
     {
         @Override
@@ -73,7 +73,6 @@ public class SplashActivity extends BaseActivity
         }
 
         mAuthToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
-        mProviderId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID, null);
     }
 
     @Override
@@ -82,11 +81,7 @@ public class SplashActivity extends BaseActivity
         super.onResume();
         bus.register(this);
 
-        if (hasUser())
-        {
-            Crashlytics.setUserIdentifier(mProviderId);
-        }
-        else
+        if (!hasUser())
         {
             final Intent loginActivityIntent = getActivityIntent(LoginActivity.class);
             loginActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
@@ -180,11 +175,9 @@ public class SplashActivity extends BaseActivity
     private void processInjectedCredentials()
     {
         final String authToken = getIntent().getStringExtra(PrefsKey.AUTH_TOKEN);
-        final String providerId = getIntent().getStringExtra(PrefsKey.LAST_PROVIDER_ID);
-        if (!TextUtils.isNullOrEmpty(authToken) && !TextUtils.isNullOrEmpty(providerId))
+        if (!TextUtils.isNullOrEmpty(authToken))
         {
             prefsManager.setString(PrefsKey.AUTH_TOKEN, authToken);
-            prefsManager.setString(PrefsKey.LAST_PROVIDER_ID, providerId);
 
             //For use with WebView
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -205,6 +198,6 @@ public class SplashActivity extends BaseActivity
 
     private boolean hasUser()
     {
-        return !TextUtils.isNullOrEmpty(mAuthToken) && !TextUtils.isNullOrEmpty(mProviderId);
+        return !TextUtils.isNullOrEmpty(mAuthToken);
     }
 }

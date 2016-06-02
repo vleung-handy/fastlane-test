@@ -1,16 +1,19 @@
 package com.handy.portal.manager;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
+import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
@@ -22,7 +25,6 @@ import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.PaymentFlow;
-import com.handy.portal.library.util.TextUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -69,9 +71,20 @@ public class ProviderManager
         requestProviderInfo();
     }
 
-    public void setProviderProfile(final ProviderProfile providerProfile)
+    public void setProviderProfile(@NonNull final ProviderProfile providerProfile)
     {
+        /*
+            although redundant, below is needed because provider id is accessed directly from prefs everywhere
+         */
+        setProviderId(providerProfile.getProviderId());
         mProviderProfileCache.put(PROVIDER_PROFILE_CACHE_KEY, providerProfile);
+    }
+
+    public void setProviderId(final String providerId)
+    {
+        mPrefsManager.setString(PrefsKey.LAST_PROVIDER_ID, providerId);
+        Crashlytics.setUserIdentifier(providerId);
+        //need to update the user identifier whenever provider id is updated
     }
 
     @Subscribe
@@ -360,7 +373,7 @@ public class ProviderManager
             public void onSuccess(Provider provider)//TODO: need a way to sync this and provider id received from onLoginSuccess!
             {
                 mProviderCache.put(PROVIDER_CACHE_KEY, provider);
-                mPrefsManager.setString(PrefsKey.LAST_PROVIDER_ID, provider.getId());
+                setProviderId(provider.getId());
                 mBus.post(new HandyEvent.ProviderIdUpdated(provider.getId()));
                 mBus.post(new HandyEvent.ReceiveProviderInfoSuccess(provider));
             }
