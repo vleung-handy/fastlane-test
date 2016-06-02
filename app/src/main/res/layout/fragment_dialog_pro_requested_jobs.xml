@@ -75,7 +75,7 @@
 
         <include tools:visibility="visible"
                  android:id="@+id/pro_requested_bookings_empty"
-                 layout="@layout/layout_pro_requested_bookings_empty"/>
+                 layout="@layout/layout_pro_requested_jobs_empty"/>
     </FrameLayout>
 
 </RelativeLayout>

@@ -77,7 +77,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     BookingModalsManager mBookingModalsManager;
 
     private MenuItem mMenuSchedule;
-    private MenuItem mMenuRequestedJobs;
+    private MenuItem mMenuProRequestedJobs;
     private ProviderProfile mProviderProfile;
 
     @Override
@@ -136,7 +136,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_available_bookings, menu);
         mMenuSchedule = menu.findItem(R.id.action_initial_jobs);
-        mMenuRequestedJobs = menu.findItem(R.id.action_requested_jobs);
+        mMenuProRequestedJobs = menu.findItem(R.id.action_pro_requested_jobs);
 
         updateMenuItems();
     }
@@ -149,16 +149,21 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
             case R.id.action_initial_jobs:
                 startActivity(new Intent(getContext(), GettingStartedActivity.class));
                 return true;
-            case R.id.action_requested_jobs:
-                if(getChildFragmentManager().findFragmentByTag(ProRequestedJobsDialogFragment.FRAGMENT_TAG) == null)
-                {
-                    ProRequestedJobsDialogFragment fragment = ProRequestedJobsDialogFragment.newInstance();
-                    FragmentUtils.safeLaunchDialogFragment(fragment, this, ProRequestedJobsDialogFragment.FRAGMENT_TAG);
-                }
+            case R.id.action_pro_requested_jobs:
+                launchProRequestedJobsDialogFragment();
                 return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void launchProRequestedJobsDialogFragment()
+    {
+        if(getChildFragmentManager().findFragmentByTag(ProRequestedJobsDialogFragment.FRAGMENT_TAG) == null)
+        {
+            ProRequestedJobsDialogFragment fragment = ProRequestedJobsDialogFragment.newInstance();
+            FragmentUtils.safeLaunchDialogFragment(fragment, this, ProRequestedJobsDialogFragment.FRAGMENT_TAG);
+        }
     }
 
     protected BookingListView getBookingListView()
@@ -277,16 +282,16 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
             }
         }
 
-        if(mMenuRequestedJobs != null)
+        if(mMenuProRequestedJobs != null)
         {
             if(mConfigManager.getConfigurationResponse() != null
                     && mConfigManager.getConfigurationResponse().isPendingRequestsInboxEnabled())
             {
-                mMenuRequestedJobs.setVisible(true);
+                mMenuProRequestedJobs.setVisible(true);
             }
             else
             {
-                mMenuRequestedJobs.setVisible(false);
+                mMenuProRequestedJobs.setVisible(false);
             }
         }
     }

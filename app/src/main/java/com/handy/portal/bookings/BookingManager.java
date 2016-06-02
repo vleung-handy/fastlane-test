@@ -171,7 +171,6 @@ public class BookingManager
     @Subscribe
     public void onRequestProRequestedJobs(BookingEvent.RequestProRequestedJobs event)
     {
-        //TODO this doesn't actually just get requested jobs. need to fully integrate with new endpoint
         Map<String, Object> options = new HashMap<>();
         options.put("is_requested", true);
         mDataManager.getAvailableBookings(event.getDatesForBookings().toArray(new Date[event.getDatesForBookings().size()]),
