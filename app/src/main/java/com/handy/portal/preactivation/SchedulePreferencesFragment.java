@@ -208,7 +208,7 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
         final BookingsListWrapper bookingsListWrapper = event.getBookingsListWrapper();
         if (bookingsListWrapper.hasBookings())
         {
-            next(ScheduleBuilderFragment.newInstance(bookingsListWrapper));
+            next(ScheduleBuilderFragment.newInstance(bookingsListWrapper.getBookingsWrappers()));
         }
         else
         {

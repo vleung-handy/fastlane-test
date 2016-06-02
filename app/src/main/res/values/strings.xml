@@ -212,6 +212,7 @@
     <string name="one_matching_job">1 Matching Job</string>
     <string name="no_matching_jobs_message">No matching jobs found. You\u2019ll be notified if there are any new matches.</string>
     <string name="go_to_all_jobs">Go to All Jobs</string>
+    <string name="booking_time">%1$s \u2013 %2$s</string>
 
     <!-- Payments -->
     <string name="total_payment">Total Payment</string>

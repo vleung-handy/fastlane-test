@@ -5,43 +5,24 @@ import android.graphics.drawable.Drawable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
-import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.bookings.ui.element.BookingDetailsPaymentView;
+import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
 import com.handy.portal.onboarding.model.BookingViewModel;
-import com.handy.portal.payments.model.PaymentInfo;
-import com.handy.portal.library.util.UIUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-/**
- * This is a custom view used for showing jobs in the onboarding screen. It'll hold a check box,
- * job title & hours, and pricing.
- */
 public class OnboardingJobView extends FrameLayout implements CompoundButton.OnCheckedChangeListener
 {
-
-    private int mCornerRadius;
-
     @Bind(R.id.check_box)
     CheckBox mCheckBox;
-
-    @Bind(R.id.onboard_payment)
-    BookingDetailsPaymentView mPayment;
-
-    @Bind(R.id.onboard_payment_bonus)
-    TextView mBonusPaymentText;
-
-    @Bind(R.id.tv_title)
-    TextView mTitle;
-
-    @Bind(R.id.tv_subtitle)
-    TextView mSubTitle;
+    @Bind(R.id.job_container)
+    ViewGroup mJobContainer;
 
     private Drawable mCheckedDrawable;
     private Drawable mUncheckedDrawable;
@@ -50,19 +31,20 @@ public class OnboardingJobView extends FrameLayout implements CompoundButton.OnC
 
     private BookingViewModel mBookingViewModel;
 
-    public OnboardingJobView(Context context)
+    public OnboardingJobView(final Context context)
     {
         super(context);
         init();
     }
 
-    public OnboardingJobView(Context context, AttributeSet attrs)
+    public OnboardingJobView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
         init();
     }
 
-    public OnboardingJobView(Context context, AttributeSet attrs, int defStyleAttr)
+    public OnboardingJobView(final Context context, final AttributeSet attrs,
+                             final int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
         init();
@@ -70,8 +52,7 @@ public class OnboardingJobView extends FrameLayout implements CompoundButton.OnC
 
     private void init()
     {
-        mCornerRadius = getResources().getDimensionPixelSize(R.dimen.medium_corner_radius);
-        inflate(getContext(), R.layout.onboard_job_layout, this);
+        inflate(getContext(), R.layout.onboarding_job_check_box, this);
         ButterKnife.bind(this);
 
         mUncheckedDrawable = ContextCompat.getDrawable(getContext(), R.drawable.border_gray_bg_white);
@@ -96,28 +77,22 @@ public class OnboardingJobView extends FrameLayout implements CompoundButton.OnC
         mOnCheckedChangeListener = onCheckedChangeListener;
     }
 
-    public void bind(BookingViewModel bookingViewModel)
+    public void bind(final BookingViewModel bookingViewModel)
     {
         mBookingViewModel = bookingViewModel;
 
-        //Payment
-        mPayment.init(bookingViewModel.getBooking());
+        mJobContainer.removeAllViews();
+        final AvailableBookingElementView elementView = new AvailableBookingElementView();
+        elementView.initView(getContext(), bookingViewModel.getBooking(), null, mJobContainer);
+        final View view = elementView.getAssociatedView();
+        view.setBackground(null);
+        mJobContainer.addView(view);
 
-        //Bonus Payment
-        PaymentInfo paymentInfo = bookingViewModel.getBooking().getBonusPaymentToProvider();
-        if (paymentInfo != null && paymentInfo.getAmount() > 0)
-        {
-            UIUtils.setPaymentInfo(mBonusPaymentText, null, paymentInfo,
-                    getResources().getString(R.string.bonus_payment_value));
-        }
-
-        mTitle.setText(bookingViewModel.getTitle());
-        mSubTitle.setText(bookingViewModel.getSubTitle());
         mCheckBox.setChecked(bookingViewModel.isSelected());
     }
 
     @Override
-    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked)
+    public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked)
     {
         mBookingViewModel.setSelected(isChecked);
         if (isChecked)

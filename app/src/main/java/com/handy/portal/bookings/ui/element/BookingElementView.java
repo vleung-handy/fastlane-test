@@ -13,7 +13,7 @@ import java.util.Locale;
 public abstract class BookingElementView
 {
     protected static final DateFormat TIME_OF_DAY_FORMAT =
-            new SimpleDateFormat("h:mm a", Locale.getDefault());
+            new SimpleDateFormat("h:mma", Locale.getDefault());
 
     protected View mAssociatedView;
 
