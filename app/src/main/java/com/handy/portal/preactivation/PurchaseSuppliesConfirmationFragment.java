@@ -1,7 +1,6 @@
 package com.handy.portal.preactivation;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.text.TextUtils;
@@ -15,11 +14,9 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.event.StripeEvent;
-import com.handy.portal.library.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.handy.portal.library.ui.view.DateFormFieldTableRow;
 import com.handy.portal.library.ui.view.FormFieldTableRow;
 import com.handy.portal.library.ui.view.SimpleContentLayout;
-import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.OnboardingSuppliesLog;
@@ -38,8 +35,6 @@ import butterknife.OnClick;
 
 public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragment
 {
-    private static final int SUCCESS_OVERLAY_DELAY_MILLIS = 1000;
-
     @Bind(R.id.shipping_summary)
     SimpleContentLayout mShippingSummary;
     @Bind(R.id.edit_address_form)
@@ -527,20 +522,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
         bus.post(new LogEvent.AddLogEvent(
                 new OnboardingSuppliesLog.RequestSupplies.Success(true)));
         hideLoadingOverlay();
-        final TransientOverlayDialogFragment fragment = TransientOverlayDialogFragment.newInstance(
-                R.anim.overlay_fade_in_then_out,
-                R.drawable.ic_success_circle,
-                R.string.supplies_ordered
-        );
-        FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), null);
-        new Handler().postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                terminate();
-            }
-        }, SUCCESS_OVERLAY_DELAY_MILLIS);
+        next(ScheduleConfirmationFragment.newInstance());
     }
 
     @Subscribe
