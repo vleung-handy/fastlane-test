@@ -16,7 +16,7 @@ import com.handy.portal.ui.adapter.ReviewListAdapter;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.ui.listener.EndlessRecyclerViewScrollListener;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;

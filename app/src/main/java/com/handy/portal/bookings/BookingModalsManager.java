@@ -4,7 +4,7 @@ import android.support.annotation.NonNull;
 
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Date;
 
@@ -17,14 +17,14 @@ import javax.inject.Inject;
  */
 public class BookingModalsManager
 {
-    private final Bus mBus;
+    private final EventBus mBus;
     private final PrefsManager mPrefsManager;
 
     @Inject
-    public BookingModalsManager(final Bus bus, final PrefsManager prefsManager)
+    public BookingModalsManager(final EventBus bus, final PrefsManager prefsManager)
     {
         mBus = bus;
-        mBus.register(this);
+//        mBus.register(this);
         mPrefsManager = prefsManager;
     }
 

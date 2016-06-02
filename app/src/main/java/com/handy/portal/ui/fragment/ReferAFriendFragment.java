@@ -20,8 +20,8 @@ import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ReferralInfo;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -32,7 +32,7 @@ import butterknife.OnClick;
 public class ReferAFriendFragment extends ActionBarFragment
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
     @Inject
     ProviderManager mProviderManager;
 

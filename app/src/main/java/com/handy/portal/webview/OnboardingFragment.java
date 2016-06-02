@@ -9,7 +9,7 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.model.onboarding.OnboardingParams;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 public class OnboardingFragment extends PortalWebViewFragment
 {

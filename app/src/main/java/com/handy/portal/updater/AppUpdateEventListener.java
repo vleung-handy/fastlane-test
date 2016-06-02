@@ -4,10 +4,10 @@ import android.support.annotation.NonNull;
 
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.updater.model.UpdateDetails;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
- * currently used by BaseActivity as a bus event listener
+ * currently used by BaseActivity as a EventBus event listener
  * because BaseActivity is abstract and cannot be registered to the bus
  */
 public class AppUpdateEventListener

@@ -9,8 +9,8 @@ import com.handy.portal.flow.FlowStep;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.ui.activity.TermsActivity;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -18,7 +18,7 @@ import javax.inject.Inject;
 public class AcceptTermsStep extends FlowStep
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
     private final Context mContext;
     private final TermsDetailsGroup mTermsDetailsGroup;
 

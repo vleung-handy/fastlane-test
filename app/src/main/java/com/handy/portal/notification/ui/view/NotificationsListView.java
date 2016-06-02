@@ -13,14 +13,14 @@ import com.handy.portal.notification.model.NotificationMessage;
 import com.handy.portal.notification.ui.adapter.NotificationsListAdapter;
 import com.handy.portal.library.ui.widget.InfiniteScrollListView;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
 public final class NotificationsListView extends InfiniteScrollListView
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
 
     private TextView mFooterView;
 

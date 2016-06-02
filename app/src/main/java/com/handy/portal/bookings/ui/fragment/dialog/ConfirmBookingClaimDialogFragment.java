@@ -11,7 +11,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
@@ -19,7 +19,7 @@ public class ConfirmBookingClaimDialogFragment
         extends ConfirmBookingCancellationPolicyDialogFragment
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
 
     public static final String FRAGMENT_TAG = ConfirmBookingClaimDialogFragment.class.getName();
 

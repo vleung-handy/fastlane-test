@@ -17,7 +17,7 @@ import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.ui.element.PaymentFeeBreakdownView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.util.CurrencyUtils;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 

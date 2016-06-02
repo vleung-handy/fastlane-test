@@ -34,8 +34,8 @@ import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.util.DeeplinkUtils;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -46,7 +46,7 @@ import butterknife.OnClick;
 public class AccountSettingsFragment extends ActionBarFragment
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
     @Inject
     ProviderManager mProviderManager;
     @Inject

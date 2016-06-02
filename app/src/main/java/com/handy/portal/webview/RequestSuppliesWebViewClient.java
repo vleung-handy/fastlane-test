@@ -8,7 +8,7 @@ import android.webkit.WebView;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.manager.GoogleManager;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 public class RequestSuppliesWebViewClient extends PortalWebViewClient
 {
@@ -16,7 +16,7 @@ public class RequestSuppliesWebViewClient extends PortalWebViewClient
     private boolean loadStartedLogSent;
 
     public RequestSuppliesWebViewClient(final Fragment parentFragment, final WebView webView,
-                                        final GoogleManager gs, final Bus bus)
+                                        final GoogleManager gs, final EventBus bus)
     {
         super(parentFragment, webView, gs, bus);
         loadFailedLogSent = false;

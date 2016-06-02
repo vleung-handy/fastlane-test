@@ -51,7 +51,7 @@ import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Date;
 import java.util.List;

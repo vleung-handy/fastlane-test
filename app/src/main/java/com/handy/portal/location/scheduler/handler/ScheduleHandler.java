@@ -15,7 +15,7 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.location.scheduler.model.ScheduleStrategy;
 import com.handy.portal.library.util.ParcelableUtils;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -34,7 +34,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
         implements ScheduleStrategyHandler.StrategyCallbacks<StrategyHandlerType>
 {
     @Inject
-    protected Bus mBus;
+    protected EventBus mBus;
 
     protected LinkedList<ScheduleStrategyType> mSortedStrategies;
     private AlarmManager mAlarmManager;
@@ -318,7 +318,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
      * called by location service when network reconnected event is broadcast
      * <p/>
      * don't want to subscribe to event here, because this object does not have a strict lifecycle
-     * unlike the location service, so it is harder to guarantee that the bus will be unregistered
+     * unlike the location service, so it is harder to guarantee that the EventBus will be unregistered
      * when we no longer care about this object (ex. what if this object loses its reference?)
      */
     public void onNetworkReconnected()

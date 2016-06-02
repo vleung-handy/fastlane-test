@@ -7,7 +7,7 @@ import com.handy.portal.R;
 import com.handy.portal.TestUtils;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.event.HandyEvent;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import org.junit.Before;
 import org.junit.Test;

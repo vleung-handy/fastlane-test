@@ -31,7 +31,7 @@ import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.library.ui.widget.InfiniteScrollListView;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -99,7 +99,7 @@ public final class PaymentsFragment extends ActionBarFragment
         {
             requestInitialPaymentsInfo();
         }
-        else //have to put this logic here because of the way the loading overlay is handled by the bus system e.g. when child fragment is destroyed but caused overlay to show (messy to put in onResume because user could have just navigated away from app)
+        else //have to put this logic here because of the way the loading overlay is handled by the EventBus system e.g. when child fragment is destroyed but caused overlay to show (messy to put in onResume because user could have just navigated away from app)
         {
             setLoadingOverlayVisible(false);
         }

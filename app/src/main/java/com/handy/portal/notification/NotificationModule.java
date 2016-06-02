@@ -6,7 +6,7 @@ import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragme
 import com.handy.portal.notification.ui.fragment.NotificationsFragment;
 import com.handy.portal.notification.ui.view.NotificationsListEntryView;
 import com.handy.portal.notification.ui.view.NotificationsListView;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Singleton;
 
@@ -27,7 +27,7 @@ public final class NotificationModule
 {
     @Provides
     @Singleton
-    final NotificationMessageManager provideNotificationMessageManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager)
+    final NotificationMessageManager provideNotificationMessageManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager)
     {
         return new NotificationMessageManager(bus, dataManager, prefsManager);
     }

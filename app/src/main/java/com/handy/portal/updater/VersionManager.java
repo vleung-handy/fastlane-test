@@ -19,12 +19,12 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.library.util.CheckApplicationCapabilitiesUtils;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.updater.model.UpdateDetails;
-import com.handy.portal.library.util.CheckApplicationCapabilitiesUtils;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Produce;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
 import java.util.Date;
@@ -33,9 +33,9 @@ import java.util.HashMap;
 import javax.inject.Inject;
 
 
- /*
- TODO this manager needs refactoring
-  */
+/*
+TODO this manager needs refactoring
+ */
 public class VersionManager
 {
     //TODO: parameterize these strings
@@ -50,7 +50,7 @@ public class VersionManager
     private long lastNonblockingUpdateShownTimeMs = 0;
 
     private final Context context;
-    private final Bus bus;
+    private final EventBus bus;
     private final BuildConfigWrapper buildConfigWrapper;
     private DataManager dataManager;
     private PrefsManager prefsManager;
@@ -61,7 +61,7 @@ public class VersionManager
     private long downloadReferenceId;
 
     @Inject
-    public VersionManager(final Context context, final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final BuildConfigWrapper buildConfigWrapper)
+    public VersionManager(final Context context, final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final BuildConfigWrapper buildConfigWrapper)
     {
         this.context = context;
         this.bus = bus;
@@ -79,7 +79,7 @@ public class VersionManager
         return Uri.fromFile(file);
     }
 
-    @Produce
+    @Subscribe
     public AppUpdateEvent.DownloadUpdateSuccessful produceUpdateDownloadSuccessful()
     {
         if (getDownloadStatus() == DownloadManager.STATUS_SUCCESSFUL)
@@ -89,7 +89,7 @@ public class VersionManager
         return null;
     }
 
-    @Produce
+    @Subscribe
     public AppUpdateEvent.DownloadUpdateFailed produceUpdateDownloadFailed()
     {
         if (getDownloadStatus() == DownloadManager.STATUS_FAILED)
@@ -132,7 +132,7 @@ public class VersionManager
                                     so simply caching the entire response object instead of just the download url
                                      */
                                     mUpdateDetails = updateDetails;
-                                    if(mUpdateDetails.isUpdateBlocking())
+                                    if (mUpdateDetails.isUpdateBlocking())
                                     {
                                         //blocking update
                                         bus.post(new AppUpdateEvent.ReceiveUpdateAvailableSuccess(updateDetails));
@@ -142,7 +142,7 @@ public class VersionManager
                                         //non-blocking update
                                         long currentTimeMs = System.currentTimeMillis();
                                         long hideNonBlockingUpdateDurationMs = mUpdateDetails.getHideNonBlockingUpdateDurationMins() * DateUtils.MINUTE_IN_MILLIS;
-                                        if(currentTimeMs - lastNonblockingUpdateShownTimeMs > hideNonBlockingUpdateDurationMs)
+                                        if (currentTimeMs - lastNonblockingUpdateShownTimeMs > hideNonBlockingUpdateDurationMs)
                                         //only show the non-blocking update if the given time interval has passed
                                         {
                                             bus.post(new AppUpdateEvent.ReceiveUpdateAvailableSuccess(updateDetails));
@@ -180,7 +180,7 @@ public class VersionManager
      */
     public void downloadApk()
     {
-        if(mUpdateDetails == null)
+        if (mUpdateDetails == null)
         {
             Crashlytics.logException(new Exception("Tried to download apk when update details is null"));
             return;
@@ -288,9 +288,10 @@ public class VersionManager
     /**
      * This was previously:
      * public String getDownloadUrl()
-     *
+     * <p>
      * TODO don't like this, but simply replacing it with the UpdateDetails model for now
      * not going to refactor right now because update flow is delicate and no time to test extensively
+     *
      * @return
      */
     public UpdateDetails getUpdateDetails()

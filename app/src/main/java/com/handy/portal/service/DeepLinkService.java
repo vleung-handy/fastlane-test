@@ -10,14 +10,14 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
 public class DeepLinkService extends IntentService
 {
     @Inject
-    Bus bus;
+    EventBus bus;
 
     public static final String URI_HOST_DEEPLINK = "deeplink";
     public static final String URI_PATH_AVAILABLE_JOBS = "/available_jobs";

@@ -29,7 +29,7 @@ import com.handy.portal.payments.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -134,7 +134,7 @@ public class MainActivity extends BaseActivity
              /*
                  on mostly Samsung Android 5.0 devices (responsible for ~97% of crashes here),
                  Activity.onPause() can be called without Activity.onResume()
-                 so unregistering the bus here can cause an exception
+                 so unregistering the EventBus here can cause an exception
               */
             bus.unregister(this);
         }

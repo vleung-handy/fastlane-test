@@ -80,7 +80,7 @@ public class LocationTrackingScheduleHandler
      * called by location service when network reconnected event is broadcast
      *
      * don't want to subscribe to event here, because this object does not have a strict lifecycle
-     * unlike the location service, so it is harder to guarantee that the bus will be unregistered
+     * unlike the location service, so it is harder to guarantee that the EventBus will be unregistered
      * when we no longer care about this object (ex. what if this object loses its reference?)
      */
     public void onNetworkReconnected()

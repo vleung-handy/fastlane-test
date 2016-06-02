@@ -80,7 +80,7 @@ public class SplashActivity extends BaseActivity
     public void onResume()
     {
         super.onResume();
-        bus.register(this);
+//        bus.register(this);
 
         if (hasUser())
         {
@@ -126,7 +126,7 @@ public class SplashActivity extends BaseActivity
              /*
                  on mostly Samsung Android 5.0 devices (responsible for ~97% of crashes here),
                  Activity.onPause() can be called without Activity.onResume()
-                 so unregistering the bus here can cause an exception
+                 so unregistering the EventBus here can cause an exception
               */
             bus.unregister(this);
         }

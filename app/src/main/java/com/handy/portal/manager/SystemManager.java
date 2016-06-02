@@ -12,7 +12,7 @@ import android.util.Log;
 import com.handy.portal.event.SystemEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NetworkConnectionLog;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
@@ -21,16 +21,16 @@ import javax.inject.Inject;
  */
 public class SystemManager extends BroadcastReceiver
 {
-    private final Bus mBus;
+    private final EventBus mBus;
     private final Context mContext;
 
     private boolean mPreviouslyHadNetworkConnectivity = true;
 
     @Inject
-    public SystemManager(@NonNull Context context, @NonNull final Bus bus)
+    public SystemManager(@NonNull Context context, @NonNull final EventBus bus)
     {
         mBus = bus;
-        mBus.register(this);
+//        mBus.register(this);
         mContext = context;
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);

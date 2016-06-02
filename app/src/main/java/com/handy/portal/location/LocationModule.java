@@ -9,7 +9,7 @@ import com.handy.portal.location.ui.LocationPermissionsBlockerDialogFragment;
 import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Singleton;
 
@@ -31,7 +31,7 @@ public final class LocationModule
 {
     @Provides
     @Singleton
-    final LocationManager provideLocationManager(final Bus bus,
+    final LocationManager provideLocationManager(final EventBus bus,
                                                  final DataManager dataManager,
                                                  final ProviderManager providerManager,
                                                  final PrefsManager prefsManager)

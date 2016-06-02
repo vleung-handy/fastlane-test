@@ -27,7 +27,7 @@ import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -40,7 +40,7 @@ import butterknife.OnClick;
 public class DashboardOptionsPerformanceView extends FrameLayout
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
     @Inject
     ProviderManager mProviderManager;
     @Inject

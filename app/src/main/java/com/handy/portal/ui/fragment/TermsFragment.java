@@ -18,7 +18,7 @@ import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.view.HandyWebView;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.ui.activity.TermsActivity;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

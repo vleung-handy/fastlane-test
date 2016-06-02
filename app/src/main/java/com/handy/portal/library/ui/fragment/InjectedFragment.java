@@ -8,9 +8,12 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
-import com.squareup.otto.Bus;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +32,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     @Inject
     protected GoogleManager googleManager;
     @Inject
-    protected Bus bus;
+    protected EventBus bus;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
@@ -40,10 +43,11 @@ public class InjectedFragment extends android.support.v4.app.Fragment
 
     /**
      * should be called by tests only
+     *
      * @return
      */
     @VisibleForTesting
-    public Bus getBus()
+    public EventBus getBus()
     {
         return bus;
     }
@@ -63,7 +67,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment
              /*
                  on mostly Samsung Android 5.0 devices (responsible for ~97% of crashes here),
                  Activity.onPause() can be called without Activity.onResume()
-                 so unregistering the bus here can cause an exception
+                 so unregistering the EventBus here can cause an exception
               */
             bus.unregister(this);
         }
@@ -72,6 +76,12 @@ public class InjectedFragment extends android.support.v4.app.Fragment
             Crashlytics.logException(e); //want more info for now
         }
         super.onPause();
+    }
+
+    @Subscribe
+    public void emptyMethod(HandyEvent event)
+    {
+
     }
 
     //Each fragment if it requires arguments from the bundles should override this list

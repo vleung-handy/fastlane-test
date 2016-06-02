@@ -4,10 +4,10 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.handy.portal.logger.mixpanel.Mixpanel;
-import com.squareup.otto.Bus;
-import com.squareup.otto.DeadEvent;
 
-public final class MainBus extends Bus
+import org.greenrobot.eventbus.EventBus;
+
+public final class MainBus extends EventBus
 {
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private Mixpanel mixpanel;
@@ -20,7 +20,7 @@ public final class MainBus extends Bus
     @Override
     public final void register(final Object object)
     {
-        if (Looper.myLooper() == Looper.getMainLooper()) super.register(object);
+        if (Looper.myLooper() == Looper.getMainLooper()) { super.register(object); }
         else
         {
             mHandler.post(new Runnable()
@@ -39,10 +39,6 @@ public final class MainBus extends Bus
     {
         if (Looper.myLooper() == Looper.getMainLooper())
         {
-            if (!(event instanceof DeadEvent))
-            {
-                mixpanel.trackEvent(event); // side effect
-            }
             super.post(event);
         }
         else

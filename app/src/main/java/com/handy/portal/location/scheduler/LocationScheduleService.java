@@ -19,8 +19,8 @@ import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -38,7 +38,7 @@ public class LocationScheduleService extends Service
         Thread.UncaughtExceptionHandler
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
     @Inject
     ConfigManager mConfigManager;
 
@@ -126,7 +126,7 @@ public class LocationScheduleService extends Service
     }
 
     /**
-     * delegating bus event here because don't want the handler to subscribe to bus
+     * delegating EventBus event here because don't want the handler to subscribe to bus
      * because it does not have a strict lifecycle
      * @param event
      */

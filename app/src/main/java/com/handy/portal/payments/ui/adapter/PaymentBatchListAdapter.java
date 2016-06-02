@@ -19,7 +19,7 @@ import com.handy.portal.payments.ui.element.PaymentsBatchListHeaderView;
 import com.handy.portal.payments.ui.element.PaymentsBatchListItemView;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -31,7 +31,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implements StickyListHeadersAdapter //TODO: THIS IS GROSS, NEED TO REFACTOR THIS COMPLETELY!
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
 
     public static final int DAYS_TO_REQUEST_PER_BATCH = 28;
     private Date nextRequestEndDate;

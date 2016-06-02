@@ -26,7 +26,7 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Collections;
 import java.util.Date;

@@ -6,21 +6,21 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.BasicLog;
 import com.handy.portal.payments.PaymentsManager;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
 public class TabNavigationManager
 {
-    private final Bus mBus;
+    private final EventBus mBus;
     private final ProviderManager mProviderManager;
     private final PaymentsManager mPaymentsManager;
     private final WebUrlManager mWebUrlManager;
     private final ConfigManager mConfigManager;
 
     @Inject
-    public TabNavigationManager(final Bus bus,
+    public TabNavigationManager(final EventBus bus,
                                 final ProviderManager providerManager,
                                 final WebUrlManager webUrlManager,
                                 final PaymentsManager paymentsManager,

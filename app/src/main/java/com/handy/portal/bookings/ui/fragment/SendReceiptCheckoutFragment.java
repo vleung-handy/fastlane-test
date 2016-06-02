@@ -37,7 +37,7 @@ import com.handy.portal.ui.view.CheckoutCompletedTaskView;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
 import java.util.List;

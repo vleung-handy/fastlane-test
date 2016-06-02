@@ -23,7 +23,7 @@ import com.handy.portal.library.ui.view.DateFormFieldTableRow;
 import com.handy.portal.library.ui.view.FormFieldTableRow;
 import com.handy.portal.library.ui.view.SimpleContentLayout;
 import com.handy.portal.library.util.UIUtils;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 import com.stripe.android.model.Card;
 
 import java.util.Map;

@@ -1,18 +1,18 @@
 package com.handy.portal.setup;
 
 import com.handy.portal.data.DataManager;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
 public class SetupManager
 {
-    private final Bus mBus;
+    private final EventBus mBus;
     private final DataManager mDataManager;
 
     @Inject
-    public SetupManager(final Bus bus,
+    public SetupManager(final EventBus bus,
                         final DataManager dataManager)
     {
         mBus = bus;

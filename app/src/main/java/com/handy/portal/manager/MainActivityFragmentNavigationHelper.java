@@ -2,8 +2,8 @@ package com.handy.portal.manager;
 
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -23,12 +23,12 @@ public class MainActivityFragmentNavigationHelper
 {
     private boolean mainActivityFragmentActive = false;
 
-    private final Bus bus;
+    private final EventBus bus;
 
     private NavigationEvent.NavigateToTab storedEvent;
 
     @Inject
-    public MainActivityFragmentNavigationHelper(final Bus bus)
+    public MainActivityFragmentNavigationHelper(final EventBus bus)
     {
         this.bus = bus;
         this.bus.register(this);

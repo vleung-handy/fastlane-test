@@ -41,8 +41,8 @@ import com.handy.portal.onboarding.ui.fragment.OnboardLoadingDialog;
 import com.handy.portal.onboarding.ui.view.OnboardJobGroupView;
 import com.handy.portal.ui.fragment.dialog.OnboardJobClaimConfirmDialog;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +82,7 @@ public class GettingStartedActivity extends AppCompatActivity
     TextView mErrorText;
 
     @Inject
-    Bus mBus;
+    EventBus mBus;
 
     @Inject
     PrefsManager mPrefsManager;
@@ -190,7 +190,7 @@ public class GettingStartedActivity extends AppCompatActivity
              /*
                  on mostly Samsung Android 5.0 devices (responsible for ~97% of crashes here),
                  Activity.onPause() can be called without Activity.onResume()
-                 so unregistering the bus here can cause an exception
+                 so unregistering the EventBus here can cause an exception
               */
             mBus.unregister(this);
         }

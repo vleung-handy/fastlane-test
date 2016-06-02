@@ -16,7 +16,7 @@ import com.handy.portal.bookings.ui.fragment.dialog.EarlyAccessTrialDialogFragme
 import com.handy.portal.bookings.ui.fragment.dialog.JobAccessUnlockedDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.data.DataManager;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Singleton;
 
@@ -47,7 +47,7 @@ public final class BookingsModule
 {
     @Provides
     @Singleton
-    final BookingManager provideBookingManager(final Bus bus,
+    final BookingManager provideBookingManager(final EventBus bus,
                                                final DataManager dataManager)
     {
         return new BookingManager(bus, dataManager);

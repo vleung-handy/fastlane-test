@@ -40,7 +40,7 @@ import com.handy.portal.setup.SetupManager;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.library.util.FontUtils;
 import com.newrelic.agent.android.NewRelic;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
@@ -58,7 +58,7 @@ public class BaseApplication extends MultiDexApplication
     @Inject
     Mixpanel mixpanel;
 
-    //We are injecting all of our event bus listening managers in BaseApplication to start them up for event listening
+    //We are injecting all of our event EventBus listening managers in BaseApplication to start them up for event listening
     @Inject
     DataManager dataManager;
     @Inject
@@ -111,7 +111,7 @@ public class BaseApplication extends MultiDexApplication
     SetupManager setupManager;
 
     @Inject
-    Bus bus;
+    EventBus bus;
 
     @Override
     public final void onCreate()

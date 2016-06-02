@@ -37,8 +37,8 @@ import com.handy.portal.updater.AppUpdateEventListener;
 import com.handy.portal.updater.AppUpdateFlowLauncher;
 import com.handy.portal.updater.ui.PleaseUpdateActivity;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Stack;
 
@@ -87,7 +87,7 @@ public abstract class BaseActivity extends AppCompatActivity
     @Inject
     public Mixpanel mixpanel;
     @Inject
-    Bus bus;
+    EventBus bus;
     @Inject
     ConfigManager configManager;
 
@@ -249,7 +249,7 @@ public abstract class BaseActivity extends AppCompatActivity
              /*
                  on mostly Samsung Android 5.0 devices (responsible for ~97% of crashes here),
                  Activity.onPause() can be called without Activity.onResume()
-                 so unregistering the bus here can cause an exception
+                 so unregistering the EventBus here can cause an exception
               */
             bus.unregister(mAppUpdateEventListener);
         }
@@ -354,7 +354,7 @@ public abstract class BaseActivity extends AppCompatActivity
     public static class SetupHandler
     {
         @Inject
-        Bus bus;
+        EventBus bus;
 
         private BaseActivity mBaseActivity;
         private Flow mSetupFlow;

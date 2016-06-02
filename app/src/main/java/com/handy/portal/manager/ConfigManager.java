@@ -6,7 +6,7 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.ConfigurationResponse;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
@@ -15,18 +15,18 @@ import javax.inject.Inject;
 //We are going to deprecate the direct config params endpoint and access everything through the configuration response layer
 public class ConfigManager
 {
-    private final Bus mBus;
+    private final EventBus mBus;
     private final DataManager mDataManager;
     private ConfigurationResponse mConfigurationResponse;
     private boolean mRequestIsPending = false; //this is getting requested more because of onboarding, prevent dupe requests
 
     @Inject
-    public ConfigManager(final DataManager dataManager, final Bus bus)
+    public ConfigManager(final DataManager dataManager, final EventBus bus)
     {
         mDataManager = dataManager;
         mConfigurationResponse = null;
         mBus = bus;
-        mBus.register(this);
+//        mBus.register(this);
     }
 
     public void prefetch()

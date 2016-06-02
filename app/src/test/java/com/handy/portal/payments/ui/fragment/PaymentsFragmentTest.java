@@ -14,7 +14,7 @@ import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import org.junit.Before;
 import org.junit.Ignore;

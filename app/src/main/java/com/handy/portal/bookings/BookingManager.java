@@ -14,12 +14,13 @@ import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.onboarding.model.JobClaimResponse;
-import com.handy.portal.library.util.DateTimeUtils;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,7 +33,7 @@ import javax.inject.Inject;
 
 public class BookingManager
 {
-    private final Bus mBus;
+    private final EventBus mBus;
     private final DataManager mDataManager;
 
     private final Cache<Date, BookingsWrapper> availableBookingsCache;
@@ -40,7 +41,7 @@ public class BookingManager
     private final Cache<Date, BookingsWrapper> complementaryBookingsCache;
 
     @Inject
-    public BookingManager(final Bus bus, final DataManager dataManager)
+    public BookingManager(final EventBus bus, final DataManager dataManager)
     {
         mBus = bus;
         mBus.register(this);

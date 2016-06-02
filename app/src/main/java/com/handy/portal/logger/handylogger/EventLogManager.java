@@ -13,8 +13,8 @@ import com.handy.portal.logger.handylogger.model.Event;
 import com.handy.portal.logger.handylogger.model.EventLogBundle;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.manager.PrefsManager;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,12 +29,12 @@ public class EventLogManager
     private static final Gson GSON = new Gson();
 
     private static List<Event> sLogs = new ArrayList<>();
-    private final Bus mBus;
+    private final EventBus mBus;
     private final DataManager mDataManager;
     private final PrefsManager mPrefsManager;
 
     @Inject
-    public EventLogManager(final Bus bus, final DataManager dataManager,
+    public EventLogManager(final EventBus bus, final DataManager dataManager,
                            final PrefsManager prefsManager)
     {
         mBus = bus;

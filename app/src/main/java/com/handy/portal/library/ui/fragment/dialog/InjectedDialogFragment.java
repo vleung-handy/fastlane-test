@@ -8,14 +8,14 @@ import android.support.v4.app.DialogFragment;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
 public class InjectedDialogFragment extends DialogFragment
 {
     @Inject
-    protected Bus mBus;
+    protected EventBus mBus;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
@@ -50,7 +50,7 @@ public class InjectedDialogFragment extends DialogFragment
              /*
                  on mostly Samsung Android 5.0 devices (responsible for ~97% of crashes here),
                  Activity.onPause() can be called without Activity.onResume()
-                 so unregistering the bus here can cause an exception
+                 so unregistering the EventBus here can cause an exception
               */
             mBus.unregister(this);
         }

@@ -13,8 +13,8 @@ import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.SuccessWrapper;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -36,7 +36,7 @@ import javax.inject.Inject;
  */
 public class LocationManager
 {
-    private final Bus mBus;
+    private final EventBus mBus;
     private final DataManager mDataManager;
     private final ProviderManager mProviderManager;
     private final PrefsManager mPrefsManager;
@@ -51,7 +51,7 @@ public class LocationManager
     private final static int MAX_FAILED_LOCATION_BATCH_UPDATES_SIZE = 100;
 
     @Inject
-    public LocationManager(final Bus bus,
+    public LocationManager(final EventBus bus,
                            final DataManager dataManager,
                            final ProviderManager providerManager,
                            final PrefsManager prefsManager)
