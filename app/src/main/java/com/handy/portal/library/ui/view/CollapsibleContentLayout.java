@@ -20,6 +20,12 @@ import butterknife.Bind;
 import butterknife.BindInt;
 import butterknife.ButterKnife;
 
+/**
+ * This is a layout with a header view and a collapsible content view. Tapping the header collapses
+ * or expands the content view. The header is set using the {@code setHeader()} method. The content
+ * view should be supplied in the layout file and it must be nested within
+ * {@link CollapsibleContentLayout}.
+ */
 public class CollapsibleContentLayout extends LinearLayout
 {
     private static final int CHEVRON_DEGREES_EXPANDED = 180;
@@ -68,6 +74,9 @@ public class CollapsibleContentLayout extends LinearLayout
     protected void onFinishInflate()
     {
         super.onFinishInflate();
+        // This is the content view that should be nested within CollapsibleContentLayout in the
+        // layout file. The reason why index is 1 is because index 0 is the header view right above
+        // the content view.
         mContent = (ViewGroup) getChildAt(1);
         collapse();
     }
