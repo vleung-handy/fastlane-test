@@ -1,9 +1,13 @@
 package com.handy.portal.preactivation;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
@@ -11,6 +15,7 @@ import com.handy.portal.bookings.ui.element.PendingBookingElementView;
 import com.handy.portal.library.ui.view.CollapsibleContentLayout;
 import com.handy.portal.library.ui.view.LabelAndValueView;
 import com.handy.portal.library.ui.view.SimpleContentLayout;
+import com.handy.portal.library.util.Utils;
 
 import butterknife.Bind;
 
@@ -26,6 +31,8 @@ public class OnboardingStatusFragment extends PreActivationFlowFragment
     LabelAndValueView mPaymentView;
     @Bind(R.id.order_total_view)
     LabelAndValueView mOrderTotalView;
+    @Bind(R.id.links_container)
+    ViewGroup mLinksContainer;
 
     public static OnboardingStatusFragment newInstance()
     {
@@ -47,7 +54,10 @@ public class OnboardingStatusFragment extends PreActivationFlowFragment
         mShippingView.setContent("Ship To", "123 Penny Lane\nBrooklyn, NY 11321");
         mPaymentView.setContent("Payment", "Card ending in 1234");
         mOrderTotalView.setContent("Order Total", "$50");
-
+        // FIXME: Use help center links
+        addLinkTextView("How Handy Works", "http://facebook.com");
+        addLinkTextView("Payments", "http://google.com");
+        addLinkTextView("Getting Help", "http://twitter.com");
     }
 
     private void displayBookings()
@@ -102,5 +112,22 @@ public class OnboardingStatusFragment extends PreActivationFlowFragment
     protected void onPrimaryButtonClicked()
     {
 
+    }
+
+    private void addLinkTextView(final String text, final String url)
+    {
+        final TextView view = (TextView) LayoutInflater.from(getActivity())
+                .inflate(R.layout.view_link_text, mLinksContainer, false);
+        view.setText(text);
+        view.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(final View v)
+            {
+                final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                Utils.safeLaunchIntent(intent, getActivity());
+            }
+        });
+        mLinksContainer.addView(view);
     }
 }

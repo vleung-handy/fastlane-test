@@ -24,7 +24,6 @@
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/extra_margin"
                 android:background="@drawable/border_gray_bottom"
                 android:orientation="vertical"
                 android:paddingBottom="@dimen/extra_padding"
