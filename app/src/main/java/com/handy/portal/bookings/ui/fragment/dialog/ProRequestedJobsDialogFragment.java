@@ -47,7 +47,7 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
     @Bind(R.id.fragment_dialog_pro_requested_jobs_list_view)
     ProRequestedJobsExpandableListView mProRequestedJobsExpandableListView;
     @Bind(R.id.pro_requested_bookings_empty)
-    SafeSwipeRefreshLayout mJobsEmptyView;
+    SafeSwipeRefreshLayout mEmptyJobsSwipeRefreshLayout;
     @Bind(R.id.fragment_dialog_pro_requested_jobs_list_swipe_refresh_layout)
     SafeSwipeRefreshLayout mJobListSwipeRefreshLayout;
     @Bind(R.id.loading_overlay)
@@ -80,7 +80,7 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
         @Override
         public void onRefresh()
         {
-            mJobListSwipeRefreshLayout.setRefreshing(true);
+            setRefreshingIndicator(true);
             requestProRequestedJobs(false);
         }
     };
@@ -105,18 +105,18 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
     private void updateJobListView(@NonNull List<BookingsWrapper> jobList)
     {
         List<BookingsWrapper> filteredJobList = new ArrayList<>(jobList.size());
-        for(BookingsWrapper bookingsWrapper : jobList)
+        for (BookingsWrapper bookingsWrapper : jobList)
         {
-            if(bookingsWrapper.getBookings().size() > 0)
+            if (bookingsWrapper.getBookings().size() > 0)
             {
                 filteredJobList.add(bookingsWrapper);
             }
         }
 
         mProRequestedJobsExpandableListView.setData(filteredJobList);
-        if(filteredJobList.isEmpty())
+        if (filteredJobList.isEmpty())
         {
-            showContentViewAndHideOthers(mJobsEmptyView);
+            showContentViewAndHideOthers(mEmptyJobsSwipeRefreshLayout);
         }
         else
         {
@@ -166,7 +166,9 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
 
         //initialize swipe refresh layout
         mJobListSwipeRefreshLayout.setOnRefreshListener(onProRequestedJobsListRefreshListener);
+        mEmptyJobsSwipeRefreshLayout.setOnRefreshListener(onProRequestedJobsListRefreshListener);
         mJobListSwipeRefreshLayout.setColorSchemeResources(R.color.handy_blue);
+        mEmptyJobsSwipeRefreshLayout.setColorSchemeResources(R.color.handy_blue);
     }
 
     @Override
@@ -209,7 +211,7 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
      */
     private void hideAllContentViews()
     {
-        mJobsEmptyView.setVisibility(View.GONE);
+        mEmptyJobsSwipeRefreshLayout.setVisibility(View.GONE);
         mJobListSwipeRefreshLayout.setVisibility(View.GONE);
         mFetchErrorView.setVisibility(View.GONE);
         mLoadingOverlay.setVisibility(View.GONE);
@@ -245,7 +247,7 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
     @Subscribe
     public void onReceiveProRequestedJobsSuccess(BookingEvent.ReceiveProRequestedJobsSuccess event)
     {
-        mJobListSwipeRefreshLayout.setRefreshing(false);
+        setRefreshingIndicator(false);
         List<BookingsWrapper> proRequestedJobsList = event.getProRequestedJobs();
         if(proRequestedJobsList == null)
         {
@@ -264,9 +266,21 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
         onError(event.error);
     }
 
+    /**
+     * need this because the empty view is also a swipe refresh layout
+     * and on error we don't know which refresh layout
+     * triggered the request
+     * @param isRefreshing
+     */
+    private void setRefreshingIndicator(boolean isRefreshing)
+    {
+        mEmptyJobsSwipeRefreshLayout.setRefreshing(isRefreshing);
+        mJobListSwipeRefreshLayout.setRefreshing(isRefreshing);
+    }
+
     private void onError(DataManager.DataManagerError error)
     {
-        mJobListSwipeRefreshLayout.setRefreshing(false);
+        setRefreshingIndicator(false);
 
         //show the try again error screen
         if(error != null && error.getType() == DataManager.DataManagerError.Type.NETWORK)

@@ -39,6 +39,14 @@ public class BookingManager
     private final Cache<Date, BookingsWrapper> scheduledBookingsCache;
     private final Cache<Date, BookingsWrapper> complementaryBookingsCache;
 
+    /*
+    keys used in QueryMap requests
+     */
+    private final class BookingRequestKeys
+    {
+        private static final String IS_PROVIDER_REQUESTED = "is_requested";
+    }
+
     @Inject
     public BookingManager(final Bus bus, final DataManager dataManager)
     {
@@ -171,8 +179,13 @@ public class BookingManager
     @Subscribe
     public void onRequestProRequestedJobs(BookingEvent.RequestProRequestedJobs event)
     {
+        /*
+            FIXME: would rather use a serialized request model for the options
+            but don't know how to pass it as a QueryMap
+            without errors
+         */
         Map<String, Object> options = new HashMap<>();
-        options.put("is_requested", true);
+        options.put(BookingRequestKeys.IS_PROVIDER_REQUESTED, true);
         mDataManager.getAvailableBookings(event.getDatesForBookings().toArray(new Date[event.getDatesForBookings().size()]),
                 options,
                 new DataManager.Callback<BookingsListWrapper>()

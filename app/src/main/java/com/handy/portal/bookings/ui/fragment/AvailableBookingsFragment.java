@@ -159,7 +159,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     private void launchProRequestedJobsDialogFragment()
     {
-        if(getChildFragmentManager().findFragmentByTag(ProRequestedJobsDialogFragment.FRAGMENT_TAG) == null)
+        if (getChildFragmentManager().findFragmentByTag(ProRequestedJobsDialogFragment.FRAGMENT_TAG) == null)
         {
             ProRequestedJobsDialogFragment fragment = ProRequestedJobsDialogFragment.newInstance();
             FragmentUtils.safeLaunchDialogFragment(fragment, this, ProRequestedJobsDialogFragment.FRAGMENT_TAG);
