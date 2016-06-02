@@ -21,10 +21,9 @@ import butterknife.ButterKnife;
 
 /**
  * This is a custom view used for showing jobs in the onboarding screen. It'll hold a check box,
- * job title & hours, and pricing
- * <p/>
+ * job title & hours, and pricing.
  */
-public class OnboardJobView extends FrameLayout implements CompoundButton.OnCheckedChangeListener
+public class OnboardingJobView extends FrameLayout implements CompoundButton.OnCheckedChangeListener
 {
 
     private int mCornerRadius;
@@ -51,19 +50,19 @@ public class OnboardJobView extends FrameLayout implements CompoundButton.OnChec
 
     private BookingViewModel mBookingViewModel;
 
-    public OnboardJobView(Context context)
+    public OnboardingJobView(Context context)
     {
         super(context);
         init();
     }
 
-    public OnboardJobView(Context context, AttributeSet attrs)
+    public OnboardingJobView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
         init();
     }
 
-    public OnboardJobView(Context context, AttributeSet attrs, int defStyleAttr)
+    public OnboardingJobView(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
         init();

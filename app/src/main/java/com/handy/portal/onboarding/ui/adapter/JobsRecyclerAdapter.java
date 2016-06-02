@@ -8,7 +8,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.onboarding.model.BookingViewModel;
 import com.handy.portal.onboarding.model.BookingsWrapperViewModel;
-import com.handy.portal.onboarding.ui.view.OnboardJobGroupView;
+import com.handy.portal.onboarding.ui.view.OnboardingJobsViewGroup;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,10 +16,10 @@ import java.util.List;
 public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapter.RecyclerViewHolder>
 {
     private List<BookingsWrapperViewModel> mBookingsWrapperViewModels;
-    private OnboardJobGroupView.OnJobChangeListener mOnJobChangeListener;
+    private OnboardingJobsViewGroup.OnJobCheckedChangedListener mOnJobCheckedChangedListener;
 
     public JobsRecyclerAdapter(List<BookingsWrapper> bookings,
-                               OnboardJobGroupView.OnJobChangeListener mListener)
+                               OnboardingJobsViewGroup.OnJobCheckedChangedListener mListener)
     {
 
         mBookingsWrapperViewModels = new ArrayList<>();
@@ -35,14 +35,14 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
             mBookingsWrapperViewModels.add(new BookingsWrapperViewModel(bookingsWrapper));
         }
 
-        mOnJobChangeListener = mListener;
+        mOnJobCheckedChangedListener = mListener;
     }
 
     @Override
     public RecyclerViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
     {
-        OnboardJobGroupView layoutView = new OnboardJobGroupView(parent.getContext());
-        layoutView.setOnJobChangeListener(mOnJobChangeListener);
+        OnboardingJobsViewGroup layoutView = new OnboardingJobsViewGroup(parent.getContext());
+        layoutView.setOnJobCheckedChangedListener(mOnJobCheckedChangedListener);
         return new RecyclerViewHolder(layoutView);
     }
 
@@ -90,14 +90,14 @@ public class JobsRecyclerAdapter extends RecyclerView.Adapter<JobsRecyclerAdapte
 
     static class RecyclerViewHolder extends RecyclerView.ViewHolder
     {
-        public OnboardJobGroupView mJobView;
+        public OnboardingJobsViewGroup mJobView;
 
         public RecyclerViewHolder(View itemView)
         {
             super(itemView);
-            if (itemView instanceof OnboardJobGroupView)
+            if (itemView instanceof OnboardingJobsViewGroup)
             {
-                mJobView = (OnboardJobGroupView) itemView;
+                mJobView = (OnboardingJobsViewGroup) itemView;
             }
         }
     }

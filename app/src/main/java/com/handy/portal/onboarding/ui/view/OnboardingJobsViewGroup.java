@@ -9,26 +9,20 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.onboarding.model.BookingViewModel;
-import com.handy.portal.onboarding.model.BookingsWrapperViewModel;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FontUtils;
+import com.handy.portal.onboarding.model.BookingViewModel;
+import com.handy.portal.onboarding.model.BookingsWrapperViewModel;
 
-/**
- * This is a custom view that holds a collection of HandyJobView. It has a title to label
- * the group
- * <p/>
- */
-public class OnboardJobGroupView extends LinearLayout implements CompoundButton.OnCheckedChangeListener
+public class OnboardingJobsViewGroup extends LinearLayout
+        implements CompoundButton.OnCheckedChangeListener
 {
-
     private TextView mTitle;
     private int mMargin;
     private int mMarginHalf;
-    private BookingsWrapperViewModel mViewModel;
-    private OnJobChangeListener mOnJobChangeListener;
+    private OnJobCheckedChangedListener mOnJobCheckedChangedListener;
 
-    public OnboardJobGroupView(Context context)
+    public OnboardingJobsViewGroup(Context context)
     {
         super(context);
         init();
@@ -37,7 +31,6 @@ public class OnboardJobGroupView extends LinearLayout implements CompoundButton.
     @SuppressWarnings("deprecation")
     public void init()
     {
-
         mMargin = getResources().getDimensionPixelSize(R.dimen.default_margin);
         mMarginHalf = getResources().getDimensionPixelSize(R.dimen.default_margin_half);
 
@@ -65,14 +58,11 @@ public class OnboardJobGroupView extends LinearLayout implements CompoundButton.
         setPadding(0, 0, 0, mMargin);
     }
 
-
-    public void bind(BookingsWrapperViewModel model)
+    public void bind(final BookingsWrapperViewModel model)
     {
-        mViewModel = model;
-
-        mTitle.setText(Html.fromHtml(DateTimeUtils.getHtmlFormattedDateString(mViewModel.getSanitizedDate())));
-
-        for (BookingViewModel bookingViewModel : mViewModel.getBookingViewModels())
+        mTitle.setText(Html.fromHtml(
+                DateTimeUtils.getHtmlFormattedDateString(model.getSanitizedDate())));
+        for (BookingViewModel bookingViewModel : model.getBookingViewModels())
         {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
@@ -80,7 +70,7 @@ public class OnboardJobGroupView extends LinearLayout implements CompoundButton.
             );
             layoutParams.setMargins(mMargin, mMarginHalf, mMargin, 0);
 
-            OnboardJobView view = new OnboardJobView(getContext());
+            OnboardingJobView view = new OnboardingJobView(getContext());
             view.bind(bookingViewModel);
             view.setLayoutParams(layoutParams);
             view.setOnCheckedChangeListener(this);
@@ -88,22 +78,23 @@ public class OnboardJobGroupView extends LinearLayout implements CompoundButton.
         }
     }
 
-    public void setOnJobChangeListener(final OnJobChangeListener onJobChangeListener)
+    public void setOnJobCheckedChangedListener(
+            final OnJobCheckedChangedListener onJobCheckedChangedListener)
     {
-        mOnJobChangeListener = onJobChangeListener;
+        mOnJobCheckedChangedListener = onJobCheckedChangedListener;
     }
 
     @Override
     public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked)
     {
-        if (mOnJobChangeListener != null)
+        if (mOnJobCheckedChangedListener != null)
         {
-            mOnJobChangeListener.onPriceChanged();
+            mOnJobCheckedChangedListener.onJobCheckedChanged();
         }
     }
 
-    public interface OnJobChangeListener
+    public interface OnJobCheckedChangedListener
     {
-        void onPriceChanged();
+        void onJobCheckedChanged();
     }
 }
