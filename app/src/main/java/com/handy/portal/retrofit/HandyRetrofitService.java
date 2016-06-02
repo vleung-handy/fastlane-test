@@ -21,6 +21,7 @@ import retrofit.http.PUT;
 import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import retrofit.http.QueryMap;
 import retrofit.mime.TypedInput;
 
 public interface HandyRetrofitService
@@ -60,8 +61,13 @@ public interface HandyRetrofitService
     void getConfigParams(@Query("key[]") String[] key,
                          HandyRetrofitCallback cb);
 
+//    @GET(JOBS_PATH + "available_jobs")
+//    void getAvailableBookings(@Query("dates[]") Date[] dates,
+//                              HandyRetrofitCallback cb);
+
     @GET(JOBS_PATH + "available_jobs")
     void getAvailableBookings(@Query("dates[]") Date[] dates,
+                              @QueryMap Map<String, Object> options,
                               HandyRetrofitCallback cb);
 
     @GET(JOBS_PATH + "onboarding_jobs")

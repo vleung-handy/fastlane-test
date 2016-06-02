@@ -123,6 +123,7 @@ public class BookingManager
         if (!datesToRequest.isEmpty())
         {
             mDataManager.getAvailableBookings(datesToRequest.toArray(new Date[datesToRequest.size()]),
+                    null,
                     new DataManager.Callback<BookingsListWrapper>()
                     {
                         @Override
@@ -171,22 +172,25 @@ public class BookingManager
     public void onRequestProRequestedJobs(BookingEvent.RequestProRequestedJobs event)
     {
         //TODO this doesn't actually just get requested jobs. need to fully integrate with new endpoint
-            mDataManager.getAvailableBookings(event.getDatesForBookings().toArray(new Date[event.getDatesForBookings().size()]),
-                    new DataManager.Callback<BookingsListWrapper>()
+        Map<String, Object> options = new HashMap<>();
+        options.put("is_requested", true);
+        mDataManager.getAvailableBookings(event.getDatesForBookings().toArray(new Date[event.getDatesForBookings().size()]),
+                options,
+                new DataManager.Callback<BookingsListWrapper>()
+                {
+                    @Override
+                    public void onSuccess(final BookingsListWrapper bookingsListWrapper)
                     {
-                        @Override
-                        public void onSuccess(final BookingsListWrapper bookingsListWrapper)
-                        {
-                            mBus.post(new BookingEvent.ReceiveProRequestedJobsSuccess(bookingsListWrapper.getBookingsWrappers()));
-                        }
-
-                        @Override
-                        public void onError(final DataManager.DataManagerError error)
-                        {
-                            mBus.post(new BookingEvent.ReceiveProRequestedJobsError(error));
-                        }
+                        mBus.post(new BookingEvent.ReceiveProRequestedJobsSuccess(bookingsListWrapper.getBookingsWrappers()));
                     }
-            );
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        mBus.post(new BookingEvent.ReceiveProRequestedJobsError(error));
+                    }
+                }
+        );
 
     }
 
