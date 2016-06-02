@@ -5,43 +5,65 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.handy.portal.model.ProviderPersonalInfo;
+import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.ui.element.dashboard.DashboardRegionTierView;
+
+import java.util.List;
 
 public class DashboardTiersPagerAdapter extends PagerAdapter
 {
-
-    private int mPageCount;
     private Context mContext;
-    private ProviderPersonalInfo mProviderPersonalInfo;
+    private ProviderEvaluation mProviderEvaluation;
 
-    public DashboardTiersPagerAdapter(final Context context, int count,
-                                      ProviderPersonalInfo providerPersonalInfo)
+    public DashboardTiersPagerAdapter(final Context context, ProviderEvaluation providerEvaluation)
     {
         mContext = context;
-//        mPageCount = count;
-        mPageCount = 2;
-        mProviderPersonalInfo = providerPersonalInfo;
+        mProviderEvaluation = providerEvaluation;
     }
 
     @Override
     public Object instantiateItem(final ViewGroup container, final int position)
     {
-        //TODO: remove all hardcoding
+        ProviderEvaluation.Incentive currentIncentive =
+                mProviderEvaluation.getPayRates().getIncentives().get(position);
+        List<ProviderEvaluation.Tier> mCurrentRegionTiers = currentIncentive.getTiers();
 
         DashboardRegionTierView view = new DashboardRegionTierView(mContext);
-//        view.setRegion(mProviderPersonalInfo.getOperatingRegion());
-        if (position == 0)
+        view.setDisplay(mCurrentRegionTiers.size(), currentIncentive.getJobsUntilNextTier(),
+                currentIncentive.getRegionName(), currentIncentive.getServiceName(),
+                currentIncentive.getType());
+
+        for (int i = 0; i < mCurrentRegionTiers.size(); i++)
         {
-            view.setRegion("New York");
-            view.setTiersInfo("1 \u2013 3", "$16", "4 \u2013 6", "$17", "7+", "$18");
-            view.setTier(0);
-        }
-        else
-        {
-            view.setRegion("Atlanta");
-            view.setTiersInfo("1 \u2013 3", "$15", "4 \u2013 6", "$16", "7+", "$17");
-            view.setTier(0);
+            ProviderEvaluation.Tier currentTier = mCurrentRegionTiers.get(i);
+
+            if (currentIncentive.getType().equals(ProviderEvaluation.Incentive.ROLLING_TYPE))
+            {
+                view.addTier(currentIncentive.getType(),
+                        Double.toString(mProviderEvaluation.getWeeklyRating().getProRating()),
+                        currentTier.getName(), currentTier.getJobRequirementRangeMinimum(),
+                        currentTier.getJobRequirementRangeMaximum(),
+                        currentIncentive.getCurrencySymbol(),
+                        currentTier.getHourlyRateInCents(), false);
+            }
+            else if (currentIncentive.getCurrentTier() != 0 &&
+                    i + 1 == currentIncentive.getCurrentTier())
+            {
+                view.addTier(currentIncentive.getType(), null, currentTier.getName(),
+                        currentTier.getJobRequirementRangeMinimum(),
+                        currentTier.getJobRequirementRangeMaximum(),
+                        currentIncentive.getCurrencySymbol(),
+                        currentTier.getHourlyRateInCents(), true);
+
+            }
+            else
+            {
+                view.addTier(currentIncentive.getType(), null, currentTier.getName(),
+                        currentTier.getJobRequirementRangeMinimum(),
+                        currentTier.getJobRequirementRangeMaximum(),
+                        currentIncentive.getCurrencySymbol(),
+                        currentTier.getHourlyRateInCents(), false);
+            }
         }
 
         container.addView(view);
@@ -51,7 +73,7 @@ public class DashboardTiersPagerAdapter extends PagerAdapter
     @Override
     public int getCount()
     {
-        return mPageCount;
+        return mProviderEvaluation.getPayRates().getIncentives().size();
     }
 
     @Override

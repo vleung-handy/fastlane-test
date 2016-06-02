@@ -2,80 +2,25 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
     >
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:tools="http://schemas.android.com/tools"
                   android:layout_width="match_parent"
                   android:layout_height="wrap_content"
                   android:orientation="vertical"
         >
 
-        <LinearLayout
+        <com.handy.portal.ui.element.dashboard.DashboardTiersHeaderView
+            android:id="@+id/dashboard_tiers_header_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
-            android:orientation="vertical"
-            android:paddingTop="@dimen/default_padding"
-            >
-
-            <TextView
-                android:id="@+id/current_week_completed_jobs_text"
-                style="@style/CircularBook"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:textColor="@color/handy_blue"
-                android:textSize="@dimen/xxxlarge_text_size"
-                tools:text="2"
-                />
-
-            <TextView
-                style="@style/CircularBold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/jobs_completed"
-                android:textColor="@color/black"
-                android:textSize="@dimen/dashboard_header_text_size"
-                />
-
-            <TextView
-                android:id="@+id/current_week_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/default_margin_xmedium"
-                android:layout_marginTop="@dimen/row_margin"
-                android:gravity="center_horizontal"
-                android:textColor="@color/tertiary_gray"
-                android:textSize="@dimen/small_text_size"
-                tools:text="(Mon, May 9 \u2013 Sun, May 16)"
-                />
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/complete_jobs_unlock_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
-            android:layout_marginBottom="@dimen/complete_job_margin_top_bottom"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:layout_marginLeft="@dimen/default_margin"
-            android:layout_marginRight="@dimen/default_margin"
-            android:layout_marginStart="@dimen/default_margin"
-            android:layout_marginTop="@dimen/complete_job_margin_top_bottom"
-            android:gravity="center_horizontal"
-            android:textColor="@color/black"
-            android:textSize="@dimen/default_text_size"
-            tools:text="Complete 1 more job this week to unlock higher rates in New York!"
             />
 
-        <android.support.v4.view.ViewPager
+        <com.handy.portal.ui.element.DashboardTierViewPager
             android:id="@+id/region_tiers_view_pager"
             android:layout_width="match_parent"
-            android:layout_height="215dp"
+            android:layout_height="match_parent"
             android:paddingLeft="@dimen/default_padding"
             android:paddingRight="@dimen/default_padding"
             />
@@ -89,10 +34,27 @@
             android:layout_marginTop="@dimen/extra_margin_medium"
             />
 
-        <LinearLayout
+        <TextView
+            style="@style/CircularBold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/row_margin"
+            android:background="@color/white"
+            android:gravity="center"
+            android:paddingBottom="@dimen/default_padding"
+            android:paddingEnd="@dimen/tiers_description_side_padding"
+            android:paddingLeft="@dimen/tiers_description_side_padding"
+            android:paddingRight="@dimen/tiers_description_side_padding"
+            android:paddingStart="@dimen/tiers_description_side_padding"
+            android:paddingTop="@dimen/default_padding_medium"
+            android:text="@string/how_it_works"
+            android:textColor="@color/black"
+            android:textSize="@dimen/large_text_size"
+            />
+
+        <LinearLayout
+            android:id="@+id/tiers_help_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/white"
             android:orientation="vertical"
             android:paddingBottom="@dimen/default_padding"
@@ -100,69 +62,22 @@
             android:paddingLeft="@dimen/tiers_description_side_padding"
             android:paddingRight="@dimen/tiers_description_side_padding"
             android:paddingStart="@dimen/tiers_description_side_padding"
-            android:paddingTop="@dimen/default_padding"
-            >
+            />
 
-            <TextView
-                style="@style/CircularBold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:text="@string/how_it_works"
-                android:textColor="@color/black"
-                android:textSize="@dimen/large_text_size"
-                />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/default_padding_half"
-                android:text="@string/tiers_description"
-                android:textColor="@color/black"
-                android:textSize="@dimen/default_text_size"
-                />
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:paddingTop="@dimen/default_padding_half"
-                android:text="@string/tier_job_region_description"
-                android:textColor="@color/black"
-                android:textSize="@dimen/default_text_size"
-                />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingTop="@dimen/default_padding_half"
-                >
-
-                <TextView
-                    style="@style/CircularBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/note_colon"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/default_text_size"
-                    />
-
-                <TextView
-                    style="@style/CircularBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:paddingEnd="@dimen/extra_padding"
-                    android:paddingLeft="@dimen/extra_padding"
-                    android:paddingRight="@dimen/extra_padding"
-                    android:paddingStart="@dimen/extra_padding"
-                    android:text="@string/tiers_reset"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/default_text_size"
-                    />
-
-            </LinearLayout>
-
-        </LinearLayout>
+        <TextView
+            android:id="@+id/tiers_legal_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin_medium"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin_medium"
+            android:textColor="@color/tertiary_gray"
+            android:textSize="@dimen/default_text_size"
+            tools:text="@string/tiers_legal_text_html"
+            />
 
     </LinearLayout>
 

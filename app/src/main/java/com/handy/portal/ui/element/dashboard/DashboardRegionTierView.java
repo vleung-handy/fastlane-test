@@ -4,46 +4,39 @@ package com.handy.portal.ui.element.dashboard;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
+import android.text.Html;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
-import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.model.dashboard.ProviderEvaluation;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class DashboardRegionTierView extends FrameLayout
 {
-    @Bind(R.id.region_name_text)
-    TextView mRegionNameText;
-    @Bind(R.id.tier_one_text)
-    TextView mTierOneText;
-    @Bind(R.id.tier_two_text)
-    TextView mTierTwoText;
-    @Bind(R.id.tier_three_text)
-    TextView mTierThreeText;
-    @Bind(R.id.tier_one_dot)
-    ImageView mTierOneDot;
-    @Bind(R.id.tier_two_dot)
-    ImageView mTierTwoDot;
-    @Bind(R.id.tier_three_dot)
-    ImageView mTierThreeDot;
-    @Bind(R.id.tier_one_jobs_text)
-    TextView mTierOneJobsText;
-    @Bind(R.id.tier_two_jobs_text)
-    TextView mTierTwoJobsText;
-    @Bind(R.id.tier_three_jobs_text)
-    TextView mTierThreeJobsText;
-    @Bind(R.id.tier_one_rate_text)
-    TextView mTierOneRateText;
-    @Bind(R.id.tier_two_rate_text)
-    TextView mTierTwoRateText;
-    @Bind(R.id.tier_three_rate_text)
-    TextView mTierThreeRateText;
+    @Bind(R.id.complete_jobs_unlock_text)
+    TextView mCompleteJobsUnlockText;
+    @Bind(R.id.region_name_service_text)
+    TextView mRegionNameServiceText;
+    @Bind(R.id.tier_header_text)
+    TextView mTierHeaderText;
+    @Bind(R.id.region_tier_middle_column)
+    TextView mRegionTierMiddleColumn;
+    @Bind(R.id.rate_header_text)
+    TextView mRateHeaderText;
+    @Bind(R.id.tiers_layout)
+    LinearLayout mTiersLayout;
+
+    private boolean mIsTwoColumns = false;
 
 
     public DashboardRegionTierView(final Context context)
@@ -77,46 +70,61 @@ public class DashboardRegionTierView extends FrameLayout
         ButterKnife.bind(this);
     }
 
-    public void setRegion(String regionName)
+    public void setDisplay(int tiersSize, int jobsToComplete, String regionName, String serviceName,
+                           String incentiveType)
     {
-        mRegionNameText.setText(regionName);
-    }
+        String rateAsteriskString = getResources().getString(R.string.rate_asterisk_superscript);
+        Spannable rate_asterisk_spannable =
+                new SpannableString(rateAsteriskString);
+        rate_asterisk_spannable.setSpan(
+                new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.black)), 0,
+                rateAsteriskString.length() - 1,
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        rate_asterisk_spannable.setSpan(
+                new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.tertiary_gray)),
+                rateAsteriskString.length() - 1, rateAsteriskString.length(),
+                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        mRateHeaderText.setText(rate_asterisk_spannable);
 
-    public void setTier(int tier)
-    {
-        // 0, 1 or 2
-        if (tier == 0)
+        mRegionNameServiceText.setText(getContext().getString(R.string.colon_formatted,
+                regionName, serviceName));
+
+        if (incentiveType.equals(ProviderEvaluation.Incentive.ROLLING_TYPE))
         {
-            mTierOneDot.setVisibility(View.VISIBLE);
-            mTierOneText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-            mTierOneJobsText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-            mTierOneRateText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
+            mRegionTierMiddleColumn.setText(getResources().getString(R.string.rating));
+            mTierHeaderText.setText(getResources().getString(R.string.job_type));
         }
-        else if (tier == 1)
+        else if (incentiveType.equals(ProviderEvaluation.Incentive.HANDYMEN_TIERED_TYPE) ||
+                incentiveType.equals(ProviderEvaluation.Incentive.HANDYMEN_ROLLING_TYPE))
         {
-            mTierTwoDot.setVisibility(View.VISIBLE);
-            mTierTwoText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-            mTierTwoJobsText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-            mTierTwoRateText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
+            mTierHeaderText.setText(getResources().getString(R.string.job_type));
+            mRegionTierMiddleColumn.setVisibility(GONE);
+            mTierHeaderText.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 3f));
+            mIsTwoColumns = true;
+        }
+
+        if (incentiveType.equals(ProviderEvaluation.Incentive.TIERED_TYPE))
+        {
+            mCompleteJobsUnlockText.setText(jobsToComplete == 0 ?
+                    getResources().getString(R.string.highest_rate_this_week_formatted, regionName) :
+                    Html.fromHtml(getContext().getResources()
+                            .getQuantityString(R.plurals.complete_jobs_unlock_higher_rate_formatted,
+                                    jobsToComplete, jobsToComplete, regionName)));
         }
         else
         {
-            mTierThreeDot.setVisibility(View.VISIBLE);
-            mTierThreeText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-            mTierThreeJobsText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
-            mTierThreeRateText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
+            mCompleteJobsUnlockText.setText(getResources().getQuantityString(
+                    R.plurals.rates_per_job_in_region_formatted, tiersSize, serviceName,
+                    regionName));
         }
     }
 
-    public void setTiersInfo(String tierOneJobsText, String tierOneRateText,
-                             String tierTwoJobsText, String tierTwoRateText,
-                             String tierThreeJobsText, String tierThreeRateText)
+    public void addTier(String incentiveType, @Nullable String rating, String tierName, int minJobs,
+                        int maxJobs, String currencySymbol, int hourlyRateInCents, boolean enabled)
     {
-        mTierOneJobsText.setText(tierOneJobsText);
-        mTierOneRateText.setText(tierOneRateText);
-        mTierTwoJobsText.setText(tierTwoJobsText);
-        mTierTwoRateText.setText(tierTwoRateText);
-        mTierThreeJobsText.setText(tierThreeJobsText);
-        mTierThreeRateText.setText(tierThreeRateText);
+        DashboardTierView mTierView = new DashboardTierView(getContext());
+        mTierView.setDisplay(incentiveType, rating, tierName, minJobs, maxJobs, currencySymbol,
+                hourlyRateInCents, enabled, mIsTwoColumns);
+        mTiersLayout.addView(mTierView);
     }
 }

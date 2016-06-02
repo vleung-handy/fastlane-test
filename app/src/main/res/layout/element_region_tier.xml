@@ -1,10 +1,26 @@
-<?xml version="1.0" encoding="utf-8"?>
-<android.support.v7.widget.CardView
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     >
+
+    <TextView
+        android:id="@+id/complete_jobs_unlock_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:paddingBottom="@dimen/complete_job_padding_top_bottom"
+        android:paddingEnd="@dimen/default_padding"
+        android:paddingLeft="@dimen/default_padding"
+        android:paddingRight="@dimen/default_padding"
+        android:paddingStart="@dimen/default_padding"
+        android:paddingTop="@dimen/complete_job_padding_top_bottom"
+        android:textColor="@color/black"
+        android:textSize="@dimen/default_text_size"
+        tools:text="Complete 1 more job this week to unlock higher rates in New York!"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,21 +30,22 @@
         >
 
         <TextView
-            android:id="@+id/region_name_text"
+            android:id="@+id/region_name_service_text"
             style="@style/CircularBold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/default_margin"
+            android:layout_margin="@dimen/default_margin_medium"
             android:gravity="center_horizontal"
             android:textColor="@color/black"
             android:textSize="@dimen/large_text_size"
-            tools:text="New York"
+            tools:text="New York: Cleaner"
             />
+
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginBottom="@dimen/row_margin"
             android:layout_marginEnd="@dimen/default_margin_medium"
             android:layout_marginLeft="@dimen/default_margin_medium"
             android:layout_marginRight="@dimen/default_margin_medium"
@@ -37,236 +54,55 @@
             >
 
             <TextView
+                android:id="@+id/tier_header_text"
                 style="@style/CircularBold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_weight="2"
                 android:gravity="start"
-                android:text="@string/tiers"
+                android:text="@string/tier"
                 android:textColor="@color/black"
                 android:textSize="@dimen/default_text_size"
                 />
 
             <TextView
+                android:id="@+id/region_tier_middle_column"
                 style="@style/CircularBold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
+                android:layout_weight="2"
+                android:gravity="start"
                 android:text="@string/jobs"
                 android:textColor="@color/black"
                 android:textSize="@dimen/default_text_size"
                 />
 
             <TextView
+                android:id="@+id/rate_header_text"
                 style="@style/CircularBold"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="end"
-                android:text="@string/rate"
+                android:gravity="start"
                 android:textColor="@color/black"
                 android:textSize="@dimen/default_text_size"
+                tools:text="@string/rate_asterisk_superscript"
                 />
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/tiers_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_margin_half"
-            android:layout_marginEnd="@dimen/default_margin_medium"
-            android:layout_marginLeft="@dimen/default_margin_medium"
-            android:layout_marginRight="@dimen/default_margin_medium"
-            android:layout_marginStart="@dimen/default_margin_medium"
-            android:orientation="horizontal"
-            >
-
-            <ImageView
-                android:id="@+id/tier_one_dot"
-                android:layout_width="7dp"
-                android:layout_height="7dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/circle_handy_blue"
-                android:visibility="gone"
-                tools:visibility="visible"
-                />
-
-            <TextView
-                android:id="@+id/tier_one_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start"
-                android:text="@string/tier_one"
-                android:textColor="@color/tertiary_gray"
-                android:textSize="@dimen/default_text_size"
-                tools:textColor="@color/handy_blue"
-                />
-
-            <TextView
-                android:id="@+id/tier_one_jobs_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:textColor="@color/tertiary_gray"
-                android:textSize="@dimen/default_text_size"
-                tools:text="0 \u2013 3"
-                tools:textColor="@color/handy_blue"
-                />
-
-            <TextView
-                android:id="@+id/tier_one_rate_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:textColor="@color/tertiary_gray"
-                android:textSize="@dimen/default_text_size"
-                tools:text="$15"
-                tools:textColor="@color/handy_blue"
-                />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_height"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:layout_marginLeft="@dimen/default_margin"
-            android:layout_marginRight="@dimen/default_margin"
-            android:layout_marginStart="@dimen/default_margin"
-            android:background="@color/list_divider"
+            android:layout_marginBottom="@dimen/default_margin_large"
+            android:divider="@drawable/divider_grey"
+            android:dividerPadding="@dimen/default_padding"
+            android:orientation="vertical"
+            android:showDividers="middle"
             />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_margin_half"
-            android:layout_marginEnd="@dimen/default_margin_medium"
-            android:layout_marginLeft="@dimen/default_margin_medium"
-            android:layout_marginRight="@dimen/default_margin_medium"
-            android:layout_marginStart="@dimen/default_margin_medium"
-            android:layout_marginTop="@dimen/default_margin_half"
-            android:orientation="horizontal"
-            >
-
-            <ImageView
-                android:id="@+id/tier_two_dot"
-                android:layout_width="7dp"
-                android:layout_height="7dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/circle_handy_blue"
-                android:visibility="gone"
-                />
-
-            <TextView
-                android:id="@+id/tier_two_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start"
-                android:text="@string/tier_two"
-                android:textColor="@color/tertiary_gray"
-                android:textSize="@dimen/default_text_size"
-                />
-
-            <TextView
-                android:id="@+id/tier_two_jobs_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:textColor="@color/tertiary_gray"
-                android:textSize="@dimen/default_text_size"
-                tools:text="4 \u2013 8"
-                />
-
-            <TextView
-                android:id="@+id/tier_two_rate_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:textColor="@color/tertiary_gray"
-                android:textSize="@dimen/default_text_size"
-                tools:text="$17"
-                />
-
-        </LinearLayout>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/divider_height"
-            android:layout_marginEnd="@dimen/default_margin"
-            android:layout_marginLeft="@dimen/default_margin"
-            android:layout_marginRight="@dimen/default_margin"
-            android:layout_marginStart="@dimen/default_margin"
-            android:background="@color/list_divider"
-            />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/default_margin_medium"
-            android:layout_marginLeft="@dimen/default_margin_medium"
-            android:layout_marginRight="@dimen/default_margin_medium"
-            android:layout_marginStart="@dimen/default_margin_medium"
-            android:layout_marginTop="@dimen/default_margin_half"
-            android:orientation="horizontal"
-            >
-
-            <ImageView
-                android:id="@+id/tier_three_dot"
-                android:layout_width="7dp"
-                android:layout_height="7dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginEnd="5dp"
-                android:layout_marginRight="5dp"
-                android:src="@drawable/circle_handy_blue"
-                android:visibility="gone"
-                />
-
-            <TextView
-                android:id="@+id/tier_three_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="start"
-                android:text="@string/tier_three"
-                android:textColor="@color/tertiary_gray"
-                android:textSize="@dimen/default_text_size"
-                />
-
-            <TextView
-                android:id="@+id/tier_three_jobs_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal"
-                android:textColor="@color/tertiary_gray"
-                android:textSize="@dimen/default_text_size"
-                tools:text="9+"
-                />
-
-            <TextView
-                android:id="@+id/tier_three_rate_text"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:textColor="@color/tertiary_gray"
-                android:textSize="@dimen/default_text_size"
-                tools:text="$19"
-                />
-
-        </LinearLayout>
 
     </LinearLayout>
 
-</android.support.v7.widget.CardView>
+</LinearLayout>
+

@@ -16,6 +16,8 @@
     <string name="two_lines_formatted">%1$s\n%2$s</string>
     <string name="comma_formatted">%1$s, %2$s</string>
     <string name="dash_formatted">%1$s \u2013 %2$s</string>
+    <string name="dash_formatted_numbers">%1$d \u2013 %2$d</string>
+    <string name="colon_formatted">%1$s: %2$s</string>
     <string name="space_formatted">%1$s %2$s</string>
     <string name="exclamation_point">!</string>
     <string name="parentheses_formatted">(%1$s)</string>
@@ -273,7 +275,7 @@
     <string name="earn_a_reward">Earn a %1$s reward</string>
     <string name="rating">Rating</string>
     <string name="jobs">Jobs</string>
-    <string name="rate">Rate</string>
+    <string name="rate_asterisk_superscript">Rate<sup>*</sup></string>
     <string name="error_loading_profile">There was an error loading your profile information.</string>
     <string name="resupply_kit_on_its_way">Your resupply kit is on its way!</string>
     <string name="your_contact_information">Contact information</string>
@@ -295,13 +297,16 @@
     <string name="feedback">Feedback</string>
     <string name="percentage">%</string>
     <string name="my_tier">My Tier</string>
-    <string name="tiers">Tiers</string>
-    <string name="weekly_tier">Weekly Tier</string>
+    <string name="tier">Tier</string>
+    <string name="job_type">Job Type</string>
+    <string name="weekly_tier_formatted">Weekly Tier - %1$d</string>
+    <string name="pay_rate">Pay Rate</string>
     <string name="how_it_works">How it works</string>
+    <string name="tiers_legal_text_html"><sup>*</sup>per hour, per job</string>
     <string name="tiers_description">Once you\'ve completed the jobs, your remaining bookings for the week and the claim jobs tab will be updated with the new rate.</string>
     <string name="tier_job_region_description">Jobs completed each week count for every region.</string>
     <string name="tiers_reset">Tiers reset every Monday.</string>
-    <string name="tier_hourly_rate_formatted">%1$s: %2$s/hour</string>
+    <string name="tier_hourly_rate_formatted">%1$s%2$d</string>
     <string name="jobs_completed">Jobs completed</string>
     <string name="tier_one">Tier 1</string>
     <string name="tier_two">Tier 2</string>
@@ -320,6 +325,15 @@
     <string name="tier_reset_note">Tiers reset at 12:01am every Monday</string>
     <string name="current_week">Current week:</string>
     <string name="current_week_description">(Monday \u2013 Sunday)</string>
+    <plurals name="rates_per_job_in_region_formatted">
+        <item quantity="one">%1$s rate per hour, per job in %2$s</item>
+        <item quantity="other">%1$s rates per hour, per job in %2$s</item>
+    </plurals>
+    <string name="highest_rate_this_week_formatted">Way to go! You\'re at the highest tier this week in %1$s</string>
+    <plurals name="complete_jobs_unlock_higher_rate_formatted">
+        <item quantity="one"><![CDATA[Complete <b>%1$s more job</b> this week to unlock higher rates in %2$s!]]></item>
+        <item quantity="other"><![CDATA[Complete <b>%1$s more jobs</b> this week to unlock higher rates in %2$s!]]></item>
+    </plurals>
 
     <!-- Booking Details-->
     <string name="nearby_transit">Nearby Transit</string>

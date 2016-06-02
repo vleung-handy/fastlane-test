@@ -133,6 +133,8 @@
     <dimen name="youtube_image_view_margin_top">8dp</dimen>
     <dimen name="youtube_image_view_margin_bottom">28dp</dimen>
 
+    <dimen name="tier_dot_width_height">7dp</dimen>
+
 
     <!-- warning or error screen -->
     <dimen name="error_margin_top">10dp</dimen>
@@ -189,7 +191,8 @@
     <dimen name="payment_description_width">200dp</dimen>
 
     <!-- Tiers -->
-    <dimen name="complete_job_margin_top_bottom">18dp</dimen>
+    <dimen name="complete_job_padding_top_bottom">18dp</dimen>
     <dimen name="tiers_description_side_padding">18dp</dimen>
+    <dimen name="tier_margin_top_bottom">8dp</dimen>
 
 </resources>

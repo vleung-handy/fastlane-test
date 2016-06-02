@@ -37,6 +37,8 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     @Inject
     Bus mBus;
 
+    @Bind(R.id.weekly_tier_text)
+    TextView mWeeklyTierText;
     @Bind(R.id.tier_hourly_rate)
     TextView mTierHourlyRateText;
     @Bind(R.id.first_feedback_title)
@@ -51,6 +53,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     TextView mReviewDate;
 
     private ProviderEvaluation mProviderEvaluation;
+    private String mTiersTitle;
 
     public DashboardOptionsPerformanceView(final Context context)
     {
@@ -88,18 +91,57 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     public void setDisplay(ProviderEvaluation evaluation)
     {
         mProviderEvaluation = evaluation;
-        ProviderEvaluation.Tier tier = mProviderEvaluation.getTier();
-        if (tier.getHourlyRateInCents() > 0)
+        if (mProviderEvaluation.getPayRates().getIncentives().size() > 0)
         {
-            String tierAmountText = getResources().getString(
-                    R.string.tier_hourly_rate_formatted, tier.getName(),
-                    tier.getCurrencySymbol() + tier.getHourlyRateInCents() / 100);
-            mTierHourlyRateText.setText(tierAmountText);
+            ProviderEvaluation.Incentive mPrimaryIncentive =
+                    mProviderEvaluation.getPayRates().getIncentives().get(0);
+
+            if (mPrimaryIncentive.getTiers() != null && mPrimaryIncentive.getTiers().size() > 0)
+            {
+                List<ProviderEvaluation.Tier> mPrimaryRegionTiers = mPrimaryIncentive.getTiers();
+
+                if (!mPrimaryIncentive.getType().equals(ProviderEvaluation.Incentive.TIERED_TYPE))
+                {
+                    mWeeklyTierText.setText(R.string.pay_rate);
+                    mTiersTitle = getResources().getString(R.string.pay_rate);
+
+                    ProviderEvaluation.Tier mTier = mPrimaryRegionTiers.get(0);
+                    if (mTier != null)
+                    {
+                        mTierHourlyRateText.setText(getResources().getString(
+                                R.string.tier_hourly_rate_formatted,
+                                mPrimaryIncentive.getCurrencySymbol(),
+                                mTier.getHourlyRateInCents() / 100));
+                    }
+                }
+                else
+                {
+                    mWeeklyTierText.setText(getResources().getString(
+                            R.string.weekly_tier_formatted, mPrimaryIncentive.getCurrentTier()));
+                    mTiersTitle = getResources().getString(R.string.my_tier);
+
+                    int tierIndex;
+                    if (mPrimaryIncentive.getCurrentTier() == 0)
+                    { tierIndex = 0; }
+                    else
+                    {
+                        tierIndex = mPrimaryIncentive.getCurrentTier() - 1;
+                    }
+                    if (tierIndex < mPrimaryRegionTiers.size())
+                    {
+                        ProviderEvaluation.Tier mTier = mPrimaryRegionTiers.get(tierIndex);
+                        if (mTier != null)
+                        {
+                            mTierHourlyRateText.setText(getResources().getString(
+                                    R.string.tier_hourly_rate_formatted,
+                                    mPrimaryIncentive.getCurrencySymbol(),
+                                    mTier.getHourlyRateInCents() / 100));
+                        }
+                    }
+                }
+            }
         }
-        else
-        {
-            mTierHourlyRateText.setText(getResources().getString(R.string.no_data));
-        }
+
         List<ProviderFeedback> feedbackList = mProviderEvaluation.getProviderFeedback();
         if (feedbackList != null && feedbackList.size() > 0)
         {
@@ -132,6 +174,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
+        arguments.putSerializable(BundleKeys.TIERS_TITLE, mTiersTitle);
         mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.TierSelected()));
         mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_TIERS, arguments, true));
     }

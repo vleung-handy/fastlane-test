@@ -11,53 +11,44 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.manager.ProviderManager;
-import com.handy.portal.model.ProviderPersonalInfo;
-import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.ui.adapter.DashboardTiersPagerAdapter;
+import com.handy.portal.ui.element.DashboardTierViewPager;
 import com.handy.portal.ui.element.dashboard.CirclePageIndicatorView;
+import com.handy.portal.ui.element.dashboard.DashboardTiersHeaderView;
+import com.handy.portal.ui.element.dashboard.DashboardViewPagerListener;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-
-import javax.inject.Inject;
+import com.handy.portal.ui.view.DashboardTiersHelp;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class DashboardTiersFragment extends ActionBarFragment
+public class DashboardTiersFragment extends ActionBarFragment implements DashboardViewPagerListener
 {
-    @Inject
-    ProviderManager mProviderManager;
-
-    @Bind(R.id.current_week_completed_jobs_text)
-    TextView mCurrentWeekCompletedJobsText;
-    @Bind(R.id.current_week_text)
-    TextView mCurrentWeekText;
-    @Bind(R.id.complete_jobs_unlock_text)
-    TextView mCompleteJobsUnlockText;
+    @Bind(R.id.dashboard_tiers_header_view)
+    DashboardTiersHeaderView mDashboardTiersHeaderView;
     @Bind(R.id.region_tiers_view_pager)
-    ViewPager mRegionTiersViewPager;
+    DashboardTierViewPager mRegionTiersViewPager;
     @Bind(R.id.region_tiers_view_pager_indicator_view)
     CirclePageIndicatorView mRegionTiersIndicatorView;
+    @Bind(R.id.tiers_help_layout)
+    ViewGroup mTiersHelpLayout;
+    @Bind(R.id.tiers_legal_text)
+    TextView mTiersLegalText;
 
     private ProviderEvaluation mEvaluation;
-    private String mRegion;
+    private ViewPager mViewPager;
+    private String mTiersTitle;
+    private int mCurrentPage = 0;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         mEvaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.PROVIDER_EVALUATION);
-
-        ProviderProfile providerProfile = mProviderManager.getCachedProviderProfile();
-        if (providerProfile != null)
-        {
-            ProviderPersonalInfo personalInfo = providerProfile.getProviderPersonalInfo();
-            if (personalInfo != null)
-            {
-                mRegion = personalInfo.getOperatingRegion();
-            }
-        }
+        mTiersTitle = getArguments().getString(BundleKeys.TIERS_TITLE);
     }
 
     @Nullable
@@ -78,37 +69,88 @@ public class DashboardTiersFragment extends ActionBarFragment
         super.onViewCreated(view, savedInstanceState);
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
-        setActionBarTitle(R.string.tiers);
+        setViewPager(mRegionTiersViewPager);
 
-//        if (mEvaluation == null) { return; }
+        if (TextUtils.isNullOrEmpty(mTiersTitle))
+        { setActionBarTitle(R.string.tier); }
+        else
+        { setActionBarTitle(mTiersTitle); }
 
-//        ProviderEvaluation.Rating rolling = mEvaluation.getRolling();
-//        if (rolling == null || mRegion == null) { return; }
+        if (mEvaluation == null || mEvaluation.getPayRates() == null) { return; }
 
-//        mCurrentWeekCompletedJobsText.setText(String.valueOf(rolling.getTotalBookingCount()));
+        updateHeader();
 
-        // TODO: set the current week
-//        mCurrentWeekText.setText(getString(R.string.parentheses_formatted, DateTimeUtils.formatDateRange(
-//                DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER,
-//                rolling.getStartDate(), rolling.getEndDate())));
-
-//        int count = rolling.getTotalBookingCount();
-//        int jobsToComplete = 5; //TODO: fix this by getting region specific tier rates
-//        mCompleteJobsUnlockText.setText(getResources().getQuantityString(
-//                R.plurals.complete_jobs_unlock_higher_rate_formatted, count, jobsToComplete - count,
-//                mRegion));
-
-        mRegionTiersViewPager.setAdapter(new DashboardTiersPagerAdapter(getContext(), 1,
-                mProviderManager.getCachedProviderProfile().getProviderPersonalInfo()));
+        mRegionTiersViewPager.setAdapter(new DashboardTiersPagerAdapter(getContext(), mEvaluation));
         mRegionTiersViewPager.setClipToPadding(false);
         mRegionTiersViewPager.setPageMargin((int) getResources().getDimension(R.dimen.ratings_view_pager_margin));
-
         mRegionTiersIndicatorView.setViewPager(mRegionTiersViewPager);
 
-        //TODO: Hardcoding
-        mCurrentWeekCompletedJobsText.setText("2");
-        mCurrentWeekText.setText("(Mon, May 9 \u2013 Sun, May 16)");
-        mCompleteJobsUnlockText.setText(Html.fromHtml(getResources().getQuantityString(R.plurals.complete_jobs_unlock_higher_rate_formatted, 1, 1, "New York")));
-//        mCompleteJobsUnlockText.setText("Complete 1 more job this week to unlock higher rates in New York!");
+        for (ProviderEvaluation.TiersServiceDescription tiersServiceDescription : mEvaluation.getPayRates().getTiersServiceDescriptions())
+        {
+            DashboardTiersHelp dashboardTiersHelpView = new DashboardTiersHelp(getContext());
+            dashboardTiersHelpView.setDisplay(tiersServiceDescription.getTitle(), tiersServiceDescription.getBody());
+            mTiersHelpLayout.addView(dashboardTiersHelpView);
+        }
+
+        // Doesn't work when setting to textview, works programmatically
+        mTiersLegalText.setText(Html.fromHtml(getString(R.string.tiers_legal_text_html)));
+    }
+
+    @Override
+    public void setViewPager(final ViewPager view)
+    {
+        mRegionTiersViewPager.addOnPageChangeListener(this);
+    }
+
+    @Override
+    public void setCurrentItem(final int item)
+    {
+        if (mViewPager == null)
+        {
+            throw new IllegalStateException("ViewPager has not been bound.");
+        }
+        mViewPager.setCurrentItem(item);
+        mCurrentPage = item;
+    }
+
+    @Override
+    public void onPageScrolled(final int position, final float positionOffset,
+                               final int positionOffsetPixels)
+    { }
+
+    @Override
+    public void onPageSelected(final int position)
+    {
+        mCurrentPage = position;
+        updateHeader();
+    }
+
+    @Override
+    public void onPageScrollStateChanged(final int state) { }
+
+    private void updateHeader()
+    {
+        ProviderEvaluation.Incentive mCurrentIncentive =
+                mEvaluation.getPayRates().getIncentives().get(mCurrentPage);
+        switch (mCurrentIncentive.getType())
+        {
+            case ProviderEvaluation.Incentive.TIERED_TYPE:
+            case ProviderEvaluation.Incentive.HANDYMEN_TIERED_TYPE:
+                ProviderEvaluation.Rating weeklyRating = mEvaluation.getWeeklyRating();
+                mDashboardTiersHeaderView.setDisplay(
+                        weeklyRating.getTotalBookingCount(), DateTimeUtils.formatDateRange(
+                                DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER,
+                                weeklyRating.getStartDate(), weeklyRating.getEndDate()));
+                break;
+            case ProviderEvaluation.Incentive.ROLLING_TYPE:
+            case ProviderEvaluation.Incentive.HANDYMEN_ROLLING_TYPE:
+                ProviderEvaluation.Rating rollingRating = mEvaluation.getRolling();
+                mDashboardTiersHeaderView.setDisplay(
+                        rollingRating.getTotalBookingCount(), DateTimeUtils.formatDateRange(
+                                DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER,
+                                rollingRating.getStartDate(), rollingRating.getEndDate()));
+                break;
+
+        }
     }
 }

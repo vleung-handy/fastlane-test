@@ -254,22 +254,6 @@ public class ProviderManager
     {
         String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
 
-        // TODO: remove this fake data once the api is ready
-//        List<ProviderRating> providerRatingList = new ArrayList<>();
-//        ProviderRating providerRating = new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job");
-//        providerRatingList.add(providerRating);
-
-//        List<ProviderFeedback> feedbackList = new ArrayList<>();
-//        feedbackList.add(new ProviderFeedback("Good stuff!", "Good Stuff", new ArrayList<ProviderFeedback.FeedbackTip>()));
-//
-//        ProviderEvaluation providerEvaluation = new ProviderEvaluation(
-//                new ProviderEvaluation.Rating(10, 15, 5, 4.8, "Things are not lookin good!", "No feedback",
-//                        new Date(1000), new Date(10000)),
-//                new ProviderEvaluation.Rating(10, 15, 5, 4.8, "Things are not lookin good!", "No feedback",
-//                        new Date(1000), new Date(10000)), new ProviderEvaluation.Tier("Tier 1", 15), 3.8, providerRatingList, feedbackList);
-
-//        mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationSuccess(providerEvaluation));
-//        mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationError(null));
         mDataManager.getProviderEvaluation(providerId, new DataManager.Callback<ProviderEvaluation>()
         {
             @Override

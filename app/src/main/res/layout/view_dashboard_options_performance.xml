@@ -20,11 +20,12 @@
         >
 
         <TextView
+            android:id="@+id/weekly_tier_text"
             style="@style/TextView.Medium.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="@string/weekly_tier"
+            tools:text="Weekly Tier - 1"
             />
 
         <TextView
