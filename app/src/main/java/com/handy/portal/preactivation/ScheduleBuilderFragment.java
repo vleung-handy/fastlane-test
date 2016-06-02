@@ -8,12 +8,14 @@ import android.view.View;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.bookings.model.BookingsListWrapper;
+import com.handy.portal.bookings.model.BookingsWrapper;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.onboarding.ui.adapter.JobsRecyclerAdapter;
 import com.handy.portal.onboarding.ui.view.OnboardingJobsViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.Bind;
@@ -25,11 +27,16 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     RecyclerView mRecyclerView;
 
     private JobsRecyclerAdapter mAdapter;
-    private BookingsListWrapper mBookingsListWrapper;
+    private List<BookingsWrapper> mBookingsWrappers;
 
-    public static ScheduleBuilderFragment newInstance(final BookingsListWrapper bookingsListWrapper)
+    public static ScheduleBuilderFragment newInstance(
+            final ArrayList<BookingsWrapper> bookingsWrappers)
     {
-        return new ScheduleBuilderFragment();
+        final ScheduleBuilderFragment fragment = new ScheduleBuilderFragment();
+        final Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.BOOKINGS_WRAPPERS, bookingsWrappers);
+        fragment.setArguments(arguments);
+        return fragment;
     }
 
     @SuppressWarnings("unchecked")
@@ -37,6 +44,8 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        mBookingsWrappers = (List<BookingsWrapper>) getArguments()
+                .getSerializable(BundleKeys.BOOKINGS_WRAPPERS);
     }
 
     @Override
@@ -44,7 +53,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     {
         super.onViewCreated(view, savedInstanceState);
         disableButtons();
-        mAdapter = new JobsRecyclerAdapter(mBookingsListWrapper.getBookingsWrappers(), this);
+        mAdapter = new JobsRecyclerAdapter(mBookingsWrappers, this);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.startLayoutAnimation();
@@ -111,7 +120,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
             {
                 bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSubmitted()));
                 setPendingBookings(selectedBookings);
-                next(ScheduleConfirmationFragment.newInstance());
+                next(PurchaseSuppliesFragment.newInstance(((PreActivationFlowActivity) getActivity()).mOnboardingSuppliesInfo));
             }
         }
     }

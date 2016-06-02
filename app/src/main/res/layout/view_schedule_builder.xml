@@ -4,8 +4,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/default_margin"
+    android:layout_marginTop="@dimen/default_margin"
     android:clipChildren="false"
     android:clipToPadding="false"
     android:layoutAnimation="@anim/list_animation"
-    android:paddingBottom="@dimen/onboard_claim_button_margin"
     />

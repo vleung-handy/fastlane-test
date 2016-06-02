@@ -118,7 +118,7 @@ public class OnboardingStatusFragment extends PreActivationFlowFragment
     @Override
     protected void onPrimaryButtonClicked()
     {
-
+        next(SchedulePreferencesFragment.newInstance());
     }
 
     private void addLinkTextView(final String text, @NonNull final String url)

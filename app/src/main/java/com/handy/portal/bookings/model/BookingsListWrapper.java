@@ -2,14 +2,14 @@ package com.handy.portal.bookings.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class BookingsListWrapper
 {
     @SerializedName("job_days")
-    private List<BookingsWrapper> mBookingsWrappers;
+    private ArrayList<BookingsWrapper> mBookingsWrappers;
 
-    public final List<BookingsWrapper> getBookingsWrappers()
+    public final ArrayList<BookingsWrapper> getBookingsWrappers()
     {
         return mBookingsWrappers;
     }

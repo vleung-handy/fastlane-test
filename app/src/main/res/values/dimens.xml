@@ -178,7 +178,6 @@
     <dimen name="onboard_particle_view_width_margin">-60dp</dimen>
     <dimen name="onboard_search_animation_width_height">160dp</dimen>
     <dimen name="onboard_list_header_padding">28dp</dimen>
-    <dimen name="onboard_claim_button_margin">20dp</dimen>
 
     <!-- Payments -->
     <dimen name="outstanding_week_question_mark_width_height">72dp</dimen>

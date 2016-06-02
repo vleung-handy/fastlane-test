@@ -3,11 +3,13 @@ package com.handy.portal.preactivation;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -40,6 +42,9 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
     protected TextView mHeader;
     @Bind(R.id.sub_header)
     protected TextView mSubHeader;
+    @Bind(R.id.scroll_view)
+    protected ScrollView mScrollView;
+
 
     public static final class ButtonTypes
     {
@@ -48,6 +53,7 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
         public static final int DOUBLE = 2;
         public static final int SINGLE_FIXED = 3;
     }
+
 
     public static final class HeaderImageTypes
     {
@@ -270,7 +276,18 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
         {
             errorMessage = getString(R.string.an_error_has_occurred);
         }
-        showToast(errorMessage);
+        final Snackbar snackbar = Snackbar.make(mScrollView, errorMessage,
+                Snackbar.LENGTH_INDEFINITE);
+        snackbar.setActionTextColor(getResources().getColor(R.color.handy_blue))
+                .setAction(R.string.ok, new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(final View v)
+                    {
+                        snackbar.dismiss();
+                    }
+                })
+                .show();
     }
 
     public List<Booking> getPendingBookings()
