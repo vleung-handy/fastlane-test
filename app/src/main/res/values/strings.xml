@@ -523,6 +523,7 @@
     <string name="skip_this_step">Skip</string>
     <string name="welcome">Welcome</string>
     <string name="learn_about_handy">Learn about Handy</string>
+    <string name="no_jobs_matching_preferences">There aren\'t any open jobs matching your preferences. Try a different date, or check back later.</string>
     <plurals name="locations_selected_count_formatted">
         <item quantity="one">%1$d location selected</item>
         <item quantity="other">%1$d locations selected</item>

@@ -13,13 +13,11 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
-import com.handy.portal.event.HandyEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.onboarding.ui.adapter.JobsRecyclerAdapter;
 import com.handy.portal.onboarding.ui.fragment.OnboardLoadingDialog;
 import com.handy.portal.onboarding.ui.view.OnboardJobGroupView;
-import com.squareup.otto.Subscribe;
 
 import java.util.Collections;
 import java.util.List;
@@ -46,7 +44,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     private long mLoadingDialogDisplayTime;
     private boolean mIsResumed;
 
-    public static ScheduleBuilderFragment newInstance()
+    public static ScheduleBuilderFragment newInstance(final BookingsListWrapper bookingsListWrapper)
     {
         return new ScheduleBuilderFragment();
     }
@@ -127,32 +125,6 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
                 bindJobsAndRemoveLoadingDialog();
             }
         }, mWaitTime);
-    }
-
-    /**
-     * When the jobs are loaded, it will check whether the dialog has been up for a specified
-     * amount of time. If it has, then dismiss it.
-     *
-     * @param event
-     */
-    @Subscribe
-    public void onReceiveOnboardingJobsSuccess(HandyEvent.ReceiveOnboardingJobsSuccess event)
-    {
-        Log.d(TAG, "onJobLoaded: ");
-        hideLoadingOverlay();
-        mJobLoaded = true;
-        mBookingsListWrapper = event.getBookingsListWrapper();
-        bindJobsAndRemoveLoadingDialog();
-    }
-
-    @Subscribe
-    public void onReceiveOnboardingJobsError(HandyEvent.ReceiveOnboardingJobsError event)
-    {
-        if (isLoadingDialogVisible())
-        {
-            mLoadingDialog.dismiss();
-        }
-        showError(event.error.getMessage());
     }
 
     /**

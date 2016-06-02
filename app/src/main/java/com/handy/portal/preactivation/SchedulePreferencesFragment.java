@@ -11,10 +11,13 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 
 import com.handy.portal.R;
+import com.handy.portal.bookings.model.BookingsListWrapper;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.ui.view.StaticFieldTableRow;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.ui.adapter.CheckBoxListAdapter;
 import com.handy.portal.ui.widget.TitleView;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -194,8 +197,30 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
         {
             return;
         }
+        showLoadingOverlay();
+        bus.post(new HandyEvent.RequestOnboardingJobs(mSelectedStartDate, mSelectedZipclusterIds));
+    }
 
-        next(ScheduleBuilderFragment.newInstance());
+    @Subscribe
+    public void onReceiveOnboardingJobsSuccess(HandyEvent.ReceiveOnboardingJobsSuccess event)
+    {
+        hideLoadingOverlay();
+        final BookingsListWrapper bookingsListWrapper = event.getBookingsListWrapper();
+        if (bookingsListWrapper.hasBookings())
+        {
+            next(ScheduleBuilderFragment.newInstance(bookingsListWrapper));
+        }
+        else
+        {
+            showError(getString(R.string.no_jobs_matching_preferences));
+        }
+    }
+
+    @Subscribe
+    public void onReceiveOnboardingJobsError(HandyEvent.ReceiveOnboardingJobsError event)
+    {
+        hideLoadingOverlay();
+        showError(event.error.getMessage());
     }
 
     private boolean validate()
