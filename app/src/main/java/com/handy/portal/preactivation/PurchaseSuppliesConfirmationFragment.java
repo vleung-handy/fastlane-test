@@ -23,7 +23,7 @@ import com.handy.portal.logger.handylogger.model.OnboardingSuppliesLog;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.definitions.FieldDefinition;
-import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
+import com.handy.portal.model.onboarding.SuppliesInfo;
 import com.handy.portal.payments.PaymentEvent;
 import com.squareup.otto.Subscribe;
 import com.stripe.android.model.Card;
@@ -69,7 +69,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     private Map<String, FieldDefinition> mPaymentFieldDefinitions;
     private Map<String, FieldDefinition> mAddressFieldDefinitions;
     private ProviderPersonalInfo mProviderPersonalInfo;
-    private OnboardingSuppliesInfo mOnboardingSuppliesInfo;
+    private SuppliesInfo mSuppliesInfo;
 
     /**
      * These signifies whether the address/payments ready for the confirm purchase step.
@@ -84,12 +84,12 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     private boolean mPaymentLoading = false;
 
     public static PurchaseSuppliesConfirmationFragment newInstance(
-            final OnboardingSuppliesInfo onboardingSuppliesInfo)
+            final SuppliesInfo suppliesInfo)
     {
         final PurchaseSuppliesConfirmationFragment fragment =
                 new PurchaseSuppliesConfirmationFragment();
         final Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.ONBOARDING_SUPPLIES, onboardingSuppliesInfo);
+        arguments.putSerializable(BundleKeys.ONBOARDING_SUPPLIES, suppliesInfo);
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -98,7 +98,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mOnboardingSuppliesInfo = (OnboardingSuppliesInfo) getArguments()
+        mSuppliesInfo = (SuppliesInfo) getArguments()
                 .getSerializable(BundleKeys.ONBOARDING_SUPPLIES);
     }
 
@@ -124,7 +124,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
                 getString(R.string.loading));
 
         final String orderTotalFormatted = getString(R.string.order_total_formatted,
-                mOnboardingSuppliesInfo.getSuppliesCost());
+                mSuppliesInfo.getSuppliesCost());
         mOrderSummary.setContent(getString(R.string.supply_starter_kit), orderTotalFormatted)
                 .setImage(ContextCompat.getDrawable(getContext(), R.drawable.img_supplies));
 
@@ -315,7 +315,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     @Override
     protected String getSubHeaderText()
     {
-        return mOnboardingSuppliesInfo.getChargeNotice();
+        return mSuppliesInfo.getChargeNotice();
     }
 
     @Override

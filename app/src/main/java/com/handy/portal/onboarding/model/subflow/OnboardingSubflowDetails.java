@@ -1,18 +1,17 @@
 package com.handy.portal.onboarding.model.subflow;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
 
-public class OnboardingSubflowDetails
+import java.io.Serializable;
+
+public class OnboardingSubflowDetails implements Serializable
 {
     @SerializedName("type")
     private SubflowType mType;
     @SerializedName("status")
     private SubflowStatus mStatus;
     @SerializedName("data")
-    private JsonObject mData;
+    private SubflowData mData;
 
     public SubflowType getType()
     {
@@ -24,9 +23,8 @@ public class OnboardingSubflowDetails
         return mStatus;
     }
 
-    public Object getData()
+    public SubflowData getData()
     {
-        final Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
-        return gson.fromJson(mData, mType.getDataClass());
+        return mData;
     }
 }

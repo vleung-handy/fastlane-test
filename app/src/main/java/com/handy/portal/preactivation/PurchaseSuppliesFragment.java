@@ -12,7 +12,7 @@ import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.OnboardingSuppliesLog;
-import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
+import com.handy.portal.model.onboarding.SuppliesInfo;
 import com.handy.portal.model.onboarding.OnboardingSuppliesSection;
 import com.handy.portal.library.ui.view.SimpleContentLayout;
 import com.handy.portal.library.util.FragmentUtils;
@@ -32,14 +32,14 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
     @Bind(R.id.products_summary)
     SimpleContentLayout mProductsSummary;
 
-    private OnboardingSuppliesInfo mOnboardingSuppliesInfo;
+    private SuppliesInfo mSuppliesInfo;
 
     public static PurchaseSuppliesFragment newInstance(
-            final OnboardingSuppliesInfo onboardingSuppliesInfo)
+            final SuppliesInfo suppliesInfo)
     {
         final PurchaseSuppliesFragment fragment = new PurchaseSuppliesFragment();
         final Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.ONBOARDING_SUPPLIES, onboardingSuppliesInfo);
+        arguments.putSerializable(BundleKeys.ONBOARDING_SUPPLIES, suppliesInfo);
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -48,7 +48,7 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mOnboardingSuppliesInfo = (OnboardingSuppliesInfo) getArguments()
+        mSuppliesInfo = (SuppliesInfo) getArguments()
                 .getSerializable(BundleKeys.ONBOARDING_SUPPLIES);
     }
 
@@ -57,11 +57,11 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
     {
         super.onViewCreated(view, savedInstanceState);
         final OnboardingSuppliesSection costSection =
-                mOnboardingSuppliesInfo.getCostSection();
+                mSuppliesInfo.getCostSection();
         final OnboardingSuppliesSection deliverySection =
-                mOnboardingSuppliesInfo.getDeliverySection();
+                mSuppliesInfo.getDeliverySection();
         final OnboardingSuppliesSection productsSection =
-                mOnboardingSuppliesInfo.getProductsSection();
+                mSuppliesInfo.getProductsSection();
 
         mCostSummary.setContent(costSection.getTitle(), costSection.getDescription());
         mDeliverySummary.setContent(deliverySection.getTitle(), deliverySection.getDescription());
@@ -139,7 +139,7 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
     {
         bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
                 OnboardingSuppliesLog.Types.PURCHASE_SUPPLIES_SELECTED)));
-        next(PurchaseSuppliesConfirmationFragment.newInstance(mOnboardingSuppliesInfo));
+        next(PurchaseSuppliesConfirmationFragment.newInstance(mSuppliesInfo));
     }
 
     @Override

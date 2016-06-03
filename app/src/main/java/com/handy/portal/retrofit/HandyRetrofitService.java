@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.model.ProviderSettings;
-import com.handy.portal.onboarding.model.JobClaimRequest;
+import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 
 import java.util.ArrayList;
 import java.util.Date;

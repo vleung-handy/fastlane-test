@@ -11,7 +11,7 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
+import com.handy.portal.model.onboarding.SuppliesInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.squareup.otto.Subscribe;
@@ -23,7 +23,7 @@ import java.util.List;
 
 public class PreActivationFlowActivity extends BaseActivity
 {
-    public OnboardingSuppliesInfo mOnboardingSuppliesInfo;
+    public SuppliesInfo mSuppliesInfo;
     private List<Booking> mPendingBookings;
 
     @Override
@@ -36,7 +36,7 @@ public class PreActivationFlowActivity extends BaseActivity
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mOnboardingSuppliesInfo = (OnboardingSuppliesInfo) getIntent()
+        mSuppliesInfo = (SuppliesInfo) getIntent()
                 .getSerializableExtra(BundleKeys.ONBOARDING_SUPPLIES);
         setContentView(R.layout.activity_pre_activation_flow);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));

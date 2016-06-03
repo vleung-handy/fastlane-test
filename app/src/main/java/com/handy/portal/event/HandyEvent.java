@@ -22,8 +22,8 @@ import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.TermsDetails;
-import com.handy.portal.onboarding.model.JobClaimRequest;
-import com.handy.portal.onboarding.model.JobClaimResponse;
+import com.handy.portal.onboarding.model.claim.JobClaimRequest;
+import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 
 import java.util.ArrayList;
 import java.util.Date;

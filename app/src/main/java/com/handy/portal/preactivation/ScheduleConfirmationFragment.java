@@ -17,8 +17,8 @@ import com.handy.portal.library.ui.view.LabelAndValueView;
 import com.handy.portal.library.ui.view.SimpleContentLayout;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
-import com.handy.portal.onboarding.model.JobClaim;
-import com.handy.portal.onboarding.model.JobClaimRequest;
+import com.handy.portal.onboarding.model.claim.JobClaim;
+import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;

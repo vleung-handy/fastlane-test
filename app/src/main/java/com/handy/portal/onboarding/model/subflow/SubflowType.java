@@ -5,23 +5,11 @@ import com.google.gson.annotations.SerializedName;
 public enum SubflowType
 {
     @SerializedName("status")
-    STATUS(StatusSubflowData.class),
+    STATUS,
     @SerializedName("claim")
-    CLAIM(ClaimSubflowData.class),
+    CLAIM,
     @SerializedName("supplies")
-    SUPPLIES(SuppliesSubflowData.class),
+    SUPPLIES,
     @SerializedName("confirmation")
-    CONFIRMATION(ConfirmationSubflowData.class),;
-
-    private Class dataClass;
-
-    SubflowType(final Class dataClass)
-    {
-        this.dataClass = dataClass;
-    }
-
-    public Class getDataClass()
-    {
-        return dataClass;
-    }
+    CONFIRMATION,
 }
