@@ -1,4 +1,4 @@
-package com.handy.portal.onboarding.model;
+package com.handy.portal.onboarding.model.subflow;
 
 import com.google.gson.annotations.SerializedName;
 
