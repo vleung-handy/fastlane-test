@@ -78,7 +78,7 @@ public class OnboardingStatusFragment extends PreActivationFlowFragment
     protected int getButtonType()
     {
         // FIXME: Branch
-        return ButtonTypes.NONE;
+        return ButtonTypes.SINGLE_FIXED;
     }
 
     @Override

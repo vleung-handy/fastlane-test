@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
@@ -26,6 +27,10 @@ import butterknife.Bind;
 
 public class ScheduleConfirmationFragment extends PreActivationFlowFragment
 {
+    @Bind(R.id.edit_schedule_button)
+    Button mEditScheduleButton;
+    @Bind(R.id.edit_supplies_button)
+    Button mEditSuppliesButton;
     @Bind(R.id.jobs_container)
     ViewGroup mJobsContainer;
     @Bind(R.id.shipping_view)

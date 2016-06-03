@@ -18,6 +18,7 @@ import com.google.android.gms.location.LocationServices;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.flow.Flow;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.location.LocationUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
@@ -31,12 +32,10 @@ import com.handy.portal.setup.step.AppUpdateStep;
 import com.handy.portal.setup.step.OnboardingStep;
 import com.handy.portal.setup.step.SetConfigurationStep;
 import com.handy.portal.setup.step.SetProviderProfileStep;
-import com.handy.portal.library.ui.widget.ProgressDialog;
 import com.handy.portal.updater.AppUpdateEvent;
 import com.handy.portal.updater.AppUpdateEventListener;
 import com.handy.portal.updater.AppUpdateFlowLauncher;
 import com.handy.portal.updater.ui.PleaseUpdateActivity;
-import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -87,7 +86,7 @@ public abstract class BaseActivity extends AppCompatActivity
     @Inject
     public Mixpanel mixpanel;
     @Inject
-    Bus bus;
+    public Bus bus;
     @Inject
     ConfigManager configManager;
 
