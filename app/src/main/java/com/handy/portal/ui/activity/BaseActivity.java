@@ -29,7 +29,6 @@ import com.handy.portal.setup.SetupData;
 import com.handy.portal.setup.SetupEvent;
 import com.handy.portal.setup.step.AcceptTermsStep;
 import com.handy.portal.setup.step.AppUpdateStep;
-import com.handy.portal.setup.step.OnboardingStep;
 import com.handy.portal.setup.step.SetConfigurationStep;
 import com.handy.portal.setup.step.SetProviderProfileStep;
 import com.handy.portal.updater.AppUpdateEvent;
@@ -68,7 +67,7 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     // this is meant to be optionally overridden
-    protected void onSetupComplete()
+    protected void onSetupComplete(final SetupData setupData)
     {
     }
 
@@ -387,14 +386,13 @@ public abstract class BaseActivity extends AppCompatActivity
                             setupData.getConfigurationResponse()))
                     .addStep(new SetProviderProfileStep(mBaseActivity,
                             setupData.getProviderProfile()))
-                    .addStep(new OnboardingStep())
                     .setOnFlowCompleteListener(new Flow.OnFlowCompleteListener()
                     {
                         @Override
                         public void onFlowComplete()
                         {
                             bus.unregister(SetupHandler.this);
-                            mBaseActivity.onSetupComplete();
+                            mBaseActivity.onSetupComplete(setupData);
                         }
                     })
                     .start();

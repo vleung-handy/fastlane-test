@@ -4,18 +4,21 @@ import com.google.gson.annotations.SerializedName;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.TermsDetailsGroup;
+import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.updater.model.UpdateDetails;
 
 public class SetupData
 {
     @SerializedName("update_details")
-    UpdateDetails mUpdateDetails;
+    private UpdateDetails mUpdateDetails;
     @SerializedName("terms_details")
-    TermsDetailsGroup mTermsDetailsGroup;
+    private TermsDetailsGroup mTermsDetailsGroup;
     @SerializedName("configuration")
-    ConfigurationResponse mConfigurationResponse;
+    private ConfigurationResponse mConfigurationResponse;
     @SerializedName("provider_profile")
-    ProviderProfile mProviderProfile;
+    private ProviderProfile mProviderProfile;
+    @SerializedName("onboarding")
+    private OnboardingDetails mOnboardingDetails;
 
     public UpdateDetails getUpdateDetails()
     {
@@ -35,5 +38,10 @@ public class SetupData
     public ProviderProfile getProviderProfile()
     {
         return mProviderProfile;
+    }
+
+    public OnboardingDetails getOnboardingDetails()
+    {
+        return mOnboardingDetails;
     }
 }
