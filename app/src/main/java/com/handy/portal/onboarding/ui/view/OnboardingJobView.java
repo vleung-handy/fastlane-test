@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
-import com.handy.portal.onboarding.model.BookingViewModel;
+import com.handy.portal.onboarding.viewmodel.BookingViewModel;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

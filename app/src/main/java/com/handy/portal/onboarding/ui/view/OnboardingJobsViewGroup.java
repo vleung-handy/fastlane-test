@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FontUtils;
-import com.handy.portal.onboarding.model.BookingViewModel;
-import com.handy.portal.onboarding.model.BookingsWrapperViewModel;
+import com.handy.portal.onboarding.viewmodel.BookingViewModel;
+import com.handy.portal.onboarding.viewmodel.BookingsWrapperViewModel;
 
 public class OnboardingJobsViewGroup extends LinearLayout
         implements CompoundButton.OnCheckedChangeListener

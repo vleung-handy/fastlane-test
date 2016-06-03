@@ -11,8 +11,8 @@ import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
-import com.handy.portal.onboarding.model.BookingViewModel;
-import com.handy.portal.onboarding.model.BookingsWrapperViewModel;
+import com.handy.portal.onboarding.viewmodel.BookingViewModel;
+import com.handy.portal.onboarding.viewmodel.BookingsWrapperViewModel;
 import com.handy.portal.onboarding.ui.view.OnboardingJobsViewGroup;
 
 import java.util.ArrayList;

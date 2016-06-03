@@ -1,4 +1,4 @@
-package com.handy.portal.onboarding.model;
+package com.handy.portal.onboarding.viewmodel;
 
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.library.util.DateTimeUtils;
