@@ -41,11 +41,7 @@ import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.onboarding.OnboardingParams;
-import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
-import com.handy.portal.model.onboarding.OnboardingSuppliesParams;
 import com.handy.portal.onboarding.ui.activity.OnboardWelcomeActivity;
-import com.handy.portal.preactivation.PreActivationFlowActivity;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
@@ -205,26 +201,7 @@ public class MainActivityFragment extends InjectedFragment
         {
             mConfigAlreadyReceivedThisSession = true;
             final ConfigurationResponse configuration = event.getConfigurationResponse();
-            launchPreActivationFlowIfNeeded(configuration);
             handleOnboardingFlow(configuration);
-        }
-    }
-
-    private void launchPreActivationFlowIfNeeded(final ConfigurationResponse configuration)
-    {
-        OnboardingParams onboardingParams;
-        OnboardingSuppliesParams onboardingSuppliesParams;
-        if (configuration != null
-                && (onboardingParams = configuration.getOnboardingParams()) != null
-                && (onboardingSuppliesParams = onboardingParams.getOnboardingSuppliesParams()) != null
-                && onboardingSuppliesParams.isEnabled())
-        {
-            final OnboardingSuppliesInfo onboardingSuppliesParamsInfo =
-                    onboardingSuppliesParams.getInfo();
-            final Intent intent = new Intent(getActivity(), PreActivationFlowActivity.class);
-            intent.putExtra(BundleKeys.ONBOARDING_SUPPLIES, onboardingSuppliesParamsInfo);
-            startActivity(intent);
-            getActivity().finish();
         }
     }
 
