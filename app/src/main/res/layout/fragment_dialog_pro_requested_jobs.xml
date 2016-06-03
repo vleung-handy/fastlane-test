@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_alignParentBottom="true"
+    android:layout_gravity="bottom"
+    android:background="@color/white_pressed"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/handy_blue"
+        android:id="@+id/fragment_dialog_requested_jobs_title_bar"
+        >
+        <TextView
+            style="@style/TextView.XLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Your Requests"
+            android:textColor="@color/white"
+            android:layout_gravity="center|center_vertical"
+            android:gravity="center"
+            android:layout_centerInParent="true"
+            />
+        <ImageView
+            android:id="@+id/fragment_dialog_requested_jobs_dismiss_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="end"
+            android:padding="@dimen/default_padding"
+            android:layout_alignParentRight="true"
+            android:src="@drawable/ic_x_white"
+            />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:layout_below="@id/fragment_dialog_requested_jobs_title_bar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        >
+
+        <com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout
+            android:id="@+id/fragment_dialog_pro_requested_jobs_list_swipe_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+            <com.handy.portal.bookings.ui.element.ProRequestedJobsExpandableListView
+                android:id="@+id/fragment_dialog_pro_requested_jobs_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:childDivider="@color/bg_inactive_grey"
+                android:divider="@color/list_divider"
+                android:dividerHeight="1px"
+                android:footerDividersEnabled="true"
+                android:groupIndicator="@color/transparent"
+                android:headerDividersEnabled="true"
+                android:paddingTop="1dp"
+                android:transcriptMode="disabled"
+                />
+            </com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout>
+
+        <include tools:visibility="visible"
+                 android:visibility="visible"
+                 layout="@layout/layout_fetch_error"/>
+
+        <include tools:visibility="visible"
+                 android:visibility="visible"
+                 layout="@layout/overlay_loading"/>
+
+        <include tools:visibility="visible"
+                 android:id="@+id/pro_requested_bookings_empty"
+                 layout="@layout/layout_pro_requested_jobs_empty"/>
+    </FrameLayout>
+
+</RelativeLayout>

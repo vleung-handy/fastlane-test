@@ -27,6 +27,7 @@ import com.handy.portal.bookings.ui.element.BookingsAccessLockedView;
 import com.handy.portal.bookings.ui.element.BookingsBannerView;
 import com.handy.portal.bookings.ui.fragment.dialog.EarlyAccessTrialDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.JobAccessUnlockedDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.ProRequestedJobsDialogFragment;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
@@ -35,14 +36,14 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.helpcenter.constants.HelpCenterUrl;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.onboarding.ui.activity.GettingStartedActivity;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.library.util.FragmentUtils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;
@@ -76,6 +77,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     BookingModalsManager mBookingModalsManager;
 
     private MenuItem mMenuSchedule;
+    private MenuItem mMenuProRequestedJobs;
     private ProviderProfile mProviderProfile;
 
     @Override
@@ -134,6 +136,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_available_bookings, menu);
         mMenuSchedule = menu.findItem(R.id.action_initial_jobs);
+        mMenuProRequestedJobs = menu.findItem(R.id.action_pro_requested_jobs);
 
         updateMenuItems();
     }
@@ -141,13 +144,26 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     public boolean onOptionsItemSelected(final MenuItem item)
     {
-        if (item.getItemId() == R.id.action_initial_jobs)
+        switch(item.getItemId())
         {
-            startActivity(new Intent(getContext(), GettingStartedActivity.class));
-            return true;
+            case R.id.action_initial_jobs:
+                startActivity(new Intent(getContext(), GettingStartedActivity.class));
+                return true;
+            case R.id.action_pro_requested_jobs:
+                launchProRequestedJobsDialogFragment();
+                return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void launchProRequestedJobsDialogFragment()
+    {
+        if (getChildFragmentManager().findFragmentByTag(ProRequestedJobsDialogFragment.FRAGMENT_TAG) == null)
+        {
+            ProRequestedJobsDialogFragment fragment = ProRequestedJobsDialogFragment.newInstance();
+            FragmentUtils.safeLaunchDialogFragment(fragment, this, ProRequestedJobsDialogFragment.FRAGMENT_TAG);
+        }
     }
 
     protected BookingListView getBookingListView()
@@ -252,20 +268,31 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     private void updateMenuItems()
     {
 
-        if (mMenuSchedule == null)
+        if (mMenuSchedule != null)
         {
-            return;
+            if (mProviderProfile != null
+                    && mProviderProfile.getPerformanceInfo() != null
+                    && mProviderProfile.getPerformanceInfo().getTotalJobsCount() <= 0)
+            {
+                mMenuSchedule.setVisible(true);
+            }
+            else
+            {
+                mMenuSchedule.setVisible(false);
+            }
         }
 
-        if (mProviderProfile != null
-                && mProviderProfile.getPerformanceInfo() != null
-                && mProviderProfile.getPerformanceInfo().getTotalJobsCount() <= 0)
+        if(mMenuProRequestedJobs != null)
         {
-            mMenuSchedule.setVisible(true);
-        }
-        else
-        {
-            mMenuSchedule.setVisible(false);
+            if(mConfigManager.getConfigurationResponse() != null
+                    && mConfigManager.getConfigurationResponse().isPendingRequestsInboxEnabled())
+            {
+                mMenuProRequestedJobs.setVisible(true);
+            }
+            else
+            {
+                mMenuProRequestedJobs.setVisible(false);
+            }
         }
     }
 

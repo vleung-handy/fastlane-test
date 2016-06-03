@@ -20,7 +20,6 @@ import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.SuccessWrapper;
-import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
@@ -91,9 +90,10 @@ public class DataManager
         return mEndpoint.getBaseUrl();
     }
 
-    public void getAvailableBookings(Date[] dates, final Callback<BookingsListWrapper> cb)
+    public void getAvailableBookings(Date[] dates, Map<String, Object> additionalOptions, final Callback<BookingsListWrapper> cb)
     {
-        mService.getAvailableBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
+
+        mService.getAvailableBookings(dates, additionalOptions, new BookingsListWrapperHandyRetroFitCallback(cb));
     }
 
     public void getOnboardingJobs(final Callback<BookingsListWrapper> cb)
