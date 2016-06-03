@@ -2,9 +2,8 @@ package com.handy.portal.preactivation;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
@@ -12,7 +11,8 @@ import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
-import com.handy.portal.onboarding.ui.adapter.JobsRecyclerAdapter;
+import com.handy.portal.onboarding.model.BookingViewModel;
+import com.handy.portal.onboarding.model.BookingsWrapperViewModel;
 import com.handy.portal.onboarding.ui.view.OnboardingJobsViewGroup;
 
 import java.util.ArrayList;
@@ -23,11 +23,11 @@ import butterknife.Bind;
 public class ScheduleBuilderFragment extends PreActivationFlowFragment
         implements OnboardingJobsViewGroup.OnJobCheckedChangedListener
 {
-    @Bind(R.id.recycler_view)
-    RecyclerView mRecyclerView;
+    @Bind(R.id.jobs_container)
+    ViewGroup mJobsContainer;
 
-    private JobsRecyclerAdapter mAdapter;
     private List<BookingsWrapper> mBookingsWrappers;
+    private List<BookingsWrapperViewModel> mBookingsWrapperViewModels;
 
     public static ScheduleBuilderFragment newInstance(
             final ArrayList<BookingsWrapper> bookingsWrappers)
@@ -53,11 +53,35 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     {
         super.onViewCreated(view, savedInstanceState);
         disableButtons();
-        mAdapter = new JobsRecyclerAdapter(mBookingsWrappers, this);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.startLayoutAnimation();
+        initBookingsWrapperViewModels();
+        displayBookings();
+
         updateButton();
+    }
+
+    private void initBookingsWrapperViewModels()
+    {
+        mBookingsWrapperViewModels = new ArrayList<>();
+        for (final BookingsWrapper bookingsWrapper : mBookingsWrappers)
+        {
+            final List<Booking> bookings = bookingsWrapper.getBookings();
+            if (bookings != null && !bookings.isEmpty())
+            {
+                mBookingsWrapperViewModels.add(new BookingsWrapperViewModel(bookingsWrapper));
+            }
+        }
+    }
+
+    private void displayBookings()
+    {
+        mJobsContainer.removeAllViews();
+        for (final BookingsWrapperViewModel viewModel : mBookingsWrapperViewModels)
+        {
+            final OnboardingJobsViewGroup jobsViewGroup = new OnboardingJobsViewGroup(getContext());
+            jobsViewGroup.setOnJobCheckedChangedListener(this);
+            jobsViewGroup.bind(viewModel);
+            mJobsContainer.addView(jobsViewGroup);
+        }
     }
 
     @Override
@@ -68,14 +92,33 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
 
     public void updateButton()
     {
-        if (mAdapter != null && !mAdapter.getSelectedBookings().isEmpty())
-        {
-            enableButtons();
-        }
-        else
+        if (getSelectedBookings().isEmpty())
         {
             disableButtons();
         }
+        else
+        {
+            enableButtons();
+        }
+    }
+
+    public List<Booking> getSelectedBookings()
+    {
+        final ArrayList<Booking> bookings = new ArrayList<>();
+        for (final BookingsWrapperViewModel viewModel : mBookingsWrapperViewModels)
+        {
+            if (viewModel != null)
+            {
+                for (BookingViewModel bookingView : viewModel.getBookingViewModels())
+                {
+                    if (bookingView.isSelected())
+                    {
+                        bookings.add(bookingView.getBooking());
+                    }
+                }
+            }
+        }
+        return bookings;
     }
 
     @Override
@@ -113,15 +156,12 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     @Override
     protected void onPrimaryButtonClicked()
     {
-        if (mAdapter != null)
+        final List<Booking> selectedBookings = getSelectedBookings();
+        if (!selectedBookings.isEmpty())
         {
-            final List<Booking> selectedBookings = mAdapter.getSelectedBookings();
-            if (!selectedBookings.isEmpty())
-            {
-                bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSubmitted()));
-                setPendingBookings(selectedBookings);
-                next(PurchaseSuppliesFragment.newInstance(((PreActivationFlowActivity) getActivity()).mOnboardingSuppliesInfo));
-            }
+            bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSubmitted()));
+            setPendingBookings(selectedBookings);
+            next(PurchaseSuppliesFragment.newInstance(((PreActivationFlowActivity) getActivity()).mOnboardingSuppliesInfo));
         }
     }
 }
