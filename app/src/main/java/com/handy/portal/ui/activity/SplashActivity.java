@@ -172,13 +172,16 @@ public class SplashActivity extends BaseActivity
         //do nothing
     }
 
+    /**
+     * called on debug builds only
+     */
     private void processInjectedCredentials()
     {
         final String authToken = getIntent().getStringExtra(PrefsKey.AUTH_TOKEN);
-        if (!TextUtils.isNullOrEmpty(authToken))
+        if (authToken != null)
         {
+            //want to set even if empty string, in the case of testing
             prefsManager.setString(PrefsKey.AUTH_TOKEN, authToken);
-
             //For use with WebView
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             {

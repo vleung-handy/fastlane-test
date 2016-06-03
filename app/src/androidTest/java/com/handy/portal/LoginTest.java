@@ -12,7 +12,6 @@ import com.handy.portal.test.util.TextViewUtil;
 import com.handy.portal.test.util.ViewUtil;
 import com.handy.portal.ui.activity.SplashActivity;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,11 +46,6 @@ public class LoginTest
             return intent;
         }
     };
-
-    @Before
-    public void init() {
-//        mDevice = UiDevice.getInstance(getInstrumentation());
-    }
 
     /*
     NOTE: for some reason AWS will run the test regardless of @Ignore
