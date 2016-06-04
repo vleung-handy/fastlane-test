@@ -161,7 +161,8 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         {
             bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSubmitted()));
             setPendingBookings(selectedBookings);
-            next(PurchaseSuppliesFragment.newInstance(((PreActivationFlowActivity) getActivity()).mSuppliesInfo));
+            // FIXME: Don't terminate here
+            terminate();
         }
     }
 }

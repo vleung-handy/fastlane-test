@@ -7,6 +7,7 @@ import com.handy.portal.onboarding.model.claim.StartDateRange;
 import com.handy.portal.onboarding.model.claim.Zipcluster;
 import com.handy.portal.onboarding.model.status.ApplicationStatus;
 import com.handy.portal.onboarding.model.status.LearningLinkDetails;
+import com.handy.portal.onboarding.model.status.StatusButton;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -37,7 +38,7 @@ public class SubflowData implements Serializable
     @SerializedName("claims")
     private ArrayList<Booking> mClaims;
     @SerializedName("button")
-    private String mButtonTitle;
+    private StatusButton mButton;
 
     public ApplicationStatus getApplicationStatus()
     {
@@ -54,9 +55,9 @@ public class SubflowData implements Serializable
         return mClaims;
     }
 
-    public String getButtonTitle()
+    public StatusButton getButton()
     {
-        return mButtonTitle;
+        return mButton;
     }
 
     // Claim Subflow Data

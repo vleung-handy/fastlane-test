@@ -44,6 +44,7 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
     protected TextView mSubHeader;
     @Bind(R.id.scroll_view)
     protected ScrollView mScrollView;
+    protected ViewGroup mMainContentContainer;
 
 
     public static final class ButtonTypes
@@ -166,14 +167,14 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
                                     final @Nullable ViewGroup container,
                                     final View view)
     {
-        final ViewGroup mainContentContainer = (ViewGroup) view.findViewById(R.id.main_content);
+        mMainContentContainer = (ViewGroup) view.findViewById(R.id.main_content);
         if (getLayoutResId() != 0
-                && mainContentContainer != null
-                && mainContentContainer.getChildCount() == 0)
+                && mMainContentContainer != null
+                && mMainContentContainer.getChildCount() == 0)
         {
             final View mainContent =
                     inflater.inflate(getLayoutResId(), container, false);
-            mainContentContainer.addView(mainContent);
+            mMainContentContainer.addView(mainContent);
         }
     }
 
@@ -269,7 +270,14 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
         button.setEnabled(enabled);
     }
 
-    public void showError(@Nullable final String message)
+    public void showError(final String message)
+    {
+        showError(message, null, null);
+    }
+
+    public void showError(@Nullable final String message,
+                          @Nullable final String actionText,
+                          @Nullable final ErrorActionOnClickListener actionListener)
     {
         String errorMessage = message;
         if (TextUtils.isNullOrEmpty(errorMessage))
@@ -278,16 +286,34 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
         }
         final Snackbar snackbar = Snackbar.make(mScrollView, errorMessage,
                 Snackbar.LENGTH_INDEFINITE);
+        setErrorAction(snackbar, actionText, actionListener);
         snackbar.setActionTextColor(getResources().getColor(R.color.handy_blue))
-                .setAction(R.string.ok, new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(final View v)
-                    {
-                        snackbar.dismiss();
-                    }
-                })
                 .show();
+    }
+
+    private void setErrorAction(final Snackbar snackbar,
+                                @Nullable final String actionText,
+                                @Nullable final ErrorActionOnClickListener actionListener)
+    {
+        final String resolvedActionText =
+                TextUtils.isNullOrEmpty(actionText) ? getString(R.string.ok) : actionText;
+        snackbar.setAction(resolvedActionText, new View.OnClickListener()
+        {
+            @Override
+            public void onClick(final View v)
+            {
+                if (actionListener != null)
+                {
+                    actionListener.onClick(snackbar);
+                }
+                snackbar.dismiss();
+            }
+        });
+    }
+
+    public interface ErrorActionOnClickListener
+    {
+        void onClick(final Snackbar snackbar);
     }
 
     public List<Booking> getPendingBookings()

@@ -389,7 +389,7 @@ public class ProviderManager
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                mBus.post(new ProfileEvent.ReceiveProviderProfileError());
+                mBus.post(new ProfileEvent.ReceiveProviderProfileError(error));
             }
         });
     }

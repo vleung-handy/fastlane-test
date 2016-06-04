@@ -65,6 +65,8 @@ public class BundleKeys
     public static final String ALLOW_BACK_NAVIGATION = "allow_back_navigation";
     public static final String NATIVE_ONBOARDING_LAUNCHED = "native_onboarding_launched";
     public static final String BOOKINGS_WRAPPERS = "bookings_wrappers";
+    public static final String SUBFLOW_DATA = "subflow_data";
+    public static final String ONBOARDING_DETAILS = "onboarding_details";
 
     // Flow
     public static final String FLOW_STEP_ID = "flow_step_id";

@@ -495,6 +495,7 @@
     <string name="continue_to_confirmation">Continue to Confirmation</string>
     <string name="supply_starter_kit">Supply Starter Kit</string>
     <string name="order_total_formatted">Order Total: %1$s</string>
+    <string name="order_total">Order Total</string>
     <string name="confirm_your_purchase">Confirm your purchase</string>
     <string name="confirm_purchase">Confirm Purchase</string>
     <string name="shipping_address">Shipping Address</string>
@@ -523,8 +524,11 @@
     <string name="schedule_preferences_notice">For the most options, select at least 3 locations. If there aren\'t any jobs nearby, we\'ll widen the search.</string>
     <string name="skip_this_step">Skip</string>
     <string name="welcome">Welcome</string>
-    <string name="learn_about_handy">Learn about Handy</string>
     <string name="no_jobs_matching_preferences">There are no open jobs matching your preferences.</string>
+    <string name="number_of_jobs_formatted">%1$d Jobs</string>
+    <string name="not_requested">Not requested</string>
+    <string name="ship_to">Ship To</string>
+    <string name="retry">Retry</string>
     <plurals name="locations_selected_count_formatted">
         <item quantity="one">%1$d location selected</item>
         <item quantity="other">%1$d locations selected</item>

@@ -42,6 +42,7 @@ public class CollapsibleContentLayout extends LinearLayout
     ImageView mChevron;
     @BindInt(R.integer.chevron_rotation_duration_millis)
     int mChevronRotationDurationMillis;
+    private View mHeader;
 
     public CollapsibleContentLayout(final Context context)
     {
@@ -84,8 +85,8 @@ public class CollapsibleContentLayout extends LinearLayout
     private void init()
     {
         final LayoutInflater inflater = LayoutInflater.from(getContext());
-        final View header = inflater.inflate(R.layout.view_collapsible_content_header, this, false);
-        header.setOnClickListener(new OnClickListener()
+        mHeader = inflater.inflate(R.layout.view_collapsible_content_header, this, false);
+        mHeader.setOnClickListener(new OnClickListener()
         {
             @Override
             public void onClick(final View v)
@@ -100,8 +101,8 @@ public class CollapsibleContentLayout extends LinearLayout
                 }
             }
         });
-        addView(header, 0);
-        ButterKnife.bind(this, header);
+        addView(mHeader, 0);
+        ButterKnife.bind(this, mHeader);
     }
 
     private void expand()
@@ -138,5 +139,12 @@ public class CollapsibleContentLayout extends LinearLayout
     public ViewGroup getContentViewContainer()
     {
         return mContent;
+    }
+
+    public void freeze()
+    {
+        mHeader.setClickable(false);
+        mHeader.setAlpha(0.5f);
+        mChevron.setVisibility(GONE);
     }
 }

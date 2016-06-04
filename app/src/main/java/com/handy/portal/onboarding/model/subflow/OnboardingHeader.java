@@ -23,12 +23,17 @@ public class OnboardingHeader implements Serializable
         return mDescription;
     }
 
+    public ImageType getImageType()
+    {
+        return mImageType;
+    }
+
     public enum ImageType
     {
         @SerializedName("avatar-welcome")
         WELCOME,
-        @SerializedName("avatar-success")
-        SUCCESS,
+        @SerializedName("avatar-complete")
+        COMPLETE,
         @SerializedName("avatar-error")
         ERROR,
     }

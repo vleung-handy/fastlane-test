@@ -124,7 +124,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
                 getString(R.string.loading));
 
         final String orderTotalFormatted = getString(R.string.order_total_formatted,
-                mSuppliesInfo.getSuppliesCost());
+                mSuppliesInfo.getCost());
         mOrderSummary.setContent(getString(R.string.supply_starter_kit), orderTotalFormatted)
                 .setImage(ContextCompat.getDrawable(getContext(), R.drawable.img_supplies));
 
@@ -225,9 +225,7 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     {
         final Address address = mProviderPersonalInfo.getAddress();
         mShippingSummary.setContent(getString(R.string.shipping_address),
-                mProviderPersonalInfo.getFirstName() + " " +
-                        mProviderPersonalInfo.getLastName() + "\n" + address.getStreetAddress() +
-                        "\n" + address.getCityStateZip())
+                mProviderPersonalInfo.getFullName() + "\n" + address.getShippingAddress())
                 .setAction(getString(R.string.edit), new View.OnClickListener()
                 {
                     @Override

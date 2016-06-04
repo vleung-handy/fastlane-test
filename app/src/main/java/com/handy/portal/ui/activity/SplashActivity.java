@@ -20,7 +20,6 @@ import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.onboarding.model.OnboardingDetails;
-import com.handy.portal.onboarding.model.subflow.OnboardingSubflowDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowStatus;
 import com.handy.portal.preactivation.PreActivationFlowActivity;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
@@ -164,6 +163,8 @@ public class SplashActivity extends BaseActivity
         if (setupData != null && shouldShowOnboarding(setupData.getOnboardingDetails()))
         {
             activityIntent = getActivityIntent(PreActivationFlowActivity.class);
+            activityIntent.putExtra(BundleKeys.ONBOARDING_DETAILS,
+                    setupData.getOnboardingDetails());
         }
         else
         {
@@ -183,14 +184,7 @@ public class SplashActivity extends BaseActivity
 
     private boolean anyOnboardingSubflowsIncomplete(final OnboardingDetails onboardingDetails)
     {
-        for (final OnboardingSubflowDetails subflowDetails : onboardingDetails.getSubflows())
-        {
-            if (subflowDetails != null && subflowDetails.getStatus() == SubflowStatus.INCOMPLETE)
-            {
-                return true;
-            }
-        }
-        return false;
+        return !onboardingDetails.getSubflowsByStatus(SubflowStatus.INCOMPLETE).isEmpty();
     }
 
     private Intent getActivityIntent(final Class<? extends BaseActivity> activityClass)

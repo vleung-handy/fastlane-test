@@ -8,7 +8,7 @@ import java.io.Serializable;
 public class SuppliesInfo implements Serializable
 {
     @SerializedName("cost")
-    private String mSuppliesCost;
+    private String mCost;
     @SerializedName("charge_notice")
     private String mChargeNotice;
     @SerializedName("cost_section")
@@ -18,11 +18,11 @@ public class SuppliesInfo implements Serializable
     @SerializedName("products_section")
     private OnboardingSuppliesSection mProductsSection;
     @SerializedName("provider_wants_supplies")
-    private Designation mSuppliesDesignation;
+    private Designation mDesignation;
 
-    public String getSuppliesCost()
+    public String getCost()
     {
-        return mSuppliesCost;
+        return mCost;
     }
 
     public String getChargeNotice()
@@ -43,5 +43,10 @@ public class SuppliesInfo implements Serializable
     public OnboardingSuppliesSection getProductsSection()
     {
         return mProductsSection;
+    }
+
+    public Designation getDesignation()
+    {
+        return mDesignation;
     }
 }
