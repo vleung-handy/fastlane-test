@@ -16,7 +16,9 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowData;
+import com.handy.portal.onboarding.model.subflow.SubflowType;
 import com.handy.portal.onboarding.ui.activity.OnboardingSubflowActivity;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
@@ -122,6 +124,19 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
         ((OnboardingSubflowActivity) getActivity()).terminate(data);
     }
 
+    protected void redo(final SubflowType subflowType, final int requestCode)
+    {
+        final Intent intent = new Intent(getActivity(), OnboardingSubflowActivity.class);
+        intent.putExtra(BundleKeys.ONBOARDING_DETAILS, getOnboardingDetails());
+        intent.putExtra(BundleKeys.SUBFLOW_TYPE, subflowType);
+        startActivityForResult(intent, requestCode);
+    }
+
+    protected OnboardingDetails getOnboardingDetails()
+    {
+        return ((OnboardingSubflowActivity) getActivity()).getOnboardingDetails();
+    }
+
     protected void showLoadingOverlay()
     {
         mLoadingOverlay.setVisibility(View.VISIBLE);
@@ -145,7 +160,7 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
                              @Nullable final ViewGroup container,
                              @Nullable final Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_pre_activation_flow, container, false);
+        View view = inflater.inflate(R.layout.fragment_onboarding_subflow, container, false);
         inflateMainContent(inflater, container, view);
 
         ButterKnife.bind(this, view);

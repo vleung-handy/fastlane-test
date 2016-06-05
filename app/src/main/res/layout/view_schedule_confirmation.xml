@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_marginBottom="@dimen/default_margin"
     >
 
     <FrameLayout
@@ -30,9 +30,7 @@
             android:layout_gravity="center_vertical|end"
             android:padding="@dimen/default_padding"
             android:textColor="@color/handy_blue"
-            android:visibility="gone"
-            tools:text="Edit"
-            tools:visibility="visible"
+            android:text="@string/redo"
             />
     </FrameLayout>
 
@@ -46,6 +44,7 @@
         />
 
     <FrameLayout
+        android:id="@+id/supplies_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_margin_half"
@@ -69,9 +68,7 @@
             android:layout_gravity="center_vertical|end"
             android:padding="@dimen/default_padding"
             android:textColor="@color/handy_blue"
-            android:visibility="gone"
-            tools:text="Edit"
-            tools:visibility="visible"
+            android:text="@string/redo"
             />
     </FrameLayout>
 

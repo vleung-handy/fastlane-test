@@ -529,6 +529,7 @@
     <string name="not_requested">Not requested</string>
     <string name="ship_to">Ship To</string>
     <string name="retry">Retry</string>
+    <string name="redo">Redo</string>
     <plurals name="locations_selected_count_formatted">
         <item quantity="one">%1$d location selected</item>
         <item quantity="other">%1$d locations selected</item>

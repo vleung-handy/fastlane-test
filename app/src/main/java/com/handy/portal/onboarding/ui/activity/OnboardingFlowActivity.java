@@ -16,6 +16,7 @@ import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.onboarding.model.subflow.OnboardingSubflowDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowStatus;
 import com.handy.portal.onboarding.model.subflow.SubflowType;
+import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 
@@ -25,6 +26,7 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
 {
     private OnboardingDetails mOnboardingDetails;
     private ArrayList<Booking> mPendingBookings;
+    private SuppliesOrderInfo mSuppliesOrderInfo;
     private Flow mOnboardingFlow;
 
     @Override
@@ -39,7 +41,7 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
         super.onCreate(savedInstanceState);
         mOnboardingDetails = (OnboardingDetails) getIntent()
                 .getSerializableExtra(BundleKeys.ONBOARDING_DETAILS);
-        setContentView(R.layout.activity_pre_activation_flow);
+        setContentView(R.layout.activity_onboarding_flow);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         startOnboardingFlow();
     }
@@ -69,6 +71,10 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
         {
             intent.putExtra(BundleKeys.BOOKINGS, mPendingBookings);
         }
+        if (mSuppliesOrderInfo != null)
+        {
+            intent.putExtra(BundleKeys.SUPPLIES_ORDER_INFO, mSuppliesOrderInfo);
+        }
         startActivityForResult(intent, RequestCode.ONBOARDING_SUBFLOW);
     }
 
@@ -82,6 +88,7 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
             {
                 case Activity.RESULT_OK:
                     savePendingBookingsIfAvailable(data);
+                    saveSuppliesOrderInfoIfAvailable(data);
                     mOnboardingFlow.goForward();
                     break;
                 case Activity.RESULT_CANCELED:
@@ -102,6 +109,16 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
         if (pendingBookings != null)
         {
             mPendingBookings = pendingBookings;
+        }
+    }
+
+    private void saveSuppliesOrderInfoIfAvailable(final Intent data)
+    {
+        final SuppliesOrderInfo suppliesOrderInfo =
+                (SuppliesOrderInfo) data.getSerializableExtra(BundleKeys.SUPPLIES_ORDER_INFO);
+        if (suppliesOrderInfo != null)
+        {
+            mSuppliesOrderInfo = suppliesOrderInfo;
         }
     }
 }

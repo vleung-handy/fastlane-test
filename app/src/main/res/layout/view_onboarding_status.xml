@@ -50,7 +50,7 @@
         style="@style/TextView.Large.Bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin_half"
+        android:layout_marginTop="@dimen/default_margin"
         android:background="@drawable/border_gray_no_side"
         android:padding="@dimen/default_padding"
         />

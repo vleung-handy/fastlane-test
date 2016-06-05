@@ -13,6 +13,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowData;
 import com.handy.portal.onboarding.model.subflow.SubflowType;
+import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
 import com.handy.portal.onboarding.ui.fragment.OnboardingStatusFragment;
 import com.handy.portal.onboarding.ui.fragment.OnboardingSubflowFragment;
 import com.handy.portal.onboarding.ui.fragment.PurchaseSuppliesFragment;
@@ -27,6 +28,11 @@ public class OnboardingSubflowActivity extends BaseActivity
     private OnboardingDetails mOnboardingDetails;
     private SubflowType mSubflowType;
 
+    public OnboardingDetails getOnboardingDetails()
+    {
+        return mOnboardingDetails;
+    }
+
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
@@ -34,7 +40,7 @@ public class OnboardingSubflowActivity extends BaseActivity
         mOnboardingDetails = (OnboardingDetails) getIntent()
                 .getSerializableExtra(BundleKeys.ONBOARDING_DETAILS);
         mSubflowType = (SubflowType) getIntent().getSerializableExtra(BundleKeys.SUBFLOW_TYPE);
-        setContentView(R.layout.activity_pre_activation_flow);
+        setContentView(R.layout.activity_onboarding_flow);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         startSubflow();
     }
@@ -55,10 +61,12 @@ public class OnboardingSubflowActivity extends BaseActivity
                 fragment = PurchaseSuppliesFragment.newInstance();
                 break;
             case CONFIRMATION:
-                mOnboardingDetails.getSubflowByType(SubflowType.CONFIRMATION);
-                ArrayList<Booking> pendingBookings =
+                final ArrayList<Booking> pendingBookings =
                         (ArrayList<Booking>) getIntent().getSerializableExtra(BundleKeys.BOOKINGS);
-                fragment = ScheduleConfirmationFragment.newInstance(pendingBookings);
+                final SuppliesOrderInfo suppliesOrderInfo = (SuppliesOrderInfo) getIntent()
+                        .getSerializableExtra(BundleKeys.SUPPLIES_ORDER_INFO);
+                fragment = ScheduleConfirmationFragment.newInstance(pendingBookings,
+                        suppliesOrderInfo);
                 break;
             default:
                 break;
@@ -91,7 +99,8 @@ public class OnboardingSubflowActivity extends BaseActivity
         {
             arguments = new Bundle();
         }
-        final SubflowData subflowData = mOnboardingDetails.getSubflowByType(mSubflowType);
+        final SubflowData subflowData =
+                mOnboardingDetails.getSubflowDataByType(mSubflowType);
         arguments.putSerializable(BundleKeys.SUBFLOW_DATA, subflowData);
         fragment.setArguments(arguments);
 

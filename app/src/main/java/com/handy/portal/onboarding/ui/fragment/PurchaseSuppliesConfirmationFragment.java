@@ -8,6 +8,7 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.Country;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.event.HandyEvent;
@@ -21,9 +22,11 @@ import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.OnboardingSuppliesLog;
 import com.handy.portal.model.Address;
+import com.handy.portal.model.Designation;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.onboarding.SuppliesInfo;
+import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
 import com.handy.portal.payments.PaymentEvent;
 import com.squareup.otto.Subscribe;
 import com.stripe.android.model.Card;
@@ -69,7 +72,9 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
     private Map<String, FieldDefinition> mPaymentFieldDefinitions;
     private Map<String, FieldDefinition> mAddressFieldDefinitions;
     private ProviderPersonalInfo mProviderPersonalInfo;
+    private Card mCard;
     private SuppliesInfo mSuppliesInfo;
+    private SuppliesOrderInfo mSuppliesOrderInfo;
 
     /**
      * These signifies whether the address/payments ready for the confirm purchase step.
@@ -93,6 +98,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
     {
         super.onCreate(savedInstanceState);
         mSuppliesInfo = mSubflowData.getSuppliesInfo();
+        mSuppliesOrderInfo = new SuppliesOrderInfo();
     }
 
     @OnClick(R.id.cancel_edit_address)
@@ -118,6 +124,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
 
         final String orderTotalFormatted = getString(R.string.order_total_formatted,
                 mSuppliesInfo.getCost());
+        mSuppliesOrderInfo.setOrderTotalText(mSuppliesInfo.getCost());
         mOrderSummary.setContent(getString(R.string.supply_starter_kit), orderTotalFormatted)
                 .setImage(ContextCompat.getDrawable(getContext(), R.drawable.img_supplies));
 
@@ -165,10 +172,10 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
         String cardLast4 = mProviderPersonalInfo.getCardLast4();
         if (!TextUtils.isEmpty(cardLast4))
         {
-            mPaymentSummary.setContent(
-                    getString(R.string.payment_method),
-                    getString(R.string.card_info_formatted,
-                            getString(R.string.card), cardLast4)
+            final String cardInfoFormatted = getString(R.string.card_info_formatted,
+                    getString(R.string.card), cardLast4);
+            mSuppliesOrderInfo.setPaymentText(cardInfoFormatted);
+            mPaymentSummary.setContent(getString(R.string.payment_method), cardInfoFormatted
             ).setAction(
                     getString(R.string.edit),
                     new View.OnClickListener()
@@ -217,8 +224,10 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
     private void populateShippingSummary()
     {
         final Address address = mProviderPersonalInfo.getAddress();
-        mShippingSummary.setContent(getString(R.string.shipping_address),
-                mProviderPersonalInfo.getFullName() + "\n" + address.getShippingAddress())
+        final String shippingSummary =
+                mProviderPersonalInfo.getFullName() + "\n" + address.getShippingAddress();
+        mSuppliesOrderInfo.setShippingText(shippingSummary);
+        mShippingSummary.setContent(getString(R.string.shipping_address), shippingSummary)
                 .setAction(getString(R.string.edit), new View.OnClickListener()
                 {
                     @Override
@@ -350,7 +359,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
         {
             mPaymentReady = false;
 
-            Card card = new Card(
+            mCard = new Card(
                     mCreditCardNumberField.getValue().getText().toString(),
                     Integer.parseInt(mExpirationDateField.getMonthValue().getText().toString()),
                     Integer.parseInt(mExpirationDateField.getYearValue().getText().toString()),
@@ -358,7 +367,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
             );
             showLoadingOverlay();
             mPaymentLoading = true;
-            bus.post(new StripeEvent.RequestStripeChargeToken(card, Country.US));
+            bus.post(new StripeEvent.RequestStripeChargeToken(mCard, Country.US));
             bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
                     OnboardingSuppliesLog.ServerTypes.GET_STRIPE_TOKEN.submitted())));
         }
@@ -456,6 +465,9 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
         mPaymentLoading = false;
         bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
                 OnboardingSuppliesLog.ServerTypes.UPDATE_CREDIT_CARD.success())));
+        final String cardInfoFormatted = getString(R.string.card_info_formatted,
+                mCard.getType(), mCard.getLast4());
+        mSuppliesOrderInfo.setPaymentText(cardInfoFormatted);
         confirmPurchase();
     }
 
@@ -513,8 +525,10 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
         bus.post(new LogEvent.AddLogEvent(
                 new OnboardingSuppliesLog.RequestSupplies.Success(true)));
         hideLoadingOverlay();
-        // FIXME: Pass supplies info in data intent
-        terminate(new Intent());
+        final Intent data = new Intent();
+        mSuppliesOrderInfo.setDesignation(Designation.YES);
+        data.putExtra(BundleKeys.SUPPLIES_ORDER_INFO, mSuppliesOrderInfo);
+        terminate(data);
     }
 
     @Subscribe

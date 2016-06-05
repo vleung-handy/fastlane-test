@@ -6,14 +6,17 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.ui.view.SimpleContentLayout;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.OnboardingSuppliesLog;
+import com.handy.portal.model.Designation;
 import com.handy.portal.model.onboarding.OnboardingSuppliesSection;
 import com.handy.portal.model.onboarding.SuppliesInfo;
+import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
 
 import java.util.List;
 
@@ -167,6 +170,11 @@ public class PurchaseSuppliesFragment extends OnboardingSubflowFragment
         // no need to wait for response
         bus.post(new LogEvent.AddLogEvent(
                 new OnboardingSuppliesLog.RequestSupplies.Submitted(false)));
-        terminate(new Intent());
+
+        final Intent data = new Intent();
+        final SuppliesOrderInfo suppliesOrderInfo = new SuppliesOrderInfo();
+        suppliesOrderInfo.setDesignation(Designation.NO);
+        data.putExtra(BundleKeys.SUPPLIES_ORDER_INFO, suppliesOrderInfo);
+        terminate(data);
     }
 }

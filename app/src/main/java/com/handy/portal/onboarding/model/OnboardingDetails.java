@@ -22,7 +22,7 @@ public class OnboardingDetails implements Serializable
     }
 
     @Nullable
-    public SubflowData getSubflowByType(final SubflowType type)
+    public SubflowData getSubflowDataByType(final SubflowType type)
     {
         for (final OnboardingSubflowDetails details : mSubflows)
         {
