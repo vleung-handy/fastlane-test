@@ -40,7 +40,7 @@ public class OnboardingSubflowActivity extends BaseActivity
         mOnboardingDetails = (OnboardingDetails) getIntent()
                 .getSerializableExtra(BundleKeys.ONBOARDING_DETAILS);
         mSubflowType = (SubflowType) getIntent().getSerializableExtra(BundleKeys.SUBFLOW_TYPE);
-        setContentView(R.layout.activity_onboarding_flow);
+        setContentView(R.layout.activity_onboarding_subflow);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         startSubflow();
     }
@@ -119,6 +119,30 @@ public class OnboardingSubflowActivity extends BaseActivity
         if (!isFinishing())
         {
             setResult(Activity.RESULT_OK, data);
+            finish();
+        }
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        if (mSubflowType == SubflowType.STATUS)
+        {
+            final Intent data = new Intent();
+            data.putExtra(BundleKeys.FORCE_FINISH, true);
+            cancel(data);
+        }
+        else
+        {
+            super.onBackPressed();
+        }
+    }
+
+    public void cancel(@NonNull final Intent data)
+    {
+        if (!isFinishing())
+        {
+            setResult(Activity.RESULT_CANCELED, data);
             finish();
         }
     }

@@ -1,11 +1,8 @@
 package com.handy.portal.onboarding.ui.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
 
-import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.RequestCode;
@@ -41,8 +38,6 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
         super.onCreate(savedInstanceState);
         mOnboardingDetails = (OnboardingDetails) getIntent()
                 .getSerializableExtra(BundleKeys.ONBOARDING_DETAILS);
-        setContentView(R.layout.activity_onboarding_flow);
-        setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         startOnboardingFlow();
     }
 
@@ -76,6 +71,7 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
             intent.putExtra(BundleKeys.SUPPLIES_ORDER_INFO, mSuppliesOrderInfo);
         }
         startActivityForResult(intent, RequestCode.ONBOARDING_SUBFLOW);
+        overridePendingTransition(0, 0);
     }
 
     @Override
@@ -86,13 +82,22 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
         {
             switch (resultCode)
             {
-                case Activity.RESULT_OK:
+                case RESULT_OK:
                     savePendingBookingsIfAvailable(data);
                     saveSuppliesOrderInfoIfAvailable(data);
                     mOnboardingFlow.goForward();
                     break;
-                case Activity.RESULT_CANCELED:
-                    startActivity(new Intent(this, SplashActivity.class));
+                case RESULT_CANCELED:
+
+                    boolean forceFinish = false;
+                    if (data != null)
+                    {
+                        forceFinish = data.getBooleanExtra(BundleKeys.FORCE_FINISH, false);
+                    }
+                    if (!forceFinish)
+                    {
+                        startActivity(new Intent(this, SplashActivity.class));
+                    }
                     finish();
                     break;
                 default:

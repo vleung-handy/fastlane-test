@@ -6,6 +6,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -171,6 +174,31 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
         initActionButtons();
 
         return view;
+    }
+
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
+    {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_x_back, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.action_exit:
+                cancel(new Intent());
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    protected void cancel(@NonNull final Intent data)
+    {
+        ((OnboardingSubflowActivity) getActivity()).cancel(data);
     }
 
     @Override

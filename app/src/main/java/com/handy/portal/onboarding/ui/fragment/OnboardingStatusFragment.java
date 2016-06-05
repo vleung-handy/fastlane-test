@@ -320,4 +320,11 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
             }
         }
     }
+
+    @Override
+    protected void cancel(@NonNull final Intent data)
+    {
+        data.putExtra(BundleKeys.FORCE_FINISH, true);
+        super.cancel(data);
+    }
 }
