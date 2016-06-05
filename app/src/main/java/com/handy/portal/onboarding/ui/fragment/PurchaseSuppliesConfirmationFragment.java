@@ -1,5 +1,6 @@
-package com.handy.portal.preactivation;
+package com.handy.portal.onboarding.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
@@ -7,7 +8,6 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.Country;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.event.HandyEvent;
@@ -33,7 +33,7 @@ import java.util.Map;
 import butterknife.Bind;
 import butterknife.OnClick;
 
-public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragment
+public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragment
 {
     @Bind(R.id.shipping_summary)
     SimpleContentLayout mShippingSummary;
@@ -83,23 +83,16 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
     private boolean mAddressLoading = false;
     private boolean mPaymentLoading = false;
 
-    public static PurchaseSuppliesConfirmationFragment newInstance(
-            final SuppliesInfo suppliesInfo)
+    public static PurchaseSuppliesConfirmationFragment newInstance()
     {
-        final PurchaseSuppliesConfirmationFragment fragment =
-                new PurchaseSuppliesConfirmationFragment();
-        final Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.ONBOARDING_SUPPLIES, suppliesInfo);
-        fragment.setArguments(arguments);
-        return fragment;
+        return new PurchaseSuppliesConfirmationFragment();
     }
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mSuppliesInfo = (SuppliesInfo) getArguments()
-                .getSerializable(BundleKeys.ONBOARDING_SUPPLIES);
+        mSuppliesInfo = mSubflowData.getSuppliesInfo();
     }
 
     @OnClick(R.id.cancel_edit_address)
@@ -520,7 +513,8 @@ public class PurchaseSuppliesConfirmationFragment extends PreActivationFlowFragm
         bus.post(new LogEvent.AddLogEvent(
                 new OnboardingSuppliesLog.RequestSupplies.Success(true)));
         hideLoadingOverlay();
-        next(ScheduleConfirmationFragment.newInstance());
+        // FIXME: Pass supplies info in data intent
+        terminate(new Intent());
     }
 
     @Subscribe

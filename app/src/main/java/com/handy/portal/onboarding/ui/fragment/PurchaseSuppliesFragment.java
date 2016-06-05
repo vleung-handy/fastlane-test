@@ -1,30 +1,26 @@
-package com.handy.portal.preactivation;
+package com.handy.portal.onboarding.ui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.view.View;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.OnboardingSuppliesLog;
-import com.handy.portal.model.onboarding.SuppliesInfo;
-import com.handy.portal.model.onboarding.OnboardingSuppliesSection;
 import com.handy.portal.library.ui.view.SimpleContentLayout;
 import com.handy.portal.library.util.FragmentUtils;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.OnboardingSuppliesLog;
+import com.handy.portal.model.onboarding.OnboardingSuppliesSection;
+import com.handy.portal.model.onboarding.SuppliesInfo;
 
 import java.util.List;
 
 import butterknife.Bind;
 
-public class PurchaseSuppliesFragment extends PreActivationFlowFragment
+public class PurchaseSuppliesFragment extends OnboardingSubflowFragment
 {
-    private static final int TERMINATION_DELAY_MILLIS = 500;
-
     @Bind(R.id.cost_summary)
     SimpleContentLayout mCostSummary;
     @Bind(R.id.delivery_summary)
@@ -34,12 +30,10 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
 
     private SuppliesInfo mSuppliesInfo;
 
-    public static PurchaseSuppliesFragment newInstance(
-            final SuppliesInfo suppliesInfo)
+    public static PurchaseSuppliesFragment newInstance()
     {
         final PurchaseSuppliesFragment fragment = new PurchaseSuppliesFragment();
         final Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.ONBOARDING_SUPPLIES, suppliesInfo);
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -48,8 +42,7 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        mSuppliesInfo = (SuppliesInfo) getArguments()
-                .getSerializable(BundleKeys.ONBOARDING_SUPPLIES);
+        mSuppliesInfo = mSubflowData.getSuppliesInfo();
     }
 
     @Override
@@ -139,7 +132,7 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
     {
         bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
                 OnboardingSuppliesLog.Types.PURCHASE_SUPPLIES_SELECTED)));
-        next(PurchaseSuppliesConfirmationFragment.newInstance(mSuppliesInfo));
+        next(PurchaseSuppliesConfirmationFragment.newInstance());
     }
 
     @Override
@@ -174,13 +167,6 @@ public class PurchaseSuppliesFragment extends PreActivationFlowFragment
         // no need to wait for response
         bus.post(new LogEvent.AddLogEvent(
                 new OnboardingSuppliesLog.RequestSupplies.Submitted(false)));
-        new Handler().postDelayed(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                terminate();
-            }
-        }, TERMINATION_DELAY_MILLIS);
+        terminate(new Intent());
     }
 }

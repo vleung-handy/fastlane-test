@@ -96,7 +96,7 @@ public class DataManager
     }
 
     public void getOnboardingJobs(final Date startDate,
-                                  final ArrayList<Integer> preferredZipclusterIds,
+                                  final ArrayList<String> preferredZipclusterIds,
                                   final Callback<BookingsListWrapper> cb)
     {
         mService.getOnboardingJobs(startDate, preferredZipclusterIds,

@@ -66,7 +66,7 @@ public interface HandyRetrofitService
 
     @GET(JOBS_PATH + "onboarding_jobs")
     void getOnboardingJobs(@Query("start_date") Date startDate,
-                           @Query("preferred_zipclusters[]") ArrayList<Integer> zipclusterIds,
+                           @Query("preferred_zipclusters[]") ArrayList<String> zipclusterIds,
                            HandyRetrofitCallback cb);
 
     @GET(JOBS_PATH + "scheduled_jobs")

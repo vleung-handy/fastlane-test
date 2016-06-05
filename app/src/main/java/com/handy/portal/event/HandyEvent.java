@@ -237,10 +237,10 @@ public abstract class HandyEvent
     public static class RequestOnboardingJobs extends RequestEvent
     {
         private final Date mStartDate;
-        private final ArrayList<Integer> mPreferredZipclusterIds;
+        private final ArrayList<String> mPreferredZipclusterIds;
 
         public RequestOnboardingJobs(final Date startDate,
-                                     final ArrayList<Integer> preferredZipclusterIds)
+                                     final ArrayList<String> preferredZipclusterIds)
         {
             mStartDate = startDate;
             mPreferredZipclusterIds = preferredZipclusterIds;
@@ -251,7 +251,7 @@ public abstract class HandyEvent
             return mStartDate;
         }
 
-        public ArrayList<Integer> getPreferredZipclusterIds()
+        public ArrayList<String> getPreferredZipclusterIds()
         {
             return mPreferredZipclusterIds;
         }

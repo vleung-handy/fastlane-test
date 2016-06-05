@@ -1,5 +1,6 @@
-package com.handy.portal.preactivation;
+package com.handy.portal.onboarding.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -20,7 +21,7 @@ import java.util.List;
 
 import butterknife.Bind;
 
-public class ScheduleBuilderFragment extends PreActivationFlowFragment
+public class ScheduleBuilderFragment extends OnboardingSubflowFragment
         implements OnboardingJobsViewGroup.OnJobCheckedChangedListener
 {
     @Bind(R.id.jobs_container)
@@ -102,7 +103,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
         }
     }
 
-    public List<Booking> getSelectedBookings()
+    public ArrayList<Booking> getSelectedBookings()
     {
         final ArrayList<Booking> bookings = new ArrayList<>();
         for (final BookingsWrapperViewModel viewModel : mBookingsWrapperViewModels)
@@ -136,7 +137,7 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     @Override
     protected String getTitle()
     {
-        return getString(R.string.claim_your_first_jobs);
+        return getString(R.string.claim_jobs);
     }
 
     @Nullable
@@ -156,13 +157,13 @@ public class ScheduleBuilderFragment extends PreActivationFlowFragment
     @Override
     protected void onPrimaryButtonClicked()
     {
-        final List<Booking> selectedBookings = getSelectedBookings();
+        final ArrayList<Booking> selectedBookings = getSelectedBookings();
         if (!selectedBookings.isEmpty())
         {
             bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSubmitted()));
-            setPendingBookings(selectedBookings);
-            // FIXME: Don't terminate here
-            terminate();
+            final Intent data = new Intent();
+            data.putExtra(BundleKeys.BOOKINGS, selectedBookings);
+            terminate(data);
         }
     }
 }

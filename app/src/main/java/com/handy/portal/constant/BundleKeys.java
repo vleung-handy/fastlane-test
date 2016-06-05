@@ -66,6 +66,7 @@ public class BundleKeys
     public static final String NATIVE_ONBOARDING_LAUNCHED = "native_onboarding_launched";
     public static final String BOOKINGS_WRAPPERS = "bookings_wrappers";
     public static final String SUBFLOW_DATA = "subflow_data";
+    public static final String SUBFLOW_TYPE = "subflow_type";
     public static final String ONBOARDING_DETAILS = "onboarding_details";
 
     // Flow

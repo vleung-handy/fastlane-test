@@ -1,5 +1,6 @@
-package com.handy.portal.preactivation;
+package com.handy.portal.onboarding.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -12,6 +13,7 @@ import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.element.PendingBookingElementView;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.ui.view.LabelAndValueView;
 import com.handy.portal.library.ui.view.SimpleContentLayout;
@@ -25,7 +27,7 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 
-public class ScheduleConfirmationFragment extends PreActivationFlowFragment
+public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
 {
     @Bind(R.id.edit_schedule_button)
     Button mEditScheduleButton;
@@ -39,16 +41,23 @@ public class ScheduleConfirmationFragment extends PreActivationFlowFragment
     LabelAndValueView mPaymentView;
     @Bind(R.id.order_total_view)
     LabelAndValueView mOrderTotalView;
+    private ArrayList<Booking> mPendingBookings;
 
-    public static ScheduleConfirmationFragment newInstance()
+    public static ScheduleConfirmationFragment newInstance(final ArrayList<Booking> pendingBookings)
     {
-        return new ScheduleConfirmationFragment();
+        final ScheduleConfirmationFragment fragment = new ScheduleConfirmationFragment();
+        final Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.BOOKINGS, pendingBookings);
+        fragment.setArguments(arguments);
+        return fragment;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+        mPendingBookings = (ArrayList<Booking>) getArguments().getSerializable(BundleKeys.BOOKINGS);
         displayPendingBookings();
         // FIXME: Only display if pro opted in
         // FIXME: Pull from server
@@ -60,7 +69,7 @@ public class ScheduleConfirmationFragment extends PreActivationFlowFragment
     private void displayPendingBookings()
     {
         mJobsContainer.removeAllViews();
-        for (final Booking booking : getPendingBookings())
+        for (final Booking booking : mPendingBookings)
         {
             final PendingBookingElementView elementView = new PendingBookingElementView();
             elementView.initView(getActivity(), booking, null, mJobsContainer);
@@ -111,7 +120,7 @@ public class ScheduleConfirmationFragment extends PreActivationFlowFragment
     {
         showLoadingOverlay();
         final ArrayList<JobClaim> jobClaims = Lists.newArrayList(Collections2.transform(
-                getPendingBookings(),
+                mPendingBookings,
                 new Function<Booking, JobClaim>()
                 {
                     @Nullable
@@ -135,7 +144,7 @@ public class ScheduleConfirmationFragment extends PreActivationFlowFragment
         hideLoadingOverlay();
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSuccess()));
         // FIXME: Handle no claims, partial claims and full claims properly
-        terminate();
+        terminate(new Intent());
     }
 
     @Subscribe

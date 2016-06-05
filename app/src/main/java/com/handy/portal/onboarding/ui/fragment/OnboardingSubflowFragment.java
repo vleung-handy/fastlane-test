@@ -1,5 +1,6 @@
-package com.handy.portal.preactivation;
+package com.handy.portal.onboarding.ui.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,18 +14,17 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.onboarding.model.subflow.SubflowData;
+import com.handy.portal.onboarding.ui.activity.OnboardingSubflowActivity;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public abstract class PreActivationFlowFragment extends ActionBarFragment
+public abstract class OnboardingSubflowFragment extends ActionBarFragment
 {
     @Bind(R.id.loading_overlay)
     protected View mLoadingOverlay;
@@ -45,6 +45,7 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
     @Bind(R.id.scroll_view)
     protected ScrollView mScrollView;
     protected ViewGroup mMainContentContainer;
+    protected SubflowData mSubflowData;
 
 
     public static final class ButtonTypes
@@ -111,14 +112,14 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
         // do nothing
     }
 
-    protected void next(@NonNull final PreActivationFlowFragment fragment)
+    protected void next(@NonNull final OnboardingSubflowFragment fragment)
     {
-        ((PreActivationFlowActivity) getActivity()).next(fragment, true);
+        ((OnboardingSubflowActivity) getActivity()).next(fragment, true);
     }
 
-    protected void terminate()
+    protected void terminate(@NonNull final Intent data)
     {
-        ((PreActivationFlowActivity) getActivity()).terminate();
+        ((OnboardingSubflowActivity) getActivity()).terminate(data);
     }
 
     protected void showLoadingOverlay()
@@ -129,6 +130,13 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
     protected void hideLoadingOverlay()
     {
         mLoadingOverlay.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        mSubflowData = (SubflowData) getArguments().getSerializable(BundleKeys.SUBFLOW_DATA);
     }
 
     @Nullable
@@ -314,15 +322,5 @@ public abstract class PreActivationFlowFragment extends ActionBarFragment
     public interface ErrorActionOnClickListener
     {
         void onClick(final Snackbar snackbar);
-    }
-
-    public List<Booking> getPendingBookings()
-    {
-        return ((PreActivationFlowActivity) getActivity()).getPendingBookings();
-    }
-
-    public void setPendingBookings(final List<Booking> bookings)
-    {
-        ((PreActivationFlowActivity) getActivity()).setPendingBookings(bookings);
     }
 }

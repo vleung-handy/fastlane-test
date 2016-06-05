@@ -1,4 +1,4 @@
-package com.handy.portal.preactivation;
+package com.handy.portal.onboarding.ui.fragment;
 
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
@@ -15,6 +15,8 @@ import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.ui.view.StaticFieldTableRow;
 import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.onboarding.model.claim.StartDateRange;
+import com.handy.portal.onboarding.model.claim.Zipcluster;
 import com.handy.portal.ui.adapter.CheckBoxListAdapter;
 import com.handy.portal.ui.widget.TitleView;
 import com.squareup.otto.Subscribe;
@@ -27,7 +29,7 @@ import java.util.Date;
 import butterknife.Bind;
 import butterknife.OnClick;
 
-public class SchedulePreferencesFragment extends PreActivationFlowFragment
+public class SchedulePreferencesFragment extends OnboardingSubflowFragment
 {
     @Bind(R.id.date_field)
     StaticFieldTableRow mDateField;
@@ -37,12 +39,19 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
     View mSchedulePreferencesNotice;
 
     private Date mSelectedStartDate;
-    private ArrayList<Integer> mSelectedZipclusterIds;
+    private ArrayList<String> mSelectedZipclusterIds;
     private CheckBoxListAdapter.CheckBoxListItem[] mLocationViewModels;
 
     @OnClick(R.id.date_field)
     public void onDateFieldClicked()
     {
+        final StartDateRange startDateRange = mSubflowData.getStartDateRange();
+        final Date startDate = startDateRange.getStartDate();
+        final Date endDate = startDateRange.getEndDate();
+
+        final Calendar dayAfterStartDate = Calendar.getInstance();
+        dayAfterStartDate.setTime(startDate);
+        dayAfterStartDate.add(Calendar.DATE, 1);
         final DatePickerDialog datePickerDialog =
                 new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener()
                 {
@@ -57,19 +66,12 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
                         c.set(year, monthOfYear, dayOfMonth);
                         updateSelectedStartedDate(c.getTime());
                     }
-                }, 2016, Calendar.JUNE, 17);
+                }, dayAfterStartDate.get(Calendar.YEAR), dayAfterStartDate.get(Calendar.MONTH),
+                        dayAfterStartDate.get(Calendar.DAY_OF_MONTH));
 
-        // FIXME: Pull date range from server
         final DatePicker datePicker = datePickerDialog.getDatePicker();
-
-        final Calendar c1 = Calendar.getInstance();
-        c1.set(2016, Calendar.JUNE, 15);
-        datePicker.setMinDate(c1.getTimeInMillis());
-
-        final Calendar c2 = Calendar.getInstance();
-        c2.set(2016, Calendar.JULY, 15);
-        datePicker.setMaxDate(c2.getTimeInMillis());
-
+        datePicker.setMinDate(startDate.getTime());
+        datePicker.setMaxDate(endDate.getTime());
         datePickerDialog.show();
     }
 
@@ -120,21 +122,20 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
     {
         super.onCreate(savedInstanceState);
         mSelectedZipclusterIds = new ArrayList<>();
+        initLocationViewModels();
+    }
 
-        // FIXME: Pull locations from server
-        mLocationViewModels = new CheckBoxListAdapter.CheckBoxListItem[]{
-                new CheckBoxListAdapter.CheckBoxListItem("Midtown", false),
-                new CheckBoxListAdapter.CheckBoxListItem("Upper East Side", false),
-                new CheckBoxListAdapter.CheckBoxListItem("Gramercy", false),
-                new CheckBoxListAdapter.CheckBoxListItem("Flatiron", false),
-                new CheckBoxListAdapter.CheckBoxListItem("Lower East Side", false),
-                new CheckBoxListAdapter.CheckBoxListItem("Union Square", false),
-                new CheckBoxListAdapter.CheckBoxListItem("Kips Bay", false),
-                new CheckBoxListAdapter.CheckBoxListItem("Financial District", false),
-                new CheckBoxListAdapter.CheckBoxListItem("Hell's Kitchen", false),
-                new CheckBoxListAdapter.CheckBoxListItem("Yorkville", false),
-                new CheckBoxListAdapter.CheckBoxListItem("Chinatown", false),
-        };
+    private void initLocationViewModels()
+    {
+        final ArrayList<Zipcluster> zipclusters = mSubflowData.getZipclusters();
+        mLocationViewModels = new CheckBoxListAdapter.CheckBoxListItem[zipclusters.size()];
+        for (int i = 0; i < mLocationViewModels.length; i++)
+        {
+            final Zipcluster zipcluster = zipclusters.get(i);
+            mLocationViewModels[i] =
+                    new CheckBoxListAdapter.CheckBoxListItem(zipcluster.getName(),
+                            zipcluster.getId(), false);
+        }
     }
 
     @Override
@@ -170,8 +171,7 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
     @Override
     protected String getTitle()
     {
-        // FIXME: Pull from server
-        return "Claim Jobs";
+        return getString(R.string.claim_jobs);
     }
 
     @Nullable
@@ -265,8 +265,7 @@ public class SchedulePreferencesFragment extends PreActivationFlowFragment
         {
             if (item.isChecked())
             {
-                // FIXME: Actually set this properly
-                mSelectedZipclusterIds.add(1);
+                mSelectedZipclusterIds.add(item.getId());
             }
         }
         displaySelectedLocations();

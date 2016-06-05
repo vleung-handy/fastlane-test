@@ -55,11 +55,13 @@ public class CheckBoxListAdapter extends ArrayAdapter<CheckBoxListAdapter.CheckB
     public static class CheckBoxListItem
     {
         private String mLabel;
+        private String mId;
         private boolean mChecked;
 
-        public CheckBoxListItem(final String label, final boolean checked)
+        public CheckBoxListItem(final String label, final String id, final boolean checked)
         {
             mLabel = label;
+            mId = id;
             mChecked = checked;
         }
 
@@ -76,6 +78,11 @@ public class CheckBoxListAdapter extends ArrayAdapter<CheckBoxListAdapter.CheckB
         public String getLabel()
         {
             return mLabel;
+        }
+
+        public String getId()
+        {
+            return mId;
         }
     }
 }

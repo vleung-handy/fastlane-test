@@ -21,7 +21,7 @@ import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowStatus;
-import com.handy.portal.preactivation.PreActivationFlowActivity;
+import com.handy.portal.onboarding.ui.activity.OnboardingFlowActivity;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.setup.SetupData;
 import com.handy.portal.util.DeeplinkUtils;
@@ -162,7 +162,7 @@ public class SplashActivity extends BaseActivity
         final Intent activityIntent;
         if (setupData != null && shouldShowOnboarding(setupData.getOnboardingDetails()))
         {
-            activityIntent = getActivityIntent(PreActivationFlowActivity.class);
+            activityIntent = getActivityIntent(OnboardingFlowActivity.class);
             activityIntent.putExtra(BundleKeys.ONBOARDING_DETAILS,
                     setupData.getOnboardingDetails());
         }

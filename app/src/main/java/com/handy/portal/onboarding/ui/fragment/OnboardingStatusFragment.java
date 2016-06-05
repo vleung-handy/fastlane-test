@@ -1,4 +1,4 @@
-package com.handy.portal.preactivation;
+package com.handy.portal.onboarding.ui.fragment;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -38,7 +38,7 @@ import java.util.ArrayList;
 
 import butterknife.Bind;
 
-public class OnboardingStatusFragment extends PreActivationFlowFragment
+public class OnboardingStatusFragment extends OnboardingSubflowFragment
 {
     @Bind(R.id.jobs_collapsible)
     CollapsibleContentLayout mJobsCollapsible;
@@ -58,13 +58,9 @@ public class OnboardingStatusFragment extends PreActivationFlowFragment
     private SubflowData mStatusData;
     private ProviderPersonalInfo mProviderPersonalInfo;
 
-    public static OnboardingStatusFragment newInstance(final SubflowData statusData)
+    public static OnboardingStatusFragment newInstance()
     {
-        final OnboardingStatusFragment fragment = new OnboardingStatusFragment();
-        final Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.SUBFLOW_DATA, statusData);
-        fragment.setArguments(arguments);
-        return fragment;
+        return new OnboardingStatusFragment();
     }
 
     @Override
@@ -320,7 +316,7 @@ public class OnboardingStatusFragment extends PreActivationFlowFragment
             }
             else
             {
-                next(SchedulePreferencesFragment.newInstance());
+                terminate(new Intent());
             }
         }
     }

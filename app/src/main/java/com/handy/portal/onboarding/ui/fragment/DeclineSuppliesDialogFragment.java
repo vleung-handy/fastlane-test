@@ -1,4 +1,4 @@
-package com.handy.portal.preactivation;
+package com.handy.portal.onboarding.ui.fragment;
 
 import android.app.Activity;
 import android.view.LayoutInflater;

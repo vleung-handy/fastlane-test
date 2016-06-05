@@ -34,14 +34,14 @@ public class OnboardingDetails implements Serializable
         return null;
     }
 
-    public ArrayList<SubflowData> getSubflowsByStatus(final SubflowStatus status)
+    public ArrayList<OnboardingSubflowDetails> getSubflowsByStatus(final SubflowStatus status)
     {
-        final ArrayList<SubflowData> subflows = new ArrayList<>();
-        for (final OnboardingSubflowDetails details : mSubflows)
+        final ArrayList<OnboardingSubflowDetails> subflows = new ArrayList<>();
+        for (final OnboardingSubflowDetails subflow : mSubflows)
         {
-            if (details.getStatus() == status)
+            if (subflow.getStatus() == status)
             {
-                subflows.add(details.getData());
+                subflows.add(subflow);
             }
         }
         return subflows;
