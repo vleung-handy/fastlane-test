@@ -178,16 +178,14 @@ public class SchedulePreferencesFragment extends OnboardingSubflowFragment
     @Override
     protected String getHeaderText()
     {
-        // FIXME: Pull from server
-        return "Set your job preferences";
+        return mSubflowData.getClaimHeader().getTitle();
     }
 
     @Nullable
     @Override
     protected String getSubHeaderText()
     {
-        // FIXME: Pull from server
-        return "You can start as early as next week!";
+        return mSubflowData.getClaimHeader().getDescription();
     }
 
     @Override

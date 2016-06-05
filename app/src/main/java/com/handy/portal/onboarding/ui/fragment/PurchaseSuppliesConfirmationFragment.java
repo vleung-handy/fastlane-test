@@ -301,21 +301,21 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
     @Override
     protected String getTitle()
     {
-        return getString(R.string.payment);
+        return getString(R.string.confirm_purchase);
     }
 
     @Nullable
     @Override
     protected String getHeaderText()
     {
-        return getString(R.string.confirm_your_purchase);
+        return mSubflowData.getPaymentHeader().getTitle();
     }
 
     @Nullable
     @Override
     protected String getSubHeaderText()
     {
-        return mSuppliesInfo.getChargeNotice();
+        return mSubflowData.getPaymentHeader().getDescription();
     }
 
     @Override

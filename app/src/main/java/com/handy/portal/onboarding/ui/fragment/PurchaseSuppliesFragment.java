@@ -109,13 +109,13 @@ public class PurchaseSuppliesFragment extends OnboardingSubflowFragment
     @Override
     protected String getHeaderText()
     {
-        return getString(R.string.supply_kit_purchase_inquiry);
+        return mSubflowData.getSuppliesHeader().getTitle();
     }
 
     @Override
     protected String getSubHeaderText()
     {
-        return null;
+        return mSubflowData.getSuppliesHeader().getDescription();
     }
 
     @Override

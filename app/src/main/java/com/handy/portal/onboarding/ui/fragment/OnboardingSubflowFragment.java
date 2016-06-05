@@ -231,7 +231,7 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
 
     private void initOrHideText(final TextView textView, @Nullable String text)
     {
-        if (text != null)
+        if (!TextUtils.isNullOrEmpty(text))
         {
             textView.setText(text);
             textView.setVisibility(View.VISIBLE);

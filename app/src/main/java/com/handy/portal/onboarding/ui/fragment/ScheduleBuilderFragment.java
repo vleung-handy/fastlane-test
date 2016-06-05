@@ -53,10 +53,8 @@ public class ScheduleBuilderFragment extends OnboardingSubflowFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        disableButtons();
         initBookingsWrapperViewModels();
         displayBookings();
-
         updateButton();
     }
 
@@ -144,14 +142,14 @@ public class ScheduleBuilderFragment extends OnboardingSubflowFragment
     @Override
     protected String getHeaderText()
     {
-        return getString(R.string.onboard_getting_started_title);
+        return mSubflowData.getScheduleHeader().getTitle();
     }
 
     @Nullable
     @Override
     protected String getSubHeaderText()
     {
-        return null;
+        return mSubflowData.getScheduleHeader().getDescription();
     }
 
     @Override
