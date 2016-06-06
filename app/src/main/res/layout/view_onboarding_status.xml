@@ -11,14 +11,16 @@
         android:id="@+id/jobs_collapsible"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/border_gray_bottom"
         android:orientation="vertical"
+        android:paddingBottom="1dp"
         >
 
         <LinearLayout
             android:id="@+id/jobs_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="?android:attr/dividerHorizontal"
+            android:divider="@drawable/divider_gray"
             android:orientation="vertical"
             android:showDividers="beginning|middle"
             />
@@ -50,7 +52,7 @@
         style="@style/TextView.Large.Bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginTop="@dimen/default_margin_half"
         android:background="@drawable/border_gray_no_side"
         android:padding="@dimen/default_padding"
         />
@@ -59,7 +61,7 @@
         android:id="@+id/links_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="?android:attr/dividerHorizontal"
+        android:divider="@drawable/divider_gray"
         android:orientation="vertical"
         android:showDividers="middle|end"
         />

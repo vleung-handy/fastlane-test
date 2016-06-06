@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
-    android:divider="?android:attr/dividerHorizontal"
+    android:divider="@drawable/divider_gray"
     android:dividerPadding="@dimen/default_padding"
     android:orientation="vertical"
     android:showDividers="middle"
