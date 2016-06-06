@@ -14,10 +14,10 @@ import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
-import com.handy.portal.library.util.DateTimeUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -38,6 +38,14 @@ public class BookingManager
     private final Cache<Date, BookingsWrapper> availableBookingsCache;
     private final Cache<Date, BookingsWrapper> scheduledBookingsCache;
     private final Cache<Date, BookingsWrapper> complementaryBookingsCache;
+
+    /*
+    keys used in QueryMap requests
+     */
+    private final class BookingRequestKeys
+    {
+        private static final String IS_PROVIDER_REQUESTED = "is_requested";
+    }
 
     @Inject
     public BookingManager(final Bus bus, final DataManager dataManager)
@@ -123,6 +131,7 @@ public class BookingManager
         if (!datesToRequest.isEmpty())
         {
             mDataManager.getAvailableBookings(datesToRequest.toArray(new Date[datesToRequest.size()]),
+                    null,
                     new DataManager.Callback<BookingsListWrapper>()
                     {
                         @Override
@@ -166,6 +175,36 @@ public class BookingManager
                     }
                 }
         );
+    }
+
+    @Subscribe
+    public void onRequestProRequestedJobs(BookingEvent.RequestProRequestedJobs event)
+    {
+        /*
+            FIXME: would rather use a serialized request model for the options
+            but don't know how to pass it as a QueryMap
+            without errors
+         */
+        Map<String, Object> options = new HashMap<>();
+        options.put(BookingRequestKeys.IS_PROVIDER_REQUESTED, true);
+        mDataManager.getAvailableBookings(event.getDatesForBookings().toArray(new Date[event.getDatesForBookings().size()]),
+                options,
+                new DataManager.Callback<BookingsListWrapper>()
+                {
+                    @Override
+                    public void onSuccess(final BookingsListWrapper bookingsListWrapper)
+                    {
+                        mBus.post(new BookingEvent.ReceiveProRequestedJobsSuccess(bookingsListWrapper.getBookingsWrappers()));
+                    }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        mBus.post(new BookingEvent.ReceiveProRequestedJobsError(error));
+                    }
+                }
+        );
+
     }
 
     /**

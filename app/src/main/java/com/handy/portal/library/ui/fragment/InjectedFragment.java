@@ -25,7 +25,6 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     protected DataManager dataManager;
     @Inject
     protected ConfigManager configManager;
-
     @Inject
     protected GoogleManager googleManager;
     @Inject
@@ -40,7 +39,8 @@ public class InjectedFragment extends android.support.v4.app.Fragment
 
     /**
      * should be called by tests only
-     * @return
+     *
+     * @return bus
      */
     @VisibleForTesting
     public Bus getBus()
@@ -52,7 +52,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     public void onResume()
     {
         super.onResume();
-        this.bus.register(this);
+        bus.register(this);
     }
 
     @Override
@@ -103,16 +103,9 @@ public class InjectedFragment extends android.support.v4.app.Fragment
             }
         }
 
-        try
+        if (!validated)
         {
-            if (!validated)
-            {
-                throw new Exception(errorDetails);
-            }
-        }
-        catch (Exception e)
-        {
-            Crashlytics.logException(e);
+            Crashlytics.logException(new Exception(errorDetails));
         }
 
         return validated;
