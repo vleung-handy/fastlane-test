@@ -43,7 +43,7 @@
                     style="@style/TextView.Bold"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/extra_margin"
+                    android:layout_marginBottom="@dimen/default_margin_half"
                     android:text="@string/shipping_address"
                     />
 

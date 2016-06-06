@@ -1,51 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<LinearLayout
+    android:id="@+id/jobs_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/handy_bg"
-    >
-
-    <LinearLayout
-        android:id="@+id/preferences_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_margin"
-        android:background="@drawable/border_gray_no_side"
-        android:orientation="vertical"
-        android:paddingEnd="@dimen/default_padding"
-        android:paddingStart="@dimen/default_padding"
-        >
-
-        <com.handy.portal.library.ui.view.LabelAndValueView
-            android:id="@+id/start_date_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/default_padding"
-            android:paddingTop="@dimen/default_padding"
-            />
-
-        <com.handy.portal.library.ui.view.LabelAndValueView
-            android:id="@+id/locations_view"
-            android:layout_width="match_parent"
-            android:layout_marginBottom="1dp"
-            android:background="@drawable/border_gray_top"
-            android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/default_padding"
-            android:paddingTop="@dimen/default_padding"
-            />
-
-    </LinearLayout>
-
-    <com.handy.portal.library.ui.view.AnimatedRecyclerView
-        android:id="@+id/recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/preferences_view"
-        android:clipChildren="false"
-        android:clipToPadding="false"
-        android:layoutAnimation="@anim/list_animation"
-        android:paddingBottom="@dimen/onboard_claim_button_margin"
-        />
-
-</RelativeLayout>
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/default_margin"
+    android:layout_marginTop="@dimen/default_margin"
+    android:layoutAnimation="@anim/list_animation"
+    android:orientation="vertical"
+    />

@@ -4,35 +4,73 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:layout_marginBottom="@dimen/default_margin"
     >
 
-    <TextView
-        style="@style/TextView.Large.Bold"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/border_gray_no_side"
-        android:padding="@dimen/default_padding"
-        android:text="@string/your_schedule"
-        />
+        >
+
+        <TextView
+            style="@style/TextView.Large.Bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|start"
+            android:padding="@dimen/default_padding"
+            android:text="@string/your_schedule"
+            />
+
+        <TextView
+            android:id="@+id/edit_schedule_button"
+            style="@style/TextView.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:padding="@dimen/default_padding"
+            android:textColor="@color/handy_blue"
+            android:text="@string/redo"
+            />
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/jobs_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="?android:attr/dividerHorizontal"
+        android:divider="@drawable/divider_gray"
         android:orientation="vertical"
         android:showDividers="middle|end"
         />
 
-    <TextView
-        style="@style/TextView.Large.Bold"
+    <FrameLayout
+        android:id="@+id/supplies_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_margin_half"
         android:background="@drawable/border_gray_no_side"
-        android:padding="@dimen/default_padding"
-        android:text="@string/supply_starter_kit"
-        />
+        >
+
+        <TextView
+            style="@style/TextView.Large.Bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|start"
+            android:padding="@dimen/default_padding"
+            android:text="@string/supply_starter_kit"
+            />
+
+        <TextView
+            android:id="@+id/edit_supplies_button"
+            style="@style/TextView.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|end"
+            android:padding="@dimen/default_padding"
+            android:textColor="@color/handy_blue"
+            android:text="@string/redo"
+            />
+    </FrameLayout>
 
     <include layout="@layout/view_supplies_container"/>
 

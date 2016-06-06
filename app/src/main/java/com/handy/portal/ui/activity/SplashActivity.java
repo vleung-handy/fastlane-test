@@ -5,6 +5,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -18,7 +19,11 @@ import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.onboarding.model.OnboardingDetails;
+import com.handy.portal.onboarding.model.subflow.SubflowStatus;
+import com.handy.portal.onboarding.ui.activity.OnboardingFlowActivity;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
+import com.handy.portal.setup.SetupData;
 import com.handy.portal.util.DeeplinkUtils;
 
 import javax.inject.Inject;
@@ -97,19 +102,19 @@ public class SplashActivity extends BaseActivity
     }
 
     @Override
-    protected void onSetupComplete()
+    protected void onSetupComplete(final SetupData setupData)
     {
-        final Intent mainActivityIntent = getActivityIntent(MainActivity.class);
-        mainActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+        final Intent activityIntent = getTerminalActivityIntent(setupData);
+        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(mainActivityIntent);
+        startActivity(activityIntent);
         finish();
     }
 
     @Override
     protected void onSetupFailure()
     {
-        onSetupComplete();
+        onSetupComplete(null);
     }
 
     @Override
@@ -152,7 +157,37 @@ public class SplashActivity extends BaseActivity
         }
     }
 
-    private Intent getActivityIntent(Class<? extends BaseActivity> activityClass)
+    public Intent getTerminalActivityIntent(@Nullable final SetupData setupData)
+    {
+        final Intent activityIntent;
+        if (setupData != null && shouldShowOnboarding(setupData.getOnboardingDetails()))
+        {
+            activityIntent = getActivityIntent(OnboardingFlowActivity.class);
+            activityIntent.putExtra(BundleKeys.ONBOARDING_DETAILS,
+                    setupData.getOnboardingDetails());
+        }
+        else
+        {
+            activityIntent = getActivityIntent(MainActivity.class);
+        }
+        return activityIntent;
+    }
+
+    private boolean shouldShowOnboarding(final OnboardingDetails onboardingDetails)
+    {
+        if (onboardingDetails != null && onboardingDetails.getSubflows() != null)
+        {
+            return anyOnboardingSubflowsIncomplete(onboardingDetails);
+        }
+        return false;
+    }
+
+    private boolean anyOnboardingSubflowsIncomplete(final OnboardingDetails onboardingDetails)
+    {
+        return !onboardingDetails.getSubflowsByStatus(SubflowStatus.INCOMPLETE).isEmpty();
+    }
+
+    private Intent getActivityIntent(final Class<? extends BaseActivity> activityClass)
     {
         final Intent intent = new Intent(this, activityClass);
         final Uri data = getIntent().getData();

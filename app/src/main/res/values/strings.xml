@@ -212,6 +212,7 @@
     <string name="one_matching_job">1 Matching Job</string>
     <string name="no_matching_jobs_message">No matching jobs found. You\u2019ll be notified if there are any new matches.</string>
     <string name="go_to_all_jobs">Go to All Jobs</string>
+    <string name="booking_time">%1$s \u2013 %2$s</string>
 
     <!-- Payments -->
     <string name="total_payment">Total Payment</string>
@@ -471,22 +472,10 @@
     <string name="job_access_locked_keep_rate_info_button">Keep Rate</string>
 
     <!-- Onboarding -->
-    <string name="onboard_congratulations_formatted">Congratulations,\n%1$s</string>
-    <string name="onboard_congratulations">Congratulations!</string>
-    <string name="onboard_get_started">Let\'s Get Started</string>
-    <string name="onboard_getting_started">Getting Started</string>
-    <string name="onboard_welcome">You\'ve been activated! We\'re excited for you to join our global community of professionals using the Handy platform.</string>
-    <string name="onboard_getting_started_title">Start building your schedule with these jobs.</string>
-    <string name="onboard_claim_and_earn_formatted">%s Claim</string>
-    <string name="onboard_loading">Choosing jobs\nin your city...</string>
-    <string name="onboard_job_claim_error">"There was an error claiming job(s), please try again"</string>
-    <string name="onboard_job_load_error">"There was an error finding jobs, please try again"</string>
-    <string name="onboard_claim_no_job">"Want to see those preselected jobs again? Tap the schedule help button in the top right."</string>
-    <string name="onboard_claim_job_confirmation">"Are you sure you want to\nclaim all of these jobs?"</string>
-    <string name="onboard_confirm_claim">"Confirm Claim"</string>
-    <string name="onboard_no_time_available">No Time Available</string>
-
-    <!-- Pre-activation -->
+    <string name="congratulations_formatted">Congratulations,\n%1$s</string>
+    <string name="congratulations">Congratulations!</string>
+    <string name="lets_get_started">Let\'s Get Started</string>
+    <string name="activation_welcome">You\'ve been activated! We\'re excited for you to join our global community of professionals using the Handy platform.</string>
     <string name="supply_kit_purchase_inquiry">Would you like to buy a starter supply kit?</string>
     <string name="yes_supply_kit">Yes, I Want Supplies</string>
     <string name="no_supply_kit">No, I Have My Own</string>
@@ -494,6 +483,7 @@
     <string name="continue_to_confirmation">Continue to Confirmation</string>
     <string name="supply_starter_kit">Supply Starter Kit</string>
     <string name="order_total_formatted">Order Total: %1$s</string>
+    <string name="order_total">Order Total</string>
     <string name="confirm_your_purchase">Confirm your purchase</string>
     <string name="confirm_purchase">Confirm Purchase</string>
     <string name="shipping_address">Shipping Address</string>
@@ -508,21 +498,30 @@
     <string name="loading">Loading…</string>
     <string name="supplies_ordered">Supplies ordered!</string>
     <string name="card">Card</string>
-    <string name="claim_your_first_jobs">Claim Your First Jobs</string>
+    <string name="claim_jobs">Claim Jobs</string>
     <string name="continue_to_next_step">Continue</string>
-    <string name="start_date">Start Date</string>
     <string name="locations">Locations</string>
-    <string name="choose_start_date">Choose your start date</string>
+    <string name="choose_date">Choose a date</string>
     <string name="choose_locations">Choose locations</string>
     <string name="confirmation">Confirmation</string>
     <string name="ready_to_commit">Ready to commit?</string>
     <string name="about_to_claim_and_order">You\'re about to claim jobs and order supplies. Time to double-check everything.</string>
     <string name="finish_building_schedule">Finish Building Schedule</string>
     <string name="your_schedule">Your Schedule</string>
-    <string name="schedule_preferences_notice">You\'ll have more options if you select multiple locations. If we can\'t find any jobs in your locations, we\'ll search for jobs nearby.</string>
+    <string name="schedule_preferences_notice">For the most options, select at least 3 locations. If there aren\'t any jobs nearby, we\'ll widen the search.</string>
     <string name="skip_this_step">Skip</string>
     <string name="welcome">Welcome</string>
-    <string name="learn_about_handy">Learn about Handy</string>
+    <string name="no_jobs_matching_preferences">There are no open jobs matching your preferences.</string>
+    <string name="number_of_jobs_formatted">%1$d Jobs</string>
+    <string name="not_requested">Not requested</string>
+    <string name="ship_to">Ship To</string>
+    <string name="retry">Retry</string>
+    <string name="redo">Redo</string>
+    <plurals name="jobs_already_claimed">
+        <item quantity="one">The job you selected is no longer available.</item>
+        <item quantity="other">The jobs you selected are no longer available.</item>
+    </plurals>
+    <string name="fix">Fix</string>
     <plurals name="locations_selected_count_formatted">
         <item quantity="one">%1$d location selected</item>
         <item quantity="other">%1$d locations selected</item>

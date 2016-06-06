@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center_vertical"
     android:background="@drawable/background_list_entry"
-    android:divider="?android:attr/dividerHorizontal"
+    android:divider="@drawable/divider_gray"
     android:dividerHeight="1dp"
     android:orientation="horizontal"
     android:paddingBottom="@dimen/payment_container_vertical_padding"

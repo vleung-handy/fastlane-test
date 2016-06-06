@@ -60,16 +60,15 @@ public class BundleKeys
     // New Checkout
     public static final String NOTE_TO_CUSTOMER = "note_to_customer";
 
-    // Payments
-    public static final String CARD_LAST4 = "card_last4";
-    public static final String CARD_TYPE = "card_type";
-
     // Onboarding
-    public static final String ONBOARDING_SUPPLIES = "onboarding_supplies";
     public static final String ALLOW_BACK_NAVIGATION = "allow_back_navigation";
     public static final String NATIVE_ONBOARDING_LAUNCHED = "native_onboarding_launched";
-    public static final String ZIPCLUSTERS_IDS = "zipcluster_ids";
-    public static final String PROVIDER_START_DATE = "provider_start_date";
+    public static final String BOOKINGS_WRAPPERS = "bookings_wrappers";
+    public static final String SUBFLOW_DATA = "subflow_data";
+    public static final String SUBFLOW_TYPE = "subflow_type";
+    public static final String ONBOARDING_DETAILS = "onboarding_details";
+    public static final String SUPPLIES_ORDER_INFO = "supplies_order_info";
+    public static final String FORCE_FINISH = "force_finish";
 
     // Flow
     public static final String FLOW_STEP_ID = "flow_step_id";

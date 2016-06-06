@@ -22,8 +22,8 @@ import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.TermsDetails;
-import com.handy.portal.onboarding.model.JobClaimRequest;
-import com.handy.portal.onboarding.model.JobClaimResponse;
+import com.handy.portal.onboarding.model.claim.JobClaimRequest;
+import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -237,10 +237,10 @@ public abstract class HandyEvent
     public static class RequestOnboardingJobs extends RequestEvent
     {
         private final Date mStartDate;
-        private final ArrayList<Integer> mPreferredZipclusterIds;
+        private final ArrayList<String> mPreferredZipclusterIds;
 
         public RequestOnboardingJobs(final Date startDate,
-                                     final ArrayList<Integer> preferredZipclusterIds)
+                                     final ArrayList<String> preferredZipclusterIds)
         {
             mStartDate = startDate;
             mPreferredZipclusterIds = preferredZipclusterIds;
@@ -251,7 +251,7 @@ public abstract class HandyEvent
             return mStartDate;
         }
 
-        public ArrayList<Integer> getPreferredZipclusterIds()
+        public ArrayList<String> getPreferredZipclusterIds()
         {
             return mPreferredZipclusterIds;
         }

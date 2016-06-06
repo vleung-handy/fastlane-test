@@ -40,6 +40,7 @@
             style="@style/TextView.Medium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignWithParentIfMissing="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="@dimen/default_margin_half"
             android:layout_marginRight="@dimen/default_margin_half"

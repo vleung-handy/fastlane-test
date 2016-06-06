@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!--The loading dialog will be displayed for at least this amount of milliseconds-->
-    <integer name="onboarding_dialog_load_min_time">3000</integer>
     <integer name="progress_spinner_start_offset_millis">400</integer>
     <integer name="chevron_rotation_duration_millis">300</integer>
 </resources>

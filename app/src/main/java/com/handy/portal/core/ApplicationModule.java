@@ -35,10 +35,10 @@ import com.handy.portal.manager.UserInterfaceUpdateManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.notification.NotificationModule;
-import com.handy.portal.onboarding.ui.activity.OnboardWelcomeActivity;
+import com.handy.portal.onboarding.ui.activity.ActivationWelcomeActivity;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsModule;
-import com.handy.portal.preactivation.PreActivationModule;
+import com.handy.portal.onboarding.OnboardingModule;
 import com.handy.portal.receiver.HandyPushReceiver;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
@@ -130,7 +130,7 @@ import retrofit.converter.GsonConverter;
         DashboardVideoLibraryFragment.class,
         DashboardFeedbackView.class,
         RequestSuppliesWebViewFragment.class,
-        OnboardWelcomeActivity.class,
+        ActivationWelcomeActivity.class,
         RequestSuppliesWebViewFragment.class,
 },
         includes = {
@@ -139,7 +139,7 @@ import retrofit.converter.GsonConverter;
                 LocationModule.class,
                 PaymentsModule.class,
                 BookingsModule.class,
-                PreActivationModule.class,
+                OnboardingModule.class,
                 SetupModule.class,
         }
 )
