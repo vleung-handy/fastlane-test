@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -12,14 +13,17 @@ import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.ui.element.PendingBookingElementView;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.ui.view.LabelAndValueView;
 import com.handy.portal.library.ui.view.SimpleContentLayout;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Designation;
 import com.handy.portal.onboarding.model.claim.JobClaim;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
@@ -28,12 +32,18 @@ import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.OnClick;
 
 public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
 {
+    @Inject
+    PrefsManager mPrefsManager;
+
     @Bind(R.id.jobs_container)
     ViewGroup mJobsContainer;
     @Bind(R.id.supplies_container)
@@ -228,16 +238,27 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
         bus.post(new HandyEvent.RequestClaimJobs(new JobClaimRequest(jobClaims)));
     }
 
-    // A success here means the server successfully processed the request. Does not mean all the
-    // jobs requested to be claimed were actually claimed (i.e. If I requested 3 jobs, the response
-    // can come back: 0 out of 3 claimed).
     @Subscribe
     public void onReceiveClaimJobsSuccess(HandyEvent.ReceiveClaimJobsSuccess event)
     {
         hideLoadingOverlay();
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSuccess()));
-        // FIXME: Handle no claims, partial claims and full claims properly
-        terminate(new Intent());
+        if (hasClaims(event.getJobClaimResponse().getJobs()))
+        {
+            terminate(new Intent());
+        }
+        else
+        {
+            showError(getString(R.string.jobs_already_claimed), getString(R.string.fix),
+                    new ErrorActionOnClickListener()
+                    {
+                        @Override
+                        public void onClick(final Snackbar snackbar)
+                        {
+                            onEditJobsButtonClicked();
+                        }
+                    });
+        }
     }
 
     @Subscribe
@@ -247,5 +268,28 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
         final String errorMessage = error.error.getMessage();
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchError(errorMessage)));
         showError(errorMessage);
+    }
+
+    private boolean hasClaims(final List<BookingClaimDetails> claimDetailsList)
+    {
+        if (claimDetailsList != null)
+        {
+            final String providerId = getProviderId();
+            for (final BookingClaimDetails claimDetails : claimDetailsList)
+            {
+                final Booking.BookingStatus bookingStatus =
+                        claimDetails.getBooking().inferBookingStatus(providerId);
+                if (bookingStatus == Booking.BookingStatus.CLAIMED)
+                {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public String getProviderId()
+    {
+        return mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
     }
 }

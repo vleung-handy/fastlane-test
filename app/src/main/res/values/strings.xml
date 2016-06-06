@@ -530,6 +530,8 @@
     <string name="ship_to">Ship To</string>
     <string name="retry">Retry</string>
     <string name="redo">Redo</string>
+    <string name="jobs_already_claimed">The jobs you selected have already been claimed. Try choosing new jobs.</string>
+    <string name="fix">Fix</string>
     <plurals name="locations_selected_count_formatted">
         <item quantity="one">%1$d location selected</item>
         <item quantity="other">%1$d locations selected</item>
