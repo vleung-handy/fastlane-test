@@ -54,24 +54,31 @@ public class Flow implements Forwardable
     @Override
     public void goForward()
     {
-        if (mStepsIterator.hasNext())
+        if (mStepsIterator == null)
         {
-            final FlowStep nextStep = mStepsIterator.next();
-            if (nextStep.shouldExecute())
-            {
-                nextStep.execute();
-            }
-            else
-            {
-                goForward();
-            }
+            start();
         }
         else
         {
-            mIsComplete = true;
-            if (mOnFlowCompleteListener != null)
+            if (mStepsIterator.hasNext())
             {
-                mOnFlowCompleteListener.onFlowComplete();
+                final FlowStep nextStep = mStepsIterator.next();
+                if (nextStep.shouldExecute())
+                {
+                    nextStep.execute();
+                }
+                else
+                {
+                    goForward();
+                }
+            }
+            else
+            {
+                mIsComplete = true;
+                if (mOnFlowCompleteListener != null)
+                {
+                    mOnFlowCompleteListener.onFlowComplete();
+                }
             }
         }
     }
