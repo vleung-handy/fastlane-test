@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class OnboardWelcomeActivity extends AppCompatActivity
+public class ActivationWelcomeActivity extends AppCompatActivity
 {
     public static final int COLORS = 12;
 
@@ -60,7 +60,7 @@ public class OnboardWelcomeActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_onboard_welcome);
+        setContentView(R.layout.activity_activation_welcome);
         ButterKnife.bind(this);
         Utils.inject(this, this);
 
@@ -79,7 +79,7 @@ public class OnboardWelcomeActivity extends AppCompatActivity
         mDrawables.add(R.drawable.confetti_11);
         mDrawables.add(R.drawable.confetti_12);
 
-        mTvTitle.setText(getString(R.string.onboard_congratulations));
+        mTvTitle.setText(getString(R.string.congratulations));
 
         //we only play the confetti after the anchors have been rendered, otherwise
         //the confetti will come out weird.
@@ -153,7 +153,7 @@ public class OnboardWelcomeActivity extends AppCompatActivity
         {
 
             mTvTitle.setText(String.format(getString(
-                    R.string.onboard_congratulations_formatted),
+                    R.string.congratulations_formatted),
                     event.providerProfile.getProviderPersonalInfo().getFirstName()
             ));
         }

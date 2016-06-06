@@ -305,7 +305,7 @@
         </receiver>
 
         <activity
-            android:name=".onboarding.ui.activity.OnboardWelcomeActivity"
+            android:name=".onboarding.ui.activity.ActivationWelcomeActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Translucent"
             />

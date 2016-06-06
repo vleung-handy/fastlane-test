@@ -41,7 +41,7 @@ import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.onboarding.ui.activity.OnboardWelcomeActivity;
+import com.handy.portal.onboarding.ui.activity.ActivationWelcomeActivity;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
@@ -220,7 +220,7 @@ public class MainActivityFragment extends InjectedFragment
                 if (!mNativeOnboardingLaunched)
                 {
                     mNativeOnboardingLaunched = true;
-                    startActivity(new Intent(getContext(), OnboardWelcomeActivity.class));
+                    startActivity(new Intent(getContext(), ActivationWelcomeActivity.class));
                 }
             }
             else if (currentTab != null && currentTab != MainViewTab.ONBOARDING_WEBVIEW &&
