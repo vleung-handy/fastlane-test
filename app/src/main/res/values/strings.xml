@@ -500,9 +500,8 @@
     <string name="card">Card</string>
     <string name="claim_jobs">Claim Jobs</string>
     <string name="continue_to_next_step">Continue</string>
-    <string name="start_date">Start Date</string>
     <string name="locations">Locations</string>
-    <string name="choose_start_date">Choose your start date</string>
+    <string name="choose_date">Choose a date</string>
     <string name="choose_locations">Choose locations</string>
     <string name="confirmation">Confirmation</string>
     <string name="ready_to_commit">Ready to commit?</string>

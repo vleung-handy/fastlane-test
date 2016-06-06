@@ -142,7 +142,7 @@ public class SchedulePreferencesFragment extends OnboardingSubflowFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        mDateField.setLabel(R.string.start_date);
+        mDateField.setLabel(R.string.date);
         mLocationField.setLabel(R.string.locations);
         displaySelectedStartDate();
         if (shouldDisplayLocationField())
@@ -251,7 +251,7 @@ public class SchedulePreferencesFragment extends OnboardingSubflowFragment
         }
         else
         {
-            mDateField.setValue(null).setHint(R.string.choose_start_date);
+            mDateField.setValue(null).setHint(R.string.choose_date);
         }
     }
 
