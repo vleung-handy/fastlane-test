@@ -249,15 +249,16 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
         }
         else
         {
-            showError(getString(R.string.jobs_already_claimed), getString(R.string.fix),
-                    new ErrorActionOnClickListener()
-                    {
-                        @Override
-                        public void onClick(final Snackbar snackbar)
-                        {
-                            onEditJobsButtonClicked();
-                        }
-                    });
+            final String errorText = getResources()
+                    .getQuantityString(R.plurals.jobs_already_claimed, mPendingBookings.size());
+            showError(errorText, getString(R.string.fix), new ErrorActionOnClickListener()
+            {
+                @Override
+                public void onClick(final Snackbar snackbar)
+                {
+                    onEditJobsButtonClicked();
+                }
+            });
         }
     }
 
