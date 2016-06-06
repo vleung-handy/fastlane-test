@@ -183,7 +183,7 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
     @Override
     protected int getButtonType()
     {
-        return ButtonTypes.SINGLE;
+        return ButtonTypes.SINGLE_FIXED;
     }
 
     @Override
