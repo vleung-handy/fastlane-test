@@ -85,10 +85,20 @@ public class OnboardingJobView extends FrameLayout implements CompoundButton.OnC
         final AvailableBookingElementView elementView = new AvailableBookingElementView();
         elementView.initView(getContext(), bookingViewModel.getBooking(), null, mJobContainer);
         final View view = elementView.getAssociatedView();
+        hideServiceText(view);
         view.setBackground(null);
         mJobContainer.addView(view);
 
         mCheckBox.setChecked(bookingViewModel.isSelected());
+    }
+
+    private void hideServiceText(final View bookingView)
+    {
+        final View view = bookingView.findViewById(R.id.booking_entry_service_text);
+        if (view != null)
+        {
+            view.setVisibility(GONE);
+        }
     }
 
     @Override
