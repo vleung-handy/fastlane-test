@@ -220,7 +220,7 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
     @Override
     protected String getPrimaryButtonText()
     {
-        return getString(R.string.finish_building_schedule);
+        return getString(R.string.finish_application);
     }
 
     @Override

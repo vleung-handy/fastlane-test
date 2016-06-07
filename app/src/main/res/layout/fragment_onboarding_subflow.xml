@@ -39,7 +39,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="@dimen/default_margin"
+                        android:layout_marginTop="@dimen/default_margin_large"
                         tools:src="@drawable/img_avatar_complete"
                         />
 
