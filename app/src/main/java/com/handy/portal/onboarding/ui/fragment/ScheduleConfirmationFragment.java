@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
@@ -50,6 +51,8 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
     ViewGroup mSuppliesContainer;
     @Bind(R.id.supplies_header)
     ViewGroup mSuppliesHeader;
+    @Bind(R.id.edit_supplies_button)
+    TextView mEditSuppliesButton;
     @Bind(R.id.shipping_view)
     SimpleContentLayout mShippingView;
     @Bind(R.id.payment_view)
@@ -151,6 +154,7 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
             mSuppliesHeader.setVisibility(View.VISIBLE);
             if (designation == Designation.YES)
             {
+                mEditSuppliesButton.setText(R.string.edit);
                 mShippingView.setContent(getString(R.string.ship_to),
                         mSuppliesOrderInfo.getShippingText());
                 mPaymentView.setContent(getString(R.string.payment),
@@ -161,6 +165,7 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
             }
             else if (designation == Designation.NO)
             {
+                mEditSuppliesButton.setText(R.string.add);
                 mSuppliesContainer.setVisibility(View.GONE);
             }
             else

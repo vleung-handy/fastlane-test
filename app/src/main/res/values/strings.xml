@@ -524,6 +524,7 @@
     </plurals>
     <string name="fix">Fix</string>
     <string name="fee">Fee</string>
+    <string name="add">Add</string>
     <plurals name="locations_selected_count_formatted">
         <item quantity="one">%1$d location selected</item>
         <item quantity="other">%1$d locations selected</item>
