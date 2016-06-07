@@ -2,4 +2,5 @@
 <resources>
     <integer name="progress_spinner_start_offset_millis">400</integer>
     <integer name="chevron_rotation_duration_millis">300</integer>
+    <integer name="onboarding_ttl_mins">30</integer>
 </resources>

@@ -26,8 +26,10 @@ import java.util.ArrayList;
 public class OnboardingSubflowActivity extends BaseActivity
 {
     private static final String EXTRA_INITIAL_LOAD = "initial_load";
+    private static final String EXTRA_LAUNCHED_TIME_MILLIS = "extra_launched_time_millis";
     private OnboardingDetails mOnboardingDetails;
     private SubflowType mSubflowType;
+    private long mLaunchedTimeMillis;
 
     public OnboardingDetails getOnboardingDetails()
     {
@@ -43,9 +45,23 @@ public class OnboardingSubflowActivity extends BaseActivity
         mSubflowType = (SubflowType) getIntent().getSerializableExtra(BundleKeys.SUBFLOW_TYPE);
         setContentView(R.layout.activity_onboarding_subflow);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
+        initLaunchedTimeMillis(savedInstanceState);
         if (savedInstanceState == null || savedInstanceState.getBoolean(EXTRA_INITIAL_LOAD, true))
         {
             startSubflow();
+        }
+    }
+
+    private void initLaunchedTimeMillis(final Bundle savedInstanceState)
+    {
+        if (savedInstanceState == null
+                || savedInstanceState.getInt(EXTRA_LAUNCHED_TIME_MILLIS, 0) == 0)
+        {
+            mLaunchedTimeMillis = System.currentTimeMillis();
+        }
+        else
+        {
+            mLaunchedTimeMillis = savedInstanceState.getInt(EXTRA_LAUNCHED_TIME_MILLIS);
         }
     }
 
@@ -57,7 +73,20 @@ public class OnboardingSubflowActivity extends BaseActivity
             outState = new Bundle();
         }
         outState.putBoolean(EXTRA_INITIAL_LOAD, false);
+        outState.putLong(EXTRA_LAUNCHED_TIME_MILLIS, mLaunchedTimeMillis);
         super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        final int onboardingTtlMillis =
+                getResources().getInteger(R.integer.onboarding_ttl_mins) * 60 * 1000;
+        if (System.currentTimeMillis() - mLaunchedTimeMillis >= onboardingTtlMillis)
+        {
+            cancel(new Intent());
+        }
     }
 
     @SuppressWarnings("unchecked")
