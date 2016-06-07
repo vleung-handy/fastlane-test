@@ -180,7 +180,11 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
     {
         super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_x_back, menu);
+        final boolean disallowExit = getArguments().getBoolean(BundleKeys.DISALLOW_EXIT, false);
+        if (!disallowExit)
+        {
+            inflater.inflate(R.menu.menu_x_back, menu);
+        }
     }
 
     @Override

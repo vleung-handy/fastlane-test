@@ -68,6 +68,9 @@ public class OnboardingSubflowActivity extends BaseActivity
         {
             case STATUS:
                 fragment = OnboardingStatusFragment.newInstance();
+                Bundle arguments = getFragmentArguments(fragment);
+                arguments.putBoolean(BundleKeys.DISALLOW_EXIT, true);
+                fragment.setArguments(arguments);
                 break;
             case CLAIM:
                 fragment = SchedulePreferencesFragment.newInstance();
@@ -99,21 +102,13 @@ public class OnboardingSubflowActivity extends BaseActivity
                 getSupportFragmentManager().beginTransaction();
         if (allowBackNavigation)
         {
-            Bundle arguments = fragment.getArguments();
-            if (arguments == null)
-            {
-                arguments = new Bundle();
-            }
+            Bundle arguments = getFragmentArguments(fragment);
             arguments.putBoolean(BundleKeys.ALLOW_BACK_NAVIGATION, true);
             fragment.setArguments(arguments);
             fragmentTransaction.addToBackStack(null);
         }
 
-        Bundle arguments = fragment.getArguments();
-        if (arguments == null)
-        {
-            arguments = new Bundle();
-        }
+        Bundle arguments = getFragmentArguments(fragment);
         final SubflowData subflowData =
                 mOnboardingDetails.getSubflowDataByType(mSubflowType);
         arguments.putSerializable(BundleKeys.SUBFLOW_DATA, subflowData);
@@ -136,6 +131,17 @@ public class OnboardingSubflowActivity extends BaseActivity
             setResult(Activity.RESULT_OK, data);
             finish();
         }
+    }
+
+    @NonNull
+    private Bundle getFragmentArguments(final OnboardingSubflowFragment fragment)
+    {
+        Bundle arguments = fragment.getArguments();
+        if (arguments == null)
+        {
+            arguments = new Bundle();
+        }
+        return arguments;
     }
 
     @Override
