@@ -25,6 +25,7 @@ import java.util.ArrayList;
 
 public class OnboardingSubflowActivity extends BaseActivity
 {
+    private static final String EXTRA_INITIAL_LOAD = "initial_load";
     private OnboardingDetails mOnboardingDetails;
     private SubflowType mSubflowType;
 
@@ -42,7 +43,21 @@ public class OnboardingSubflowActivity extends BaseActivity
         mSubflowType = (SubflowType) getIntent().getSerializableExtra(BundleKeys.SUBFLOW_TYPE);
         setContentView(R.layout.activity_onboarding_subflow);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
-        startSubflow();
+        if (savedInstanceState == null || savedInstanceState.getBoolean(EXTRA_INITIAL_LOAD, true))
+        {
+            startSubflow();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState)
+    {
+        if (outState == null)
+        {
+            outState = new Bundle();
+        }
+        outState.putBoolean(EXTRA_INITIAL_LOAD, false);
+        super.onSaveInstanceState(outState);
     }
 
     @SuppressWarnings("unchecked")

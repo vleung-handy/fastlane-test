@@ -192,7 +192,7 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
                 cancel(new Intent());
                 return true;
             default:
-                return false;
+                return super.onOptionsItemSelected(item);
         }
     }
 

@@ -18,6 +18,7 @@ import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class OnboardingFlowActivity extends BaseActivity implements SubflowLauncher
 {
@@ -25,6 +26,8 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
     private ArrayList<Booking> mPendingBookings;
     private SuppliesOrderInfo mSuppliesOrderInfo;
     private Flow mOnboardingFlow;
+    private ArrayList<OnboardingSubflowDetails> mIncompleteSubflows;
+    private SubflowType mLastLaunchedSubflowType;
 
     @Override
     protected boolean shouldTriggerSetup()
@@ -38,22 +41,117 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
         super.onCreate(savedInstanceState);
         mOnboardingDetails = (OnboardingDetails) getIntent()
                 .getSerializableExtra(BundleKeys.ONBOARDING_DETAILS);
-        startOnboardingFlow();
+        mIncompleteSubflows = mOnboardingDetails.getSubflowsByStatus(SubflowStatus.INCOMPLETE);
+        restoreOnboardingFlow(savedInstanceState);
     }
 
-    private void startOnboardingFlow()
+    @SuppressWarnings("unchecked")
+    private void restoreOnboardingFlow(final Bundle savedInstanceState)
+    {
+        if (savedInstanceState != null)
+        {
+            final ArrayList<OnboardingSubflowDetails> incompleteSubflows =
+                    (ArrayList<OnboardingSubflowDetails>) savedInstanceState
+                            .getSerializable(BundleKeys.SUBFLOWS);
+            final SubflowType lastLaunchedSubflowType = (SubflowType) savedInstanceState
+                    .getSerializable(BundleKeys.SUBFLOW_TYPE);
+            if (incompleteSubflows != null && lastLaunchedSubflowType != null)
+            {
+                removeLaunchedSubflows(incompleteSubflows, lastLaunchedSubflowType);
+                if (incompleteSubflows.isEmpty())
+                {
+                    finishOnboardingFlow(true);
+                }
+                else
+                {
+                    mIncompleteSubflows = incompleteSubflows;
+                    mLastLaunchedSubflowType = lastLaunchedSubflowType;
+                    final Intent data = new Intent();
+                    data.putExtras(savedInstanceState);
+                    savePendingBookingsIfAvailable(data);
+                    saveSuppliesOrderInfoIfAvailable(data);
+                    initOnboardingFlow();
+                }
+            }
+        }
+    }
+
+    private void removeLaunchedSubflows(final List<OnboardingSubflowDetails> incompleteSubflows,
+                                        final SubflowType lastLaunchedSubflowType)
+    {
+        if (!incompleteSubflows.isEmpty())
+        {
+            OnboardingSubflowDetails removedSubflow;
+            do
+            {
+                removedSubflow = incompleteSubflows.remove(0);
+            }
+            while (!incompleteSubflows.isEmpty()
+                    && removedSubflow.getType() != lastLaunchedSubflowType);
+        }
+    }
+
+    @Override
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCode.ONBOARDING_SUBFLOW)
+        {
+            switch (resultCode)
+            {
+                case RESULT_OK:
+                    savePendingBookingsIfAvailable(data);
+                    saveSuppliesOrderInfoIfAvailable(data);
+                    mOnboardingFlow.goForward();
+                    if (mOnboardingFlow.isComplete())
+                    {
+                        finishOnboardingFlow(true);
+                    }
+                    break;
+                case RESULT_CANCELED:
+                    boolean shouldLaunchSplash = true;
+                    if (data != null)
+                    {
+                        shouldLaunchSplash = !data.getBooleanExtra(BundleKeys.FORCE_FINISH, false);
+                    }
+                    finishOnboardingFlow(shouldLaunchSplash);
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    private void finishOnboardingFlow(final boolean shouldLaunchSplash)
+    {
+        if (shouldLaunchSplash)
+        {
+            startActivity(new Intent(this, SplashActivity.class));
+        }
+        finish();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        if (mOnboardingFlow == null)
+        {
+            initOnboardingFlow();
+            mOnboardingFlow.start();
+        }
+    }
+
+    private void initOnboardingFlow()
     {
         mOnboardingFlow = new Flow();
-        final ArrayList<OnboardingSubflowDetails> incompleteSubflows =
-                mOnboardingDetails.getSubflowsByStatus(SubflowStatus.INCOMPLETE);
-        for (final OnboardingSubflowDetails subflow : incompleteSubflows)
+        for (final OnboardingSubflowDetails subflow : mIncompleteSubflows)
         {
             if (subflow.getType() != null)
             {
                 mOnboardingFlow.addStep(new OnboardingFlowStep(this, subflow.getType()));
             }
         }
-        mOnboardingFlow.start();
     }
 
     @Override
@@ -70,40 +168,23 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
         {
             intent.putExtra(BundleKeys.SUPPLIES_ORDER_INFO, mSuppliesOrderInfo);
         }
+        mLastLaunchedSubflowType = subflowType;
         startActivityForResult(intent, RequestCode.ONBOARDING_SUBFLOW);
         overridePendingTransition(0, 0);
     }
 
     @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data)
+    protected void onSaveInstanceState(Bundle outState)
     {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RequestCode.ONBOARDING_SUBFLOW)
+        if (outState == null)
         {
-            switch (resultCode)
-            {
-                case RESULT_OK:
-                    savePendingBookingsIfAvailable(data);
-                    saveSuppliesOrderInfoIfAvailable(data);
-                    mOnboardingFlow.goForward();
-                    break;
-                case RESULT_CANCELED:
-
-                    boolean forceFinish = false;
-                    if (data != null)
-                    {
-                        forceFinish = data.getBooleanExtra(BundleKeys.FORCE_FINISH, false);
-                    }
-                    if (!forceFinish)
-                    {
-                        startActivity(new Intent(this, SplashActivity.class));
-                    }
-                    finish();
-                    break;
-                default:
-                    break;
-            }
+            outState = new Bundle();
         }
+        outState.putSerializable(BundleKeys.SUBFLOWS, mIncompleteSubflows);
+        outState.putSerializable(BundleKeys.SUBFLOW_TYPE, mLastLaunchedSubflowType);
+        outState.putSerializable(BundleKeys.BOOKINGS, mPendingBookings);
+        outState.putSerializable(BundleKeys.SUPPLIES_ORDER_INFO, mSuppliesOrderInfo);
+        super.onSaveInstanceState(outState);
     }
 
     @SuppressWarnings("unchecked")
