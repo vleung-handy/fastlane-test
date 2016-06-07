@@ -70,6 +70,7 @@ public class BundleKeys
     public static final String SUPPLIES_ORDER_INFO = "supplies_order_info";
     public static final String FORCE_FINISH = "force_finish";
     public static final String SUBFLOWS = "subflows";
+    public static final String DISALLOW_EXIT = "disallow_exit";
 
     // Flow
     public static final String FLOW_STEP_ID = "flow_step_id";
