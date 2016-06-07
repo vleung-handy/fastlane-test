@@ -176,13 +176,27 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
                     break;
             }
 
+            // Shipping
             final Address address = mProviderPersonalInfo.getAddress();
             mShippingView.setContent(getString(R.string.ship_to),
                     mProviderPersonalInfo.getFullName() + "\n" + address.getShippingAddress());
-            mPaymentView.setContent(getString(R.string.payment),
-                    getString(R.string.card_info_formatted, getString(R.string.card),
-                            mProviderPersonalInfo.getCardLast4()));
-            mOrderTotalView.setContent(getString(R.string.order_total), suppliesInfo.getCost());
+
+            // Order/Fee Total
+            final String orderTotalTitle = getString(providerHasPaymentMethod() ?
+                    R.string.order_total : R.string.fee);
+            mOrderTotalView.setContent(orderTotalTitle, suppliesInfo.getCost());
+
+            // Payment
+            if (providerHasPaymentMethod())
+            {
+                mPaymentView.setContent(getString(R.string.payment),
+                        getString(R.string.card_info_formatted, getString(R.string.card),
+                                mProviderPersonalInfo.getCardLast4()));
+            }
+            else
+            {
+                mPaymentView.setVisibility(View.GONE);
+            }
         }
         else
         {
@@ -208,6 +222,12 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
             mLinksTitle.setVisibility(View.GONE);
             mLinksContainer.setVisibility(View.GONE);
         }
+    }
+
+    private boolean providerHasPaymentMethod()
+    {
+        final String cardLast4 = mProviderPersonalInfo.getCardLast4();
+        return !TextUtils.isNullOrEmpty(cardLast4);
     }
 
     private void addLinkTextView(final String text, @NonNull final String url)
