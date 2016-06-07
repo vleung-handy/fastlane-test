@@ -485,7 +485,6 @@
     <string name="supply_starter_kit">Supply Starter Kit</string>
     <string name="order_total_formatted">Order Total: %1$s</string>
     <string name="order_total">Order Total</string>
-    <string name="confirm_your_purchase">Confirm your purchase</string>
     <string name="confirm_purchase">Confirm Purchase</string>
     <string name="shipping_address">Shipping Address</string>
     <string name="payment_method">Payment Method</string>
@@ -505,11 +504,9 @@
     <string name="choose_date">Choose a date</string>
     <string name="choose_locations">Choose locations</string>
     <string name="confirmation">Confirmation</string>
-    <string name="ready_to_commit">Ready to commit?</string>
-    <string name="about_to_claim_and_order">You\'re about to claim jobs and order supplies. Time to double-check everything.</string>
     <string name="finish_building_schedule">Finish Building Schedule</string>
     <string name="your_schedule">Your Schedule</string>
-    <string name="schedule_preferences_notice">For the most options, select at least 3 locations. If there aren\'t any jobs nearby, we\'ll widen the search.</string>
+    <string name="schedule_preferences_notice">For the most options, select at least 3 locations. If there aren’t any jobs nearby, we’ll widen the search.</string>
     <string name="skip_this_step">Skip</string>
     <string name="welcome">Welcome</string>
     <string name="no_jobs_matching_preferences">There are no open jobs matching your preferences.</string>
