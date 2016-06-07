@@ -433,7 +433,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
         bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
                 OnboardingSuppliesLog.ServerTypes.UPDATE_ADDRESS.error())));
         smartHideLoadingOverlay();
-        showError(event.error.getMessage());
+        showError(event.error.getMessage(), true);
     }
 
     /**
@@ -479,7 +479,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
         bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
                 OnboardingSuppliesLog.ServerTypes.GET_STRIPE_TOKEN.error())));
         smartHideLoadingOverlay();
-        showError(event.getError().getMessage());
+        showError(event.getError().getMessage(), true);
     }
 
     @Subscribe
@@ -490,7 +490,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
         bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
                 OnboardingSuppliesLog.ServerTypes.UPDATE_CREDIT_CARD.error())));
         smartHideLoadingOverlay();
-        showError(event.error.getMessage());
+        showError(event.error.getMessage(), true);
     }
 
     private void confirmPurchase()
@@ -537,7 +537,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
         bus.post(new LogEvent.AddLogEvent(
                 new OnboardingSuppliesLog.RequestSupplies.Error(true)));
         hideLoadingOverlay();
-        showError(event.error.getMessage());
+        showError(event.error.getMessage(), true);
     }
 
     private boolean validateAddress()

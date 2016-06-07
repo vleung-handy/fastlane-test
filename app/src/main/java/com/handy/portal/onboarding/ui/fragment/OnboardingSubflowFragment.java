@@ -325,14 +325,15 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
         button.setEnabled(enabled);
     }
 
-    public void showError(final String message)
+    public void showError(final String message, final boolean autoDismiss)
     {
-        showError(message, null, null);
+        showError(message, null, null, autoDismiss);
     }
 
     public void showError(@Nullable final String message,
                           @Nullable final String actionText,
-                          @Nullable final ErrorActionOnClickListener actionListener)
+                          @Nullable final ErrorActionOnClickListener actionListener,
+                          final boolean autoDismiss)
     {
         String errorMessage = message;
         if (TextUtils.isNullOrEmpty(errorMessage))
@@ -340,7 +341,7 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
             errorMessage = getString(R.string.an_error_has_occurred);
         }
         final Snackbar snackbar = Snackbar.make(mScrollView, errorMessage,
-                Snackbar.LENGTH_INDEFINITE);
+                autoDismiss ? Snackbar.LENGTH_LONG : Snackbar.LENGTH_INDEFINITE);
         setErrorAction(snackbar, actionText, actionListener);
         snackbar.setActionTextColor(getResources().getColor(R.color.handy_blue))
                 .show();

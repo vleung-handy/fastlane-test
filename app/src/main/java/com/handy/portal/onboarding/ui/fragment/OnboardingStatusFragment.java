@@ -119,7 +119,7 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
                     {
                         requestProviderProfile();
                     }
-                });
+                }, false);
     }
 
     private void requestProviderProfile()

@@ -255,7 +255,7 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
         else
         {
             final String errorText = getResources()
-                    .getQuantityString(R.plurals.jobs_already_claimed, mPendingBookings.size());
+                    .getQuantityString(R.plurals.jobs_no_longer_available, mPendingBookings.size());
             showError(errorText, getString(R.string.fix), new ErrorActionOnClickListener()
             {
                 @Override
@@ -263,7 +263,7 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
                 {
                     onEditJobsButtonClicked();
                 }
-            });
+            }, false);
         }
     }
 
@@ -273,7 +273,7 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
         hideLoadingOverlay();
         final String errorMessage = error.error.getMessage();
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchError(errorMessage)));
-        showError(errorMessage);
+        showError(errorMessage, true);
     }
 
     private boolean hasClaims(final List<BookingClaimDetails> claimDetailsList)

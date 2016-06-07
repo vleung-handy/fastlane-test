@@ -210,7 +210,7 @@ public class SchedulePreferencesFragment extends OnboardingSubflowFragment
         }
         else
         {
-            showError(getString(R.string.no_jobs_matching_preferences));
+            showError(getString(R.string.no_jobs_matching_preferences), true);
         }
     }
 
@@ -218,7 +218,7 @@ public class SchedulePreferencesFragment extends OnboardingSubflowFragment
     public void onReceiveOnboardingJobsError(HandyEvent.ReceiveOnboardingJobsError event)
     {
         hideLoadingOverlay();
-        showError(event.error.getMessage());
+        showError(event.error.getMessage(), true);
     }
 
     private boolean validate()

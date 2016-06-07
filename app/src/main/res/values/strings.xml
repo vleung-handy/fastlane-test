@@ -518,11 +518,11 @@
     <string name="ship_to">Ship To</string>
     <string name="retry">Retry</string>
     <string name="redo">Redo</string>
-    <plurals name="jobs_already_claimed">
+    <plurals name="jobs_no_longer_available">
         <item quantity="one">The job you selected is no longer available.</item>
         <item quantity="other">The jobs you selected are no longer available.</item>
     </plurals>
-    <string name="fix">Fix</string>
+    <string name="fix">Fix It</string>
     <string name="fee">Fee</string>
     <string name="add">Add</string>
     <plurals name="locations_selected_count_formatted">
