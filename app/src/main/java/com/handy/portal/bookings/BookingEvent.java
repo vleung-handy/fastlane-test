@@ -123,4 +123,15 @@ public abstract class BookingEvent extends HandyEvent
             this.error = error;
         }
     }
+
+
+    public static class InvalidateScheduledBookingsCache extends RequestEvent
+    {
+        public final Date date;
+
+        public InvalidateScheduledBookingsCache(Date date)
+        {
+            this.date = date;
+        }
+    }
 }

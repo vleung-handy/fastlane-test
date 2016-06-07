@@ -30,6 +30,8 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
@@ -39,8 +41,6 @@ import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.library.util.UIUtils;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -386,9 +386,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     /**
      * updates the bookings view with the given list of bookings for the given date
-     *
-     * @param bookingsWrapper
-     * @param dateOfBookings
      */
     protected void displayBookings(@NonNull BookingsWrapper bookingsWrapper, @NonNull Date dateOfBookings)
     {
