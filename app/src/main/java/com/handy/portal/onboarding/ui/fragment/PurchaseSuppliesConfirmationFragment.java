@@ -129,7 +129,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
                 .setImage(ContextCompat.getDrawable(getContext(), R.drawable.img_supplies));
 
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.Types.CONFIRMATION_SCREEN_SHOWN)));
+                NativeOnboardingLog.Types.SUPPLIES_CONFIRMATION_SHOWN)));
     }
 
     @Override
@@ -322,7 +322,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
     protected void onPrimaryButtonClicked()
     {
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.Types.CONFIRM_PURCHASE_SELECTED)));
+                NativeOnboardingLog.Types.SUPPLIES_CONFIRM_PURCHASE_SELECTED)));
 
         UIUtils.dismissKeyboard(getActivity());
 

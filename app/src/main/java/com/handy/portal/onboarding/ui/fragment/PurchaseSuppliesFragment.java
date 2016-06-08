@@ -85,7 +85,7 @@ public class PurchaseSuppliesFragment extends OnboardingSubflowFragment
                 });
 
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.Types.LANDING_SCREEN_SHOWN)));
+                NativeOnboardingLog.Types.PURCHASE_SUPPLIES_SHOWN)));
     }
 
     @Override
