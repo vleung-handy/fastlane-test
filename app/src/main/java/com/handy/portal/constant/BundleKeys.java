@@ -52,6 +52,7 @@ public class BundleKeys
 
     // Dashboard
     public static final String PROVIDER_EVALUATION = "provider_evaluation";
+    public static final String TIERS_TITLE = "tiers_title";
     public static final String YOUTUBE_VIDEO_ID = "youtube_video_id";
 
     // Location

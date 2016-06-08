@@ -43,6 +43,7 @@ import butterknife.OnClick;
 public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
 {
     public static final String FRAGMENT_TAG = ProRequestedJobsDialogFragment.class.getName();
+    public static final int REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE = 14;//TODO: Make this a config param
 
     @Bind(R.id.fragment_dialog_pro_requested_jobs_list_view)
     ProRequestedJobsExpandableListView mProRequestedJobsExpandableListView;
@@ -228,13 +229,7 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
 
     private List<Date> getDatesForBookings()
     {
-        return DateTimeUtils.getDateWithoutTimeList(new Date(), getNumDaysToDisplay());
-    }
-
-    //FIXME: get this as a config param from the server instead
-    protected int getNumDaysToDisplay()
-    {
-        return 28;
+        return DateTimeUtils.getDateWithoutTimeList(new Date(), REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
     }
 
     @Override

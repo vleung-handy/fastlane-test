@@ -15,6 +15,7 @@
     <dimen name="extra_margin_large">15dp</dimen>
     <dimen name="extra_margin_xlarge">20dp</dimen>
     <dimen name="section_item_margin">20dp</dimen>
+    <dimen name="default_margin_xmedium">30dp</dimen>
     <dimen name="default_margin_x2">32dp</dimen>
     <dimen name="default_margin_x3">48dp</dimen>
     <dimen name="default_margin_large">32dp</dimen>
@@ -32,6 +33,7 @@
     <dimen name="default_padding_half">8dp</dimen>
     <dimen name="default_padding">16dp</dimen>
     <dimen name="default_padding_medium">24dp</dimen>
+    <dimen name="default_padding_medium_large">30dp</dimen>
     <dimen name="default_padding_large">32dp</dimen>
     <dimen name="dashboard_header_padding">20dp</dimen>
     <dimen name="default_padding_xlarge">48dp</dimen>
@@ -62,6 +64,7 @@
         going forward, this will replace the xxlarge_text_size -->
     <dimen name="xxlarge_text_size_new">24sp</dimen>
     <dimen name="xxlarge_text_size">32sp</dimen>
+    <dimen name="xxxlarge_text_size">48sp</dimen>
     <dimen name="title_text_size">25sp</dimen>
     <dimen name="accept_terms_button_text_size">20sp</dimen>
 
@@ -130,6 +133,8 @@
     <dimen name="youtube_image_view_margin_top">8dp</dimen>
     <dimen name="youtube_image_view_margin_bottom">28dp</dimen>
 
+    <dimen name="tier_dot_width_height">7dp</dimen>
+
 
     <!-- warning or error screen -->
     <dimen name="error_margin_top">10dp</dimen>
@@ -182,5 +187,16 @@
     <!-- Payments -->
     <dimen name="outstanding_week_question_mark_width_height">72dp</dimen>
     <dimen name="payment_description_width">200dp</dimen>
+
+    <!-- Requested Jobs Inbox -->
+    <dimen name="requested_jobs_inbox_text_count_size">25dp</dimen>
+    <dimen name="requested_jobs_inbox_text_left_offset">20dp</dimen>
+    <dimen name="requested_jobs_inbox_icon_top_offset">5dp</dimen>
+    <dimen name="requested_jobs_layout_top_offset">10dp</dimen>
+
+    <!-- Tiers -->
+    <dimen name="complete_job_padding_top_bottom">18dp</dimen>
+    <dimen name="tiers_description_side_padding">18dp</dimen>
+    <dimen name="tier_margin_top_bottom">8dp</dimen>
 
 </resources>
