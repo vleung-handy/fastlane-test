@@ -10,6 +10,8 @@ public class StatusButton implements Serializable
     private String mTitle;
     @SerializedName("deeplink")
     private String mUrl;
+    @SerializedName("type")
+    private Type mType;
 
     public String getTitle()
     {
@@ -19,5 +21,18 @@ public class StatusButton implements Serializable
     public String getUrl()
     {
         return mUrl;
+    }
+
+    public Type getType()
+    {
+        return mType;
+    }
+
+    public enum Type
+    {
+        @SerializedName("normal")
+        NORMAL,
+        @SerializedName("error")
+        ERROR,
     }
 }
