@@ -125,7 +125,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
         final String orderTotalFormatted = getString(R.string.order_total_formatted,
                 mSuppliesInfo.getCost());
         mSuppliesOrderInfo.setOrderTotalText(mSuppliesInfo.getCost());
-        mOrderSummary.setContent(getString(R.string.supply_starter_kit), orderTotalFormatted)
+        mOrderSummary.setContent(getString(R.string.starter_supply_kit), orderTotalFormatted)
                 .setImage(ContextCompat.getDrawable(getContext(), R.drawable.img_supplies));
 
         bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
@@ -301,21 +301,21 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
     @Override
     protected String getTitle()
     {
-        return getString(R.string.confirm_purchase);
+        return getString(R.string.purchase_supplies);
     }
 
     @Nullable
     @Override
     protected String getHeaderText()
     {
-        return mSubflowData.getPaymentHeader().getTitle();
+        return getString(R.string.enter_payment_information);
     }
 
     @Nullable
     @Override
     protected String getSubHeaderText()
     {
-        return mSubflowData.getPaymentHeader().getDescription();
+        return mSuppliesInfo.getChargeNotice();
     }
 
     @Override

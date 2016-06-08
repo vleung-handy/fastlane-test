@@ -72,7 +72,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/extra_margin"
                     android:textAppearance="@style/TextView.Bold"
-                    tools:text="@string/supply_starter_kit"
+                    tools:text="@string/starter_supply_kit"
                     />
 
                 <TextView

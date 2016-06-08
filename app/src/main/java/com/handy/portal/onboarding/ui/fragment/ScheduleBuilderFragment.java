@@ -146,7 +146,7 @@ public class ScheduleBuilderFragment extends OnboardingSubflowFragment
     @Override
     protected String getHeaderText()
     {
-        return mSubflowData.getScheduleHeader().getTitle();
+        return getString(R.string.create_your_first_schedule);
     }
 
     @Nullable
@@ -154,7 +154,7 @@ public class ScheduleBuilderFragment extends OnboardingSubflowFragment
     protected String getSubHeaderText()
     {
         return TextUtils.isNullOrEmpty(mMessage) ?
-                mSubflowData.getScheduleHeader().getDescription() : mMessage;
+                getString(R.string.we_found_some_jobs) : mMessage;
     }
 
     @Override

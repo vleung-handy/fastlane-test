@@ -178,14 +178,14 @@ public class SchedulePreferencesFragment extends OnboardingSubflowFragment
     @Override
     protected String getHeaderText()
     {
-        return mSubflowData.getClaimHeader().getTitle();
+        return getString(R.string.set_your_preferences);
     }
 
     @Nullable
     @Override
     protected String getSubHeaderText()
     {
-        return mSubflowData.getClaimHeader().getDescription();
+        return getString(R.string.start_as_early_as_next_week);
     }
 
     @Override

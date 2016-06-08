@@ -57,7 +57,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical|start"
             android:padding="@dimen/default_padding"
-            android:text="@string/supply_starter_kit"
+            android:text="@string/starter_supply_kit"
             />
 
         <TextView
