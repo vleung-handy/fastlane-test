@@ -13,6 +13,8 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.DashboardTiersLog;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.ui.adapter.DashboardTiersPagerAdapter;
 import com.handy.portal.ui.element.DashboardTierViewPager;
@@ -132,6 +134,7 @@ public class DashboardTiersFragment extends ActionBarFragment implements Dashboa
     {
         ProviderEvaluation.Incentive mCurrentIncentive =
                 mEvaluation.getPayRates().getIncentives().get(mCurrentPage);
+
         switch (mCurrentIncentive.getType())
         {
             case ProviderEvaluation.Incentive.TIERED_TYPE:
@@ -152,5 +155,8 @@ public class DashboardTiersFragment extends ActionBarFragment implements Dashboa
                 break;
 
         }
+
+        bus.post(new LogEvent.AddLogEvent(new DashboardTiersLog.TiersCardViewedLog(
+                mCurrentIncentive.getRegionName(), mCurrentIncentive.getServiceName())));
     }
 }
