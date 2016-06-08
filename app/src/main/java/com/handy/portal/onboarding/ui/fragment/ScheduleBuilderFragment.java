@@ -10,6 +10,7 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.onboarding.viewmodel.BookingViewModel;
@@ -29,13 +30,15 @@ public class ScheduleBuilderFragment extends OnboardingSubflowFragment
 
     private List<BookingsWrapper> mBookingsWrappers;
     private List<BookingsWrapperViewModel> mBookingsWrapperViewModels;
+    private String mMessage;
 
     public static ScheduleBuilderFragment newInstance(
-            final ArrayList<BookingsWrapper> bookingsWrappers)
+            final ArrayList<BookingsWrapper> bookingsWrappers, final String message)
     {
         final ScheduleBuilderFragment fragment = new ScheduleBuilderFragment();
         final Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKINGS_WRAPPERS, bookingsWrappers);
+        arguments.putString(BundleKeys.MESSAGE, message);
         fragment.setArguments(arguments);
         return fragment;
     }
@@ -47,6 +50,7 @@ public class ScheduleBuilderFragment extends OnboardingSubflowFragment
         super.onCreate(savedInstanceState);
         mBookingsWrappers = (List<BookingsWrapper>) getArguments()
                 .getSerializable(BundleKeys.BOOKINGS_WRAPPERS);
+        mMessage = getArguments().getString(BundleKeys.MESSAGE);
     }
 
     @Override
@@ -142,14 +146,15 @@ public class ScheduleBuilderFragment extends OnboardingSubflowFragment
     @Override
     protected String getHeaderText()
     {
-        return mSubflowData.getScheduleHeader().getTitle();
+        return getString(R.string.create_your_first_schedule);
     }
 
     @Nullable
     @Override
     protected String getSubHeaderText()
     {
-        return mSubflowData.getScheduleHeader().getDescription();
+        return TextUtils.isNullOrEmpty(mMessage) ?
+                getString(R.string.we_found_some_jobs) : mMessage;
     }
 
     @Override

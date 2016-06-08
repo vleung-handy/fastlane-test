@@ -7,15 +7,8 @@ import java.util.ArrayList;
 
 public class LearningLinkDetails implements Serializable
 {
-    @SerializedName("title")
-    private String mTitle;
     @SerializedName("links")
     private ArrayList<LearningLink> mLearningLinks;
-
-    public String getTitle()
-    {
-        return mTitle;
-    }
 
     public ArrayList<LearningLink> getLearningLinks()
     {

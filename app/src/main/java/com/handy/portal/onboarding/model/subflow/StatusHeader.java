@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class OnboardingHeader implements Serializable
+public class StatusHeader implements Serializable
 {
     @SerializedName("title")
     private String mTitle;

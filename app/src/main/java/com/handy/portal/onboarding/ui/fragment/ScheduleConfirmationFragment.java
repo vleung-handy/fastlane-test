@@ -207,14 +207,14 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
     @Override
     protected String getHeaderText()
     {
-        return mSubflowData.getHeader().getTitle();
+        return getString(R.string.ready_to_commit);
     }
 
     @Nullable
     @Override
     protected String getSubHeaderText()
     {
-        return mSubflowData.getHeader().getDescription();
+        return getString(R.string.double_check_everything);
     }
 
     @Override

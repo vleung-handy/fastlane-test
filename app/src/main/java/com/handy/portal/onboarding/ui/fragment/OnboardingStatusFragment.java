@@ -30,7 +30,7 @@ import com.handy.portal.onboarding.model.status.ApplicationStatus;
 import com.handy.portal.onboarding.model.status.LearningLink;
 import com.handy.portal.onboarding.model.status.LearningLinkDetails;
 import com.handy.portal.onboarding.model.status.StatusButton;
-import com.handy.portal.onboarding.model.subflow.OnboardingHeader;
+import com.handy.portal.onboarding.model.subflow.StatusHeader;
 import com.handy.portal.onboarding.model.subflow.SubflowData;
 import com.squareup.otto.Subscribe;
 
@@ -161,7 +161,7 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
                 && suppliesInfo.getDesignation() != null
                 && suppliesInfo.getDesignation() != Designation.UNDECIDED)
         {
-            final String title = getString(R.string.supply_starter_kit);
+            final String title = getString(R.string.supply_kit);
             switch (suppliesInfo.getDesignation())
             {
                 case YES:
@@ -211,7 +211,6 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
                 && learningLinkDetails.getLearningLinks() != null
                 && !learningLinkDetails.getLearningLinks().isEmpty())
         {
-            mLinksTitle.setText(learningLinkDetails.getTitle());
             for (final LearningLink learningLink : learningLinkDetails.getLearningLinks())
             {
                 addLinkTextView(learningLink.getTitle(), learningLink.getUrl());
@@ -276,7 +275,7 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
     @Override
     protected int getHeaderImageType()
     {
-        final OnboardingHeader.ImageType imageType = mStatusData.getHeader().getImageType();
+        final StatusHeader.ImageType imageType = mStatusData.getHeader().getImageType();
         if (imageType != null)
         {
             switch (imageType)

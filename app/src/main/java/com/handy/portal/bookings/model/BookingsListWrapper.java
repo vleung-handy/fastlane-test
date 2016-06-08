@@ -8,6 +8,8 @@ public class BookingsListWrapper
 {
     @SerializedName("job_days")
     private ArrayList<BookingsWrapper> mBookingsWrappers;
+    @SerializedName("message")
+    private String mMessage;
 
     public final ArrayList<BookingsWrapper> getBookingsWrappers()
     {
@@ -32,5 +34,10 @@ public class BookingsListWrapper
             }
         }
         return false;
+    }
+
+    public String getMessage()
+    {
+        return mMessage;
     }
 }

@@ -17,17 +17,10 @@ public class SubflowData implements Serializable
     // Generic Subflow Data
     @SerializedName("supplies_info")
     private SuppliesInfo mSuppliesInfo; // belongs to Status and Supplies subflows
-    @SerializedName("header")
-    private OnboardingHeader mHeader; // belongs to Status and Confirmation subflows
 
     public SuppliesInfo getSuppliesInfo()
     {
         return mSuppliesInfo;
-    }
-
-    public OnboardingHeader getHeader()
-    {
-        return mHeader;
     }
 
     // Status Subflow Data
@@ -39,6 +32,8 @@ public class SubflowData implements Serializable
     private ArrayList<Booking> mClaims;
     @SerializedName("button")
     private StatusButton mButton;
+    @SerializedName("header")
+    private StatusHeader mHeader;
 
     public ApplicationStatus getApplicationStatus()
     {
@@ -60,26 +55,16 @@ public class SubflowData implements Serializable
         return mButton;
     }
 
+    public StatusHeader getHeader()
+    {
+        return mHeader;
+    }
+
     // Claim Subflow Data
-    @SerializedName("claim_header")
-    private OnboardingHeader mClaimHeader;
-    @SerializedName("schedule_header")
-    private OnboardingHeader mScheduleHeader;
     @SerializedName("date_range")
     private StartDateRange mStartDateRange;
     @SerializedName("locations")
     private ArrayList<Zipcluster> mZipclusters;
-
-
-    public OnboardingHeader getClaimHeader()
-    {
-        return mClaimHeader;
-    }
-
-    public OnboardingHeader getScheduleHeader()
-    {
-        return mScheduleHeader;
-    }
 
     public StartDateRange getStartDateRange()
     {
@@ -89,21 +74,5 @@ public class SubflowData implements Serializable
     public ArrayList<Zipcluster> getZipclusters()
     {
         return mZipclusters;
-    }
-
-    // Supplies Subflow Data
-    @SerializedName("supplies_header")
-    private OnboardingHeader mSuppliesHeader;
-    @SerializedName("payment_header")
-    private OnboardingHeader mPaymentHeader;
-
-    public OnboardingHeader getSuppliesHeader()
-    {
-        return mSuppliesHeader;
-    }
-
-    public OnboardingHeader getPaymentHeader()
-    {
-        return mPaymentHeader;
     }
 }
