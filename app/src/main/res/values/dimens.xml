@@ -190,6 +190,12 @@
     <dimen name="outstanding_week_question_mark_width_height">72dp</dimen>
     <dimen name="payment_description_width">200dp</dimen>
 
+    <!-- Requested Jobs Inbox -->
+    <dimen name="requested_jobs_inbox_text_count_size">25dp</dimen>
+    <dimen name="requested_jobs_inbox_text_left_offset">20dp</dimen>
+    <dimen name="requested_jobs_inbox_icon_top_offset">5dp</dimen>
+    <dimen name="requested_jobs_layout_top_offset">10dp</dimen>
+
     <!-- Tiers -->
     <dimen name="complete_job_padding_top_bottom">18dp</dimen>
     <dimen name="tiers_description_side_padding">18dp</dimen>

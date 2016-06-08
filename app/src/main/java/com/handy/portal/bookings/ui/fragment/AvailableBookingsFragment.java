@@ -13,9 +13,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
+import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.BookingModalsManager;
 import com.handy.portal.bookings.BookingModalsManager.BookingsForDaysAheadModalsManager;
 import com.handy.portal.bookings.model.Booking;
@@ -125,8 +127,65 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
             {
                 mToggleAvailableJobNotification.setVisibility(View.VISIBLE);
             }
-
             setLateDispatchOptInToggleListener();
+
+            if (configManager.getConfigurationResponse() != null &&
+                    configManager.getConfigurationResponse().isPendingRequestsInboxEnabled())
+            {
+                requestRequestedAvailableJobs();
+            }
+        }
+    }
+
+    private void requestRequestedAvailableJobs()
+    {
+        //Hide the count until we get back, this is an inflated element so not bindable yet
+
+        if (mMenuProRequestedJobs != null)
+        {
+            TextView displayCountText = (TextView) mMenuProRequestedJobs.getActionView().findViewById(R.id.action_pro_requested_jobs_layout_count_text);
+            displayCountText.setVisibility(View.INVISIBLE);
+        }
+
+        //TODO: Days should be behind a config param, just using a static const until then
+        List<Date> datesForBookings = DateTimeUtils.getDateWithoutTimeList(new Date(), ProRequestedJobsDialogFragment.REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
+        bus.post(new BookingEvent.RequestProRequestedJobs(datesForBookings, true));
+    }
+
+    @Subscribe
+    public void onReceiveProRequestedJobsSuccess(BookingEvent.ReceiveProRequestedJobsSuccess event)
+    {
+
+        List<BookingsWrapper> proRequestedJobsList = event.getProRequestedJobs();
+
+        if (mMenuProRequestedJobs != null && proRequestedJobsList != null)
+        {
+            //not bound because manually inflated
+            TextView displayCountText = (TextView) mMenuProRequestedJobs.getActionView().findViewById(R.id.action_pro_requested_jobs_layout_count_text);
+            if (displayCountText == null)
+            {
+                return;
+            }
+
+            //Show and update count
+            int countOfRequestedJobs = 0;
+            for (BookingsWrapper wrapper : event.getProRequestedJobs())
+            {
+                countOfRequestedJobs += wrapper.getBookings().size();
+            }
+
+            //If no unclaimed jobs don't show icon and count
+            if (countOfRequestedJobs > 0)
+            {
+                mMenuProRequestedJobs.setVisible(true);
+                displayCountText.setVisibility(View.VISIBLE);
+                displayCountText.setText(Integer.toString(countOfRequestedJobs));
+            }
+            else
+            {
+                //hide the whole thing
+                mMenuProRequestedJobs.setVisible(false);
+            }
         }
     }
 
@@ -137,7 +196,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         inflater.inflate(R.menu.menu_available_bookings, menu);
         mMenuSchedule = menu.findItem(R.id.action_initial_jobs);
         mMenuProRequestedJobs = menu.findItem(R.id.action_pro_requested_jobs);
-
         updateMenuItems();
     }
 
@@ -149,11 +207,9 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
             case R.id.action_initial_jobs:
                 startActivity(new Intent(getContext(), GettingStartedActivity.class));
                 return true;
-            case R.id.action_pro_requested_jobs:
-                launchProRequestedJobsDialogFragment();
-                return true;
+            //Had to use an onclick listener since we're using a custom view for the envelope + count
+//            case R.id.action_pro_requested_jobs:
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -267,7 +323,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     private void updateMenuItems()
     {
-
         if (mMenuSchedule != null)
         {
             if (mProviderProfile != null
@@ -284,10 +339,20 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
         if(mMenuProRequestedJobs != null)
         {
-            if(mConfigManager.getConfigurationResponse() != null
+            if (mConfigManager.getConfigurationResponse() != null
                     && mConfigManager.getConfigurationResponse().isPendingRequestsInboxEnabled())
             {
-                mMenuProRequestedJobs.setVisible(true);
+                //Don't turn this visible until the call with count comes back, only show if 1+ jobs unclaimed
+
+                //Need to use the click listener instead of menu listener in the action view because of the custom view
+                mMenuProRequestedJobs.getActionView().setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(final View v)
+                    {
+                        launchProRequestedJobsDialogFragment();
+                    }
+                });
             }
             else
             {

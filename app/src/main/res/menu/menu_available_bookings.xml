@@ -12,8 +12,8 @@
     <item
         android:id="@+id/action_pro_requested_jobs"
         app:showAsAction="always"
-        android:icon="@drawable/ic_nav_pro_requested_jobs_inbox"
-        android:title=""
+        app:actionLayout="@layout/action_pro_requested_jobs_layout"
         android:visible="false"
+        android:title=""
         />
 </menu>
