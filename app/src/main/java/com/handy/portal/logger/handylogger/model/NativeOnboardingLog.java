@@ -228,10 +228,13 @@ public class NativeOnboardingLog extends EventLog
     public static class ClaimBatchSubmitted extends NativeOnboardingLog
     {
         private static final String EVENT_TYPE = "claim_batch_submitted";
+        @SerializedName("booking_ids")
+        private String[] mBookingsIds;
 
-        public ClaimBatchSubmitted()
+        public ClaimBatchSubmitted(final ArrayList<Booking> bookings)
         {
             super(EVENT_TYPE);
+            mBookingsIds = extractBookingIds(bookings);
         }
     }
 
@@ -245,10 +248,13 @@ public class NativeOnboardingLog extends EventLog
     public static class ClaimBatchSuccess extends NativeOnboardingLog
     {
         private static final String EVENT_TYPE = "claim_batch_success";
+        @SerializedName("booking_ids")
+        private String[] mBookingsIds;
 
-        public ClaimBatchSuccess()
+        public ClaimBatchSuccess(final ArrayList<Booking> bookings)
         {
             super(EVENT_TYPE);
+            mBookingsIds = extractBookingIds(bookings);
         }
     }
 
@@ -260,14 +266,27 @@ public class NativeOnboardingLog extends EventLog
     {
         private static final String EVENT_TYPE = "claim_batch_error";
 
+        @SerializedName("booking_ids")
+        private String[] mBookingsIds;
         @SerializedName("error_message")
         private String mErrorMessage;
 
-        public ClaimBatchError(String errorMessage)
+        public ClaimBatchError(final ArrayList<Booking> bookings, final String errorMessage)
         {
             super(EVENT_TYPE);
             mErrorMessage = errorMessage;
+            mBookingsIds = extractBookingIds(bookings);
         }
+    }
+
+    private static String[] extractBookingIds(final ArrayList<Booking> bookings)
+    {
+        final String[] bookingsIds = new String[bookings.size()];
+        for (int i = 0; i < bookings.size(); i++)
+        {
+            bookingsIds[i] = bookings.get(i).getId();
+        }
+        return bookingsIds;
     }
 
 
@@ -292,13 +311,9 @@ public class NativeOnboardingLog extends EventLog
     {
         private static final String EVENT_TYPE = "claim_error";
 
-        @SerializedName("error_message")
-        private String mErrorMessage;
-
-        public ClaimError(final Booking booking, String errorMessage)
+        public ClaimError(final Booking booking)
         {
             super(EVENT_TYPE, EVENT_CONTEXT, booking);
-            mErrorMessage = errorMessage;
         }
     }
 }
