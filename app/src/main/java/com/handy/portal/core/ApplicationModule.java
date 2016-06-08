@@ -67,7 +67,6 @@ import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesWebViewFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
-import com.handy.portal.ui.fragment.dashboard.DashboardNewTiersFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardVideoLibraryFragment;
@@ -118,7 +117,6 @@ import retrofit.converter.GsonConverter;
         ProfileUpdateFragment.class,
         SupportActionView.class,
         DashboardTiersFragment.class,
-        DashboardNewTiersFragment.class,
         DashboardFeedbackFragment.class,
         DashboardReviewsFragment.class,
         DashboardOptionsPerformanceView.class,
@@ -134,6 +132,7 @@ import retrofit.converter.GsonConverter;
         GettingStartedActivity.class,
         OnboardWelcomeActivity.class,
         RequestSuppliesWebViewFragment.class,
+        DashboardTiersFragment.class,
 },
         includes = {
                 HelpModule.class,
