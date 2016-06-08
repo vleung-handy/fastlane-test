@@ -104,6 +104,7 @@ public class DashboardTierView extends FrameLayout
 
         if (isTwoColumns)
         {
+            // Change column ratio to 3:1 if two columns
             mTierRowLayout.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 3f));
         }
     }

@@ -99,6 +99,8 @@ public class DashboardRegionTierView extends FrameLayout
         {
             mTierHeaderText.setText(getResources().getString(R.string.job_type));
             mRegionTierMiddleColumn.setVisibility(GONE);
+
+            // Change column ratio to 3:1 if two columns
             mTierHeaderText.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 3f));
             mIsTwoColumns = true;
         }
