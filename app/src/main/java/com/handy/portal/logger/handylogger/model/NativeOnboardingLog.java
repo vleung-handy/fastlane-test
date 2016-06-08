@@ -74,6 +74,7 @@ public class NativeOnboardingLog extends EventLog
         public static final String SUPPLIES_CONFIRMATION_SHOWN = "supplies_confirmation_shown";
         public static final String EDIT_ADDRESS_SHOWN = "edit_address_shown";
         public static final String SUPPLIES_CONFIRM_PURCHASE_SELECTED = "supplies_confirm_purchase_selected";
+        public static final String CONFIRMATION_PAGE_SHOWN = "confirmation_page_shown";
     }
 
 
@@ -200,6 +201,23 @@ public class NativeOnboardingLog extends EventLog
                 super(ServerTypes.SUFFIX_ERROR);
                 mRequested = requested;
             }
+        }
+    }
+
+
+    public static class ConfirmationPageSubmitted extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "confirmation_page_submitted";
+        @SerializedName("claimed_jobs")
+        private final int mClaimedJobs;
+        @SerializedName("supplies_requested")
+        private final Boolean mSuppliesRequested;
+
+        public ConfirmationPageSubmitted(final int claimedJobs, final Boolean suppliesRequested)
+        {
+            super(EVENT_TYPE);
+            mClaimedJobs = claimedJobs;
+            mSuppliesRequested = suppliesRequested;
         }
     }
 

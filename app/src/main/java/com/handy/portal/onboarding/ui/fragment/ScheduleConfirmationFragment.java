@@ -133,6 +133,8 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
                 .getSerializable(BundleKeys.SUPPLIES_ORDER_INFO);
         initJobsView();
         initSuppliesView();
+        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
+                NativeOnboardingLog.Types.CONFIRMATION_PAGE_SHOWN)));
     }
 
     private void initJobsView()
@@ -241,6 +243,26 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
                     }
                 }));
         bus.post(new HandyEvent.RequestClaimJobs(new JobClaimRequest(jobClaims)));
+        logConfirmationPageSubmitted(jobClaims);
+    }
+
+    private void logConfirmationPageSubmitted(final ArrayList<JobClaim> jobClaims)
+    {
+        Boolean suppliesRequested = null;
+        if (mSuppliesOrderInfo != null && mSuppliesOrderInfo.getDesignation() != null)
+        {
+            final Designation designation = mSuppliesOrderInfo.getDesignation();
+            if (designation == Designation.YES)
+            {
+                suppliesRequested = true;
+            }
+            else if (designation == Designation.NO)
+            {
+                suppliesRequested = false;
+            }
+        }
+        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ConfirmationPageSubmitted(
+                jobClaims.size(), suppliesRequested)));
     }
 
     @Subscribe
