@@ -82,6 +82,8 @@ public class MainActivityFragment extends InjectedFragment
     RadioButton mNavLinkReferAFriend;
     @Bind(R.id.nav_link_account_settings)
     RadioButton mNavAccountSettings;
+    @Bind(R.id.nav_link_video_library)
+    RadioButton mNavLinkVideoLibrary;
     @Bind(R.id.nav_link_help)
     RadioButton mNavLinkHelp;
     @Bind(R.id.drawer_layout)
@@ -438,6 +440,12 @@ public class MainActivityFragment extends InjectedFragment
                 mNavAccountSettings.toggle();
             }
             break;
+            case DASHBOARD_VIDEO_LIBRARY:
+            {
+                mButtonMore.toggle();
+                mNavLinkVideoLibrary.toggle();
+            }
+            break;
             case HELP_WEBVIEW:
             {
                 mButtonMore.toggle();
@@ -491,6 +499,7 @@ public class MainActivityFragment extends InjectedFragment
         mNavLinkRatingsAndFeedback.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.DASHBOARD, null));
         mNavLinkReferAFriend.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.REFER_A_FRIEND, null));
         mNavAccountSettings.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.ACCOUNT_SETTINGS, null));
+        mNavLinkVideoLibrary.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.DASHBOARD_VIDEO_LIBRARY, null));
         mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.HELP_WEBVIEW, null));
     }
 
