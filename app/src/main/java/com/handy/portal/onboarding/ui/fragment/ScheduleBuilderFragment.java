@@ -60,6 +60,8 @@ public class ScheduleBuilderFragment extends OnboardingSubflowFragment
         initBookingsWrapperViewModels();
         displayBookings();
         updateButton();
+        bus.post(new LogEvent.AddLogEvent(
+                new NativeOnboardingLog.ScheduleJobsShown(countBookings(mBookingsWrappers))));
     }
 
     private void initBookingsWrapperViewModels()
@@ -85,6 +87,20 @@ public class ScheduleBuilderFragment extends OnboardingSubflowFragment
             jobsViewGroup.bind(viewModel);
             mJobsContainer.addView(jobsViewGroup);
         }
+    }
+
+    private int countBookings(final List<BookingsWrapper> bookingsWrappers)
+    {
+        int bookingsCount = 0;
+        for (final BookingsWrapper bookingsWrapper : mBookingsWrappers)
+        {
+            final List<Booking> bookings = bookingsWrapper.getBookings();
+            if (bookings != null)
+            {
+                bookingsCount += bookings.size();
+            }
+        }
+        return bookingsCount;
     }
 
     @Override
@@ -163,7 +179,8 @@ public class ScheduleBuilderFragment extends OnboardingSubflowFragment
         final ArrayList<Booking> selectedBookings = getSelectedBookings();
         if (!selectedBookings.isEmpty())
         {
-            bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSubmitted()));
+            bus.post(new LogEvent.AddLogEvent(
+                    new NativeOnboardingLog.ScheduleJobsSubmitted(selectedBookings.size())));
             final Intent data = new Intent();
             data.putExtra(BundleKeys.BOOKINGS, selectedBookings);
             terminate(data);

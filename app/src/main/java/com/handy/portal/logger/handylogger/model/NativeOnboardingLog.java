@@ -3,6 +3,9 @@ package com.handy.portal.logger.handylogger.model;
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.Booking;
 
+import java.util.ArrayList;
+import java.util.Date;
+
 /**
  * FWIW, this is where the logging docs are:
  * <p/>
@@ -61,6 +64,8 @@ public class NativeOnboardingLog extends EventLog
 
     public static class Types
     {
+        public static final String JOB_SEARCH_SHOWN = "job_search_shown";
+        public static final String NO_JOBS_LOADED = "no_jobs_loaded";
         public static final String PURCHASE_SUPPLIES_SHOWN = "purchase_supplies_shown";
         public static final String PRODUCTS_LIST_SHOWN = "products_list_shown";
         public static final String PURCHASE_SUPPLIES_SELECTED = "purchase_supplies_selected";
@@ -95,6 +100,62 @@ public class NativeOnboardingLog extends EventLog
         public String error()
         {
             return this.toString().toLowerCase() + SUFFIX_ERROR;
+        }
+    }
+
+
+    public static class StartDateSelected extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "start_date_selected";
+        @SerializedName("start_date")
+        private Date mDate;
+
+        public StartDateSelected(final Date date)
+        {
+            super(EVENT_TYPE);
+            mDate = date;
+        }
+    }
+
+
+    public static class LocationsSelected extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "locations_selected";
+        @SerializedName("locations")
+        private ArrayList<String> mZipclusterIds;
+
+        public LocationsSelected(final ArrayList<String> zipclusterIds)
+        {
+            super(EVENT_TYPE);
+            mZipclusterIds = zipclusterIds;
+        }
+    }
+
+
+    public static class ScheduleJobsShown extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "schedule_jobs_shown";
+        @SerializedName("jobs_shown")
+        private int mJobsShown;
+
+        public ScheduleJobsShown(final int jobsShown)
+        {
+            super(EVENT_TYPE);
+            mJobsShown = jobsShown;
+        }
+    }
+
+
+    public static class ScheduleJobsSubmitted extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "schedule_jobs_submitted";
+        @SerializedName("jobs_to_claim")
+        private int mJobsToClaim;
+
+        public ScheduleJobsSubmitted(final int jobsToClaim)
+        {
+            super(EVENT_TYPE);
+            mJobsToClaim = jobsToClaim;
         }
     }
 
@@ -188,20 +249,6 @@ public class NativeOnboardingLog extends EventLog
         {
             super(EVENT_TYPE);
             mErrorMessage = errorMessage;
-        }
-    }
-
-
-    /**
-     * No bookings are returned from the server to display to the user, essentially skipping the flow
-     */
-    public static class NoJobsLoaded extends NativeOnboardingLog
-    {
-        private static final String EVENT_TYPE = "no_jobs_loaded";
-
-        public NoJobsLoaded()
-        {
-            super(EVENT_TYPE);
         }
     }
 
