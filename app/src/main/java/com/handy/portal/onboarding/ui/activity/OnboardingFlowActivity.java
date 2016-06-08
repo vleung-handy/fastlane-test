@@ -60,7 +60,7 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
                 removeLaunchedSubflows(incompleteSubflows, lastLaunchedSubflowType);
                 if (incompleteSubflows.isEmpty())
                 {
-                    finishOnboardingFlow(true);
+                    finishOnboardingFlow(lastLaunchedSubflowType != SubflowType.STATUS);
                 }
                 else
                 {
