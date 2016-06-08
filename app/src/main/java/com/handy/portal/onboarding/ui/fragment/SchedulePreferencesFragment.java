@@ -15,6 +15,8 @@ import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.ui.view.StaticFieldTableRow;
 import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.onboarding.model.claim.StartDateRange;
 import com.handy.portal.onboarding.model.claim.Zipcluster;
 import com.handy.portal.ui.adapter.CheckBoxListAdapter;
@@ -154,6 +156,8 @@ public class SchedulePreferencesFragment extends OnboardingSubflowFragment
             mLocationField.setVisibility(View.GONE);
             mSchedulePreferencesNotice.setVisibility(View.GONE);
         }
+        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
+                NativeOnboardingLog.Types.JOB_SEARCH_SHOWN)));
     }
 
     @Override
@@ -212,6 +216,8 @@ public class SchedulePreferencesFragment extends OnboardingSubflowFragment
         else
         {
             showError(getString(R.string.no_jobs_matching_preferences), true);
+            bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
+                    NativeOnboardingLog.Types.NO_JOBS_LOADED)));
         }
     }
 
@@ -241,6 +247,8 @@ public class SchedulePreferencesFragment extends OnboardingSubflowFragment
     public void updateSelectedStartedDate(final Date date)
     {
         mSelectedStartDate = date;
+        bus.post(new LogEvent.AddLogEvent(
+                new NativeOnboardingLog.StartDateSelected(mSelectedStartDate)));
         displaySelectedStartDate();
     }
 
@@ -267,6 +275,9 @@ public class SchedulePreferencesFragment extends OnboardingSubflowFragment
                 mSelectedZipclusterIds.add(item.getId());
             }
         }
+        bus.post(new LogEvent.AddLogEvent(
+                new NativeOnboardingLog.LocationsSelected(
+                        new ArrayList<>(mSelectedZipclusterIds))));
         displaySelectedLocations();
     }
 

@@ -133,6 +133,8 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
                 .getSerializable(BundleKeys.SUPPLIES_ORDER_INFO);
         initJobsView();
         initSuppliesView();
+        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
+                NativeOnboardingLog.Types.CONFIRMATION_PAGE_SHOWN)));
     }
 
     private void initJobsView()
@@ -241,14 +243,38 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
                     }
                 }));
         bus.post(new HandyEvent.RequestClaimJobs(new JobClaimRequest(jobClaims)));
+        logConfirmationPageSubmitted();
+        bus.post(new NativeOnboardingLog.ClaimBatchSubmitted(mPendingBookings));
+    }
+
+    private void logConfirmationPageSubmitted()
+    {
+        Boolean suppliesRequested = null;
+        if (mSuppliesOrderInfo != null && mSuppliesOrderInfo.getDesignation() != null)
+        {
+            final Designation designation = mSuppliesOrderInfo.getDesignation();
+            if (designation == Designation.YES)
+            {
+                suppliesRequested = true;
+            }
+            else if (designation == Designation.NO)
+            {
+                suppliesRequested = false;
+            }
+        }
+        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ConfirmationPageSubmitted(
+                mPendingBookings.size(), suppliesRequested)));
     }
 
     @Subscribe
     public void onReceiveClaimJobsSuccess(HandyEvent.ReceiveClaimJobsSuccess event)
     {
         hideLoadingOverlay();
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchSuccess()));
-        if (hasClaims(event.getJobClaimResponse().getJobs()))
+        bus.post(new LogEvent.AddLogEvent(
+                new NativeOnboardingLog.ClaimBatchSuccess(mPendingBookings)));
+        final List<Booking> claimedBookings =
+                logAndGetClaimedBookings(event.getJobClaimResponse().getJobs());
+        if (!claimedBookings.isEmpty())
         {
             terminate(new Intent());
         }
@@ -272,26 +298,37 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
     {
         hideLoadingOverlay();
         final String errorMessage = error.error.getMessage();
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ClaimBatchError(errorMessage)));
+        bus.post(new LogEvent.AddLogEvent(
+                new NativeOnboardingLog.ClaimBatchError(mPendingBookings, errorMessage)));
         showError(errorMessage, true);
     }
 
-    private boolean hasClaims(final List<BookingClaimDetails> claimDetailsList)
+    // WARNING: This has a event logging side-effect. Be mindful of its usage.
+    private List<Booking> logAndGetClaimedBookings(final List<BookingClaimDetails> claimDetailsList)
     {
+        final List<Booking> claimedBookings = new ArrayList<>();
         if (claimDetailsList != null)
         {
             final String providerId = getProviderId();
             for (final BookingClaimDetails claimDetails : claimDetailsList)
             {
+                final Booking booking = claimDetails.getBooking();
                 final Booking.BookingStatus bookingStatus =
-                        claimDetails.getBooking().inferBookingStatus(providerId);
+                        booking.inferBookingStatus(providerId);
                 if (bookingStatus == Booking.BookingStatus.CLAIMED)
                 {
-                    return true;
+                    claimedBookings.add(booking);
+                    bus.post(new LogEvent.AddLogEvent(
+                            new NativeOnboardingLog.ClaimSuccess(booking)));
+                }
+                else
+                {
+                    bus.post(new LogEvent.AddLogEvent(
+                            new NativeOnboardingLog.ClaimError(booking)));
                 }
             }
         }
-        return false;
+        return claimedBookings;
     }
 
     public String getProviderId()
