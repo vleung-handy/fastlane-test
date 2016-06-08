@@ -28,7 +28,6 @@ import com.handy.portal.model.Address;
 import com.handy.portal.model.Designation;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.onboarding.SuppliesInfo;
-import com.handy.portal.onboarding.model.status.ApplicationStatus;
 import com.handy.portal.onboarding.model.status.LearningLink;
 import com.handy.portal.onboarding.model.status.LearningLinkDetails;
 import com.handy.portal.onboarding.model.status.StatusButton;
@@ -59,7 +58,6 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
 
     private SubflowData mStatusData;
     private ProviderPersonalInfo mProviderPersonalInfo;
-    private ApplicationStatus mStatus;
 
     public static OnboardingStatusFragment newInstance()
     {
@@ -71,7 +69,6 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
     {
         super.onCreate(savedInstanceState);
         mStatusData = (SubflowData) getArguments().getSerializable(BundleKeys.SUBFLOW_DATA);
-        mStatus = mStatusData.getApplicationStatus();
     }
 
     @Override
@@ -79,15 +76,20 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
     {
         super.onViewCreated(view, savedInstanceState);
         mMainContentContainer.setVisibility(View.GONE);
-        mStatus = mStatusData.getApplicationStatus();
-        if (mStatus == ApplicationStatus.REJECTED || mStatus == ApplicationStatus.UNVERIFIED)
+        initButtonColor();
+        bus.post(new LogEvent.AddLogEvent(
+                new NativeOnboardingLog.StatusPageShown(
+                        mStatusData.getApplicationStatus().name().toLowerCase())));
+    }
+
+    private void initButtonColor()
+    {
+        if (mStatusData.getButton().getType() == StatusButton.Type.ERROR)
         {
             final int red = getResources().getColor(R.color.error_red);
             mGroupPrimaryButton.setBackgroundColor(red);
             mSingleActionButton.setBackgroundColor(red);
         }
-        bus.post(new LogEvent.AddLogEvent(
-                new NativeOnboardingLog.StatusPageShown(mStatus.name().toLowerCase())));
     }
 
     @Override
@@ -334,7 +336,8 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
         if (statusButton != null)
         {
             bus.post(new LogEvent.AddLogEvent(
-                    new NativeOnboardingLog.StatusPageSubmitted(mStatus.name().toLowerCase())));
+                    new NativeOnboardingLog.StatusPageSubmitted(
+                            mStatusData.getApplicationStatus().name().toLowerCase())));
             final String url = statusButton.getUrl();
             if (!TextUtils.isNullOrEmpty(url))
             {
