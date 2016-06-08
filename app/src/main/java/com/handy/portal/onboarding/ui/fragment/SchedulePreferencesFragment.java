@@ -206,7 +206,8 @@ public class SchedulePreferencesFragment extends OnboardingSubflowFragment
         final BookingsListWrapper bookingsListWrapper = event.getBookingsListWrapper();
         if (bookingsListWrapper.hasBookings())
         {
-            next(ScheduleBuilderFragment.newInstance(bookingsListWrapper.getBookingsWrappers()));
+            next(ScheduleBuilderFragment.newInstance(bookingsListWrapper.getBookingsWrappers(),
+                    bookingsListWrapper.getMessage()));
         }
         else
         {
