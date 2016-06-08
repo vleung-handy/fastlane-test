@@ -84,11 +84,15 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
 
     private void initButtonColor()
     {
-        if (mStatusData.getButton().getType() == StatusButton.Type.ERROR)
+        final StatusButton button = mStatusData.getButton();
+        if (button != null)
         {
-            final int red = getResources().getColor(R.color.error_red);
-            mGroupPrimaryButton.setBackgroundColor(red);
-            mSingleActionButton.setBackgroundColor(red);
+            if (button.getType() == StatusButton.Type.ERROR)
+            {
+                final int red = getResources().getColor(R.color.error_red);
+                mGroupPrimaryButton.setBackgroundColor(red);
+                mSingleActionButton.setBackgroundColor(red);
+            }
         }
     }
 

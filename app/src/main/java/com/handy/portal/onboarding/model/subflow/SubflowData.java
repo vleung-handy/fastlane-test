@@ -1,5 +1,7 @@
 package com.handy.portal.onboarding.model.subflow;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.model.onboarding.SuppliesInfo;
@@ -50,6 +52,7 @@ public class SubflowData implements Serializable
         return mClaims;
     }
 
+    @Nullable
     public StatusButton getButton()
     {
         return mButton;
