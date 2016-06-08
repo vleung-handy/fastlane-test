@@ -12,7 +12,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.ui.view.SimpleContentLayout;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.OnboardingSuppliesLog;
+import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.model.Designation;
 import com.handy.portal.model.onboarding.OnboardingSuppliesSection;
 import com.handy.portal.model.onboarding.SuppliesInfo;
@@ -79,13 +79,13 @@ public class PurchaseSuppliesFragment extends OnboardingSubflowFragment
                     @Override
                     public void run()
                     {
-                        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
-                                OnboardingSuppliesLog.Types.PRODUCTS_LIST_SHOWN)));
+                        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
+                                NativeOnboardingLog.Types.PRODUCTS_LIST_SHOWN)));
                     }
                 });
 
-        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
-                OnboardingSuppliesLog.Types.LANDING_SCREEN_SHOWN)));
+        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
+                NativeOnboardingLog.Types.LANDING_SCREEN_SHOWN)));
     }
 
     @Override
@@ -133,16 +133,16 @@ public class PurchaseSuppliesFragment extends OnboardingSubflowFragment
     @Override
     protected void onPrimaryButtonClicked()
     {
-        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
-                OnboardingSuppliesLog.Types.PURCHASE_SUPPLIES_SELECTED)));
+        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
+                NativeOnboardingLog.Types.PURCHASE_SUPPLIES_SELECTED)));
         next(PurchaseSuppliesConfirmationFragment.newInstance());
     }
 
     @Override
     protected void onSecondaryButtonClicked()
     {
-        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
-                OnboardingSuppliesLog.Types.DECLINE_SUPPLIES_SELECTED)));
+        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
+                NativeOnboardingLog.Types.DECLINE_SUPPLIES_SELECTED)));
         final DeclineSuppliesDialogFragment fragment = DeclineSuppliesDialogFragment.newInstance();
         fragment.setTargetFragment(this, RequestCode.DECLINE_SUPPLIES);
         FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), null);
@@ -164,12 +164,12 @@ public class PurchaseSuppliesFragment extends OnboardingSubflowFragment
 
     private void declineSupplies()
     {
-        bus.post(new LogEvent.AddLogEvent(new OnboardingSuppliesLog(
-                OnboardingSuppliesLog.Types.DECLINE_SUPPLIES_CONFIRMED)));
+        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
+                NativeOnboardingLog.Types.DECLINE_SUPPLIES_CONFIRMED)));
         bus.post(new HandyEvent.RequestOnboardingSupplies(false));
         // no need to wait for response
         bus.post(new LogEvent.AddLogEvent(
-                new OnboardingSuppliesLog.RequestSupplies.Submitted(false)));
+                new NativeOnboardingLog.RequestSupplies.Submitted(false)));
 
         final Intent data = new Intent();
         final SuppliesOrderInfo suppliesOrderInfo = new SuppliesOrderInfo();
