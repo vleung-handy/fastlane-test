@@ -17,6 +17,48 @@ public class NativeOnboardingLog extends EventLog
         super(eventType, EVENT_CONTEXT);
     }
 
+    public static class StatusPageShown extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "status_page_shown";
+        @SerializedName("status")
+        private String mStatus;
+
+        public StatusPageShown(final String status)
+        {
+            super(EVENT_TYPE);
+            mStatus = status;
+        }
+    }
+
+
+    public static class StatusPageSubmitted extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "status_page_submitted";
+        @SerializedName("status")
+        private String mStatus;
+
+        public StatusPageSubmitted(final String status)
+        {
+            super(EVENT_TYPE);
+            mStatus = status;
+        }
+    }
+
+
+    public static class HelpLinkSelected extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "help_link_selected";
+        @SerializedName("help_link")
+        private String mHelpLink;
+
+        public HelpLinkSelected(final String helpLink)
+        {
+            super(EVENT_TYPE);
+            mHelpLink = helpLink;
+        }
+    }
+
+
     public static class Types
     {
         public static final String PURCHASE_SUPPLIES_SHOWN = "purchase_supplies_shown";
@@ -99,6 +141,7 @@ public class NativeOnboardingLog extends EventLog
             }
         }
     }
+
 
     /**
      * User submits jobs to claim through the native onboarding funnel
