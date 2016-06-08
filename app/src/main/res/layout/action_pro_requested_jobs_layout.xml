@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingTop="10dp"
+                android:paddingTop="@dimen/requested_jobs_layout_top_offset"
                 android:clickable="true"
     >
 
@@ -10,7 +10,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:paddingTop="5dp"
+        android:paddingTop="@dimen/requested_jobs_inbox_icon_top_offset"
         android:src="@drawable/ic_nav_pro_requested_jobs_inbox"
         />
 
@@ -18,13 +18,13 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingBottom="0dp"
-        android:paddingLeft="20dp"
+        android:paddingLeft="@dimen/requested_jobs_inbox_text_left_offset"
         >
 
         <TextView
             android:id="@+id/action_pro_requested_jobs_layout_count_text"
-            android:layout_width="25dp"
-            android:layout_height="25dp"
+            android:layout_width="@dimen/requested_jobs_inbox_text_count_size"
+            android:layout_height="@dimen/requested_jobs_inbox_text_count_size"
             android:gravity="center"
             android:text=""
             android:textColor="@color/white"

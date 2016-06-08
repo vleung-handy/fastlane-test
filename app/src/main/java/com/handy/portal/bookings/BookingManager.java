@@ -203,9 +203,12 @@ public class BookingManager
             {
                 final BookingsWrapper bookingsWrapper = requestedBookingsCache.getIfPresent(date);
                 //cut out early if something doesn't fit, then just go do request
-                if (bookingsWrapper == null)
+                if (bookingsWrapper != null)
                 {
                     bookingsListWrapper.add(bookingsWrapper);
+                }
+                else
+                {
                     matchingCache = false;
                     break;
                 }

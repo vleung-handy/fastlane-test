@@ -158,7 +158,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
         List<BookingsWrapper> proRequestedJobsList = event.getProRequestedJobs();
 
-        if (mMenuProRequestedJobs != null)
+        if (mMenuProRequestedJobs != null && proRequestedJobsList != null)
         {
             //not bound because manually inflated
             TextView displayCountText = (TextView) mMenuProRequestedJobs.getActionView().findViewById(R.id.action_pro_requested_jobs_layout_count_text);
@@ -167,24 +167,14 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 return;
             }
 
-            if (proRequestedJobsList == null)
+            //Show and update count
+            displayCountText.setVisibility(View.VISIBLE);
+            int countOfRequestedJobs = 0;
+            for (BookingsWrapper wrapper : event.getProRequestedJobs())
             {
-                Crashlytics.logException(new Exception("pro requested jobs list is null for count"));
-                //Not going to popup an error for this since it is a small sub function of the main screen, shouldn't block
-                displayCountText.setVisibility(View.VISIBLE);
-                displayCountText.setText("?");
+                countOfRequestedJobs += wrapper.getBookings().size();
             }
-            else
-            {
-                //Show and update count
-                displayCountText.setVisibility(View.VISIBLE);
-                int countOfRequestedJobs = 0;
-                for (BookingsWrapper wrapper : event.getProRequestedJobs())
-                {
-                    countOfRequestedJobs += wrapper.getBookings().size();
-                }
-                displayCountText.setText(Integer.toString(countOfRequestedJobs));
-            }
+            displayCountText.setText(Integer.toString(countOfRequestedJobs));
         }
     }
 
