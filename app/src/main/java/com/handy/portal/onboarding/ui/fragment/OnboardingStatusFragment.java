@@ -253,6 +253,7 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
             @Override
             public void onClick(final View v)
             {
+                bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.HelpLinkSelected(url)));
                 final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                 Utils.safeLaunchIntent(intent, getActivity());
             }
