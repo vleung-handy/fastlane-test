@@ -652,6 +652,7 @@ public class BookingManager
         availableBookingsCache.invalidateAll();
         scheduledBookingsCache.invalidateAll();
         complementaryBookingsCache.invalidateAll();
+        requestedBookingsCache.invalidateAll();
     }
 
     private void invalidateCachesForDay(Date day)
@@ -659,5 +660,6 @@ public class BookingManager
         availableBookingsCache.invalidate(day);
         scheduledBookingsCache.invalidate(day);
         complementaryBookingsCache.invalidate(day);
+        requestedBookingsCache.invalidate(day);
     }
 }
