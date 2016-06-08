@@ -120,13 +120,9 @@ public class DashboardOptionsPerformanceView extends FrameLayout
                             R.string.weekly_tier_formatted, mPrimaryIncentive.getCurrentTier()));
                     mTiersTitle = getResources().getString(R.string.my_tier);
 
-                    int tierIndex;
-                    if (mPrimaryIncentive.getCurrentTier() == 0)
-                    { tierIndex = 0; }
-                    else
-                    {
-                        tierIndex = mPrimaryIncentive.getCurrentTier() - 1;
-                    }
+                    int tierIndex = mPrimaryIncentive.getCurrentTier() == 0 ? 0 :
+                            mPrimaryIncentive.getCurrentTier() - 1;
+
                     if (tierIndex < mPrimaryRegionTiers.size())
                     {
                         ProviderEvaluation.Tier mTier = mPrimaryRegionTiers.get(tierIndex);
