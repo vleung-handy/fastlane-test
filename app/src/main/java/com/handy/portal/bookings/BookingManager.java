@@ -207,18 +207,18 @@ public class BookingManager
                 {
                     bookingsListWrapper.add(bookingsWrapper);
                     matchingCache = false;
-                    System.out.println("Tried to use cache but failed :(");
                     break;
                 }
             }
 
+            //full match, send the cached data
             if (matchingCache)
             {
-                System.out.println("Having a matching cache, using it!");
                 mBus.post(new BookingEvent.ReceiveProRequestedJobsSuccess(bookingsListWrapper));
             }
         }
 
+        //We don't want to use the cache or the cache was not an exact match
         if (!matchingCache)
         {
             Map<String, Object> options = new HashMap<>();

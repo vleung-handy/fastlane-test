@@ -129,9 +129,8 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
             }
             setLateDispatchOptInToggleListener();
 
-            if (true)
-//            if(configManager.getConfigurationResponse() != null &&
-//                    configManager.getConfigurationResponse().isPendingRequestsInboxEnabled())
+            if (configManager.getConfigurationResponse() != null &&
+                    configManager.getConfigurationResponse().isPendingRequestsInboxEnabled())
             {
                 requestRequestedAvailableJobs();
             }
@@ -151,7 +150,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         //TODO: Days should be behind a config param, just using a static const until then
         List<Date> datesForBookings = DateTimeUtils.getDateWithoutTimeList(new Date(), ProRequestedJobsDialogFragment.REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
         bus.post(new BookingEvent.RequestProRequestedJobs(datesForBookings, true));
-        System.out.println("ASKING FOR REQUESTED JOBS!");
     }
 
     @Subscribe
@@ -159,7 +157,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
 
         List<BookingsWrapper> proRequestedJobsList = event.getProRequestedJobs();
-        System.out.println("HEARING REQUESTED JOBS! " + event.getProRequestedJobs().size());
 
         if (mMenuProRequestedJobs != null)
         {
@@ -211,8 +208,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 return true;
             //Had to use an onclick listener since we're using a custom view for the envelope + count
 //            case R.id.action_pro_requested_jobs:
-//                launchProRequestedJobsDialogFragment();
-//                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -343,10 +338,8 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
         if(mMenuProRequestedJobs != null)
         {
-            if (true)
-//            if(mConfigManager.getConfigurationResponse() != null
-//                 && mConfigManager.getConfigurationResponse().isPendingRequestsInboxEnabled())
-
+            if (mConfigManager.getConfigurationResponse() != null
+                    && mConfigManager.getConfigurationResponse().isPendingRequestsInboxEnabled())
             {
                 mMenuProRequestedJobs.setVisible(true);
                 //Need to use the click listener instead of menu listener in the action view because of the custom view
