@@ -35,10 +35,10 @@ import com.handy.portal.manager.UserInterfaceUpdateManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.notification.NotificationModule;
+import com.handy.portal.onboarding.OnboardingModule;
 import com.handy.portal.onboarding.ui.activity.ActivationWelcomeActivity;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsModule;
-import com.handy.portal.onboarding.OnboardingModule;
 import com.handy.portal.receiver.HandyPushReceiver;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
@@ -74,7 +74,6 @@ import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateActivity;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
-import com.handy.portal.webview.OnboardingFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
@@ -124,7 +123,6 @@ import retrofit.converter.GsonConverter;
         RatingsAndFeedbackFragment.class,
         ReferAFriendFragment.class,
         FiveStarRatingPercentageView.class,
-        OnboardingFragment.class,
         DashboardVideoLibraryFragment.class,
         DashboardFeedbackView.class,
         RequestSuppliesWebViewFragment.class,

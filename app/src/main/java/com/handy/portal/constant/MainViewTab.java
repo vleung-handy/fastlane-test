@@ -33,7 +33,6 @@ import com.handy.portal.ui.fragment.dashboard.DashboardVideoLibraryFragment;
 import com.handy.portal.ui.fragment.dashboard.RatingsAndFeedbackFragment;
 import com.handy.portal.ui.fragment.dashboard.YoutubePlayerFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
-import com.handy.portal.webview.OnboardingFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
 
 import java.io.Serializable;
@@ -78,7 +77,6 @@ public enum MainViewTab implements Serializable
     WEB_PAGE(PortalWebViewFragment.class),
 
     BLOCK_PRO_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
-    ONBOARDING_WEBVIEW(OnboardingFragment.class, WebUrlManager.USES_CONFIG_PARAM_ONBOARDING_PAGE),
     PAYMENT_BLOCKING(PaymentBlockingFragment.class),;
 
     private Class mClassType;
