@@ -41,6 +41,8 @@ public final class DateTimeUtils
             new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
     public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER =
             new SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault());
+    public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DATE_FORMATTER =
+            new SimpleDateFormat("EEEE, MMM d", Locale.getDefault());
     public final static SimpleDateFormat YEAR_FORMATTER = new SimpleDateFormat("yyyy", Locale.getDefault());
     public final static SimpleDateFormat MONTH_YEAR_FORMATTER =
             new SimpleDateFormat("MMM yyyy", Locale.getDefault());
@@ -311,6 +313,13 @@ public final class DateTimeUtils
     }
 
     @Nullable
+    public static String formatDayOfWeekMonthDate(Date date)
+    {
+        if (date == null) { return null; }
+        return getDayOfWeekMonthDateFormatter().format(date);
+    }
+
+    @Nullable
     public static String formatIso8601(Date date)
     {
         if (date == null) { return null; }
@@ -519,6 +528,12 @@ public final class DateTimeUtils
     {
         DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER.setTimeZone(TimeZone.getDefault());
         return DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER;
+    }
+
+    private static SimpleDateFormat getDayOfWeekMonthDateFormatter()
+    {
+        DAY_OF_WEEK_MONTH_DATE_FORMATTER.setTimeZone(TimeZone.getDefault());
+        return DAY_OF_WEEK_MONTH_DATE_FORMATTER;
     }
 
     private static SimpleDateFormat getYearFormatter()

@@ -17,7 +17,7 @@ public class PendingBookingElementView extends AvailableBookingElementView
     {
         final View view = super.initView(parentContext, booking, convertView, parent);
         final Date startDate = booking.getStartDate();
-        mBookingServiceTextView.setText(DateTimeUtils.formatDayOfWeekMonthDateYear(startDate));
+        mBookingServiceTextView.setText(DateTimeUtils.formatDayOfWeekMonthDate(startDate));
         return view;
     }
 }

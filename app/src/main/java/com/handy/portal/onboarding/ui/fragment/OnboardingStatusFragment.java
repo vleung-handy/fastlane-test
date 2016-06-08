@@ -146,9 +146,10 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
         if (claims != null && !claims.isEmpty())
         {
             final String firstBookingDateFormatted =
-                    DateTimeUtils.formatDayOfWeekMonthDateYear(claims.get(0).getStartDate());
+                    DateTimeUtils.formatDayOfWeekMonthDate(claims.get(0).getStartDate());
             mJobsCollapsible.setHeader(R.drawable.ic_onboarding_schedule,
-                    getString(R.string.number_of_jobs_formatted, claims.size()),
+                    getResources().getQuantityString(R.plurals.number_of_jobs_formatted,
+                            claims.size(), claims.size()),
                     firstBookingDateFormatted);
 
             final ViewGroup container = mJobsCollapsible.getContentViewContainer();
@@ -177,7 +178,8 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
             switch (suppliesInfo.getDesignation())
             {
                 case YES:
-                    mSuppliesCollapsible.setHeader(R.drawable.ic_onboarding_supplies, title, null);
+                    mSuppliesCollapsible.setHeader(R.drawable.ic_onboarding_supplies, title,
+                            getString(R.string.order_details));
                     break;
                 case NO:
                     mSuppliesCollapsible.setHeader(R.drawable.ic_onboarding_supplies, title,

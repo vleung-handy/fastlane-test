@@ -256,7 +256,7 @@ public class SchedulePreferencesFragment extends OnboardingSubflowFragment
     {
         if (mSelectedStartDate != null)
         {
-            mDateField.setValue(DateTimeUtils.formatDayOfWeekMonthDateYear(mSelectedStartDate));
+            mDateField.setValue(DateTimeUtils.formatDayOfWeekMonthDate(mSelectedStartDate));
         }
         else
         {
