@@ -168,13 +168,24 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
             }
 
             //Show and update count
-            displayCountText.setVisibility(View.VISIBLE);
             int countOfRequestedJobs = 0;
             for (BookingsWrapper wrapper : event.getProRequestedJobs())
             {
                 countOfRequestedJobs += wrapper.getBookings().size();
             }
-            displayCountText.setText(Integer.toString(countOfRequestedJobs));
+
+            //If no unclaimed jobs don't show icon and count
+            if (countOfRequestedJobs > 0)
+            {
+                mMenuProRequestedJobs.setVisible(true);
+                displayCountText.setVisibility(View.VISIBLE);
+                displayCountText.setText(Integer.toString(countOfRequestedJobs));
+            }
+            else
+            {
+                //hide the whole thing
+                mMenuProRequestedJobs.setVisible(false);
+            }
         }
     }
 
@@ -331,7 +342,8 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
             if (mConfigManager.getConfigurationResponse() != null
                     && mConfigManager.getConfigurationResponse().isPendingRequestsInboxEnabled())
             {
-                mMenuProRequestedJobs.setVisible(true);
+                //Don't turn this visible until the call with count comes back, only show if 1+ jobs unclaimed
+
                 //Need to use the click listener instead of menu listener in the action view because of the custom view
                 mMenuProRequestedJobs.getActionView().setOnClickListener(new View.OnClickListener()
                 {
