@@ -124,9 +124,9 @@ public class DashboardRegionTierView extends FrameLayout
     public void addTier(String incentiveType, @Nullable String rating, String tierName, int minJobs,
                         int maxJobs, String currencySymbol, int hourlyRateInCents, boolean enabled)
     {
-        DashboardTierView mTierView = new DashboardTierView(getContext());
-        mTierView.setDisplay(incentiveType, rating, tierName, minJobs, maxJobs, currencySymbol,
+        DashboardTierView tierView = new DashboardTierView(getContext());
+        tierView.setDisplay(incentiveType, rating, tierName, minJobs, maxJobs, currencySymbol,
                 hourlyRateInCents, enabled, mIsTwoColumns);
-        mTiersLayout.addView(mTierView);
+        mTiersLayout.addView(tierView);
     }
 }
