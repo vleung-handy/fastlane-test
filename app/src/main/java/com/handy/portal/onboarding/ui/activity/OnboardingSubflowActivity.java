@@ -30,6 +30,7 @@ public class OnboardingSubflowActivity extends BaseActivity
     private OnboardingDetails mOnboardingDetails;
     private SubflowType mSubflowType;
     private long mLaunchedTimeMillis;
+    private boolean mSingleStepMode;
 
     public OnboardingDetails getOnboardingDetails()
     {
@@ -43,6 +44,7 @@ public class OnboardingSubflowActivity extends BaseActivity
         mOnboardingDetails = (OnboardingDetails) getIntent()
                 .getSerializableExtra(BundleKeys.ONBOARDING_DETAILS);
         mSubflowType = (SubflowType) getIntent().getSerializableExtra(BundleKeys.SUBFLOW_TYPE);
+        mSingleStepMode = getIntent().getBooleanExtra(BundleKeys.SINGLE_STEP_MODE, false);
         setContentView(R.layout.activity_onboarding_subflow);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         initLaunchedTimeMillis(savedInstanceState);
@@ -141,6 +143,7 @@ public class OnboardingSubflowActivity extends BaseActivity
         final SubflowData subflowData =
                 mOnboardingDetails.getSubflowDataByType(mSubflowType);
         arguments.putSerializable(BundleKeys.SUBFLOW_DATA, subflowData);
+        arguments.putBoolean(BundleKeys.SINGLE_STEP_MODE, mSingleStepMode);
         fragment.setArguments(arguments);
 
         fragmentTransaction.setCustomAnimations(

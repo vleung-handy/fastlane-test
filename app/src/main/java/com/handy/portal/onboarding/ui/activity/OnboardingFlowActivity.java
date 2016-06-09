@@ -28,6 +28,7 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
     private Flow mOnboardingFlow;
     private ArrayList<OnboardingSubflowDetails> mIncompleteSubflows;
     private SubflowType mLastLaunchedSubflowType;
+    private boolean mSingleStepMode;
 
     @Override
     protected boolean shouldTriggerSetup()
@@ -42,6 +43,7 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
         mOnboardingDetails = (OnboardingDetails) getIntent()
                 .getSerializableExtra(BundleKeys.ONBOARDING_DETAILS);
         mIncompleteSubflows = mOnboardingDetails.getSubflowsByStatus(SubflowStatus.INCOMPLETE);
+        mSingleStepMode = mIncompleteSubflows.size() == 1;
         restoreOnboardingFlow(savedInstanceState);
     }
 
@@ -57,6 +59,7 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
                     .getSerializable(BundleKeys.SUBFLOW_TYPE);
             if (incompleteSubflows != null && lastLaunchedSubflowType != null)
             {
+                mSingleStepMode = incompleteSubflows.size() == 1;
                 removeLaunchedSubflows(incompleteSubflows, lastLaunchedSubflowType);
                 if (incompleteSubflows.isEmpty())
                 {
@@ -160,6 +163,7 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
         final Intent intent = new Intent(this, OnboardingSubflowActivity.class);
         intent.putExtra(BundleKeys.ONBOARDING_DETAILS, mOnboardingDetails);
         intent.putExtra(BundleKeys.SUBFLOW_TYPE, subflowType);
+        intent.putExtra(BundleKeys.SINGLE_STEP_MODE, mSingleStepMode);
         if (mPendingBookings != null)
         {
             intent.putExtra(BundleKeys.BOOKINGS, mPendingBookings);

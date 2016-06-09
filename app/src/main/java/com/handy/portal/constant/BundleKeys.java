@@ -63,7 +63,6 @@ public class BundleKeys
 
     // Onboarding
     public static final String ALLOW_BACK_NAVIGATION = "allow_back_navigation";
-    public static final String NATIVE_ONBOARDING_LAUNCHED = "native_onboarding_launched";
     public static final String BOOKINGS_WRAPPERS = "bookings_wrappers";
     public static final String SUBFLOW_DATA = "subflow_data";
     public static final String SUBFLOW_TYPE = "subflow_type";
@@ -72,6 +71,7 @@ public class BundleKeys
     public static final String FORCE_FINISH = "force_finish";
     public static final String SUBFLOWS = "subflows";
     public static final String DISALLOW_EXIT = "disallow_exit";
+    public static final String SINGLE_STEP_MODE = "single_step_mode";
 
     // Flow
     public static final String FLOW_STEP_ID = "flow_step_id";
