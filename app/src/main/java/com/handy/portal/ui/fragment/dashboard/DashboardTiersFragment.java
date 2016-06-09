@@ -141,7 +141,7 @@ public class DashboardTiersFragment extends ActionBarFragment implements Dashboa
             case ProviderEvaluation.Incentive.HANDYMEN_TIERED_TYPE:
                 ProviderEvaluation.Rating weeklyRating = mEvaluation.getWeeklyRating();
                 mDashboardTiersHeaderView.setDisplay(
-                        weeklyRating.getTotalBookingCount(), DateTimeUtils.formatDateRange(
+                        weeklyRating.getCompletedBookings(), DateTimeUtils.formatDateRange(
                                 DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER,
                                 weeklyRating.getStartDate(), weeklyRating.getEndDate()));
                 break;
@@ -149,7 +149,7 @@ public class DashboardTiersFragment extends ActionBarFragment implements Dashboa
             case ProviderEvaluation.Incentive.HANDYMEN_ROLLING_TYPE:
                 ProviderEvaluation.Rating rollingRating = mEvaluation.getRolling();
                 mDashboardTiersHeaderView.setDisplay(
-                        rollingRating.getTotalBookingCount(), DateTimeUtils.formatDateRange(
+                        rollingRating.getCompletedBookings(), DateTimeUtils.formatDateRange(
                                 DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER,
                                 rollingRating.getStartDate(), rollingRating.getEndDate()));
                 break;
