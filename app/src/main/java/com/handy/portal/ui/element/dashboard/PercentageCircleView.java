@@ -13,7 +13,7 @@ import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.View;
 
-import com.handy.portal.util.FontUtils;
+import com.handy.portal.library.util.FontUtils;
 
 public class PercentageCircleView extends View
 {

@@ -8,9 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.handy.portal.R;
-import com.handy.portal.ui.fragment.dialog.InjectedDialogFragment;
-import com.handy.portal.ui.view.DialogBlockerView;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
+import com.handy.portal.library.ui.view.DialogBlockerView;
+import com.handy.portal.library.util.Utils;
 
 public class LocationSettingsBlockerDialogFragment extends InjectedDialogFragment
 {

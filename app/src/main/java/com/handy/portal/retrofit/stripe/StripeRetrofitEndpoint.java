@@ -3,7 +3,7 @@ package com.handy.portal.retrofit.stripe;
 import android.content.Context;
 
 import com.handy.portal.constant.UrlName;
-import com.handy.portal.core.PropertiesReader;
+import com.handy.portal.library.util.PropertiesReader;
 
 import java.util.Properties;
 

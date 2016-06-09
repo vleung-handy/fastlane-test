@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".onboarding.ui.activity.ActivationWelcomeActivity"
+    >
+
+    <include layout="@layout/particle_top"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/negative_complete_button_height_half"
+        >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/img_badge"
+            />
+
+        <TextView
+            android:id="@+id/tv_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="@string/congratulations_formatted"
+            style="@style/TextView.Headline.XLarge.Bold"
+            android:layout_marginTop="@dimen/default_margin_x3"
+            android:gravity="center"
+            />
+
+        <TextView
+            android:id="@+id/tv_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            android:gravity="center"
+            android:text="@string/activation_welcome"
+            android:layout_marginRight="@dimen/default_margin_x2"
+            android:layout_marginLeft="@dimen/default_margin_x2"
+            style="@style/TextView.Medium"
+            />
+    </LinearLayout>
+
+    <include
+        layout="@layout/overlay_loading"
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        />
+
+    <Button
+        android:id="@+id/btn_next"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/complete_button_height"
+        android:text="@string/lets_get_started"
+        android:layout_gravity="bottom"
+        style="@style/Button.Green"
+        />
+</FrameLayout>

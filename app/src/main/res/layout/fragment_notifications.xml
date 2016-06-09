@@ -8,13 +8,13 @@
 
     <include layout="@layout/layout_no_notifications" />
 
-    <com.handy.portal.ui.widget.SafeSwipeRefreshLayout
+    <com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout
         android:id="@+id/refresh_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
         <include layout="@layout/element_notifications_list" />
 
-    </com.handy.portal.ui.widget.SafeSwipeRefreshLayout>
+    </com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout>
 
 </LinearLayout>

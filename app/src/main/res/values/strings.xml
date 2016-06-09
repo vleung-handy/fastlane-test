@@ -16,8 +16,11 @@
     <string name="two_lines_formatted">%1$s\n%2$s</string>
     <string name="comma_formatted">%1$s, %2$s</string>
     <string name="dash_formatted">%1$s \u2013 %2$s</string>
+    <string name="dash_formatted_numbers">%1$d \u2013 %2$d</string>
+    <string name="colon_formatted">%1$s: %2$s</string>
     <string name="space_formatted">%1$s %2$s</string>
     <string name="exclamation_point">!</string>
+    <string name="parentheses_formatted">(%1$s)</string>
 
     <!-- Generic Single Word -->
     <string name="success">Success</string>
@@ -27,6 +30,7 @@
     <string name="error">Error</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="current_colon">Current:</string>
     <string name="note_colon">Note:</string>
 
     <!-- Navigation Drawer -->
@@ -126,6 +130,7 @@
     <string name="full_details_and_more_available_on_date"><![CDATA[Full job details, including exact address, will be available on <b>%1$s</b>. We\u2019ll send you a reminder at that time.]]></string>
     <string name="full_details_and_more_available_on_date_flex"><![CDATA[Depending on the specific customer details you receive, this job may be a minimum of <b>%1$s</b> hours up to a maximum of <b>%2$s</b> hours. The job will not start prior to <b>%3$s</b> and will not end after <b>%4$s</b>. Exact customer and booking details will be sent by 1 hour before job start.<br/><br/>Job payment depends on the number of hours of the booking you receive. It will be minimum <b>%5$s</b> for a <b>%6$s</b> hour booking and maximum <b>%7$s</b> for a <b>%8$s</b> hour booking.]]></string>
     <string name="no_available_jobs">Sorry, there aren\u2019t any available jobs left for this day</string>
+    <string name="no_pro_requested_jobs">You don\u2019t have any new job requests.</string>
     <string name="error_fetching_available_jobs">There was an error fetching your available jobs</string>
     <string name="error_fetching_scheduled_jobs">There was an error fetching your scheduled jobs</string>
     <string name="error_fetching_matching_jobs">There was an error searching for matching jobs</string>
@@ -212,6 +217,7 @@
     <string name="one_matching_job">1 Matching Job</string>
     <string name="no_matching_jobs_message">No matching jobs found. You\u2019ll be notified if there are any new matches.</string>
     <string name="go_to_all_jobs">Go to All Jobs</string>
+    <string name="booking_time">%1$s \u2013 %2$s</string>
 
     <!-- Payments -->
     <string name="total_payment">Total Payment</string>
@@ -270,7 +276,7 @@
     <string name="earn_a_reward">Earn a %1$s reward</string>
     <string name="rating">Rating</string>
     <string name="jobs">Jobs</string>
-    <string name="rate">Rate</string>
+    <string name="rate_asterisk_superscript">Rate<sup>*</sup></string>
     <string name="error_loading_profile">There was an error loading your profile information.</string>
     <string name="resupply_kit_on_its_way">Your resupply kit is on its way!</string>
     <string name="your_contact_information">Contact information</string>
@@ -292,6 +298,20 @@
     <string name="feedback">Feedback</string>
     <string name="percentage">%</string>
     <string name="my_tier">My Tier</string>
+    <string name="tier">Tier</string>
+    <string name="job_type">Job Type</string>
+    <string name="weekly_tier_formatted">Weekly Tier - %1$d</string>
+    <string name="pay_rate">Pay Rate</string>
+    <string name="how_it_works">How it works</string>
+    <string name="tiers_legal_text_html"><sup>*</sup>per hour, per job</string>
+    <string name="tiers_description">Once you\'ve completed the jobs, your remaining bookings for the week and the claim jobs tab will be updated with the new rate.</string>
+    <string name="tier_job_region_description">Jobs completed each week count for every region.</string>
+    <string name="tiers_reset">Tiers reset every Monday.</string>
+    <string name="tier_hourly_rate_formatted">%1$s%2$d</string>
+    <string name="jobs_completed">Jobs completed</string>
+    <string name="tier_one">Tier 1</string>
+    <string name="tier_two">Tier 2</string>
+    <string name="tier_three">Tier 3</string>
     <string name="current_28_days">Current\n 28 DAYS</string>
     <string name="payment_tier_info">Your payment tier is determined by the total number of jobs you have completed in the last 28 days, and your average rating over the last 28 days. This means that your job count only includes jobs that were completed in the previous 28 days.</string>
     <string name="tips_for_success">Tips for success</string>
@@ -304,13 +324,17 @@
     <string name="new_weekly_tiers">Weekly Tiers (New)</string>
     <string name="tier_description">As you complete jobs each week, your job pay rate will increase. When you hit a new tier, all of your future jobs, and all available jobs for the current week, will update to reflect the higher rate.</string>
     <string name="tier_reset_note">Tiers reset at 12:01am every Monday</string>
-    <string name="tiers">Tiers</string>
-    <string name="weekly_tier">Weekly Tier</string>
-    <string name="tier_one">Tier 1</string>
-    <string name="tier_two">Tier 2</string>
-    <string name="tier_three">Tier 3</string>
     <string name="current_week">Current week:</string>
     <string name="current_week_description">(Monday \u2013 Sunday)</string>
+    <plurals name="rates_per_job_in_region_formatted">
+        <item quantity="one">%1$s rate per hour, per job in %2$s</item>
+        <item quantity="other">%1$s rates per hour, per job in %2$s</item>
+    </plurals>
+    <string name="highest_rate_this_week_formatted">Way to go! You\'re at the highest tier this week in %1$s</string>
+    <plurals name="complete_jobs_unlock_higher_rate_formatted">
+        <item quantity="one"><![CDATA[Complete <b>%1$s more job</b> this week to unlock higher rates in %2$s!]]></item>
+        <item quantity="other"><![CDATA[Complete <b>%1$s more jobs</b> this week to unlock higher rates in %2$s!]]></item>
+    </plurals>
 
     <!-- Booking Details-->
     <string name="nearby_transit">Nearby Transit</string>
@@ -471,31 +495,18 @@
     <string name="job_access_locked_keep_rate_info_button">Keep Rate</string>
 
     <!-- Onboarding -->
-    <string name="onboard_congratulations_formatted">Congratulations,\n%1$s</string>
-    <string name="onboard_congratulations">Congratulations!</string>
-    <string name="onboard_get_started">Let\'s Get Started</string>
-    <string name="onboard_getting_started">Getting Started</string>
-    <string name="onboard_welcome">You\'ve been activated! We\'re excited for you to join our global community of professionals using the Handy platform.</string>
-    <string name="onboard_getting_started_title">Start building your schedule with these jobs.</string>
-    <string name="onboard_claim_and_earn_formatted">%s Claim</string>
-    <string name="onboard_no_thanks">No thanks, I\'ll find my own jobs</string>
-    <string name="onboard_loading">Choosing jobs\nin your city...</string>
-    <string name="onboard_job_claim_error">"There was an error claiming job(s), please try again"</string>
-    <string name="onboard_job_load_error">"There was an error finding jobs, please try again"</string>
-    <string name="onboard_claim_no_job">"Want to see those preselected jobs again? Tap the schedule help button in the top right."</string>
-    <string name="onboard_claim_job_confirmation">"Are you sure you want to\nclaim all of these jobs?"</string>
-    <string name="onboard_confirm_claim">"Confirm Claim"</string>
-    <string name="onboard_no_time_available">No Time Available</string>
-
-    <!-- Pre-activation -->
+    <string name="congratulations_formatted">Congratulations,\n%1$s</string>
+    <string name="congratulations">Congratulations!</string>
+    <string name="lets_get_started">Let\'s Get Started</string>
+    <string name="activation_welcome">You\'ve been activated! We\'re excited for you to join our global community of professionals using the Handy platform.</string>
     <string name="supply_kit_purchase_inquiry">Would you like to buy a starter supply kit?</string>
     <string name="yes_supply_kit">Yes, I Want Supplies</string>
     <string name="no_supply_kit">No, I Have My Own</string>
     <string name="enter_payment_information">Enter payment information</string>
     <string name="continue_to_confirmation">Continue to Confirmation</string>
-    <string name="supply_starter_kit">Supply Starter Kit</string>
+    <string name="starter_supply_kit">Starter Supply Kit</string>
     <string name="order_total_formatted">Order Total: %1$s</string>
-    <string name="confirm_your_purchase">Confirm your purchase</string>
+    <string name="order_total">Order Total</string>
     <string name="confirm_purchase">Confirm Purchase</string>
     <string name="shipping_address">Shipping Address</string>
     <string name="payment_method">Payment Method</string>
@@ -505,9 +516,49 @@
     <string name="card_info_formatted">%1$s ending in %2$s</string>
     <string name="i_have_my_own_supplies">I Have My Own Supplies</string>
     <string name="are_you_sure_no_kit">Are you sure you don’t want to order the kit?</string>
-    <string name="supplies_expectation">Handy customers expect you to arrive prepared with supplies to get the job done right.</string>
+    <string name="supplies_expectation">Handy customers expect you to arrive prepared with the supplies to get the job done right.</string>
     <string name="loading">Loading…</string>
     <string name="supplies_ordered">Supplies ordered!</string>
     <string name="card">Card</string>
-
+    <string name="claim_jobs">Claim Jobs</string>
+    <string name="continue_to_next_step">Continue</string>
+    <string name="locations">Locations</string>
+    <string name="choose_date">Choose a date</string>
+    <string name="choose_locations">Choose locations</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="finish_application">Finish Application</string>
+    <string name="your_schedule">Your Schedule</string>
+    <string name="schedule_preferences_notice">For the most options, select at least 3 locations. If there aren’t any jobs nearby, we’ll widen the search.</string>
+    <string name="skip_this_step">Skip</string>
+    <string name="welcome">Welcome</string>
+    <string name="no_jobs_matching_preferences">There are no open jobs matching your preferences.</string>
+    <plurals name="number_of_jobs_formatted">
+        <item quantity="one">%1$d Job</item>
+        <item quantity="other">%1$d Jobs</item>
+    </plurals>
+    <string name="not_requested">Not requested</string>
+    <string name="ship_to">Ship To</string>
+    <string name="retry">Retry</string>
+    <string name="redo">Redo</string>
+    <plurals name="jobs_no_longer_available">
+        <item quantity="one">The job you selected is no longer available.</item>
+        <item quantity="other">The jobs you selected are no longer available.</item>
+    </plurals>
+    <string name="fix">Fix It</string>
+    <string name="fee">Fee</string>
+    <string name="add">Add</string>
+    <string name="ready_to_commit">Ready to commit?</string>
+    <string name="double_check_everything">Time to double-check everything.</string>
+    <string name="learn_about_handy">Learn about Handy</string>
+    <string name="do_you_want_supplies">Do you want to purchase a starter supply kit?</string>
+    <string name="set_your_preferences">Set your job preferences</string>
+    <string name="start_as_early_as_next_week">You can start as early as next week.</string>
+    <string name="create_your_first_schedule">Create your first schedule</string>
+    <string name="we_found_some_jobs">We found some jobs we think you’ll like; most pros start with 5 to 10 in their first week.</string>
+    <string name="supply_kit">Supply Kit</string>
+    <string name="order_details">Order Details</string>
+    <plurals name="locations_selected_count_formatted">
+        <item quantity="one">%1$d location selected</item>
+        <item quantity="other">%1$d locations selected</item>
+    </plurals>
 </resources>

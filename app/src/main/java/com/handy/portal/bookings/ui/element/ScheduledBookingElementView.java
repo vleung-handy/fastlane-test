@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.util.UIUtils;
+import com.handy.portal.library.util.UIUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -35,11 +35,8 @@ public class ScheduledBookingElementView extends BookingElementView
     @Bind(R.id.booking_entry_service_text)
     TextView mBookingServiceTextView;
 
-    @Bind(R.id.booking_entry_start_date_text)
-    TextView mStartTimeText;
-
-    @Bind(R.id.booking_entry_end_date_text)
-    TextView mEndTimeText;
+    @Bind(R.id.booking_entry_date_text)
+    TextView mTimeText;
 
     public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent)
     {
@@ -64,13 +61,13 @@ public class ScheduledBookingElementView extends BookingElementView
         //Date and Time
         final String formattedStartDate = TIME_OF_DAY_FORMAT.format(booking.getStartDate());
         final String formattedEndDate = TIME_OF_DAY_FORMAT.format(booking.getEndDate());
-        mStartTimeText.setText(formattedStartDate.toLowerCase());
-        mEndTimeText.setText(formattedEndDate.toLowerCase());
+        mTimeText.setText(parentContext.getString(R.string.booking_time,
+                formattedStartDate.toLowerCase(), formattedEndDate.toLowerCase()));
 
         //Service or frequency for home cleaning jobs
         UIUtils.setService(mBookingServiceTextView, booking);
 
-        this.associatedView = convertView;
+        mAssociatedView = convertView;
 
         return convertView;
     }

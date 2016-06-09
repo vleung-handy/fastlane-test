@@ -9,6 +9,7 @@ public class PaymentInfo implements Serializable
     @SerializedName("amount")
     private int mAmount;
     // TODO: Remove
+    @Deprecated
     @SerializedName("adjusted_amount")
     private float mAdjustedAmount;
     @SerializedName("symbol")
@@ -21,6 +22,7 @@ public class PaymentInfo implements Serializable
         return mAmount;
     }
 
+    @Deprecated
     public float getAdjustedAmount()
     {
         return mAdjustedAmount;

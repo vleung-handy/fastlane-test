@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/default_margin"
+    android:orientation="vertical"
+    >
+
+    <com.handy.portal.library.ui.view.CollapsibleContentLayout
+        android:id="@+id/jobs_collapsible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_gray_bottom"
+        android:orientation="vertical"
+        android:paddingBottom="1dp"
+        >
+
+        <LinearLayout
+            android:id="@+id/jobs_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:divider="@drawable/divider_gray"
+            android:orientation="vertical"
+            android:showDividers="beginning|middle"
+            />
+    </com.handy.portal.library.ui.view.CollapsibleContentLayout>
+
+    <com.handy.portal.library.ui.view.CollapsibleContentLayout
+        android:id="@+id/supplies_collapsible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_gray_bottom"
+        android:orientation="vertical"
+        android:paddingBottom="1dp"
+        >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border_gray_top"
+            android:paddingTop="1dp"
+            >
+
+            <include layout="@layout/view_supplies_container"/>
+        </FrameLayout>
+    </com.handy.portal.library.ui.view.CollapsibleContentLayout>
+
+
+    <TextView
+        android:id="@+id/links_title"
+        style="@style/TextView.Large.Bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin_half"
+        android:background="@drawable/border_gray_no_side"
+        android:padding="@dimen/default_padding"
+        android:text="@string/learn_about_handy"
+        />
+
+    <LinearLayout
+        android:id="@+id/links_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:divider="@drawable/divider_gray"
+        android:orientation="vertical"
+        android:showDividers="middle|end"
+        />
+</LinearLayout>

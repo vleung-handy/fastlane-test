@@ -21,7 +21,7 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.updater.model.UpdateDetails;
-import com.handy.portal.util.CheckApplicationCapabilitiesUtils;
+import com.handy.portal.library.util.CheckApplicationCapabilitiesUtils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Produce;
 import com.squareup.otto.Subscribe;

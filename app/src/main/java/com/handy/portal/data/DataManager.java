@@ -20,15 +20,14 @@ import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.SuccessWrapper;
-import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.notification.model.NotificationMessages;
-import com.handy.portal.onboarding.model.JobClaimRequest;
-import com.handy.portal.onboarding.model.JobClaimResponse;
+import com.handy.portal.onboarding.model.claim.JobClaimRequest;
+import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
@@ -41,6 +40,7 @@ import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
+import com.handy.portal.setup.SetupData;
 import com.handy.portal.updater.model.UpdateDetails;
 
 import org.json.JSONObject;
@@ -70,6 +70,11 @@ public class DataManager
         mStripeService = stripeService;
     }
 
+    public void getSetupData(final Callback<SetupData> cb)
+    {
+        mService.getSetupData(new SetupDataRetrofitCallback(cb));
+    }
+
     public void getLocationStrategies(String providerId, Callback<LocationScheduleStrategies> cb)
     {
         mService.getLocationStrategies(providerId, new GetLocationScheduleRetrofitCallback(cb));
@@ -85,14 +90,18 @@ public class DataManager
         return mEndpoint.getBaseUrl();
     }
 
-    public void getAvailableBookings(Date[] dates, final Callback<BookingsListWrapper> cb)
+    public void getAvailableBookings(Date[] dates, Map<String, Object> additionalOptions, final Callback<BookingsListWrapper> cb)
     {
-        mService.getAvailableBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
+
+        mService.getAvailableBookings(dates, additionalOptions, new BookingsListWrapperHandyRetroFitCallback(cb));
     }
 
-    public void getOnboardingJobs(final Callback<BookingsListWrapper> cb)
+    public void getOnboardingJobs(final Date startDate,
+                                  final ArrayList<String> preferredZipclusterIds,
+                                  final Callback<BookingsListWrapper> cb)
     {
-        mService.getOnboardingJobs(new BookingsListWrapperHandyRetroFitCallback(cb));
+        mService.getOnboardingJobs(startDate, preferredZipclusterIds,
+                new BookingsListWrapperHandyRetroFitCallback(cb));
     }
 
     public void getScheduledBookings(Date[] dates, final Callback<BookingsListWrapper> cb)
@@ -230,11 +239,6 @@ public class DataManager
     public void checkForUpdates(String appFlavor, int versionCode, final Callback<UpdateDetails> cb)
     {
         mService.checkUpdates(appFlavor, versionCode, new UpdateDetailsResponseHandyRetroFitCallback(cb));
-    }
-
-    public void checkForAllPendingTerms(final Callback<TermsDetailsGroup> cb)
-    {
-        mService.checkAllPendingTerms(new TermsDetailsGroupResponseHandyRetroFitCallback(cb));
     }
 
     public void acceptTerms(String termsCode, final Callback<Void> cb)

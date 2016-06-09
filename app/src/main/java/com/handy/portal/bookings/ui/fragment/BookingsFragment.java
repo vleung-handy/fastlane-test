@@ -39,8 +39,8 @@ import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.UIUtils;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.UIUtils;
 
 import java.util.Calendar;
 import java.util.Collections;

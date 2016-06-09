@@ -16,7 +16,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
-import com.handy.portal.util.CurrencyUtils;
+import com.handy.portal.library.util.CurrencyUtils;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;

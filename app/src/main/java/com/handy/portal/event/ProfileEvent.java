@@ -27,7 +27,13 @@ public abstract class ProfileEvent extends HandyEvent
         }
     }
 
-    public static class ReceiveProviderProfileError extends ReceiveErrorEvent {}
+    public static class ReceiveProviderProfileError extends ReceiveErrorEvent
+    {
+        public ReceiveProviderProfileError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 
     public static class RequestSendResupplyKit extends RequestEvent {}
 

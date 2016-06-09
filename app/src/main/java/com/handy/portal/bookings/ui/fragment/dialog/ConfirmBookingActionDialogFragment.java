@@ -11,8 +11,8 @@ import android.widget.ScrollView;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.ui.fragment.dialog.SlideUpDialogFragment;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.ui.fragment.dialog.SlideUpDialogFragment;
+import com.handy.portal.library.util.Utils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

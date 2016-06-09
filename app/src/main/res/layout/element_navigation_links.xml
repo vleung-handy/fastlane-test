@@ -40,6 +40,14 @@
         />
 
     <RadioButton
+        android:id="@+id/nav_link_video_library"
+        style="@style/TrayButton"
+        android:drawableLeft="@drawable/tray_video_library"
+        android:drawableStart="@drawable/tray_video_library"
+        android:text="@string/video_library"
+        />
+
+    <RadioButton
         android:id="@+id/nav_link_help"
         style="@style/TrayButton"
         android:drawableLeft="@drawable/ic_lifesaver"

@@ -14,7 +14,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.BookingsWrapper;
-import com.handy.portal.ui.fragment.dialog.PopupDialogFragment;
+import com.handy.portal.library.ui.fragment.dialog.PopupDialogFragment;
 
 import butterknife.Bind;
 import butterknife.OnClick;

@@ -19,7 +19,7 @@ import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ReferralInfo;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 

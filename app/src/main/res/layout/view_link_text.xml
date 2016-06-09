@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView
+    style="@style/TextView.Medium"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="@dimen/default_padding_medium"
+    android:paddingEnd="@dimen/default_padding"
+    android:paddingStart="@dimen/default_padding"
+    android:paddingTop="@dimen/default_padding_medium"
+    android:background="@drawable/button_white"
+    />

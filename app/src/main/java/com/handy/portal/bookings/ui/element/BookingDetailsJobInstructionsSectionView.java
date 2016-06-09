@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.util.FontUtils;
+import com.handy.portal.library.util.FontUtils;
 
 import java.util.List;
 
