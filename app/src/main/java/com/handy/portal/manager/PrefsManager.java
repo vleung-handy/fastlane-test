@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.core.PropertiesReader;
+import com.handy.portal.library.util.PropertiesReader;
 import com.securepreferences.SecurePreferences;
 
 import java.util.Properties;

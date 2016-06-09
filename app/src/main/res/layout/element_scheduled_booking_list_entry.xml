@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/background_list_entry"
-    android:minHeight="@dimen/job_cell_min_height"
     android:padding="@dimen/default_padding"
     >
 
@@ -79,30 +78,12 @@
             >
 
             <TextView
-                android:id="@+id/booking_entry_start_date_text"
+                android:id="@+id/booking_entry_date_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/dark_gray"
                 android:textSize="@dimen/default_text_size"
-                tools:text="10:00 am"
-                android:textColor="@color/dark_gray"
-                />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/extra_margin"
-                android:layout_marginRight="@dimen/extra_margin"
-                android:text="@string/dash"
-                android:textColor="@color/dark_gray"
-                />
-
-            <TextView
-                android:id="@+id/booking_entry_end_date_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/default_text_size"
-                tools:text="1:00 pm"
-                android:textColor="@color/dark_gray"
+                tools:text="10:00am -  1:00pm"
                 />
         </LinearLayout>
 

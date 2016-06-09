@@ -20,7 +20,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
-import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.library.util.DateTimeUtils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingTop="@dimen/default_padding"
+    >
+
+    <TextView
+        android:id="@+id/current_week_completed_jobs_text"
+        style="@style/CircularBook"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:textColor="@color/handy_blue"
+        android:textSize="@dimen/xxxlarge_text_size"
+        tools:text="2"
+        />
+
+    <TextView
+        style="@style/CircularBold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/jobs_completed"
+        android:textColor="@color/black"
+        android:textSize="@dimen/dashboard_header_text_size"
+        />
+
+    <TextView
+        android:id="@+id/current_week_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin_xmedium"
+        android:layout_marginTop="@dimen/row_margin"
+        android:gravity="center_horizontal"
+        android:textColor="@color/tertiary_gray"
+        android:textSize="@dimen/default_text_size"
+        tools:text="(Mon, May 9 \u2013 Sun, May 16)"
+        />
+
+</LinearLayout>

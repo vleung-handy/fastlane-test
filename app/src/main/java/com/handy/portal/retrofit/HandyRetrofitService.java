@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.model.ProviderSettings;
-import com.handy.portal.onboarding.model.JobClaimRequest;
+import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -21,6 +21,7 @@ import retrofit.http.PUT;
 import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import retrofit.http.QueryMap;
 import retrofit.mime.TypedInput;
 
 public interface HandyRetrofitService
@@ -43,13 +44,13 @@ public interface HandyRetrofitService
             @Body LocationBatchUpdate locationBatchUpdate,
             HandyRetrofitCallback cb);
 
+    @GET("/setup")
+    void getSetupData(HandyRetrofitCallback cb);
+
     @GET("/check_for_update")
     void checkUpdates(@Query("app_flavor") String appFlavor,
                       @Query("version_code") int versionCode,
                       HandyRetrofitCallback cb);
-
-    @GET("/check_all_pending_terms")
-    void checkAllPendingTerms(HandyRetrofitCallback cb);
 
     @Multipart
     @POST("/accept_terms")
@@ -62,10 +63,13 @@ public interface HandyRetrofitService
 
     @GET(JOBS_PATH + "available_jobs")
     void getAvailableBookings(@Query("dates[]") Date[] dates,
+                              @QueryMap Map<String, Object> options,
                               HandyRetrofitCallback cb);
 
     @GET(JOBS_PATH + "onboarding_jobs")
-    void getOnboardingJobs(HandyRetrofitCallback cb);
+    void getOnboardingJobs(@Query("start_date") Date startDate,
+                           @Query("preferred_zipclusters[]") ArrayList<String> zipclusterIds,
+                           HandyRetrofitCallback cb);
 
     @GET(JOBS_PATH + "scheduled_jobs")
     void getScheduledBookings(@Query("dates[]") Date[] date,
@@ -84,7 +88,7 @@ public interface HandyRetrofitService
 
     @PUT(JOBS_PATH + "claim_jobs")
     void claimBookings(@Body JobClaimRequest jobClaimRequest,
-                      HandyRetrofitCallback cb);
+                       HandyRetrofitCallback cb);
 
     @PUT(JOBS_PATH + "{id}/remove")
     void removeBooking(@Path("id") String bookingId,

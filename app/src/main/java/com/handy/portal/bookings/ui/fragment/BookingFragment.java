@@ -49,18 +49,17 @@ import com.handy.portal.model.LocationData;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.fragment.TimerActionBarFragment;
-import com.handy.portal.ui.view.MapPlaceholderView;
-import com.handy.portal.ui.view.RoundedTextView;
-import com.handy.portal.util.CurrencyUtils;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.FragmentUtils;
-import com.handy.portal.util.TextUtils;
-import com.handy.portal.util.UIUtils;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.ui.view.MapPlaceholderView;
+import com.handy.portal.library.ui.view.RoundedTextView;
+import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.FragmentUtils;
+import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.library.util.UIUtils;
+import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -360,7 +359,7 @@ public class BookingFragment extends TimerActionBarFragment
         String formattedDate = DateTimeUtils.DAY_OF_WEEK_MONTH_DAY_FORMATTER.format(startDate);
         String formattedTime = getResources().getString(R.string.dash_formatted,
                 DateTimeUtils.formatDateTo12HourClock(startDate), DateTimeUtils.formatDateTo12HourClock(endDate));
-        String dateTimeText = getTodayTomorrowStringByStartDate(startDate) + formattedDate;
+        String dateTimeText = DateTimeUtils.getTodayTomorrowStringByStartDate(startDate, getContext()) + formattedDate;
         mJobDateText.setText(dateTimeText);
         mJobTimeText.setText(formattedTime.toLowerCase());
 
@@ -597,30 +596,6 @@ public class BookingFragment extends TimerActionBarFragment
         return mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
     }
 
-    //returns a today or tomorrow prepend as needed
-    private String getTodayTomorrowStringByStartDate(Date bookingStartDate)
-    {
-        String prepend = "";
-
-        Calendar calendar = Calendar.getInstance();
-
-        Date currentTime = calendar.getTime();
-
-        if (DateTimeUtils.equalCalendarDates(currentTime, bookingStartDate))
-        {
-            prepend = (getContext().getString(R.string.today) + ", ");
-        }
-
-        calendar.add(Calendar.DATE, 1);
-        Date tomorrowTime = calendar.getTime();
-        if (DateTimeUtils.equalCalendarDates(tomorrowTime, bookingStartDate))
-        {
-            prepend = (getContext().getString(R.string.tomorrow) + ", ");
-        }
-
-        return prepend;
-    }
-
     private void requestClaimJob()
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
@@ -758,7 +733,7 @@ public class BookingFragment extends TimerActionBarFragment
             Booking.Action.Extras.CancellationPolicy cancellationPolicy = claimAction.getExtras().getCancellationPolicy();
             if (cancellationPolicy != null)
             {
-                if (getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null)
+                if (getChildFragmentManager().findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null)
                 {
                     ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mBooking);
                     confirmBookingDialogFragment.setTargetFragment(BookingFragment.this, RequestCode.CONFIRM_REQUEST);

@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import com.handy.portal.R;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.ui.element.dashboard.DashboardRatingsView;
-import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.library.util.DateTimeUtils;
 
 public class DashboardRatingsPagerAdapter extends PagerAdapter
 {

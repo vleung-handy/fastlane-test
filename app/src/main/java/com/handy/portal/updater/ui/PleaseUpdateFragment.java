@@ -25,10 +25,10 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppUpdateLog;
-import com.handy.portal.ui.fragment.InjectedFragment;
+import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.updater.AppUpdateEvent;
 import com.handy.portal.updater.VersionManager;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;

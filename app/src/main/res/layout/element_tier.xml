@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="@dimen/default_margin_half"
+    android:layout_marginEnd="@dimen/default_margin_medium"
+    android:layout_marginLeft="@dimen/default_margin_medium"
+    android:layout_marginRight="@dimen/default_margin_medium"
+    android:layout_marginStart="@dimen/default_margin_medium"
+    android:layout_marginTop="@dimen/tier_margin_top_bottom"
+    android:orientation="horizontal"
+    >
+
+    <LinearLayout
+        android:id="@+id/tier_row_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:gravity="start"
+        android:orientation="horizontal"
+        >
+
+        <ImageView
+            android:id="@+id/tier_dot"
+            android:layout_width="@dimen/tier_dot_width_height"
+            android:layout_height="@dimen/tier_dot_width_height"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/extra_margin"
+            android:layout_marginRight="@dimen/extra_margin"
+            android:src="@drawable/circle_handy_blue"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
+
+        <TextView
+            android:id="@+id/tier_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:text="@string/tier_one"
+            android:textColor="@color/tertiary_gray"
+            android:textSize="@dimen/default_text_size"
+            tools:textColor="@color/handy_blue"
+            />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tier_middle_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:gravity="start"
+        android:textColor="@color/tertiary_gray"
+        android:textSize="@dimen/default_text_size"
+        tools:text="0 \u2013 3"
+        tools:textColor="@color/handy_blue"
+        />
+
+    <TextView
+        android:id="@+id/tier_rate_text"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="start"
+        android:textColor="@color/tertiary_gray"
+        android:textSize="@dimen/default_text_size"
+        tools:text="$15"
+        tools:textColor="@color/handy_blue"
+        />
+
+</LinearLayout>

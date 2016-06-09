@@ -20,8 +20,8 @@ import com.handy.portal.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.BankAccountInfo;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.ui.view.FormFieldTableRow;
-import com.handy.portal.util.UIUtils;
+import com.handy.portal.library.ui.view.FormFieldTableRow;
+import com.handy.portal.library.util.UIUtils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Map;

@@ -1,7 +1,7 @@
 package com.handy.portal.notification.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.library.util.DateTimeUtils;
 
 import java.io.Serializable;
 import java.util.Date;

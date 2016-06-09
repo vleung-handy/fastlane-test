@@ -10,8 +10,8 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.payments.model.Payment;
-import com.handy.portal.util.CurrencyUtils;
-import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.DateTimeUtils;
 
 import java.util.Date;
 

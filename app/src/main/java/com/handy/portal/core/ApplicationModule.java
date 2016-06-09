@@ -15,6 +15,7 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpModule;
+import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.location.LocationModule;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
@@ -34,11 +35,10 @@ import com.handy.portal.manager.UserInterfaceUpdateManager;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.notification.NotificationModule;
-import com.handy.portal.onboarding.ui.activity.GettingStartedActivity;
-import com.handy.portal.onboarding.ui.activity.OnboardWelcomeActivity;
+import com.handy.portal.onboarding.OnboardingModule;
+import com.handy.portal.onboarding.ui.activity.ActivationWelcomeActivity;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsModule;
-import com.handy.portal.preactivation.PreActivationModule;
 import com.handy.portal.receiver.HandyPushReceiver;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
@@ -46,6 +46,8 @@ import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitEndpoint;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.service.DeepLinkService;
+import com.handy.portal.setup.SetupManager;
+import com.handy.portal.setup.SetupModule;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
@@ -64,7 +66,6 @@ import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesWebViewFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
-import com.handy.portal.ui.fragment.dashboard.DashboardNewTiersFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
 import com.handy.portal.ui.fragment.dashboard.DashboardVideoLibraryFragment;
@@ -73,7 +74,6 @@ import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateActivity;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
-import com.handy.portal.webview.OnboardingFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.otto.Bus;
@@ -115,7 +115,6 @@ import retrofit.converter.GsonConverter;
         ProfileUpdateFragment.class,
         SupportActionView.class,
         DashboardTiersFragment.class,
-        DashboardNewTiersFragment.class,
         DashboardFeedbackFragment.class,
         DashboardReviewsFragment.class,
         DashboardOptionsPerformanceView.class,
@@ -124,13 +123,12 @@ import retrofit.converter.GsonConverter;
         RatingsAndFeedbackFragment.class,
         ReferAFriendFragment.class,
         FiveStarRatingPercentageView.class,
-        OnboardingFragment.class,
         DashboardVideoLibraryFragment.class,
         DashboardFeedbackView.class,
         RequestSuppliesWebViewFragment.class,
-        GettingStartedActivity.class,
-        OnboardWelcomeActivity.class,
+        ActivationWelcomeActivity.class,
         RequestSuppliesWebViewFragment.class,
+        DashboardTiersFragment.class,
 },
         includes = {
                 HelpModule.class,
@@ -138,7 +136,8 @@ import retrofit.converter.GsonConverter;
                 LocationModule.class,
                 PaymentsModule.class,
                 BookingsModule.class,
-                PreActivationModule.class,
+                OnboardingModule.class,
+                SetupModule.class,
         }
 )
 public final class ApplicationModule
@@ -440,6 +439,14 @@ public final class ApplicationModule
     )
     {
         return new TabNavigationManager(bus, providerManager, webUrlManager, paymentsManager, configManager);
+    }
+
+    @Provides
+    @Singleton
+    final SetupManager provideApplicationSetupManager(final Bus bus,
+                                                      final DataManager dataManager)
+    {
+        return new SetupManager(bus, dataManager);
     }
 
     private String getDeviceId()

@@ -14,10 +14,10 @@ import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.TypeSafeMap;
-import com.handy.portal.onboarding.model.JobClaimResponse;
-import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -38,6 +38,15 @@ public class BookingManager
     private final Cache<Date, BookingsWrapper> availableBookingsCache;
     private final Cache<Date, BookingsWrapper> scheduledBookingsCache;
     private final Cache<Date, BookingsWrapper> complementaryBookingsCache;
+    private final Cache<Date, BookingsWrapper> requestedBookingsCache;
+
+    /*
+    keys used in QueryMap requests
+     */
+    private final class BookingRequestKeys
+    {
+        private static final String IS_PROVIDER_REQUESTED = "is_requested";
+    }
 
     @Inject
     public BookingManager(final Bus bus, final DataManager dataManager)
@@ -59,6 +68,11 @@ public class BookingManager
         this.complementaryBookingsCache = CacheBuilder.newBuilder()
                 .maximumSize(100)
                 .expireAfterWrite(2, TimeUnit.MINUTES)
+                .build();
+
+        this.requestedBookingsCache = CacheBuilder.newBuilder()
+                .maximumSize(100)
+                .expireAfterWrite(5, TimeUnit.MINUTES)
                 .build();
     }
 
@@ -123,6 +137,7 @@ public class BookingManager
         if (!datesToRequest.isEmpty())
         {
             mDataManager.getAvailableBookings(datesToRequest.toArray(new Date[datesToRequest.size()]),
+                    null,
                     new DataManager.Callback<BookingsListWrapper>()
                     {
                         @Override
@@ -150,21 +165,93 @@ public class BookingManager
     @Subscribe
     public void onRequestOnboardingJobs(HandyEvent.RequestOnboardingJobs event)
     {
-        mDataManager.getOnboardingJobs(new DataManager.Callback<BookingsListWrapper>()
-                                       {
-                                           @Override
-                                           public void onSuccess(final BookingsListWrapper bookingsListWrapper)
-                                           {
-                                               mBus.post(new HandyEvent.ReceiveOnboardingJobsSuccess(bookingsListWrapper));
-                                           }
+        mDataManager.getOnboardingJobs(event.getStartDate(), event.getPreferredZipclusterIds(),
+                new DataManager.Callback<BookingsListWrapper>()
+                {
+                    @Override
+                    public void onSuccess(final BookingsListWrapper bookingsListWrapper)
+                    {
+                        mBus.post(new HandyEvent.ReceiveOnboardingJobsSuccess(bookingsListWrapper));
+                    }
 
-                                           @Override
-                                           public void onError(final DataManager.DataManagerError error)
-                                           {
-                                               mBus.post(new HandyEvent.ReceiveOnboardingJobsError(error));
-                                           }
-                                       }
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        mBus.post(new HandyEvent.ReceiveOnboardingJobsError(error));
+                    }
+                }
         );
+    }
+
+    @Subscribe
+    public void onRequestProRequestedJobs(BookingEvent.RequestProRequestedJobs event)
+    {
+        /*
+            FIXME: would rather use a serialized request model for the options
+            but don't know how to pass it as a QueryMap
+            without errors
+         */
+
+        boolean matchingCache = false;
+
+        if (event.useCachedIfPresent())
+        {
+            matchingCache = true; //assume true until broken
+            List<BookingsWrapper> bookingsListWrapper = new ArrayList<>();
+            //check our cache to see if we have a hit for the dates, do not need to check options since they are always the same for this request
+            //not going to be smart and assemble stuff now, just see if everything matches, otherwise ignor
+            for (Date date : event.getDatesForBookings())
+            {
+                final BookingsWrapper bookingsWrapper = requestedBookingsCache.getIfPresent(date);
+                //cut out early if something doesn't fit, then just go do request
+                if (bookingsWrapper != null)
+                {
+                    bookingsListWrapper.add(bookingsWrapper);
+                }
+                else
+                {
+                    matchingCache = false;
+                    break;
+                }
+            }
+
+            //full match, send the cached data
+            if (matchingCache)
+            {
+                mBus.post(new BookingEvent.ReceiveProRequestedJobsSuccess(bookingsListWrapper));
+            }
+        }
+
+        //We don't want to use the cache or the cache was not an exact match
+        if (!matchingCache)
+        {
+            Map<String, Object> options = new HashMap<>();
+            options.put(BookingRequestKeys.IS_PROVIDER_REQUESTED, true);
+            mDataManager.getAvailableBookings(event.getDatesForBookings().toArray(new Date[event.getDatesForBookings().size()]),
+                    options,
+                    new DataManager.Callback<BookingsListWrapper>()
+                    {
+                        @Override
+                        public void onSuccess(final BookingsListWrapper bookingsListWrapper)
+                        {
+                            for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
+                            {
+                                Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
+                                Crashlytics.log("Received requested bookings for " + day);
+                                requestedBookingsCache.put(day, bookingsWrapper);
+                            }
+                            mBus.post(new BookingEvent.ReceiveProRequestedJobsSuccess(bookingsListWrapper.getBookingsWrappers()));
+                        }
+
+                        @Override
+                        public void onError(final DataManager.DataManagerError error)
+                        {
+                            mBus.post(new BookingEvent.ReceiveProRequestedJobsError(error));
+                        }
+                    }
+            );
+        }
+
     }
 
     /**
@@ -569,6 +656,7 @@ public class BookingManager
         availableBookingsCache.invalidateAll();
         scheduledBookingsCache.invalidateAll();
         complementaryBookingsCache.invalidateAll();
+        requestedBookingsCache.invalidateAll();
     }
 
     private void invalidateCachesForDay(Date day)
@@ -576,5 +664,6 @@ public class BookingManager
         availableBookingsCache.invalidate(day);
         scheduledBookingsCache.invalidate(day);
         complementaryBookingsCache.invalidate(day);
+        requestedBookingsCache.invalidate(day);
     }
 }

@@ -19,24 +19,24 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
-import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.constants.HelpCenterUrl;
+import com.handy.portal.library.ui.fragment.InjectedFragment;
+import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
+import com.handy.portal.library.ui.widget.PhoneInputTextView;
+import com.handy.portal.library.ui.widget.PinCodeInputTextView;
+import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.library.util.UIUtils;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.LoginLog;
 import com.handy.portal.logger.mixpanel.Mixpanel;
-import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.ui.activity.SplashActivity;
-import com.handy.portal.ui.layout.SlideUpPanelLayout;
-import com.handy.portal.ui.widget.PhoneInputTextView;
-import com.handy.portal.ui.widget.PinCodeInputTextView;
-import com.handy.portal.util.TextUtils;
-import com.handy.portal.util.UIUtils;
-import com.handy.portal.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -72,7 +72,7 @@ public class LoginActivityFragment extends InjectedFragment
     @Inject
     Mixpanel mixpanel;
     @Inject
-    PrefsManager prefsManager;
+    ProviderManager mProviderManager;
 
 
     private enum LoginState
@@ -376,7 +376,7 @@ public class LoginActivityFragment extends InjectedFragment
         }
 
         String providerId = loginDetails.getProviderId();
-        prefsManager.setString(PrefsKey.LAST_PROVIDER_ID, providerId);//TODO: we need to move away from using PrefsKey.LAST_PROVIDER_ID
+        mProviderManager.setProviderId(providerId);
 
         startActivity(new Intent(this.getActivity(), SplashActivity.class));
     }

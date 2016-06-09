@@ -17,21 +17,21 @@
             android:orientation="vertical"
             android:stretchColumns="2">
 
-            <com.handy.portal.ui.view.FormFieldTableRow
+            <com.handy.portal.library.ui.view.FormFieldTableRow
                 android:id="@+id/routing_number_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_gray_no_side"
                 />
 
-            <com.handy.portal.ui.view.FormFieldTableRow
+            <com.handy.portal.library.ui.view.FormFieldTableRow
                 android:id="@+id/account_number_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_gray_bottom"
                 />
 
-            <com.handy.portal.ui.view.FormFieldTableRow
+            <com.handy.portal.library.ui.view.FormFieldTableRow
                 android:id="@+id/tax_id_field"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

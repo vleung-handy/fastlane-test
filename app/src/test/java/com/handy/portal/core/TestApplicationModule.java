@@ -6,6 +6,7 @@ import com.handy.portal.bookings.BookingManager;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
+import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragmentTest;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.TestDataManager;
 import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
@@ -29,6 +30,7 @@ import com.handy.portal.payments.ui.fragment.PaymentsFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsFragmentTest;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
+import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.TestActivity;
@@ -37,7 +39,6 @@ import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragmentTest;
 import com.handy.portal.ui.fragment.ProfileUpdateFragment;
-import com.handy.portal.ui.fragment.SendReceiptCheckoutFragmentTest;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.securepreferences.SecurePreferences;
@@ -73,6 +74,7 @@ import static org.mockito.Mockito.when;
         SendReceiptCheckoutFragment.class,
         SendReceiptCheckoutFragmentTest.class,
         PaymentBatchListAdapter.class,
+        BaseActivity.SetupHandler.class,
 }, library = true)
 public class TestApplicationModule
 {

@@ -9,7 +9,7 @@ import com.handy.portal.bookings.model.Booking.BookingType;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Bus;
 
 import javax.inject.Inject;

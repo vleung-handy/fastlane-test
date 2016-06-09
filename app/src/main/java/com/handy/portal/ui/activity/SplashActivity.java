@@ -1,85 +1,83 @@
 package com.handy.portal.ui.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.widget.TextView;
+import android.widget.ImageView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
-import com.handy.portal.data.DataManager;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.onboarding.model.OnboardingDetails;
+import com.handy.portal.onboarding.model.subflow.SubflowStatus;
+import com.handy.portal.onboarding.ui.activity.OnboardingFlowActivity;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
+import com.handy.portal.setup.SetupData;
 import com.handy.portal.util.DeeplinkUtils;
-import com.squareup.otto.Subscribe;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
+import butterknife.Bind;
+import butterknife.BindInt;
+import butterknife.ButterKnife;
+
 public class SplashActivity extends BaseActivity
 {
-    private static final String STATE_LAUNCHED_NEXT = "LAUNCHED_NEXT";
-
-    private boolean launchedNext;
-
     @Inject
     PrefsManager prefsManager;
-    @Inject
-    ProviderManager providerManager;
     @Inject
     HandyRetrofitEndpoint endpoint;
     @Inject
     BuildConfigWrapper buildConfigWrapper;
 
-    @SuppressWarnings("deprecation")
+    @Bind(R.id.progress_spinner)
+    ImageView mProgressSpinner;
+    @BindInt(R.integer.progress_spinner_start_offset_millis)
+    int mProgressSpinnerStartOffsetMillis;
+
+    private String mAuthToken;
+
+    private Runnable mLoadingAnimationStarter = new Runnable()
+    {
+        @Override
+        public void run()
+        {
+            if (mProgressSpinner != null)
+            {
+                mProgressSpinner.setVisibility(View.VISIBLE);
+                final AnimationDrawable animation =
+                        (AnimationDrawable) mProgressSpinner.getBackground();
+                animation.start();
+            }
+        }
+    };
+
     @Override
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_splash);
+        ButterKnife.bind(this);
 
-        String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
-        if (providerId != null)
-        {
-            // needs to happen immediately just in case anything bad happens after this line
-            Crashlytics.setUserIdentifier(providerId);
-        }
+        mProgressSpinner.postDelayed(mLoadingAnimationStarter, mProgressSpinnerStartOffsetMillis);
 
         if (buildConfigWrapper.isDebug())
         {
-            String authToken = getIntent().getDataString();
-            if (authToken != null && authToken.matches("[A-Za-z0-9_]+"))
-            {
-                prefsManager.setString(PrefsKey.AUTH_TOKEN, authToken);
-
-                //For use with WebView
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-                {
-                    CookieManager.getInstance().setCookie(endpoint.getBaseUrl(),
-                            "user_credentials=" + authToken);
-                    CookieManager.getInstance().flush();
-                }
-                else
-                {
-                    CookieSyncManager.createInstance(this);
-                    CookieManager.getInstance().setCookie(endpoint.getBaseUrl(), "user_credentials=" + authToken);
-                    CookieSyncManager.getInstance().sync();
-                }
-            }
+            processInjectedCredentials();
         }
+
+        mAuthToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
     }
 
     @Override
@@ -88,119 +86,36 @@ public class SplashActivity extends BaseActivity
         super.onResume();
         bus.register(this);
 
-        String authToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
-        String authTokenFromCookieManager = getAuthTokenFromCookieManager();
-        if (authToken == null && authTokenFromCookieManager != null)
+        if (!hasUser())
         {
-            authToken = authTokenFromCookieManager;
-            prefsManager.setString(PrefsKey.AUTH_TOKEN, authToken);
+            final Intent loginActivityIntent = getActivityIntent(LoginActivity.class);
+            loginActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(loginActivityIntent);
+            finish();
         }
-
-        if (authToken == null)
-        {
-            launchActivity(LoginActivity.class);
-        }
-        else
-        {
-            // TODO: SplashActivity is always relaunched when user info is received or when terms are accepted. When we move away from that logic, refactor this section.
-            if (providerManager.getCachedActiveProvider() != null)
-            {
-                checkForTerms();
-            }
-            else
-            {
-                requestProviderInfo();
-            }
-
-        }
-    }
-
-    private void requestProviderInfo()
-    {
-        bus.post(new HandyEvent.RequestProviderInfo());
-    }
-
-    @Subscribe
-    public void onReceiveUserInfoSuccess(HandyEvent.ReceiveProviderInfoSuccess event)
-    {
-        // at this point, ProviderManager should have set the provider ID in prefs
-        configManager.prefetch();
-        launchActivity(SplashActivity.class);
-    }
-
-    @Subscribe
-    public void onReceiveUserInfoError(HandyEvent.ReceiveProviderInfoError event)
-    {
-        if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
-        {
-            // only allow retries on network errors
-            findViewById(R.id.progress_spinner).setVisibility(View.GONE);
-            findViewById(R.id.fetch_error_view).setVisibility(View.VISIBLE);
-            ((TextView) findViewById(R.id.fetch_error_text)).setText(R.string.unable_to_fetch_user);
-            findViewById(R.id.try_again_button).setOnClickListener(new View.OnClickListener()
-            {
-                @Override
-                public void onClick(View view)
-                {
-                    findViewById(R.id.progress_spinner).setVisibility(View.VISIBLE);
-                    findViewById(R.id.fetch_error_view).setVisibility(View.GONE);
-                    requestProviderInfo();
-                }
-            });
-        }
-        else
-        {
-            launchActivity(LoginActivity.class);
-        }
-    }
-
-    @SuppressWarnings("deprecation")
-    private String getAuthTokenFromCookieManager()
-    {
-        String allCookies;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        {
-            allCookies = CookieManager.getInstance().getCookie(endpoint.getBaseUrl());
-            CookieManager.getInstance().flush();
-        }
-        else
-        {
-            CookieSyncManager.createInstance(this);
-            allCookies = CookieManager.getInstance().getCookie(endpoint.getBaseUrl());
-            CookieSyncManager.getInstance().sync();
-        }
-
-        if (allCookies != null)
-        {
-            Pattern pattern = Pattern.compile(".*user_credentials=(.*?)(?:%3A|;|$).*");
-            Matcher matcher = pattern.matcher(allCookies);
-            if (matcher.matches())
-            {
-                return matcher.group(1);
-            }
-            else
-            {
-                Crashlytics.log("Token cannot be obtained from cookie manager");
-            }
-        }
-        else
-        {
-            // TODO: Maybe remove this since we remove all cookies on logout
-            Crashlytics.log("No cookies found in this device");
-        }
-        return null;
     }
 
     @Override
-    public void startActivity(final Intent intent)
+    protected void onSetupComplete(final SetupData setupData)
     {
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
-        super.startActivity(intent);
-
-        launchedNext = true;
+        final Intent activityIntent = getTerminalActivityIntent(setupData);
+        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(activityIntent);
         finish();
+    }
+
+    @Override
+    protected void onSetupFailure()
+    {
+        onSetupComplete(null);
+    }
+
+    @Override
+    protected boolean shouldTriggerSetup()
+    {
+        return hasUser();
     }
 
     @Override
@@ -219,14 +134,8 @@ public class SplashActivity extends BaseActivity
         {
             Crashlytics.logException(e); //want more info for now
         }
+        mProgressSpinner.removeCallbacks(mLoadingAnimationStarter);
         super.onPause();
-    }
-
-    @Override
-    public void startActivityForResult(final Intent intent, final int resultCode)
-    {
-        super.startActivityForResult(intent, resultCode);
-        launchedNext = true;
     }
 
     @Override
@@ -234,7 +143,6 @@ public class SplashActivity extends BaseActivity
     {
         try
         {
-            outState.putBoolean(STATE_LAUNCHED_NEXT, launchedNext);
             super.onSaveInstanceState(outState);
         }
         catch (IllegalArgumentException e)
@@ -244,31 +152,37 @@ public class SplashActivity extends BaseActivity
         }
     }
 
-    private void checkForTerms()
+    public Intent getTerminalActivityIntent(@Nullable final SetupData setupData)
     {
-        bus.post(new HandyEvent.RequestCheckTerms());
-    }
-
-    @Subscribe
-    public void onReceiveCheckTermsSuccess(HandyEvent.ReceiveCheckTermsSuccess event) //TODO: we check terms in MainActivity also! need to consolidate
-    {
-        if (event.termsDetailsGroup.hasTerms())
+        final Intent activityIntent;
+        if (setupData != null && shouldShowOnboarding(setupData.getOnboardingDetails()))
         {
-            launchActivity(TermsActivity.class);
+            activityIntent = getActivityIntent(OnboardingFlowActivity.class);
+            activityIntent.putExtra(BundleKeys.ONBOARDING_DETAILS,
+                    setupData.getOnboardingDetails());
         }
         else
         {
-            launchActivity(MainActivity.class);
+            activityIntent = getActivityIntent(MainActivity.class);
         }
+        return activityIntent;
     }
 
-    @Subscribe
-    public void onReceiveCheckTermsError(HandyEvent.ReceiveCheckTermsError event)
+    private boolean shouldShowOnboarding(final OnboardingDetails onboardingDetails)
     {
-        launchActivity(TermsActivity.class);
+        if (onboardingDetails != null && onboardingDetails.getSubflows() != null)
+        {
+            return anyOnboardingSubflowsIncomplete(onboardingDetails);
+        }
+        return false;
     }
 
-    private void launchActivity(Class<? extends BaseActivity> activityClass)
+    private boolean anyOnboardingSubflowsIncomplete(final OnboardingDetails onboardingDetails)
+    {
+        return !onboardingDetails.getSubflowsByStatus(SubflowStatus.INCOMPLETE).isEmpty();
+    }
+
+    private Intent getActivityIntent(final Class<? extends BaseActivity> activityClass)
     {
         final Intent intent = new Intent(this, activityClass);
         final Uri data = getIntent().getData();
@@ -278,7 +192,7 @@ public class SplashActivity extends BaseActivity
             intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkBundle);
             intent.putExtra(BundleKeys.DEEPLINK_SOURCE, DeeplinkLog.Source.LINK);
         }
-        startActivity(intent);
+        return intent;
     }
 
     @Override
@@ -291,5 +205,34 @@ public class SplashActivity extends BaseActivity
     public void launchAppUpdater()
     {
         //do nothing
+    }
+
+    private void processInjectedCredentials()
+    {
+        final String authToken = getIntent().getStringExtra(PrefsKey.AUTH_TOKEN);
+        if (!TextUtils.isNullOrEmpty(authToken))
+        {
+            prefsManager.setString(PrefsKey.AUTH_TOKEN, authToken);
+
+            //For use with WebView
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+            {
+                CookieManager.getInstance().setCookie(endpoint.getBaseUrl(),
+                        "user_credentials=" + authToken);
+                CookieManager.getInstance().flush();
+            }
+            else
+            {
+                CookieSyncManager.createInstance(this);
+                CookieManager.getInstance().setCookie(endpoint.getBaseUrl(),
+                        "user_credentials=" + authToken);
+                CookieSyncManager.getInstance().sync();
+            }
+        }
+    }
+
+    private boolean hasUser()
+    {
+        return !TextUtils.isNullOrEmpty(mAuthToken);
     }
 }

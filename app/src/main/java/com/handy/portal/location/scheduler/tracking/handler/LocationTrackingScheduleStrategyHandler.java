@@ -17,7 +17,7 @@ import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.model.LocationUpdate;
 import com.handy.portal.location.scheduler.handler.ScheduleStrategyHandler;
 import com.handy.portal.location.scheduler.tracking.model.LocationTrackingScheduleStrategy;
-import com.handy.portal.util.SystemUtils;
+import com.handy.portal.library.util.SystemUtils;
 
 import java.util.LinkedList;
 import java.util.Queue;

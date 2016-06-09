@@ -15,10 +15,10 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.payments.model.Transaction;
-import com.handy.portal.util.CurrencyUtils;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.FontUtils;
-import com.handy.portal.util.TextUtils;
+import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.FontUtils;
+import com.handy.portal.library.util.TextUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

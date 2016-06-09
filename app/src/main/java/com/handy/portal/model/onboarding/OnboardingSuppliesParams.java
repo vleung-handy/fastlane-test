@@ -7,14 +7,14 @@ public class OnboardingSuppliesParams
     @SerializedName("enabled")
     private boolean mEnabled;
     @SerializedName("info")
-    private OnboardingSuppliesInfo mInfo;
+    private SuppliesInfo mInfo;
 
     public boolean isEnabled()
     {
         return mEnabled;
     }
 
-    public OnboardingSuppliesInfo getInfo()
+    public SuppliesInfo getInfo()
     {
         return mInfo;
     }

@@ -14,7 +14,8 @@ import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.util.UIUtils;
+import com.handy.portal.library.ui.fragment.InjectedFragment;
+import com.handy.portal.library.util.UIUtils;
 
 import javax.inject.Inject;
 

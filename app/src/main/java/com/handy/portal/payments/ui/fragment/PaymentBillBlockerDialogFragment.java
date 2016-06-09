@@ -14,7 +14,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.ui.fragment.dialog.PopupDialogFragment;
+import com.handy.portal.library.ui.fragment.dialog.PopupDialogFragment;
 
 import butterknife.Bind;
 

@@ -2,30 +2,30 @@ package com.handy.portal.bookings.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class BookingsListWrapper
 {
     @SerializedName("job_days")
-    private List<BookingsWrapper> bookingsWrappers;
+    private ArrayList<BookingsWrapper> mBookingsWrappers;
+    @SerializedName("message")
+    private String mMessage;
 
-    public final List<BookingsWrapper> getBookingsWrappers()
+    public final ArrayList<BookingsWrapper> getBookingsWrappers()
     {
-        return bookingsWrappers;
+        return mBookingsWrappers;
     }
 
     /**
      * Checks to see if there is at least one job. It's tricky, because there could be elements
-     * without jobs, so we need to check specifically for the existence of a job
-     *
-     * @return
+     * without jobs, so we need to check specifically for the existence of a job.
      */
-    public boolean hasJobs()
+    public boolean hasBookings()
     {
-        if (bookingsWrappers != null && !bookingsWrappers.isEmpty())
+        if (mBookingsWrappers != null && !mBookingsWrappers.isEmpty())
         {
-            //we need to check that it has actual jobs, and not just an empty list
-            for (BookingsWrapper booking : bookingsWrappers)
+            // we need to check that it has actual jobs, and not just an empty list
+            for (BookingsWrapper booking : mBookingsWrappers)
             {
                 if (booking.getBookings() != null && !booking.getBookings().isEmpty())
                 {
@@ -33,7 +33,11 @@ public class BookingsListWrapper
                 }
             }
         }
-
         return false;
+    }
+
+    public String getMessage()
+    {
+        return mMessage;
     }
 }
