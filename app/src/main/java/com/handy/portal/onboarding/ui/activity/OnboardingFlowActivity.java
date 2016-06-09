@@ -18,7 +18,6 @@ import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class OnboardingFlowActivity extends BaseActivity implements SubflowLauncher
 {
@@ -52,23 +51,17 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
     {
         if (savedInstanceState != null)
         {
-            final ArrayList<OnboardingSubflowDetails> incompleteSubflows =
-                    (ArrayList<OnboardingSubflowDetails>) savedInstanceState
-                            .getSerializable(BundleKeys.SUBFLOWS);
-            final SubflowType lastLaunchedSubflowType = (SubflowType) savedInstanceState
+            mLastLaunchedSubflowType = (SubflowType) savedInstanceState
                     .getSerializable(BundleKeys.SUBFLOW_TYPE);
-            if (incompleteSubflows != null && lastLaunchedSubflowType != null)
+            if (mLastLaunchedSubflowType != null)
             {
-                mSingleStepMode = incompleteSubflows.size() == 1;
-                removeLaunchedSubflows(incompleteSubflows, lastLaunchedSubflowType);
-                if (incompleteSubflows.isEmpty())
+                removeLaunchedSubflows();
+                if (mIncompleteSubflows.isEmpty())
                 {
-                    finishOnboardingFlow(lastLaunchedSubflowType != SubflowType.STATUS);
+                    finishOnboardingFlow(mLastLaunchedSubflowType != SubflowType.STATUS);
                 }
                 else
                 {
-                    mIncompleteSubflows = incompleteSubflows;
-                    mLastLaunchedSubflowType = lastLaunchedSubflowType;
                     final Intent data = new Intent();
                     data.putExtras(savedInstanceState);
                     savePendingBookingsIfAvailable(data);
@@ -79,18 +72,17 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
         }
     }
 
-    private void removeLaunchedSubflows(final List<OnboardingSubflowDetails> incompleteSubflows,
-                                        final SubflowType lastLaunchedSubflowType)
+    private void removeLaunchedSubflows()
     {
-        if (!incompleteSubflows.isEmpty())
+        if (!mIncompleteSubflows.isEmpty())
         {
             OnboardingSubflowDetails removedSubflow;
             do
             {
-                removedSubflow = incompleteSubflows.remove(0);
+                removedSubflow = mIncompleteSubflows.remove(0);
             }
-            while (!incompleteSubflows.isEmpty()
-                    && removedSubflow.getType() != lastLaunchedSubflowType);
+            while (!mIncompleteSubflows.isEmpty()
+                    && removedSubflow.getType() != mLastLaunchedSubflowType);
         }
     }
 
@@ -184,7 +176,6 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
         {
             outState = new Bundle();
         }
-        outState.putSerializable(BundleKeys.SUBFLOWS, mIncompleteSubflows);
         outState.putSerializable(BundleKeys.SUBFLOW_TYPE, mLastLaunchedSubflowType);
         outState.putSerializable(BundleKeys.BOOKINGS, mPendingBookings);
         outState.putSerializable(BundleKeys.SUPPLIES_ORDER_INFO, mSuppliesOrderInfo);
