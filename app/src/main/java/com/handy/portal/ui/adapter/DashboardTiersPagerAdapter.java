@@ -26,16 +26,16 @@ public class DashboardTiersPagerAdapter extends PagerAdapter
     {
         ProviderEvaluation.Incentive currentIncentive =
                 mProviderEvaluation.getPayRates().getIncentives().get(position);
-        List<ProviderEvaluation.Tier> mCurrentRegionTiers = currentIncentive.getTiers();
+        List<ProviderEvaluation.Tier> currentTiers = currentIncentive.getTiers();
 
         DashboardRegionTierView view = new DashboardRegionTierView(mContext);
-        view.setDisplay(mCurrentRegionTiers.size(), currentIncentive.getJobsUntilNextTier(),
+        view.setDisplay(currentTiers.size(), currentIncentive.getJobsUntilNextTier(),
                 currentIncentive.getRegionName(), currentIncentive.getServiceName(),
                 currentIncentive.getType());
 
-        for (int i = 0; i < mCurrentRegionTiers.size(); i++)
+        for (int i = 0; i < currentTiers.size(); i++)
         {
-            ProviderEvaluation.Tier currentTier = mCurrentRegionTiers.get(i);
+            ProviderEvaluation.Tier currentTier = currentTiers.get(i);
 
             if (currentIncentive.getType().equals(ProviderEvaluation.Incentive.ROLLING_TYPE))
             {
