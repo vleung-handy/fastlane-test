@@ -37,15 +37,9 @@ import com.handy.portal.library.ui.widget.TabButtonGroup;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
-import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.onboarding.OnboardingParams;
-import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
-import com.handy.portal.model.onboarding.OnboardingSuppliesParams;
-import com.handy.portal.onboarding.ui.activity.OnboardWelcomeActivity;
-import com.handy.portal.preactivation.PreActivationFlowActivity;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
@@ -106,26 +100,15 @@ public class MainActivityFragment extends InjectedFragment
     // Other fragments will want to know to avoid re-doing things on their onCreateView
     public static boolean clearingBackStack = false;
 
-    private boolean mOnResumeTransitionToMainTab; //need to catch and hold until onResume so we can catch the response from the bus
-
-    private boolean mConfigAlreadyReceivedThisSession = false; //the first time we get config response back we may need to navigate away
     private Bundle mDeeplinkData;
     private boolean mDeeplinkHandled;
     private String mDeeplinkSource;
-
-    private boolean mNativeOnboardingLaunched = false;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setDeeplinkData(savedInstanceState);
-
-        if (savedInstanceState != null)
-        {
-            mNativeOnboardingLaunched =
-                    savedInstanceState.getBoolean(BundleKeys.NATIVE_ONBOARDING_LAUNCHED, false);
-        }
 
         mActionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), mDrawerLayout,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -153,11 +136,6 @@ public class MainActivityFragment extends InjectedFragment
     {
         super.onViewStateRestored(savedInstanceState);
         setDeeplinkData(savedInstanceState);
-        if (savedInstanceState != null)
-        {
-            mNativeOnboardingLaunched =
-                    savedInstanceState.getBoolean(BundleKeys.NATIVE_ONBOARDING_LAUNCHED, false);
-        }
     }
 
     @Override
@@ -200,60 +178,12 @@ public class MainActivityFragment extends InjectedFragment
         {
             Crashlytics.logException(e);
         }
-
-        //If the config response came back for the first time may need to navigate away
-        //Normally the fragment would take care of itself, but this would launch the fragment if needed
-        if (!mConfigAlreadyReceivedThisSession)
-        {
-            mConfigAlreadyReceivedThisSession = true;
-            final ConfigurationResponse configuration = event.getConfigurationResponse();
-            launchPreActivationFlowIfNeeded(configuration);
-            handleOnboardingFlow(configuration);
-        }
-    }
-
-    private void launchPreActivationFlowIfNeeded(final ConfigurationResponse configuration)
-    {
-        OnboardingParams onboardingParams;
-        OnboardingSuppliesParams onboardingSuppliesParams;
-        if (configuration != null
-                && (onboardingParams = configuration.getOnboardingParams()) != null
-                && (onboardingSuppliesParams = onboardingParams.getOnboardingSuppliesParams()) != null
-                && onboardingSuppliesParams.isEnabled())
-        {
-            final OnboardingSuppliesInfo onboardingSuppliesParamsInfo =
-                    onboardingSuppliesParams.getInfo();
-            final Intent intent = new Intent(getActivity(), PreActivationFlowActivity.class);
-            intent.putExtra(BundleKeys.ONBOARDING_SUPPLIES, onboardingSuppliesParamsInfo);
-            startActivity(intent);
-            getActivity().finish();
-        }
     }
 
     @Subscribe
     public void onReceiveUnreadCountSuccess(NotificationEvent.ReceiveUnreadCountSuccess event)
     {
         mNotificationsButton.setUnreadCount(event.getUnreadCount());
-    }
-
-    private void handleOnboardingFlow(final ConfigurationResponse configuration)
-    {
-        if (configuration != null)
-        {
-            if (configuration.shouldShowNativeOnboarding())
-            {
-                if (!mNativeOnboardingLaunched)
-                {
-                    mNativeOnboardingLaunched = true;
-                    startActivity(new Intent(getContext(), OnboardWelcomeActivity.class));
-                }
-            }
-            else if (currentTab != null && currentTab != MainViewTab.ONBOARDING_WEBVIEW &&
-                    doesCachedProviderNeedWebOnboarding())
-            {
-                switchToTab(MainViewTab.ONBOARDING_WEBVIEW, false);
-            }
-        }
     }
 
     private void setDeeplinkData(final Bundle savedInstanceState)
@@ -306,7 +236,6 @@ public class MainActivityFragment extends InjectedFragment
                 outState = new Bundle();
             }
             outState.putBoolean(BundleKeys.DEEPLINK_HANDLED, mDeeplinkHandled);
-            outState.putBoolean(BundleKeys.NATIVE_ONBOARDING_LAUNCHED, mNativeOnboardingLaunched);
             super.onSaveInstanceState(outState);
         }
         catch (IllegalArgumentException e)
@@ -585,13 +514,6 @@ public class MainActivityFragment extends InjectedFragment
     private void switchToTab(@NonNull MainViewTab targetTab, @NonNull Bundle argumentsBundle,
                              @NonNull TransitionStyle overrideTransitionStyle, boolean userTriggered)
     {
-        //If the user navved away from a non-blocking onboarding log it
-        if (currentTab == MainViewTab.ONBOARDING_WEBVIEW &&
-                targetTab != MainViewTab.ONBOARDING_WEBVIEW && userTriggered)
-        {
-            bus.post(new LogEvent.AddLogEvent(new WebOnboardingLog.Dismissed()));
-        }
-
         bus.post(new NavigationEvent.NavigateToTab(targetTab, argumentsBundle, overrideTransitionStyle, false));
     }
 
@@ -679,12 +601,6 @@ public class MainActivityFragment extends InjectedFragment
     private ConfigurationResponse getConfigurationResponse()
     {
         return mConfigManager.getConfigurationResponse();
-    }
-
-    private boolean doesCachedProviderNeedWebOnboarding()
-    {
-        return (getConfigurationResponse() != null &&
-                getConfigurationResponse().shouldShowWebOnboarding());
     }
 
     @SuppressWarnings("deprecation")

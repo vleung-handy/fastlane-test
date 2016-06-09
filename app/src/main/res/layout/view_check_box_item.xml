@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/check_box_wrapper"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/button_white"
+    android:clickable="true"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:padding="@dimen/default_padding"
+    >
+
+    <CheckBox
+        android:id="@+id/check_box"
+        android:layout_width="@dimen/green_checkbox_width_height"
+        android:layout_height="@dimen/green_checkbox_width_height"
+        android:button="@drawable/selector_green_checkbox"
+        />
+
+    <TextView
+        android:id="@+id/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
+        android:textAppearance="@style/TextView.Medium"
+        tools:text="Manhattan"
+        />
+
+</LinearLayout>

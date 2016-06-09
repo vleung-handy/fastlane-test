@@ -76,6 +76,7 @@
     <dimen name="default_elevation">2dp</dimen>
     <dimen name="medium_elevation">4dp</dimen>
     <dimen name="medium_corner_radius">4dp</dimen>
+    <dimen name="green_checkbox_width_height">32dp</dimen>
 
     <!-- Generic -->
     <dimen name="negative_complete_button_height_half">-32dp</dimen>
@@ -103,7 +104,6 @@
     <dimen name="customer_no_show_banner_height">48dp</dimen>
 
     <!--job list-->
-    <dimen name="job_cell_min_height">128dp</dimen>
     <dimen name="job_cell_icon_size">40dp</dimen>
     <dimen name="job_cell_dot_size">8dp</dimen>
     <dimen name="job_cell_left_strip_indicator_width">5dp</dimen>
@@ -183,8 +183,6 @@
     <dimen name="onboard_particle_view_width_margin">-60dp</dimen>
     <dimen name="onboard_search_animation_width_height">160dp</dimen>
     <dimen name="onboard_list_header_padding">28dp</dimen>
-    <dimen name="onboard_claim_button_margin">20dp</dimen>
-    <dimen name="onboard_checkbox_width_height">32dp</dimen>
 
     <!-- Payments -->
     <dimen name="outstanding_week_question_mark_width_height">72dp</dimen>

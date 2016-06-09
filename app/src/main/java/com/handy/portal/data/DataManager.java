@@ -26,8 +26,8 @@ import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.notification.model.NotificationMessages;
-import com.handy.portal.onboarding.model.JobClaimRequest;
-import com.handy.portal.onboarding.model.JobClaimResponse;
+import com.handy.portal.onboarding.model.claim.JobClaimRequest;
+import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
@@ -96,9 +96,12 @@ public class DataManager
         mService.getAvailableBookings(dates, additionalOptions, new BookingsListWrapperHandyRetroFitCallback(cb));
     }
 
-    public void getOnboardingJobs(final Callback<BookingsListWrapper> cb)
+    public void getOnboardingJobs(final Date startDate,
+                                  final ArrayList<String> preferredZipclusterIds,
+                                  final Callback<BookingsListWrapper> cb)
     {
-        mService.getOnboardingJobs(new BookingsListWrapperHandyRetroFitCallback(cb));
+        mService.getOnboardingJobs(startDate, preferredZipclusterIds,
+                new BookingsListWrapperHandyRetroFitCallback(cb));
     }
 
     public void getScheduledBookings(Date[] dates, final Callback<BookingsListWrapper> cb)

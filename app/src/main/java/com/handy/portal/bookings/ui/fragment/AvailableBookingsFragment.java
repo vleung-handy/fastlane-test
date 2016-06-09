@@ -1,6 +1,5 @@
 package com.handy.portal.bookings.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -35,7 +34,6 @@ import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.helpcenter.constants.HelpCenterUrl;
 import com.handy.portal.library.util.DateTimeUtils;
@@ -43,8 +41,6 @@ import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.ProviderProfile;
-import com.handy.portal.onboarding.ui.activity.GettingStartedActivity;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.squareup.otto.Subscribe;
 
@@ -78,9 +74,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Inject
     BookingModalsManager mBookingModalsManager;
 
-    private MenuItem mMenuSchedule;
     private MenuItem mMenuProRequestedJobs;
-    private ProviderProfile mProviderProfile;
 
     @Override
     protected MainViewTab getTab()
@@ -118,8 +112,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         super.onResume();
         setActionBar(R.string.available_jobs, false);
-
-        bus.post(new ProfileEvent.RequestProviderProfile(false));
 
         if (!MainActivityFragment.clearingBackStack)
         {
@@ -194,23 +186,8 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_available_bookings, menu);
-        mMenuSchedule = menu.findItem(R.id.action_initial_jobs);
         mMenuProRequestedJobs = menu.findItem(R.id.action_pro_requested_jobs);
         updateMenuItems();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item)
-    {
-        switch(item.getItemId())
-        {
-            case R.id.action_initial_jobs:
-                startActivity(new Intent(getContext(), GettingStartedActivity.class));
-                return true;
-            //Had to use an onclick listener since we're using a custom view for the envelope + count
-//            case R.id.action_pro_requested_jobs:
-        }
-        return super.onOptionsItemSelected(item);
     }
 
     private void launchProRequestedJobsDialogFragment()
@@ -323,21 +300,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     private void updateMenuItems()
     {
-        if (mMenuSchedule != null)
-        {
-            if (mProviderProfile != null
-                    && mProviderProfile.getPerformanceInfo() != null
-                    && mProviderProfile.getPerformanceInfo().getTotalJobsCount() <= 0)
-            {
-                mMenuSchedule.setVisible(true);
-            }
-            else
-            {
-                mMenuSchedule.setVisible(false);
-            }
-        }
-
-        if(mMenuProRequestedJobs != null)
+        if (mMenuProRequestedJobs != null)
         {
             if (mConfigManager.getConfigurationResponse() != null
                     && mConfigManager.getConfigurationResponse().isPendingRequestsInboxEnabled())
@@ -359,14 +322,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 mMenuProRequestedJobs.setVisible(false);
             }
         }
-    }
-
-    @Subscribe
-    public void onReceiveProviderProfileSuccess(ProfileEvent.ReceiveProviderProfileSuccess event)
-    {
-        //show the menu option if the pro haven't claimed jobs before.
-        mProviderProfile = event.providerProfile;
-        updateMenuItems();
     }
 
     /**

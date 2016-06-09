@@ -4,7 +4,7 @@ import com.google.gson.JsonObject;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.model.ProviderSettings;
-import com.handy.portal.onboarding.model.JobClaimRequest;
+import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -67,7 +67,9 @@ public interface HandyRetrofitService
                               HandyRetrofitCallback cb);
 
     @GET(JOBS_PATH + "onboarding_jobs")
-    void getOnboardingJobs(HandyRetrofitCallback cb);
+    void getOnboardingJobs(@Query("start_date") Date startDate,
+                           @Query("preferred_zipclusters[]") ArrayList<String> zipclusterIds,
+                           HandyRetrofitCallback cb);
 
     @GET(JOBS_PATH + "scheduled_jobs")
     void getScheduledBookings(@Query("dates[]") Date[] date,
@@ -86,7 +88,7 @@ public interface HandyRetrofitService
 
     @PUT(JOBS_PATH + "claim_jobs")
     void claimBookings(@Body JobClaimRequest jobClaimRequest,
-                      HandyRetrofitCallback cb);
+                       HandyRetrofitCallback cb);
 
     @PUT(JOBS_PATH + "{id}/remove")
     void removeBooking(@Path("id") String bookingId,

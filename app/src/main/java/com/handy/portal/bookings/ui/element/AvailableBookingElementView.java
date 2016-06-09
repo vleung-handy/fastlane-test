@@ -36,11 +36,8 @@ public class AvailableBookingElementView extends BookingElementView
     @Bind(R.id.booking_entry_listing_message_title_view)
     BookingMessageTitleView mBookingMessageTitleView;
 
-    @Bind(R.id.booking_entry_start_date_text)
-    TextView mStartTimeText;
-
-    @Bind(R.id.booking_entry_end_date_text)
-    TextView mEndTimeText;
+    @Bind(R.id.booking_entry_date_text)
+    TextView mTimeText;
 
     @Bind(R.id.booking_entry_distance_text)
     TextView mFormattedDistanceText;
@@ -125,10 +122,10 @@ public class AvailableBookingElementView extends BookingElementView
         //Date and Time
         final String formattedStartDate = TIME_OF_DAY_FORMAT.format(booking.getStartDate());
         final String formattedEndDate = TIME_OF_DAY_FORMAT.format(booking.getEndDate());
-        mStartTimeText.setText(formattedStartDate.toLowerCase());
-        mEndTimeText.setText(formattedEndDate.toLowerCase());
+        mTimeText.setText(parentContext.getString(R.string.booking_time,
+                formattedStartDate.toLowerCase(), formattedEndDate.toLowerCase()));
 
-        this.associatedView = convertView;
+        mAssociatedView = convertView;
 
         return convertView;
     }
