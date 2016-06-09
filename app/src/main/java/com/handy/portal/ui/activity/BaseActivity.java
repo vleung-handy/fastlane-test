@@ -132,6 +132,13 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     @Override
+    protected void onResume()
+    {
+        super.onResume();
+        bus.post(new LogEvent.SendLogsEvent());
+    }
+
+    @Override
     protected void onPostResume()
     {
         super.onPostResume();
