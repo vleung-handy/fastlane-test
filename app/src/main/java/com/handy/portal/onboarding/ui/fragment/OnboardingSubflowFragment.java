@@ -51,7 +51,7 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
     protected ScrollView mScrollView;
     protected ViewGroup mMainContentContainer;
     protected SubflowData mSubflowData;
-    private boolean mIsSingleStepMode;
+    protected boolean mIsSingleStepMode;
 
 
     public static final class ButtonTypes
@@ -270,12 +270,6 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
 
     private void initActionButtons()
     {
-        if (mIsSingleStepMode)
-        {
-            mActionButtonGroup.setVisibility(View.GONE);
-            mSingleActionButton.setVisibility(View.GONE);
-            return;
-        }
         switch (getButtonType())
         {
             case ButtonTypes.DOUBLE:
