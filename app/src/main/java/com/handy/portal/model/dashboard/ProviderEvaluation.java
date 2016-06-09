@@ -159,6 +159,8 @@ public class ProviderEvaluation implements Serializable
         private int mRatedBookingCount;
         @SerializedName("total_booking_count")
         private int mTotalBookingCount;
+        @SerializedName("completed_bookings")
+        private int mCompletedBookings;
         @SerializedName("five_star_rated_booking_count")
         private int mFiveStarRatedBookingCount;
         @SerializedName("pro_rating")
@@ -173,12 +175,13 @@ public class ProviderEvaluation implements Serializable
         private Date mEndDate;
 
         public Rating(final int ratedBookingCount, final int totalBookingCount,
-                      final int fiveStarRatedBookingCount, final double proRating,
-                      final String status, final String ratingEvaluation, final Date startDate,
-                      final Date endDate)
+                      final int completedBookings, final int fiveStarRatedBookingCount,
+                      final double proRating, final String status, final String ratingEvaluation,
+                      final Date startDate, final Date endDate)
         {
             mRatedBookingCount = ratedBookingCount;
             mTotalBookingCount = totalBookingCount;
+            mCompletedBookings = completedBookings;
             mFiveStarRatedBookingCount = fiveStarRatedBookingCount;
             mProRating = proRating;
             mStatus = status;
@@ -195,6 +198,11 @@ public class ProviderEvaluation implements Serializable
         public int getTotalBookingCount()
         {
             return mTotalBookingCount;
+        }
+
+        public int getCompletedBookings()
+        {
+            return mCompletedBookings;
         }
 
         public int getFiveStarRatedBookingCount()
