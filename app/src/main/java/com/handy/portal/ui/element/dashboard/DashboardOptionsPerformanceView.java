@@ -91,7 +91,9 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     public void setDisplay(ProviderEvaluation evaluation)
     {
         mProviderEvaluation = evaluation;
-        if (mProviderEvaluation.getPayRates().getIncentives().size() > 0)
+
+        if (mProviderEvaluation.getPayRates() != null &&
+                mProviderEvaluation.getPayRates().getIncentives().size() > 0)
         {
             ProviderEvaluation.Incentive mPrimaryIncentive =
                     mProviderEvaluation.getPayRates().getIncentives().get(0);
@@ -136,6 +138,10 @@ public class DashboardOptionsPerformanceView extends FrameLayout
                     }
                 }
             }
+        }
+        else
+        {
+            mWeeklyTierText.setText(getResources().getString(R.string.tier));
         }
 
         List<ProviderFeedback> feedbackList = mProviderEvaluation.getProviderFeedback();
