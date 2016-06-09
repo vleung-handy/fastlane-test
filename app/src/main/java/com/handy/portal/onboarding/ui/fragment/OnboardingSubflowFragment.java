@@ -51,7 +51,7 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
     protected ScrollView mScrollView;
     protected ViewGroup mMainContentContainer;
     protected SubflowData mSubflowData;
-    private boolean mSingleStepMode;
+    private boolean mIsSingleStepMode;
 
 
     public static final class ButtonTypes
@@ -156,7 +156,7 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
     {
         super.onCreate(savedInstanceState);
         mSubflowData = (SubflowData) getArguments().getSerializable(BundleKeys.SUBFLOW_DATA);
-        mSingleStepMode = getArguments().getBoolean(BundleKeys.SINGLE_STEP_MODE, false);
+        mIsSingleStepMode = getArguments().getBoolean(BundleKeys.IS_SINGLE_STEP_MODE, false);
     }
 
     @Nullable
@@ -270,7 +270,7 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
 
     private void initActionButtons()
     {
-        if (mSingleStepMode)
+        if (mIsSingleStepMode)
         {
             mActionButtonGroup.setVisibility(View.GONE);
             mSingleActionButton.setVisibility(View.GONE);
