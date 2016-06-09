@@ -38,7 +38,7 @@
         android:layout_marginTop="@dimen/row_margin"
         android:gravity="center_horizontal"
         android:textColor="@color/tertiary_gray"
-        android:textSize="@dimen/small_text_size"
+        android:textSize="@dimen/default_text_size"
         tools:text="(Mon, May 9 \u2013 Sun, May 16)"
         />
 
