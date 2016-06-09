@@ -265,7 +265,9 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
     protected int getButtonType()
     {
         final StatusButton statusButton = mStatusData.getButton();
-        if (statusButton != null && !TextUtils.isNullOrEmpty(statusButton.getTitle()))
+        if (statusButton != null
+                && (!mIsSingleStepMode || !TextUtils.isNullOrEmpty(statusButton.getUrl()))
+                && !TextUtils.isNullOrEmpty(statusButton.getTitle()))
         {
             return ButtonTypes.SINGLE_FIXED;
         }
