@@ -207,6 +207,7 @@ public class SplashActivity extends BaseActivity
         //do nothing
     }
 
+    @SuppressWarnings("deprecation")
     private void processInjectedCredentials()
     {
         final String authToken = getIntent().getStringExtra(PrefsKey.AUTH_TOKEN);

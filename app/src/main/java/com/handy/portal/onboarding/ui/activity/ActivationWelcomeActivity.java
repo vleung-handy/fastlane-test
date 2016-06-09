@@ -32,7 +32,6 @@ public class ActivationWelcomeActivity extends AppCompatActivity
 {
     public static final int COLORS = 12;
 
-    @DrawableRes
     private List<Integer> mDrawables;
 
     @Bind(R.id.left_center_view)
