@@ -122,7 +122,6 @@ public class MainActivity extends BaseActivity
         }
         checkIfNotificationIsEnabled();
 
-        bus.post(new LogEvent.SendLogsEvent());
         bus.post(new LogEvent.AddLogEvent(new BasicLog.Open()));
     }
 

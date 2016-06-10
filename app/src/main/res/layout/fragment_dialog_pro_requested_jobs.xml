@@ -11,20 +11,22 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="?attr/actionBarSize"
         android:layout_alignParentTop="true"
         android:background="@color/handy_blue"
         android:id="@+id/fragment_dialog_requested_jobs_title_bar"
         >
         <TextView
             style="@style/TextView.XLarge"
+            android:textSize="20sp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Your Requests"
             android:textColor="@color/white"
             android:layout_gravity="center|center_vertical"
             android:gravity="center"
-            android:layout_centerInParent="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/default_margin"
             />
         <ImageView
             android:id="@+id/fragment_dialog_requested_jobs_dismiss_button"
@@ -32,6 +34,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end"
             android:padding="@dimen/default_padding"
+            android:layout_centerVertical="true"
             android:layout_alignParentRight="true"
             android:src="@drawable/ic_x_white"
             />

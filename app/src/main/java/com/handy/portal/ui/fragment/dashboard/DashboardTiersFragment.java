@@ -132,10 +132,10 @@ public class DashboardTiersFragment extends ActionBarFragment implements Dashboa
 
     private void updateHeader()
     {
-        ProviderEvaluation.Incentive mCurrentIncentive =
+        ProviderEvaluation.Incentive currentIncentive =
                 mEvaluation.getPayRates().getIncentives().get(mCurrentPage);
 
-        switch (mCurrentIncentive.getType())
+        switch (currentIncentive.getType())
         {
             case ProviderEvaluation.Incentive.TIERED_TYPE:
             case ProviderEvaluation.Incentive.HANDYMEN_TIERED_TYPE:
@@ -157,6 +157,6 @@ public class DashboardTiersFragment extends ActionBarFragment implements Dashboa
         }
 
         bus.post(new LogEvent.AddLogEvent(new DashboardTiersLog.TiersCardViewedLog(
-                mCurrentIncentive.getRegionName(), mCurrentIncentive.getServiceName())));
+                currentIncentive.getRegionName(), currentIncentive.getServiceName())));
     }
 }

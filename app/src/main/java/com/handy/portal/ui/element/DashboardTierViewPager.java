@@ -31,7 +31,8 @@ public class DashboardTierViewPager extends ViewPager
             int h = child.getMeasuredHeight();
             if (h > mMaxHeight) { mMaxHeight = h; }
         }
-        heightMeasureSpec = MeasureSpec.makeMeasureSpec(mMaxHeight, MeasureSpec.EXACTLY);
+
+        heightMeasureSpec = MeasureSpec.makeMeasureSpec(mMaxHeight + 40, MeasureSpec.EXACTLY);
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
     }
 }
