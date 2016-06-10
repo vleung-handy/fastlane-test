@@ -20,8 +20,6 @@ public class LocationScheduleStrategies implements Parcelable
     @SerializedName("booking_geofences")
     private LinkedList<BookingGeofenceStrategy> mBookingGeofenceStrategies;
 
-    @SerializedName("success")
-    private boolean mSuccess;
 
     protected LocationScheduleStrategies(Parcel in)
     {
@@ -70,11 +68,6 @@ public class LocationScheduleStrategies implements Parcelable
             return new LocationScheduleStrategies[size];
         }
     };
-
-    public boolean getSuccess()
-    {
-        return mSuccess;
-    }
 
     public boolean isEmpty()
     {
