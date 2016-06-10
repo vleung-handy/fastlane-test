@@ -1,24 +1,37 @@
 package com.handy.portal.notification.ui.fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.NotificationEvent;
+import com.handy.portal.library.ui.widget.InfiniteScrollListView;
+import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.notification.model.NotificationAction;
 import com.handy.portal.notification.model.NotificationMessage;
 import com.handy.portal.notification.ui.view.NotificationsListView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.library.ui.widget.InfiniteScrollListView;
+import com.handy.portal.ui.widget.TitleView;
+import com.handy.portal.util.DeeplinkMapper;
+import com.handy.portal.util.DeeplinkUtils;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -67,7 +80,76 @@ public final class NotificationsFragment extends ActionBarFragment
         });
         mRefreshLayout.setColorSchemeResources(R.color.handy_blue);
 
+        mNotificationsListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
+        {
+            @Override
+            public void onItemClick(final AdapterView<?> parent, final View view,
+                                    final int position, final long id)
+            {
+                final NotificationMessage message =
+                        mNotificationsListView.getWrappedAdapter().getItem(position);
+                triggerMessageActions(message.getActions());
+            }
+        });
+
         return mFragmentView;
+    }
+
+    private void triggerMessageActions(final List<NotificationAction> actions)
+    {
+        if (actions != null && !actions.isEmpty())
+        {
+            if (actions.size() == 1)
+            {
+                triggerMessageAction(actions.get(0));
+            }
+            else
+            {
+                showMessageActionsDialog(actions);
+            }
+        }
+    }
+
+    private void showMessageActionsDialog(final List<NotificationAction> actions)
+    {
+        final List<String> actionNames = new ArrayList<>(actions.size());
+        for (final NotificationAction action : actions)
+        {
+            actionNames.add(action.getText());
+        }
+        final TitleView titleView = new TitleView(getActivity());
+        titleView.setText(R.string.select_action);
+        new AlertDialog.Builder(getActivity())
+                .setCustomTitle(titleView)
+                .setAdapter(new ArrayAdapter<>(getActivity(), R.layout.view_selection_text,
+                                actionNames),
+                        new DialogInterface.OnClickListener()
+                        {
+                            @Override
+                            public void onClick(final DialogInterface dialog, final int which)
+                            {
+                                triggerMessageAction(actions.get(which));
+                            }
+                        })
+                .setNegativeButton(R.string.cancel, null)
+                .create()
+                .show();
+    }
+
+    private void triggerMessageAction(final NotificationAction notificationAction)
+    {
+        final String deeplinkUriString = notificationAction.getDeeplink();
+        if (deeplinkUriString != null)
+        {
+            final Bundle deeplinkData =
+                    DeeplinkUtils.createDeeplinkBundleFromUri(Uri.parse(deeplinkUriString));
+            final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
+            if (!TextUtils.isNullOrEmpty(deeplink))
+            {
+                final MainViewTab tab = DeeplinkMapper.getTabForDeeplink(deeplink);
+                bus.post(new NavigationEvent.NavigateToTab(tab, deeplinkData));
+            }
+        }
     }
 
     @Override
