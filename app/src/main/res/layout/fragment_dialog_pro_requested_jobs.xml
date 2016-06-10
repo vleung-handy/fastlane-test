@@ -57,7 +57,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:childDivider="@color/bg_inactive_grey"
+                android:childDivider="@color/list_divider"
                 android:divider="@color/list_divider"
                 android:dividerHeight="1px"
                 android:footerDividersEnabled="true"
