@@ -47,9 +47,8 @@
                     android:id="@+id/scheduled_jobs_list_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:divider="@color/white_trans"
+                    android:divider="@color/list_divider"
                     android:dividerHeight="1dp"
-                    android:paddingTop="1dp"
                     />
             </com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout>
 

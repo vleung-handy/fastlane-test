@@ -49,7 +49,7 @@ public class ProRequestedJobsListGroupView extends FrameLayout
                 DateTimeUtils.getTodayTomorrowStringByStartDate(
                         bookingsWrapper.getDate(),
                         context)
-                + DateTimeUtils.DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER.format(bookingsWrapper.getDate());
+                + DateTimeUtils.formatDayOfWeekMonthDate(bookingsWrapper.getDate());
         titleText.setText(formattedDate);
     }
 

@@ -72,6 +72,7 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
             if(booking != null)
             {
                 navigateToJobDetails(booking);
+                dismiss();
             }
             return true;
         }
