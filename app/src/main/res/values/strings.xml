@@ -83,7 +83,6 @@
     <string name="phone">Phone</string>
     <string name="loading_more_payments">Loading more payments…</string>
     <string name="are_you_sure">Are you sure?</string>
-    <string name="job_num">Job #</string>
     <string name="address">Address</string>
     <string name="time">Time</string>
     <string name="confirm">Confirm</string>
@@ -557,6 +556,7 @@
     <string name="we_found_some_jobs">We found some jobs we think you’ll like; most pros start with 5 to 10 in their first week.</string>
     <string name="supply_kit">Supply Kit</string>
     <string name="order_details">Order Details</string>
+    <string name="your_requests">Your Requests</string>
     <plurals name="locations_selected_count_formatted">
         <item quantity="one">%1$d location selected</item>
         <item quantity="other">%1$d locations selected</item>

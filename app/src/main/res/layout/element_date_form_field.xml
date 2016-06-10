@@ -36,7 +36,7 @@
             android:maxLength="2"
             android:nextFocusDown="@+id/year_value_text"
             android:padding="@dimen/default_padding"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textColor="@color/black"
             />
 
@@ -55,7 +55,7 @@
             android:maxLength="4"
             android:nextFocusDown="@+id/tax_id_field"
             android:padding="@dimen/default_padding"
-            android:singleLine="true"
+            android:maxLines="1"
             android:textColor="@color/black"
             />
 
