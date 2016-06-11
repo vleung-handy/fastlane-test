@@ -28,7 +28,7 @@ import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Designation;
 import com.handy.portal.model.ProviderPersonalInfo;
-import com.handy.portal.model.onboarding.SuppliesInfo;
+import com.handy.portal.onboarding.model.supplies.SuppliesInfo;
 import com.handy.portal.onboarding.model.status.LearningLink;
 import com.handy.portal.onboarding.model.status.LearningLinkDetails;
 import com.handy.portal.onboarding.model.status.StatusButton;

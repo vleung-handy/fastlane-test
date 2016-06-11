@@ -1,9 +1,6 @@
 package com.handy.portal.model;
 
-import android.support.annotation.Nullable;
-
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.model.onboarding.OnboardingParams;
 
 public class ConfigurationResponse
 {
@@ -36,9 +33,6 @@ public class ConfigurationResponse
 
     @SerializedName("boxed_supplies_enabled")
     private boolean mBoxedSuppliesEnabled;
-
-    @SerializedName("onboarding_info")
-    private OnboardingParams mOnboardingParams;
 
     @SerializedName("help_center")
     private HelpCenterInfo mHelpCenterInfo;
@@ -113,22 +107,6 @@ public class ConfigurationResponse
     public boolean shouldShowWeeklyPaymentTiers()
     {
         return mWeeklyPaymentTiersEnabled;
-    }
-
-    @Nullable
-    public OnboardingParams getOnboardingParams()
-    {
-        return mOnboardingParams;
-    }
-
-    public boolean shouldShowWebOnboarding()
-    {
-        return getOnboardingParams() != null && mOnboardingParams.shouldShowWebOnboarding();
-    }
-
-    public boolean shouldShowNativeOnboarding()
-    {
-        return getOnboardingParams() != null && mOnboardingParams.shouldShowNativeOnboarding();
     }
 
     public boolean shouldUseHelpCenterWebView()

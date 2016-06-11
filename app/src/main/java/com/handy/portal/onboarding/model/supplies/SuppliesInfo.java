@@ -1,4 +1,4 @@
-package com.handy.portal.model.onboarding;
+package com.handy.portal.onboarding.model.supplies;
 
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.model.Designation;
@@ -12,11 +12,11 @@ public class SuppliesInfo implements Serializable
     @SerializedName("charge_notice")
     private String mChargeNotice;
     @SerializedName("cost_section")
-    private OnboardingSuppliesSection mCostSection;
+    private SuppliesSection mCostSection;
     @SerializedName("delivery_section")
-    private OnboardingSuppliesSection mDeliverySection;
+    private SuppliesSection mDeliverySection;
     @SerializedName("products_section")
-    private OnboardingSuppliesSection mProductsSection;
+    private SuppliesSection mProductsSection;
     @SerializedName("provider_wants_supplies")
     private Designation mDesignation;
 
@@ -30,17 +30,17 @@ public class SuppliesInfo implements Serializable
         return mChargeNotice;
     }
 
-    public OnboardingSuppliesSection getCostSection()
+    public SuppliesSection getCostSection()
     {
         return mCostSection;
     }
 
-    public OnboardingSuppliesSection getDeliverySection()
+    public SuppliesSection getDeliverySection()
     {
         return mDeliverySection;
     }
 
-    public OnboardingSuppliesSection getProductsSection()
+    public SuppliesSection getProductsSection()
     {
         return mProductsSection;
     }

@@ -25,7 +25,7 @@ import com.handy.portal.model.Address;
 import com.handy.portal.model.Designation;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.definitions.FieldDefinition;
-import com.handy.portal.model.onboarding.SuppliesInfo;
+import com.handy.portal.onboarding.model.supplies.SuppliesInfo;
 import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
 import com.handy.portal.payments.PaymentEvent;
 import com.squareup.otto.Subscribe;

@@ -1,11 +1,11 @@
-package com.handy.portal.model.onboarding;
+package com.handy.portal.onboarding.model.supplies;
 
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 import java.util.List;
 
-public class OnboardingSuppliesSection implements Serializable
+public class SuppliesSection implements Serializable
 {
     @SerializedName("title")
     private String mTitle;
