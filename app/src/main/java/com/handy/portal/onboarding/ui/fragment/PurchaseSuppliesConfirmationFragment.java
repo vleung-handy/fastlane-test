@@ -130,6 +130,12 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
 
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                 NativeOnboardingLog.Types.SUPPLIES_CONFIRMATION_SHOWN)));
+
+        if (!mSuppliesInfo.isCardRequired())
+        {
+            mPaymentSummary.setVisibility(View.GONE);
+            mEditPaymentForm.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -169,31 +175,34 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
     private void onProviderLoaded()
     {
         populateShippingSummary();
-        String cardLast4 = mProviderPersonalInfo.getCardLast4();
-        if (!TextUtils.isEmpty(cardLast4))
+        if (mSuppliesInfo.isCardRequired())
         {
-            final String cardInfoFormatted = getString(R.string.card_info_formatted,
-                    getString(R.string.card), cardLast4);
-            mSuppliesOrderInfo.setPaymentText(cardInfoFormatted);
-            mPaymentSummary.setContent(getString(R.string.payment_method), cardInfoFormatted
-            ).setAction(
-                    getString(R.string.edit),
-                    new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(final View v)
+            String cardLast4 = mProviderPersonalInfo.getCardLast4();
+            if (!TextUtils.isEmpty(cardLast4))
+            {
+                final String cardInfoFormatted = getString(R.string.card_info_formatted,
+                        getString(R.string.card), cardLast4);
+                mSuppliesOrderInfo.setPaymentText(cardInfoFormatted);
+                mPaymentSummary.setContent(getString(R.string.payment_method), cardInfoFormatted
+                ).setAction(
+                        getString(R.string.edit),
+                        new View.OnClickListener()
                         {
-                            unfreezeEditPaymentForm();
-                        }
-                    });
+                            @Override
+                            public void onClick(final View v)
+                            {
+                                unfreezeEditPaymentForm();
+                            }
+                        });
 
-            freezeEditPaymentForm();
-        }
-        else
-        {
-            //Since the user doesn't have any payments, don't let them cancel out.
-            mCancelEditPayment.setVisibility(View.GONE);
-            unfreezeEditPaymentForm();
+                freezeEditPaymentForm();
+            }
+            else
+            {
+                //Since the user doesn't have any payments, don't let them cancel out.
+                mCancelEditPayment.setVisibility(View.GONE);
+                unfreezeEditPaymentForm();
+            }
         }
     }
 
@@ -201,7 +210,10 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
     public void onReceiveProviderInfoError(final ProfileEvent.ReceiveProviderProfileError event)
     {
         showEditAddressForm();
-        unfreezeEditPaymentForm();
+        if (mSuppliesInfo.isCardRequired())
+        {
+            unfreezeEditPaymentForm();
+        }
         mCancelEditAddress.setVisibility(View.GONE);
         mCancelEditPayment.setVisibility(View.GONE);
         hideLoadingOverlay();
@@ -355,7 +367,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
             mAddressReady = true;
         }
 
-        if (mEditPaymentForm.getVisibility() == View.VISIBLE)
+        if (mEditPaymentForm.getVisibility() == View.VISIBLE && mSuppliesInfo.isCardRequired())
         {
             mPaymentReady = false;
 

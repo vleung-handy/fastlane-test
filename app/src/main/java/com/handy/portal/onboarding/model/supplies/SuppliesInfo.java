@@ -19,6 +19,8 @@ public class SuppliesInfo implements Serializable
     private SuppliesSection mProductsSection;
     @SerializedName("provider_wants_supplies")
     private Designation mDesignation;
+    @SerializedName("is_card_required")
+    private boolean isCardRequired;
 
     public String getCost()
     {
@@ -48,5 +50,10 @@ public class SuppliesInfo implements Serializable
     public Designation getDesignation()
     {
         return mDesignation;
+    }
+
+    public boolean isCardRequired()
+    {
+        return isCardRequired;
     }
 }
