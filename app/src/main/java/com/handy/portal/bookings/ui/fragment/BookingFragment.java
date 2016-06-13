@@ -643,8 +643,6 @@ public class BookingFragment extends TimerActionBarFragment
                     public void onClick(final View v)
                     {
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                        bus.post(new BookingEvent.InvalidateScheduledBookingsCache(
-                                DateTimeUtils.getDateWithoutTime(mBooking.getStartDate())));
                         bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWaySubmitted(
                                 mBooking, getLocationData())));
                         bus.post(new HandyEvent.RequestNotifyJobOnMyWay(

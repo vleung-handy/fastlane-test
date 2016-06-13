@@ -17,7 +17,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.handy.portal.R;
-import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.bookings.ui.fragment.dialog.RateBookingDialogFragment;
@@ -275,8 +274,6 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOutSubmitted(mBooking, locationData)));
-        bus.post(new BookingEvent.InvalidateScheduledBookingsCache(
-                DateTimeUtils.getDateWithoutTime(mBooking.getStartDate())));
         bus.post(new HandyEvent.RequestNotifyJobCheckOut(bookingId, checkoutRequest));
     }
 
