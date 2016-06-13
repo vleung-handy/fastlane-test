@@ -1,4 +1,4 @@
-package com.handy.portal.testutil;
+package com.handy.portal.test.util;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
