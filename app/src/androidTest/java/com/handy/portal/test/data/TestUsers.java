@@ -11,7 +11,7 @@ public class TestUsers
             null
     );
 
-    public static TestUser NY_PROVIDER = new TestUser(
+    public static TestUser BOOKINGS_NY_PROVIDER = new TestUser(
             "6465559879",
             "123456",
             "test_persistence_token"
