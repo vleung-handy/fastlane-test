@@ -79,8 +79,7 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
         mMainContentContainer.setVisibility(View.GONE);
         initButtonColor();
         bus.post(new LogEvent.AddLogEvent(
-                new NativeOnboardingLog.StatusPageShown(
-                        mStatusData.getApplicationStatus().name().toLowerCase())));
+                new NativeOnboardingLog.StatusPageShown(mStatusData.getApplicationStatus())));
     }
 
     private void initButtonColor()
@@ -345,9 +344,8 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
         final StatusButton statusButton = mStatusData.getButton();
         if (statusButton != null)
         {
-            bus.post(new LogEvent.AddLogEvent(
-                    new NativeOnboardingLog.StatusPageSubmitted(
-                            mStatusData.getApplicationStatus().name().toLowerCase())));
+            bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.StatusPageSubmitted(
+                            mStatusData.getApplicationStatus())));
             final String url = statusButton.getUrl();
             if (!TextUtils.isNullOrEmpty(url))
             {
