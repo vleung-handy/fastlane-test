@@ -7,9 +7,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.test.data.TestFields;
 import com.handy.portal.test.data.TestUsers;
-import com.handy.portal.test.model.TestField;
 import com.handy.portal.test.model.TestUser;
 import com.handy.portal.test.util.ViewUtil;
 import com.handy.portal.ui.activity.SplashActivity;
@@ -30,8 +28,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 public class ViewPaymentsTest
 {
     private static final TestUser TEST_USER = TestUsers.BOOKINGS_NY_PROVIDER;
-    private static final TestField[] TEST_UPDATE_PERSONAL_INFO_FIELDS
-            = TestFields.UPDATE_PERSONAL_INFO_FIELDS;
 
     @Rule
     public ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<SplashActivity>(
