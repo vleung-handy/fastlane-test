@@ -58,19 +58,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     @Override
     public void onPause()
     {
-        try
-        {
-             /*
-                 on mostly Samsung Android 5.0 devices (responsible for ~97% of crashes here),
-                 Activity.onPause() can be called without Activity.onResume()
-                 so unregistering the bus here can cause an exception
-              */
-            bus.unregister(this);
-        }
-        catch (Exception e)
-        {
-            Crashlytics.logException(e); //want more info for now
-        }
+        bus.unregister(this);
         super.onPause();
     }
 
