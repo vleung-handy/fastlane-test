@@ -11,8 +11,10 @@ import com.handy.portal.R;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +41,8 @@ public final class DateTimeUtils
             new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
     public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER =
             new SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault());
+    public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DATE_FORMATTER =
+            new SimpleDateFormat("EEEE, MMM d", Locale.getDefault());
     public final static SimpleDateFormat YEAR_FORMATTER = new SimpleDateFormat("yyyy", Locale.getDefault());
     public final static SimpleDateFormat MONTH_YEAR_FORMATTER =
             new SimpleDateFormat("MMM yyyy", Locale.getDefault());
@@ -57,6 +61,54 @@ public final class DateTimeUtils
     public final static int HOURS_IN_DAY = 24;
     public final static int HOURS_IN_SIX_DAYS = HOURS_IN_DAY * 6;
     public final static String UTC_TIMEZONE = "UTC";
+
+
+    //returns a today or tomorrow prepend as needed
+    public static String getTodayTomorrowStringByStartDate(Date startDate, Context context)
+    {
+        String prepend = "";
+
+        Calendar calendar = Calendar.getInstance();
+
+        Date currentTime = calendar.getTime();
+
+        if (DateTimeUtils.equalCalendarDates(currentTime, startDate))
+        {
+            prepend = (context.getString(R.string.today) + ", ");
+        }
+
+        calendar.add(Calendar.DATE, 1);
+        Date tomorrowTime = calendar.getTime();
+        if (DateTimeUtils.equalCalendarDates(tomorrowTime, startDate))
+        {
+            prepend = (context.getString(R.string.tomorrow) + ", ");
+        }
+
+        return prepend;
+    }
+
+    /**
+     *
+     * @param inclusiveStartDate
+     * @param numDays
+     * @return a list of dates without time, with numDays elements, inclusively starting from the given start date
+     *
+     * currently used for creating request params
+     */
+    public static List<Date> getDateWithoutTimeList(Date inclusiveStartDate, int numDays)
+    {
+        List<Date> dates = new ArrayList<>();
+        for (int i = 0; i < numDays; i++)
+        {
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(inclusiveStartDate);
+            calendar.add(Calendar.DATE, i);
+            final Date day = DateTimeUtils.getDateWithoutTime(calendar.getTime());
+
+            dates.add(day);
+        }
+        return dates;
+    }
 
     public static boolean isDateWithinXHoursFromNow(Date date, int hours)
     {
@@ -258,6 +310,13 @@ public final class DateTimeUtils
     {
         if (date == null) { return null; }
         return getDayOfWeekMonthDateYearFormatter().format(date);
+    }
+
+    @Nullable
+    public static String formatDayOfWeekMonthDate(Date date)
+    {
+        if (date == null) { return null; }
+        return getDayOfWeekMonthDateFormatter().format(date);
     }
 
     @Nullable
@@ -469,6 +528,12 @@ public final class DateTimeUtils
     {
         DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER.setTimeZone(TimeZone.getDefault());
         return DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER;
+    }
+
+    private static SimpleDateFormat getDayOfWeekMonthDateFormatter()
+    {
+        DAY_OF_WEEK_MONTH_DATE_FORMATTER.setTimeZone(TimeZone.getDefault());
+        return DAY_OF_WEEK_MONTH_DATE_FORMATTER;
     }
 
     private static SimpleDateFormat getYearFormatter()

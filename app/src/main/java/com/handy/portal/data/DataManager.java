@@ -20,15 +20,14 @@ import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.SuccessWrapper;
-import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.notification.model.NotificationMessages;
-import com.handy.portal.onboarding.model.JobClaimRequest;
-import com.handy.portal.onboarding.model.JobClaimResponse;
+import com.handy.portal.onboarding.model.claim.JobClaimRequest;
+import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
@@ -91,14 +90,18 @@ public class DataManager
         return mEndpoint.getBaseUrl();
     }
 
-    public void getAvailableBookings(Date[] dates, final Callback<BookingsListWrapper> cb)
+    public void getAvailableBookings(Date[] dates, Map<String, Object> additionalOptions, final Callback<BookingsListWrapper> cb)
     {
-        mService.getAvailableBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
+
+        mService.getAvailableBookings(dates, additionalOptions, new BookingsListWrapperHandyRetroFitCallback(cb));
     }
 
-    public void getOnboardingJobs(final Callback<BookingsListWrapper> cb)
+    public void getOnboardingJobs(final Date startDate,
+                                  final ArrayList<String> preferredZipclusterIds,
+                                  final Callback<BookingsListWrapper> cb)
     {
-        mService.getOnboardingJobs(new BookingsListWrapperHandyRetroFitCallback(cb));
+        mService.getOnboardingJobs(startDate, preferredZipclusterIds,
+                new BookingsListWrapperHandyRetroFitCallback(cb));
     }
 
     public void getScheduledBookings(Date[] dates, final Callback<BookingsListWrapper> cb)

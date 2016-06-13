@@ -9,4 +9,11 @@
         android:title=""
         android:visible="false"
         />
+    <item
+        android:id="@+id/action_pro_requested_jobs"
+        app:showAsAction="always"
+        app:actionLayout="@layout/action_pro_requested_jobs_layout"
+        android:visible="false"
+        android:title=""
+        />
 </menu>

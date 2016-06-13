@@ -8,8 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LayoutAnimationController;
 
-/**
- */
 public class AnimatedRecyclerView extends RecyclerView
 {
 

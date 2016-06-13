@@ -1,10 +1,12 @@
 package com.handy.portal.bookings;
 
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.ZipClusterPolygons;
 
+import java.util.Date;
 import java.util.List;
 
 public abstract class BookingEvent extends HandyEvent
@@ -19,6 +21,49 @@ public abstract class BookingEvent extends HandyEvent
         }
     }
 
+    public static class RequestProRequestedJobs extends RequestEvent
+    {
+        private List<Date> mDatesForBookings;
+        private boolean mUseCachedIfPresent;
+        public RequestProRequestedJobs(List<Date> datesForBookings, boolean useCachedIfPresent)
+        {
+            mDatesForBookings = datesForBookings;
+            mUseCachedIfPresent = useCachedIfPresent;
+        }
+
+        public boolean useCachedIfPresent()
+        {
+            return mUseCachedIfPresent;
+        }
+
+        public List<Date> getDatesForBookings()
+        {
+            return mDatesForBookings;
+        }
+    }
+
+    public static class ReceiveProRequestedJobsSuccess extends ReceiveSuccessEvent
+    {
+        public final List<BookingsWrapper> mProRequestedJobs;
+
+        public ReceiveProRequestedJobsSuccess(List<BookingsWrapper> proRequestedJobs)
+        {
+            mProRequestedJobs = proRequestedJobs;
+        }
+
+        public List<BookingsWrapper> getProRequestedJobs()
+        {
+            return mProRequestedJobs;
+        }
+    }
+
+    public static class ReceiveProRequestedJobsError extends ReceiveErrorEvent
+    {
+        public ReceiveProRequestedJobsError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 
     public static class ReceiveZipClusterPolygonsSuccess extends ReceiveSuccessEvent
     {

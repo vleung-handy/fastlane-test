@@ -15,6 +15,7 @@ import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFra
 import com.handy.portal.bookings.ui.fragment.dialog.EarlyAccessTrialDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.JobAccessUnlockedDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.RateBookingDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.ProRequestedJobsDialogFragment;
 import com.handy.portal.data.DataManager;
 import com.squareup.otto.Bus;
 
@@ -41,7 +42,8 @@ import dagger.Provides;
                 InProgressBookingFragment.class,
                 SendReceiptCheckoutFragment.class,
                 EarlyAccessTrialDialogFragment.class,
-                JobAccessUnlockedDialogFragment.class
+                JobAccessUnlockedDialogFragment.class,
+                ProRequestedJobsDialogFragment.class
         })
 public final class BookingsModule
 {

@@ -52,6 +52,14 @@ public class ConfigurationResponse
     @SerializedName("weekly_payment_tiers_enabled")
     private boolean mWeeklyPaymentTiersEnabled;
 
+    @SerializedName("pending_requests_inbox_enabled")
+    private boolean mPendingRequestsInboxEnabled;
+
+    public boolean isPendingRequestsInboxEnabled()
+    {
+        return mPendingRequestsInboxEnabled;
+    }
+
     public boolean isLocationScheduleServiceEnabled()
     {
         return mLocationScheduleServiceEnabled;

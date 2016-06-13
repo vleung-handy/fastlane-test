@@ -36,6 +36,11 @@ public class ProviderPersonalInfo implements Serializable
         return mFirstName;
     }
 
+    public String getFullName()
+    {
+        return mFirstName + " " +mLastName;
+    }
+
     public String getEmail()
     {
         return mEmail;

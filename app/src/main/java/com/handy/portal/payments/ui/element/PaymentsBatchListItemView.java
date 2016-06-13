@@ -7,12 +7,12 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.payments.model.LegacyPaymentBatch;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentGroup;
-import com.handy.portal.library.util.CurrencyUtils;
-import com.handy.portal.library.util.DateTimeUtils;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -85,7 +85,8 @@ public class PaymentsBatchListItemView extends TableLayout
             paymentAmountText.setText(CurrencyUtils.formatPriceWithCents(legacyPaymentBatch.getEarnedByProvider(), legacyPaymentBatch.getCurrencySymbol()));
             statusText.setText(legacyPaymentBatch.getStatus());
             statusText.setTextColor(ContextCompat.getColor(getContext(), R.color.tertiary_gray));
-            jobInfoText.setText(getResources().getString(R.string.job_num) + legacyPaymentBatch.getBookingId());
+            jobInfoText.setText(getResources().getString(R.string.job_number_formatted,
+                    Integer.toString(legacyPaymentBatch.getBookingId())));
             setEnabled(false);
         }
 

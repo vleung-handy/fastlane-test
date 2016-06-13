@@ -10,7 +10,7 @@
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/extra_margin"
+        android:layout_marginBottom="@dimen/default_margin_half"
         android:background="@drawable/border_gray_no_side"
         android:src="@drawable/img_supplies"
         />
@@ -19,7 +19,7 @@
         android:id="@+id/cost_summary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/extra_margin"
+        android:layout_marginBottom="@dimen/default_margin_half"
         android:background="@drawable/border_gray_no_side"
         />
 
@@ -27,7 +27,7 @@
         android:id="@+id/delivery_summary"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/extra_margin"
+        android:layout_marginBottom="@dimen/default_margin_half"
         android:background="@drawable/border_gray_no_side"
         />
 
