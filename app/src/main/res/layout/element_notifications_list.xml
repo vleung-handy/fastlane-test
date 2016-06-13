@@ -10,5 +10,5 @@
     android:headerDividersEnabled="true"
     android:orientation="vertical"
     android:transcriptMode="disabled"
-    android:background="@color/white"
+    android:background="@drawable/border_gray_bottom"
     />
