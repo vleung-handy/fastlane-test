@@ -14,8 +14,8 @@ import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.model.Designation;
-import com.handy.portal.model.onboarding.OnboardingSuppliesSection;
-import com.handy.portal.model.onboarding.SuppliesInfo;
+import com.handy.portal.onboarding.model.supplies.SuppliesSection;
+import com.handy.portal.onboarding.model.supplies.SuppliesInfo;
 import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
 
 import java.util.List;
@@ -52,12 +52,9 @@ public class PurchaseSuppliesFragment extends OnboardingSubflowFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        final OnboardingSuppliesSection costSection =
-                mSuppliesInfo.getCostSection();
-        final OnboardingSuppliesSection deliverySection =
-                mSuppliesInfo.getDeliverySection();
-        final OnboardingSuppliesSection productsSection =
-                mSuppliesInfo.getProductsSection();
+        final SuppliesSection costSection = mSuppliesInfo.getCostSection();
+        final SuppliesSection deliverySection = mSuppliesInfo.getDeliverySection();
+        final SuppliesSection productsSection = mSuppliesInfo.getProductsSection();
 
         mCostSummary.setContent(costSection.getTitle(), costSection.getDescription());
         mDeliverySummary.setContent(deliverySection.getTitle(), deliverySection.getDescription());
