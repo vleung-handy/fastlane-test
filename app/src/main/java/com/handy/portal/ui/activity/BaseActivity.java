@@ -15,15 +15,18 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.flow.Flow;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.location.LocationUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.GoogleApiLog;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.setup.SetupData;
 import com.handy.portal.setup.SetupEvent;
 import com.handy.portal.setup.step.AcceptTermsStep;
@@ -48,6 +51,9 @@ public abstract class BaseActivity extends AppCompatActivity
         GoogleApiClient.OnConnectionFailedListener,
         AppUpdateFlowLauncher
 {
+    @Inject
+    PrefsManager mPrefsManager;
+
     private AppUpdateEventListener mAppUpdateEventListener;
     protected boolean allowCallbacks;
     private Stack<OnBackPressedListener> onBackPressedListenerStack;
@@ -128,6 +134,16 @@ public abstract class BaseActivity extends AppCompatActivity
         onBackPressedListenerStack = new Stack<>();
 
         buildGoogleApiClient();
+
+        if (mPrefsManager.getBoolean(PrefsKey.APP_FIRST_LAUNCH, true))
+        {
+            bus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(true)));
+            mPrefsManager.setBoolean(PrefsKey.APP_FIRST_LAUNCH, false);
+        }
+        else
+        {
+            bus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(false)));
+        }
     }
 
     @Override

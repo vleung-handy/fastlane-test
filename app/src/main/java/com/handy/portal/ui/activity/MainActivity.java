@@ -39,8 +39,6 @@ import javax.inject.Inject;
 public class MainActivity extends BaseActivity
 {
     @Inject
-    PrefsManager mPrefsManager;
-    @Inject
     ProviderManager providerManager;
     @Inject
     ConfigManager mConfigManager;
@@ -64,16 +62,6 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         setFullScreen();
-
-        if (mPrefsManager.getBoolean(PrefsKey.APP_FIRST_LAUNCH, true))
-        {
-            bus.post(new LogEvent.AddLogEvent(new AppLog.Open(true)));
-            mPrefsManager.setBoolean(PrefsKey.APP_FIRST_LAUNCH, false);
-        }
-        else
-        {
-            bus.post(new LogEvent.AddLogEvent(new AppLog.Open(false)));
-        }
     }
 
     /**
