@@ -472,6 +472,7 @@
     <string name="environment">Environment</string>
     <string name="date">Date</string>
     <string name="progress">Progress</string>
+    <string name="in_progress">In Progress</string>
 
     <!-- Job Cancellation -->
     <string name="need_to_cancel">Are you sure you need to cancel?</string>

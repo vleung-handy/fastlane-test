@@ -640,6 +640,12 @@ public class BookingManager
         });
     }
 
+    @Subscribe
+    public void invalidateScheduledBookingCache(BookingEvent.InvalidateScheduledBookingsCache event)
+    {
+        scheduledBookingsCache.invalidate(event.date);
+    }
+
     private TypeSafeMap<ProviderKey> getNoShowParams(boolean active, LocationData locationData)
     {
         TypeSafeMap<ProviderKey> noShowParams = new TypeSafeMap<>();
