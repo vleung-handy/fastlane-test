@@ -27,7 +27,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @LargeTest
 public class UpdatePersonalInfoTest
 {
-    private static final TestUser TEST_USER = TestUsers.NY_PROVIDER;
+    private static final TestUser TEST_USER = TestUsers.BOOKINGS_NY_PROVIDER;
     private static final TestField[] TEST_UPDATE_PERSONAL_INFO_FIELDS
             = TestFields.UPDATE_PERSONAL_INFO_FIELDS;
 
