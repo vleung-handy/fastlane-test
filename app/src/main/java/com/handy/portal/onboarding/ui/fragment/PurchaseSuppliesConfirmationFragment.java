@@ -349,7 +349,8 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
     @Override
     protected String getHeaderText()
     {
-        return getString(R.string.enter_payment_information);
+        return getString(mSuppliesInfo.isCardRequired() ?
+                R.string.enter_payment_information : R.string.confirm_shipping_details);
     }
 
     @Nullable
