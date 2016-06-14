@@ -142,9 +142,9 @@ dependencies {
     compile 'com.android.support:design:23.3.0'
 
     //Google services
-    compile 'com.google.android.gms:play-services-location:8.4.0'
+    compile 'com.google.android.gms:play-services-location:9.0.2'
     //Recommended for location services
-    compile 'com.google.android.gms:play-services-gcm:8.4.0'
+    compile 'com.google.android.gms:play-services-gcm:9.0.2'
     //Required for Android (GCM) push notifications
 
     //Guava
