@@ -70,9 +70,9 @@ public class CheckInTest
         //check in
         onView(withId(R.id.booking_action_button)).perform(click());
 
-        //wait for booking action button to be visible and verify it says "check out"
+        //wait for booking action button to be visible and verify it says "continue to check out"
         ViewUtil.waitForViewVisibility(
-                allOf(withId(R.id.booking_action_button), withText(R.string.check_out)),
+                allOf(withId(R.id.in_progress_booking_action_button), withText(R.string.continue_to_check_out)),
                 true,
                 ViewUtil.LONG_MAX_WAIT_TIME_MS);
     }
