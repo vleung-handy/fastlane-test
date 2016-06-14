@@ -543,7 +543,8 @@
         <item quantity="other">The jobs you selected are no longer available.</item>
     </plurals>
     <string name="fix">Fix It</string>
-    <string name="fee">Fee</string>
+    <string name="supplies_fee">Supplies Fee</string>
+    <string name="supplies_fee_notice_formatted">You\'ll see a %1$s supplies fee on your first payment to take care of the supply kit.</string>
     <string name="add">Add</string>
     <string name="ready_to_commit">Ready to commit?</string>
     <string name="double_check_everything">Time to double-check everything.</string>

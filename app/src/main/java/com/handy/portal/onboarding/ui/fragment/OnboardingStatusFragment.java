@@ -197,7 +197,7 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
 
             // Order/Fee Total
             final String orderTotalTitle = getString(providerHasPaymentMethod() ?
-                    R.string.order_total : R.string.fee);
+                    R.string.order_total : R.string.supplies_fee);
             mOrderTotalView.setContent(orderTotalTitle, suppliesInfo.getCost());
 
             // Payment
