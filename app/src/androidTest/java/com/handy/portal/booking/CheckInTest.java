@@ -6,6 +6,7 @@ import android.support.test.runner.AndroidJUnit4;
 import android.test.suitebuilder.annotation.LargeTest;
 
 import com.handy.portal.R;
+import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.test.data.TestUsers;
 import com.handy.portal.test.model.TestUser;
@@ -16,11 +17,14 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.hamcrest.Matchers.is;
 
 //note that animations should be disabled on the device running these tests
 @RunWith(AndroidJUnit4.class)
@@ -51,8 +55,10 @@ public class CheckInTest
         onView(allOf(withId(R.id.tab_title), withText(R.string.tab_schedule))).perform(click());
 
         //click the first scheduled job
-        ViewUtil.waitForViewVisible(R.id.booking_entry_details_layout, ViewUtil.LONG_MAX_WAIT_TIME_MS);
-        onView(withId(R.id.booking_entry_details_layout)).perform(click());
+        ViewUtil.waitForViewVisible(R.id.scheduled_jobs_list_view, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+        onData(is(instanceOf(Booking.class)))
+                .atPosition(0)
+                .perform(click());
 
         //wait for booking action button to be visible and verify it says "on my way"
         ViewUtil.waitForViewVisibility(
