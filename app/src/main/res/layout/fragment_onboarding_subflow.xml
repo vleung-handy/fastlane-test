@@ -7,11 +7,46 @@
     android:orientation="vertical"
     >
 
+    <RelativeLayout
+        android:id="@+id/progress_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_gray_bottom"
+        android:orientation="vertical"
+        android:padding="@dimen/default_padding"
+        >
+
+        <TextView
+            android:id="@+id/percent_text"
+            style="@style/TextView.Small.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="85% Complete"
+            />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_toEndOf="@+id/percent_text"
+            android:layout_toRightOf="@+id/percent_text"
+            android:progressDrawable="@drawable/progress_bar"
+            tools:progress="85"
+            />
+
+    </RelativeLayout>
+
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/single_action_button"
         android:layout_alignWithParentIfMissing="true"
+        android:layout_below="@+id/progress_view"
         >
 
         <ScrollView
