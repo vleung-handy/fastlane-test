@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 
-import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Bus;
@@ -44,20 +43,7 @@ public class InjectedDialogFragment extends DialogFragment
     @Override
     public void onPause()
     {
-
-        try
-        {
-             /*
-                 on mostly Samsung Android 5.0 devices (responsible for ~97% of crashes here),
-                 Activity.onPause() can be called without Activity.onResume()
-                 so unregistering the bus here can cause an exception
-              */
-            mBus.unregister(this);
-        }
-        catch (Exception e)
-        {
-            Crashlytics.logException(e); //want more info for now
-        }
+        mBus.unregister(this);
         super.onPause();
     }
 
