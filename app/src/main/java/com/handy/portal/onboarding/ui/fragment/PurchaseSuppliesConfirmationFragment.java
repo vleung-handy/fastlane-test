@@ -127,8 +127,15 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
         final String orderTotalFormatted = getString(R.string.order_total_formatted,
                 mSuppliesInfo.getCost());
         mSuppliesOrderInfo.setOrderTotalText(mSuppliesInfo.getCost());
-        mOrderSummary.setContent(getString(R.string.starter_supply_kit), orderTotalFormatted)
-                .setImage(ContextCompat.getDrawable(getContext(), R.drawable.img_supplies));
+        if (mSuppliesInfo.isCardRequired())
+        {
+            mOrderSummary.setContent(getString(R.string.starter_supply_kit), orderTotalFormatted)
+                    .setImage(ContextCompat.getDrawable(getContext(), R.drawable.img_supplies));
+        }
+        else
+        {
+            mOrderSummary.setVisibility(View.GONE);
+        }
 
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                 NativeOnboardingLog.Types.SUPPLIES_CONFIRMATION_SHOWN)));
