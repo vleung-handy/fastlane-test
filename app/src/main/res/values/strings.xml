@@ -500,15 +500,12 @@
     <string name="congratulations">Congratulations!</string>
     <string name="lets_get_started">Let\'s Get Started</string>
     <string name="activation_welcome">You\'ve been activated! We\'re excited for you to join our global community of professionals using the Handy platform.</string>
-    <string name="supply_kit_purchase_inquiry">Would you like to buy a starter supply kit?</string>
     <string name="yes_supply_kit">Yes, I Want Supplies</string>
     <string name="no_supply_kit">No, I Have My Own</string>
     <string name="enter_payment_information">Enter payment information</string>
-    <string name="continue_to_confirmation">Continue to Confirmation</string>
     <string name="starter_supply_kit">Starter Supply Kit</string>
     <string name="order_total_formatted">Order Total: %1$s</string>
     <string name="order_total">Order Total</string>
-    <string name="confirm_purchase">Confirm Purchase</string>
     <string name="shipping_address">Shipping Address</string>
     <string name="payment_method">Payment Method</string>
     <string name="edit">Edit</string>
