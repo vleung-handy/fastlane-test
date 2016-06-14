@@ -31,7 +31,7 @@ import com.handy.portal.onboarding.model.claim.JobClaim;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.onboarding.model.subflow.SubflowType;
 import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;

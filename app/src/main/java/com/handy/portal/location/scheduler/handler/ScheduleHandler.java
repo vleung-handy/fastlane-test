@@ -12,10 +12,11 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.handy.portal.location.scheduler.model.ScheduleStrategy;
 import com.handy.portal.library.util.ParcelableUtils;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Bus;
+import com.handy.portal.location.scheduler.model.ScheduleStrategy;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -34,7 +35,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
         implements ScheduleStrategyHandler.StrategyCallbacks<StrategyHandlerType>
 {
     @Inject
-    protected Bus mBus;
+    protected EventBus mBus;
 
     protected LinkedList<ScheduleStrategyType> mSortedStrategies;
     private AlarmManager mAlarmManager;

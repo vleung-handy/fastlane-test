@@ -36,7 +36,7 @@ import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.MathUtils;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
@@ -128,6 +128,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
         bus.post(new LogEvent.AddLogEvent(
                 new NearbyJobsLog.Shown(mBookings.size())));
     }
@@ -136,6 +137,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
     public void onPause()
     {
         super.onPause();
+        bus.unregister(this);
         if (mCounter != null) { mCounter.cancel(); }
     }
 

@@ -57,7 +57,7 @@ import com.handy.portal.model.LocationData;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.fragment.TimerActionBarFragment;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -219,6 +219,8 @@ public class BookingFragment extends TimerActionBarFragment
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
+
         mBookingMapView.onResume();
 
         setDisplay();
@@ -228,6 +230,7 @@ public class BookingFragment extends TimerActionBarFragment
     public void onPause()
     {
         mBookingMapView.onPause();
+        bus.unregister(this);
         super.onPause();
     }
 

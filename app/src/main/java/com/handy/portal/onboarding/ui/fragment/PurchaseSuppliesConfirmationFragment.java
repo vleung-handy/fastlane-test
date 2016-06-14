@@ -30,7 +30,7 @@ import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.onboarding.model.supplies.SuppliesInfo;
 import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
 import com.handy.portal.payments.PaymentEvent;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 import com.stripe.android.model.Card;
 
 import java.util.Map;

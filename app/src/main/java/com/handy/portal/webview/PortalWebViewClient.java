@@ -16,25 +16,26 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.util.DeeplinkMapper;
 import com.handy.portal.util.DeeplinkUtils;
-import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Bus;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class PortalWebViewClient extends WebViewClient
 {
     private Fragment parentFragment;
     private WebView webView;
     private GoogleManager googleManager;
-    protected Bus bus;
+    protected EventBus bus;
 
     public PortalWebViewClient(Fragment parentFragment,
                                WebView webView,
                                GoogleManager gs,
-                               Bus bus)
+                               EventBus bus)
     {
         this.parentFragment = parentFragment;
         this.webView = webView;

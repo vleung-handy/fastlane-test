@@ -84,8 +84,6 @@ public class SplashActivity extends BaseActivity
     public void onResume()
     {
         super.onResume();
-        bus.register(this);
-
         if (!hasUser())
         {
             final Intent loginActivityIntent = getActivityIntent(LoginActivity.class);
@@ -121,7 +119,6 @@ public class SplashActivity extends BaseActivity
     @Override
     public void onPause()
     {
-        bus.unregister(this);
         mProgressSpinner.removeCallbacks(mLoadingAnimationStarter);
         super.onPause();
     }

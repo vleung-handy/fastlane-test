@@ -29,7 +29,7 @@ import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.widget.TitleView;
 import com.handy.portal.util.DeeplinkMapper;
 import com.handy.portal.util.DeeplinkUtils;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;

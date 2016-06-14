@@ -6,7 +6,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import org.junit.Before;
 import org.junit.Test;

@@ -203,6 +203,20 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
     }
 
     @Override
+    public void onResume()
+    {
+        super.onResume();
+        bus.register(this);
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
+    }
+
+    @Override
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
     {
         super.onCreateOptionsMenu(menu, inflater);

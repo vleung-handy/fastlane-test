@@ -21,7 +21,7 @@ import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.ui.view.DateFormFieldTableRow;
 import com.handy.portal.library.ui.view.FormFieldTableRow;
 import com.handy.portal.library.util.UIUtils;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Map;
 
@@ -96,11 +96,21 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
         super.onResume();
         setBackButtonEnabled(true);
         resetStates();
+
+        bus.register(this);
+
         if (providerManager.getCachedActiveProvider() != null)
         {
             bus.post(new RegionDefinitionEvent.RequestFormDefinitions(
                     providerManager.getCachedActiveProvider().getCountry(), this.getContext()));
         }
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     public boolean validate()

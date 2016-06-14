@@ -22,7 +22,7 @@ import com.handy.portal.payments.model.BankAccountInfo;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.ui.view.FormFieldTableRow;
 import com.handy.portal.library.util.UIUtils;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Map;
 
@@ -89,6 +89,9 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
     {
         super.onResume();
         setBackButtonEnabled(true);
+
+        bus.register(this);
+
         Provider provider = providerManager.getCachedActiveProvider();
 
         if(provider != null)
@@ -103,6 +106,13 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
         {
             Crashlytics.log("PaymentsUpdateBankAccountFragment null cached provider on resume");
         }
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     private boolean validate()

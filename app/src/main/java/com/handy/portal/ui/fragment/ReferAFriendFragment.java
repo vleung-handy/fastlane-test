@@ -21,8 +21,9 @@ import com.handy.portal.logger.handylogger.model.ReferralLog;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ReferralInfo;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -33,7 +34,7 @@ import butterknife.OnClick;
 public class ReferAFriendFragment extends ActionBarFragment
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
     @Inject
     ProviderManager mProviderManager;
 
@@ -94,9 +95,17 @@ public class ReferAFriendFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
-        setActionBar(R.string.refer_a_friend, false);
+        bus.register(this);
 
+        setActionBar(R.string.refer_a_friend, false);
         populateInfo();
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @OnClick(R.id.envelope)
@@ -156,8 +165,6 @@ public class ReferAFriendFragment extends ActionBarFragment
             populateText();
             startAnimations();
         }
-
-        bus.post(new LogEvent.AddLogEvent(new ReferralLog.ReferralOpenLog()));
     }
 
     private void populateText()

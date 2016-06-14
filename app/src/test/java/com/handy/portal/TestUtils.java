@@ -1,6 +1,6 @@
 package com.handy.portal;
 
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import org.mockito.ArgumentCaptor;
 

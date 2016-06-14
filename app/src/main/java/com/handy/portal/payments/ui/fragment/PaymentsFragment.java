@@ -31,7 +31,8 @@ import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.payments.ui.element.PaymentsBatchListView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -94,6 +95,8 @@ public final class PaymentsFragment extends ActionBarFragment
     {
         super.onResume();
         setActionBar(R.string.payments, false);
+
+        bus.register(this);
 
         if (paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData())//if initial batch has not been received yet
         {
@@ -169,6 +172,7 @@ public final class PaymentsFragment extends ActionBarFragment
     public void onPause()
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));//don't want overlay to persist when this fragment is paused
+        bus.unregister(this);
         super.onPause();
     }
 

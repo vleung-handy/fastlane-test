@@ -51,7 +51,8 @@ import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Date;
 import java.util.List;
@@ -129,6 +130,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
 
         if (!MainActivityFragment.clearingBackStack)
         {
@@ -140,6 +142,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     public void onPause()
     {
         super.onPause();
+        bus.unregister(this);
 
         if (mBooking != null && mBooking.isCheckedIn())
         {

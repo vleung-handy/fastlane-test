@@ -37,7 +37,7 @@ import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.ui.activity.SplashActivity;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -106,6 +106,20 @@ public class LoginActivityFragment extends InjectedFragment
         bus.post(new LogEvent.AddLogEvent(new LoginLog.Shown()));
 
         return view;
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        bus.register(this);
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     private void registerControlListeners()

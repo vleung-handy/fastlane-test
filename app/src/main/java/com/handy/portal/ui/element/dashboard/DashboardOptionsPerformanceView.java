@@ -22,7 +22,7 @@ import com.handy.portal.logger.handylogger.model.PerformanceLog;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ import butterknife.OnClick;
 public class DashboardOptionsPerformanceView extends FrameLayout
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
 
     @Bind(R.id.weekly_tier_text)
     TextView mWeeklyTierText;

@@ -18,7 +18,7 @@ import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.library.ui.widget.InputTextField;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import org.junit.Before;
 import org.junit.Ignore;

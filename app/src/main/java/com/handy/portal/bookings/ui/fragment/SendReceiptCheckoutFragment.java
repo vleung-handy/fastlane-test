@@ -37,7 +37,7 @@ import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.view.CheckoutCompletedTaskView;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
 import java.util.List;
@@ -134,6 +134,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
         getContext().registerReceiver(mTimeBroadcastReceiver, mTimeIntentFilter);
     }
 
@@ -141,6 +142,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     public void onPause()
     {
         super.onPause();
+        bus.unregister(this);
         getContext().unregisterReceiver(mTimeBroadcastReceiver);
     }
 

@@ -22,7 +22,7 @@ import com.handy.portal.library.ui.view.YoutubeImagePlaceholderView;
 import com.handy.portal.library.ui.widget.BulletTextView;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
@@ -32,7 +32,7 @@ import butterknife.ButterKnife;
 public class DashboardFeedbackView extends FrameLayout implements View.OnClickListener
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
 
     @Bind(R.id.dashboard_feedback_title)
     TextView mTitle;

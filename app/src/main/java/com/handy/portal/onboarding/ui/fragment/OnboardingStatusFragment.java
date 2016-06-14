@@ -28,13 +28,14 @@ import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Designation;
 import com.handy.portal.model.ProviderPersonalInfo;
-import com.handy.portal.onboarding.model.supplies.SuppliesInfo;
 import com.handy.portal.onboarding.model.status.LearningLink;
 import com.handy.portal.onboarding.model.status.LearningLinkDetails;
 import com.handy.portal.onboarding.model.status.StatusButton;
 import com.handy.portal.onboarding.model.subflow.StatusHeader;
 import com.handy.portal.onboarding.model.subflow.SubflowData;
-import com.squareup.otto.Subscribe;
+import com.handy.portal.onboarding.model.supplies.SuppliesInfo;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
@@ -78,8 +79,6 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
         super.onViewCreated(view, savedInstanceState);
         mMainContentContainer.setVisibility(View.GONE);
         initButtonColor();
-        bus.post(new LogEvent.AddLogEvent(
-                new NativeOnboardingLog.StatusPageShown(mStatusData.getApplicationStatus())));
     }
 
     private void initButtonColor()
@@ -100,10 +99,20 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
+        bus.post(new LogEvent.AddLogEvent(
+                new NativeOnboardingLog.StatusPageShown(mStatusData.getApplicationStatus())));
         if (mProviderPersonalInfo == null)
         {
             requestProviderProfile();
         }
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @Subscribe
@@ -345,7 +354,7 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
         if (statusButton != null)
         {
             bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.StatusPageSubmitted(
-                            mStatusData.getApplicationStatus())));
+                    mStatusData.getApplicationStatus())));
             final String url = statusButton.getUrl();
             if (!TextUtils.isNullOrEmpty(url))
             {

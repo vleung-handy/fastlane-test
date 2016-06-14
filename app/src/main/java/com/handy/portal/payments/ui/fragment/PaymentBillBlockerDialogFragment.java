@@ -16,10 +16,16 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.ui.fragment.dialog.PopupDialogFragment;
 
+import org.greenrobot.eventbus.EventBus;
+
+import javax.inject.Inject;
+
 import butterknife.Bind;
 
 public class PaymentBillBlockerDialogFragment extends PopupDialogFragment //TODO: consolidate some of this logic with other dialog fragments
 {
+    @Inject
+    EventBus mBus;
 
     @Bind(R.id.payments_bill_blocker_content)
     TextView mPaymentBlockerContentText;

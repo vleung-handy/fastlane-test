@@ -30,7 +30,7 @@ import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.UIUtils;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -103,6 +103,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
         setBackButtonEnabled(true);
 
         if (mProviderManager.getCachedActiveProvider() != null)
@@ -110,6 +111,13 @@ public class ProfileUpdateFragment extends ActionBarFragment
             bus.post(new RegionDefinitionEvent.RequestFormDefinitions(
                     mProviderManager.getCachedActiveProvider().getCountry(), this.getContext()));
         }
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @OnClick(R.id.profile_update_provider_button)

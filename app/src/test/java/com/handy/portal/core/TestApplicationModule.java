@@ -42,7 +42,7 @@ import com.handy.portal.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.securepreferences.SecurePreferences;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Singleton;
 
