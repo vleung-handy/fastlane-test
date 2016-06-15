@@ -29,6 +29,8 @@ public class SimpleContentLayout extends FrameLayout
     TextView mDescription;
     @Bind(R.id.action_button)
     TextView mActionButton;
+    @Bind(R.id.action_icon)
+    ImageView mActionIcon;
     @Bind(R.id.expand_button)
     TextView mExpandButton;
     @Bind(R.id.content_holder)
@@ -99,6 +101,15 @@ public class SimpleContentLayout extends FrameLayout
         mActionButton.setText(actionButtonText);
         mActionButton.setOnClickListener(onClickListener);
         mActionButton.setVisibility(VISIBLE);
+        return this;
+    }
+
+    public SimpleContentLayout setAction(final Drawable icon,
+                                         final OnClickListener onClickListener)
+    {
+        mActionIcon.setImageDrawable(icon);
+        mActionIcon.setOnClickListener(onClickListener);
+        mActionIcon.setVisibility(VISIBLE);
         return this;
     }
 

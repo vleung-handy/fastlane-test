@@ -22,6 +22,7 @@ import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.ui.view.LabelAndValueView;
 import com.handy.portal.library.ui.view.SimpleContentLayout;
+import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.manager.PrefsManager;
@@ -159,10 +160,7 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
                 mEditSuppliesButton.setText(R.string.edit);
                 mShippingView.setContent(getString(R.string.ship_to),
                         mSuppliesOrderInfo.getShippingText());
-                mPaymentView.setContent(getString(R.string.payment),
-                        mSuppliesOrderInfo.getPaymentText());
-                mOrderTotalView.setContent(getString(R.string.order_total),
-                        mSuppliesOrderInfo.getOrderTotalText());
+                populatePaymentViews(mSuppliesOrderInfo.getPaymentText());
                 mSuppliesContainer.setVisibility(View.VISIBLE);
             }
             else if (designation == Designation.NO)
@@ -178,6 +176,23 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
         else
         {
             hideSuppliesSection();
+        }
+    }
+
+    private void populatePaymentViews(final String paymentText)
+    {
+        // If there's no payment information, assume pro is being charged through a supplies fee.
+        if (TextUtils.isNullOrEmpty(paymentText))
+        {
+            mPaymentView.setVisibility(View.GONE);
+            mOrderTotalView.setContent(getString(R.string.supplies_fee),
+                    mSuppliesOrderInfo.getOrderTotalText());
+        }
+        else
+        {
+            mPaymentView.setContent(getString(R.string.payment), paymentText);
+            mOrderTotalView.setContent(getString(R.string.order_total),
+                    mSuppliesOrderInfo.getOrderTotalText());
         }
     }
 
