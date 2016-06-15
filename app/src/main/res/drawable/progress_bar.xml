@@ -2,13 +2,7 @@
     <item android:id="@android:id/background">
         <shape>
             <corners android:radius="999dp"/>
-            <gradient
-                android:angle="90"
-                android:centerColor="@color/handy_bg"
-                android:endColor="@color/border_gray"
-                android:startColor="@color/border_gray"
-                android:type="linear"
-                />
+            <solid android:color="@color/border_gray"/>
         </shape>
     </item>
 

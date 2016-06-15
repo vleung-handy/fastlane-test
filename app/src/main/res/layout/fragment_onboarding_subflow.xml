@@ -12,8 +12,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/border_gray_bottom"
+        android:elevation="1dp"
         android:orientation="vertical"
         android:padding="@dimen/default_padding"
+        tools:targetApi="lollipop"
         >
 
         <TextView
@@ -28,9 +30,10 @@
             android:id="@+id/progress_bar"
             style="?android:attr/progressBarStyleHorizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="@dimen/progress_bar_height"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
             android:layout_toEndOf="@+id/progress_percent"
