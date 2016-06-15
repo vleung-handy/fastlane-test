@@ -31,6 +31,7 @@ import com.handy.portal.onboarding.model.claim.JobClaim;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.onboarding.model.subflow.SubflowType;
 import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
+
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -136,6 +137,20 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
         initSuppliesView();
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                 NativeOnboardingLog.Types.CONFIRMATION_PAGE_SHOWN)));
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        bus.register(this);
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     private void initJobsView()

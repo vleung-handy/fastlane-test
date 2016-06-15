@@ -20,13 +20,14 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.library.util.CurrencyUtils;
-import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.library.util.UIUtils;
+
 import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
@@ -82,6 +83,20 @@ public class CancellationRequestFragment extends ActionBarFragment
     {
         ButterKnife.bind(this, view);
         init();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        bus.register(this);
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @Override

@@ -29,6 +29,7 @@ import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.widget.TitleView;
 import com.handy.portal.util.DeeplinkMapper;
 import com.handy.portal.util.DeeplinkUtils;
+
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -170,6 +171,8 @@ public final class NotificationsFragment extends ActionBarFragment
         super.onResume();
         setActionBar(R.string.tab_notifications, false);
 
+        bus.register(this);
+
         if (mNotificationsListView.shouldRequestMoreNotifications())
         {
             setLoadingOverlayVisible(true);
@@ -187,6 +190,7 @@ public final class NotificationsFragment extends ActionBarFragment
     public void onPause()
     {
         setLoadingOverlayVisible(false); //don't want overlay to persist when this fragment is paused
+        bus.unregister(this);
         super.onPause();
     }
 

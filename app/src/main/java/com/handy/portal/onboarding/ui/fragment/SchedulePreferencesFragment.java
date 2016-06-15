@@ -21,6 +21,7 @@ import com.handy.portal.onboarding.model.claim.StartDateRange;
 import com.handy.portal.onboarding.model.claim.Zipcluster;
 import com.handy.portal.ui.adapter.CheckBoxListAdapter;
 import com.handy.portal.ui.widget.TitleView;
+
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
@@ -158,6 +159,20 @@ public class SchedulePreferencesFragment extends OnboardingSubflowFragment
         }
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                 NativeOnboardingLog.Types.JOB_SEARCH_SHOWN)));
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        bus.register(this);
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @Override

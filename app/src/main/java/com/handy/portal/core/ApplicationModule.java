@@ -23,12 +23,12 @@ import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
+import com.handy.portal.manager.PageNavigationManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.StripeManager;
 import com.handy.portal.manager.SystemManager;
-import com.handy.portal.manager.PageNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.UserInterfaceUpdateManager;
@@ -278,7 +278,7 @@ public final class ApplicationModule
     @Singleton
     final EventBus provideBus(final Mixpanel mixpanel)
     {
-        return new EventBus();
+        return new MainBus();
     }
 
     @Provides

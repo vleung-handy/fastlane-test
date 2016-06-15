@@ -169,6 +169,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
 
         //this fragment doesn't use the universal overlay, so make sure it's hidden
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
@@ -180,6 +181,13 @@ public class ProRequestedJobsFragment extends ActionBarFragment
             showContentViewAndHideOthers(mLoadingOverlay);
             requestProRequestedJobs(true);
         }
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     /**
