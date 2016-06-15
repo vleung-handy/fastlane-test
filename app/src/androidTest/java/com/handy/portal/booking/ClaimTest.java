@@ -23,6 +23,7 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
@@ -52,17 +53,17 @@ public class ClaimTest
     };
 
     /**
-     * assumptions: this user hasn't claimed any bookings yet for 4 days out
+     * assumptions: this user hasn't claimed any bookings yet for 5 days out
      */
     @Test
     public void testBookingClaim()
     {
         ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
 
-        int claimableJobDateButtonIndex = 4;
-        //click the date button element at index 4
+        int claimableJobDateButtonIndex = 5;
+        //click the date button element at specific index
         onView(ViewMatchers.childAtIndex(withId(R.id.available_bookings_dates_scroll_view_layout), claimableJobDateButtonIndex))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         //click the first available job
         ViewUtil.waitForViewVisible(R.id.available_jobs_list_view, ViewUtil.LONG_MAX_WAIT_TIME_MS);
@@ -79,11 +80,11 @@ public class ClaimTest
         //wait for loading screen to disappear and bookings to reload
         ViewUtil.waitForViewVisible(R.id.scheduled_bookings_dates_scroll_view, ViewUtil.LONG_MAX_WAIT_TIME_MS);
 
-        //click the date button at index 4
+        //click the date button element at specific index
         onView(ViewMatchers.childAtIndex(
                 withId(R.id.scheduled_bookings_dates_scroll_view_layout),
                 claimableJobDateButtonIndex))
-                .perform(click());
+                .perform(scrollTo(), click());
 
         //verify that the booking is claimed
         onData(is(instanceOf(Booking.class)))
