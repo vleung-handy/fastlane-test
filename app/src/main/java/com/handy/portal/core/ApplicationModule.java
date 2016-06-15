@@ -76,6 +76,7 @@ import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
 import com.squareup.okhttp.OkHttpClient;
+
 import org.greenrobot.eventbus.EventBus;
 
 import java.util.Properties;
@@ -277,7 +278,7 @@ public final class ApplicationModule
     @Singleton
     final EventBus provideBus(final Mixpanel mixpanel)
     {
-        return new MainBus();
+        return new EventBus();
     }
 
     @Provides
