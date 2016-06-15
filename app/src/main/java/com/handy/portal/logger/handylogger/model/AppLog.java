@@ -5,27 +5,32 @@ import com.google.gson.annotations.SerializedName;
 /*
     Basic app events such as app open and navigation change
  */
-public class BasicLog extends EventLog
+public class AppLog extends EventLog
 {
     private static final String EVENT_CONTEXT = "app";
 
-    protected BasicLog(final String eventType)
+    protected AppLog(final String eventType)
     {
         super(eventType, EVENT_CONTEXT);
     }
 
-    public static class Open extends BasicLog
+    public static class Open extends AppLog
     {
         private static final String EVENT_TYPE = "open";
 
-        public Open()
+        @SerializedName("first_launch")
+        private boolean mFirstLaunch;
+
+        public Open(final boolean firstLaunch)
         {
             super(EVENT_TYPE);
+            mFirstLaunch = firstLaunch;
         }
+
     }
 
 
-    public static class Navigation extends BasicLog
+    public static class Navigation extends AppLog
     {
         private static final String EVENT_TYPE = "navigation";
 

@@ -14,12 +14,12 @@ import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ReferralInfo;
-import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -62,6 +62,13 @@ public class ReferAFriendFragment extends ActionBarFragment
     protected MainViewTab getTab()
     {
         return MainViewTab.REFER_A_FRIEND;
+    }
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        bus.post(new LogEvent.AddLogEvent(new ProfileLog.ReferralOpen()));
     }
 
     @Nullable
