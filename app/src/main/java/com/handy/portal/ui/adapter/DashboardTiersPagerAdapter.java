@@ -40,7 +40,7 @@ public class DashboardTiersPagerAdapter extends PagerAdapter
             if (currentIncentive.getType().equals(ProviderEvaluation.Incentive.ROLLING_TYPE))
             {
                 view.addTier(currentIncentive.getType(),
-                        Double.toString(mProviderEvaluation.getWeeklyRating().getProRating()),
+                        Double.toString(mProviderEvaluation.getRolling().getProRating()),
                         currentTier.getName(), currentTier.getJobRequirementRangeMinimum(),
                         currentTier.getJobRequirementRangeMaximum(),
                         currentIncentive.getCurrencySymbol(),
