@@ -160,19 +160,7 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
                 mEditSuppliesButton.setText(R.string.edit);
                 mShippingView.setContent(getString(R.string.ship_to),
                         mSuppliesOrderInfo.getShippingText());
-                final String paymentText = mSuppliesOrderInfo.getPaymentText();
-                if (!TextUtils.isNullOrEmpty(paymentText))
-                {
-                    mPaymentView.setContent(getString(R.string.payment), paymentText);
-                    mOrderTotalView.setContent(getString(R.string.order_total),
-                            mSuppliesOrderInfo.getOrderTotalText());
-                }
-                else
-                {
-                    mPaymentView.setVisibility(View.GONE);
-                    mOrderTotalView.setContent(getString(R.string.supplies_fee),
-                            mSuppliesOrderInfo.getOrderTotalText());
-                }
+                populatePaymentViews(mSuppliesOrderInfo.getPaymentText());
                 mSuppliesContainer.setVisibility(View.VISIBLE);
             }
             else if (designation == Designation.NO)
@@ -188,6 +176,23 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
         else
         {
             hideSuppliesSection();
+        }
+    }
+
+    private void populatePaymentViews(final String paymentText)
+    {
+        // If there's no payment information, assume pro is being charged through a supplies fee.
+        if (TextUtils.isNullOrEmpty(paymentText))
+        {
+            mPaymentView.setVisibility(View.GONE);
+            mOrderTotalView.setContent(getString(R.string.supplies_fee),
+                    mSuppliesOrderInfo.getOrderTotalText());
+        }
+        else
+        {
+            mPaymentView.setContent(getString(R.string.payment), paymentText);
+            mOrderTotalView.setContent(getString(R.string.order_total),
+                    mSuppliesOrderInfo.getOrderTotalText());
         }
     }
 

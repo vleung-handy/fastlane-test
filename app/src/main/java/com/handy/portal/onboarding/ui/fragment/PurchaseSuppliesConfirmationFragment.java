@@ -186,6 +186,8 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
         if (mSuppliesInfo.isCardRequired())
         {
             String cardLast4 = mProviderPersonalInfo.getCardLast4();
+            // If pro already has a card, do not prompt them to enter card information, but instead
+            // just show the existing one.
             if (!TextUtils.isNullOrEmpty(cardLast4))
             {
                 final String cardInfoFormatted = getString(R.string.card_info_formatted,
@@ -213,6 +215,8 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
         }
         else
         {
+            // Since card information is not required, just inform pro that they will be charged
+            // through a supplies fee.
             final String feeNoticeFormatted =
                     getString(R.string.supplies_fee_notice_formatted, mSuppliesInfo.getCost());
             mPaymentSummary.setContent(getString(R.string.supplies_fee), feeNoticeFormatted)
