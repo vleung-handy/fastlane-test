@@ -10,25 +10,27 @@ import android.view.View;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.util.FragmentUtils;
+import com.handy.portal.library.util.SystemUtils;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.location.LocationConstants;
 import com.handy.portal.location.LocationUtils;
 import com.handy.portal.location.scheduler.LocationScheduleService;
 import com.handy.portal.location.ui.LocationPermissionsBlockerDialogFragment;
 import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.BasicLog;
+import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.notification.NotificationUtils;
 import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragment;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.ui.fragment.PaymentBillBlockerDialogFragment;
 import com.handy.portal.payments.ui.fragment.PaymentBlockingFragment;
-import com.handy.portal.library.util.FragmentUtils;
-import com.handy.portal.library.util.SystemUtils;
-import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
@@ -36,6 +38,8 @@ import javax.inject.Inject;
 //TODO: should move some of this logic out of here
 public class MainActivity extends BaseActivity
 {
+    @Inject
+    PrefsManager mPrefsManager;
     @Inject
     ProviderManager providerManager;
     @Inject
@@ -60,6 +64,16 @@ public class MainActivity extends BaseActivity
         setContentView(R.layout.activity_main);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         setFullScreen();
+
+        if (mPrefsManager.getBoolean(PrefsKey.APP_FIRST_LAUNCH, true))
+        {
+            bus.post(new LogEvent.AddLogEvent(new AppLog.Open(true)));
+            mPrefsManager.setBoolean(PrefsKey.APP_FIRST_LAUNCH, false);
+        }
+        else
+        {
+            bus.post(new LogEvent.AddLogEvent(new AppLog.Open(false)));
+        }
     }
 
     /**
@@ -121,8 +135,6 @@ public class MainActivity extends BaseActivity
             Crashlytics.logException(e);
         }
         checkIfNotificationIsEnabled();
-
-        bus.post(new LogEvent.AddLogEvent(new BasicLog.Open()));
     }
 
     @Override
