@@ -46,7 +46,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     private static final String VALID_PHONE_NUMBER = "1231231234";
 
     @Mock
-    private Bus bus;
+    private EventBus bus;
     @Mock
     private BuildConfigWrapper buildConfigWrapper;
     @Mock

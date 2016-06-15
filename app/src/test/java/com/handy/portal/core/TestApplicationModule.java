@@ -42,6 +42,7 @@ import com.handy.portal.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.securepreferences.SecurePreferences;
+
 import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Singleton;
@@ -120,9 +121,9 @@ public class TestApplicationModule
 
     @Provides
     @Singleton
-    final Bus provideBus()
+    final EventBus provideBus()
     {
-        return mock(Bus.class);
+        return mock(EventBus.class);
     }
 
     @Provides
@@ -222,7 +223,7 @@ public class TestApplicationModule
     }
 
     @Provides
-    final UrbanAirshipManager providerUrbanAirshipManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication)
+    final UrbanAirshipManager providerUrbanAirshipManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication)
     {
         return mock(UrbanAirshipManager.class);
     }

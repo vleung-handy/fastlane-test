@@ -33,7 +33,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class SupportActionViewTest
 {
     @Mock
-    Bus mBus;
+    EventBus mBus;
 
     @InjectMocks
     SupportActionView mView;

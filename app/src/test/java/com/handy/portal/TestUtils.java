@@ -1,7 +1,6 @@
 package com.handy.portal;
 
 import org.greenrobot.eventbus.EventBus;
-
 import org.mockito.ArgumentCaptor;
 
 import java.util.List;
@@ -25,7 +24,7 @@ public class TestUtils
         return null;
     }
 
-    public static <T> T getFirstMatchingBusEvent(Bus bus, Class klass)
+    public static <T> T getFirstMatchingBusEvent(EventBus bus, Class klass)
     {
         ArgumentCaptor<T> captor = ArgumentCaptor.forClass(klass);
         verify(bus, atLeastOnce()).post(captor.capture());

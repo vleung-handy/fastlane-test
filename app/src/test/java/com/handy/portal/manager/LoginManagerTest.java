@@ -6,8 +6,8 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
-import org.greenrobot.eventbus.EventBus;
 
+import org.greenrobot.eventbus.EventBus;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
@@ -27,7 +27,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class LoginManagerTest extends RobolectricGradleTestWrapper
 {
     @Mock
-    private Bus bus;
+    private EventBus bus;
     @Mock
     private DataManager dataManager;
     @Mock

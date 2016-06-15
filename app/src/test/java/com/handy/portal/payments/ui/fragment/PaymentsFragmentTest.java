@@ -10,12 +10,12 @@ import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.core.TestBaseApplication;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.activity.MainActivity;
-import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
-import org.greenrobot.eventbus.EventBus;
 
+import org.greenrobot.eventbus.EventBus;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -40,7 +40,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
 {
     @Mock
-    Bus mBus;
+    EventBus mBus;
 
     @InjectMocks
     private PaymentsFragment mFragment;

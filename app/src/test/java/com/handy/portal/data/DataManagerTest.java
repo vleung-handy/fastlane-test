@@ -38,7 +38,7 @@ public class DataManagerTest extends RobolectricGradleTestWrapper
     @Mock
     StripeRetrofitService stripeService;
     @Mock
-    Bus bus;
+    EventBus bus;
     @Mock
     PrefsManager prefsManager;
     @Mock
