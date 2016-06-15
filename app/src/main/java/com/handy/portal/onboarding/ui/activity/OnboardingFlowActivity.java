@@ -28,6 +28,7 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
     private ArrayList<OnboardingSubflowDetails> mIncompleteSubflows;
     private SubflowType mLastLaunchedSubflowType;
     private boolean mIsSingleStepMode;
+    private int mBasePercentComplete;
 
     @Override
     protected boolean shouldTriggerSetup()
@@ -41,6 +42,7 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
         super.onCreate(savedInstanceState);
         mOnboardingDetails = (OnboardingDetails) getIntent()
                 .getSerializableExtra(BundleKeys.ONBOARDING_DETAILS);
+        mBasePercentComplete = (int) (mOnboardingDetails.getPercentComplete() * 100);
         mIncompleteSubflows = mOnboardingDetails.getSubflowsByStatus(SubflowStatus.INCOMPLETE);
         mIsSingleStepMode = mIncompleteSubflows.size() == 1;
         restoreOnboardingFlow(savedInstanceState);
@@ -156,6 +158,7 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
         intent.putExtra(BundleKeys.ONBOARDING_DETAILS, mOnboardingDetails);
         intent.putExtra(BundleKeys.SUBFLOW_TYPE, subflowType);
         intent.putExtra(BundleKeys.IS_SINGLE_STEP_MODE, mIsSingleStepMode);
+        intent.putExtra(BundleKeys.BASE_PERCENT_COMPLETE, mBasePercentComplete);
         if (mPendingBookings != null)
         {
             intent.putExtra(BundleKeys.BOOKINGS, mPendingBookings);

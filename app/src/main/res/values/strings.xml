@@ -558,6 +558,7 @@
     <string name="order_details">Order Details</string>
     <string name="your_requests">Your Requests</string>
     <string name="confirm_shipping_details">Confirm shipping details</string>
+    <string name="percent_complete_formatted">%1$d%% Complete</string>
     <plurals name="locations_selected_count_formatted">
         <item quantity="one">%1$d location selected</item>
         <item quantity="other">%1$d locations selected</item>

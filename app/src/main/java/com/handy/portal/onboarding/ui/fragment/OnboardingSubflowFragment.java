@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
@@ -50,10 +51,16 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
     protected TextView mSubHeader;
     @Bind(R.id.scroll_view)
     protected ScrollView mScrollView;
+    @Bind(R.id.progress_bar)
+    protected ProgressBar mProgressBar;
+    @Bind(R.id.progress_percent)
+    protected TextView mProgressPercent;
+    @Bind(R.id.progress_view)
+    protected ViewGroup mProgressView;
     protected ViewGroup mMainContentContainer;
     protected SubflowData mSubflowData;
     protected boolean mIsSingleStepMode;
-
+    protected int mBasePercentComplete;
 
     public static final class ButtonTypes
     {
@@ -158,6 +165,7 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
         super.onCreate(savedInstanceState);
         mSubflowData = (SubflowData) getArguments().getSerializable(BundleKeys.SUBFLOW_DATA);
         mIsSingleStepMode = getArguments().getBoolean(BundleKeys.IS_SINGLE_STEP_MODE, false);
+        mBasePercentComplete = getArguments().getInt(BundleKeys.BASE_PERCENT_COMPLETE);
     }
 
     @Nullable
@@ -175,8 +183,23 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
         initOrHideText(mSubHeader, getSubHeaderText());
         initOrHideImageHeader();
         initActionButtons();
+        initPercentCompleteView();
 
         return view;
+    }
+
+    private void initPercentCompleteView()
+    {
+        if (mIsSingleStepMode || mBasePercentComplete <= 0 || mBasePercentComplete >= 100)
+        {
+            mProgressView.setVisibility(View.GONE);
+        }
+        else
+        {
+            mProgressBar.setProgress(mBasePercentComplete);
+            mProgressPercent.setText(getString(R.string.percent_complete_formatted,
+                    mBasePercentComplete));
+        }
     }
 
     @Override

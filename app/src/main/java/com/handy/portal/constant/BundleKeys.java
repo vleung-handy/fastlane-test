@@ -69,9 +69,9 @@ public class BundleKeys
     public static final String ONBOARDING_DETAILS = "onboarding_details";
     public static final String SUPPLIES_ORDER_INFO = "supplies_order_info";
     public static final String FORCE_FINISH = "force_finish";
-    public static final String SUBFLOWS = "subflows";
     public static final String DISALLOW_EXIT = "disallow_exit";
     public static final String IS_SINGLE_STEP_MODE = "single_step_mode";
+    public static final String BASE_PERCENT_COMPLETE = "base_percent_complete";
 
     // Flow
     public static final String FLOW_STEP_ID = "flow_step_id";
