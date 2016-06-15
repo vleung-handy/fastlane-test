@@ -41,6 +41,16 @@ public class ViewUtil
         waitForViewVisibility(withId(viewId), false, maxWaitingTimeMs);
     }
 
+    public static void waitForTextVisible(int stringResourceId, long maxWaitingTimeMs)
+    {
+        waitForViewVisibility(withText(stringResourceId), true, maxWaitingTimeMs);
+    }
+
+    public static void waitForTextNotVisible(int stringResourceId, long maxWaitingTimeMs)
+    {
+        waitForViewVisibility(withText(stringResourceId), false, maxWaitingTimeMs);
+    }
+
     public static void checkToastDisplayed(int toastStringResourceId, Activity activity)
     {
         onView(withText(toastStringResourceId)).
@@ -50,16 +60,13 @@ public class ViewUtil
 
     /**
      * waits for the view with the given id to be a given visibility
-     * <p/>
+     * <p>
      * TODO: cleaner way to do this?
      * TODO: add better error logging
-     *
-     * @param viewMatcher
-     * @param visible
      */
     public static void waitForViewVisibility(@NonNull Matcher<View> viewMatcher,
-                                      final boolean visible,
-                                      final long maxWaitingTimeMs)
+                                             final boolean visible,
+                                             final long maxWaitingTimeMs)
     {
         final long startTime = System.currentTimeMillis();
         final long endTime = startTime + maxWaitingTimeMs;
@@ -81,9 +88,6 @@ public class ViewUtil
 
     /**
      * checks to see if a view is displayed without throwing an exception if it isn't displayed
-     *
-     * @param viewId
-     * @return
      */
     public static boolean isViewDisplayed(int viewId)
     {
@@ -92,9 +96,6 @@ public class ViewUtil
 
     /**
      * checks to see if a view is displayed without throwing an exception if it isn't displayed
-     *
-     * @param viewMatcher
-     * @return
      */
     public static boolean isViewDisplayed(@NonNull Matcher<View> viewMatcher)
     {

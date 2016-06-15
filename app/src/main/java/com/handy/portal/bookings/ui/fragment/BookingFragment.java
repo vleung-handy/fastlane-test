@@ -683,7 +683,7 @@ public class BookingFragment extends TimerActionBarFragment
             }
             case CHECK_OUT:
             {
-                mActionButton.setText(R.string.check_out);
+                mActionButton.setText(R.string.continue_to_check_out);
                 mActionButton.setVisibility(action.isEnabled() ? View.VISIBLE : View.GONE);
                 mActionButton.setOnClickListener(new View.OnClickListener()
                 {
