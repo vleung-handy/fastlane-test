@@ -31,7 +31,7 @@ public class OnboardingSubflowActivity extends BaseActivity
     private SubflowType mSubflowType;
     private long mLaunchedTimeMillis;
     private boolean mIsSingleStepMode;
-    private int mBasePercentComplete;
+    private int mPercentComplete;
 
     public OnboardingDetails getOnboardingDetails()
     {
@@ -46,7 +46,7 @@ public class OnboardingSubflowActivity extends BaseActivity
                 .getSerializableExtra(BundleKeys.ONBOARDING_DETAILS);
         mSubflowType = (SubflowType) getIntent().getSerializableExtra(BundleKeys.SUBFLOW_TYPE);
         mIsSingleStepMode = getIntent().getBooleanExtra(BundleKeys.IS_SINGLE_STEP_MODE, false);
-        mBasePercentComplete = getIntent().getIntExtra(BundleKeys.BASE_PERCENT_COMPLETE, 0);
+        mPercentComplete = getIntent().getIntExtra(BundleKeys.PERCENT_COMPLETE, 0);
         setContentView(R.layout.activity_onboarding_subflow);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         initLaunchedTimeMillis(savedInstanceState);
@@ -146,7 +146,7 @@ public class OnboardingSubflowActivity extends BaseActivity
                 mOnboardingDetails.getSubflowDataByType(mSubflowType);
         arguments.putSerializable(BundleKeys.SUBFLOW_DATA, subflowData);
         arguments.putBoolean(BundleKeys.IS_SINGLE_STEP_MODE, mIsSingleStepMode);
-        arguments.putInt(BundleKeys.BASE_PERCENT_COMPLETE, mBasePercentComplete);
+        arguments.putInt(BundleKeys.PERCENT_COMPLETE, mPercentComplete);
         fragment.setArguments(arguments);
 
         fragmentTransaction.setCustomAnimations(

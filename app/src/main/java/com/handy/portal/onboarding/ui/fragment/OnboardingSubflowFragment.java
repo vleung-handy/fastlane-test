@@ -60,7 +60,7 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
     protected ViewGroup mMainContentContainer;
     protected SubflowData mSubflowData;
     protected boolean mIsSingleStepMode;
-    protected int mBasePercentComplete;
+    protected int mPercentComplete;
 
     public static final class ButtonTypes
     {
@@ -165,7 +165,7 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
         super.onCreate(savedInstanceState);
         mSubflowData = (SubflowData) getArguments().getSerializable(BundleKeys.SUBFLOW_DATA);
         mIsSingleStepMode = getArguments().getBoolean(BundleKeys.IS_SINGLE_STEP_MODE, false);
-        mBasePercentComplete = getArguments().getInt(BundleKeys.BASE_PERCENT_COMPLETE);
+        mPercentComplete = getArguments().getInt(BundleKeys.PERCENT_COMPLETE);
     }
 
     @Nullable
@@ -190,15 +190,15 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
 
     private void initPercentCompleteView()
     {
-        if (mIsSingleStepMode || mBasePercentComplete <= 0 || mBasePercentComplete >= 100)
+        if (mIsSingleStepMode || mPercentComplete <= 0 || mPercentComplete >= 100)
         {
             mProgressView.setVisibility(View.GONE);
         }
         else
         {
-            mProgressBar.setProgress(mBasePercentComplete);
+            mProgressBar.setProgress(mPercentComplete);
             mProgressPercent.setText(getString(R.string.percent_complete_formatted,
-                    mBasePercentComplete));
+                    mPercentComplete));
         }
     }
 

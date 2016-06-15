@@ -71,7 +71,8 @@ public class BundleKeys
     public static final String FORCE_FINISH = "force_finish";
     public static final String DISALLOW_EXIT = "disallow_exit";
     public static final String IS_SINGLE_STEP_MODE = "single_step_mode";
-    public static final String BASE_PERCENT_COMPLETE = "base_percent_complete";
+    public static final String PERCENT_COMPLETE = "percent_complete";
+    public static final String PERCENT_COMPLETE_ADDEND = "percent_complete_addend";
 
     // Flow
     public static final String FLOW_STEP_ID = "flow_step_id";

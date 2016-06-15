@@ -29,6 +29,7 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
     private SubflowType mLastLaunchedSubflowType;
     private boolean mIsSingleStepMode;
     private int mBasePercentComplete;
+    private int mPercentCompleteAddend;
 
     @Override
     protected boolean shouldTriggerSetup()
@@ -53,6 +54,7 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
     {
         if (savedInstanceState != null)
         {
+            mPercentCompleteAddend = savedInstanceState.getInt(BundleKeys.PERCENT_COMPLETE_ADDEND);
             mLastLaunchedSubflowType = (SubflowType) savedInstanceState
                     .getSerializable(BundleKeys.SUBFLOW_TYPE);
             if (mLastLaunchedSubflowType != null)
@@ -99,6 +101,7 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
                 case RESULT_OK:
                     savePendingBookingsIfAvailable(data);
                     saveSuppliesOrderInfoIfAvailable(data);
+                    mPercentCompleteAddend += 5;
                     mOnboardingFlow.goForward();
                     if (mOnboardingFlow.isComplete())
                     {
@@ -158,7 +161,7 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
         intent.putExtra(BundleKeys.ONBOARDING_DETAILS, mOnboardingDetails);
         intent.putExtra(BundleKeys.SUBFLOW_TYPE, subflowType);
         intent.putExtra(BundleKeys.IS_SINGLE_STEP_MODE, mIsSingleStepMode);
-        intent.putExtra(BundleKeys.BASE_PERCENT_COMPLETE, mBasePercentComplete);
+        intent.putExtra(BundleKeys.PERCENT_COMPLETE, mBasePercentComplete + mPercentCompleteAddend);
         if (mPendingBookings != null)
         {
             intent.putExtra(BundleKeys.BOOKINGS, mPendingBookings);
@@ -182,6 +185,7 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
         outState.putSerializable(BundleKeys.SUBFLOW_TYPE, mLastLaunchedSubflowType);
         outState.putSerializable(BundleKeys.BOOKINGS, mPendingBookings);
         outState.putSerializable(BundleKeys.SUPPLIES_ORDER_INFO, mSuppliesOrderInfo);
+        outState.putInt(BundleKeys.PERCENT_COMPLETE_ADDEND, mPercentCompleteAddend);
         super.onSaveInstanceState(outState);
     }
 
