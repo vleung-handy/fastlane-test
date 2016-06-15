@@ -7,11 +7,49 @@
     android:orientation="vertical"
     >
 
+    <RelativeLayout
+        android:id="@+id/progress_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_gray_bottom"
+        android:elevation="1dp"
+        android:orientation="vertical"
+        android:padding="@dimen/default_padding"
+        tools:targetApi="lollipop"
+        >
+
+        <TextView
+            android:id="@+id/progress_percent"
+            style="@style/TextView.Small.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="85% Complete"
+            />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/progress_bar_height"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_toEndOf="@+id/progress_percent"
+            android:layout_toRightOf="@+id/progress_percent"
+            android:progressDrawable="@drawable/progress_bar"
+            tools:progress="85"
+            />
+
+    </RelativeLayout>
+
     <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@+id/single_action_button"
         android:layout_alignWithParentIfMissing="true"
+        android:layout_below="@+id/progress_view"
         >
 
         <ScrollView
