@@ -60,7 +60,7 @@ public abstract class OnboardingSubflowFragment extends ActionBarFragment
     protected ViewGroup mMainContentContainer;
     protected SubflowData mSubflowData;
     protected boolean mIsSingleStepMode;
-    protected int mPercentComplete;
+    private int mPercentComplete;
 
     public static final class ButtonTypes
     {

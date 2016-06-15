@@ -73,6 +73,7 @@ public class BundleKeys
     public static final String IS_SINGLE_STEP_MODE = "single_step_mode";
     public static final String PERCENT_COMPLETE = "percent_complete";
     public static final String PERCENT_COMPLETE_ADDEND = "percent_complete_addend";
+    public static final String PERCENT_RANGE = "percent_range";
 
     // Flow
     public static final String FLOW_STEP_ID = "flow_step_id";

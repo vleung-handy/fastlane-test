@@ -164,6 +164,7 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
         intent.putExtra(BundleKeys.SUBFLOW_TYPE, subflowType);
         intent.putExtra(BundleKeys.IS_SINGLE_STEP_MODE, mIsSingleStepMode);
         intent.putExtra(BundleKeys.PERCENT_COMPLETE, mBasePercentComplete + mPercentCompleteAddend);
+        intent.putExtra(BundleKeys.PERCENT_RANGE, mPercentCompleteJump);
         if (mPendingBookings != null)
         {
             intent.putExtra(BundleKeys.BOOKINGS, mPendingBookings);

@@ -5,11 +5,23 @@ import com.google.gson.annotations.SerializedName;
 public enum SubflowType
 {
     @SerializedName("status")
-    STATUS,
+    STATUS(1),
     @SerializedName("claim")
-    CLAIM,
+    CLAIM(2),
     @SerializedName("supplies")
-    SUPPLIES,
+    SUPPLIES(2),
     @SerializedName("confirmation")
-    CONFIRMATION,
+    CONFIRMATION(1),;
+
+    private int mNumberOfSteps;
+
+    SubflowType(final int numberOfSteps)
+    {
+        mNumberOfSteps = numberOfSteps;
+    }
+
+    public int getNumberOfSteps()
+    {
+        return mNumberOfSteps;
+    }
 }
