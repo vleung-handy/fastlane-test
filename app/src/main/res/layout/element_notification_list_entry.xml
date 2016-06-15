@@ -26,36 +26,16 @@
         android:src="@drawable/ic_notification_generic"
         />
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/notification_body"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:duplicateParentState="true"
-        android:orientation="vertical"
-        >
-
-        <TextView
-            android:id="@+id/notification_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:duplicateParentState="true"
-            android:textAppearance="@style/TextView.Bold"
-            android:textColor="@drawable/notification_text"
-            android:textSize="@dimen/medium_text_size"
-            tools:text="Cancellation"
-            />
-
-        <TextView
-            android:id="@+id/notification_body"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:duplicateParentState="true"
-            android:textColor="@drawable/list_entry_title_text"
-            android:textSize="@dimen/small_text_size"
-            tools:text="3:00pm job on Wednesday, Oct 21 has been cancelled."
-            />
-
-    </LinearLayout>
+        android:textColor="@drawable/list_entry_title_text"
+        android:textSize="@dimen/small_text_size"
+        tools:text="3:00pm job on Wednesday, Oct 21 has been cancelled."
+        />
 
     <TextView
         android:id="@+id/notification_time"
@@ -63,11 +43,10 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="@dimen/notification_list_entry_time_margin_left"
         android:layout_marginStart="@dimen/notification_list_entry_time_margin_left"
-        android:layout_marginTop="@dimen/notification_list_entry_time_margin_top"
         android:duplicateParentState="true"
         android:textColor="@color/tertiary_gray"
         android:textSize="@dimen/xsmall_text_size"
-        tools:text="10:35am"
+        tools:text="3h"
         />
 
 </LinearLayout>

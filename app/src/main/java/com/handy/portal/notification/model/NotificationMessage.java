@@ -12,9 +12,6 @@ public class NotificationMessage implements Serializable
     @SerializedName("id")
     private int mId;
 
-    @SerializedName("title")
-    private String mTitle;
-
     @SerializedName("body")
     private String mBody;
 
@@ -48,11 +45,6 @@ public class NotificationMessage implements Serializable
     public int getId()
     {
         return mId;
-    }
-
-    public String getTitle()
-    {
-        return mTitle;
     }
 
     public String getBody()
@@ -102,7 +94,7 @@ public class NotificationMessage implements Serializable
 
     public String getFormattedTime()
     {
-        return DateTimeUtils.formatDateTo12HourClock(getCreatedAt());
+        return DateTimeUtils.formatDateToNumberTimeUnit(getCreatedAt());
     }
 
     public NotificationImage getImage()

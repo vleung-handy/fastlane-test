@@ -23,9 +23,6 @@ public class NotificationsListEntryView extends FrameLayout
     @Bind(R.id.notification_icon)
     ImageView mNotificationIcon;
 
-    @Bind(R.id.notification_title)
-    TextView mNotificationTitle;
-
     @Bind(R.id.notification_body)
     TextView mNotificationBody;
 
@@ -55,7 +52,6 @@ public class NotificationsListEntryView extends FrameLayout
 
     public void updateDisplay(NotificationMessage notificationMessage)
     {
-        mNotificationTitle.setText(notificationMessage.getTitle());
         mNotificationBody.setText(Html.fromHtml(notificationMessage.getHtmlBody()));
         mNotificationTime.setText(notificationMessage.getFormattedTime());
         setNotificationImage(notificationMessage);

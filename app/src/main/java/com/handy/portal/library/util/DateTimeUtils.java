@@ -560,4 +560,28 @@ public final class DateTimeUtils
         return LOCAL_TIME_12_HOURS;
     }
 
+    public static String formatDateToNumberTimeUnit(final Date date)
+    {
+        final Calendar calendar = Calendar.getInstance();
+        final long difference = calendar.getTimeInMillis() - date.getTime();
+        final long minutes = difference / 1000 / 60;
+        long hours;
+        long days;
+        if (minutes < 60) // minutes
+        {
+            return minutes + "m";
+        }
+        else if ((hours = minutes / 60) < 24) // hours
+        {
+            return hours + "h";
+        }
+        else if ((days = hours / 24) < 7) // days
+        {
+            return days + "d";
+        }
+        else // weeks
+        {
+            return (days / 7) + "w";
+        }
+    }
 }
