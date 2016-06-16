@@ -3,6 +3,7 @@ package com.handy.portal.logger.handylogger.model;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 
 import com.google.gson.annotations.SerializedName;
@@ -149,8 +150,14 @@ public class DeeplinkLog extends EventLog
         }
     }
 
+    @Nullable
     private static Map<String, Object> extractExtrasMap(@NonNull final Uri data)
     {
+        if (!data.isHierarchical()) //Uri.getQueryParameterNames() will throw exception if uri is NOT hierarchical
+        {
+            return null;
+        }
+
         final Map<String, Object> parameters = new HashMap<>();
         final Set<String> queryParameterNames = data.getQueryParameterNames();
         for (final String queryParameterName : queryParameterNames)
