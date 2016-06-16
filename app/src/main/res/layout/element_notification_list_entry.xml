@@ -12,7 +12,7 @@
         android:id="@+id/notification_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_list_entry"
+        android:background="@drawable/button_white"
         android:duplicateParentState="true"
         android:orientation="horizontal"
         android:paddingBottom="@dimen/notification_list_entry_vertical_padding"
@@ -28,10 +28,9 @@
             android:layout_marginEnd="@dimen/notification_list_entry_icon_margin_right"
             android:layout_marginRight="@dimen/notification_list_entry_icon_margin_right"
             android:layout_marginTop="@dimen/notification_list_entry_icon_margin_top"
-            android:background="@drawable/notification_generic"
             android:duplicateParentState="true"
             android:orientation="horizontal"
-            android:src="@drawable/ic_notification_generic"
+            tools:src="@drawable/ic_notification_alert"
             />
 
         <TextView

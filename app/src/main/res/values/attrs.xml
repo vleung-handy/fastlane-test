@@ -7,9 +7,4 @@
         <attr name="minLength"
               format="integer"/>
     </declare-styleable>
-
-    <declare-styleable name="notification">
-        <attr name="state_interacted"
-              format="boolean"/>
-    </declare-styleable>
 </resources>

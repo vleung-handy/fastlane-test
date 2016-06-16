@@ -1,5 +1,7 @@
 package com.handy.portal.notification.model;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.library.util.DateTimeUtils;
 
@@ -19,7 +21,7 @@ public class NotificationMessage implements Serializable
     private String mHtmlBody;
 
     @SerializedName("type")
-    private String mType;
+    private NotificationType mType;
 
     @SerializedName("created_at")
     private Date mCreatedAt;
@@ -36,14 +38,8 @@ public class NotificationMessage implements Serializable
     @SerializedName("interacted_status")
     private boolean mInteractedStatus;
 
-    @SerializedName("images")
-    private List<NotificationImage> mImages;
-
     @SerializedName("actions")
     private List<NotificationAction> mActions;
-
-    private NotificationImage mImage;
-    private boolean mHasNoImage = false;
 
     public int getId()
     {
@@ -60,9 +56,10 @@ public class NotificationMessage implements Serializable
         return mHtmlBody;
     }
 
-    public String getType()
+    @NonNull
+    public NotificationType getType()
     {
-        return mType;
+        return mType != null ? mType : NotificationType.ALERT;
     }
 
     public Date getCreatedAt()
@@ -90,11 +87,6 @@ public class NotificationMessage implements Serializable
         return mInteractedStatus;
     }
 
-    public List<NotificationImage> getImages()
-    {
-        return mImages;
-    }
-
     public List<NotificationAction> getActions()
     {
         return mActions;
@@ -103,30 +95,5 @@ public class NotificationMessage implements Serializable
     public String getFormattedTime()
     {
         return DateTimeUtils.formatDateToNumberTimeUnit(getCreatedAt());
-    }
-
-    public NotificationImage getImage()
-    {
-        return mImage;
-    }
-
-    public void setImage(float scale)
-    {
-        for (NotificationImage image : getImages()) {
-            if (scale == image.getScale())
-            {
-                mImage = image;
-            }
-        }
-
-        if (mImage == null)
-        {
-            mHasNoImage = true;
-        }
-    }
-
-    public boolean hasNoImage()
-    {
-        return mHasNoImage;
     }
 }
