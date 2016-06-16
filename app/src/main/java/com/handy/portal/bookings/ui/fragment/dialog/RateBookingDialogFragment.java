@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -60,6 +61,8 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     EditText mCommentText;
     @Bind(R.id.rate_booking_rating_radiogroup)
     RadioGroup mRatingRadioGroup;
+    @Bind(R.id.rate_booking_submit_button)
+    Button mSubmitButton;
 
     public static final String FRAGMENT_TAG = "fragment_dialog_rate_booking";
 
@@ -143,7 +146,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingSubmitted(bookingRatingScore)));
         if (bookingRatingScore > 0)
         {
-            mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+            mSubmitButton.setEnabled(false);
             final LocationData locationData = getLocationData();
             mBus.post(new LogEvent.AddLogEvent(
                     new CheckInFlowLog.CheckOutSubmitted(mBooking, locationData)));
@@ -179,7 +182,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     @Subscribe
     public void onReceiveNotifyJobCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
     {
-        mBus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        mSubmitButton.setEnabled(true);
         UIUtils.showToast(getContext(), getString(R.string.an_error_has_occurred), Toast.LENGTH_SHORT);
         //allow them to try again. they can always click the X button if they don't want to.
     }
