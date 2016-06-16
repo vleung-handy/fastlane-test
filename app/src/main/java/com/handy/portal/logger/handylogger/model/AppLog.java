@@ -14,14 +14,14 @@ public class AppLog extends EventLog
         super(eventType, EVENT_CONTEXT);
     }
 
-    public static class Open extends AppLog
+    public static class AppOpenLog extends AppLog
     {
         private static final String EVENT_TYPE = "open";
 
         @SerializedName("first_launch")
         private boolean mFirstLaunch;
 
-        public Open(final boolean firstLaunch)
+        public AppOpenLog(final boolean firstLaunch)
         {
             super(EVENT_TYPE);
             mFirstLaunch = firstLaunch;

@@ -17,6 +17,7 @@ import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
+import com.handy.portal.logger.handylogger.model.ReferralLog;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ReferralInfo;
@@ -113,6 +114,7 @@ public class ReferAFriendFragment extends ActionBarFragment
         sendIntent.putExtra(Intent.EXTRA_TEXT, mReferralInfo.getReferralLink());
         sendIntent.setType("text/plain");
         Utils.safeLaunchIntent(Intent.createChooser(sendIntent, getContext().getString(R.string.share_with)), getContext());
+        bus.post(new LogEvent.AddLogEvent(new ReferralLog.ReferralCompletedLog()));
     }
 
     @OnClick(R.id.try_again_button)
@@ -154,6 +156,8 @@ public class ReferAFriendFragment extends ActionBarFragment
             populateText();
             startAnimations();
         }
+
+        bus.post(new LogEvent.AddLogEvent(new ReferralLog.ReferralOpenLog()));
     }
 
     private void populateText()
