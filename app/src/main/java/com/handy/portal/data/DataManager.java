@@ -312,6 +312,11 @@ public class DataManager
         mService.postMarkNotificationsAsRead(providerId, notificationIds, new NotificationMessagesHandyRetroFitCallback(cb));
     }
 
+    public void postMarkNotificationsAsInteracted(String providerId, ArrayList<Integer> notificationIds, Callback<NotificationMessages> cb)
+    {
+        mService.postMarkNotificationsAsInteracted(providerId, notificationIds, new NotificationMessagesHandyRetroFitCallback(cb));
+    }
+
     public void getNotificationsUnreadCount(final String providerId, final Callback<HashMap<String, Object>> cb)
     {
         mService.getNotificationsUnreadCount(providerId, new NotificationUnreadCountHandyRetroFitCallback(cb));
