@@ -33,6 +33,9 @@ public class NotificationMessage implements Serializable
     @SerializedName("read_status")
     private boolean mReadStatus;
 
+    @SerializedName("interacted_status")
+    private boolean mInteractedStatus;
+
     @SerializedName("images")
     private List<NotificationImage> mImages;
 
@@ -82,6 +85,11 @@ public class NotificationMessage implements Serializable
         return mReadStatus;
     }
 
+    public boolean isInteracted()
+    {
+        return mInteractedStatus;
+    }
+
     public List<NotificationImage> getImages()
     {
         return mImages;
@@ -120,10 +128,5 @@ public class NotificationMessage implements Serializable
     public boolean hasNoImage()
     {
         return mHasNoImage;
-    }
-
-    public void markAsRead()
-    {
-        mReadStatus = true;
     }
 }

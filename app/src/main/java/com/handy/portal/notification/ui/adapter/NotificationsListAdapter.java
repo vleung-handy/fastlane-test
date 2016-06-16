@@ -38,7 +38,7 @@ public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> 
 
         ((NotificationsListEntryView) v).updateDisplay(notificationMessage);
 
-        ((NotificationsListEntryView) v).setRead(notificationMessage.isRead());
+        ((NotificationsListEntryView) v).setInteracted(notificationMessage.isInteracted());
         v.refreshDrawableState();
 
         return v;

@@ -2,7 +2,7 @@
 <selector xmlns:android="http://schemas.android.com/apk/res/android"
           xmlns:app="http://schemas.android.com/apk/res-auto"
     >
-    <item app:state_read="false">
+    <item app:state_interacted="false">
         <shape android:shape="rectangle">
             <corners
                 android:bottomLeftRadius="@dimen/notification_icon_radius"
@@ -15,7 +15,7 @@
         </shape>
     </item>
 
-    <item app:state_read="true">
+    <item app:state_interacted="true">
         <shape android:shape="rectangle">
             <corners
                 android:bottomLeftRadius="@dimen/notification_icon_radius"
