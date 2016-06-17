@@ -13,7 +13,7 @@ public enum NotificationType
     PAYMENT(R.drawable.ic_notification_payment, R.drawable.ic_notification_payment_gray),
     @SerializedName("cancellation")
     CANCELLATION(R.drawable.ic_notification_cancel, R.drawable.ic_notification_cancel_gray),
-    @SerializedName("pro-team")
+    @SerializedName("pro_team")
     PRO_TEAM(R.drawable.ic_notification_pro_team, R.drawable.ic_notification_pro_team_gray),
     @SerializedName("performance")
     PERFORMANCE(R.drawable.ic_notification_performance, R.drawable.ic_notification_performance_gray),
