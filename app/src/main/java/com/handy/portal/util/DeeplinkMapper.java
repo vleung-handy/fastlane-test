@@ -33,6 +33,9 @@ public class DeeplinkMapper
         deeplinkMap.put("account_settings/edit_profile", MainViewTab.PROFILE_UPDATE);
         deeplinkMap.put("account_settings/edit_payment_method", MainViewTab.SELECT_PAYMENT_METHOD);
         deeplinkMap.put("account_settings/request_supplies", MainViewTab.REQUEST_SUPPLIES);
+
+        deeplinkMap.put("requested_jobs", MainViewTab.REQUESTED_JOBS); //TODO: verify the schema
+
         // TODO: Add more
 
         DEEPLINK_MAP = ImmutableMap.copyOf(deeplinkMap);
