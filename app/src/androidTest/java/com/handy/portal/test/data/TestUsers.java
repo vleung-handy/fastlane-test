@@ -16,4 +16,10 @@ public class TestUsers
             "123456",
             "test_persistence_token"
     );
+
+    public static TestUser CHECK_OUT_TEST_PROVIDER = new TestUser(
+            "6466669879",
+            "123456",
+            "test_persistence_token_two"
+    );
 }
