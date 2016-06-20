@@ -47,4 +47,36 @@ public class DateTimeUtilsTest
         tomorrow.add(Calendar.DATE, -3);
         assertEquals("3 days ago", DateTimeUtils.dayDifferenceInWords(tomorrow.getTime()));
     }
+
+    @Test
+    public void formatDateToNumberTimeUnit_shouldBe20M()
+    {
+        Calendar fewMinutesAgo = Calendar.getInstance();
+        fewMinutesAgo.add(Calendar.MINUTE, -20);
+        assertEquals("20m", DateTimeUtils.formatDateToNumberTimeUnit(fewMinutesAgo.getTime()));
+    }
+
+    @Test
+    public void formatDateToNumberTimeUnit_shouldBe2H()
+    {
+        Calendar fewHoursAgo = Calendar.getInstance();
+        fewHoursAgo.add(Calendar.HOUR, -2);
+        assertEquals("2h", DateTimeUtils.formatDateToNumberTimeUnit(fewHoursAgo.getTime()));
+    }
+
+    @Test
+    public void formatDateToNumberTimeUnit_shouldBe3D()
+    {
+        Calendar fewDaysAgo = Calendar.getInstance();
+        fewDaysAgo.add(Calendar.DATE, -3);
+        assertEquals("3d", DateTimeUtils.formatDateToNumberTimeUnit(fewDaysAgo.getTime()));
+    }
+
+    @Test
+    public void formatDateToNumberTimeUnit_shouldBe4W()
+    {
+        Calendar fewWeeksAgo = Calendar.getInstance();
+        fewWeeksAgo.add(Calendar.DATE, -4 * 7);
+        assertEquals("4w", DateTimeUtils.formatDateToNumberTimeUnit(fewWeeksAgo.getTime()));
+    }
 }

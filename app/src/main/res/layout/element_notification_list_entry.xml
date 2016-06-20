@@ -1,73 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_list_entry"
-    android:duplicateParentState="true"
-    android:orientation="horizontal"
-    android:paddingBottom="@dimen/notification_list_entry_vertical_padding"
-    android:paddingLeft="@dimen/notification_list_entry_horizontal_padding"
-    android:paddingRight="@dimen/notification_list_entry_horizontal_padding"
-    android:paddingTop="@dimen/notification_list_entry_vertical_padding"
+    android:background="@drawable/border_gray_bottom"
     >
 
-    <ImageView
-        android:id="@+id/notification_icon"
-        android:layout_width="@dimen/notification_list_entry_icon_size"
-        android:layout_height="@dimen/notification_list_entry_icon_size"
-        android:layout_marginEnd="@dimen/notification_list_entry_icon_margin_right"
-        android:layout_marginRight="@dimen/notification_list_entry_icon_margin_right"
-        android:layout_marginTop="@dimen/notification_list_entry_icon_margin_top"
-        android:background="@drawable/notification_generic"
+    <LinearLayout
+        android:id="@+id/notification_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/button_white"
         android:duplicateParentState="true"
         android:orientation="horizontal"
-        android:src="@drawable/ic_notification_generic"
-        />
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:duplicateParentState="true"
-        android:orientation="vertical"
+        android:paddingBottom="@dimen/notification_list_entry_vertical_padding"
+        android:paddingLeft="@dimen/notification_list_entry_horizontal_padding"
+        android:paddingRight="@dimen/notification_list_entry_horizontal_padding"
+        android:paddingTop="@dimen/notification_list_entry_vertical_padding"
         >
 
-        <TextView
-            android:id="@+id/notification_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ImageView
+            android:id="@+id/notification_icon"
+            android:layout_width="@dimen/notification_list_entry_icon_size"
+            android:layout_height="@dimen/notification_list_entry_icon_size"
+            android:layout_marginEnd="@dimen/notification_list_entry_icon_margin_right"
+            android:layout_marginRight="@dimen/notification_list_entry_icon_margin_right"
+            android:layout_marginTop="@dimen/notification_list_entry_icon_margin_top"
             android:duplicateParentState="true"
-            android:textAppearance="@style/TextView.Bold"
-            android:textColor="@drawable/notification_text"
-            android:textSize="@dimen/medium_text_size"
-            tools:text="Cancellation"
+            android:orientation="horizontal"
+            tools:src="@drawable/ic_notification_alert"
             />
 
         <TextView
             android:id="@+id/notification_body"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:duplicateParentState="true"
             android:textColor="@drawable/list_entry_title_text"
             android:textSize="@dimen/small_text_size"
             tools:text="3:00pm job on Wednesday, Oct 21 has been cancelled."
             />
 
+        <TextView
+            android:id="@+id/notification_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/notification_list_entry_time_margin_left"
+            android:layout_marginStart="@dimen/notification_list_entry_time_margin_left"
+            android:duplicateParentState="true"
+            android:textColor="@color/tertiary_gray"
+            android:textSize="@dimen/xsmall_text_size"
+            tools:text="3h"
+            />
+
     </LinearLayout>
-
-    <TextView
-        android:id="@+id/notification_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/notification_list_entry_time_margin_left"
-        android:layout_marginStart="@dimen/notification_list_entry_time_margin_left"
-        android:layout_marginTop="@dimen/notification_list_entry_time_margin_top"
-        android:duplicateParentState="true"
-        android:textColor="@color/tertiary_gray"
-        android:textSize="@dimen/xsmall_text_size"
-        tools:text="10:35am"
-        />
-
-</LinearLayout>
+</FrameLayout>

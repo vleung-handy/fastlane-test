@@ -261,6 +261,12 @@ public interface HandyRetrofitService
                                      @Field("notification_ids[]") ArrayList<Integer> notificationIds,
                                      HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
+    @POST(PROVIDERS_PATH + "{id}/notifications/mark_as_interacted")
+    void postMarkNotificationsAsInteracted(@Path("id") String providerId,
+                                     @Field("notification_ids[]") ArrayList<Integer> notificationIds,
+                                     HandyRetrofitCallback cb);
+
     @GET(PROVIDERS_PATH + "{id}/notifications/unread_count")
     void getNotificationsUnreadCount(@Path("id") String providerId, HandyRetrofitCallback cb);
 

@@ -2,16 +2,13 @@ package com.handy.portal.notification.ui.adapter;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.notification.model.NotificationMessage;
 import com.handy.portal.notification.ui.view.NotificationsListEntryView;
-import com.handy.portal.library.util.DateTimeUtils;
 
 import java.util.HashSet;
 
@@ -41,36 +38,21 @@ public class NotificationsListAdapter extends ArrayAdapter<NotificationMessage> 
 
         ((NotificationsListEntryView) v).updateDisplay(notificationMessage);
 
-        ((NotificationsListEntryView) v).setRead(notificationMessage.isRead());
-        v.refreshDrawableState();
-
         return v;
     }
 
     @Override
     public View getHeaderView(final int position, final View convertView, final ViewGroup parent)
     {
-        View v = convertView;
-        NotificationMessage notificationMessage = getItem(position);
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        if (v == null)
-        {
-            v = inflater.inflate(R.layout.element_notification_list_section_header, parent, false);
-        }
-
-        String headerText = DateTimeUtils.dayDifferenceInWords(notificationMessage.getCreatedAt());
-        headerText += " · ";
-        headerText += DateTimeUtils.formatDayOfWeekMonthDateYear(notificationMessage.getCreatedAt());
-
-        ((TextView) v.findViewById(R.id.notification_list_section_header_text)).setText(headerText);
-        return v;
+        final View view = convertView != null ? convertView : new View(getContext());
+        view.setVisibility(View.GONE);
+        return view;
     }
 
     @Override
     public long getHeaderId(final int position)
     {
-        NotificationMessage notificationMessage = getItem(position);
-        return DateTimeUtils.getBeginningOfDay(notificationMessage.getCreatedAt()).getTime();
+        return 0;
     }
 
     public void appendData(final NotificationMessage[] notificationMessages)

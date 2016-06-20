@@ -13,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
@@ -88,6 +89,11 @@ public final class NotificationsFragment extends ActionBarFragment
             {
                 final NotificationMessage message =
                         mNotificationsListView.getWrappedAdapter().getItem(position);
+                if (!message.isInteracted())
+                {
+                    bus.post(new NotificationEvent.RequestMarkNotificationsAsInteracted(
+                            Lists.newArrayList(message.getId())));
+                }
                 triggerMessageActions(message.getActions());
             }
         });
@@ -203,6 +209,7 @@ public final class NotificationsFragment extends ActionBarFragment
         mNotificationsListView.appendData(notificationMessages);
         cleanUpView();
         markUnreadNotificationsAsRead(notificationMessages);
+        markActionlessUninteractedNotificationsAsInteracted(notificationMessages);
 
         if (isFirstRequest && mNotificationsListView.isEmpty())
         {
@@ -264,6 +271,25 @@ public final class NotificationsFragment extends ActionBarFragment
         if (!unreadNotifications.isEmpty())
         {
             bus.post(new NotificationEvent.RequestMarkNotificationsAsRead(unreadNotifications));
+        }
+    }
+
+    private void markActionlessUninteractedNotificationsAsInteracted(
+            final NotificationMessage[] notificationMessages)
+    {
+        ArrayList<Integer> notificationIds = new ArrayList<>();
+        for (final NotificationMessage notificationMessage : notificationMessages)
+        {
+            final List<NotificationAction> actions = notificationMessage.getActions();
+            if (!notificationMessage.isInteracted() && actions != null && actions.isEmpty())
+            {
+                notificationIds.add(notificationMessage.getId());
+            }
+        }
+
+        if (!notificationIds.isEmpty())
+        {
+            bus.post(new NotificationEvent.RequestMarkNotificationsAsInteracted(notificationIds));
         }
     }
 
