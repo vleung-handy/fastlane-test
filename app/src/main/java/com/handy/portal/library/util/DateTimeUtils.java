@@ -563,19 +563,19 @@ public final class DateTimeUtils
     public static String formatDateToNumberTimeUnit(final Date date)
     {
         final Calendar calendar = Calendar.getInstance();
-        final long difference = calendar.getTimeInMillis() - date.getTime();
-        final long minutes = difference / 1000 / 60;
+        final long timePastMillis = calendar.getTimeInMillis() - date.getTime();
+        final long minutes = TimeUnit.MILLISECONDS.toMinutes(timePastMillis);
         long hours;
         long days;
         if (minutes < 60) // minutes
         {
             return minutes + "m";
         }
-        else if ((hours = minutes / 60) < 24) // hours
+        else if ((hours = TimeUnit.MINUTES.toHours(minutes)) < 24) // hours
         {
             return hours + "h";
         }
-        else if ((days = hours / 24) < 7) // days
+        else if ((days = TimeUnit.HOURS.toDays(hours)) < 7) // days
         {
             return days + "d";
         }
