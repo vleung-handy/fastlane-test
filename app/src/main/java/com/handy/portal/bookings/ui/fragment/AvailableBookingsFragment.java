@@ -181,8 +181,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     private void showProRequestedJobsInbox()
     {
-        final Bundle arguments = new Bundle();
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.REQUESTED_JOBS, arguments, TransitionStyle.SLIDE_UP, true));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.REQUESTED_JOBS, null, TransitionStyle.SLIDE_UP, true));
     }
 
     protected BookingListView getBookingListView()

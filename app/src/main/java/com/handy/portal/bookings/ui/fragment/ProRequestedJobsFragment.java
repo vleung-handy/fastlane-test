@@ -166,7 +166,6 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
-        mBus.register(this);
 
         //this fragment doesn't use the universal overlay, so make sure it's hidden
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
@@ -214,13 +213,6 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     private List<Date> getDatesForBookings()
     {
         return DateTimeUtils.getDateWithoutTimeList(new Date(), REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
-    }
-
-    @Override
-    public void onPause()
-    {
-        mBus.unregister(this);
-        super.onPause();
     }
 
     @Subscribe
