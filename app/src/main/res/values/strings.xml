@@ -345,6 +345,7 @@
     <string name="job_number_formatted">Job # %1$s</string>
     <string name="frequency">Frequency</string>
     <string name="completed_job">Completed Job</string>
+    <string name="eta_success">Thanks for updating your arrival time</string>
 
     <!-- Booking Transaction Summary-->
     <string name="job_details">Job Details</string>
