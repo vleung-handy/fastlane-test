@@ -33,10 +33,10 @@ public class NotificationMessage implements Serializable
     private boolean mAvailable;
 
     @SerializedName("read_status")
-    private boolean mReadStatus;
+    private boolean mIsRead;
 
     @SerializedName("interacted_status")
-    private boolean mInteractedStatus;
+    private boolean mIsInteracted;
 
     @SerializedName("actions")
     private List<NotificationAction> mActions;
@@ -79,12 +79,12 @@ public class NotificationMessage implements Serializable
 
     public boolean isRead()
     {
-        return mReadStatus;
+        return mIsRead;
     }
 
     public boolean isInteracted()
     {
-        return mInteractedStatus;
+        return mIsInteracted;
     }
 
     public List<NotificationAction> getActions()
