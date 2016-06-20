@@ -4,9 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
@@ -25,6 +22,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout;
 import com.handy.portal.library.util.DateTimeUtils;
@@ -45,14 +43,13 @@ import butterknife.OnClick;
 
 public class ProRequestedJobsFragment extends ActionBarFragment
 {
-    public static final String FRAGMENT_TAG = ProRequestedJobsFragment.class.getName();
     public static final int REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE = 14;//TODO: Make this a config param
 
-    @Bind(R.id.fragment_dialog_pro_requested_jobs_list_view)
+    @Bind(R.id.fragment_pro_requested_jobs_list_view)
     ProRequestedJobsExpandableListView mProRequestedJobsExpandableListView;
     @Bind(R.id.pro_requested_bookings_empty)
     SafeSwipeRefreshLayout mEmptyJobsSwipeRefreshLayout;
-    @Bind(R.id.fragment_dialog_pro_requested_jobs_list_swipe_refresh_layout)
+    @Bind(R.id.fragment_pro_requested_jobs_list_swipe_refresh_layout)
     SafeSwipeRefreshLayout mJobListSwipeRefreshLayout;
     @Bind(R.id.loading_overlay)
     RelativeLayout mLoadingOverlay;
@@ -70,26 +67,6 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     protected MainViewTab getTab()
     {
         return MainViewTab.REQUESTED_JOBS;
-    }
-
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        super.onCreateOptionsMenu(menu, inflater);
-        inflater.inflate(R.menu.menu_x_back, menu);
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
-            case R.id.action_exit:
-                onBackButtonPressed();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     private ExpandableListView.OnChildClickListener onProRequestedJobsListChildClickListener = new ExpandableListView.OnChildClickListener() {
@@ -114,11 +91,6 @@ public class ProRequestedJobsFragment extends ActionBarFragment
             requestProRequestedJobs(false);
         }
     };
-
-    public static ProRequestedJobsFragment newInstance()
-    {
-        return new ProRequestedJobsFragment();
-    }
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
@@ -195,6 +167,10 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     {
         super.onResume();
         mBus.register(this);
+
+        //this fragment doesn't use the universal overlay, so make sure it's hidden
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+
         setActionBar(R.string.your_requests, true);
         mJobListSwipeRefreshLayout.setRefreshing(false);
         if(!mProRequestedJobsExpandableListView.hasValidData())

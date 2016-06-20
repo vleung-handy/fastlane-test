@@ -10,13 +10,13 @@
     >
 
     <com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout
-        android:id="@+id/fragment_dialog_pro_requested_jobs_list_swipe_refresh_layout"
+        android:id="@+id/fragment_pro_requested_jobs_list_swipe_refresh_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         >
 
         <com.handy.portal.bookings.ui.element.ProRequestedJobsExpandableListView
-            android:id="@+id/fragment_dialog_pro_requested_jobs_list_view"
+            android:id="@+id/fragment_pro_requested_jobs_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
