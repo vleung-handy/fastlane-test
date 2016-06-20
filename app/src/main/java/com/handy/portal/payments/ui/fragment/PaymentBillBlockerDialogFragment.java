@@ -11,7 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.AppPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.ui.fragment.dialog.PopupDialogFragment;
@@ -57,7 +57,7 @@ public class PaymentBillBlockerDialogFragment extends PopupDialogFragment //TODO
             @Override
             public void onClick(View v)
             {
-                mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.REFRESH_TAB, true));
+                mBus.post(new NavigationEvent.NavigateToTab(AppPage.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.REFRESH_TAB, true));
                 PaymentBillBlockerDialogFragment.this.dismiss();
             }
         });

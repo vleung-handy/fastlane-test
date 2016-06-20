@@ -29,7 +29,7 @@ import com.handy.portal.bookings.ui.element.BookingsBannerView;
 import com.handy.portal.bookings.ui.fragment.dialog.EarlyAccessTrialDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.JobAccessUnlockedDialogFragment;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.AppPage;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
@@ -77,9 +77,9 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     private MenuItem mMenuProRequestedJobs;
 
     @Override
-    protected MainViewTab getTab()
+    protected AppPage getTab()
     {
-        return MainViewTab.AVAILABLE_JOBS;
+        return AppPage.AVAILABLE_JOBS;
     }
 
     @Override
@@ -181,7 +181,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     private void showProRequestedJobsInbox()
     {
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.REQUESTED_JOBS, null, TransitionStyle.SLIDE_UP, true));
+        bus.post(new NavigationEvent.NavigateToTab(AppPage.REQUESTED_JOBS, null, TransitionStyle.SLIDE_UP, true));
     }
 
     protected BookingListView getBookingListView()
@@ -231,7 +231,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         //don't ever need to support native help center again so ignore the config response
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, helpCenterRedirectPath);
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP_WEBVIEW, arguments, true));
+        bus.post(new NavigationEvent.NavigateToTab(AppPage.HELP_WEBVIEW, arguments, true));
     }
 
     @Override

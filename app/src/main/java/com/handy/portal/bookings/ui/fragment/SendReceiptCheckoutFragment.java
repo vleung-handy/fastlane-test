@@ -21,7 +21,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.bookings.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.AppPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -82,9 +82,9 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     private int mHiddenTasksCount;
 
     @Override
-    protected MainViewTab getTab()
+    protected AppPage getTab()
     {
-        return MainViewTab.SEND_RECEIPT_CHECKOUT;
+        return AppPage.SEND_RECEIPT_CHECKOUT;
     }
 
     @Override
@@ -191,7 +191,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
         mPrefsManager.setBookingInstructions(mBooking.getId(), null);
 
         //return to schedule page
-        returnToTab(MainViewTab.SCHEDULED_JOBS, mBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
+        returnToTab(AppPage.SCHEDULED_JOBS, mBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
 
         showToast(R.string.check_out_success, Toast.LENGTH_LONG);
     }
@@ -309,7 +309,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
         }
     }
 
-    private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)
+    private void returnToTab(AppPage targetTab, long epochTime, TransitionStyle transitionStyle)
     {
         //Return to available jobs with success
         Bundle arguments = new Bundle();

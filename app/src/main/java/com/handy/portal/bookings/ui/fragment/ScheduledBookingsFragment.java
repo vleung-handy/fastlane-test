@@ -14,7 +14,7 @@ import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
 import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.AppPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -44,9 +44,9 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     ViewGroup mFindMatchingJobsButtonContainer;
 
     @Override
-    protected MainViewTab getTab()
+    protected AppPage getTab()
     {
-        return MainViewTab.SCHEDULED_JOBS;
+        return AppPage.SCHEDULED_JOBS;
     }
 
     @Override
@@ -178,7 +178,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
         //Return to available jobs on that day
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS, arguments, transitionStyle));
+        bus.post(new NavigationEvent.NavigateToTab(AppPage.AVAILABLE_JOBS, arguments, transitionStyle));
     }
 
     @OnClick(R.id.find_matching_jobs_button)
@@ -190,7 +190,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
         arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
 
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.COMPLEMENTARY_JOBS, arguments, TransitionStyle.SLIDE_UP, true));
+        bus.post(new NavigationEvent.NavigateToTab(AppPage.COMPLEMENTARY_JOBS, arguments, TransitionStyle.SLIDE_UP, true));
     }
 
     @Override

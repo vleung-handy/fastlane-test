@@ -20,7 +20,7 @@ import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.AppPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
@@ -199,7 +199,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
                 args.putSerializable(BundleKeys.BOOKINGS, new ArrayList<>(event.getBookings()));
                 args.putParcelable(BundleKeys.MAP_CENTER,
                         new LatLng(address.getLatitude(), address.getLongitude()));
-                mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.NEARBY_JOBS, args, true));
+                mBus.post(new NavigationEvent.NavigateToTab(AppPage.NEARBY_JOBS, args, true));
             }
         }
         dismiss();

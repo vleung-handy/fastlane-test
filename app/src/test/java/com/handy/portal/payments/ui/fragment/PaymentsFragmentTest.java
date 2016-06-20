@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.TestUtils;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.AppPage;
 import com.handy.portal.core.TestBaseApplication;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -83,7 +83,7 @@ public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
         NavigationEvent.NavigateToTab event = TestUtils.getBusCaptorValue(captor, NavigationEvent.NavigateToTab.class);
 
         assertNotNull("NavigateToTab event was not post to bus", event);
-        assertEquals("Failed to navigate to help tab", MainViewTab.HELP_WEBVIEW, event.targetTab);
+        assertEquals("Failed to navigate to help tab", AppPage.HELP_WEBVIEW, event.targetTab);
     }
 
 }

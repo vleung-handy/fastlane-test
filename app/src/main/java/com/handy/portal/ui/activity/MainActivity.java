@@ -9,8 +9,7 @@ import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.constant.AppPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.util.FragmentUtils;
@@ -21,10 +20,7 @@ import com.handy.portal.location.LocationUtils;
 import com.handy.portal.location.scheduler.LocationScheduleService;
 import com.handy.portal.location.ui.LocationPermissionsBlockerDialogFragment;
 import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
-import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.notification.NotificationUtils;
 import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragment;
@@ -212,7 +208,7 @@ public class MainActivity extends BaseActivity
                 //Tab Navigation Manager should be handling this, but if we got this back too late force a move to blocking fragment
                 if (fragmentManager.findFragmentByTag(PaymentBlockingFragment.FRAGMENT_TAG) == null) //only show if there isn't an instance of the fragment showing already
                 {
-                    bus.post(new NavigationEvent.NavigateToTab(MainViewTab.PAYMENT_BLOCKING, new Bundle()));
+                    bus.post(new NavigationEvent.NavigateToTab(AppPage.PAYMENT_BLOCKING, new Bundle()));
                 }
             }
             else

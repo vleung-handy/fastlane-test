@@ -11,7 +11,7 @@ import android.view.View;
 
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.AppPage;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
@@ -152,5 +152,5 @@ public abstract class ActionBarFragment extends InjectedFragment
         }
     }
 
-    protected MainViewTab getTab() { return null; }
+    protected AppPage getTab() { return null; }
 }

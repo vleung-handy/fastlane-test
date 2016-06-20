@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.AppPage;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.webview.PortalWebViewFragment;
@@ -20,9 +20,9 @@ public class HelpWebViewFragment extends PortalWebViewFragment
     ConfigManager mConfigManager;
 
     @Override
-    protected MainViewTab getTab()
+    protected AppPage getTab()
     {
-        return MainViewTab.HELP_WEBVIEW;
+        return AppPage.HELP_WEBVIEW;
     }
 
     @Override

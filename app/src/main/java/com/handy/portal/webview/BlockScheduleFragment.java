@@ -1,14 +1,14 @@
 package com.handy.portal.webview;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.AppPage;
 
 public class BlockScheduleFragment extends PortalWebViewFragment
 {
     @Override
-    protected MainViewTab getTab()
+    protected AppPage getTab()
     {
-        return MainViewTab.BLOCK_PRO_WEBVIEW;
+        return AppPage.BLOCK_PRO_WEBVIEW;
     }
 
     @Override

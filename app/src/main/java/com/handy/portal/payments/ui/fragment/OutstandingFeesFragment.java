@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.AppPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.payments.PaymentEvent;
@@ -41,9 +41,9 @@ public class OutstandingFeesFragment extends ActionBarFragment
     private View fragmentView;
 
     @Override
-    protected MainViewTab getTab()
+    protected AppPage getTab()
     {
-        return MainViewTab.OUTSTANDING_FEES;
+        return AppPage.OUTSTANDING_FEES;
     }
 
     @Override
@@ -118,7 +118,7 @@ public class OutstandingFeesFragment extends ActionBarFragment
                         arguments.putString(BundleKeys.BOOKING_ID, payment.getBookingId());
                         arguments.putString(BundleKeys.BOOKING_TYPE, payment.getBookingType());
                         NavigationEvent.NavigateToTab event =
-                                new NavigationEvent.NavigateToTab(MainViewTab.JOB_PAYMENT_DETAILS, arguments, true);
+                                new NavigationEvent.NavigateToTab(AppPage.JOB_PAYMENT_DETAILS, arguments, true);
                         bus.post(event);
                     }
                 });

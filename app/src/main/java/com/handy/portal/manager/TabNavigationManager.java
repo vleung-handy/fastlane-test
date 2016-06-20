@@ -1,7 +1,7 @@
 package com.handy.portal.manager;
 
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.AppPage;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
@@ -48,17 +48,17 @@ public class TabNavigationManager
         //HACK : Magical hack to show a blocking fragment if the pro's payment info is out of date
         if (doesCachedProviderNeedPaymentInformation() &&
                 configBlockingForPayment() &&
-                (event.targetTab == MainViewTab.AVAILABLE_JOBS ||
-                        event.targetTab == MainViewTab.SCHEDULED_JOBS ||
-                        event.targetTab == MainViewTab.BLOCK_PRO_WEBVIEW))
+                (event.targetTab == AppPage.AVAILABLE_JOBS ||
+                        event.targetTab == AppPage.SCHEDULED_JOBS ||
+                        event.targetTab == AppPage.BLOCK_PRO_WEBVIEW))
         {
-            swapFragmentEvent.targetTab = MainViewTab.PAYMENT_BLOCKING;
+            swapFragmentEvent.targetTab = AppPage.PAYMENT_BLOCKING;
         }
 
         //HACK : Magical hack to turn block pros available jobs into the webview block jobs
-        else if (isCachedProviderBlockPro() && event.targetTab == MainViewTab.AVAILABLE_JOBS)
+        else if (isCachedProviderBlockPro() && event.targetTab == AppPage.AVAILABLE_JOBS)
         {
-            swapFragmentEvent.targetTab = MainViewTab.BLOCK_PRO_WEBVIEW;
+            swapFragmentEvent.targetTab = AppPage.BLOCK_PRO_WEBVIEW;
         }
 
         if (swapFragmentEvent.targetTab.getWebViewTarget() != null)
