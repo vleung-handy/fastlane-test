@@ -48,6 +48,10 @@ public class NotificationsListEntryView extends FrameLayout
         {
             mNotificationContainer.setBackgroundResource(R.color.handy_bg);
         }
+        else
+        {
+            mNotificationContainer.setBackgroundResource(R.drawable.button_white);
+        }
     }
 
     private void setNotificationText(final NotificationMessage notificationMessage)
