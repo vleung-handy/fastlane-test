@@ -5,6 +5,7 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.ui.element.dashboard.DashboardRegionTierView;
 
@@ -29,41 +30,48 @@ public class DashboardTiersPagerAdapter extends PagerAdapter
         List<ProviderEvaluation.Tier> currentTiers = currentIncentive.getTiers();
 
         DashboardRegionTierView view = new DashboardRegionTierView(mContext);
-        view.setDisplay(currentTiers.size(), currentIncentive.getJobsUntilNextTier(),
+        view.setDisplay(currentTiers, currentIncentive.getJobsUntilNextTier(),
                 currentIncentive.getRegionName(), currentIncentive.getServiceName(),
                 currentIncentive.getType());
 
-        for (int i = 0; i < currentTiers.size(); i++)
+        if (currentTiers != null)
         {
-            ProviderEvaluation.Tier currentTier = currentTiers.get(i);
+            for (int i = 0; i < currentTiers.size(); i++)
+            {
+                ProviderEvaluation.Tier currentTier = currentTiers.get(i);
 
-            if (currentIncentive.getType().equals(ProviderEvaluation.Incentive.ROLLING_TYPE))
-            {
-                view.addTier(currentIncentive.getType(),
-                        Double.toString(mProviderEvaluation.getRolling().getProRating()),
-                        currentTier.getName(), currentTier.getJobRequirementRangeMinimum(),
-                        currentTier.getJobRequirementRangeMaximum(),
-                        currentIncentive.getCurrencySymbol(),
-                        currentTier.getHourlyRateInCents(), false);
-            }
-            else if (currentIncentive.getCurrentTier() != 0 &&
-                    i + 1 == currentIncentive.getCurrentTier())
-            {
-                view.addTier(currentIncentive.getType(), null, currentTier.getName(),
-                        currentTier.getJobRequirementRangeMinimum(),
-                        currentTier.getJobRequirementRangeMaximum(),
-                        currentIncentive.getCurrencySymbol(),
-                        currentTier.getHourlyRateInCents(), true);
+                if (currentIncentive.getType().equals(ProviderEvaluation.Incentive.ROLLING_TYPE))
+                {
+                    view.addTier(currentIncentive.getType(),
+                            Double.toString(mProviderEvaluation.getRolling().getProRating()),
+                            currentTier.getName(), currentTier.getJobRequirementRangeMinimum(),
+                            currentTier.getJobRequirementRangeMaximum(),
+                            currentIncentive.getCurrencySymbol(),
+                            currentTier.getHourlyRateInCents(), false);
+                }
+                else if (currentIncentive.getCurrentTier() != 0 &&
+                        i + 1 == currentIncentive.getCurrentTier())
+                {
+                    view.addTier(currentIncentive.getType(), null, currentTier.getName(),
+                            currentTier.getJobRequirementRangeMinimum(),
+                            currentTier.getJobRequirementRangeMaximum(),
+                            currentIncentive.getCurrencySymbol(),
+                            currentTier.getHourlyRateInCents(), true);
 
+                }
+                else
+                {
+                    view.addTier(currentIncentive.getType(), null, currentTier.getName(),
+                            currentTier.getJobRequirementRangeMinimum(),
+                            currentTier.getJobRequirementRangeMaximum(),
+                            currentIncentive.getCurrencySymbol(),
+                            currentTier.getHourlyRateInCents(), false);
+                }
             }
-            else
-            {
-                view.addTier(currentIncentive.getType(), null, currentTier.getName(),
-                        currentTier.getJobRequirementRangeMinimum(),
-                        currentTier.getJobRequirementRangeMaximum(),
-                        currentIncentive.getCurrencySymbol(),
-                        currentTier.getHourlyRateInCents(), false);
-            }
+        }
+        else
+        {
+            Crashlytics.logException(new NullPointerException("Tiers is null"));
         }
 
         container.addView(view);
