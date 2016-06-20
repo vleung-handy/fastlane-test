@@ -1,4 +1,4 @@
-package com.handy.portal.bookings.ui.fragment.dialog;
+package com.handy.portal.bookings.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -6,7 +6,6 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
@@ -23,11 +22,12 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.library.ui.fragment.dialog.SlideUpDialogFragment;
 import com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.Utils;
+import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
 
@@ -38,18 +38,18 @@ import java.util.List;
 import javax.inject.Inject;
 
 import butterknife.Bind;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
+public class ProRequestedJobsFragment extends ActionBarFragment
 {
-    public static final String FRAGMENT_TAG = ProRequestedJobsDialogFragment.class.getName();
     public static final int REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE = 14;//TODO: Make this a config param
 
-    @Bind(R.id.fragment_dialog_pro_requested_jobs_list_view)
+    @Bind(R.id.fragment_pro_requested_jobs_list_view)
     ProRequestedJobsExpandableListView mProRequestedJobsExpandableListView;
     @Bind(R.id.pro_requested_bookings_empty)
     SafeSwipeRefreshLayout mEmptyJobsSwipeRefreshLayout;
-    @Bind(R.id.fragment_dialog_pro_requested_jobs_list_swipe_refresh_layout)
+    @Bind(R.id.fragment_pro_requested_jobs_list_swipe_refresh_layout)
     SafeSwipeRefreshLayout mJobListSwipeRefreshLayout;
     @Bind(R.id.loading_overlay)
     RelativeLayout mLoadingOverlay;
@@ -63,6 +63,12 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
 
     private View mFragmentView; //this saves the exact view state including the scroll position
 
+    @Override
+    protected MainViewTab getTab()
+    {
+        return MainViewTab.REQUESTED_JOBS;
+    }
+
     private ExpandableListView.OnChildClickListener onProRequestedJobsListChildClickListener = new ExpandableListView.OnChildClickListener() {
         @Override
         public boolean onChildClick(final ExpandableListView parent, final View v, final int groupPosition, final int childPosition, final long id)
@@ -72,7 +78,6 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
             if(booking != null)
             {
                 navigateToJobDetails(booking);
-                dismiss();
             }
             return true;
         }
@@ -86,11 +91,6 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
             requestProRequestedJobs(false);
         }
     };
-
-    public static ProRequestedJobsDialogFragment newInstance()
-    {
-        return new ProRequestedJobsDialogFragment();
-    }
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
@@ -137,12 +137,6 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
                 TransitionStyle.JOB_LIST_TO_DETAILS, true));
     }
 
-    @Override
-    protected View inflateContentView(final LayoutInflater inflater, final ViewGroup container)
-    {
-        return inflater.inflate(R.layout.fragment_dialog_pro_requested_jobs, container, false);
-    }
-
     @NonNull
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
@@ -150,13 +144,7 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
         //this saves the exact view state, including scroll position
         if(mFragmentView == null)
         {
-            mFragmentView = super.onCreateView(inflater, container, savedInstanceState);
-        }
-        else
-        {
-            //the view can't already have a parent, so remove it
-            ViewGroup view = (ViewGroup) mFragmentView.getParent();
-            view.removeView(mFragmentView);
+            mFragmentView = inflater.inflate(R.layout.fragment_pro_requested_jobs_inbox, container, false);
         }
         return mFragmentView;
     }
@@ -165,6 +153,7 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+        ButterKnife.bind(this, view);
 
         //initialize swipe refresh layout
         mJobListSwipeRefreshLayout.setOnRefreshListener(onProRequestedJobsListRefreshListener);
@@ -174,21 +163,14 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
     }
 
     @Override
-    public void onStart()
-    {
-        super.onStart();
-        Window window = getDialog().getWindow();
-
-        //force it to be full screen
-        window.setLayout(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-    }
-
-    @Override
     public void onResume()
     {
         super.onResume();
-        mBus.register(this);
 
+        //this fragment doesn't use the universal overlay, so make sure it's hidden
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+
+        setActionBar(R.string.your_requests, true);
         mJobListSwipeRefreshLayout.setRefreshing(false);
         if(!mProRequestedJobsExpandableListView.hasValidData())
         {
@@ -231,13 +213,6 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
     private List<Date> getDatesForBookings()
     {
         return DateTimeUtils.getDateWithoutTimeList(new Date(), REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
-    }
-
-    @Override
-    public void onPause()
-    {
-        mBus.unregister(this);
-        super.onPause();
     }
 
     @Subscribe
@@ -295,11 +270,5 @@ public class ProRequestedJobsDialogFragment extends SlideUpDialogFragment
     {
         showContentViewAndHideOthers(mLoadingOverlay);
         requestProRequestedJobs(false);
-    }
-
-    @OnClick(R.id.fragment_dialog_requested_jobs_dismiss_button)
-    public void onDismissButtonClicked()
-    {
-        dismiss();
     }
 }

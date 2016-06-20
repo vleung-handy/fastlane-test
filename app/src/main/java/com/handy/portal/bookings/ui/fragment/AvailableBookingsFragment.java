@@ -28,10 +28,10 @@ import com.handy.portal.bookings.ui.element.BookingsAccessLockedView;
 import com.handy.portal.bookings.ui.element.BookingsBannerView;
 import com.handy.portal.bookings.ui.fragment.dialog.EarlyAccessTrialDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.JobAccessUnlockedDialogFragment;
-import com.handy.portal.bookings.ui.fragment.dialog.ProRequestedJobsDialogFragment;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
@@ -132,7 +132,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     private void requestRequestedAvailableJobs()
     {
         //TODO: Days should be behind a config param, just using a static const until then
-        List<Date> datesForBookings = DateTimeUtils.getDateWithoutTimeList(new Date(), ProRequestedJobsDialogFragment.REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
+        List<Date> datesForBookings = DateTimeUtils.getDateWithoutTimeList(new Date(), ProRequestedJobsFragment.REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
         bus.post(new BookingEvent.RequestProRequestedJobs(datesForBookings, true));
     }
 
@@ -179,13 +179,9 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         initProRequestedJobsMenuItem();
     }
 
-    private void launchProRequestedJobsDialogFragment()
+    private void showProRequestedJobsInbox()
     {
-        if (getChildFragmentManager().findFragmentByTag(ProRequestedJobsDialogFragment.FRAGMENT_TAG) == null)
-        {
-            ProRequestedJobsDialogFragment fragment = ProRequestedJobsDialogFragment.newInstance();
-            FragmentUtils.safeLaunchDialogFragment(fragment, this, ProRequestedJobsDialogFragment.FRAGMENT_TAG);
-        }
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.REQUESTED_JOBS, null, TransitionStyle.SLIDE_UP, true));
     }
 
     protected BookingListView getBookingListView()
@@ -303,7 +299,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
                     @Override
                     public void onClick(final View v)
                     {
-                        launchProRequestedJobsDialogFragment();
+                        showProRequestedJobsInbox();
                     }
                 });
             }
