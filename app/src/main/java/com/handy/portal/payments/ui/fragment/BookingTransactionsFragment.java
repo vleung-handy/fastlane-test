@@ -13,7 +13,7 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.AppPage;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.CompletedJobsLog;
@@ -87,7 +87,7 @@ public class BookingTransactionsFragment extends ActionBarFragment
         {
             Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.TARGET_URL, url);
-            bus.post(new NavigationEvent.NavigateToTab(AppPage.WEB_PAGE, arguments, true));
+            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.WEB_PAGE, arguments, true));
             bus.post(new LogEvent.AddLogEvent(new CompletedJobsLog.HelpClicked(mBooking)));
         }
     };

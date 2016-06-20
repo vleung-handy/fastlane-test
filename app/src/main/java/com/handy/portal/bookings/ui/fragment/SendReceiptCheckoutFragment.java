@@ -21,7 +21,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.bookings.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.AppPage;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -82,9 +82,9 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     private int mHiddenTasksCount;
 
     @Override
-    protected AppPage getTab()
+    protected MainViewPage getAppPage()
     {
-        return AppPage.SEND_RECEIPT_CHECKOUT;
+        return MainViewPage.SEND_RECEIPT_CHECKOUT;
     }
 
     @Override
@@ -191,7 +191,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
         mPrefsManager.setBookingInstructions(mBooking.getId(), null);
 
         //return to schedule page
-        returnToTab(AppPage.SCHEDULED_JOBS, mBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
+        returnToPage(MainViewPage.SCHEDULED_JOBS, mBooking.getStartDate().getTime(), TransitionStyle.REFRESH_PAGE);
 
         showToast(R.string.check_out_success, Toast.LENGTH_LONG);
     }
@@ -309,13 +309,13 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
         }
     }
 
-    private void returnToTab(AppPage targetTab, long epochTime, TransitionStyle transitionStyle)
+    private void returnToPage(MainViewPage targetPage, long epochTime, TransitionStyle transitionStyle)
     {
         //Return to available jobs with success
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
         //Return to available jobs on that day
-        bus.post(new NavigationEvent.NavigateToTab(targetTab, arguments, transitionStyle));
+        bus.post(new NavigationEvent.NavigateToPage(targetPage, arguments, transitionStyle));
     }
 
     private LocationData getLocationData()

@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.AppPage;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -63,9 +63,9 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
     private int mNumberOfGraphsAnimated = 0;
 
     @Override
-    protected AppPage getTab()
+    protected MainViewPage getAppPage()
     {
-        return AppPage.DASHBOARD;
+        return MainViewPage.DASHBOARD;
     }
 
     @Nullable
@@ -215,6 +215,6 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
 
         bus.post(new LogEvent.AddLogEvent(new PerformanceLog.FeedbackSelected()));
-        bus.post(new NavigationEvent.NavigateToTab(AppPage.DASHBOARD_FEEDBACK, arguments, true));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.DASHBOARD_FEEDBACK, arguments, true));
     }
 }

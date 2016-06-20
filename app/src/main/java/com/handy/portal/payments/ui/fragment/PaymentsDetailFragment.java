@@ -10,7 +10,7 @@ import android.widget.ExpandableListView;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.AppPage;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
@@ -35,9 +35,9 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
     private View fragmentView;
 
     @Override
-    protected AppPage getTab()
+    protected MainViewPage getAppPage()
     {
-        return AppPage.PAYMENTS;
+        return MainViewPage.PAYMENTS;
     }
 
     @Override
@@ -110,8 +110,8 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
         Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.BOOKING_ID, bookingId);
         arguments.putString(BundleKeys.BOOKING_TYPE, bookingType);
-        NavigationEvent.NavigateToTab event =
-                new NavigationEvent.NavigateToTab(AppPage.JOB_PAYMENT_DETAILS, arguments, true);
+        NavigationEvent.NavigateToPage event =
+                new NavigationEvent.NavigateToPage(MainViewPage.JOB_PAYMENT_DETAILS, arguments, true);
         bus.post(event);
     }
 }

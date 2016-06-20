@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.AppPage;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -71,9 +71,9 @@ public class AccountSettingsFragment extends ActionBarFragment
     private View fragmentView;
 
     @Override
-    protected AppPage getTab()
+    protected MainViewPage getAppPage()
     {
-        return AppPage.ACCOUNT_SETTINGS;
+        return MainViewPage.ACCOUNT_SETTINGS;
     }
 
     @Nullable
@@ -104,13 +104,13 @@ public class AccountSettingsFragment extends ActionBarFragment
     public void switchToProfile()
     {
         bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileSelected()));
-        mBus.post(new NavigationEvent.NavigateToTab(AppPage.PROFILE_UPDATE, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
+        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_UPDATE, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
     @OnClick(R.id.edit_payment_option)
     public void switchToPayments()
     {
-        mBus.post(new NavigationEvent.NavigateToTab(AppPage.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
+        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
     @OnClick(R.id.order_resupply_layout)
@@ -118,8 +118,8 @@ public class AccountSettingsFragment extends ActionBarFragment
     {
         mBus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitSelected()));
 
-        mBus.post(new NavigationEvent.NavigateToTab(
-                AppPage.REQUEST_SUPPLIES, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
+        mBus.post(new NavigationEvent.NavigateToPage(
+                MainViewPage.REQUEST_SUPPLIES, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
 
@@ -230,7 +230,7 @@ public class AccountSettingsFragment extends ActionBarFragment
     public void onSendIncomeVerificationSuccess(HandyEvent.ReceiveSendIncomeVerificationSuccess event)
     {
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        mBus.post(new NavigationEvent.NavigateToTab(AppPage.ACCOUNT_SETTINGS, null, TransitionStyle.SEND_VERIFICAITON_SUCCESS));
+        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.ACCOUNT_SETTINGS, null, TransitionStyle.SEND_VERIFICAITON_SUCCESS));
     }
 
     @Subscribe

@@ -1,7 +1,7 @@
 package com.handy.portal.manager;
 
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.AppPage;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
@@ -11,7 +11,7 @@ import com.squareup.otto.Subscribe;
 
 import javax.inject.Inject;
 
-public class TabNavigationManager
+public class PageNavigationManager
 {
     private final Bus mBus;
     private final ProviderManager mProviderManager;
@@ -20,11 +20,11 @@ public class TabNavigationManager
     private final ConfigManager mConfigManager;
 
     @Inject
-    public TabNavigationManager(final Bus bus,
-                                final ProviderManager providerManager,
-                                final WebUrlManager webUrlManager,
-                                final PaymentsManager paymentsManager,
-                                final ConfigManager configManager
+    public PageNavigationManager(final Bus bus,
+                                 final ProviderManager providerManager,
+                                 final WebUrlManager webUrlManager,
+                                 final PaymentsManager paymentsManager,
+                                 final ConfigManager configManager
     )
     {
         mBus = bus;
@@ -37,33 +37,33 @@ public class TabNavigationManager
 
 
     @Subscribe
-    public void onNavigateToTabEvent(NavigationEvent.NavigateToTab event)
+    public void onNavigateToPageEvent(NavigationEvent.NavigateToPage event)
     {
-        mBus.post(new LogEvent.AddLogEvent(new AppLog.Navigation(event.targetTab.name().toLowerCase())));
+        mBus.post(new LogEvent.AddLogEvent(new AppLog.Navigation(event.targetPage.name().toLowerCase())));
         //Ordering is important for these checks, they have different priorities
 
         NavigationEvent.SwapFragmentEvent swapFragmentEvent = new NavigationEvent.SwapFragmentEvent(
-                event.targetTab, event.arguments, event.transitionStyle, event.addToBackStack);
+                event.targetPage, event.arguments, event.transitionStyle, event.addToBackStack);
 
         //HACK : Magical hack to show a blocking fragment if the pro's payment info is out of date
         if (doesCachedProviderNeedPaymentInformation() &&
                 configBlockingForPayment() &&
-                (event.targetTab == AppPage.AVAILABLE_JOBS ||
-                        event.targetTab == AppPage.SCHEDULED_JOBS ||
-                        event.targetTab == AppPage.BLOCK_PRO_WEBVIEW))
+                (event.targetPage == MainViewPage.AVAILABLE_JOBS ||
+                        event.targetPage == MainViewPage.SCHEDULED_JOBS ||
+                        event.targetPage == MainViewPage.BLOCK_PRO_WEBVIEW))
         {
-            swapFragmentEvent.targetTab = AppPage.PAYMENT_BLOCKING;
+            swapFragmentEvent.targetPage = MainViewPage.PAYMENT_BLOCKING;
         }
 
         //HACK : Magical hack to turn block pros available jobs into the webview block jobs
-        else if (isCachedProviderBlockPro() && event.targetTab == AppPage.AVAILABLE_JOBS)
+        else if (isCachedProviderBlockPro() && event.targetPage == MainViewPage.AVAILABLE_JOBS)
         {
-            swapFragmentEvent.targetTab = AppPage.BLOCK_PRO_WEBVIEW;
+            swapFragmentEvent.targetPage = MainViewPage.BLOCK_PRO_WEBVIEW;
         }
 
-        if (swapFragmentEvent.targetTab.getWebViewTarget() != null)
+        if (swapFragmentEvent.targetPage.getWebViewTarget() != null)
         {
-            String constructedUrl = mWebUrlManager.constructUrlForTargetTab(swapFragmentEvent.targetTab);
+            String constructedUrl = mWebUrlManager.constructUrlForTargetPage(swapFragmentEvent.targetPage);
             swapFragmentEvent.arguments.putString(BundleKeys.TARGET_URL, constructedUrl);
         }
 

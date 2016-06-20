@@ -19,7 +19,7 @@ import com.handy.portal.bookings.ui.element.BookingElementMediator;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.AppPage;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -67,9 +67,9 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
     private static final String SOURCE_COMPLEMENTARY_JOBS_LIST = "matching_jobs_list";
 
     @Override
-    protected AppPage getTab()
+    protected MainViewPage getAppPage()
     {
-        return AppPage.SCHEDULED_JOBS;
+        return MainViewPage.SCHEDULED_JOBS;
     }
 
     @Override
@@ -117,7 +117,7 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
         else
         {
             showToast(R.string.error_fetching_matching_jobs);
-            bus.post(new NavigationEvent.NavigateToTab(AppPage.SCHEDULED_JOBS));
+            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SCHEDULED_JOBS));
         }
 
         loadingOverlay.setVisibility(View.VISIBLE);
@@ -147,7 +147,7 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
     {
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, claimedBooking.getStartDate().getTime());
-        bus.post(new NavigationEvent.NavigateToTab(AppPage.AVAILABLE_JOBS, arguments));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.AVAILABLE_JOBS, arguments));
     }
 
     @OnClick(R.id.try_again_button)
@@ -299,7 +299,7 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
             arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
             arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
             arguments.putString(BundleKeys.BOOKING_SOURCE, SOURCE_COMPLEMENTARY_JOBS_LIST);
-            bus.post(new NavigationEvent.NavigateToTab(AppPage.JOB_DETAILS, arguments, true));
+            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.JOB_DETAILS, arguments, true));
         }
     }
 }

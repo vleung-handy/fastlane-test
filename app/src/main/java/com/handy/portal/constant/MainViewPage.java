@@ -38,7 +38,13 @@ import com.handy.portal.webview.PortalWebViewFragment;
 
 import java.io.Serializable;
 
-public enum MainViewTab implements Serializable
+/**
+ * a content page/fragment of this application that will be displayed inside
+ * the main content view of MainActivityFragment
+ *
+ * easily deeplink-able - see DeeplinkMapper
+ */
+public enum MainViewPage implements Serializable
 {
     AVAILABLE_JOBS(AvailableBookingsFragment.class),
     SCHEDULED_JOBS(ScheduledBookingsFragment.class),
@@ -87,12 +93,12 @@ public enum MainViewTab implements Serializable
     @WebUrlManager.TargetPage
     String mWebViewTarget;
 
-    MainViewTab(Class classType)
+    MainViewPage(Class classType)
     {
         mClassType = classType;
     }
 
-    MainViewTab(Class classType, @WebUrlManager.TargetPage String target)
+    MainViewPage(Class classType, @WebUrlManager.TargetPage String target)
     {
         mClassType = classType;
         mWebViewTarget = target;

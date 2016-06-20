@@ -25,7 +25,7 @@ public class MainActivityFragmentNavigationHelper
 
     private final Bus bus;
 
-    private NavigationEvent.NavigateToTab storedEvent;
+    private NavigationEvent.NavigateToPage storedEvent;
 
     @Inject
     public MainActivityFragmentNavigationHelper(final Bus bus)
@@ -35,7 +35,7 @@ public class MainActivityFragmentNavigationHelper
     }
 
     @Subscribe
-    public void onNavigateToTabEvent(NavigationEvent.NavigateToTab event)
+    public void onNavigateToPageEvent(NavigationEvent.NavigateToPage event)
     {
         if(!this.mainActivityFragmentActive)
         {
@@ -43,7 +43,7 @@ public class MainActivityFragmentNavigationHelper
         }
     }
 
-    private void setStoredEvent(NavigationEvent.NavigateToTab storedEvent)
+    private void setStoredEvent(NavigationEvent.NavigateToPage storedEvent)
     {
         this.storedEvent = storedEvent;
     }

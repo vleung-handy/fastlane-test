@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
-import com.handy.portal.constant.AppPage;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.event.StripeEvent;
@@ -85,9 +85,9 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     }
 
     @Override
-    protected AppPage getTab()
+    protected MainViewPage getAppPage()
     {
-        return AppPage.PAYMENTS;
+        return MainViewPage.PAYMENTS;
     }
 
     @Override

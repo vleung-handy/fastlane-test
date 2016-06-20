@@ -4,36 +4,36 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.common.collect.ImmutableMap;
-import com.handy.portal.constant.AppPage;
+import com.handy.portal.constant.MainViewPage;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class DeeplinkMapper
 {
-    private static final ImmutableMap<String, AppPage> DEEPLINK_MAP;
+    private static final ImmutableMap<String, MainViewPage> DEEPLINK_MAP;
 
     static
     {
-        final Map<String, AppPage> deeplinkMap = new HashMap<>();
+        final Map<String, MainViewPage> deeplinkMap = new HashMap<>();
 
-        deeplinkMap.put("booking_details", AppPage.JOB_DETAILS);
-        deeplinkMap.put("available_jobs", AppPage.AVAILABLE_JOBS);
-        deeplinkMap.put("scheduled_jobs", AppPage.SCHEDULED_JOBS);
-        deeplinkMap.put("requested_jobs", AppPage.REQUESTED_JOBS);
+        deeplinkMap.put("booking_details", MainViewPage.JOB_DETAILS);
+        deeplinkMap.put("available_jobs", MainViewPage.AVAILABLE_JOBS);
+        deeplinkMap.put("scheduled_jobs", MainViewPage.SCHEDULED_JOBS);
+        deeplinkMap.put("requested_jobs", MainViewPage.REQUESTED_JOBS);
 
-        deeplinkMap.put("payments", AppPage.PAYMENTS);
+        deeplinkMap.put("payments", MainViewPage.PAYMENTS);
 
-        deeplinkMap.put("ratings_and_feedback", AppPage.DASHBOARD);
-        deeplinkMap.put("ratings_and_feedback/videos", AppPage.DASHBOARD_VIDEO_LIBRARY);
-        deeplinkMap.put("ratings_and_feedback/feedback", AppPage.DASHBOARD_FEEDBACK);
+        deeplinkMap.put("ratings_and_feedback", MainViewPage.DASHBOARD);
+        deeplinkMap.put("ratings_and_feedback/videos", MainViewPage.DASHBOARD_VIDEO_LIBRARY);
+        deeplinkMap.put("ratings_and_feedback/feedback", MainViewPage.DASHBOARD_FEEDBACK);
 
-        deeplinkMap.put("refer", AppPage.REFER_A_FRIEND);
+        deeplinkMap.put("refer", MainViewPage.REFER_A_FRIEND);
 
-        deeplinkMap.put("account_settings", AppPage.ACCOUNT_SETTINGS);
-        deeplinkMap.put("account_settings/edit_profile", AppPage.PROFILE_UPDATE);
-        deeplinkMap.put("account_settings/edit_payment_method", AppPage.SELECT_PAYMENT_METHOD);
-        deeplinkMap.put("account_settings/request_supplies", AppPage.REQUEST_SUPPLIES);
+        deeplinkMap.put("account_settings", MainViewPage.ACCOUNT_SETTINGS);
+        deeplinkMap.put("account_settings/edit_profile", MainViewPage.PROFILE_UPDATE);
+        deeplinkMap.put("account_settings/edit_payment_method", MainViewPage.SELECT_PAYMENT_METHOD);
+        deeplinkMap.put("account_settings/request_supplies", MainViewPage.REQUEST_SUPPLIES);
 
         // TODO: Add more
 
@@ -41,7 +41,7 @@ public class DeeplinkMapper
     }
 
     @Nullable
-    public static AppPage getTabForDeeplink(@NonNull final String deeplink)
+    public static MainViewPage getPageForDeeplink(@NonNull final String deeplink)
     {
         return DEEPLINK_MAP.get(deeplink);
     }

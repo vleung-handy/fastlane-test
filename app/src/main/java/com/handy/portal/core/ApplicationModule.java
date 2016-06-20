@@ -28,7 +28,7 @@ import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.StripeManager;
 import com.handy.portal.manager.SystemManager;
-import com.handy.portal.manager.TabNavigationManager;
+import com.handy.portal.manager.PageNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.UserInterfaceUpdateManager;
@@ -431,14 +431,14 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final TabNavigationManager provideTabNavigationManager(final Bus bus,
-                                                           final ProviderManager providerManager,
-                                                           final WebUrlManager webUrlManager,
-                                                           final PaymentsManager paymentsManager,
-                                                           final ConfigManager configManager
+    final PageNavigationManager provideTabNavigationManager(final Bus bus,
+                                                            final ProviderManager providerManager,
+                                                            final WebUrlManager webUrlManager,
+                                                            final PaymentsManager paymentsManager,
+                                                            final ConfigManager configManager
     )
     {
-        return new TabNavigationManager(bus, providerManager, webUrlManager, paymentsManager, configManager);
+        return new PageNavigationManager(bus, providerManager, webUrlManager, paymentsManager, configManager);
     }
 
     @Provides

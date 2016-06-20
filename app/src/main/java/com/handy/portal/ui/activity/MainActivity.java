@@ -9,7 +9,7 @@ import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
-import com.handy.portal.constant.AppPage;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.util.FragmentUtils;
@@ -205,10 +205,10 @@ public class MainActivity extends BaseActivity
             if (configManager.getConfigurationResponse() != null &&
                     configManager.getConfigurationResponse().shouldBlockClaimsIfMissingAccountInformation())
             {
-                //Tab Navigation Manager should be handling this, but if we got this back too late force a move to blocking fragment
+                //Page Navigation Manager should be handling this, but if we got this back too late force a move to blocking fragment
                 if (fragmentManager.findFragmentByTag(PaymentBlockingFragment.FRAGMENT_TAG) == null) //only show if there isn't an instance of the fragment showing already
                 {
-                    bus.post(new NavigationEvent.NavigateToTab(AppPage.PAYMENT_BLOCKING, new Bundle()));
+                    bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PAYMENT_BLOCKING, new Bundle()));
                 }
             }
             else

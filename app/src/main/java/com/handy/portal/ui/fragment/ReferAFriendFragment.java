@@ -11,7 +11,7 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.AppPage;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.library.util.Utils;
@@ -60,9 +60,9 @@ public class ReferAFriendFragment extends ActionBarFragment
     private ReferralInfo mReferralInfo;
 
     @Override
-    protected AppPage getTab()
+    protected MainViewPage getAppPage()
     {
-        return AppPage.REFER_A_FRIEND;
+        return MainViewPage.REFER_A_FRIEND;
     }
 
     @Override

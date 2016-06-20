@@ -19,7 +19,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.element.ProRequestedJobsExpandableListView;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.AppPage;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
@@ -64,9 +64,9 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     private View mFragmentView; //this saves the exact view state including the scroll position
 
     @Override
-    protected AppPage getTab()
+    protected MainViewPage getAppPage()
     {
-        return AppPage.REQUESTED_JOBS;
+        return MainViewPage.REQUESTED_JOBS;
     }
 
     private ExpandableListView.OnChildClickListener onProRequestedJobsListChildClickListener = new ExpandableListView.OnChildClickListener() {
@@ -133,7 +133,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
         arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
         arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
-        mBus.post(new NavigationEvent.NavigateToTab(AppPage.JOB_DETAILS, arguments,
+        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.JOB_DETAILS, arguments,
                 TransitionStyle.JOB_LIST_TO_DETAILS, true));
     }
 

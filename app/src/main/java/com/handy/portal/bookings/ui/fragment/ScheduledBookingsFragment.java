@@ -14,7 +14,7 @@ import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
 import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.AppPage;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -44,9 +44,9 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     ViewGroup mFindMatchingJobsButtonContainer;
 
     @Override
-    protected AppPage getTab()
+    protected MainViewPage getAppPage()
     {
-        return AppPage.SCHEDULED_JOBS;
+        return MainViewPage.SCHEDULED_JOBS;
     }
 
     @Override
@@ -172,13 +172,13 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     public void onFindJobsButtonClicked()
     {
         bus.post(new LogEvent.AddLogEvent((new ScheduledJobsLog.FindJobsSelected(mSelectedDay))));
-        TransitionStyle transitionStyle = TransitionStyle.TAB_TO_TAB;
+        TransitionStyle transitionStyle = TransitionStyle.PAGE_TO_PAGE;
         long epochTime = mSelectedDay.getTime();
         //navigate back to available bookings for this day
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
         //Return to available jobs on that day
-        bus.post(new NavigationEvent.NavigateToTab(AppPage.AVAILABLE_JOBS, arguments, transitionStyle));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.AVAILABLE_JOBS, arguments, transitionStyle));
     }
 
     @OnClick(R.id.find_matching_jobs_button)
@@ -190,7 +190,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
         arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
 
-        bus.post(new NavigationEvent.NavigateToTab(AppPage.COMPLEMENTARY_JOBS, arguments, TransitionStyle.SLIDE_UP, true));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.COMPLEMENTARY_JOBS, arguments, TransitionStyle.SLIDE_UP, true));
     }
 
     @Override

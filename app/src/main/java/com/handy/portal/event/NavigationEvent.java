@@ -4,47 +4,47 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
-import com.handy.portal.constant.AppPage;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
 
 public abstract class NavigationEvent extends HandyEvent
 {
-    public static class NavigateToTab extends NavigationEvent
+    public static class NavigateToPage extends NavigationEvent
     {
-        public final AppPage targetTab;
+        public final MainViewPage targetPage;
         public final boolean addToBackStack;
         @NonNull
         public final Bundle arguments;
         public final TransitionStyle transitionStyle;
 
-        public NavigateToTab(AppPage targetTab)
+        public NavigateToPage(MainViewPage targetPage)
         {
-            this(targetTab, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, false);
+            this(targetPage, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, false);
         }
 
-        public NavigateToTab(AppPage targetTab, boolean addToBackStack)
+        public NavigateToPage(MainViewPage targetPage, boolean addToBackStack)
         {
-            this(targetTab, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, addToBackStack);
+            this(targetPage, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, addToBackStack);
         }
 
-        public NavigateToTab(AppPage targetTab, Bundle arguments)
+        public NavigateToPage(MainViewPage targetPage, Bundle arguments)
         {
-            this(targetTab, arguments, TransitionStyle.NATIVE_TO_NATIVE, false);
+            this(targetPage, arguments, TransitionStyle.NATIVE_TO_NATIVE, false);
         }
 
-        public NavigateToTab(AppPage targetTab, Bundle arguments, boolean addToBackStack)
+        public NavigateToPage(MainViewPage targetPage, Bundle arguments, boolean addToBackStack)
         {
-            this(targetTab, arguments, TransitionStyle.NATIVE_TO_NATIVE, addToBackStack);
+            this(targetPage, arguments, TransitionStyle.NATIVE_TO_NATIVE, addToBackStack);
         }
 
-        public NavigateToTab(AppPage targetTab, Bundle arguments, TransitionStyle transitionStyle)
+        public NavigateToPage(MainViewPage targetPage, Bundle arguments, TransitionStyle transitionStyle)
         {
-            this(targetTab, arguments, transitionStyle, false);
+            this(targetPage, arguments, transitionStyle, false);
         }
 
-        public NavigateToTab(AppPage targetTab, @Nullable Bundle arguments, TransitionStyle transitionStyle, boolean addToBackStack)
+        public NavigateToPage(MainViewPage targetPage, @Nullable Bundle arguments, TransitionStyle transitionStyle, boolean addToBackStack)
         {
-            this.targetTab = targetTab;
+            this.targetPage = targetPage;
             this.addToBackStack = addToBackStack;
             this.arguments = (arguments != null) ? arguments : new Bundle();
             this.transitionStyle = transitionStyle;
@@ -54,15 +54,15 @@ public abstract class NavigationEvent extends HandyEvent
 
     public static class SwapFragmentEvent extends NavigationEvent
     {
-        public AppPage targetTab;
+        public MainViewPage targetPage;
         public Bundle arguments;
         public TransitionStyle transitionStyle;
         public boolean addToBackStack;
 
-        public SwapFragmentEvent(final AppPage targetTab, final Bundle arguments,
+        public SwapFragmentEvent(final MainViewPage targetPage, final Bundle arguments,
                                  final TransitionStyle transitionStyle, final boolean addToBackStack)
         {
-            this.targetTab = targetTab;
+            this.targetPage = targetPage;
             this.addToBackStack = addToBackStack;
             this.arguments = arguments;
             this.transitionStyle = transitionStyle;
@@ -97,9 +97,9 @@ public abstract class NavigationEvent extends HandyEvent
     //Highlight the navigation tab
     public static class SelectTab extends NavigationEvent
     {
-        public final AppPage tab;
+        public final MainViewPage tab;
 
-        public SelectTab(@Nullable final AppPage tab) { this.tab = tab; }
+        public SelectTab(@Nullable final MainViewPage tab) { this.tab = tab; }
     }
 
 }
