@@ -26,7 +26,7 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Collections;
 import java.util.Date;
@@ -136,10 +136,18 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
     {
         super.onResume();
         setActionBar(R.string.matching_jobs, false);
+        bus.register(this);
         if (!MainActivityFragment.clearingBackStack)
         {
             requestComplementaryBookings();
         }
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @OnClick(R.id.all_jobs_button)

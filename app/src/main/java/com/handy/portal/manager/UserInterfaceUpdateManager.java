@@ -1,9 +1,9 @@
 package com.handy.portal.manager;
 
 import com.handy.portal.event.HandyEvent;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Produce;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * manager for keeping track of UI update request events
@@ -11,23 +11,13 @@ import com.squareup.otto.Subscribe;
  */
 public class UserInterfaceUpdateManager
 {
-    private final Bus mBus;
+    private final EventBus mBus;
     private Boolean mLoadingOverlayVisibility;
 
-    public UserInterfaceUpdateManager(final Bus bus)
+    public UserInterfaceUpdateManager(final EventBus bus)
     {
         mBus = bus;
         mBus.register(this);
-    }
-
-    @Produce
-    public HandyEvent.SetLoadingOverlayVisibility produceSetLoadingOverlayVisibilityEvent()
-    {
-        if (mLoadingOverlayVisibility != null)
-        {
-            return new HandyEvent.SetLoadingOverlayVisibility(mLoadingOverlayVisibility);
-        }
-        return null;
     }
 
     @Subscribe

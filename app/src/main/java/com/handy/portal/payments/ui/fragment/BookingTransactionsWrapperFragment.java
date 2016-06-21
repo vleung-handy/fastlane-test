@@ -12,11 +12,12 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.Transaction;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.library.util.TextUtils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -62,7 +63,15 @@ public class BookingTransactionsWrapperFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
         requestBookingPaymentDetails();
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @OnClick(R.id.try_again_button)

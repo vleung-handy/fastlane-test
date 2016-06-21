@@ -36,7 +36,9 @@ import com.handy.portal.model.LocationData;
 import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
@@ -50,6 +52,8 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
 {
     @Inject
     PrefsManager mPrefsManager;
+    @Inject
+    EventBus mBus;
 
     @Bind(R.id.rate_booking_amount_text)
     TextView mAmountText;
@@ -130,6 +134,20 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         }
 
         mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingShown()));
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        mBus.register(this);
+    }
+
+    @Override
+    public void onPause()
+    {
+        mBus.unregister(this);
+        super.onPause();
     }
 
     @OnClick(R.id.close_button)

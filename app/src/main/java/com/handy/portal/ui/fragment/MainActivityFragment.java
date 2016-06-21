@@ -44,7 +44,8 @@ import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.util.DeeplinkMapper;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -154,6 +155,7 @@ public class MainActivityFragment extends InjectedFragment
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
 
         bus.post(new NotificationEvent.RequestUnreadCount());
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
@@ -248,9 +250,10 @@ public class MainActivityFragment extends InjectedFragment
     @Override
     public void onPause()
     {
-        super.onPause();
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(false));
         mDrawerLayout.removeDrawerListener(mActionBarDrawerToggle);
+        bus.unregister(this);
+        super.onPause();
     }
 
 //Event Listeners

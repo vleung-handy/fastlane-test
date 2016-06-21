@@ -8,7 +8,8 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
-import com.squareup.otto.Bus;
+
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
@@ -19,7 +20,7 @@ public class ConfirmBookingCancelCancellationPolicyDialogFragment
             ConfirmBookingCancelCancellationPolicyDialogFragment.class.getSimpleName();
 
     @Inject
-    Bus mBus;
+    EventBus mBus;
 
     public static ConfirmBookingCancelCancellationPolicyDialogFragment newInstance(
             final Booking booking

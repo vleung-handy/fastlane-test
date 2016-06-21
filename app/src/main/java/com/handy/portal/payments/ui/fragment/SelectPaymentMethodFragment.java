@@ -15,7 +15,7 @@ import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.PaymentFlow;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.squareup.otto.Subscribe;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -80,9 +80,19 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     {
         super.onResume();
         setBackButtonEnabled(true);
+
+        bus.register(this);
+
         paymentMethodContainer.setVisibility(View.GONE);
         bus.post(new PaymentEvent.RequestPaymentFlow());
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @Override

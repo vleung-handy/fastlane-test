@@ -30,8 +30,9 @@ import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.onboarding.model.supplies.SuppliesInfo;
 import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
 import com.handy.portal.payments.PaymentEvent;
-import com.squareup.otto.Subscribe;
 import com.stripe.android.model.Card;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Map;
 
@@ -145,6 +146,8 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
     public void onResume()
     {
         super.onResume();
+        bus.register(this)
+        ;
         if (mAddressFieldDefinitions == null)
         {
             bus.post(new RegionDefinitionEvent.RequestFormDefinitions(Country.US, getActivity()));
@@ -159,6 +162,13 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
             showLoadingOverlay();
             bus.post(new ProfileEvent.RequestProviderProfile(true));
         }
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @Subscribe

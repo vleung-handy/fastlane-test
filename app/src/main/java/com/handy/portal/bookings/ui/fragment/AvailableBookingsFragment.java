@@ -42,7 +42,8 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Date;
 import java.util.List;
@@ -110,6 +111,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     public void onResume()
     {
+        bus.register(this);
         super.onResume();
         setActionBar(R.string.available_jobs, false);
 
@@ -127,6 +129,13 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 requestRequestedAvailableJobs();
             }
         }
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     private void requestRequestedAvailableJobs()

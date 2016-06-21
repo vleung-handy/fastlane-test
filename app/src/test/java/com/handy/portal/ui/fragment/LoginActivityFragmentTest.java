@@ -18,7 +18,7 @@ import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.library.ui.widget.InputTextField;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import org.junit.Before;
 import org.junit.Ignore;
@@ -46,7 +46,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     private static final String VALID_PHONE_NUMBER = "1231231234";
 
     @Mock
-    private Bus bus;
+    private EventBus bus;
     @Mock
     private BuildConfigWrapper buildConfigWrapper;
     @Mock

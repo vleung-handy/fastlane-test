@@ -18,10 +18,11 @@ import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
-import com.handy.portal.library.util.DateTimeUtils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Date;
 import java.util.List;
@@ -52,8 +53,16 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     public void onResume()
     {
+        bus.register(this);
         super.onResume();
         setActionBar(R.string.scheduled_jobs, false);
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     protected LinearLayout getDatesLayout()

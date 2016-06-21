@@ -13,7 +13,7 @@ import com.handy.portal.logger.handylogger.model.EventLog;
 import com.handy.portal.logger.handylogger.model.PushNotificationLog;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 import com.urbanairship.push.BaseIntentReceiver;
 import com.urbanairship.push.PushMessage;
 
@@ -22,7 +22,7 @@ import javax.inject.Inject;
 public class HandyPushReceiver extends BaseIntentReceiver
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
 
     @Override
     public void onReceive(final Context context, final Intent intent)

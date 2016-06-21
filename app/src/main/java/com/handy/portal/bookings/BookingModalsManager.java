@@ -2,9 +2,10 @@ package com.handy.portal.bookings;
 
 import android.support.annotation.NonNull;
 
-import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.squareup.otto.Bus;
+import com.handy.portal.manager.PrefsManager;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Date;
 
@@ -12,19 +13,18 @@ import javax.inject.Inject;
 
 /**
  * remembers when booking modals are shown
- *
+ * <p>
  * i.e. bookings for day unlocked modal
  */
 public class BookingModalsManager
 {
-    private final Bus mBus;
+    private final EventBus mBus;
     private final PrefsManager mPrefsManager;
 
     @Inject
-    public BookingModalsManager(final Bus bus, final PrefsManager prefsManager)
+    public BookingModalsManager(final EventBus bus, final PrefsManager prefsManager)
     {
         mBus = bus;
-        mBus.register(this);
         mPrefsManager = prefsManager;
     }
 
@@ -44,6 +44,7 @@ public class BookingModalsManager
             UNLOCKED_MODAL,
             UNLOCKED_TRIAL_MODAL
         }
+
 
         private final BookingsForDaysAheadModalType mBookingsForDaysAheadModalType;
         private final int mNumDaysAhead;

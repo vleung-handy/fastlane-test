@@ -39,11 +39,12 @@
 -keep class * extends dagger.internal.Binding
 -keep class * extends dagger.internal.ModuleAdapter
 
-#Otto
+#EventBus
+-keepattributes *Annotation*
 -keepclassmembers class ** {
-    @com.squareup.otto.Subscribe public *;
-    @com.squareup.otto.Produce public *;
+    @org.greenrobot.eventbus.Subscribe <methods>;
 }
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
 
 #Facebook
 -keep class com.facebook.** { *; }

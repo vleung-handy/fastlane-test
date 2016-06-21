@@ -27,7 +27,8 @@ import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
 import com.handy.portal.ui.element.dashboard.DashboardRatingsView;
 import com.handy.portal.ui.element.dashboard.DashboardWelcomeView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -84,8 +85,16 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
         setActionBar(R.string.ratings_and_feedback, false);
         getProviderEvaluation();
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     private void createDashboardView(ProviderEvaluation evaluation)

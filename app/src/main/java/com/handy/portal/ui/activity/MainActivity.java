@@ -27,7 +27,8 @@ import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragme
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.ui.fragment.PaymentBillBlockerDialogFragment;
 import com.handy.portal.payments.ui.fragment.PaymentBlockingFragment;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 

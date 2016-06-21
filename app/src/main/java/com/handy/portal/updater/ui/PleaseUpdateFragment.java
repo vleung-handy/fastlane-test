@@ -23,13 +23,14 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
+import com.handy.portal.library.ui.fragment.InjectedFragment;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppUpdateLog;
-import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.updater.AppUpdateEvent;
 import com.handy.portal.updater.VersionManager;
-import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -98,6 +99,7 @@ public class PleaseUpdateFragment extends InjectedFragment
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
         if (!mVersionManager.hasRequestedDownload() && !shouldRequestPermissions())
         {
             mGrantPermissionsSection.setVisibility(View.GONE);
@@ -110,6 +112,13 @@ public class PleaseUpdateFragment extends InjectedFragment
             mGrantPermissionsSection.setVisibility(View.VISIBLE);
         }
         showUpdateLaterButtonForUpdateDetails();
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @Subscribe

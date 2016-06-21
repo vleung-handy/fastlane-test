@@ -11,13 +11,14 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.Payment;
 import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.ui.element.PaymentFeeBreakdownView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.library.util.CurrencyUtils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -73,7 +74,16 @@ public class OutstandingFeesFragment extends ActionBarFragment
     {
         super.onResume();
         setActionBar(R.string.outstanding_fees, true);
+
+        bus.register(this);
         requestOutstandingFees();
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     private void requestOutstandingFees()
