@@ -10,12 +10,13 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.library.ui.listener.EndlessRecyclerViewScrollListener;
+import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.ui.adapter.ReviewListAdapter;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.library.ui.listener.EndlessRecyclerViewScrollListener;
-import com.handy.portal.library.util.DateTimeUtils;
+
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;

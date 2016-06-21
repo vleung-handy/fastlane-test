@@ -15,11 +15,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.library.ui.view.PriceMarker;
+import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.location.LocationUtils;
 import com.handy.portal.model.Address;
 import com.handy.portal.payments.model.PaymentInfo;
-import com.handy.portal.library.ui.view.PriceMarker;
-import com.handy.portal.library.util.UIUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -26,7 +26,7 @@
         android:paddingTop="@dimen/default_padding_half"
         android:textColor="@color/black"
         android:textSize="@dimen/default_text_size"
-        tools:text="@string/tiers_description"
+        tools:text="Once you\'ve completed the jobs, your remaining bookings for the week and the claim jobs tab will be updated with the new rate."
         />
 
 </LinearLayout>

@@ -8,9 +8,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.payments.model.NeoPaymentBatch;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

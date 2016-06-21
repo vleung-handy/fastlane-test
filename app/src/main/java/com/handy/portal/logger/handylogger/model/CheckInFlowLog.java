@@ -5,9 +5,9 @@ import android.support.annotation.NonNull;
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.LocationKey;
+import com.handy.portal.library.util.MathUtils;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.LocationData;
-import com.handy.portal.library.util.MathUtils;
 
 public class CheckInFlowLog extends EventLog
 {

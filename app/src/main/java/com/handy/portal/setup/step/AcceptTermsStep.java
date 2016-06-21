@@ -9,6 +9,7 @@ import com.handy.portal.flow.FlowStep;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.ui.activity.TermsActivity;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 

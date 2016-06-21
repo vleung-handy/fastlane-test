@@ -26,6 +26,8 @@ import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.MathUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.NearbyJobsLog;
@@ -34,8 +36,7 @@ import com.handy.portal.model.Address;
 import com.handy.portal.model.Provider;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.library.util.MathUtils;
+
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;

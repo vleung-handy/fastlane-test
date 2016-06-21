@@ -10,8 +10,8 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.PartnerNames;
-import com.handy.portal.model.Address;
 import com.handy.portal.library.util.UIUtils;
+import com.handy.portal.model.Address;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

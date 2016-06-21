@@ -8,6 +8,7 @@ import android.webkit.WebView;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.manager.GoogleManager;
+
 import org.greenrobot.eventbus.EventBus;
 
 public class RequestSuppliesWebViewClient extends PortalWebViewClient

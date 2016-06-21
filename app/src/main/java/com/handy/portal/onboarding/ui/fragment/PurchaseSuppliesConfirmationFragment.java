@@ -230,7 +230,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
             final String feeNoticeFormatted =
                     getString(R.string.supplies_fee_notice_formatted, mSuppliesInfo.getCost());
             mPaymentSummary.setContent(getString(R.string.supplies_fee), feeNoticeFormatted)
-                    .setAction(getResources().getDrawable(R.drawable.ic_question_gray),
+                    .setAction(ContextCompat.getDrawable(getContext(), R.drawable.ic_question_gray),
                             new View.OnClickListener()
                             {
                                 @Override

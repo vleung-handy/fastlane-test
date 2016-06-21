@@ -20,6 +20,8 @@ import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
+import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.manager.ProviderManager;
@@ -28,8 +30,7 @@ import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
-import com.handy.portal.library.util.TextUtils;
-import com.handy.portal.library.util.UIUtils;
+
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Map;
