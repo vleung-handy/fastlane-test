@@ -12,7 +12,6 @@ import com.handy.portal.test.util.TextViewUtil;
 import com.handy.portal.test.util.ViewUtil;
 import com.handy.portal.ui.activity.SplashActivity;
 
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -29,7 +28,6 @@ public class LoginTest
 
     private static final TestUser TEST_USER = TestUsers.FIRST_TIME_NY_PROVIDER;
 
-    @Rule
     public ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<SplashActivity>(
             SplashActivity.class)
     {
@@ -52,9 +50,10 @@ public class LoginTest
     if the prefix is "test"
     TODO: investigate
      */
+
     /**
      * Logs in as the test user
-     *
+     * <p>
      * Assumptions:
      * - no one is logged into the app
      * - there are no popup modals (for example, promos)
@@ -72,7 +71,7 @@ public class LoginTest
         onView(withId(R.id.login_button)).perform(click());
 
         //accept all the terms
-        while(true) //accept any required terms
+        while (true) //accept any required terms
         {
             try
             {

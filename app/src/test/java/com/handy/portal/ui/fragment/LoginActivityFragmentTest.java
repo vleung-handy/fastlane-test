@@ -71,7 +71,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
 
         initMocks(this);
 
-        when(environmentModifier.getEnvironmentPrefix()).thenReturn("s");
+        when(environmentModifier.getEnvironmentPrefix()).thenReturn("ms");
     }
 
     @Test

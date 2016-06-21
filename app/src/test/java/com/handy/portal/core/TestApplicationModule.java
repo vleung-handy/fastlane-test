@@ -95,7 +95,7 @@ public class TestApplicationModule
     final EnvironmentModifier provideEnvironmentModifier()
     {
         EnvironmentModifier environmentModifier = mock(EnvironmentModifier.class);
-        when(environmentModifier.getEnvironmentPrefix()).thenReturn("s");
+        when(environmentModifier.getEnvironmentPrefix()).thenReturn("ms");
         return environmentModifier;
     }
 
