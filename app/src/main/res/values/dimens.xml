@@ -181,4 +181,6 @@
     <dimen name="tiers_description_side_padding">18dp</dimen>
     <dimen name="tier_margin_top_bottom">8dp</dimen>
 
+    <dimen name="list_item_bullet_size">8dp</dimen>
+
 </resources>

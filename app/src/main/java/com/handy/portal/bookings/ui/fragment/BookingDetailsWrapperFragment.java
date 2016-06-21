@@ -27,6 +27,7 @@ import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingCancelCancellationPolicyDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingCancelKeepRateDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.CustomerNoShowDialogFragment;
 import com.handy.portal.bookings.util.SupportActionUtils;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
@@ -63,7 +64,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class BookingDetailsWrapperFragment extends ActionBarFragment implements View.OnClickListener
+public class BookingDetailsWrapperFragment extends ActionBarFragment implements View.OnClickListener, CustomerNoShowDialogFragment.OnReportCustomerNoShowButtonClickedListener
 {
     public static final String SOURCE_LATE_DISPATCH = "late_dispatch";
 
@@ -299,7 +300,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 showUpdateArrivalTimeDialog(mBooking, R.string.notify_customer_of_lateness, Booking.ArrivalTimeOption.lateValues());
                 break;
             case REPORT_NO_SHOW:
-                showCustomerNoShowDialog(event.action);
+                showCustomerNoShowConfirmation(event.action);
                 break;
             case RETRACT_NO_SHOW:
                 requestCancelNoShow();
@@ -636,7 +637,20 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 .show();
     }
 
-    private void showCustomerNoShowDialog(final Booking.Action action)
+    private void showCustomerNoShowDialogFragment()
+    {
+        if(getChildFragmentManager().findFragmentByTag(CustomerNoShowDialogFragment.FRAGMENT_TAG) == null)
+        {
+            CustomerNoShowDialogFragment customerNoShowDialogFragment =
+                    CustomerNoShowDialogFragment.newInstance(mBooking);
+            FragmentUtils.safeLaunchDialogFragment(
+                    customerNoShowDialogFragment,
+                    this,
+                    CustomerNoShowDialogFragment.FRAGMENT_TAG);
+        }
+    }
+
+    private void showCustomerNoShowAlertDialog(@NonNull final Booking.Action action)
     {
         new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.report_customer_no_show)
@@ -653,6 +667,21 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 .setNegativeButton(R.string.back, null)
                 .create()
                 .show();
+    }
+
+    private void showCustomerNoShowConfirmation(@NonNull final Booking.Action action)
+    {
+        boolean customerNoShowModalEnabled =
+                configManager.getConfigurationResponse() != null
+                        && configManager.getConfigurationResponse().isCustomerNoShowModalEnabled();
+        if(customerNoShowModalEnabled)
+        {
+            showCustomerNoShowDialogFragment();
+        }
+        else
+        {
+            showCustomerNoShowAlertDialog(action);
+        }
     }
 
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
@@ -810,5 +839,17 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         {
             showNetworkErrorToast();
         }
+    }
+
+    /**
+     * interface method called by the customer no show dialog fragment
+     *
+     * this fragment's onPause() isn't called when launching a DialogFragment,
+     so this is already resumed (and bus is registered) at this point
+     */
+    @Override
+    public void onReportCustomerNoShowButtonClicked()
+    {
+        requestReportNoShow();
     }
 }
