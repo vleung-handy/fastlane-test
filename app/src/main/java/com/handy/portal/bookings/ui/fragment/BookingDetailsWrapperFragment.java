@@ -29,7 +29,7 @@ import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingCancelCancella
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingCancelKeepRateDialogFragment;
 import com.handy.portal.bookings.util.SupportActionUtils;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.constant.SupportActionType;
@@ -84,13 +84,13 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     private Date mAssociatedBookingDate;
     private String mSource;
     private Bundle mSourceExtras;
-    private MainViewTab mCurrentTab;
+    private MainViewPage mCurrentPage;
 
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return mCurrentTab;
+        return mCurrentPage;
     }
 
     @Override
@@ -122,7 +122,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
             mSource = SOURCE_LATE_DISPATCH;
             mSourceExtras = arguments;
         }
-        mCurrentTab = (MainViewTab) arguments.getSerializable(BundleKeys.TAB);
+        mCurrentPage = (MainViewPage) arguments.getSerializable(BundleKeys.PAGE);
     }
 
     @Override
@@ -173,7 +173,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
             final Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.MESSAGE, getString(R.string.job_no_longer_available));
             arguments.putBundle(BundleKeys.EXTRAS, getArguments());
-            returnToTab(MainViewTab.AVAILABLE_JOBS, 0, TransitionStyle.REFRESH_TAB, arguments);
+            returnToPage(MainViewPage.AVAILABLE_JOBS, 0, TransitionStyle.REFRESH_PAGE, arguments);
         }
         else
         {
@@ -203,12 +203,12 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 claimTargetDialogFragment.setDisplayData(claimTargetInfo); //wrong way to pass argument to a fragment
                 claimTargetDialogFragment.show(getFragmentManager(), ClaimTargetDialogFragment.FRAGMENT_TAG);
 
-                returnToTab(MainViewTab.SCHEDULED_JOBS, bookingClaimDetails.getBooking().getStartDate().getTime(), null, null);
+                returnToPage(MainViewPage.SCHEDULED_JOBS, bookingClaimDetails.getBooking().getStartDate().getTime(), null, null);
             }
             else
             {
                 TransitionStyle transitionStyle = (bookingClaimDetails.getBooking().isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
-                returnToTab(MainViewTab.SCHEDULED_JOBS, bookingClaimDetails.getBooking().getStartDate().getTime(), transitionStyle, null);
+                returnToPage(MainViewPage.SCHEDULED_JOBS, bookingClaimDetails.getBooking().getStartDate().getTime(), transitionStyle, null);
             }
         }
         else
@@ -408,7 +408,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                     removeAction != null ? removeAction.getWarningText() : null
             )));
             TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
-            returnToTab(MainViewTab.SCHEDULED_JOBS, event.booking.getStartDate().getTime(), transitionStyle, null);
+            returnToPage(MainViewPage.SCHEDULED_JOBS, event.booking.getStartDate().getTime(), transitionStyle, null);
         }
         else
         {
@@ -482,7 +482,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         return mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
     }
 
-    private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle, Bundle additionalArguments)
+    private void returnToPage(MainViewPage targetPage, long epochTime, TransitionStyle transitionStyle, Bundle additionalArguments)
     {
         //Return to available jobs with success
         Bundle arguments = new Bundle();
@@ -492,7 +492,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         {
             arguments.putAll(additionalArguments);
         }
-        bus.post(new NavigationEvent.NavigateToTab(targetTab, arguments, transitionStyle));
+        bus.post(new NavigationEvent.NavigateToPage(targetPage, arguments, transitionStyle));
     }
 
     private void handleBookingDetailsError(String errorMessage)
@@ -540,7 +540,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i)
                     {
-                        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, TransitionStyle.REFRESH_TAB));
+                        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SCHEDULED_JOBS, arguments, TransitionStyle.REFRESH_PAGE));
                     }
                 });
 
@@ -682,7 +682,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     {
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, action.getHelpRedirectPath());
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP_WEBVIEW, arguments, true));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.HELP_WEBVIEW, arguments, true));
     }
 
     private void unassignJob(@NonNull Booking.Action removeAction)
@@ -690,7 +690,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING, mBooking);
         arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.CANCELLATION_REQUEST, arguments));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.CANCELLATION_REQUEST, arguments));
     }
 
     private void removeJob(@NonNull Booking.Action removeAction)

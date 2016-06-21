@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
@@ -145,7 +145,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
                     @Override
                     public void onClick(final View v)
                     {
-                        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.OUTSTANDING_FEES, true));
+                        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.OUTSTANDING_FEES, true));
                         mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.FeeDetailSelected()));
                     }
                 });

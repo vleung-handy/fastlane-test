@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.NavigationEvent;
 
 import butterknife.ButterKnife;
@@ -41,6 +41,6 @@ public class RequestSuppliesFragment extends ActionBarFragment
     @OnClick(R.id.request_supplies_text)
     public void onRequestSuppliesButtonClicked()
     {
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.REQUEST_SUPPLIES_WEB_VIEW, true));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.REQUEST_SUPPLIES_WEB_VIEW, true));
     }
 }

@@ -13,7 +13,7 @@ import android.webkit.WebViewClient;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
@@ -56,12 +56,12 @@ public class PortalWebViewClient extends WebViewClient
             final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
             if (deeplink != null)
             {
-                final MainViewTab tab = DeeplinkMapper.getTabForDeeplink(deeplink);
+                final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
                 bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
                         DeeplinkLog.Source.WEBVIEW,
                         uri
                 )));
-                bus.post(new NavigationEvent.NavigateToTab(tab, deeplinkData));
+                bus.post(new NavigationEvent.NavigateToPage(page, deeplinkData));
             }
         }
         else

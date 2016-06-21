@@ -9,7 +9,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.event.StripeEvent;
@@ -79,9 +79,9 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
     }
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.PAYMENTS;
+        return MainViewPage.PAYMENTS;
     }
 
     @Override

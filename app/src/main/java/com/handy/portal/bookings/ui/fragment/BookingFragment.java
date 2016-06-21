@@ -35,7 +35,7 @@ import com.handy.portal.bookings.ui.element.BookingMapView;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
@@ -692,7 +692,7 @@ public class BookingFragment extends TimerActionBarFragment
                     {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(BundleKeys.BOOKING, mBooking);
-                        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle, true));
+                        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SEND_RECEIPT_CHECKOUT, bundle, true));
                     }
                 });
                 initHelperText(action);

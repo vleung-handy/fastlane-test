@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -52,13 +52,13 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     @OnClick(R.id.debit_card_option)
     public void onDebitCardOptionClicked()
     {
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.UPDATE_DEBIT_CARD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.UPDATE_DEBIT_CARD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
     @OnClick(R.id.bank_account_option)
     public void onBankAccountOptionClicked()
     {
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.UPDATE_BANK_ACCOUNT, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.UPDATE_BANK_ACCOUNT, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
     @Override

@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.FeedbackLog;
@@ -115,6 +115,6 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
         bundle.putString(BundleKeys.YOUTUBE_VIDEO_ID, view.getID());
 
         mBus.post(new LogEvent.AddLogEvent(new FeedbackLog.VideoSelected(view.getSection())));
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.YOUTUBE_PLAYER, bundle));
+        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.YOUTUBE_PLAYER, bundle));
     }
 }

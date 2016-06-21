@@ -27,7 +27,7 @@ import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.StripeManager;
 import com.handy.portal.manager.SystemManager;
-import com.handy.portal.manager.TabNavigationManager;
+import com.handy.portal.manager.PageNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.UserInterfaceUpdateManager;
@@ -96,7 +96,7 @@ public class BaseApplication extends MultiDexApplication
     @Inject
     MainActivityFragmentNavigationHelper mainActivityFragmentNavigationHelper;
     @Inject
-    TabNavigationManager tabNavigationManager;
+    PageNavigationManager mPageNavigationManager;
     @Inject
     WebUrlManager webUrlManager;
     @Inject

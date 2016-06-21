@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 import com.handy.portal.bookings.model.Booking.BookingType;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Bus;
@@ -66,8 +66,8 @@ public class DeepLinkService extends IntentService
         {
             case URI_PATH_AVAILABLE_JOBS:
             {
-                NavigationEvent.NavigateToTab navigateToTab = new NavigationEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS);
-                bus.post(navigateToTab);
+                NavigationEvent.NavigateToPage navigateToPage = new NavigationEvent.NavigateToPage(MainViewPage.AVAILABLE_JOBS);
+                bus.post(navigateToPage);
             }
             break;
 
@@ -77,8 +77,8 @@ public class DeepLinkService extends IntentService
                 String bookingId = deepLink.getQuery();
                 bundle.putString(BundleKeys.BOOKING_ID, bookingId);
                 bundle.putString(BundleKeys.BOOKING_TYPE, BookingType.BOOKING.toString());
-                NavigationEvent.NavigateToTab navigateToTab = new NavigationEvent.NavigateToTab(MainViewTab.JOB_DETAILS, bundle, true);
-                bus.post(navigateToTab);
+                NavigationEvent.NavigateToPage navigateToPage = new NavigationEvent.NavigateToPage(MainViewPage.JOB_DETAILS, bundle, true);
+                bus.post(navigateToPage);
             }
             break;
         }

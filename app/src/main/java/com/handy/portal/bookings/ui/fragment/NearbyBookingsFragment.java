@@ -22,7 +22,7 @@ import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFr
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.Country;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -84,9 +84,9 @@ public class NearbyBookingsFragment extends ActionBarFragment
     }
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.NEARBY_JOBS;
+        return MainViewPage.NEARBY_JOBS;
     }
 
     @Nullable
@@ -188,7 +188,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, booking.getStartDate().getTime());
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, null));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SCHEDULED_JOBS, arguments, null));
     }
 
     @Subscribe

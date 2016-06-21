@@ -11,7 +11,7 @@ import android.view.View;
 
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
@@ -34,7 +34,7 @@ public abstract class ActionBarFragment extends InjectedFragment
     public void onResume()
     {
         super.onResume();
-        bus.post(new NavigationEvent.SelectTab(getTab()));
+        bus.post(new NavigationEvent.SelectPage(getAppPage()));
     }
 
     @Override
@@ -152,5 +152,5 @@ public abstract class ActionBarFragment extends InjectedFragment
         }
     }
 
-    protected MainViewTab getTab() { return null; }
+    protected MainViewPage getAppPage() { return null; }
 }

@@ -24,7 +24,7 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -94,7 +94,7 @@ public class MainActivityFragment extends InjectedFragment
     TextView mBuildVersionText;
 
     private ActionBarDrawerToggle mActionBarDrawerToggle;
-    private MainViewTab currentTab = null;
+    private MainViewPage currentPage = null;
 
     //Are we currently clearing out the backstack?
     // Other fragments will want to know to avoid re-doing things on their onCreateView
@@ -157,9 +157,9 @@ public class MainActivityFragment extends InjectedFragment
 
         bus.post(new NotificationEvent.RequestUnreadCount());
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
-        if (currentTab == null)
+        if (currentPage == null)
         {
-            switchToTab(MainViewTab.AVAILABLE_JOBS, false);
+            switchToPage(MainViewPage.AVAILABLE_JOBS, false);
         }
         handleDeeplink();
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
@@ -203,18 +203,18 @@ public class MainActivityFragment extends InjectedFragment
             final String deeplink = mDeeplinkData.getString(BundleKeys.DEEPLINK);
             if (deeplink != null)
             {
-                final MainViewTab targetTab = DeeplinkMapper.getTabForDeeplink(deeplink);
-                if (targetTab != null)
+                final MainViewPage targetPage = DeeplinkMapper.getPageForDeeplink(deeplink);
+                if (targetPage != null)
                 {
                     bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
                             mDeeplinkSource,
                             mDeeplinkData
                     )));
-                    switchToTab(targetTab, mDeeplinkData, false);
+                    switchToPage(targetPage, mDeeplinkData, false);
                 }
                 else
                 {
-                    // Unable to find a matching tab for deeplink, so ignore it.
+                    // Unable to find a matching page for deeplink, so ignore it.
                     bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
                             mDeeplinkSource,
                             DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
@@ -291,12 +291,12 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onSwapFragment(NavigationEvent.SwapFragmentEvent event)
     {
-        trackSwitchToTab(event.targetTab);
+        trackSwitchToPage(event.targetPage);
         setTabVisibility(true);
         setDrawerActive(false);
         swapFragment(event);
         ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
-        currentTab = event.targetTab;
+        currentPage = event.targetPage;
     }
 
     @Subscribe
@@ -319,10 +319,10 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void updateSelectedTabButton(NavigationEvent.SelectTab event)
+    public void updateSelectedTabButton(NavigationEvent.SelectPage event)
     {
-        if (event.tab == null) { return; }
-        switch (event.tab)
+        if (event.page == null) { return; }
+        switch (event.page)
         {
             case AVAILABLE_JOBS:
             case BLOCK_PRO_WEBVIEW:
@@ -406,15 +406,15 @@ public class MainActivityFragment extends InjectedFragment
         mTabs.setTabs(mJobsButton, mScheduleButton, mNotificationsButton, mButtonMore);
 
         mJobsButton.setOnClickListener(
-                new TabOnClickListener(mJobsButton, MainViewTab.AVAILABLE_JOBS));
+                new TabOnClickListener(mJobsButton, MainViewPage.AVAILABLE_JOBS));
         mScheduleButton.setOnClickListener(
-                new TabOnClickListener(mScheduleButton, MainViewTab.SCHEDULED_JOBS));
+                new TabOnClickListener(mScheduleButton, MainViewPage.SCHEDULED_JOBS));
         mButtonMore.setOnClickListener(new MoreButtonOnClickListener());
 
         if (getConfigurationResponse() != null && getConfigurationResponse().shouldShowNotificationMenuButton())
         {
             mNotificationsButton.setOnClickListener(
-                    new TabOnClickListener(mNotificationsButton, MainViewTab.NOTIFICATIONS));
+                    new TabOnClickListener(mNotificationsButton, MainViewPage.NOTIFICATIONS));
             mNotificationsButton.setVisibility(View.VISIBLE);
         }
         else
@@ -425,23 +425,23 @@ public class MainActivityFragment extends InjectedFragment
 
     private void registerNavDrawerListeners()
     {
-        mNavLinkPayments.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PAYMENTS, null));
-        mNavLinkRatingsAndFeedback.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.DASHBOARD, null));
-        mNavLinkReferAFriend.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.REFER_A_FRIEND, null));
-        mNavAccountSettings.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.ACCOUNT_SETTINGS, null));
-        mNavLinkVideoLibrary.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.DASHBOARD_VIDEO_LIBRARY, null));
-        mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.HELP_WEBVIEW, null));
+        mNavLinkPayments.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.PAYMENTS, null));
+        mNavLinkRatingsAndFeedback.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.DASHBOARD, null));
+        mNavLinkReferAFriend.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.REFER_A_FRIEND, null));
+        mNavAccountSettings.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.ACCOUNT_SETTINGS, null));
+        mNavLinkVideoLibrary.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.DASHBOARD_VIDEO_LIBRARY, null));
+        mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.HELP_WEBVIEW, null));
     }
 
     private class TabOnClickListener implements View.OnClickListener
     {
         private TabButton mTabButton;
-        private MainViewTab mTab;
+        private MainViewPage mPage;
 
-        TabOnClickListener(@Nullable final TabButton tabButton, final MainViewTab tab)
+        TabOnClickListener(@Nullable final TabButton tabButton, final MainViewPage page)
         {
             mTabButton = tabButton;
-            mTab = tab;
+            mPage = page;
         }
 
         @Override
@@ -451,9 +451,9 @@ public class MainActivityFragment extends InjectedFragment
             {
                 mTabButton.toggle();
             }
-            if (mTab != currentTab)
+            if (mPage != currentPage)
             {
-                switchToTab(mTab, true);
+                switchToPage(mPage, true);
             }
         }
     }
@@ -461,31 +461,31 @@ public class MainActivityFragment extends InjectedFragment
 
     private class NavDrawerOnClickListener extends TabOnClickListener
     {
-        private MainViewTab mTab;
+        private MainViewPage mPage;
         private TransitionStyle mTransitionStyle;
 
         NavDrawerOnClickListener(
-                final MainViewTab tab,
+                final MainViewPage mPage,
                 final TransitionStyle transitionStyleOverride
         )
         {
-            super(null, tab);
-            mTab = tab;
+            super(null, mPage);
+            this.mPage = mPage;
             mTransitionStyle = transitionStyleOverride;
         }
 
         @Override
         public void onClick(View view)
         {
-            bus.post(new LogEvent.AddLogEvent(new SideMenuLog.ItemSelected(mTab.name().toLowerCase())));
+            bus.post(new LogEvent.AddLogEvent(new SideMenuLog.ItemSelected(mPage.name().toLowerCase())));
             mButtonMore.toggle();
             if (mTransitionStyle != null)
             {
-                switchToTab(mTab, new Bundle(), mTransitionStyle, false);
+                switchToPage(mPage, new Bundle(), mTransitionStyle, false);
             }
             else
             {
-                switchToTab(mTab, true);
+                switchToPage(mPage, true);
             }
 
             mDrawerLayout.closeDrawers();
@@ -502,20 +502,20 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
-    private void switchToTab(@NonNull MainViewTab tab, boolean userTriggered)
+    private void switchToPage(@NonNull MainViewPage page, boolean userTriggered)
     {
-        switchToTab(tab, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, userTriggered);
+        switchToPage(page, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, userTriggered);
     }
 
-    private void switchToTab(@NonNull MainViewTab targetTab, @NonNull Bundle argumentsBundle, boolean userTriggered)
+    private void switchToPage(@NonNull MainViewPage targetPage, @NonNull Bundle argumentsBundle, boolean userTriggered)
     {
-        switchToTab(targetTab, argumentsBundle, TransitionStyle.NATIVE_TO_NATIVE, userTriggered);
+        switchToPage(targetPage, argumentsBundle, TransitionStyle.NATIVE_TO_NATIVE, userTriggered);
     }
 
-    private void switchToTab(@NonNull MainViewTab targetTab, @NonNull Bundle argumentsBundle,
-                             @NonNull TransitionStyle overrideTransitionStyle, boolean userTriggered)
+    private void switchToPage(@NonNull MainViewPage targetPage, @NonNull Bundle argumentsBundle,
+                              @NonNull TransitionStyle overrideTransitionStyle, boolean userTriggered)
     {
-        bus.post(new NavigationEvent.NavigateToTab(targetTab, argumentsBundle, overrideTransitionStyle, false));
+        bus.post(new NavigationEvent.NavigateToPage(targetPage, argumentsBundle, overrideTransitionStyle, false));
     }
 
 ///Fragment swapping and related
@@ -529,9 +529,9 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     //analytics event
-    private void trackSwitchToTab(MainViewTab targetTab)
+    private void trackSwitchToPage(MainViewPage targetPage)
     {
-        bus.post(new HandyEvent.Navigation(targetTab.toString().toLowerCase()));
+        bus.post(new HandyEvent.Navigation(targetPage.toString().toLowerCase()));
     }
 
     private void swapFragment(NavigationEvent.SwapFragmentEvent swapFragmentEvent)
@@ -545,11 +545,11 @@ public class MainActivityFragment extends InjectedFragment
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 
         Fragment newFragment = null;
-        if (swapFragmentEvent.targetTab != null)
+        if (swapFragmentEvent.targetPage != null)
         {
             try
             {
-                newFragment = (Fragment) swapFragmentEvent.targetTab.getClassType().newInstance();
+                newFragment = (Fragment) swapFragmentEvent.targetPage.getClassType().newInstance();
             }
             catch (Exception e)
             {

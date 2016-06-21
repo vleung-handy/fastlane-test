@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
@@ -84,9 +84,9 @@ public final class PaymentsFragment extends ActionBarFragment
     }
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.PAYMENTS;
+        return MainViewPage.PAYMENTS;
     }
 
     @Override
@@ -219,7 +219,7 @@ public final class PaymentsFragment extends ActionBarFragment
         {
             Bundle arguments = new Bundle();
             arguments.putSerializable(BundleKeys.PAYMENT_BATCH, paymentBatch);
-            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.PAYMENTS_DETAIL, arguments, true));
+            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PAYMENTS_DETAIL, arguments, true));
         }
     }
 
@@ -241,7 +241,7 @@ public final class PaymentsFragment extends ActionBarFragment
     {
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, HELP_PAYMENTS_SECTION_REDIRECT_PATH);
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP_WEBVIEW, arguments, true));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.HELP_WEBVIEW, arguments, true));
     }
 
     @Subscribe

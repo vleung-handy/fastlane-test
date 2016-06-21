@@ -22,7 +22,7 @@ import com.handy.portal.bookings.constant.BookingActionButtonType;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.element.CustomerRequestsView;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.manager.PrefsManager;
@@ -94,7 +94,7 @@ public class InProgressBookingFragment extends TimerActionBarFragment
     }
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
         return null;
     }
@@ -227,7 +227,7 @@ public class InProgressBookingFragment extends TimerActionBarFragment
         args.putString(BundleKeys.BOOKING_SOURCE, mSource);
         args.putBoolean(BundleKeys.BOOKING_SHOULD_HIDE_ACTION_BUTTONS, true);
 
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.NOT_IN_PROGRESS_JOB_DETAILS, args, true));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.NOT_IN_PROGRESS_JOB_DETAILS, args, true));
     }
 
     @OnClick(R.id.in_progress_booking_action_button)
@@ -238,7 +238,7 @@ public class InProgressBookingFragment extends TimerActionBarFragment
         {
             Bundle bundle = new Bundle();
             bundle.putSerializable(BundleKeys.BOOKING, mBooking);
-            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle, true));
+            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SEND_RECEIPT_CHECKOUT, bundle, true));
         }
         else
         {

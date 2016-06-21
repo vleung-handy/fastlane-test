@@ -8,7 +8,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -29,9 +29,9 @@ public class PaymentBlockingFragment extends ActionBarFragment
 
     public static final String FRAGMENT_TAG = "fragment_payment_blocking";
 
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.AVAILABLE_JOBS;
+        return MainViewPage.AVAILABLE_JOBS;
     }
 
     @Override
@@ -68,7 +68,7 @@ public class PaymentBlockingFragment extends ActionBarFragment
             @Override
             public void onClick(final View v)
             {
-                bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.REFRESH_TAB, true));
+                bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.REFRESH_PAGE, true));
             }
         });
     }
