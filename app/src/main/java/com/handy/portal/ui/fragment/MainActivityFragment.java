@@ -203,18 +203,18 @@ public class MainActivityFragment extends InjectedFragment
             final String deeplink = mDeeplinkData.getString(BundleKeys.DEEPLINK);
             if (deeplink != null)
             {
-                final MainViewPage targetTab = DeeplinkMapper.getPageForDeeplink(deeplink);
-                if (targetTab != null)
+                final MainViewPage targetPage = DeeplinkMapper.getPageForDeeplink(deeplink);
+                if (targetPage != null)
                 {
                     bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
                             mDeeplinkSource,
                             mDeeplinkData
                     )));
-                    switchToPage(targetTab, mDeeplinkData, false);
+                    switchToPage(targetPage, mDeeplinkData, false);
                 }
                 else
                 {
-                    // Unable to find a matching tab for deeplink, so ignore it.
+                    // Unable to find a matching page for deeplink, so ignore it.
                     bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
                             mDeeplinkSource,
                             DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
@@ -319,10 +319,10 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void updateSelectedTabButton(NavigationEvent.SelectTab event)
+    public void updateSelectedTabButton(NavigationEvent.SelectPage event)
     {
-        if (event.tab == null) { return; }
-        switch (event.tab)
+        if (event.page == null) { return; }
+        switch (event.page)
         {
             case AVAILABLE_JOBS:
             case BLOCK_PRO_WEBVIEW:
@@ -436,12 +436,12 @@ public class MainActivityFragment extends InjectedFragment
     private class TabOnClickListener implements View.OnClickListener
     {
         private TabButton mTabButton;
-        private MainViewPage mTab;
+        private MainViewPage mPage;
 
-        TabOnClickListener(@Nullable final TabButton tabButton, final MainViewPage tab)
+        TabOnClickListener(@Nullable final TabButton tabButton, final MainViewPage page)
         {
             mTabButton = tabButton;
-            mTab = tab;
+            mPage = page;
         }
 
         @Override
@@ -451,9 +451,9 @@ public class MainActivityFragment extends InjectedFragment
             {
                 mTabButton.toggle();
             }
-            if (mTab != currentPage)
+            if (mPage != currentPage)
             {
-                switchToPage(mTab, true);
+                switchToPage(mPage, true);
             }
         }
     }
@@ -461,31 +461,31 @@ public class MainActivityFragment extends InjectedFragment
 
     private class NavDrawerOnClickListener extends TabOnClickListener
     {
-        private MainViewPage mTab;
+        private MainViewPage mPage;
         private TransitionStyle mTransitionStyle;
 
         NavDrawerOnClickListener(
-                final MainViewPage tab,
+                final MainViewPage mPage,
                 final TransitionStyle transitionStyleOverride
         )
         {
-            super(null, tab);
-            mTab = tab;
+            super(null, mPage);
+            this.mPage = mPage;
             mTransitionStyle = transitionStyleOverride;
         }
 
         @Override
         public void onClick(View view)
         {
-            bus.post(new LogEvent.AddLogEvent(new SideMenuLog.ItemSelected(mTab.name().toLowerCase())));
+            bus.post(new LogEvent.AddLogEvent(new SideMenuLog.ItemSelected(mPage.name().toLowerCase())));
             mButtonMore.toggle();
             if (mTransitionStyle != null)
             {
-                switchToPage(mTab, new Bundle(), mTransitionStyle, false);
+                switchToPage(mPage, new Bundle(), mTransitionStyle, false);
             }
             else
             {
-                switchToPage(mTab, true);
+                switchToPage(mPage, true);
             }
 
             mDrawerLayout.closeDrawers();
@@ -502,20 +502,20 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
-    private void switchToPage(@NonNull MainViewPage tab, boolean userTriggered)
+    private void switchToPage(@NonNull MainViewPage page, boolean userTriggered)
     {
-        switchToPage(tab, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, userTriggered);
+        switchToPage(page, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, userTriggered);
     }
 
-    private void switchToPage(@NonNull MainViewPage targetTab, @NonNull Bundle argumentsBundle, boolean userTriggered)
+    private void switchToPage(@NonNull MainViewPage targetPage, @NonNull Bundle argumentsBundle, boolean userTriggered)
     {
-        switchToPage(targetTab, argumentsBundle, TransitionStyle.NATIVE_TO_NATIVE, userTriggered);
+        switchToPage(targetPage, argumentsBundle, TransitionStyle.NATIVE_TO_NATIVE, userTriggered);
     }
 
-    private void switchToPage(@NonNull MainViewPage targetTab, @NonNull Bundle argumentsBundle,
+    private void switchToPage(@NonNull MainViewPage targetPage, @NonNull Bundle argumentsBundle,
                               @NonNull TransitionStyle overrideTransitionStyle, boolean userTriggered)
     {
-        bus.post(new NavigationEvent.NavigateToPage(targetTab, argumentsBundle, overrideTransitionStyle, false));
+        bus.post(new NavigationEvent.NavigateToPage(targetPage, argumentsBundle, overrideTransitionStyle, false));
     }
 
 ///Fragment swapping and related
@@ -529,9 +529,9 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     //analytics event
-    private void trackSwitchToPage(MainViewPage targetTab)
+    private void trackSwitchToPage(MainViewPage targetPage)
     {
-        bus.post(new HandyEvent.Navigation(targetTab.toString().toLowerCase()));
+        bus.post(new HandyEvent.Navigation(targetPage.toString().toLowerCase()));
     }
 
     private void swapFragment(NavigationEvent.SwapFragmentEvent swapFragmentEvent)

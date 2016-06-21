@@ -34,7 +34,7 @@ public abstract class ActionBarFragment extends InjectedFragment
     public void onResume()
     {
         super.onResume();
-        bus.post(new NavigationEvent.SelectTab(getAppPage()));
+        bus.post(new NavigationEvent.SelectPage(getAppPage()));
     }
 
     @Override

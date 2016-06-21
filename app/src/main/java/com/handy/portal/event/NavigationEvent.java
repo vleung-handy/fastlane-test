@@ -95,11 +95,11 @@ public abstract class NavigationEvent extends HandyEvent
 
 
     //Highlight the navigation tab
-    public static class SelectTab extends NavigationEvent
+    public static class SelectPage extends NavigationEvent
     {
-        public final MainViewPage tab;
+        public final MainViewPage page;
 
-        public SelectTab(@Nullable final MainViewPage tab) { this.tab = tab; }
+        public SelectPage(@Nullable final MainViewPage page) { this.page = page; }
     }
 
 }

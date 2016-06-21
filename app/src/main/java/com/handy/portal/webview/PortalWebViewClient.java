@@ -56,12 +56,12 @@ public class PortalWebViewClient extends WebViewClient
             final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
             if (deeplink != null)
             {
-                final MainViewPage tab = DeeplinkMapper.getPageForDeeplink(deeplink);
+                final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
                 bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
                         DeeplinkLog.Source.WEBVIEW,
                         uri
                 )));
-                bus.post(new NavigationEvent.NavigateToPage(tab, deeplinkData));
+                bus.post(new NavigationEvent.NavigateToPage(page, deeplinkData));
             }
         }
         else

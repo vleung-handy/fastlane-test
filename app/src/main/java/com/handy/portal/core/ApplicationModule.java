@@ -431,11 +431,11 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final PageNavigationManager provideTabNavigationManager(final Bus bus,
-                                                            final ProviderManager providerManager,
-                                                            final WebUrlManager webUrlManager,
-                                                            final PaymentsManager paymentsManager,
-                                                            final ConfigManager configManager
+    final PageNavigationManager providePageNavigationManager(final Bus bus,
+                                                             final ProviderManager providerManager,
+                                                             final WebUrlManager webUrlManager,
+                                                             final PaymentsManager paymentsManager,
+                                                             final ConfigManager configManager
     )
     {
         return new PageNavigationManager(bus, providerManager, webUrlManager, paymentsManager, configManager);
