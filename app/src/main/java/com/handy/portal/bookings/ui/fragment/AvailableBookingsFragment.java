@@ -31,7 +31,6 @@ import com.handy.portal.bookings.ui.fragment.dialog.JobAccessUnlockedDialogFragm
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
@@ -181,7 +180,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     private void showProRequestedJobsInbox()
     {
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.REQUESTED_JOBS, null, TransitionStyle.SLIDE_UP, true));
+        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.REQUESTED_JOBS, true));
     }
 
     protected BookingListView getBookingListView()
