@@ -21,10 +21,12 @@ public abstract class BookingEvent extends HandyEvent
         }
     }
 
+
     public static class RequestProRequestedJobs extends RequestEvent
     {
         private List<Date> mDatesForBookings;
         private boolean mUseCachedIfPresent;
+
         public RequestProRequestedJobs(List<Date> datesForBookings, boolean useCachedIfPresent)
         {
             mDatesForBookings = datesForBookings;
@@ -42,6 +44,7 @@ public abstract class BookingEvent extends HandyEvent
         }
     }
 
+
     public static class ReceiveProRequestedJobsSuccess extends ReceiveSuccessEvent
     {
         public final List<BookingsWrapper> mProRequestedJobs;
@@ -57,6 +60,7 @@ public abstract class BookingEvent extends HandyEvent
         }
     }
 
+
     public static class ReceiveProRequestedJobsError extends ReceiveErrorEvent
     {
         public ReceiveProRequestedJobsError(DataManager.DataManagerError error)
@@ -64,6 +68,7 @@ public abstract class BookingEvent extends HandyEvent
             this.error = error;
         }
     }
+
 
     public static class ReceiveZipClusterPolygonsSuccess extends ReceiveSuccessEvent
     {
@@ -122,5 +127,29 @@ public abstract class BookingEvent extends HandyEvent
         {
             this.error = error;
         }
+    }
+
+
+    public static class RateCustomer extends RequestEvent
+    {
+        public final String bookingId;
+        public final int rating;
+        public final String reviewText;
+
+        public RateCustomer(String bookingId, int rating, String reviewText)
+        {
+            this.bookingId = bookingId;
+            this.rating = rating;
+            this.reviewText = reviewText;
+        }
+    }
+
+
+    public static class RateCustomerSuccess extends ReceiveSuccessEvent {}
+
+
+    public static class RateCustomerError extends ReceiveErrorEvent
+    {
+        public RateCustomerError(DataManager.DataManagerError error) { this.error = error; }
     }
 }

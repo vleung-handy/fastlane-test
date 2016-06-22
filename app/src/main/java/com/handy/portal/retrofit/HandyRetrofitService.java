@@ -210,6 +210,13 @@ public interface HandyRetrofitService
                            @Part("lateness") String latenessValue,
                            HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
+    @POST(BOOKINGS_PATH + "{booking_id}/rate_customer")
+    void rateCustomer(@Path("booking_id") String bookingId,
+                      @Field("rating") int rating,
+                      @Field("review_text") String reviewText,
+                      HandyRetrofitCallback cb);
+
     @Multipart
     @POST(SESSIONS_PATH + "request_user_pin")
     void requestPinCode(@Part("phone") String phoneNumber,

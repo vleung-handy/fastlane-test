@@ -100,6 +100,7 @@ class AnnualPaymentSummariesRetroFitCallback extends TypedHandyRetrofitCallback<
     }
 }
 
+
 class PaymentOutstandingFeesRetroFitCallback extends TypedHandyRetrofitCallback<PaymentOutstandingFees>
 {
     PaymentOutstandingFeesRetroFitCallback(DataManager.Callback callback)
@@ -107,6 +108,7 @@ class PaymentOutstandingFeesRetroFitCallback extends TypedHandyRetrofitCallback<
         super(callback);
     }
 }
+
 
 class NeedsToUpdatePaymentInfoRetroFitCallback extends TypedHandyRetrofitCallback<RequiresPaymentInfoUpdate>
 {
@@ -342,6 +344,7 @@ class NotificationMessagesHandyRetroFitCallback extends TypedHandyRetrofitCallba
     }
 }
 
+
 class NotificationUnreadCountHandyRetroFitCallback extends TypedHandyRetrofitCallback<HashMap<String, Object>>
 {
     NotificationUnreadCountHandyRetroFitCallback(DataManager.Callback callback)
@@ -377,6 +380,7 @@ class GetProviderFeedbackRetrofitCallback extends TypedHandyRetrofitCallback<Pro
     }
 }
 
+
 class GetLocationScheduleRetrofitCallback extends TypedHandyRetrofitCallback<LocationScheduleStrategies>
 {
     GetLocationScheduleRetrofitCallback(DataManager.Callback callback)
@@ -384,6 +388,7 @@ class GetLocationScheduleRetrofitCallback extends TypedHandyRetrofitCallback<Loc
         super(callback);
     }
 }
+
 
 class SetupDataRetrofitCallback extends TypedHandyRetrofitCallback<SetupData>
 {

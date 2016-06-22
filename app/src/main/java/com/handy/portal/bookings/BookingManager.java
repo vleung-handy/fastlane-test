@@ -628,6 +628,25 @@ public class BookingManager
     }
 
     @Subscribe
+    public void onRateCustomer(BookingEvent.RateCustomer event)
+    {
+        mDataManager.rateCustomer(event.bookingId, event.rating, event.reviewText, new DataManager.Callback<Void>()
+        {
+            @Override
+            public void onSuccess(Void response)
+            {
+                mBus.post(new BookingEvent.RateCustomerSuccess());
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                mBus.post(new BookingEvent.RateCustomerError(error));
+            }
+        });
+    }
+
+    @Subscribe
     public void onRequestCancelNoShow(HandyEvent.RequestCancelNoShow event)
     {
         mDataManager.reportNoShow(event.bookingId, getNoShowParams(false, event.locationData), new DataManager.Callback<Booking>()
