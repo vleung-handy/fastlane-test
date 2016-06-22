@@ -13,6 +13,7 @@ import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.core.EnvironmentModifier;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.util.UIUtils;
@@ -66,6 +67,7 @@ public abstract class ActionBarFragment extends InjectedFragment
                         public void onEnvironmentChanged(String newEnvironmentPrefix)
                         {
                             environmentModifierMenuItem.setTitle(newEnvironmentPrefix.toUpperCase());
+                            bus.post(new HandyEvent.LogOutProvider());
                         }
                     }).show();
                     return true;
