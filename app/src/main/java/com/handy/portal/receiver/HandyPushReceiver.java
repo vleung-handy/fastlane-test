@@ -6,16 +6,17 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.location.LocationPingService;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.EventLog;
 import com.handy.portal.logger.handylogger.model.PushNotificationLog;
 import com.handy.portal.ui.activity.SplashActivity;
-import com.handy.portal.library.util.Utils;
-import org.greenrobot.eventbus.EventBus;
 import com.urbanairship.push.BaseIntentReceiver;
 import com.urbanairship.push.PushMessage;
+
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 

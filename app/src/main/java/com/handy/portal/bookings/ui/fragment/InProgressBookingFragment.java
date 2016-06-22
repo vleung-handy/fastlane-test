@@ -25,12 +25,12 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.ui.fragment.TimerActionBarFragment;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
+import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.ui.fragment.TimerActionBarFragment;
 
 import java.util.Arrays;
 import java.util.List;

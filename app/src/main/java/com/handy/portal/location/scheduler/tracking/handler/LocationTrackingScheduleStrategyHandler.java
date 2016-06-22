@@ -12,12 +12,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.LocationUtils;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.model.LocationUpdate;
 import com.handy.portal.location.scheduler.handler.ScheduleStrategyHandler;
 import com.handy.portal.location.scheduler.tracking.model.LocationTrackingScheduleStrategy;
-import com.handy.portal.library.util.SystemUtils;
 
 import java.util.LinkedList;
 import java.util.Queue;

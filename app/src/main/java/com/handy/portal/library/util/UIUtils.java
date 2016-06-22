@@ -35,12 +35,12 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.constant.BookingActionButtonType;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.core.EnvironmentModifier;
-import com.handy.portal.model.definitions.FieldDefinition;
-import com.handy.portal.payments.model.PaymentInfo;
-import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.library.ui.view.DateFormFieldTableRow;
 import com.handy.portal.library.ui.view.Errorable;
 import com.handy.portal.library.ui.view.FormFieldTableRow;
+import com.handy.portal.model.definitions.FieldDefinition;
+import com.handy.portal.payments.model.PaymentInfo;
+import com.handy.portal.ui.activity.BaseActivity;
 
 import java.text.DecimalFormat;
 import java.util.regex.Pattern;

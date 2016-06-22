@@ -13,6 +13,8 @@ import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.event.StripeEvent;
+import com.handy.portal.library.ui.view.FormFieldTableRow;
+import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.definitions.FieldDefinition;
@@ -20,8 +22,7 @@ import com.handy.portal.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.BankAccountInfo;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.library.ui.view.FormFieldTableRow;
-import com.handy.portal.library.util.UIUtils;
+
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Map;

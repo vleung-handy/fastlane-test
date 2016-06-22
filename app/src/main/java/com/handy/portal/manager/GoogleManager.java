@@ -10,8 +10,8 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
 import com.handy.portal.constant.ServerParams;
-import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.library.util.Utils;
+import com.handy.portal.ui.activity.MainActivity;
 
 public class GoogleManager
 {

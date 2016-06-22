@@ -34,6 +34,7 @@ import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.util.DeeplinkUtils;
+
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 

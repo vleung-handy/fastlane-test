@@ -15,6 +15,7 @@ import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.PaymentFlow;
 import com.handy.portal.ui.fragment.ActionBarFragment;
+
 import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;

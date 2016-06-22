@@ -22,7 +22,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 @Ignore
 //TODO ignoring for now because we need to set up seed automation file for this to pass, but we need to set up tests to pass with AWS now
 @RunWith(AndroidJUnit4.class)
-@LargeTest
 public class DashboardTest
 {
     @Rule

@@ -29,13 +29,14 @@ public class TextViewUtil
      * for each field in the given field set, updates
      * the view associated with the field's resource id
      * with the field's value
+     *
      * @param testFieldSet
      */
     public static void updateFieldValues(TestField[] testFieldSet)
     {
-        for(int i = 0; i< testFieldSet.length; i++)
+        for (TestField testField : testFieldSet)
         {
-            TextViewUtil.updateEditTextView(testFieldSet[i].getViewResourceId(), testFieldSet[i].getValue());
+            TextViewUtil.updateEditTextView(testField.getViewResourceId(), testField.getValue());
         }
     }
 
@@ -43,13 +44,14 @@ public class TextViewUtil
      * for each field in the given field set, asserts
      * that the view associated with the field's resource id
      * has a value equal to the field's value
+     *
      * @param testFieldSet
      */
     public static void assertFieldValues(TestField[] testFieldSet)
     {
-        for(int i = 0; i< testFieldSet.length; i++)
+        for (TestField testField : testFieldSet)
         {
-            TextViewUtil.assertViewHasText(testFieldSet[i].getViewResourceId(), testFieldSet[i].getValue());
+            TextViewUtil.assertViewHasText(testField.getViewResourceId(), testField.getValue());
         }
     }
 }

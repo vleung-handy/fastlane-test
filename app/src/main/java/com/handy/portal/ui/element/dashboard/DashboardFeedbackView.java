@@ -15,13 +15,14 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.FeedbackLog;
-import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.library.ui.view.YoutubeImagePlaceholderView;
 import com.handy.portal.library.ui.widget.BulletTextView;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.Utils;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.FeedbackLog;
+import com.handy.portal.model.dashboard.ProviderFeedback;
+
 import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;

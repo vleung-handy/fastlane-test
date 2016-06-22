@@ -21,7 +21,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 //note that animations should be disabled on the device running these tests
 @RunWith(AndroidJUnit4.class)
-@LargeTest
 public class LoginTest
 {
 //    private UiDevice mDevice; //TODO use this to test for system dialogs
