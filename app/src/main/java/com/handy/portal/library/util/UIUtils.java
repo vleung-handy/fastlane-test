@@ -2,18 +2,18 @@ package com.handy.portal.library.util;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.os.Build;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.InputType;
@@ -24,8 +24,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -36,7 +34,6 @@ import android.widget.Toast;
 import com.handy.portal.R;
 import com.handy.portal.bookings.constant.BookingActionButtonType;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.library.ui.view.DateFormFieldTableRow;
 import com.handy.portal.library.ui.view.Errorable;
 import com.handy.portal.library.ui.view.FormFieldTableRow;
@@ -329,6 +326,26 @@ public final class UIUtils
     {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dp * scale + .5f); // round up if the decimal is greater than .5
+    }
+
+    @NonNull
+    public static android.app.AlertDialog.Builder createDialogBuilderWithTitle(
+            final Context context, @StringRes final int titleResId)
+    {
+        final android.app.AlertDialog.Builder dialogBuilder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            dialogBuilder = new android.app.AlertDialog.Builder(context, R.style.AlertDialogStyle);
+            final TitleView titleView = new TitleView(context);
+            titleView.setText(titleResId);
+            dialogBuilder.setCustomTitle(titleView);
+        }
+        else
+        {
+            dialogBuilder = new android.app.AlertDialog.Builder(context);
+            dialogBuilder.setTitle(titleResId);
+        }
+        return dialogBuilder;
     }
 
     public static class FormFieldErrorStateRemover implements TextWatcher

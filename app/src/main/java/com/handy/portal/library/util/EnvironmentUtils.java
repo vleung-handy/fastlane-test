@@ -4,14 +4,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
 import android.view.Gravity;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
 import com.handy.portal.R;
 import com.handy.portal.core.EnvironmentModifier;
-import com.handy.portal.ui.widget.TitleView;
 
 public class EnvironmentUtils
 {
@@ -21,10 +19,7 @@ public class EnvironmentUtils
             @Nullable final EnvironmentModifier.OnEnvironmentChangedListener callback)
     {
         final String[] environmentNames = getEnvironmentNames(context, environmentModifier);
-        final TitleView titleView = new TitleView(context);
-        titleView.setText(R.string.select_environment);
-        new AlertDialog.Builder(context)
-                .setCustomTitle(titleView)
+        UIUtils.createDialogBuilderWithTitle(context, R.string.select_environment)
                 .setAdapter(new ArrayAdapter<>(context, R.layout.view_selection_text,
                                 environmentNames),
                         new DialogInterface.OnClickListener()
@@ -76,10 +71,7 @@ public class EnvironmentUtils
             default:
                 return;
         }
-        final TitleView titleView = new TitleView(context);
-        titleView.setText(titleTextResId);
-        new AlertDialog.Builder(context)
-                .setCustomTitle(titleView)
+        UIUtils.createDialogBuilderWithTitle(context, titleTextResId)
                 .setView(input)
                 .setNegativeButton(R.string.cancel, null)
                 .setPositiveButton(R.string.ok, new DialogInterface.OnClickListener()
