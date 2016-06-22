@@ -157,24 +157,10 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     public void completeCheckout()
     {
         LocationData locationData = getLocationData();
-
-        boolean showCheckoutRatingFlow = false;
-        if (mConfigManager.getConfigurationResponse() != null)
-        {
-            showCheckoutRatingFlow = mConfigManager.getConfigurationResponse().isCheckoutRatingFlowEnabled();
-        }
-
-        if (showCheckoutRatingFlow)
-        {
-            showCheckoutRatingFlow();
-        }
-        else
-        {
-            String noteToCustomer = mSendNoteEditText.getText().toString();
-            CheckoutRequest checkoutRequest = new CheckoutRequest(locationData,
-                    new ProBookingFeedback(-1, ""), noteToCustomer, mBooking.getCustomerPreferences());
-            requestNotifyCheckOutJob(mBooking.getId(), checkoutRequest, locationData);
-        }
+        String noteToCustomer = mSendNoteEditText.getText().toString();
+        CheckoutRequest checkoutRequest = new CheckoutRequest(locationData,
+                new ProBookingFeedback(-1, ""), noteToCustomer, mBooking.getCustomerPreferences());
+        requestNotifyCheckOutJob(mBooking.getId(), checkoutRequest, locationData);
     }
 
     @OnFocusChange(R.id.send_note_edit_text)
@@ -193,10 +179,12 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
 
         mPrefsManager.setBookingInstructions(mBooking.getId(), null);
 
-        //return to schedule page
-        returnToPage(MainViewPage.SCHEDULED_JOBS, mBooking.getStartDate().getTime(), TransitionStyle.REFRESH_PAGE);
-
         showToast(R.string.check_out_success, Toast.LENGTH_LONG);
+
+        showCheckoutRatingFlowIfNeeded();
+
+        returnToPage(MainViewPage.SCHEDULED_JOBS, mBooking.getStartDate().getTime(),
+                TransitionStyle.REFRESH_PAGE);
     }
 
     @Subscribe
@@ -280,22 +268,23 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
         bus.post(new HandyEvent.RequestNotifyJobCheckOut(bookingId, checkoutRequest));
     }
 
-    private void showCheckoutRatingFlow()
+    private void showCheckoutRatingFlowIfNeeded()
     {
-        String noteToCustomer = mSendNoteEditText.getText().toString();
-
-        RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
-        Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.BOOKING, mBooking);
-        arguments.putString(BundleKeys.NOTE_TO_CUSTOMER, noteToCustomer);
-        rateBookingDialogFragment.setArguments(arguments);
-        try
+        if (mConfigManager.getConfigurationResponse() != null &&
+                mConfigManager.getConfigurationResponse().isCheckoutRatingFlowEnabled())
         {
-            rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
-        }
-        catch (IllegalStateException e)
-        {
-            Crashlytics.logException(e);
+            RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
+            Bundle arguments = new Bundle();
+            arguments.putSerializable(BundleKeys.BOOKING, mBooking);
+            rateBookingDialogFragment.setArguments(arguments);
+            try
+            {
+                rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
+            }
+            catch (IllegalStateException e)
+            {
+                Crashlytics.logException(e);
+            }
         }
     }
 

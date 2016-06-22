@@ -367,7 +367,7 @@
     <!-- Rate Booking -->
     <string name="rate_booking_submit_rating">Submit Rating</string>
     <string name="rate_booking_comment_text_hint">Any additional comments?</string>
-    <string name="rate_booking_need_rating">You must select a rating to check out</string>
+    <string name="rate_booking_need_rating">You must select a rating</string>
     <string name="you_earned_money_formatted">You made %1$s</string>
     <string name="bonus_formatted">\u0020+ %s REWARD</string>
     <string name="how_was_experience_formatted">How was your experience at %1$s’s home?</string>
