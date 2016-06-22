@@ -28,8 +28,8 @@ import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.library.ui.widget.PhoneInputTextView;
 import com.handy.portal.library.ui.widget.PinCodeInputTextView;
+import com.handy.portal.library.util.EnvironmentUtils;
 import com.handy.portal.library.util.TextUtils;
-import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.LoginLog;
@@ -180,7 +180,7 @@ public class LoginActivityFragment extends InjectedFragment
     {
         if (!buildConfigWrapper.isDebug()) { return; }
 
-        UIUtils.showEnvironmentModifierDialog(environmentModifier, getActivity(), null);
+        EnvironmentUtils.showEnvironmentModifierDialog(environmentModifier, getActivity(), null);
     }
 
     @OnClick(R.id.login_help_button)

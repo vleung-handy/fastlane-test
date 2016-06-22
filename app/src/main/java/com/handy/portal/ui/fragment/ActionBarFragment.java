@@ -16,6 +16,7 @@ import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
+import com.handy.portal.library.util.EnvironmentUtils;
 import com.handy.portal.library.util.UIUtils;
 
 import javax.inject.Inject;
@@ -61,7 +62,7 @@ public abstract class ActionBarFragment extends InjectedFragment
                 @Override
                 public boolean onMenuItemClick(MenuItem item)
                 {
-                    UIUtils.showEnvironmentModifierDialog(environmentModifier, getActivity(), new EnvironmentModifier.OnEnvironmentChangedListener()
+                    EnvironmentUtils.showEnvironmentModifierDialog(environmentModifier, getActivity(), new EnvironmentModifier.OnEnvironmentChangedListener()
                     {
                         @Override
                         public void onEnvironmentChanged(String newEnvironmentPrefix)
