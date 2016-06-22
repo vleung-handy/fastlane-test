@@ -20,7 +20,7 @@ public class EnvironmentUtils
             final Context context,
             @Nullable final EnvironmentModifier.OnEnvironmentChangedListener callback)
     {
-        final String[] environmentNames = getEnvironmentNames(environmentModifier);
+        final String[] environmentNames = getEnvironmentNames(context, environmentModifier);
         final TitleView titleView = new TitleView(context);
         titleView.setText(R.string.select_environment);
         new AlertDialog.Builder(context)
@@ -99,7 +99,8 @@ public class EnvironmentUtils
     }
 
     @NonNull
-    private static String[] getEnvironmentNames(final EnvironmentModifier environmentModifier)
+    private static String[] getEnvironmentNames(final Context context,
+                                                final EnvironmentModifier environmentModifier)
     {
         final EnvironmentModifier.Environment currentEnvironment =
                 environmentModifier.getEnvironment();
@@ -111,7 +112,7 @@ public class EnvironmentUtils
         for (int i = 0; i < environments.length; i++)
         {
             final EnvironmentModifier.Environment environment = environments[i];
-            environmentNames[i] = environment.getDisplayName();
+            environmentNames[i] = context.getString(environment.getDisplayNameResId());
             if (currentEnvironment == environment)
             {
                 if (!TextUtils.isNullOrEmpty(currentEnvironmentPrefix))

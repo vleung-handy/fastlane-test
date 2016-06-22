@@ -2,7 +2,9 @@ package com.handy.portal.core;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 
+import com.handy.portal.R;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.manager.PrefsManager;
@@ -13,22 +15,23 @@ public class EnvironmentModifier
 {
     public enum Environment
     {
-        Q("Q Environment"),
-        LOCAL("Local"),
-        MOBILE_STAGING("Mobile Staging"),
-        STAGING("Staging"),
-        PRODUCTION("Production"),;
+        Q(R.string.q),
+        LOCAL(R.string.local),
+        MOBILE_STAGING(R.string.mobile_staging),
+        STAGING(R.string.staging),;
+        // TODO: Support pointing to production
+        // PRODUCTION(R.string.production),;
 
-        private String mDisplayName;
+        private int mDisplayNameResId;
 
-        Environment(final String displayName)
+        Environment(@StringRes final int displayNameResId)
         {
-            mDisplayName = displayName;
+            mDisplayNameResId = displayNameResId;
         }
 
-        public String getDisplayName()
+        public int getDisplayNameResId()
         {
-            return mDisplayName;
+            return mDisplayNameResId;
         }
     }
 
