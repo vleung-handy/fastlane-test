@@ -21,14 +21,14 @@ import com.handy.portal.payments.ui.element.PaymentDetailExpandableListView;
 import com.handy.portal.payments.ui.element.PaymentsDetailListHeaderView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public final class PaymentsDetailFragment extends ActionBarFragment implements ExpandableListView.OnChildClickListener
 {
-    @Bind(R.id.payments_detail_list_view)
+    @BindView(R.id.payments_detail_list_view)
     PaymentDetailExpandableListView paymentDetailExpandableListView; //using ExpandableListView because it is the only ListView that offers group view support
-    @Bind(R.id.payment_details_list_header)
+    @BindView(R.id.payment_details_list_header)
     PaymentsDetailListHeaderView paymentsDetailListHeaderView;
 
     private NeoPaymentBatch neoPaymentBatch;

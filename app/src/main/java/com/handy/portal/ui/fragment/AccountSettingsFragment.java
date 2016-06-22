@@ -40,7 +40,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -55,17 +55,17 @@ public class AccountSettingsFragment extends ActionBarFragment
     @Inject
     PrefsManager mPrefsManager;
 
-    @Bind(R.id.provider_name_text)
+    @BindView(R.id.provider_name_text)
     TextView mProviderNameText;
-    @Bind(R.id.verification_status_text)
+    @BindView(R.id.verification_status_text)
     TextView mVerificationStatusText;
-    @Bind(R.id.order_resupply_layout)
+    @BindView(R.id.order_resupply_layout)
     ViewGroup mOrderResupplyLayout;
-    @Bind(R.id.account_settings_layout)
+    @BindView(R.id.account_settings_layout)
     ViewGroup mAccountSettingsLayout;
-    @Bind(R.id.fetch_error_view)
+    @BindView(R.id.fetch_error_view)
     ViewGroup mFetchErrorView;
-    @Bind(R.id.fetch_error_text)
+    @BindView(R.id.fetch_error_text)
     TextView mFetchErrorText;
 
     private ProviderProfile mProviderProfile;

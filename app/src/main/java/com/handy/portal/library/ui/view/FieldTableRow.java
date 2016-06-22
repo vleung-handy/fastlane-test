@@ -11,16 +11,16 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.library.util.UIUtils;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public abstract class FieldTableRow extends TableRow implements Errorable
 {
-    @Bind(R.id.label_text)
+    @BindView(R.id.label_text)
     TextView mLabelText;
-    @Bind(R.id.value_text)
+    @BindView(R.id.value_text)
     TextView mValueText;
-    @Bind(R.id.error_indicator)
+    @BindView(R.id.error_indicator)
     View mErrorIndicator;
 
     protected abstract int getLayoutResId();

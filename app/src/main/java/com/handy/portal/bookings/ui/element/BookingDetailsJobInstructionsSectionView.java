@@ -16,14 +16,14 @@ import com.handy.portal.library.util.FontUtils;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class BookingDetailsJobInstructionsSectionView extends FrameLayout
 {
-    @Bind(R.id.booking_details_job_instructions_section_title_text)
+    @BindView(R.id.booking_details_job_instructions_section_title_text)
     TextView mSectionTitleText;
-    @Bind(R.id.booking_details_job_instructions_section_entries_layout)
+    @BindView(R.id.booking_details_job_instructions_section_entries_layout)
     LinearLayout mEntriesLayout;
 
     public BookingDetailsJobInstructionsSectionView(final Context context)

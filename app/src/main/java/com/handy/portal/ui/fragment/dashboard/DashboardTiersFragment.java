@@ -25,20 +25,20 @@ import com.handy.portal.ui.element.dashboard.DashboardViewPagerListener;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.view.DashboardTiersHelp;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DashboardTiersFragment extends ActionBarFragment implements DashboardViewPagerListener
 {
-    @Bind(R.id.dashboard_tiers_header_view)
+    @BindView(R.id.dashboard_tiers_header_view)
     DashboardTiersHeaderView mDashboardTiersHeaderView;
-    @Bind(R.id.region_tiers_view_pager)
+    @BindView(R.id.region_tiers_view_pager)
     DashboardTierViewPager mRegionTiersViewPager;
-    @Bind(R.id.region_tiers_view_pager_indicator_view)
+    @BindView(R.id.region_tiers_view_pager_indicator_view)
     CirclePageIndicatorView mRegionTiersIndicatorView;
-    @Bind(R.id.tiers_help_layout)
+    @BindView(R.id.tiers_help_layout)
     ViewGroup mTiersHelpLayout;
-    @Bind(R.id.tiers_legal_text)
+    @BindView(R.id.tiers_legal_text)
     TextView mTiersLegalText;
 
     private ProviderEvaluation mEvaluation;

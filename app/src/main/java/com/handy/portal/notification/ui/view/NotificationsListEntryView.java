@@ -11,21 +11,21 @@ import com.handy.portal.R;
 import com.handy.portal.notification.model.NotificationMessage;
 import com.handy.portal.notification.model.NotificationType;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class NotificationsListEntryView extends FrameLayout
 {
-    @Bind(R.id.notification_container)
+    @BindView(R.id.notification_container)
     ViewGroup mNotificationContainer;
 
-    @Bind(R.id.notification_icon)
+    @BindView(R.id.notification_icon)
     ImageView mNotificationIcon;
 
-    @Bind(R.id.notification_body)
+    @BindView(R.id.notification_body)
     TextView mNotificationBody;
 
-    @Bind(R.id.notification_time)
+    @BindView(R.id.notification_time)
     TextView mNotificationTime;
 
     public NotificationsListEntryView(Context context)

@@ -28,8 +28,8 @@ import com.handy.portal.util.DeeplinkUtils;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
 import butterknife.BindInt;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class SplashActivity extends BaseActivity
@@ -41,7 +41,7 @@ public class SplashActivity extends BaseActivity
     @Inject
     BuildConfigWrapper buildConfigWrapper;
 
-    @Bind(R.id.progress_spinner)
+    @BindView(R.id.progress_spinner)
     ImageView mProgressSpinner;
     @BindInt(R.integer.progress_spinner_start_offset_millis)
     int mProgressSpinnerStartOffsetMillis;

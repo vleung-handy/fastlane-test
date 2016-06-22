@@ -39,23 +39,23 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 
 public class OnboardingStatusFragment extends OnboardingSubflowFragment
 {
-    @Bind(R.id.jobs_collapsible)
+    @BindView(R.id.jobs_collapsible)
     CollapsibleContentLayout mJobsCollapsible;
-    @Bind(R.id.supplies_collapsible)
+    @BindView(R.id.supplies_collapsible)
     CollapsibleContentLayout mSuppliesCollapsible;
-    @Bind(R.id.shipping_view)
+    @BindView(R.id.shipping_view)
     SimpleContentLayout mShippingView;
-    @Bind(R.id.payment_view)
+    @BindView(R.id.payment_view)
     LabelAndValueView mPaymentView;
-    @Bind(R.id.order_total_view)
+    @BindView(R.id.order_total_view)
     LabelAndValueView mOrderTotalView;
-    @Bind(R.id.links_title)
+    @BindView(R.id.links_title)
     TextView mLinksTitle;
-    @Bind(R.id.links_container)
+    @BindView(R.id.links_container)
     ViewGroup mLinksContainer;
 
     private SubflowData mStatusData;

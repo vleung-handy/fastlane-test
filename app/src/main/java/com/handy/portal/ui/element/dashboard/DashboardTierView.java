@@ -17,20 +17,20 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DashboardTierView extends FrameLayout
 {
-    @Bind(R.id.tier_dot)
+    @BindView(R.id.tier_dot)
     ImageView mTierDot;
-    @Bind(R.id.tier_text)
+    @BindView(R.id.tier_text)
     TextView mTierText;
-    @Bind(R.id.tier_middle_text)
+    @BindView(R.id.tier_middle_text)
     TextView mTierMiddleText;
-    @Bind(R.id.tier_rate_text)
+    @BindView(R.id.tier_rate_text)
     TextView mTierRateText;
-    @Bind(R.id.tier_row_layout)
+    @BindView(R.id.tier_row_layout)
     ViewGroup mTierRowLayout;
 
     public DashboardTierView(final Context context)

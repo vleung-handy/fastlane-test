@@ -9,12 +9,12 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PriceMarker extends FrameLayout
 {
-    @Bind(R.id.marker_text)
+    @BindView(R.id.marker_text)
     TextView mMarkerText;
 
     private boolean mActive = false;

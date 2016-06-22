@@ -55,7 +55,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivityFragment extends InjectedFragment
@@ -66,7 +66,7 @@ public class MainActivityFragment extends InjectedFragment
     ConfigManager mConfigManager;
     /////////////Bad useless injection that breaks if not in?
 
-    @Bind(R.id.tabs)
+    @BindView(R.id.tabs)
     TabButtonGroup mTabs;
     private TabButton mJobsButton;
     private TabButton mRequestsButton;
@@ -74,31 +74,31 @@ public class MainActivityFragment extends InjectedFragment
     private TabButton mAlertsButton;
     private TabButton mButtonMore;
 
-    @Bind(R.id.loading_overlay)
+    @BindView(R.id.loading_overlay)
     View mLoadingOverlayView;
-    @Bind(R.id.nav_link_payments)
+    @BindView(R.id.nav_link_payments)
     RadioButton mNavLinkPayments;
-    @Bind(R.id.nav_link_ratings_and_feedback)
+    @BindView(R.id.nav_link_ratings_and_feedback)
     RadioButton mNavLinkRatingsAndFeedback;
-    @Bind(R.id.nav_link_refer_a_friend)
+    @BindView(R.id.nav_link_refer_a_friend)
     RadioButton mNavLinkReferAFriend;
-    @Bind(R.id.nav_link_account_settings)
+    @BindView(R.id.nav_link_account_settings)
     RadioButton mNavAccountSettings;
-    @Bind(R.id.nav_link_video_library)
+    @BindView(R.id.nav_link_video_library)
     RadioButton mNavLinkVideoLibrary;
-    @Bind(R.id.nav_link_help)
+    @BindView(R.id.nav_link_help)
     RadioButton mNavLinkHelp;
-    @Bind(R.id.drawer_layout)
+    @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
-    @Bind(R.id.navigation_drawer)
+    @BindView(R.id.navigation_drawer)
     RelativeLayout mNavigationDrawer;
-    @Bind(R.id.nav_tray_links)
+    @BindView(R.id.nav_tray_links)
     RadioGroup mNavTrayLinks;
-    @Bind(R.id.navigation_header)
+    @BindView(R.id.navigation_header)
     TextView mNavigationHeader;
-    @Bind(R.id.content_frame)
+    @BindView(R.id.content_frame)
     TabbedLayout mContentFrame;
-    @Bind(R.id.build_version_text)
+    @BindView(R.id.build_version_text)
     TextView mBuildVersionText;
 
     private ActionBarDrawerToggle mActionBarDrawerToggle;

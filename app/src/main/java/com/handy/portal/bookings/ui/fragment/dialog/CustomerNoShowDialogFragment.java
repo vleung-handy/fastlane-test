@@ -30,15 +30,15 @@ import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CustomerNoShowDialogFragment extends InjectedDialogFragment
 {
-    @Bind(R.id.fragment_dialog_customer_no_show_instructions_list)
+    @BindView(R.id.fragment_dialog_customer_no_show_instructions_list)
     LinearLayout mInstructionsList;
-    @Bind(R.id.fragment_dialog_customer_no_show_payment_info_text)
+    @BindView(R.id.fragment_dialog_customer_no_show_payment_info_text)
     TextView mPaymentInfoText;
 
     @Inject

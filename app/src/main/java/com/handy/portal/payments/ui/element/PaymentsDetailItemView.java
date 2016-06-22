@@ -12,25 +12,25 @@ import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.Payment;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PaymentsDetailItemView extends LinearLayout
 {
 
-    @Bind(R.id.payments_detail_month_text)
+    @BindView(R.id.payments_detail_month_text)
     protected TextView monthText;
 
-    @Bind(R.id.payments_detail_date_text)
+    @BindView(R.id.payments_detail_date_text)
     protected TextView dateText;
 
-    @Bind(R.id.payments_detail_location_text)
+    @BindView(R.id.payments_detail_location_text)
     protected TextView locationText;
 
-    @Bind(R.id.payments_detail_time_text)
+    @BindView(R.id.payments_detail_time_text)
     protected TextView timeText;
 
-    @Bind(R.id.payments_detail_payment_text)
+    @BindView(R.id.payments_detail_payment_text)
     protected TextView paymentText;
 
     public PaymentsDetailItemView(Context context)

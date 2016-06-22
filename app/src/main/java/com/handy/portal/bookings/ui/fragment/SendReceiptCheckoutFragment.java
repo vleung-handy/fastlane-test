@@ -45,7 +45,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import butterknife.OnFocusChange;
@@ -58,23 +58,23 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     @Inject
     PrefsManager mPrefsManager;
 
-    @Bind(R.id.started_time_text)
+    @BindView(R.id.started_time_text)
     TextView mStartTimeText;
-    @Bind(R.id.ended_time_text)
+    @BindView(R.id.ended_time_text)
     TextView mEndTimeText;
-    @Bind(R.id.send_note_formatted_text)
+    @BindView(R.id.send_note_formatted_text)
     TextView mSendNoteText;
-    @Bind(R.id.send_note_edit_text)
+    @BindView(R.id.send_note_edit_text)
     EditText mSendNoteEditText;
-    @Bind(R.id.completed_tasks_header)
+    @BindView(R.id.completed_tasks_header)
     View mCompletedTasksHeader;
-    @Bind(R.id.checklist_column_one)
+    @BindView(R.id.checklist_column_one)
     ViewGroup mChecklistFirstColumn;
-    @Bind(R.id.checklist_column_two)
+    @BindView(R.id.checklist_column_two)
     ViewGroup mChecklistSecondColumn;
-    @Bind(R.id.signature_pad)
+    @BindView(R.id.signature_pad)
     SignaturePad mSignaturePad;
-    @Bind(R.id.complete_checkout_button)
+    @BindView(R.id.complete_checkout_button)
     Button mCompleteCheckoutButton;
 
     private static final IntentFilter mTimeIntentFilter = new IntentFilter(Intent.ACTION_TIME_TICK);

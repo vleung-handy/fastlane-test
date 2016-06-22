@@ -20,19 +20,19 @@ import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 
 public class PaymentBillBlockerDialogFragment extends PopupDialogFragment //TODO: consolidate some of this logic with other dialog fragments
 {
     @Inject
     EventBus mBus;
 
-    @Bind(R.id.payments_bill_blocker_content)
+    @BindView(R.id.payments_bill_blocker_content)
     TextView mPaymentBlockerContentText;
-    @Bind(R.id.payments_bill_blocker_update_now_button)
+    @BindView(R.id.payments_bill_blocker_update_now_button)
     protected Button updateNowButton;
 
-    @Bind(R.id.payments_bill_blocker_later_button)
+    @BindView(R.id.payments_bill_blocker_later_button)
     protected Button laterButton;
 
     public static final String FRAGMENT_TAG = "fragment_dialog_payment_bill_blocker";

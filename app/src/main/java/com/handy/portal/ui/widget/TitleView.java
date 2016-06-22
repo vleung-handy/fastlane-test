@@ -10,12 +10,12 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TitleView extends FrameLayout
 {
-    @Bind(R.id.title)
+    @BindView(R.id.title)
     TextView mTitle;
 
     public TitleView(final Context context)

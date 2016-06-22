@@ -27,35 +27,35 @@ import com.handy.portal.onboarding.model.subflow.SubflowType;
 import com.handy.portal.onboarding.ui.activity.OnboardingSubflowActivity;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public abstract class OnboardingSubflowFragment extends ActionBarFragment
 {
-    @Bind(R.id.loading_overlay)
+    @BindView(R.id.loading_overlay)
     protected View mLoadingOverlay;
-    @Bind(R.id.action_button_group)
+    @BindView(R.id.action_button_group)
     protected ViewGroup mActionButtonGroup;
-    @Bind(R.id.single_action_button)
+    @BindView(R.id.single_action_button)
     protected Button mSingleActionButton;
-    @Bind(R.id.group_primary_button)
+    @BindView(R.id.group_primary_button)
     protected Button mGroupPrimaryButton;
-    @Bind(R.id.group_secondary_button)
+    @BindView(R.id.group_secondary_button)
     protected Button mGroupSecondaryButton;
-    @Bind(R.id.header_image)
+    @BindView(R.id.header_image)
     protected ImageView mHeaderImage;
-    @Bind(R.id.header)
+    @BindView(R.id.header)
     protected TextView mHeader;
-    @Bind(R.id.sub_header)
+    @BindView(R.id.sub_header)
     protected TextView mSubHeader;
-    @Bind(R.id.scroll_view)
+    @BindView(R.id.scroll_view)
     protected ScrollView mScrollView;
-    @Bind(R.id.progress_bar)
+    @BindView(R.id.progress_bar)
     protected ProgressBar mProgressBar;
-    @Bind(R.id.progress_percent)
+    @BindView(R.id.progress_percent)
     protected TextView mProgressPercent;
-    @Bind(R.id.progress_view)
+    @BindView(R.id.progress_view)
     protected ViewGroup mProgressView;
     protected ViewGroup mMainContentContainer;
     protected SubflowData mSubflowData;

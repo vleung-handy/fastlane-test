@@ -10,22 +10,22 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DashboardRatingsView extends FrameLayout
 {
-    @Bind(R.id.five_star_title)
+    @BindView(R.id.five_star_title)
     TextView mTitle;
-    @Bind(R.id.five_star_ratings_view)
+    @BindView(R.id.five_star_ratings_view)
     JobRatingView mFiveStarRatingsView;
-    @Bind(R.id.rated_jobs_view)
+    @BindView(R.id.rated_jobs_view)
     JobRatingView mRatedJobsView;
-    @Bind(R.id.total_jobs_view)
+    @BindView(R.id.total_jobs_view)
     JobRatingView mTotalJobsView;
-    @Bind(R.id.date_text)
+    @BindView(R.id.date_text)
     TextView mDateText;
-    @Bind(R.id.five_star_progress_percentage_view)
+    @BindView(R.id.five_star_progress_percentage_view)
     FiveStarRatingPercentageView mFiveStarProgressPercentageRatingView;
 
     private boolean mAnimated = false;

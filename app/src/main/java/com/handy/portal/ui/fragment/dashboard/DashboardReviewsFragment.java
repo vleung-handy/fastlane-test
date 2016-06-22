@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static com.handy.portal.event.ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess;
@@ -31,11 +31,11 @@ import static com.handy.portal.event.ProviderDashboardEvent.RequestProviderFiveS
 
 public class DashboardReviewsFragment extends ActionBarFragment
 {
-    @Bind(R.id.reviews_list)
+    @BindView(R.id.reviews_list)
     RecyclerView mReviewRecyclerView;
-    @Bind(R.id.no_result_view)
+    @BindView(R.id.no_result_view)
     ViewGroup mNoResultView;
-    @Bind(R.id.no_result_text)
+    @BindView(R.id.no_result_text)
     TextView mNoResultText;
 
     private static int MIN_STAR = 5;

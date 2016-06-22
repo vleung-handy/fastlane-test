@@ -28,16 +28,16 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 public class SchedulePreferencesFragment extends OnboardingSubflowFragment
 {
-    @Bind(R.id.date_field)
+    @BindView(R.id.date_field)
     StaticFieldTableRow mDateField;
-    @Bind(R.id.location_field)
+    @BindView(R.id.location_field)
     StaticFieldTableRow mLocationField;
-    @Bind(R.id.schedule_preferences_notice)
+    @BindView(R.id.schedule_preferences_notice)
     View mSchedulePreferencesNotice;
 
     private Date mSelectedStartDate;

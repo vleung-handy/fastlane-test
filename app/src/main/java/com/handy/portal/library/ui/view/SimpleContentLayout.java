@@ -13,27 +13,27 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SimpleContentLayout extends FrameLayout
 {
-    @Bind(R.id.image_holder)
+    @BindView(R.id.image_holder)
     View mImageHolder;
-    @Bind(R.id.image)
+    @BindView(R.id.image)
     ImageView mImage;
-    @Bind(R.id.title)
+    @BindView(R.id.title)
     TextView mTitle;
-    @Bind(R.id.description)
+    @BindView(R.id.description)
     TextView mDescription;
-    @Bind(R.id.action_button)
+    @BindView(R.id.action_button)
     TextView mActionButton;
-    @Bind(R.id.action_icon)
+    @BindView(R.id.action_icon)
     ImageView mActionIcon;
-    @Bind(R.id.expand_button)
+    @BindView(R.id.expand_button)
     TextView mExpandButton;
-    @Bind(R.id.content_holder)
+    @BindView(R.id.content_holder)
     View mContentHolder;
 
     @Nullable

@@ -10,16 +10,16 @@ import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentGroup;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PaymentsDetailGroupView extends LinearLayout
 {
 
-    @Bind(R.id.payments_detail_group_title_text)
+    @BindView(R.id.payments_detail_group_title_text)
     protected TextView titleText;
 
-    @Bind(R.id.payments_detail_group_payments_text)
+    @BindView(R.id.payments_detail_group_payments_text)
     protected TextView paymentsText;
 
     public PaymentsDetailGroupView(Context context)

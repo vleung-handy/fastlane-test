@@ -15,20 +15,20 @@ import com.handy.portal.payments.model.Payment;
 
 import java.util.Date;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PaymentFeeBreakdownView extends FrameLayout
 {
-    @Bind(R.id.fee_breakdown_month_text)
+    @BindView(R.id.fee_breakdown_month_text)
     TextView mFeeBreakdownMonthText;
-    @Bind(R.id.fee_breakdown_day_text)
+    @BindView(R.id.fee_breakdown_day_text)
     TextView mFeeBreakdownDayText;
-    @Bind(R.id.fee_breakdown_reason_text)
+    @BindView(R.id.fee_breakdown_reason_text)
     TextView mFeeBreakdownReasonText;
-    @Bind(R.id.fee_breakdown_description_text)
+    @BindView(R.id.fee_breakdown_description_text)
     TextView mFeeBreakdownDescriptionText;
-    @Bind(R.id.fee_breakdown_amount_text)
+    @BindView(R.id.fee_breakdown_amount_text)
     TextView mFeeBreakdownAmountText;
 
     public PaymentFeeBreakdownView(final Context context)

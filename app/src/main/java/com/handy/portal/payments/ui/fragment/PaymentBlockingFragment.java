@@ -15,16 +15,16 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PaymentBlockingFragment extends ActionBarFragment
 {
-    @Bind(R.id.fetch_error_view)
+    @BindView(R.id.fetch_error_view)
     View fetchErrorView;
-    @Bind(R.id.fetch_error_text)
+    @BindView(R.id.fetch_error_text)
     TextView errorText;
-    @Bind(R.id.try_again_button)
+    @BindView(R.id.try_again_button)
     Button errorCTAButton;
 
     public static final String FRAGMENT_TAG = "fragment_payment_blocking";

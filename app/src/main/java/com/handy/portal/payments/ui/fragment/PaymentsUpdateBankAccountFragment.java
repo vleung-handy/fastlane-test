@@ -29,22 +29,22 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
 {
-    @Bind(R.id.routing_number_field)
+    @BindView(R.id.routing_number_field)
     FormFieldTableRow routingNumberField;
 
-    @Bind(R.id.account_number_field)
+    @BindView(R.id.account_number_field)
     FormFieldTableRow accountNumberField;
 
-    @Bind(R.id.tax_id_field)
+    @BindView(R.id.tax_id_field)
     FormFieldTableRow taxIdField;
 
-    @Bind(R.id.bank_account_setup_helper)
+    @BindView(R.id.bank_account_setup_helper)
     ViewGroup bankAccountSetupHelper;
 
     @Inject

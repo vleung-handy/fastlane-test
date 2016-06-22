@@ -11,15 +11,15 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class HandyCheckBox extends FrameLayout
 {
-    @Bind(R.id.check_box)
+    @BindView(R.id.check_box)
     CheckBox mCheckBox;
-    @Bind(R.id.label)
+    @BindView(R.id.label)
     TextView mLabel;
 
     @OnClick(R.id.check_box_wrapper)
