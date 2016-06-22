@@ -37,7 +37,7 @@ public class EnvironmentUtils
                                 switch (selectedEnvironment)
                                 {
                                     case Q:
-                                    case LOCAL:
+                                    case L:
                                         showEnvironmentPrefixDialog(context, environmentModifier,
                                                 selectedEnvironment, callback);
                                         break;
@@ -69,7 +69,7 @@ public class EnvironmentUtils
                 titleTextResId = R.string.enter_q_environment_number;
                 input.setHint(R.string.q_environment_number_hint);
                 break;
-            case LOCAL:
+            case L:
                 titleTextResId = R.string.enter_domain;
                 input.setHint(R.string.local_hint);
                 break;

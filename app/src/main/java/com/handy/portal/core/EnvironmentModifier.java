@@ -16,11 +16,11 @@ public class EnvironmentModifier
     public enum Environment
     {
         Q(R.string.q),
-        LOCAL(R.string.local),
-        MOBILE_STAGING(R.string.mobile_staging),
-        STAGING(R.string.staging),;
+        L(R.string.local),
+        MS(R.string.mobile_staging),
+        S(R.string.staging),;
         // TODO: Support pointing to production
-        // PRODUCTION(R.string.production),;
+        // P(R.string.production),;
 
         private int mDisplayNameResId;
 
@@ -36,7 +36,7 @@ public class EnvironmentModifier
     }
 
 
-    private static final String DEFAULT_ENVIRONMENT = Environment.MOBILE_STAGING.name();
+    private static final String DEFAULT_ENVIRONMENT = Environment.MS.name();
     private final PrefsManager mPrefsManager;
     private boolean mIsPinRequestEnabled = true;
 

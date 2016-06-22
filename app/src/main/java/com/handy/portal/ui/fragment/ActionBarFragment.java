@@ -56,7 +56,7 @@ public abstract class ActionBarFragment extends InjectedFragment
         final MenuItem environmentModifierMenuItem = menu.findItem(R.id.action_settings);
         if (environmentModifierMenuItem != null)
         {
-            environmentModifierMenuItem.setTitle(environmentModifier.getEnvironmentPrefix().toUpperCase());
+            setEnvironmentMenuItemTitle(environmentModifierMenuItem);
             environmentModifierMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener()
             {
                 @Override
@@ -67,7 +67,7 @@ public abstract class ActionBarFragment extends InjectedFragment
                         @Override
                         public void onEnvironmentChanged(String newEnvironmentPrefix)
                         {
-                            environmentModifierMenuItem.setTitle(newEnvironmentPrefix.toUpperCase());
+                            setEnvironmentMenuItemTitle(environmentModifierMenuItem);
                             bus.post(new HandyEvent.LogOutProvider());
                         }
                     });
@@ -75,6 +75,21 @@ public abstract class ActionBarFragment extends InjectedFragment
                 }
             });
         }
+    }
+
+    public void setEnvironmentMenuItemTitle(final MenuItem environmentMenuItemTitle)
+    {
+        String title;
+        final EnvironmentModifier.Environment environment = environmentModifier.getEnvironment();
+        if (environment == EnvironmentModifier.Environment.Q)
+        {
+            title = environmentModifier.getEnvironmentPrefix().toUpperCase();
+        }
+        else
+        {
+            title = environment.name().toUpperCase();
+        }
+        environmentMenuItemTitle.setTitle(title);
     }
 
     public void setActionBarVisible(boolean visible)
