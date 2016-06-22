@@ -180,7 +180,7 @@ public class LoginActivityFragment extends InjectedFragment
     {
         if (!buildConfigWrapper.isDebug()) { return; }
 
-        UIUtils.createEnvironmentModifierDialog(environmentModifier, getActivity(), null).show();
+        UIUtils.showEnvironmentModifierDialog(environmentModifier, getActivity(), null);
     }
 
     @OnClick(R.id.login_help_button)
@@ -221,7 +221,7 @@ public class LoginActivityFragment extends InjectedFragment
         storedPhoneNumber = phoneNumber; //remember so they don't have to reinput once they receive their pin
         changeState(LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE);
 
-        if (buildConfigWrapper.isDebug() && !environmentModifier.pinRequestEnabled())
+        if (buildConfigWrapper.isDebug() && !environmentModifier.isPinRequestEnabled())
         {
             // if pin request is disabled, jump to pin input state; this is used for test automation
             // purposes where the seeded value of the pin associated with the provider will be

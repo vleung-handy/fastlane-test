@@ -11,24 +11,50 @@ import java.util.Properties;
 
 public class EnvironmentModifier
 {
-    private static final String DEFAULT_ENVIRONMENT_PREFIX = "ms";
-    private final PrefsManager prefsManager;
-    private boolean pinRequestEnabled = true;
+    public enum Environment
+    {
+        Q("Q Environment"),
+        LOCAL("Local"),
+        MOBILE_STAGING("Mobile Staging"),
+        STAGING("Staging"),
+        PRODUCTION("Production"),;
+
+        private String mDisplayName;
+
+        Environment(final String displayName)
+        {
+            mDisplayName = displayName;
+        }
+
+        public String getDisplayName()
+        {
+            return mDisplayName;
+        }
+    }
+
+
+    private static final String DEFAULT_ENVIRONMENT = Environment.MOBILE_STAGING.name();
+    private final PrefsManager mPrefsManager;
+    private boolean mIsPinRequestEnabled = true;
 
     public EnvironmentModifier(Context context, PrefsManager prefsManager)
     {
-        this.prefsManager = prefsManager;
-
+        mPrefsManager = prefsManager;
         try
         {
             Properties properties = PropertiesReader.getProperties(context, "override.properties");
             boolean disablePinRequest = Boolean.parseBoolean(properties.getProperty("disable_pin_request", "false"));
-            String environment = properties.getProperty("environment", DEFAULT_ENVIRONMENT_PREFIX);
-            environment = prefsManager.getString(PrefsKey.ENVIRONMENT_PREFIX, environment); // whatever is stored in prefs is higher priority
+            mIsPinRequestEnabled = !disablePinRequest;
+            String environmentPrefix = properties.getProperty("environment", null);
+            environmentPrefix = prefsManager.getString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix); // whatever is stored in prefs is higher priority
 
-            this.pinRequestEnabled = !disablePinRequest;
-            prefsManager.setString(PrefsKey.ENVIRONMENT_PREFIX, environment);
-        } catch (Exception e)
+            if (environmentPrefix != null && environmentPrefix.startsWith("q")) // this means it's an override to point to a Q environment
+            {
+                prefsManager.setString(PrefsKey.ENVIRONMENT, Environment.Q.name());
+                prefsManager.setString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix);
+            }
+        }
+        catch (Exception e)
         {
             e.printStackTrace();
         }
@@ -36,17 +62,27 @@ public class EnvironmentModifier
 
     public String getEnvironmentPrefix()
     {
-        return prefsManager.getString(PrefsKey.ENVIRONMENT_PREFIX, DEFAULT_ENVIRONMENT_PREFIX);
+        return mPrefsManager.getString(PrefsKey.ENVIRONMENT_PREFIX, null);
     }
 
-    public boolean pinRequestEnabled()
+    public Environment getEnvironment()
     {
-        return pinRequestEnabled;
+        final String environmentName =
+                mPrefsManager.getString(PrefsKey.ENVIRONMENT, DEFAULT_ENVIRONMENT);
+        return Environment.valueOf(environmentName);
     }
 
-    public void setEnvironmentPrefix(String environmentPrefix, @Nullable OnEnvironmentChangedListener callback)
+    public boolean isPinRequestEnabled()
     {
-        prefsManager.setString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix);
+        return mIsPinRequestEnabled;
+    }
+
+    public void setEnvironment(final Environment environment,
+                               @Nullable final String environmentPrefix,
+                               @Nullable final OnEnvironmentChangedListener callback)
+    {
+        mPrefsManager.setString(PrefsKey.ENVIRONMENT, environment.name());
+        mPrefsManager.setString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix);
         if (callback != null)
         {
             callback.onEnvironmentChanged(environmentPrefix);

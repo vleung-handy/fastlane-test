@@ -61,7 +61,7 @@ public abstract class ActionBarFragment extends InjectedFragment
                 @Override
                 public boolean onMenuItemClick(MenuItem item)
                 {
-                    UIUtils.createEnvironmentModifierDialog(environmentModifier, getActivity(), new EnvironmentModifier.OnEnvironmentChangedListener()
+                    UIUtils.showEnvironmentModifierDialog(environmentModifier, getActivity(), new EnvironmentModifier.OnEnvironmentChangedListener()
                     {
                         @Override
                         public void onEnvironmentChanged(String newEnvironmentPrefix)
@@ -69,7 +69,7 @@ public abstract class ActionBarFragment extends InjectedFragment
                             environmentModifierMenuItem.setTitle(newEnvironmentPrefix.toUpperCase());
                             bus.post(new HandyEvent.LogOutProvider());
                         }
-                    }).show();
+                    });
                     return true;
                 }
             });
