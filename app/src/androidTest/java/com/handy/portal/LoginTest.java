@@ -3,7 +3,6 @@ package com.handy.portal;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.test.data.TestUsers;
@@ -12,6 +11,7 @@ import com.handy.portal.test.util.TextViewUtil;
 import com.handy.portal.test.util.ViewUtil;
 import com.handy.portal.ui.activity.SplashActivity;
 
+import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -27,6 +27,7 @@ public class LoginTest
 
     private static final TestUser TEST_USER = TestUsers.FIRST_TIME_NY_PROVIDER;
 
+    @Rule
     public ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<SplashActivity>(
             SplashActivity.class)
     {
