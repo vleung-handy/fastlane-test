@@ -326,7 +326,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         if (event.days.contains(mSelectedDay))
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-            if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
+            if (event.error != null && event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
             {
                 mErrorText.setText(R.string.error_fetching_connectivity_issue);
             }

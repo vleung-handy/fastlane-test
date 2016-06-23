@@ -1,5 +1,7 @@
 package com.handy.portal.bookings;
 
+import android.support.annotation.Nullable;
+
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.data.DataManager;
@@ -63,7 +65,7 @@ public abstract class BookingEvent extends HandyEvent
 
     public static class ReceiveProRequestedJobsError extends ReceiveErrorEvent
     {
-        public ReceiveProRequestedJobsError(DataManager.DataManagerError error)
+        public ReceiveProRequestedJobsError(@Nullable DataManager.DataManagerError error)
         {
             this.error = error;
         }

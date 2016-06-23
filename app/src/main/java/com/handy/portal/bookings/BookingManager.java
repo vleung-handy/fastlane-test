@@ -145,12 +145,19 @@ public class BookingManager
                         @Override
                         public void onSuccess(final BookingsListWrapper bookingsListWrapper)
                         {
-                            for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
+                            if (bookingsListWrapper != null && bookingsListWrapper.getBookingsWrappers() != null)
                             {
-                                Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
-                                Crashlytics.log("Received available bookings for " + day);
-                                availableBookingsCache.put(day, bookingsWrapper);
-                                mBus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(bookingsWrapper, day));
+                                for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
+                                {
+                                    Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
+                                    Crashlytics.log("Received available bookings for " + day);
+                                    availableBookingsCache.put(day, bookingsWrapper);
+                                    mBus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(bookingsWrapper, day));
+                                }
+                            }
+                            else
+                            {
+                                mBus.post(new HandyEvent.ReceiveAvailableBookingsError(null, datesToRequest));
                             }
                         }
 
@@ -236,13 +243,20 @@ public class BookingManager
                         @Override
                         public void onSuccess(final BookingsListWrapper bookingsListWrapper)
                         {
-                            for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
+                            if (bookingsListWrapper != null && bookingsListWrapper.getBookingsWrappers() != null)
                             {
-                                Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
-                                Crashlytics.log("Received requested bookings for " + day);
-                                requestedBookingsCache.put(day, bookingsWrapper);
+                                for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
+                                {
+                                    Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
+                                    Crashlytics.log("Received requested bookings for " + day);
+                                    requestedBookingsCache.put(day, bookingsWrapper);
+                                }
+                                mBus.post(new BookingEvent.ReceiveProRequestedJobsSuccess(bookingsListWrapper.getBookingsWrappers()));
                             }
-                            mBus.post(new BookingEvent.ReceiveProRequestedJobsSuccess(bookingsListWrapper.getBookingsWrappers()));
+                            else
+                            {
+                                mBus.post(new BookingEvent.ReceiveProRequestedJobsError(null));
+                            }
                         }
 
                         @Override
@@ -296,16 +310,23 @@ public class BookingManager
                         @Override
                         public void onSuccess(final BookingsListWrapper bookingsListWrapper)
                         {
-                            for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
+                            if (bookingsListWrapper != null && bookingsListWrapper.getBookingsWrappers() != null)
                             {
-                                Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
-                                Log.d(getClass().getName(), "batch received scheduled bookings: " + day.toString());
-                                Crashlytics.log("Received scheduled bookings for " + day);
-                                List<Booking> bookings = bookingsWrapper.getBookings();
-                                scheduledBookingsCache.put(day, bookingsWrapper);
-                                resultMap.put(day, bookings);
+                                for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
+                                {
+                                    Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
+                                    Log.d(getClass().getName(), "batch received scheduled bookings: " + day.toString());
+                                    Crashlytics.log("Received scheduled bookings for " + day);
+                                    List<Booking> bookings = bookingsWrapper.getBookings();
+                                    scheduledBookingsCache.put(day, bookingsWrapper);
+                                    resultMap.put(day, bookings);
+                                }
+                                mBus.post(new HandyEvent.ReceiveScheduledBookingsBatchSuccess(resultMap));
                             }
-                            mBus.post(new HandyEvent.ReceiveScheduledBookingsBatchSuccess(resultMap));
+                            else
+                            {
+                                mBus.post(new HandyEvent.ReceiveScheduledBookingsError(null, datesToRequest));
+                            }
                         }
 
                         @Override
