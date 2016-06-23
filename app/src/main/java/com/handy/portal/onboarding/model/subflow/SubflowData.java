@@ -4,10 +4,9 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.model.onboarding.SuppliesInfo;
+import com.handy.portal.onboarding.model.supplies.SuppliesInfo;
 import com.handy.portal.onboarding.model.claim.StartDateRange;
 import com.handy.portal.onboarding.model.claim.Zipcluster;
-import com.handy.portal.onboarding.model.status.ApplicationStatus;
 import com.handy.portal.onboarding.model.status.LearningLinkDetails;
 import com.handy.portal.onboarding.model.status.StatusButton;
 
@@ -27,7 +26,7 @@ public class SubflowData implements Serializable
 
     // Status Subflow Data
     @SerializedName("application_status")
-    private ApplicationStatus mApplicationStatus;
+    private String mApplicationStatus;
     @SerializedName("learning_links")
     private LearningLinkDetails mLearningLinkDetails;
     @SerializedName("claims")
@@ -37,7 +36,7 @@ public class SubflowData implements Serializable
     @SerializedName("header")
     private StatusHeader mHeader;
 
-    public ApplicationStatus getApplicationStatus()
+    public String getApplicationStatus()
     {
         return mApplicationStatus;
     }

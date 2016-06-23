@@ -7,6 +7,7 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -22,6 +23,10 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
+import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.UIUtils;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
@@ -31,10 +36,6 @@ import com.handy.portal.model.LocationData;
 import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
-import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
-import com.handy.portal.library.util.CurrencyUtils;
-import com.handy.portal.library.util.UIUtils;
-import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -60,6 +61,8 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     EditText mCommentText;
     @Bind(R.id.rate_booking_rating_radiogroup)
     RadioGroup mRatingRadioGroup;
+    @Bind(R.id.rate_booking_submit_button)
+    Button mSubmitButton;
 
     public static final String FRAGMENT_TAG = "fragment_dialog_rate_booking";
 
@@ -124,12 +127,6 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         if (mBooking == null)
         {
             Crashlytics.logException(new Exception("No valid booking passed to RateBookingDialogFragment, aborting rating"));
-            mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            final LocationData locationData = getLocationData();
-            mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOutSubmitted(mBooking, locationData)));
-            mBus.post(new HandyEvent.RequestNotifyJobCheckOut(mBooking.getId(), new CheckoutRequest(
-                    locationData, new ProBookingFeedback(getBookingRatingScore(),
-                    getBookingRatingComment()), mNoteToCustomer, null)));
         }
 
         mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingShown()));
@@ -149,10 +146,10 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingSubmitted(bookingRatingScore)));
         if (bookingRatingScore > 0)
         {
-            // TODO: combine this with line 71
-            mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+            mSubmitButton.setEnabled(false);
             final LocationData locationData = getLocationData();
-            mBus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOutSubmitted(mBooking, locationData)));
+            mBus.post(new LogEvent.AddLogEvent(
+                    new CheckInFlowLog.CheckOutSubmitted(mBooking, locationData)));
             mBus.post(new HandyEvent.RequestNotifyJobCheckOut(mBooking.getId(), new CheckoutRequest(
                     locationData, new ProBookingFeedback(bookingRatingScore,
                     getBookingRatingComment()), mNoteToCustomer, mBooking.getCustomerPreferences())
@@ -185,7 +182,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     @Subscribe
     public void onReceiveNotifyJobCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
     {
-        mBus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        mSubmitButton.setEnabled(true);
         UIUtils.showToast(getContext(), getString(R.string.an_error_has_occurred), Toast.LENGTH_SHORT);
         //allow them to try again. they can always click the X button if they don't want to.
     }

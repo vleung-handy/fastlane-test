@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,7 +28,7 @@ import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Designation;
 import com.handy.portal.model.ProviderPersonalInfo;
-import com.handy.portal.model.onboarding.SuppliesInfo;
+import com.handy.portal.onboarding.model.supplies.SuppliesInfo;
 import com.handy.portal.onboarding.model.status.LearningLink;
 import com.handy.portal.onboarding.model.status.LearningLinkDetails;
 import com.handy.portal.onboarding.model.status.StatusButton;
@@ -78,8 +79,7 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
         mMainContentContainer.setVisibility(View.GONE);
         initButtonColor();
         bus.post(new LogEvent.AddLogEvent(
-                new NativeOnboardingLog.StatusPageShown(
-                        mStatusData.getApplicationStatus().name().toLowerCase())));
+                new NativeOnboardingLog.StatusPageShown(mStatusData.getApplicationStatus())));
     }
 
     private void initButtonColor()
@@ -89,7 +89,7 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
         {
             if (button.getType() == StatusButton.Type.ERROR)
             {
-                final int red = getResources().getColor(R.color.error_red);
+                final int red = ContextCompat.getColor(getContext(), R.color.error_red);
                 mGroupPrimaryButton.setBackgroundColor(red);
                 mSingleActionButton.setBackgroundColor(red);
             }
@@ -197,7 +197,7 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
 
             // Order/Fee Total
             final String orderTotalTitle = getString(providerHasPaymentMethod() ?
-                    R.string.order_total : R.string.fee);
+                    R.string.order_total : R.string.supplies_fee);
             mOrderTotalView.setContent(orderTotalTitle, suppliesInfo.getCost());
 
             // Payment
@@ -344,9 +344,8 @@ public class OnboardingStatusFragment extends OnboardingSubflowFragment
         final StatusButton statusButton = mStatusData.getButton();
         if (statusButton != null)
         {
-            bus.post(new LogEvent.AddLogEvent(
-                    new NativeOnboardingLog.StatusPageSubmitted(
-                            mStatusData.getApplicationStatus().name().toLowerCase())));
+            bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.StatusPageSubmitted(
+                            mStatusData.getApplicationStatus())));
             final String url = statusButton.getUrl();
             if (!TextUtils.isNullOrEmpty(url))
             {

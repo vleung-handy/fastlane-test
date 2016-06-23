@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:background="@null"
         android:padding="@dimen/default_padding"
-        android:singleLine="true"
+        android:maxLines="1"
         android:textColor="@color/black"
         />
 </merge>

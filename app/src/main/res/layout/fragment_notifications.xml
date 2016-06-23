@@ -10,7 +10,7 @@
 
     <com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout
         android:id="@+id/refresh_layout"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <include layout="@layout/element_notifications_list" />

@@ -3,6 +3,7 @@ package com.handy.portal.core;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.squareup.otto.Bus;
 import com.squareup.otto.DeadEvent;
@@ -31,6 +32,19 @@ public final class MainBus extends Bus
                     MainBus.super.register(object);
                 }
             });
+        }
+    }
+
+    @Override
+    public void unregister(final Object object)
+    {
+        try
+        {
+            super.unregister(object);
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e);
         }
     }
 

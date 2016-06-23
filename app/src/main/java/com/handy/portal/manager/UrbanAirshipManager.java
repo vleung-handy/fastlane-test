@@ -55,34 +55,41 @@ public class UrbanAirshipManager
         final AirshipConfigOptions options = AirshipConfigOptions.loadDefaultOptions(associatedApplication.getApplicationContext());
         options.inProduction = !BuildConfig.DEBUG;
 
-        UAirship.takeOff(associatedApplication, options, new UAirship.OnReadyCallback()
+        try
         {
-            @Override
-            public void onAirshipReady(final UAirship airship)
+            UAirship.takeOff(associatedApplication, options, new UAirship.OnReadyCallback()
             {
-                final DefaultNotificationFactory defaultNotificationFactory =
-                        new DefaultNotificationFactory(associatedApplication.getApplicationContext());
-
-                defaultNotificationFactory.setColor(ContextCompat.getColor(associatedApplication.getApplicationContext(), R.color.handy_blue));
-                defaultNotificationFactory.setSmallIconId(R.drawable.ic_notification);
-
-                airship.getPushManager().setNotificationFactory(defaultNotificationFactory);
-                airship.getPushManager().setPushEnabled(true);
-                airship.getPushManager().setUserNotificationsEnabled(true); //notifications the user can see as opposed to background data pushes
-
-                //Setup a named user linking this user's id to a UA named user
-                //We may not have a cached provider id when a user first logs in, possible race condition, but the UrbanAirshipManager will hear the ProviderIdUpdated event and update accordingly
-                String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
-                if (providerId != null)
+                @Override
+                public void onAirshipReady(final UAirship airship)
                 {
-                    setUniqueIdentifiers(providerId);
-                }
+                    final DefaultNotificationFactory defaultNotificationFactory =
+                            new DefaultNotificationFactory(associatedApplication.getApplicationContext());
 
-                //Override the default action otherwise it tries to openurl all of our deep links
-                //Init the deep link listener, must be done after takeoff
-                UAirship.shared().getActionRegistry().getEntry(DeepLinkAction.DEFAULT_REGISTRY_NAME).setDefaultAction(customDeepLinkAction);
-            }
-        });
+                    defaultNotificationFactory.setColor(ContextCompat.getColor(associatedApplication.getApplicationContext(), R.color.handy_blue));
+                    defaultNotificationFactory.setSmallIconId(R.drawable.ic_notification);
+
+                    airship.getPushManager().setNotificationFactory(defaultNotificationFactory);
+                    airship.getPushManager().setPushEnabled(true);
+                    airship.getPushManager().setUserNotificationsEnabled(true); //notifications the user can see as opposed to background data pushes
+
+                    //Setup a named user linking this user's id to a UA named user
+                    //We may not have a cached provider id when a user first logs in, possible race condition, but the UrbanAirshipManager will hear the ProviderIdUpdated event and update accordingly
+                    String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+                    if (providerId != null)
+                    {
+                        setUniqueIdentifiers(providerId);
+                    }
+
+                    //Override the default action otherwise it tries to openurl all of our deep links
+                    //Init the deep link listener, must be done after takeoff
+                    UAirship.shared().getActionRegistry().getEntry(DeepLinkAction.DEFAULT_REGISTRY_NAME).setDefaultAction(customDeepLinkAction);
+                }
+            });
+        }
+        catch (IllegalStateException e)
+        {
+            Crashlytics.logException(e);
+        }
     }
 
     //Update our alias to match the provider id

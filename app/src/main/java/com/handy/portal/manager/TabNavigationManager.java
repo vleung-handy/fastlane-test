@@ -4,7 +4,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewTab;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.BasicLog;
+import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.payments.PaymentsManager;
 import com.squareup.otto.Bus;
 import com.squareup.otto.Subscribe;
@@ -39,7 +39,7 @@ public class TabNavigationManager
     @Subscribe
     public void onNavigateToTabEvent(NavigationEvent.NavigateToTab event)
     {
-        mBus.post(new LogEvent.AddLogEvent(new BasicLog.Navigation(event.targetTab.name().toLowerCase())));
+        mBus.post(new LogEvent.AddLogEvent(new AppLog.Navigation(event.targetTab.name().toLowerCase())));
         //Ordering is important for these checks, they have different priorities
 
         NavigationEvent.SwapFragmentEvent swapFragmentEvent = new NavigationEvent.SwapFragmentEvent(

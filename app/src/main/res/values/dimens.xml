@@ -77,6 +77,7 @@
     <dimen name="medium_elevation">4dp</dimen>
     <dimen name="medium_corner_radius">4dp</dimen>
     <dimen name="green_checkbox_width_height">32dp</dimen>
+    <dimen name="progress_bar_height">12dp</dimen>
 
     <!-- Generic -->
     <dimen name="negative_complete_button_height_half">-32dp</dimen>
@@ -92,7 +93,6 @@
     <dimen name="notification_list_entry_icon_size">18dp</dimen>
     <dimen name="notification_icon_radius">9dp</dimen>
     <dimen name="notification_list_entry_time_margin_left">8dp</dimen>
-    <dimen name="notification_list_entry_time_margin_top">3dp</dimen>
 
     <dimen name="notification_section_header_horizontal_padding">16dp</dimen>
     <dimen name="notification_section_header_vertical_padding">10dp</dimen>

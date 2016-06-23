@@ -61,6 +61,8 @@ public final class DateTimeUtils
     public final static int HOURS_IN_DAY = 24;
     public final static int HOURS_IN_SIX_DAYS = HOURS_IN_DAY * 6;
     public final static String UTC_TIMEZONE = "UTC";
+    public static final int MINUTES_IN_AN_HOUR = 60;
+    public static final int DAYS_IN_A_WEEK = 7;
 
 
     //returns a today or tomorrow prepend as needed
@@ -560,4 +562,28 @@ public final class DateTimeUtils
         return LOCAL_TIME_12_HOURS;
     }
 
+    public static String formatDateToNumberTimeUnit(final Date date)
+    {
+        final Calendar calendar = Calendar.getInstance();
+        final long timePastMillis = calendar.getTimeInMillis() - date.getTime();
+        final long minutes = TimeUnit.MILLISECONDS.toMinutes(timePastMillis);
+        long hours;
+        long days;
+        if (minutes < MINUTES_IN_AN_HOUR) // minutes
+        {
+            return minutes + "m";
+        }
+        else if ((hours = TimeUnit.MINUTES.toHours(minutes)) <  HOURS_IN_DAY) // hours
+        {
+            return hours + "h";
+        }
+        else if ((days = TimeUnit.HOURS.toDays(hours)) < DAYS_IN_A_WEEK) // days
+        {
+            return days + "d";
+        }
+        else // weeks
+        {
+            return (days / DAYS_IN_A_WEEK) + "w";
+        }
+    }
 }

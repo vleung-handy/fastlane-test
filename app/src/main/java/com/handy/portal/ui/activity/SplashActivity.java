@@ -121,19 +121,7 @@ public class SplashActivity extends BaseActivity
     @Override
     public void onPause()
     {
-        try
-        {
-             /*
-                 on mostly Samsung Android 5.0 devices (responsible for ~97% of crashes here),
-                 Activity.onPause() can be called without Activity.onResume()
-                 so unregistering the bus here can cause an exception
-              */
-            bus.unregister(this);
-        }
-        catch (Exception e)
-        {
-            Crashlytics.logException(e); //want more info for now
-        }
+        bus.unregister(this);
         mProgressSpinner.removeCallbacks(mLoadingAnimationStarter);
         super.onPause();
     }
@@ -207,13 +195,17 @@ public class SplashActivity extends BaseActivity
         //do nothing
     }
 
+    /**
+     * called on debug builds only
+     */
+    @SuppressWarnings("deprecation")
     private void processInjectedCredentials()
     {
         final String authToken = getIntent().getStringExtra(PrefsKey.AUTH_TOKEN);
-        if (!TextUtils.isNullOrEmpty(authToken))
+        if (authToken != null)
         {
+            //want to set even if empty string, in the case of testing
             prefsManager.setString(PrefsKey.AUTH_TOKEN, authToken);
-
             //For use with WebView
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             {

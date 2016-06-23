@@ -15,6 +15,8 @@ public class OnboardingDetails implements Serializable
 {
     @SerializedName("steps")
     private ArrayList<OnboardingSubflowDetails> mSubflows;
+    @SerializedName("percent_complete")
+    private float mPercentComplete;
 
     public ArrayList<OnboardingSubflowDetails> getSubflows()
     {
@@ -45,5 +47,10 @@ public class OnboardingDetails implements Serializable
             }
         }
         return subflows;
+    }
+
+    public float getPercentComplete()
+    {
+        return mPercentComplete;
     }
 }

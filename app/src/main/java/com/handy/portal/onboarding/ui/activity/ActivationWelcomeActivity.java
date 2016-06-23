@@ -2,7 +2,6 @@ package com.handy.portal.onboarding.ui.activity;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.DrawableRes;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.View;
@@ -10,7 +9,6 @@ import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.library.util.Utils;
@@ -32,7 +30,6 @@ public class ActivationWelcomeActivity extends AppCompatActivity
 {
     public static final int COLORS = 12;
 
-    @DrawableRes
     private List<Integer> mDrawables;
 
     @Bind(R.id.left_center_view)
@@ -124,21 +121,8 @@ public class ActivationWelcomeActivity extends AppCompatActivity
     @Override
     protected void onPause()
     {
-        try
-        {
-             /*
-                 on mostly Samsung Android 5.0 devices (responsible for ~97% of crashes here),
-                 Activity.onPause() can be called without Activity.onResume()
-                 so unregistering the bus here can cause an exception
-              */
-            mBus.unregister(this);
-        }
-        catch (Exception e)
-        {
-            Crashlytics.logException(e); //want more info for now
-        }
+        mBus.unregister(this);
         super.onPause();
-
     }
 
     @Subscribe

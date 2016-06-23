@@ -10,10 +10,10 @@
     android:clickable="false"
     android:longClickable="false"
     android:orientation="horizontal"
-    android:paddingBottom="@dimen/extra_padding"
-    android:paddingLeft="@dimen/payment_container_horizontal_padding"
-    android:paddingRight="@dimen/payment_container_horizontal_padding"
-    android:paddingTop="@dimen/default_padding"
+    android:paddingBottom="@dimen/default_padding_half"
+    android:paddingLeft="@dimen/default_padding"
+    android:paddingRight="@dimen/default_padding"
+    android:paddingTop="@dimen/default_padding_half"
     >
 
     <TextView

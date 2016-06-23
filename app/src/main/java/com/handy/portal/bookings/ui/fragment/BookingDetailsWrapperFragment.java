@@ -37,6 +37,10 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
+import com.handy.portal.library.util.FragmentUtils;
+import com.handy.portal.library.util.UIUtils;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
@@ -47,10 +51,6 @@ import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
-import com.handy.portal.library.util.FragmentUtils;
-import com.handy.portal.library.util.UIUtils;
-import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import java.util.Date;
@@ -244,7 +244,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     public void onReceiveNotifyJobOnMyWayError(final HandyEvent.ReceiveNotifyJobOnMyWayError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        if(mBooking != null)
+        if (mBooking != null)
         {
             bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWayError(
                     mBooking, getLocationData())));
@@ -425,6 +425,34 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         trackRemoveJobError(event.error.getMessage());
         handleBookingRemoveError(event.error.getMessage());
+    }
+
+    @Subscribe
+    public void onReceiveNotifyJobUpdateArrivalTimeSuccess(final HandyEvent.ReceiveNotifyJobUpdateArrivalTimeSuccess event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+
+        //refresh the page with the new booking
+        mBooking = event.booking;
+        updateDisplay();
+
+        showToast(R.string.eta_success, Toast.LENGTH_LONG);
+    }
+
+    @Subscribe
+    public void onReceiveNotifyJobUpdateArrivalTimeError(final HandyEvent.ReceiveNotifyJobUpdateArrivalTimeError event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+
+        String errorMessage = event.error.getMessage();
+        if (errorMessage != null)
+        {
+            showToast(errorMessage);
+        }
+        else
+        {
+            showNetworkErrorToast();
+        }
     }
 
     @NonNull

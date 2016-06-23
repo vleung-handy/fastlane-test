@@ -10,6 +10,7 @@ import com.handy.portal.bookings.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.NearbyBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
+import com.handy.portal.bookings.ui.fragment.ProRequestedJobsFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.notification.ui.fragment.NotificationsFragment;
@@ -77,7 +78,9 @@ public enum MainViewTab implements Serializable
     WEB_PAGE(PortalWebViewFragment.class),
 
     BLOCK_PRO_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
-    PAYMENT_BLOCKING(PaymentBlockingFragment.class),;
+    PAYMENT_BLOCKING(PaymentBlockingFragment.class),
+
+    REQUESTED_JOBS(ProRequestedJobsFragment.class);
 
     private Class mClassType;
     private

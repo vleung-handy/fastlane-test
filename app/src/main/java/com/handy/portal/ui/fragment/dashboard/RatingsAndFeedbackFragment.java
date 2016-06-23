@@ -138,9 +138,9 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
         mDashboardOptionsPerformanceView.setDisplay(evaluation);
 
         mLifetimeRatingText.setText(getString(R.string.rating_lifetime_formatted,
-                evaluation.getLifeTime().getProRating()));
+                Double.toString(evaluation.getLifeTime().getProRating())));
         mRatingThresholdText.setText(getString(R.string.rating_threshold_formatted,
-                evaluation.getDangerRatingThreshold()));
+                Double.toString(evaluation.getDangerRatingThreshold())));
     }
 
     @Subscribe

@@ -31,6 +31,9 @@ public class OnboardingSubflowActivity extends BaseActivity
     private SubflowType mSubflowType;
     private long mLaunchedTimeMillis;
     private boolean mIsSingleStepMode;
+    private int mPercentComplete;
+    private int mPercentRange;
+    private int mSubflowStepCount;
 
     public OnboardingDetails getOnboardingDetails()
     {
@@ -45,6 +48,8 @@ public class OnboardingSubflowActivity extends BaseActivity
                 .getSerializableExtra(BundleKeys.ONBOARDING_DETAILS);
         mSubflowType = (SubflowType) getIntent().getSerializableExtra(BundleKeys.SUBFLOW_TYPE);
         mIsSingleStepMode = getIntent().getBooleanExtra(BundleKeys.IS_SINGLE_STEP_MODE, false);
+        mPercentComplete = getIntent().getIntExtra(BundleKeys.PERCENT_COMPLETE, 0);
+        mPercentRange = getIntent().getIntExtra(BundleKeys.PERCENT_RANGE, 0);
         setContentView(R.layout.activity_onboarding_subflow);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         initLaunchedTimeMillis(savedInstanceState);
@@ -144,6 +149,7 @@ public class OnboardingSubflowActivity extends BaseActivity
                 mOnboardingDetails.getSubflowDataByType(mSubflowType);
         arguments.putSerializable(BundleKeys.SUBFLOW_DATA, subflowData);
         arguments.putBoolean(BundleKeys.IS_SINGLE_STEP_MODE, mIsSingleStepMode);
+        arguments.putInt(BundleKeys.PERCENT_COMPLETE, calculatePercentComplete());
         fragment.setArguments(arguments);
 
         fragmentTransaction.setCustomAnimations(
@@ -154,6 +160,7 @@ public class OnboardingSubflowActivity extends BaseActivity
         );
         fragmentTransaction.replace(R.id.main_container, fragment);
         fragmentTransaction.commit();
+        mSubflowStepCount++;
     }
 
     public void terminate(@NonNull Intent data)
@@ -179,6 +186,7 @@ public class OnboardingSubflowActivity extends BaseActivity
     @Override
     public void onBackPressed()
     {
+        mSubflowStepCount--;
         if (mSubflowType == SubflowType.STATUS)
         {
             final Intent data = new Intent();
@@ -198,5 +206,12 @@ public class OnboardingSubflowActivity extends BaseActivity
             setResult(Activity.RESULT_CANCELED, data);
             finish();
         }
+    }
+
+    // This will use number of screens within the subflow to calculate percent complete.
+    public int calculatePercentComplete()
+    {
+        final int miniPercentJump = mPercentRange / (mSubflowType.getNumberOfSteps() + 1); // + 1 to exaggerate transition between subflows
+        return mPercentComplete + (mSubflowStepCount * miniPercentJump);
     }
 }

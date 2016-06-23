@@ -9,19 +9,13 @@ import android.view.LayoutInflater;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.notification.model.NotificationMessage;
-import com.handy.portal.notification.ui.adapter.NotificationsListAdapter;
 import com.handy.portal.library.ui.widget.InfiniteScrollListView;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Bus;
-
-import javax.inject.Inject;
+import com.handy.portal.notification.model.NotificationMessage;
+import com.handy.portal.notification.ui.adapter.NotificationsListAdapter;
 
 public final class NotificationsListView extends InfiniteScrollListView
 {
-    @Inject
-    Bus mBus;
-
     private TextView mFooterView;
 
     public NotificationsListView(final Context context)

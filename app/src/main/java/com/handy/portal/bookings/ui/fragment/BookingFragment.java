@@ -40,6 +40,14 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.ui.view.MapPlaceholderView;
+import com.handy.portal.library.ui.view.RoundedTextView;
+import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.FragmentUtils;
+import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.library.util.UIUtils;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
@@ -49,14 +57,6 @@ import com.handy.portal.model.LocationData;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.fragment.TimerActionBarFragment;
-import com.handy.portal.library.ui.view.MapPlaceholderView;
-import com.handy.portal.library.ui.view.RoundedTextView;
-import com.handy.portal.library.util.CurrencyUtils;
-import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.library.util.FragmentUtils;
-import com.handy.portal.library.util.TextUtils;
-import com.handy.portal.library.util.UIUtils;
-import com.handy.portal.library.util.Utils;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -683,7 +683,7 @@ public class BookingFragment extends TimerActionBarFragment
             }
             case CHECK_OUT:
             {
-                mActionButton.setText(R.string.check_out);
+                mActionButton.setText(R.string.continue_to_check_out);
                 mActionButton.setVisibility(action.isEnabled() ? View.VISIBLE : View.GONE);
                 mActionButton.setOnClickListener(new View.OnClickListener()
                 {

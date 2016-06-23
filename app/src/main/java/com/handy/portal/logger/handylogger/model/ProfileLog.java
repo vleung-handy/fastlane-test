@@ -14,6 +14,17 @@ public class ProfileLog extends EventLog
     // Referral logs
 
 
+    public static class ReferralOpen extends ProfileLog
+    {
+        private static final String EVENT_TYPE = "referral_open";
+
+        public ReferralOpen()
+        {
+            super(EVENT_TYPE);
+        }
+    }
+
+
     public static class ReferralSelected extends ProfileLog
     {
         private static final String EVENT_TYPE = "referral_selected";

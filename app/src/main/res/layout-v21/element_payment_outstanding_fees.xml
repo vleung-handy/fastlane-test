@@ -32,7 +32,7 @@
         android:layout_gravity="center|start"
         android:layout_toEndOf="@id/outstanding_fee_image"
         android:ellipsize="end"
-        android:singleLine="true"
+        android:maxLines="1"
         android:text="@string/outstanding_fees"
         android:textColor="@color/black"
         android:textSize="@dimen/default_text_size"

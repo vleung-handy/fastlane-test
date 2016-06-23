@@ -1,10 +1,10 @@
 package com.handy.portal.onboarding.ui.fragment;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.text.TextUtils;
 import android.view.View;
 
 import com.handy.portal.R;
@@ -18,14 +18,16 @@ import com.handy.portal.event.StripeEvent;
 import com.handy.portal.library.ui.view.DateFormFieldTableRow;
 import com.handy.portal.library.ui.view.FormFieldTableRow;
 import com.handy.portal.library.ui.view.SimpleContentLayout;
+import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.UIUtils;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Designation;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.definitions.FieldDefinition;
-import com.handy.portal.model.onboarding.SuppliesInfo;
+import com.handy.portal.onboarding.model.supplies.SuppliesInfo;
 import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
 import com.handy.portal.payments.PaymentEvent;
 import com.squareup.otto.Subscribe;
@@ -125,8 +127,15 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
         final String orderTotalFormatted = getString(R.string.order_total_formatted,
                 mSuppliesInfo.getCost());
         mSuppliesOrderInfo.setOrderTotalText(mSuppliesInfo.getCost());
-        mOrderSummary.setContent(getString(R.string.starter_supply_kit), orderTotalFormatted)
-                .setImage(ContextCompat.getDrawable(getContext(), R.drawable.img_supplies));
+        if (mSuppliesInfo.isCardRequired())
+        {
+            mOrderSummary.setContent(getString(R.string.starter_supply_kit), orderTotalFormatted)
+                    .setImage(ContextCompat.getDrawable(getContext(), R.drawable.img_supplies));
+        }
+        else
+        {
+            mOrderSummary.setVisibility(View.GONE);
+        }
 
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                 NativeOnboardingLog.Types.SUPPLIES_CONFIRMATION_SHOWN)));
@@ -169,31 +178,64 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
     private void onProviderLoaded()
     {
         populateShippingSummary();
-        String cardLast4 = mProviderPersonalInfo.getCardLast4();
-        if (!TextUtils.isEmpty(cardLast4))
-        {
-            final String cardInfoFormatted = getString(R.string.card_info_formatted,
-                    getString(R.string.card), cardLast4);
-            mSuppliesOrderInfo.setPaymentText(cardInfoFormatted);
-            mPaymentSummary.setContent(getString(R.string.payment_method), cardInfoFormatted
-            ).setAction(
-                    getString(R.string.edit),
-                    new View.OnClickListener()
-                    {
-                        @Override
-                        public void onClick(final View v)
-                        {
-                            unfreezeEditPaymentForm();
-                        }
-                    });
+        populatePaymentSummary();
+    }
 
-            freezeEditPaymentForm();
+    private void populatePaymentSummary()
+    {
+        if (mSuppliesInfo.isCardRequired())
+        {
+            String cardLast4 = mProviderPersonalInfo.getCardLast4();
+            // If pro already has a card, do not prompt them to enter card information, but instead
+            // just show the existing one.
+            if (!TextUtils.isNullOrEmpty(cardLast4))
+            {
+                final String cardInfoFormatted = getString(R.string.card_info_formatted,
+                        getString(R.string.card), cardLast4);
+                mSuppliesOrderInfo.setPaymentText(cardInfoFormatted);
+                mPaymentSummary.setContent(getString(R.string.payment_method), cardInfoFormatted)
+                        .setAction(getString(R.string.edit),
+                                new View.OnClickListener()
+                                {
+                                    @Override
+                                    public void onClick(final View v)
+                                    {
+                                        unfreezeEditPaymentForm();
+                                    }
+                                });
+
+                freezeEditPaymentForm();
+            }
+            else
+            {
+                //Since the user doesn't have any payments, don't let them cancel out.
+                mCancelEditPayment.setVisibility(View.GONE);
+                unfreezeEditPaymentForm();
+            }
         }
         else
         {
-            //Since the user doesn't have any payments, don't let them cancel out.
-            mCancelEditPayment.setVisibility(View.GONE);
-            unfreezeEditPaymentForm();
+            // Since card information is not required, just inform pro that they will be charged
+            // through a supplies fee.
+            final String feeNoticeFormatted =
+                    getString(R.string.supplies_fee_notice_formatted, mSuppliesInfo.getCost());
+            mPaymentSummary.setContent(getString(R.string.supplies_fee), feeNoticeFormatted)
+                    .setAction(getResources().getDrawable(R.drawable.ic_question_gray),
+                            new View.OnClickListener()
+                            {
+                                @Override
+                                public void onClick(final View v)
+                                {
+                                    final String feesHelpLink = mSuppliesInfo.getFeesHelpLink();
+                                    if (!TextUtils.isNullOrEmpty(feesHelpLink))
+                                    {
+                                        final Intent intent = new Intent(Intent.ACTION_VIEW,
+                                                Uri.parse(feesHelpLink));
+                                        Utils.safeLaunchIntent(intent, getActivity());
+                                    }
+                                }
+                            });
+            freezeEditPaymentForm();
         }
     }
 
@@ -201,7 +243,10 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
     public void onReceiveProviderInfoError(final ProfileEvent.ReceiveProviderProfileError event)
     {
         showEditAddressForm();
-        unfreezeEditPaymentForm();
+        if (mSuppliesInfo.isCardRequired())
+        {
+            unfreezeEditPaymentForm();
+        }
         mCancelEditAddress.setVisibility(View.GONE);
         mCancelEditPayment.setVisibility(View.GONE);
         hideLoadingOverlay();
@@ -308,7 +353,8 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
     @Override
     protected String getHeaderText()
     {
-        return getString(R.string.enter_payment_information);
+        return getString(mSuppliesInfo.isCardRequired() ?
+                R.string.enter_payment_information : R.string.confirm_shipping_details);
     }
 
     @Nullable
@@ -355,7 +401,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragm
             mAddressReady = true;
         }
 
-        if (mEditPaymentForm.getVisibility() == View.VISIBLE)
+        if (mEditPaymentForm.getVisibility() == View.VISIBLE && mSuppliesInfo.isCardRequired())
         {
             mPaymentReady = false;
 

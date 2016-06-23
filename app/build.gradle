@@ -1,3 +1,7 @@
+import org.gradle.logging.StyledTextOutputFactory
+
+import static org.gradle.logging.StyledTextOutput.Style
+
 buildscript {
     repositories {
         flatDir {
@@ -35,12 +39,19 @@ apply plugin: 'com.getkeepsafe.dexcount'
 
 apply from: 'jacoco.gradle'
 
+def computeVersionCode(versionName) {
+    def versionNameMatcher = (versionName =~ /^([1-9]\d*)\.(\d{1,2})\.(\d{1,2})$/)
+    if (versionNameMatcher.matches()) {
+        def identifiers = (versionNameMatcher[0] - [versionName])
+        def (major, minor, patch) = identifiers.collect { it.toInteger() }
+        def versionCode = (major * 10000) + (minor * 100) + (patch * 1)
 
-def computeVersionName(versionCode) {
-    def major = (versionCode / 10000).intValue() % 10000
-    def minor = (versionCode / 100).intValue() % 100
-    def bugfix = versionCode % 100
-    "${major}.${minor}.${bugfix}"
+        def out = services.get(StyledTextOutputFactory).create("debug")
+        out.withStyle(Style.Info).println("\nBuilding version ${versionName} (${versionCode})\n")
+        return versionCode
+    } else {
+        throw new InvalidUserDataException("Illegal version name ${versionName}")
+    }
 }
 
 android {
@@ -54,8 +65,8 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 16
         targetSdkVersion 23
-        versionCode 10002 //1.0.2
-        versionName computeVersionName(versionCode)
+        versionName '1.0.3'
+        versionCode computeVersionCode(versionName)
         proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -142,9 +153,9 @@ dependencies {
     compile 'com.android.support:design:23.3.0'
 
     //Google services
-    compile 'com.google.android.gms:play-services-location:8.4.0'
+    compile 'com.google.android.gms:play-services-location:9.0.2'
     //Recommended for location services
-    compile 'com.google.android.gms:play-services-gcm:8.4.0'
+    compile 'com.google.android.gms:play-services-gcm:9.0.2'
     //Required for Android (GCM) push notifications
 
     //Guava
@@ -208,5 +219,5 @@ dependencies {
     androidTestCompile ('com.android.support.test.espresso:espresso-core:2.2.1') {
         exclude module: 'support-annotations'
     }
-    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.1'
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 }

@@ -37,7 +37,6 @@
         android:paddingEnd="@dimen/extra_padding_medium"
         android:paddingRight="@dimen/extra_padding_medium"
         android:paddingTop="@dimen/extra_padding_medium"
-        android:singleLine="false"
         android:textColor="@color/black"
         android:textSize="@dimen/default_text_size"
         tools:text="Kitchen Load dishwasher, wipe surfaces, and clean sink."

@@ -15,8 +15,12 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
+import com.google.common.base.Strings;
 import com.handy.portal.R;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
+
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -70,8 +74,8 @@ public class DashboardRegionTierView extends FrameLayout
         ButterKnife.bind(this);
     }
 
-    public void setDisplay(int tiersSize, int jobsToComplete, String regionName, String serviceName,
-                           String incentiveType)
+    public void setDisplay(@Nullable List<ProviderEvaluation.Tier> currentTiers, int jobsToComplete,
+                           String regionName, String serviceName, String incentiveType)
     {
         String rateAsteriskString = getResources().getString(R.string.rate_asterisk_superscript);
         Spannable rate_asterisk_spannable =
@@ -86,38 +90,52 @@ public class DashboardRegionTierView extends FrameLayout
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
         mRateHeaderText.setText(rate_asterisk_spannable);
 
-        mRegionNameServiceText.setText(getContext().getString(R.string.colon_formatted,
-                regionName, serviceName));
-
-        if (incentiveType.equals(ProviderEvaluation.Incentive.ROLLING_TYPE))
+        if (!Strings.isNullOrEmpty(regionName) && !Strings.isNullOrEmpty(serviceName))
         {
-            mRegionTierMiddleColumn.setText(getResources().getString(R.string.rating));
-            mTierHeaderText.setText(getResources().getString(R.string.job_type));
-        }
-        else if (incentiveType.equals(ProviderEvaluation.Incentive.HANDYMEN_TIERED_TYPE) ||
-                incentiveType.equals(ProviderEvaluation.Incentive.HANDYMEN_ROLLING_TYPE))
-        {
-            mTierHeaderText.setText(getResources().getString(R.string.job_type));
-            mRegionTierMiddleColumn.setVisibility(GONE);
-
-            // Change column ratio to 3:1 if two columns
-            mTierHeaderText.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 3f));
-            mIsTwoColumns = true;
-        }
-
-        if (incentiveType.equals(ProviderEvaluation.Incentive.TIERED_TYPE))
-        {
-            mCompleteJobsUnlockText.setText(jobsToComplete == 0 ?
-                    getResources().getString(R.string.highest_rate_this_week_formatted, regionName) :
-                    Html.fromHtml(getContext().getResources()
-                            .getQuantityString(R.plurals.complete_jobs_unlock_higher_rate_formatted,
-                                    jobsToComplete, jobsToComplete, regionName)));
+            mRegionNameServiceText.setText(getContext().getString(R.string.colon_formatted,
+                    regionName, serviceName));
         }
         else
         {
-            mCompleteJobsUnlockText.setText(getResources().getQuantityString(
-                    R.plurals.rates_per_job_in_region_formatted, tiersSize, serviceName,
-                    regionName));
+            Crashlytics.logException(new NullPointerException("Region name and/or service name is null"));
+        }
+
+        if (!Strings.isNullOrEmpty(incentiveType))
+        {
+            if (incentiveType.equals(ProviderEvaluation.Incentive.ROLLING_TYPE))
+            {
+                mRegionTierMiddleColumn.setText(getResources().getString(R.string.rating));
+                mTierHeaderText.setText(getResources().getString(R.string.job_type));
+            }
+            else if (incentiveType.equals(ProviderEvaluation.Incentive.HANDYMEN_TIERED_TYPE) ||
+                    incentiveType.equals(ProviderEvaluation.Incentive.HANDYMEN_ROLLING_TYPE))
+            {
+                mTierHeaderText.setText(getResources().getString(R.string.job_type));
+                mRegionTierMiddleColumn.setVisibility(GONE);
+
+                // Change column ratio to 3:1 if two columns
+                mTierHeaderText.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 3f));
+                mIsTwoColumns = true;
+            }
+
+            if (incentiveType.equals(ProviderEvaluation.Incentive.TIERED_TYPE))
+            {
+                mCompleteJobsUnlockText.setText(jobsToComplete == 0 ?
+                        getResources().getString(R.string.highest_rate_this_week_formatted, regionName) :
+                        Html.fromHtml(getContext().getResources()
+                                .getQuantityString(R.plurals.complete_jobs_unlock_higher_rate_formatted,
+                                        jobsToComplete, jobsToComplete, regionName)));
+            }
+            else if (currentTiers != null)
+            {
+                mCompleteJobsUnlockText.setText(getResources().getQuantityString(
+                        R.plurals.rates_per_job_in_region_formatted, currentTiers.size(), serviceName,
+                        regionName));
+            }
+        }
+        else
+        {
+            Crashlytics.logException(new NullPointerException("Incentive type is null"));
         }
     }
 

@@ -530,6 +530,8 @@ public class BookingManager
             public void onSuccess(Booking booking)
             {
                 mBus.post(new HandyEvent.ReceiveNotifyJobOnMyWaySuccess(booking));
+                invalidateScheduledBookingCache(
+                        DateTimeUtils.getDateWithoutTime(booking.getStartDate()));
             }
 
             @Override
@@ -571,6 +573,8 @@ public class BookingManager
             public void onSuccess(Booking booking)
             {
                 mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(booking));
+                invalidateScheduledBookingCache(
+                        DateTimeUtils.getDateWithoutTime(booking.getStartDate()));
             }
 
             @Override
@@ -665,5 +669,10 @@ public class BookingManager
         scheduledBookingsCache.invalidate(day);
         complementaryBookingsCache.invalidate(day);
         requestedBookingsCache.invalidate(day);
+    }
+
+    private void invalidateScheduledBookingCache(Date date)
+    {
+        scheduledBookingsCache.invalidate(date);
     }
 }

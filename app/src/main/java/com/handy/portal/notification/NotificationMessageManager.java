@@ -70,6 +70,27 @@ public class NotificationMessageManager
     }
 
     @Subscribe
+    public void onRequestMarkNotificationsAsInteracted(
+            final NotificationEvent.RequestMarkNotificationsAsInteracted event)
+    {
+        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        mDataManager.postMarkNotificationsAsInteracted(providerId, event.getNotificationIds(), new DataManager.Callback<NotificationMessages>()
+        {
+            @Override
+            public void onSuccess(final NotificationMessages notificationMessages)
+            {
+                mBus.post(new NotificationEvent.ReceiveMarkNotificationsAsInteractedSuccess(notificationMessages.getList()));
+            }
+
+            @Override
+            public void onError(final DataManager.DataManagerError error)
+            {
+                mBus.post(new NotificationEvent.ReceiveMarkNotificationsAsInteractedError(error));
+            }
+        });
+    }
+
+    @Subscribe
     public void onRequestUnreadCount(final NotificationEvent.RequestUnreadCount event)
     {
         String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);

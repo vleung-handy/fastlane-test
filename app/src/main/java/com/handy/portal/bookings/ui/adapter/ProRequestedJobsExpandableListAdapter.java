@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseExpandableListAdapter;
 
+import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
@@ -106,7 +107,16 @@ public class ProRequestedJobsExpandableListAdapter extends BaseExpandableListAda
                 convertView,
                 parent,
                 AvailableBookingElementView.class);
-        return bem.getAssociatedView();
+        final View associatedView = bem.getAssociatedView();
+        // Hide requested pro indicator because this is a list view that displays only pro requests.
+        final View requestedIndicator =
+                associatedView.findViewById(R.id.booking_list_entry_left_strip_indicator);
+        if (requestedIndicator != null)
+        {
+            requestedIndicator.setVisibility(View.INVISIBLE);
+        }
+
+        return associatedView;
     }
 
     @Override
