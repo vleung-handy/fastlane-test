@@ -1,5 +1,6 @@
 package com.handy.portal.ui.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.handy.portal.R;
@@ -23,9 +24,19 @@ public class TermsActivity extends BaseActivity
         setContentView(R.layout.activity_terms);
         final TermsDetailsGroup termsGroup =
                 (TermsDetailsGroup) getIntent().getSerializableExtra(BundleKeys.TERMS_GROUP);
-        mTermsIterator = termsGroup.getTermsDetails().iterator();
-        mStepIdentifier = getIntent().getIntExtra(BundleKeys.FLOW_STEP_ID, -1);
-        proceed();
+        if (termsGroup != null && termsGroup.hasTerms())
+        {
+            mTermsIterator = termsGroup.getTermsDetails().iterator();
+            mStepIdentifier = getIntent().getIntExtra(BundleKeys.FLOW_STEP_ID, -1);
+            proceed();
+        }
+        else
+        {
+            Intent intent = new Intent(this, SplashActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                    | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+        }
     }
 
     public void proceed()
