@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
@@ -81,7 +82,15 @@ public class OnboardingSubflowActivity extends BaseActivity
         }
         outState.putBoolean(EXTRA_INITIAL_LOAD, false);
         outState.putLong(EXTRA_LAUNCHED_TIME_MILLIS, mLaunchedTimeMillis);
-        super.onSaveInstanceState(outState);
+        try
+        {
+            super.onSaveInstanceState(outState);
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Non fatal
+            Crashlytics.logException(e);
+        }
     }
 
     @Override
