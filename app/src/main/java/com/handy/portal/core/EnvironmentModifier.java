@@ -7,12 +7,15 @@ import android.support.annotation.StringRes;
 import com.handy.portal.R;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.library.util.PropertiesReader;
+import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.manager.PrefsManager;
 
 import java.util.Properties;
 
 public class EnvironmentModifier
 {
+    public static final String IP_ADDRESS_REGEX = "(\\d+\\.){3}\\d+";
+
     public enum Environment
     {
         Q(R.string.q),
@@ -51,10 +54,18 @@ public class EnvironmentModifier
             String environmentPrefix = properties.getProperty("environment", null);
             environmentPrefix = prefsManager.getString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix); // whatever is stored in prefs is higher priority
 
-            if (environmentPrefix != null && environmentPrefix.startsWith("q")) // this means it's an override to point to a Q environment
+            if (!TextUtils.isNullOrEmpty(environmentPrefix)) // this means it's an override to point to a Q/L environment
             {
-                prefsManager.setString(PrefsKey.ENVIRONMENT, Environment.Q.name());
-                prefsManager.setString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix);
+                if (environmentPrefix.matches(IP_ADDRESS_REGEX))
+                {
+                    prefsManager.setString(PrefsKey.ENVIRONMENT, Environment.L.name());
+                    prefsManager.setString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix);
+                }
+                else
+                {
+                    prefsManager.setString(PrefsKey.ENVIRONMENT, Environment.Q.name());
+                    prefsManager.setString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix);
+                }
             }
         }
         catch (Exception e)

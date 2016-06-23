@@ -13,6 +13,8 @@ import com.handy.portal.core.EnvironmentModifier;
 
 public class EnvironmentUtils
 {
+    private static final String Q_SUBDOMAIN_SUFFIX = "-handy";
+
     public static void showEnvironmentModifierDialog(
             final EnvironmentModifier environmentModifier,
             final Context context,
@@ -79,9 +81,13 @@ public class EnvironmentUtils
                     @Override
                     public void onClick(final DialogInterface dialog, final int which)
                     {
-                        final String value = input.getText().toString().trim().toLowerCase();
+                        String value = input.getText().toString().trim().toLowerCase();
                         if (!TextUtils.isNullOrEmpty(value))
                         {
+                            if (environment == EnvironmentModifier.Environment.Q)
+                            {
+                                value += Q_SUBDOMAIN_SUFFIX;
+                            }
                             environmentModifier.setEnvironment(environment, value, callback);
                         }
                     }
