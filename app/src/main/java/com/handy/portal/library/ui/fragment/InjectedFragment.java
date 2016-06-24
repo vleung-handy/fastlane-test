@@ -9,7 +9,6 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.manager.GoogleManager;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -26,8 +25,6 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     protected DataManager dataManager;
     @Inject
     protected ConfigManager configManager;
-    @Inject
-    protected GoogleManager googleManager;
     @Inject
     protected EventBus bus;
 

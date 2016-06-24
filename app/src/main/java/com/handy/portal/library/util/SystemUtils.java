@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.BatteryManager;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 
 /**
@@ -57,5 +58,11 @@ public final class SystemUtils
             }
         }
         return "";
+    }
+
+    public static String getDeviceId(final Context context)
+    {
+        return Settings.Secure.getString(context.getContentResolver(),
+                Settings.Secure.ANDROID_ID);
     }
 }
