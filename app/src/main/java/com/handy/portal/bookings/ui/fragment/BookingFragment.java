@@ -24,6 +24,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.common.base.Strings;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.constant.BookingActionButtonType;
@@ -838,8 +839,11 @@ public class BookingFragment extends TimerActionBarFragment
         for (String transitMarker : transitDescription)
         {
             RoundedTextView transitMarkerView = new RoundedTextView(getContext());
-            transitMarkerView.setText(transitMarker);
-            mNearbyTransits.addView(transitMarkerView);
+            if (!Strings.isNullOrEmpty(transitMarker))
+            {
+                transitMarkerView.setText(transitMarker.trim());
+                mNearbyTransits.addView(transitMarkerView);
+            }
         }
     }
 }
