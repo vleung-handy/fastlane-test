@@ -22,13 +22,12 @@
 
         <ImageView
             android:id="@+id/notification_icon"
-            android:layout_width="@dimen/notification_list_entry_icon_size"
-            android:layout_height="@dimen/notification_list_entry_icon_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/notification_list_entry_icon_margin_right"
             android:layout_marginRight="@dimen/notification_list_entry_icon_margin_right"
-            android:layout_marginTop="@dimen/notification_list_entry_icon_margin_top"
             android:duplicateParentState="true"
-            android:orientation="horizontal"
+            android:layout_gravity="center_vertical"
             tools:src="@drawable/ic_notification_alert"
             />
 
