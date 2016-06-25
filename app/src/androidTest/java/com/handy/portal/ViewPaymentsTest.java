@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.support.test.espresso.Espresso;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.test.data.TestUsers;
@@ -50,6 +49,8 @@ public class ViewPaymentsTest
     {
         ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
 
+        ViewUtil.waitForViewNotVisible(R.id.loading_overlay, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+
         ViewUtil.waitForViewVisible(R.id.tab_nav_item_more, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         onView(withId(R.id.tab_nav_item_more)).perform(click());
 
@@ -63,6 +64,8 @@ public class ViewPaymentsTest
         onView(withId(R.id.payments_current_week_expected_payment))
                 .check(matches(withText(currentWeekExpectedPaymentString)));
         onView(withId(R.id.payments_batch_list_header)).perform(click());
+        ViewUtil.waitForViewVisible(R.id.payment_details_list_header,
+                ViewUtil.LONG_MAX_WAIT_TIME_MS);
         onView(withId(R.id.payments_detail_total_payment_text))
                 .check(matches(withText(currentWeekExpectedPaymentString)));
 
@@ -76,6 +79,8 @@ public class ViewPaymentsTest
                 .check(matches(withText(previousWeekExpectedPaymentString)));
         onView(withId(R.id.payments_batch_list_item_payment_amount_text)).perform(click());
 
+        ViewUtil.waitForViewVisible(R.id.payment_details_list_header,
+                ViewUtil.LONG_MAX_WAIT_TIME_MS);
         //check the header item
         onView(withId(R.id.payments_detail_total_payment_text))
                 .check(matches(withText(previousWeekExpectedPaymentString)));

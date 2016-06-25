@@ -1,14 +1,15 @@
 package com.handy.portal.library.util;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.os.Build;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,7 +24,6 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -34,13 +34,13 @@ import android.widget.Toast;
 import com.handy.portal.R;
 import com.handy.portal.bookings.constant.BookingActionButtonType;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.library.ui.view.DateFormFieldTableRow;
 import com.handy.portal.library.ui.view.Errorable;
 import com.handy.portal.library.ui.view.FormFieldTableRow;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
+import com.handy.portal.ui.widget.TitleView;
 
 import java.text.DecimalFormat;
 import java.util.regex.Pattern;
@@ -322,31 +322,30 @@ public final class UIUtils
         return null;
     }
 
-    public static AlertDialog createEnvironmentModifierDialog(final EnvironmentModifier environmentModifier, final Context context, final EnvironmentModifier.OnEnvironmentChangedListener callback)
-    {
-        String currentEnvironmentPrefix = environmentModifier.getEnvironmentPrefix();
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        final EditText input = new EditText(context);
-        input.setText(currentEnvironmentPrefix);
-        builder.setTitle("Set environment")
-                .setView(input)
-                .setPositiveButton(R.string.set, new DialogInterface.OnClickListener()
-                {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which)
-                    {
-                        environmentModifier.setEnvironmentPrefix(input.getText().toString(), callback);
-                    }
-                })
-                .setNegativeButton(R.string.cancel, null);
-        return builder.create();
-    }
-
     public static int calculateDpToPx(Context context, int dp)
     {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dp * scale + .5f); // round up if the decimal is greater than .5
+    }
+
+    @NonNull
+    public static android.app.AlertDialog.Builder createDialogBuilderWithTitle(
+            final Context context, @StringRes final int titleResId)
+    {
+        final android.app.AlertDialog.Builder dialogBuilder;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            dialogBuilder = new android.app.AlertDialog.Builder(context, R.style.AlertDialogStyle);
+            final TitleView titleView = new TitleView(context);
+            titleView.setText(titleResId);
+            dialogBuilder.setCustomTitle(titleView);
+        }
+        else
+        {
+            dialogBuilder = new android.app.AlertDialog.Builder(context);
+            dialogBuilder.setTitle(titleResId);
+        }
+        return dialogBuilder;
     }
 
     public static class FormFieldErrorStateRemover implements TextWatcher

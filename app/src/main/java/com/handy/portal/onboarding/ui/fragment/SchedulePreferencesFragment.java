@@ -3,7 +3,6 @@ package com.handy.portal.onboarding.ui.fragment;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.View;
@@ -15,12 +14,12 @@ import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.ui.view.StaticFieldTableRow;
 import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.onboarding.model.claim.StartDateRange;
 import com.handy.portal.onboarding.model.claim.Zipcluster;
 import com.handy.portal.ui.adapter.CheckBoxListAdapter;
-import com.handy.portal.ui.widget.TitleView;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -87,19 +86,8 @@ public class SchedulePreferencesFragment extends OnboardingSubflowFragment
         listView.setDivider(null);
         listView.setAdapter(adapter);
 
-        final AlertDialog.Builder dialogBuilder;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        {
-            dialogBuilder = new AlertDialog.Builder(getActivity(), R.style.AlertDialogStyle);
-            final TitleView titleView = new TitleView(getActivity());
-            titleView.setText(R.string.choose_locations);
-            dialogBuilder.setCustomTitle(titleView);
-        }
-        else
-        {
-            dialogBuilder = new AlertDialog.Builder(getActivity());
-            dialogBuilder.setTitle(R.string.choose_locations);
-        }
+        final AlertDialog.Builder dialogBuilder = UIUtils.createDialogBuilderWithTitle(getActivity(),
+                R.string.choose_locations);
         dialogBuilder.setPositiveButton(R.string.ok,
                 new DialogInterface.OnClickListener()
                 {
