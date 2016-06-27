@@ -49,6 +49,14 @@ public class ConfigurationResponse
     @SerializedName("pending_requests_inbox_enabled")
     private boolean mPendingRequestsInboxEnabled;
 
+    @SerializedName("customer_no_show_modal_enabled")
+    private boolean mCustomerNoShowModalEnabled;
+
+    public boolean isCustomerNoShowModalEnabled()
+    {
+        return mCustomerNoShowModalEnabled;
+    }
+
     public boolean isPendingRequestsInboxEnabled()
     {
         return mPendingRequestsInboxEnabled;

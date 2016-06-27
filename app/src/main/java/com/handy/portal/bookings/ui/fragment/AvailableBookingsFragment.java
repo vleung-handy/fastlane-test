@@ -237,7 +237,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     private void goToHelpCenter(final String helpCenterRedirectPath)
     {
-        //don't ever need to support native help center again so ignore the config response
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, helpCenterRedirectPath);
         bus.post(new NavigationEvent.NavigateToPage(MainViewPage.HELP_WEBVIEW, arguments, true));

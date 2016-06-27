@@ -7,4 +7,10 @@
         <attr name="minLength"
               format="integer"/>
     </declare-styleable>
+    <declare-styleable name="BulletListItem">
+        <attr name="iconDrawable"
+              format="reference"/>
+        <attr name="text"
+              format="string"/>
+    </declare-styleable>
 </resources>

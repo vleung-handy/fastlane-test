@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_gray_bg_white"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingBottom="@dimen/tab_padding"
+    android:paddingRight="@dimen/default_padding"
+    android:paddingTop="@dimen/tab_padding"
+    >
+
+    <ImageView
+        android:id="@+id/list_item_bullet_image_view"
+        android:layout_width="@dimen/list_item_bullet_size"
+        android:layout_height="@dimen/list_item_bullet_size"
+        android:layout_margin="@dimen/default_margin"
+        android:layout_gravity="top"
+        android:src="@drawable/circle_grey"
+        />
+
+
+    <TextView
+        android:id="@+id/list_item_text"
+        android:textColor="@color/black"
+        android:textSize="@dimen/medium_text_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingRight="@dimen/default_padding"
+        android:paddingTop="@dimen/default_padding_half"
+        android:paddingBottom="@dimen/default_padding_half"
+        tools:text="list item text list item text list item text list item text list item text list item text list item text "
+        />
+    <!--NOTE: not using style:TextView.Medium here because its freezesText:true
+    causes this text view to display the wrong text when this layout is recreated
+    TODO: investigate removing freezesText:true from the style
+    -->
+
+</LinearLayout>
