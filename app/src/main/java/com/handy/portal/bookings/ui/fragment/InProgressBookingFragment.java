@@ -255,10 +255,21 @@ public class InProgressBookingFragment extends TimerActionBarFragment
         String phoneNumber = mBooking.getBookingPhone();
         if (phoneNumber == null)
         {
+            showInvalidPhoneNumberToast();
             Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
             return;
         }
-        Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), getContext());
+
+        try
+        {
+            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), getContext());
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(getContext(),
+                    getString(R.string.unable_to_call_customer), Toast.LENGTH_SHORT).show();
+            Crashlytics.logException(new RuntimeException("Calling a Phone Number failed", e));
+        }
     }
 
     @OnClick(R.id.in_progress_booking_message_customer_view)
@@ -269,10 +280,21 @@ public class InProgressBookingFragment extends TimerActionBarFragment
         String phoneNumber = mBooking.getBookingPhone();
         if (phoneNumber == null)
         {
+            showInvalidPhoneNumberToast();
             Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
             return;
         }
-        Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)), getContext());
+
+        try
+        {
+            Toast.makeText(getContext(),
+                    getString(R.string.unable_to_text_customer), Toast.LENGTH_SHORT).show();
+            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)), getContext());
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(new RuntimeException("Texting a Phone Number failed", e));
+        }
     }
 
     private void enableActionsIfNeeded(Booking.Action action)
@@ -308,5 +330,11 @@ public class InProgressBookingFragment extends TimerActionBarFragment
                 break;
             }
         }
+    }
+
+    private void showInvalidPhoneNumberToast()
+    {
+        Toast.makeText(getContext(),
+                getString(R.string.invalid_phone_number), Toast.LENGTH_LONG).show();
     }
 }
