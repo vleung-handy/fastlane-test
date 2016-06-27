@@ -563,7 +563,7 @@
     <string name="customer_no_show_instructions_list_item_contact_customer">Call or text the customer.</string>
     <string name="customer_no_show_instructions_list_item_wait_for_customer">Wait nearby for 30 minutes after checking in. Then tap \'Complete Report\' to finish.</string>
     <string name="customer_no_show_action_bar_title">My Customer is Not Home</string>
-    <string name="customer_no_show_header_title">No Show Reported</string> <!--FIXME: this copy is terribly misleading because no show hasn't been actually reported at this point but the business has not thought of a better one yet-->
+    <string name="customer_no_show_header_title">Customer No Show</string>
     <string name="customer_no_show_complete_report_button">Complete Report</string>
     <string name="customer_no_show_view_policy_button">View Policy</string>
 
