@@ -3,7 +3,6 @@ package com.handy.portal.core;
 import android.app.Application;
 import android.content.Context;
 import android.os.Build;
-import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 
@@ -16,11 +15,11 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpModule;
 import com.handy.portal.library.util.PropertiesReader;
+import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.LocationModule;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.PageNavigationManager;
@@ -219,7 +218,7 @@ public final class ApplicationModule
                         request.addHeader("Accept", "application/json");
                         request.addQueryParam("client", "android");
                         request.addQueryParam("app_version", BuildConfig.VERSION_NAME);
-                        request.addQueryParam("device_id", getDeviceId());
+                        request.addQueryParam("device_id", SystemUtils.getDeviceId(context));
                         request.addQueryParam("device_model", BaseApplication.getDeviceModel());
                         request.addQueryParam("os_version", Build.VERSION.RELEASE);
                         request.addQueryParam("device_carrier", getDeviceCarrier());
@@ -360,13 +359,6 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final GoogleManager provideGoogleService()
-    {
-        return new GoogleManager(this.context);
-    }
-
-    @Provides
-    @Singleton
     final UrbanAirshipManager provideUrbanAirshipManager(final EventBus bus,
                                                          final DataManager dataManager,
                                                          final PrefsManager prefsManager,
@@ -448,12 +440,6 @@ public final class ApplicationModule
                                                       final DataManager dataManager)
     {
         return new SetupManager(bus, dataManager);
-    }
-
-    private String getDeviceId()
-    {
-        return Settings.Secure.getString(context.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
     }
 
     private String getDeviceCarrier()

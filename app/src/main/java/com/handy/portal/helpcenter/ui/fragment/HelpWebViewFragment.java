@@ -28,7 +28,6 @@ public class HelpWebViewFragment extends PortalWebViewFragment
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
     {
-        super.onViewCreated(view, savedInstanceState);
         setActionBarTitle(R.string.help);
 
         final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
@@ -45,8 +44,9 @@ public class HelpWebViewFragment extends PortalWebViewFragment
                 setOptionsMenuEnabled(true);
                 setBackButtonEnabled(true);
             }
-            getWebView().loadUrl(helpCenterUrl);
+            getArguments().putString(BundleKeys.TARGET_URL, helpCenterUrl);
         }
-        // TODO: Handle null configuration
+
+        super.onViewCreated(view, savedInstanceState);
     }
 }

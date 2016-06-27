@@ -14,6 +14,7 @@ import android.webkit.WebView;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import java.util.ArrayList;
@@ -40,13 +41,6 @@ public class PortalWebViewFragment extends ActionBarFragment
             view.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
         }
 
-        initWebView();
-
-        if (validateRequiredArguments())
-        {
-            openPortalUrl(getArguments().getString(BundleKeys.TARGET_URL));
-        }
-
         return view;
     }
 
@@ -56,6 +50,21 @@ public class PortalWebViewFragment extends ActionBarFragment
         super.onViewCreated(view, savedInstanceState);
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
+
+        initWebView();
+
+        if (validateRequiredArguments() && webView != null)
+        {
+            webView.setWebChromeClient(new WebChromeClient()
+            {
+                @Override
+                public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback)
+                {
+                    callback.invoke(origin, true, false);
+                }
+            });
+            webView.loadUrl(getArguments().getString(BundleKeys.TARGET_URL));
+        }
     }
 
     @Override
@@ -80,44 +89,12 @@ public class PortalWebViewFragment extends ActionBarFragment
         }
     }
 
-    public void openPortalUrl(String url)
-    {
-        if (webView != null)
-        {
-            webView.setWebChromeClient(new WebChromeClient()
-            {
-                @Override
-                public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback)
-                {
-                    callback.invoke(origin, true, false);
-                }
-            });
-            loadUrlWithFromAppParam(url);
-        }
-    }
-
-    private void initWebView()
+    protected void initWebView()
     {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setGeolocationEnabled(true);
-        webView.setWebViewClient(new PortalWebViewClient(this, webView, googleManager, bus));
-    }
-
-    private void loadUrlWithFromAppParam(String url)
-    {
-        //TODO: This code seems to be duplicated in the PortalWebViewClient
-        String endOfUrl = "from_app=true&device_id=" + googleManager.getOrSetDeviceId()
-                + "&device_type=android&hide_nav=1"
-                + "&hide_banner=1"
-                + "&hide_payments_tab=1"
-                + "&hide_pro_request=1"
-                + "&ht=1"
-                + "&skip_web_portal_version_tracking=1"
-                + "&skip_web_portal_blocking=1"
-                + "&from_android_native=1"
-                + "&disable_mobile_splash=1";
-        String urlWithParams = url + (url.contains("?") ? "&" : "?") + endOfUrl;
-        webView.loadUrl(urlWithParams);
+        webView.setWebViewClient(new PortalWebViewClient(this, webView, bus,
+                SystemUtils.getDeviceId(getContext())));
     }
 
     @NonNull

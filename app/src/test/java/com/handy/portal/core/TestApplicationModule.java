@@ -13,7 +13,6 @@ import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
@@ -208,12 +207,6 @@ public class TestApplicationModule
     final Mixpanel provideMixpanel()
     {
         return mock(Mixpanel.class);
-    }
-
-    @Provides
-    final GoogleManager provideGoogleService()
-    {
-        return mock(GoogleManager.class);
     }
 
     @Provides

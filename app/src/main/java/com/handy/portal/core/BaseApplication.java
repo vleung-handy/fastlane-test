@@ -3,7 +3,6 @@ package com.handy.portal.core;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
@@ -16,11 +15,11 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.util.FontUtils;
 import com.handy.portal.library.util.PropertiesReader;
+import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.PageNavigationManager;
@@ -64,8 +63,6 @@ public class BaseApplication extends MultiDexApplication
     DataManager dataManager;
     @Inject
     HandyRetrofitEndpoint handyRetrofitEndpoint;
-    @Inject
-    GoogleManager googleManager;
     @Inject
     BookingManager bookingManager;
     @Inject
@@ -123,7 +120,7 @@ public class BaseApplication extends MultiDexApplication
 
         startNewRelic();
         startCrashlytics();
-        sDeviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        sDeviceId = SystemUtils.getDeviceId(getApplicationContext());
         //Start UA
         bus.post(new HandyEvent.StartUrbanAirship());
 

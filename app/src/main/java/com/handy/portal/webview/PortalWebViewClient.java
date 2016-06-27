@@ -11,7 +11,6 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.crashlytics.android.Crashlytics;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
@@ -19,7 +18,6 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
-import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.util.DeeplinkMapper;
 import com.handy.portal.util.DeeplinkUtils;
 
@@ -29,18 +27,17 @@ public class PortalWebViewClient extends WebViewClient
 {
     private Fragment parentFragment;
     private WebView webView;
-    private GoogleManager googleManager;
+    private String mDeviceId;
     protected EventBus bus;
 
     public PortalWebViewClient(Fragment parentFragment,
                                WebView webView,
-                               GoogleManager gs,
-                               EventBus bus)
+                               EventBus bus, String deviceId)
     {
         this.parentFragment = parentFragment;
         this.webView = webView;
-        this.googleManager = gs;
         this.bus = bus;
+        this.mDeviceId = deviceId;
     }
 
     @Override
@@ -151,14 +148,8 @@ public class PortalWebViewClient extends WebViewClient
 
     private void loadUrlWithFromAppParam(String url)
     {
-        if (googleManager == null)
-        {
-            Crashlytics.log("Can not contact google service");
-            return;
-        }
-
         //TODO: This code seems to be duplicated in the PortalWebViewFragment
-        String endOfUrl = "from_app=true&device_id=" + googleManager.getOrSetDeviceId()
+        String endOfUrl = "from_app=true&device_id=" + mDeviceId
                 + "&device_type=android&hide_nav=1"
                 + "&hide_banner=1"
                 + "&hide_payments_tab=1"
