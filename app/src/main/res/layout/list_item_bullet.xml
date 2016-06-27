@@ -25,7 +25,8 @@
 
     <TextView
         android:id="@+id/list_item_text"
-        style="@style/TextView.Medium"
+        android:textColor="@color/black"
+        android:textSize="@dimen/medium_text_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingRight="@dimen/default_padding"
@@ -33,5 +34,9 @@
         android:paddingBottom="@dimen/default_padding_half"
         tools:text="list item text list item text list item text list item text list item text list item text list item text "
         />
+    <!--NOTE: not using style:TextView.Medium here because its freezesText:true
+    causes this text view to display the wrong text when this layout is recreated
+    TODO: investigate removing freezesText:true from the style
+    -->
 
 </LinearLayout>
