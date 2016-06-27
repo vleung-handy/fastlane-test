@@ -6,20 +6,21 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
 public class LoginManager
 {
-    private final Bus bus;
+    private final EventBus bus;
     private DataManager dataManager;
     private PrefsManager prefsManager;
     private Mixpanel mixpanel;
 
     @Inject
-    public LoginManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final Mixpanel mixpanel)
+    public LoginManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final Mixpanel mixpanel)
     {
         this.bus = bus;
         this.dataManager = dataManager;

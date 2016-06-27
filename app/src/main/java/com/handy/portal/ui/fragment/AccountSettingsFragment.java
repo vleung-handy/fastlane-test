@@ -18,7 +18,7 @@ import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -34,8 +34,9 @@ import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.util.DeeplinkUtils;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -46,7 +47,7 @@ import butterknife.OnClick;
 public class AccountSettingsFragment extends ActionBarFragment
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
     @Inject
     ProviderManager mProviderManager;
     @Inject
@@ -71,9 +72,9 @@ public class AccountSettingsFragment extends ActionBarFragment
     private View fragmentView;
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.ACCOUNT_SETTINGS;
+        return MainViewPage.ACCOUNT_SETTINGS;
     }
 
     @Nullable
@@ -95,22 +96,30 @@ public class AccountSettingsFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
-        setActionBar(getString(R.string.account_settings), false);
+        bus.register(this);
 
+        setActionBar(getString(R.string.account_settings), false);
         populateInfo();
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @OnClick(R.id.contact_info_layout)
     public void switchToProfile()
     {
         bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileSelected()));
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.PROFILE_UPDATE, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
+        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_UPDATE, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
     @OnClick(R.id.edit_payment_option)
     public void switchToPayments()
     {
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
+        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
     @OnClick(R.id.order_resupply_layout)
@@ -118,8 +127,8 @@ public class AccountSettingsFragment extends ActionBarFragment
     {
         mBus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitSelected()));
 
-        mBus.post(new NavigationEvent.NavigateToTab(
-                MainViewTab.REQUEST_SUPPLIES, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
+        mBus.post(new NavigationEvent.NavigateToPage(
+                MainViewPage.REQUEST_SUPPLIES, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
 
@@ -230,7 +239,7 @@ public class AccountSettingsFragment extends ActionBarFragment
     public void onSendIncomeVerificationSuccess(HandyEvent.ReceiveSendIncomeVerificationSuccess event)
     {
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.ACCOUNT_SETTINGS, null, TransitionStyle.SEND_VERIFICAITON_SUCCESS));
+        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.ACCOUNT_SETTINGS, null, TransitionStyle.SEND_VERIFICAITON_SUCCESS));
     }
 
     @Subscribe

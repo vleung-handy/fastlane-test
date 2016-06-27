@@ -3,7 +3,6 @@ package com.handy.portal.core;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
@@ -14,20 +13,21 @@ import com.handy.portal.bookings.BookingManager;
 import com.handy.portal.bookings.BookingModalsManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.library.util.FontUtils;
 import com.handy.portal.library.util.PropertiesReader;
+import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
+import com.handy.portal.manager.PageNavigationManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.StripeManager;
 import com.handy.portal.manager.SystemManager;
-import com.handy.portal.manager.TabNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.UserInterfaceUpdateManager;
@@ -38,9 +38,9 @@ import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.setup.SetupManager;
 import com.handy.portal.updater.VersionManager;
-import com.handy.portal.library.util.FontUtils;
 import com.newrelic.agent.android.NewRelic;
-import com.squareup.otto.Bus;
+
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
@@ -63,8 +63,6 @@ public class BaseApplication extends MultiDexApplication
     DataManager dataManager;
     @Inject
     HandyRetrofitEndpoint handyRetrofitEndpoint;
-    @Inject
-    GoogleManager googleManager;
     @Inject
     BookingManager bookingManager;
     @Inject
@@ -96,7 +94,7 @@ public class BaseApplication extends MultiDexApplication
     @Inject
     MainActivityFragmentNavigationHelper mainActivityFragmentNavigationHelper;
     @Inject
-    TabNavigationManager tabNavigationManager;
+    PageNavigationManager mPageNavigationManager;
     @Inject
     WebUrlManager webUrlManager;
     @Inject
@@ -111,7 +109,7 @@ public class BaseApplication extends MultiDexApplication
     SetupManager setupManager;
 
     @Inject
-    Bus bus;
+    EventBus bus;
 
     @Override
     public final void onCreate()
@@ -122,7 +120,7 @@ public class BaseApplication extends MultiDexApplication
 
         startNewRelic();
         startCrashlytics();
-        sDeviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        sDeviceId = SystemUtils.getDeviceId(getApplicationContext());
         //Start UA
         bus.post(new HandyEvent.StartUrbanAirship());
 

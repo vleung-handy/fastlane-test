@@ -6,16 +6,16 @@ import android.support.v7.app.AppCompatActivity;
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.TestUtils;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.core.TestBaseApplication;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.activity.MainActivity;
-import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
-import com.squareup.otto.Bus;
 
+import org.greenrobot.eventbus.EventBus;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -40,7 +40,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
 {
     @Mock
-    Bus mBus;
+    EventBus mBus;
 
     @InjectMocks
     private PaymentsFragment mFragment;
@@ -80,10 +80,10 @@ public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
 
         ArgumentCaptor<HandyEvent> captor = ArgumentCaptor.forClass(HandyEvent.class);
         verify(mBus, atLeastOnce()).post(captor.capture());
-        NavigationEvent.NavigateToTab event = TestUtils.getBusCaptorValue(captor, NavigationEvent.NavigateToTab.class);
+        NavigationEvent.NavigateToPage event = TestUtils.getBusCaptorValue(captor, NavigationEvent.NavigateToPage.class);
 
-        assertNotNull("NavigateToTab event was not post to bus", event);
-        assertEquals("Failed to navigate to help tab", MainViewTab.HELP_WEBVIEW, event.targetTab);
+        assertNotNull("NavigateToPage event was not post to bus", event);
+        assertEquals("Failed to navigate to help page", MainViewPage.HELP_WEBVIEW, event.targetPage);
     }
 
 }

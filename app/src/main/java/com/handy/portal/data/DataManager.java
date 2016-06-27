@@ -221,6 +221,11 @@ public class DataManager
         mService.reportNoShow(bookingId, params.toStringMap(), new BookingHandyRetroFitCallback(cb));
     }
 
+    public void rateCustomer(String bookingId, int rating, String reviewText, Callback<Void> cb)
+    {
+        mService.rateCustomer(bookingId, rating, reviewText, new EmptyHandyRetroFitCallback(cb));
+    }
+
     public void requestPinCode(String phoneNumber, final Callback<PinRequestDetails> cb)
     {
         mService.requestPinCode(phoneNumber, new PinRequestDetailsResponseHandyRetroFitCallback(cb));
@@ -245,7 +250,6 @@ public class DataManager
     {
         mService.acceptTerms(termsCode, new HandyRetrofitCallback(cb)
         {
-
             public void success(JSONObject response)
             {
                 cb.onSuccess(null);

@@ -13,17 +13,9 @@ public class BundleKeys
     public static final String BOOKING_PRIORITY_ACCESS = "BUNDLE_KEY_PRIORITIY_ACCESS";
     public static final String BOOKING_TRANSACTIONS = "booking_transactions";
 
-    public static final String PROVIDER_OPERATING_REGION = "provider_operating_region";
-    public static final String PROVIDER_WEEKLY_JOBS_COUNT = "provider_weekly_jobs_count";
-    public static final String PROVIDER_TIER_HOURLY_RATE = "provider_tier_hourly_rate";
-    public static final String PROVIDER_TIER = "provider_tier"; // 0, 1, 2
-
     public static final String DATE_EPOCH_TIME = "date_epoch_time";
-    public static final String HELP_NODE = "help_node";
-    public static final String HELP_NODE_ID = "help_node_id";
     public static final String HELP_REDIRECT_PATH = "help_redirect_path";
-    public static final String PATH = "path";
-    public static final String TAB = "tab";
+    public static final String PAGE = "page";
     public static final String PAYMENT_BATCH = "payment_batch";
     public static final String BOOKINGS = "bookings";
     public static final String MAP_CENTER = "map_center";
@@ -57,9 +49,6 @@ public class BundleKeys
 
     // Location
     public static final String EVENT_NAME = "event_name";
-
-    // New Checkout
-    public static final String NOTE_TO_CUSTOMER = "note_to_customer";
 
     // Onboarding
     public static final String ALLOW_BACK_NAVIGATION = "allow_back_navigation";

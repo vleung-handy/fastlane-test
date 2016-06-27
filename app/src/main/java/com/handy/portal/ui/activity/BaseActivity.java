@@ -37,8 +37,9 @@ import com.handy.portal.updater.AppUpdateEvent;
 import com.handy.portal.updater.AppUpdateEventListener;
 import com.handy.portal.updater.AppUpdateFlowLauncher;
 import com.handy.portal.updater.ui.PleaseUpdateActivity;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Stack;
 
@@ -90,7 +91,7 @@ public abstract class BaseActivity extends AppCompatActivity
     @Inject
     public Mixpanel mixpanel;
     @Inject
-    public Bus bus;
+    public EventBus bus;
     @Inject
     ConfigManager configManager;
 
@@ -362,7 +363,7 @@ public abstract class BaseActivity extends AppCompatActivity
     public static class SetupHandler
     {
         @Inject
-        Bus bus;
+        EventBus bus;
 
         private BaseActivity mBaseActivity;
         private Flow mSetupFlow;

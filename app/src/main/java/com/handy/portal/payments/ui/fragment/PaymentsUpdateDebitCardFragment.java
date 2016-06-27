@@ -8,20 +8,21 @@ import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.event.StripeEvent;
+import com.handy.portal.library.ui.view.DateFormFieldTableRow;
+import com.handy.portal.library.ui.view.FormFieldTableRow;
+import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.DebitCardInfo;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.library.ui.view.DateFormFieldTableRow;
-import com.handy.portal.library.ui.view.FormFieldTableRow;
-import com.handy.portal.library.util.UIUtils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Map;
 
@@ -85,9 +86,9 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     }
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.PAYMENTS;
+        return MainViewPage.PAYMENTS;
     }
 
     @Override
@@ -96,11 +97,21 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
         super.onResume();
         setBackButtonEnabled(true);
         resetStates();
+
+        bus.register(this);
+
         if (providerManager.getCachedActiveProvider() != null)
         {
             bus.post(new RegionDefinitionEvent.RequestFormDefinitions(
                     providerManager.getCachedActiveProvider().getCountry(), this.getContext()));
         }
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     public boolean validate()

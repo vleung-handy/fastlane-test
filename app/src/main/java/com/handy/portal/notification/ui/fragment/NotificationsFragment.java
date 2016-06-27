@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.NotificationEvent;
@@ -29,7 +29,8 @@ import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.widget.TitleView;
 import com.handy.portal.util.DeeplinkMapper;
 import com.handy.portal.util.DeeplinkUtils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -152,16 +153,16 @@ public final class NotificationsFragment extends ActionBarFragment
             final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
             if (!TextUtils.isNullOrEmpty(deeplink))
             {
-                final MainViewTab tab = DeeplinkMapper.getTabForDeeplink(deeplink);
-                bus.post(new NavigationEvent.NavigateToTab(tab, deeplinkData));
+                final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
+                bus.post(new NavigationEvent.NavigateToPage(page, deeplinkData));
             }
         }
     }
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.NOTIFICATIONS;
+        return MainViewPage.NOTIFICATIONS;
     }
 
     @Override
@@ -169,6 +170,8 @@ public final class NotificationsFragment extends ActionBarFragment
     {
         super.onResume();
         setActionBar(R.string.tab_notifications, false);
+
+        bus.register(this);
 
         if (mNotificationsListView.shouldRequestMoreNotifications())
         {
@@ -187,6 +190,7 @@ public final class NotificationsFragment extends ActionBarFragment
     public void onPause()
     {
         setLoadingOverlayVisible(false); //don't want overlay to persist when this fragment is paused
+        bus.unregister(this);
         super.onPause();
     }
 

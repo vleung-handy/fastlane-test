@@ -13,7 +13,6 @@ import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
@@ -42,7 +41,8 @@ import com.handy.portal.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.securepreferences.SecurePreferences;
-import com.squareup.otto.Bus;
+
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Singleton;
 
@@ -95,7 +95,7 @@ public class TestApplicationModule
     final EnvironmentModifier provideEnvironmentModifier()
     {
         EnvironmentModifier environmentModifier = mock(EnvironmentModifier.class);
-        when(environmentModifier.getEnvironmentPrefix()).thenReturn("s");
+        when(environmentModifier.getEnvironmentPrefix()).thenReturn("ms");
         return environmentModifier;
     }
 
@@ -120,9 +120,9 @@ public class TestApplicationModule
 
     @Provides
     @Singleton
-    final Bus provideBus()
+    final EventBus provideBus()
     {
-        return mock(Bus.class);
+        return mock(EventBus.class);
     }
 
     @Provides
@@ -210,19 +210,13 @@ public class TestApplicationModule
     }
 
     @Provides
-    final GoogleManager provideGoogleService()
-    {
-        return mock(GoogleManager.class);
-    }
-
-    @Provides
     final UserInterfaceUpdateManager provideUserInterfaceUpdateManager()
     {
         return mock(UserInterfaceUpdateManager.class);
     }
 
     @Provides
-    final UrbanAirshipManager providerUrbanAirshipManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication)
+    final UrbanAirshipManager providerUrbanAirshipManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication)
     {
         return mock(UrbanAirshipManager.class);
     }

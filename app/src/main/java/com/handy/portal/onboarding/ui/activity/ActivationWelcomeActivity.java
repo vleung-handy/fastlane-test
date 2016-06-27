@@ -13,8 +13,9 @@ import com.handy.portal.R;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.library.util.Utils;
 import com.plattysoft.leonids.ParticleSystem;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,7 +49,7 @@ public class ActivationWelcomeActivity extends AppCompatActivity
     RelativeLayout mLoadingOverlay;
 
     @Inject
-    Bus mBus;
+    EventBus mBus;
 
     private boolean mAnchorViewRendered = false;
     private boolean mProfileLoaded = false;
@@ -130,7 +131,7 @@ public class ActivationWelcomeActivity extends AppCompatActivity
     {
         mLoadingOverlay.setVisibility(View.GONE);
         mProfileLoaded = true;
-        
+
         if (event.providerProfile != null
                 && event.providerProfile.getProviderPersonalInfo() != null
                 && !TextUtils.isEmpty(event.providerProfile.getProviderPersonalInfo().getFirstName()))

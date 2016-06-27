@@ -8,7 +8,7 @@ import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.TestUtils;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.core.TestBaseApplication;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -81,7 +81,7 @@ public class SendReceiptCheckoutFragmentTest extends RobolectricGradleTestWrappe
     {
         fragment.onReceiveNotifyJobCheckOutSuccess(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(null));
 
-        assertThat(getBusCaptorValue(NavigationEvent.NavigateToTab.class).targetTab, equalTo(MainViewTab.SCHEDULED_JOBS));
+        assertThat(getBusCaptorValue(NavigationEvent.NavigateToPage.class).targetPage, equalTo(MainViewPage.SCHEDULED_JOBS));
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(fragment.getString(R.string.check_out_success)));
     }
 

@@ -29,8 +29,9 @@ import com.handy.portal.bookings.ui.element.BookingsBannerView;
 import com.handy.portal.bookings.ui.fragment.dialog.EarlyAccessTrialDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.JobAccessUnlockedDialogFragment;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
@@ -41,7 +42,8 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Date;
 import java.util.List;
@@ -76,9 +78,9 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     private MenuItem mMenuProRequestedJobs;
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.AVAILABLE_JOBS;
+        return MainViewPage.AVAILABLE_JOBS;
     }
 
     @Override
@@ -109,6 +111,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     public void onResume()
     {
+        bus.register(this);
         super.onResume();
         setActionBar(R.string.available_jobs, false);
 
@@ -126,6 +129,13 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 requestRequestedAvailableJobs();
             }
         }
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     private void requestRequestedAvailableJobs()
@@ -180,7 +190,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     private void showProRequestedJobsInbox()
     {
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.REQUESTED_JOBS, true));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.REQUESTED_JOBS, null, TransitionStyle.SLIDE_UP, true));
     }
 
     protected BookingListView getBookingListView()
@@ -227,10 +237,9 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     private void goToHelpCenter(final String helpCenterRedirectPath)
     {
-        //don't ever need to support native help center again so ignore the config response
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, helpCenterRedirectPath);
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP_WEBVIEW, arguments, true));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.HELP_WEBVIEW, arguments, true));
     }
 
     @Override

@@ -10,7 +10,7 @@ import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.updater.model.UpdateDetails;
-import com.squareup.otto.Bus;
+import org.greenrobot.eventbus.EventBus;
 
 import org.json.JSONObject;
 import org.junit.Before;
@@ -38,7 +38,7 @@ public class DataManagerTest extends RobolectricGradleTestWrapper
     @Mock
     StripeRetrofitService stripeService;
     @Mock
-    Bus bus;
+    EventBus bus;
     @Mock
     PrefsManager prefsManager;
     @Mock

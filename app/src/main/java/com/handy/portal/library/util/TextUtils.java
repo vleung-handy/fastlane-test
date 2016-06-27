@@ -182,6 +182,7 @@ public final class TextUtils
                                        @Nullable final LaunchWebViewCallback launchWebViewCallback)
     {
         CharSequence sequence = Html.fromHtml(html);
+
         SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
         URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);
         for (final URLSpan span : urls)

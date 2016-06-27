@@ -17,7 +17,7 @@ public class DeeplinkUtils
         {
             final Bundle deeplinkBundle = new Bundle();
             final String path = sanitizeUriPath(uri);
-            if (DeeplinkMapper.getTabForDeeplink(path) != null)
+            if (DeeplinkMapper.getPageForDeeplink(path) != null)
             {
                 deeplinkBundle.putString(BundleKeys.DEEPLINK, path);
                 for (String key : uri.getQueryParameterNames())

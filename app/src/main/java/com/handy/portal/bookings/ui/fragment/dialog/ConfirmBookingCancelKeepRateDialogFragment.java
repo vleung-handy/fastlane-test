@@ -14,10 +14,11 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
-import com.handy.portal.library.util.CurrencyUtils;
-import com.squareup.otto.Bus;
+
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
@@ -41,7 +42,7 @@ public class ConfirmBookingCancelKeepRateDialogFragment extends ConfirmBookingAc
     TextView mWithholdingFeeNoticeText;
 
     @Inject
-    Bus mBus;
+    EventBus mBus;
 
     public static ConfirmBookingCancelKeepRateDialogFragment newInstance(@NonNull final Booking booking)
     {

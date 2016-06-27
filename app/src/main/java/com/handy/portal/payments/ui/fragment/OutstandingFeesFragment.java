@@ -8,16 +8,17 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.Payment;
 import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.ui.element.PaymentFeeBreakdownView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.library.util.CurrencyUtils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -41,9 +42,9 @@ public class OutstandingFeesFragment extends ActionBarFragment
     private View fragmentView;
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.OUTSTANDING_FEES;
+        return MainViewPage.OUTSTANDING_FEES;
     }
 
     @Override
@@ -73,7 +74,16 @@ public class OutstandingFeesFragment extends ActionBarFragment
     {
         super.onResume();
         setActionBar(R.string.outstanding_fees, true);
+
+        bus.register(this);
         requestOutstandingFees();
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     private void requestOutstandingFees()
@@ -117,8 +127,8 @@ public class OutstandingFeesFragment extends ActionBarFragment
                         Bundle arguments = new Bundle();
                         arguments.putString(BundleKeys.BOOKING_ID, payment.getBookingId());
                         arguments.putString(BundleKeys.BOOKING_TYPE, payment.getBookingType());
-                        NavigationEvent.NavigateToTab event =
-                                new NavigationEvent.NavigateToTab(MainViewTab.JOB_PAYMENT_DETAILS, arguments, true);
+                        NavigationEvent.NavigateToPage event =
+                                new NavigationEvent.NavigateToPage(MainViewPage.JOB_PAYMENT_DETAILS, arguments, true);
                         bus.post(event);
                     }
                 });

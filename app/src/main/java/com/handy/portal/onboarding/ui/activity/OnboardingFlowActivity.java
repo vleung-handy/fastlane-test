@@ -3,6 +3,7 @@ package com.handy.portal.onboarding.ui.activity;
 import android.content.Intent;
 import android.os.Bundle;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.RequestCode;
@@ -189,7 +190,15 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
         outState.putSerializable(BundleKeys.BOOKINGS, mPendingBookings);
         outState.putSerializable(BundleKeys.SUPPLIES_ORDER_INFO, mSuppliesOrderInfo);
         outState.putInt(BundleKeys.PERCENT_COMPLETE_ADDEND, mPercentCompleteAddend);
-        super.onSaveInstanceState(outState);
+        try
+        {
+            super.onSaveInstanceState(outState);
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Non fatal
+            Crashlytics.logException(e);
+        }
     }
 
     @SuppressWarnings("unchecked")

@@ -3,7 +3,6 @@ package com.handy.portal.core;
 import android.app.Application;
 import android.content.Context;
 import android.os.Build;
-import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 
@@ -16,19 +15,19 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpModule;
 import com.handy.portal.library.util.PropertiesReader;
+import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.LocationModule;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
+import com.handy.portal.manager.PageNavigationManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.StripeManager;
 import com.handy.portal.manager.SystemManager;
-import com.handy.portal.manager.TabNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.UserInterfaceUpdateManager;
@@ -76,7 +75,8 @@ import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.otto.Bus;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Properties;
 import java.util.TimeZone;
@@ -169,7 +169,7 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final UserInterfaceUpdateManager provideUserInterfaceManager(final Bus bus)
+    final UserInterfaceUpdateManager provideUserInterfaceManager(final EventBus bus)
     {
         return new UserInterfaceUpdateManager(bus);
     }
@@ -190,7 +190,7 @@ public final class ApplicationModule
     final HandyRetrofitService provideHandyService(final BuildConfigWrapper buildConfigWrapper,
                                                    final HandyRetrofitEndpoint endpoint,
                                                    final PrefsManager prefsManager,
-                                                   final Bus bus)
+                                                   final EventBus bus)
     {
 
         final OkHttpClient okHttpClient = new OkHttpClient();
@@ -218,7 +218,7 @@ public final class ApplicationModule
                         request.addHeader("Accept", "application/json");
                         request.addQueryParam("client", "android");
                         request.addQueryParam("app_version", BuildConfig.VERSION_NAME);
-                        request.addQueryParam("device_id", getDeviceId());
+                        request.addQueryParam("device_id", SystemUtils.getDeviceId(context));
                         request.addQueryParam("device_model", BaseApplication.getDeviceModel());
                         request.addQueryParam("os_version", Build.VERSION.RELEASE);
                         request.addQueryParam("device_carrier", getDeviceCarrier());
@@ -275,9 +275,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final Bus provideBus(final Mixpanel mixpanel)
+    final EventBus provideBus(final Mixpanel mixpanel)
     {
-        return new MainBus(mixpanel);
+        return new MainBus();
     }
 
     @Provides
@@ -299,35 +299,35 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final SystemManager provideSystemManager(final Bus bus)
+    final SystemManager provideSystemManager(final EventBus bus)
     {
         return new SystemManager(context, bus);
     }
 
     @Provides
     @Singleton
-    final LoginManager provideLoginManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final Mixpanel mixpanel)
+    final LoginManager provideLoginManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final Mixpanel mixpanel)
     {
         return new LoginManager(bus, dataManager, prefsManager, mixpanel);
     }
 
     @Provides
     @Singleton
-    final ProviderManager provideProviderManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager)
+    final ProviderManager provideProviderManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager)
     {
         return new ProviderManager(bus, dataManager, prefsManager);
     }
 
     @Provides
     @Singleton
-    final ConfigManager provideConfigManager(final DataManager dataManager, final Bus bus)
+    final ConfigManager provideConfigManager(final DataManager dataManager, final EventBus bus)
     {
         return new ConfigManager(dataManager, bus);
     }
 
     @Provides
     @Singleton
-    final VersionManager provideVersionManager(final Bus bus,
+    final VersionManager provideVersionManager(final EventBus bus,
                                                final DataManager dataManager,
                                                final PrefsManager prefsManager,
                                                final BuildConfigWrapper buildConfigWrapper)
@@ -337,7 +337,7 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final TermsManager provideTermsManager(final Bus bus,
+    final TermsManager provideTermsManager(final EventBus bus,
                                            final DataManager dataManager)
     {
         return new TermsManager(bus, dataManager);
@@ -359,14 +359,7 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final GoogleManager provideGoogleService()
-    {
-        return new GoogleManager(this.context);
-    }
-
-    @Provides
-    @Singleton
-    final UrbanAirshipManager provideUrbanAirshipManager(final Bus bus,
+    final UrbanAirshipManager provideUrbanAirshipManager(final EventBus bus,
                                                          final DataManager dataManager,
                                                          final PrefsManager prefsManager,
                                                          final Application associatedApplication,
@@ -384,28 +377,28 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final MainActivityFragmentNavigationHelper provideFragmentNavigationManager(Bus bus)
+    final MainActivityFragmentNavigationHelper provideFragmentNavigationManager(EventBus bus)
     {
         return new MainActivityFragmentNavigationHelper(bus);
     }
 
     @Provides
     @Singleton
-    final ZipClusterManager provideZipClusterPolygonManager(final Bus bus, final DataManager dataManager)
+    final ZipClusterManager provideZipClusterPolygonManager(final EventBus bus, final DataManager dataManager)
     {
         return new ZipClusterManager(bus, dataManager);
     }
 
     @Provides
     @Singleton
-    final StripeManager provideStripeManager(final Bus bus, final DataManager dataManager)
+    final StripeManager provideStripeManager(final EventBus bus, final DataManager dataManager)
     {
         return new StripeManager(context, bus, dataManager);
     }
 
     @Provides
     @Singleton
-    final EventLogManager provideLogEventsManager(final Bus bus,
+    final EventLogManager provideLogEventsManager(final EventBus bus,
                                                   final DataManager dataManager,
                                                   final PrefsManager prefsManager)
     {
@@ -414,7 +407,7 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final RegionDefinitionsManager provideRegionDefinitionsManager(final Bus bus)
+    final RegionDefinitionsManager provideRegionDefinitionsManager(final EventBus bus)
     {
         return new RegionDefinitionsManager(bus);
     }
@@ -431,28 +424,22 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final TabNavigationManager provideTabNavigationManager(final Bus bus,
-                                                           final ProviderManager providerManager,
-                                                           final WebUrlManager webUrlManager,
-                                                           final PaymentsManager paymentsManager,
-                                                           final ConfigManager configManager
+    final PageNavigationManager providePageNavigationManager(final EventBus bus,
+                                                             final ProviderManager providerManager,
+                                                             final WebUrlManager webUrlManager,
+                                                             final PaymentsManager paymentsManager,
+                                                             final ConfigManager configManager
     )
     {
-        return new TabNavigationManager(bus, providerManager, webUrlManager, paymentsManager, configManager);
+        return new PageNavigationManager(bus, providerManager, webUrlManager, paymentsManager, configManager);
     }
 
     @Provides
     @Singleton
-    final SetupManager provideApplicationSetupManager(final Bus bus,
+    final SetupManager provideApplicationSetupManager(final EventBus bus,
                                                       final DataManager dataManager)
     {
         return new SetupManager(bus, dataManager);
-    }
-
-    private String getDeviceId()
-    {
-        return Settings.Secure.getString(context.getContentResolver(),
-                Settings.Secure.ANDROID_ID);
     }
 
     private String getDeviceCarrier()

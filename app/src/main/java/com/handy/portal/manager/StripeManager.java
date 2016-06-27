@@ -4,17 +4,18 @@ package com.handy.portal.manager;
 import android.content.Context;
 
 import com.handy.portal.constant.Country;
-import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.StripeEvent;
+import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.payments.model.BankAccountInfo;
 import com.handy.portal.payments.model.DebitCardInfo;
 import com.handy.portal.payments.model.StripeTokenResponse;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 import com.stripe.android.Stripe;
 import com.stripe.android.TokenCallback;
 import com.stripe.android.model.Token;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,12 +27,14 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
     private final String STRIPE_API_KEY_US;
     private final String STRIPE_API_KEY_GB;
     private final String STRIPE_API_KEY_CA;
-    private final Bus bus;
+    private final EventBus bus;
     private final DataManager dataManager;
+
 
     private final class RequestStripeTokenKeys
     {
         private static final String API_KEY = "key";
+
 
         private final class BankAccount
         {
@@ -41,6 +44,7 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
             private static final String BANK_ACCOUNT_ROUTING_NUMBER = BANK_ACCOUNT + "[routing_number]";
             private static final String BANK_ACCOUNT_ACCOUNT_NUMBER = BANK_ACCOUNT + "[account_number]";
         }
+
 
         private final class DebitCard
         {
@@ -53,7 +57,7 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
     }
 
     @Inject
-    public StripeManager(final Context context, final Bus bus, final DataManager dataManager)
+    public StripeManager(final Context context, final EventBus bus, final DataManager dataManager)
     {
         this.bus = bus;
         this.bus.register(this);

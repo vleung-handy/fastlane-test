@@ -9,8 +9,8 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.manager.GoogleManager;
-import com.squareup.otto.Bus;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,9 +26,7 @@ public class InjectedFragment extends android.support.v4.app.Fragment
     @Inject
     protected ConfigManager configManager;
     @Inject
-    protected GoogleManager googleManager;
-    @Inject
-    protected Bus bus;
+    protected EventBus bus;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
@@ -43,23 +41,9 @@ public class InjectedFragment extends android.support.v4.app.Fragment
      * @return bus
      */
     @VisibleForTesting
-    public Bus getBus()
+    public EventBus getBus()
     {
         return bus;
-    }
-
-    @Override
-    public void onResume()
-    {
-        super.onResume();
-        bus.register(this);
-    }
-
-    @Override
-    public void onPause()
-    {
-        bus.unregister(this);
-        super.onPause();
     }
 
     //Each fragment if it requires arguments from the bundles should override this list

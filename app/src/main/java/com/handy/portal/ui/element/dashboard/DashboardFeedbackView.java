@@ -13,16 +13,17 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.FeedbackLog;
-import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.library.ui.view.YoutubeImagePlaceholderView;
 import com.handy.portal.library.ui.widget.BulletTextView;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Bus;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.FeedbackLog;
+import com.handy.portal.model.dashboard.ProviderFeedback;
+
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
@@ -32,7 +33,7 @@ import butterknife.ButterKnife;
 public class DashboardFeedbackView extends FrameLayout implements View.OnClickListener
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
 
     @Bind(R.id.dashboard_feedback_title)
     TextView mTitle;
@@ -115,6 +116,6 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
         bundle.putString(BundleKeys.YOUTUBE_VIDEO_ID, view.getID());
 
         mBus.post(new LogEvent.AddLogEvent(new FeedbackLog.VideoSelected(view.getSection())));
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.YOUTUBE_PLAYER, bundle));
+        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.YOUTUBE_PLAYER, bundle));
     }
 }

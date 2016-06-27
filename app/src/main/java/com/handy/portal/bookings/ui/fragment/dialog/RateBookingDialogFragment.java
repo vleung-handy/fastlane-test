@@ -18,10 +18,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.library.util.CurrencyUtils;
@@ -33,10 +31,11 @@ import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.LocationData;
-import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
@@ -50,6 +49,8 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
 {
     @Inject
     PrefsManager mPrefsManager;
+    @Inject
+    EventBus mBus;
 
     @Bind(R.id.rate_booking_amount_text)
     TextView mAmountText;
@@ -67,7 +68,6 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     public static final String FRAGMENT_TAG = "fragment_dialog_rate_booking";
 
     private Booking mBooking;
-    private String mNoteToCustomer;
 
     public void onCreate(Bundle savedInstanceState)
     {
@@ -101,27 +101,26 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         if (bundle != null && bundle.containsKey(BundleKeys.BOOKING))
         {
             mBooking = (Booking) bundle.getSerializable(BundleKeys.BOOKING);
-            mNoteToCustomer = bundle.getString(BundleKeys.NOTE_TO_CUSTOMER);
-
-            PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
-            if (paymentInfo != null)
+            if (mBooking != null)
             {
-                String amount = CurrencyUtils.formatPrice(
-                        paymentInfo.getAdjustedAmount(), paymentInfo.getCurrencySymbol());
-                mAmountText.setText(getString(R.string.you_earned_money_formatted, amount));
+                PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
+                if (paymentInfo != null)
+                {
+                    String amount = CurrencyUtils.formatPrice(
+                            paymentInfo.getAdjustedAmount(), paymentInfo.getCurrencySymbol());
+                    mAmountText.setText(getString(R.string.you_earned_money_formatted, amount));
+                }
+                PaymentInfo bonusInfo = mBooking.getBonusPaymentToProvider();
+                if (bonusInfo != null && bonusInfo.getAdjustedAmount() > 0)
+                {
+                    String amount = CurrencyUtils.formatPrice(
+                            bonusInfo.getAdjustedAmount(), bonusInfo.getCurrencySymbol());
+                    mBonusAmountText.setText(getString(R.string.bonus_formatted, amount));
+                    mBonusAmountText.setVisibility(View.VISIBLE);
+                }
+                String name = mBooking.getUser().getFirstName();
+                mExperienceText.setText(getString(R.string.how_was_experience_formatted, name));
             }
-            PaymentInfo bonusInfo = mBooking.getBonusPaymentToProvider();
-            if (bonusInfo != null && bonusInfo.getAdjustedAmount() > 0)
-            {
-                String amount = CurrencyUtils.formatPrice(
-                        bonusInfo.getAdjustedAmount(), bonusInfo.getCurrencySymbol());
-                mBonusAmountText.setText(getString(R.string.bonus_formatted, amount));
-                mBonusAmountText.setVisibility(View.VISIBLE);
-            }
-            String name = mBooking.getUser().getFirstName();
-            mExperienceText.setText(getString(R.string.how_was_experience_formatted, name));
-
-
         }
 
         if (mBooking == null)
@@ -130,6 +129,20 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         }
 
         mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingShown()));
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        mBus.register(this);
+    }
+
+    @Override
+    public void onPause()
+    {
+        mBus.unregister(this);
+        super.onPause();
     }
 
     @OnClick(R.id.close_button)
@@ -150,10 +163,8 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             final LocationData locationData = getLocationData();
             mBus.post(new LogEvent.AddLogEvent(
                     new CheckInFlowLog.CheckOutSubmitted(mBooking, locationData)));
-            mBus.post(new HandyEvent.RequestNotifyJobCheckOut(mBooking.getId(), new CheckoutRequest(
-                    locationData, new ProBookingFeedback(bookingRatingScore,
-                    getBookingRatingComment()), mNoteToCustomer, mBooking.getCustomerPreferences())
-            ));
+            mBus.post(new BookingEvent.RateCustomer(
+                    mBooking.getId(), bookingRatingScore, getBookingRatingComment()));
         }
         else
         {
@@ -161,9 +172,8 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         }
     }
 
-    //when clicked on, close the dialog, the fragment will listen for the event to come back and transition correctly, if fails brings back
     @Subscribe
-    public void onReceiveNotifyJobCheckOutSuccess(final HandyEvent.ReceiveNotifyJobCheckOutSuccess event)
+    public void onReceiveRateCustomerSuccess(final BookingEvent.RateCustomerSuccess event)
     {
         Address address = mBooking.getAddress();
         if (address != null)
@@ -180,7 +190,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     }
 
     @Subscribe
-    public void onReceiveNotifyJobCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
+    public void onRateCustomerError(final BookingEvent.RateCustomerError event)
     {
         mSubmitButton.setEnabled(true);
         UIUtils.showToast(getContext(), getString(R.string.an_error_has_occurred), Toast.LENGTH_SHORT);
@@ -199,7 +209,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
                 args.putSerializable(BundleKeys.BOOKINGS, new ArrayList<>(event.getBookings()));
                 args.putParcelable(BundleKeys.MAP_CENTER,
                         new LatLng(address.getLatitude(), address.getLongitude()));
-                mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.NEARBY_JOBS, args, true));
+                mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.NEARBY_JOBS, args, true));
             }
         }
         dismiss();

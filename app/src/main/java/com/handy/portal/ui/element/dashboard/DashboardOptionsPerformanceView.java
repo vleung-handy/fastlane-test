@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.Utils;
@@ -22,7 +22,8 @@ import com.handy.portal.logger.handylogger.model.PerformanceLog;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.model.dashboard.ProviderRating;
-import com.squareup.otto.Bus;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -35,7 +36,7 @@ import butterknife.OnClick;
 public class DashboardOptionsPerformanceView extends FrameLayout
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
 
     @Bind(R.id.weekly_tier_text)
     TextView mWeeklyTierText;
@@ -178,7 +179,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
         arguments.putSerializable(BundleKeys.TIERS_TITLE, mTiersTitle);
         mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.TierSelected()));
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_TIERS, arguments, true));
+        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.DASHBOARD_TIERS, arguments, true));
     }
 
     @OnClick(R.id.feedback_option)
@@ -187,7 +188,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
         mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.FeedbackSelected()));
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_FEEDBACK, arguments, true));
+        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.DASHBOARD_FEEDBACK, arguments, true));
     }
 
 
@@ -197,6 +198,6 @@ public class DashboardOptionsPerformanceView extends FrameLayout
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
         mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.FiveStarReviewsSelected()));
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_REVIEWS, arguments, true));
+        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.DASHBOARD_REVIEWS, arguments, true));
     }
 }

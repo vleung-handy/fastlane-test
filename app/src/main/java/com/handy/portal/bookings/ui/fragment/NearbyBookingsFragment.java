@@ -22,10 +22,12 @@ import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFr
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.Country;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.MathUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.NearbyJobsLog;
@@ -34,9 +36,8 @@ import com.handy.portal.model.Address;
 import com.handy.portal.model.Provider;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.library.util.MathUtils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
@@ -84,9 +85,9 @@ public class NearbyBookingsFragment extends ActionBarFragment
     }
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.NEARBY_JOBS;
+        return MainViewPage.NEARBY_JOBS;
     }
 
     @Nullable
@@ -128,6 +129,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
         bus.post(new LogEvent.AddLogEvent(
                 new NearbyJobsLog.Shown(mBookings.size())));
     }
@@ -136,6 +138,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
     public void onPause()
     {
         super.onPause();
+        bus.unregister(this);
         if (mCounter != null) { mCounter.cancel(); }
     }
 
@@ -188,7 +191,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, booking.getStartDate().getTime());
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, null));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SCHEDULED_JOBS, arguments, null));
     }
 
     @Subscribe

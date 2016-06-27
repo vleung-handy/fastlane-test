@@ -7,7 +7,7 @@ import android.view.View;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.webview.PortalWebViewFragment;
@@ -20,15 +20,14 @@ public class HelpWebViewFragment extends PortalWebViewFragment
     ConfigManager mConfigManager;
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.HELP_WEBVIEW;
+        return MainViewPage.HELP_WEBVIEW;
     }
 
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
     {
-        super.onViewCreated(view, savedInstanceState);
         setActionBarTitle(R.string.help);
 
         final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
@@ -45,8 +44,9 @@ public class HelpWebViewFragment extends PortalWebViewFragment
                 setOptionsMenuEnabled(true);
                 setBackButtonEnabled(true);
             }
-            getWebView().loadUrl(helpCenterUrl);
+            getArguments().putString(BundleKeys.TARGET_URL, helpCenterUrl);
         }
-        // TODO: Handle null configuration
+
+        super.onViewCreated(view, savedInstanceState);
     }
 }

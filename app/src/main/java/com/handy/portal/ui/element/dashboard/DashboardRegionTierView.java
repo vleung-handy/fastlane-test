@@ -125,6 +125,7 @@ public class DashboardRegionTierView extends FrameLayout
                         Html.fromHtml(getContext().getResources()
                                 .getQuantityString(R.plurals.complete_jobs_unlock_higher_rate_formatted,
                                         jobsToComplete, jobsToComplete, regionName)));
+
             }
             else if (currentTiers != null)
             {

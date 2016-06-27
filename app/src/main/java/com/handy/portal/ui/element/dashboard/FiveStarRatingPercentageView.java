@@ -20,7 +20,8 @@ import com.handy.portal.library.util.Utils;
 import com.hookedonplay.decoviewlib.DecoView;
 import com.hookedonplay.decoviewlib.charts.SeriesItem;
 import com.hookedonplay.decoviewlib.events.DecoEvent;
-import com.squareup.otto.Bus;
+
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
@@ -30,7 +31,7 @@ import butterknife.ButterKnife;
 public class FiveStarRatingPercentageView extends FrameLayout
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
 
     @Bind(R.id.five_star_percentage_number)
     TextView mFiveStarPercentageNumber;

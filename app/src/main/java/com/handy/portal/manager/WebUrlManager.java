@@ -2,7 +2,7 @@ package com.handy.portal.manager;
 
 import android.support.annotation.StringDef;
 
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.model.Provider;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
@@ -42,15 +42,15 @@ public class WebUrlManager
         mConfigManager = configManager;
     }
 
-    public String constructUrlForTargetTab(MainViewTab targetTab)
+    public String constructUrlForTargetPage(MainViewPage targetPage)
     {
         String targetUrl = mEndpoint.getBaseUrl();
 
-        if (targetTab == null) { return targetUrl; }
+        if (targetPage == null) { return targetUrl; }
 
-        if (targetTab.getWebViewTarget() != null)
+        if (targetPage.getWebViewTarget() != null)
         {
-            targetUrl += targetTab.getWebViewTarget();
+            targetUrl += targetPage.getWebViewTarget();
         }
 
         return replaceVariablesInUrl(targetUrl);

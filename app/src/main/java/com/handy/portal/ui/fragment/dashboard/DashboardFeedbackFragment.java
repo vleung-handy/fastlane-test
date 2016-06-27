@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.FeedbackLog;
@@ -84,13 +84,13 @@ public class DashboardFeedbackFragment extends ActionBarFragment
     public void switchToVideoLibrary()
     {
         bus.post(new LogEvent.AddLogEvent(new FeedbackLog.VideoLibrarySelected()));
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.DASHBOARD_VIDEO_LIBRARY, true));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.DASHBOARD_VIDEO_LIBRARY, true));
     }
 
     public void swapToVideo(String youtubeId)
     {
         Bundle bundle = new Bundle();
         bundle.putSerializable(BundleKeys.YOUTUBE_VIDEO_ID, youtubeId);
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.YOUTUBE_PLAYER, bundle));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.YOUTUBE_PLAYER, bundle));
     }
 }

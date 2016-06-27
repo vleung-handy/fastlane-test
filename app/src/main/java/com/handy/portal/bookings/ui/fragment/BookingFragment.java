@@ -36,7 +36,7 @@ import com.handy.portal.bookings.ui.element.BookingMapView;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
@@ -58,7 +58,8 @@ import com.handy.portal.model.LocationData;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.fragment.TimerActionBarFragment;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -196,14 +197,14 @@ public class BookingFragment extends TimerActionBarFragment
      * shows the booking details message view
      * with the message in the booking's pro request display model
      * if the message is present and someone in the proxy/booking requested the pro
-     *
+     * <p/>
      * TODO ugly! would be nice if the display attributes were generic but
      * since there's not enough time to fully generalize this
      * we're making it specific to pro request for now
      */
     private void updateDisplayWithBookingProRequestDisplayAttributes()
     {
-        if(mBooking.isRequested()) //ideally should be decoupled
+        if (mBooking.isRequested()) //ideally should be decoupled
         {
             Booking.DisplayAttributes displayAttributes = mBooking.getProviderRequestDisplayAttributes();
             if (displayAttributes != null
@@ -220,6 +221,8 @@ public class BookingFragment extends TimerActionBarFragment
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
+
         mBookingMapView.onResume();
 
         setDisplay();
@@ -229,6 +232,7 @@ public class BookingFragment extends TimerActionBarFragment
     public void onPause()
     {
         mBookingMapView.onPause();
+        bus.unregister(this);
         super.onPause();
     }
 
@@ -266,7 +270,7 @@ public class BookingFragment extends TimerActionBarFragment
              */
             mBookingMapView.onSaveInstanceState(outState);
         }
-        catch(Exception e)
+        catch (Exception e)
         {
             Crashlytics.log("Error while attempting MapView.onSaveInstanceState(). Ignoring exception: " + e.getMessage());
         }
@@ -310,6 +314,8 @@ public class BookingFragment extends TimerActionBarFragment
         if (mBooking.isProxy())
         {
             mBookingAddressTitleText.setText(mBooking.getLocationName());
+            mBookingAddressText.setVisibility(View.GONE);
+
             mBookingAddressText.setVisibility(View.GONE);
 
             if (mBooking.getZipCluster() != null)
@@ -693,7 +699,7 @@ public class BookingFragment extends TimerActionBarFragment
                     {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(BundleKeys.BOOKING, mBooking);
-                        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle, true));
+                        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SEND_RECEIPT_CHECKOUT, bundle, true));
                     }
                 });
                 initHelperText(action);
@@ -787,6 +793,7 @@ public class BookingFragment extends TimerActionBarFragment
             final String maximumHoursFormatted = TextUtils.formatHours(maximumHours);
             final String startDateFormatted = DateTimeUtils.formatDetailedDate(mBooking.getStartDate());
             final String endDateFormatted = DateTimeUtils.formatDetailedDate(mBooking.getEndDate());
+
             noticeText = Html.fromHtml(getResources()
                     .getString(R.string.full_details_and_more_available_on_date_flex,
                             minimumHoursFormatted, maximumHoursFormatted,
@@ -794,6 +801,7 @@ public class BookingFragment extends TimerActionBarFragment
                             minimumPaymentFormatted, minimumHoursFormatted,
                             maximumPaymentFormatted, maximumHoursFormatted
                     ));
+
         }
         else
         {

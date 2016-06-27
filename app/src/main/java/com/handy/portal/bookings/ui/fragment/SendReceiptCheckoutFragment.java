@@ -21,7 +21,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.bookings.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -37,7 +37,8 @@ import com.handy.portal.model.ProBookingFeedback;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.view.CheckoutCompletedTaskView;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Calendar;
 import java.util.List;
@@ -82,9 +83,9 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     private int mHiddenTasksCount;
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.SEND_RECEIPT_CHECKOUT;
+        return MainViewPage.SEND_RECEIPT_CHECKOUT;
     }
 
     @Override
@@ -134,6 +135,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
         getContext().registerReceiver(mTimeBroadcastReceiver, mTimeIntentFilter);
     }
 
@@ -141,6 +143,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     public void onPause()
     {
         super.onPause();
+        bus.unregister(this);
         getContext().unregisterReceiver(mTimeBroadcastReceiver);
     }
 
@@ -154,24 +157,10 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     public void completeCheckout()
     {
         LocationData locationData = getLocationData();
-
-        boolean showCheckoutRatingFlow = false;
-        if (mConfigManager.getConfigurationResponse() != null)
-        {
-            showCheckoutRatingFlow = mConfigManager.getConfigurationResponse().isCheckoutRatingFlowEnabled();
-        }
-
-        if (showCheckoutRatingFlow)
-        {
-            showCheckoutRatingFlow();
-        }
-        else
-        {
-            String noteToCustomer = mSendNoteEditText.getText().toString();
-            CheckoutRequest checkoutRequest = new CheckoutRequest(locationData,
-                    new ProBookingFeedback(-1, ""), noteToCustomer, mBooking.getCustomerPreferences());
-            requestNotifyCheckOutJob(mBooking.getId(), checkoutRequest, locationData);
-        }
+        String noteToCustomer = mSendNoteEditText.getText().toString();
+        CheckoutRequest checkoutRequest = new CheckoutRequest(locationData,
+                new ProBookingFeedback(-1, ""), noteToCustomer, mBooking.getCustomerPreferences());
+        requestNotifyCheckOutJob(mBooking.getId(), checkoutRequest, locationData);
     }
 
     @OnFocusChange(R.id.send_note_edit_text)
@@ -190,10 +179,12 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
 
         mPrefsManager.setBookingInstructions(mBooking.getId(), null);
 
-        //return to schedule page
-        returnToTab(MainViewTab.SCHEDULED_JOBS, mBooking.getStartDate().getTime(), TransitionStyle.REFRESH_TAB);
-
         showToast(R.string.check_out_success, Toast.LENGTH_LONG);
+
+        showCheckoutRatingFlowIfNeeded();
+
+        returnToPage(MainViewPage.SCHEDULED_JOBS, mBooking.getStartDate().getTime(),
+                TransitionStyle.REFRESH_PAGE);
     }
 
     @Subscribe
@@ -277,22 +268,23 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
         bus.post(new HandyEvent.RequestNotifyJobCheckOut(bookingId, checkoutRequest));
     }
 
-    private void showCheckoutRatingFlow()
+    private void showCheckoutRatingFlowIfNeeded()
     {
-        String noteToCustomer = mSendNoteEditText.getText().toString();
-
-        RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
-        Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.BOOKING, mBooking);
-        arguments.putString(BundleKeys.NOTE_TO_CUSTOMER, noteToCustomer);
-        rateBookingDialogFragment.setArguments(arguments);
-        try
+        if (mConfigManager.getConfigurationResponse() != null &&
+                mConfigManager.getConfigurationResponse().isCheckoutRatingFlowEnabled())
         {
-            rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
-        }
-        catch (IllegalStateException e)
-        {
-            Crashlytics.logException(e);
+            RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
+            Bundle arguments = new Bundle();
+            arguments.putSerializable(BundleKeys.BOOKING, mBooking);
+            rateBookingDialogFragment.setArguments(arguments);
+            try
+            {
+                rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
+            }
+            catch (IllegalStateException e)
+            {
+                Crashlytics.logException(e);
+            }
         }
     }
 
@@ -309,13 +301,13 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
         }
     }
 
-    private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle)
+    private void returnToPage(MainViewPage targetPage, long epochTime, TransitionStyle transitionStyle)
     {
         //Return to available jobs with success
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
         //Return to available jobs on that day
-        bus.post(new NavigationEvent.NavigateToTab(targetTab, arguments, transitionStyle));
+        bus.post(new NavigationEvent.NavigateToPage(targetPage, arguments, transitionStyle));
     }
 
     private LocationData getLocationData()

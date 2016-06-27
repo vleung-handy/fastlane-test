@@ -18,8 +18,9 @@ import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -32,13 +33,14 @@ import javax.inject.Inject;
 
 public class BookingManager
 {
-    private final Bus mBus;
+    private final EventBus mBus;
     private final DataManager mDataManager;
 
     private final Cache<Date, BookingsWrapper> availableBookingsCache;
     private final Cache<Date, BookingsWrapper> scheduledBookingsCache;
     private final Cache<Date, BookingsWrapper> complementaryBookingsCache;
     private final Cache<Date, BookingsWrapper> requestedBookingsCache;
+
 
     /*
     keys used in QueryMap requests
@@ -49,7 +51,7 @@ public class BookingManager
     }
 
     @Inject
-    public BookingManager(final Bus bus, final DataManager dataManager)
+    public BookingManager(final EventBus bus, final DataManager dataManager)
     {
         mBus = bus;
         mBus.register(this);
@@ -621,6 +623,25 @@ public class BookingManager
             public void onError(DataManager.DataManagerError error)
             {
                 mBus.post(new HandyEvent.ReceiveReportNoShowError(error));
+            }
+        });
+    }
+
+    @Subscribe
+    public void onRateCustomer(BookingEvent.RateCustomer event)
+    {
+        mDataManager.rateCustomer(event.bookingId, event.rating, event.reviewText, new DataManager.Callback<Void>()
+        {
+            @Override
+            public void onSuccess(Void response)
+            {
+                mBus.post(new BookingEvent.RateCustomerSuccess());
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error)
+            {
+                mBus.post(new BookingEvent.RateCustomerError(error));
             }
         });
     }

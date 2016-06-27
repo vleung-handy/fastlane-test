@@ -14,7 +14,8 @@ import com.handy.portal.bookings.util.SupportActionUtils;
 import com.handy.portal.constant.SupportActionType;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Bus;
+
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
@@ -25,7 +26,7 @@ import butterknife.OnClick;
 public class SupportActionView extends FrameLayout
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
 
     @Bind(R.id.support_action_icon)
     ImageView mIcon;

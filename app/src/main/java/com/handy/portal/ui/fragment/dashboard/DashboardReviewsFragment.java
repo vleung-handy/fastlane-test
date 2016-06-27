@@ -10,13 +10,14 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.library.ui.listener.EndlessRecyclerViewScrollListener;
+import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.model.dashboard.ProviderEvaluation;
 import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.ui.adapter.ReviewListAdapter;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.library.ui.listener.EndlessRecyclerViewScrollListener;
-import com.handy.portal.library.util.DateTimeUtils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -108,6 +109,20 @@ public class DashboardReviewsFragment extends ActionBarFragment
             mRatings.addAll(mEvaluation.getFiveStarRatingsWithComments());
             adapter.notifyDataSetChanged();
         }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        bus.register(this);
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @Subscribe

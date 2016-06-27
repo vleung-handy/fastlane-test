@@ -28,8 +28,8 @@ import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.library.ui.widget.PhoneInputTextView;
 import com.handy.portal.library.ui.widget.PinCodeInputTextView;
+import com.handy.portal.library.util.EnvironmentUtils;
 import com.handy.portal.library.util.TextUtils;
-import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.LoginLog;
@@ -37,7 +37,8 @@ import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.ui.activity.SplashActivity;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -108,6 +109,20 @@ public class LoginActivityFragment extends InjectedFragment
         return view;
     }
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        bus.register(this);
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
+    }
+
     private void registerControlListeners()
     {
         loginButton.setOnClickListener(new View.OnClickListener()
@@ -165,7 +180,7 @@ public class LoginActivityFragment extends InjectedFragment
     {
         if (!buildConfigWrapper.isDebug()) { return; }
 
-        UIUtils.createEnvironmentModifierDialog(environmentModifier, getActivity(), null).show();
+        EnvironmentUtils.showEnvironmentModifierDialog(environmentModifier, getActivity(), null);
     }
 
     @OnClick(R.id.login_help_button)
@@ -206,7 +221,7 @@ public class LoginActivityFragment extends InjectedFragment
         storedPhoneNumber = phoneNumber; //remember so they don't have to reinput once they receive their pin
         changeState(LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE);
 
-        if (buildConfigWrapper.isDebug() && !environmentModifier.pinRequestEnabled())
+        if (buildConfigWrapper.isDebug() && !environmentModifier.isPinRequestEnabled())
         {
             // if pin request is disabled, jump to pin input state; this is used for test automation
             // purposes where the seeded value of the pin associated with the provider will be

@@ -8,8 +8,10 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.model.NeoPaymentBatch;
@@ -17,9 +19,8 @@ import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.ui.element.PaymentsBatchListHeaderView;
 import com.handy.portal.payments.ui.element.PaymentsBatchListItemView;
-import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Bus;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -31,7 +32,7 @@ import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implements StickyListHeadersAdapter //TODO: THIS IS GROSS, NEED TO REFACTOR THIS COMPLETELY!
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
 
     public static final int DAYS_TO_REQUEST_PER_BATCH = 28;
     private Date nextRequestEndDate;
@@ -145,7 +146,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
                     @Override
                     public void onClick(final View v)
                     {
-                        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.OUTSTANDING_FEES, true));
+                        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.OUTSTANDING_FEES, true));
                         mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.FeeDetailSelected()));
                     }
                 });

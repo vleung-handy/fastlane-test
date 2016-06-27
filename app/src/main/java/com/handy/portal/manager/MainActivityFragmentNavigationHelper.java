@@ -2,48 +2,48 @@ package com.handy.portal.manager;
 
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
 /**
  * Created by cdavis on 8/19/15.
- *
+ * <p>
  * This is a class that acts as a patch for problems we are having with deep links.
  * It will catch and hold NavigateToTab events until the MainActivityFragment is available/resumed
  * This is not an optimal solution but is better than fragment knowing about deep links.
- *
+ * <p>
  * Ideally we come up with a better way, like the mainactivityfragment is not responsible for directly handling fragment swapping and navigation
  * and whatever service is responsible also keeps an eye on the fragment stack but that refactor is out of scope right now for push notifications
- *
  */
 
 public class MainActivityFragmentNavigationHelper
 {
     private boolean mainActivityFragmentActive = false;
 
-    private final Bus bus;
+    private final EventBus bus;
 
-    private NavigationEvent.NavigateToTab storedEvent;
+    private NavigationEvent.NavigateToPage storedEvent;
 
     @Inject
-    public MainActivityFragmentNavigationHelper(final Bus bus)
+    public MainActivityFragmentNavigationHelper(final EventBus bus)
     {
         this.bus = bus;
         this.bus.register(this);
     }
 
     @Subscribe
-    public void onNavigateToTabEvent(NavigationEvent.NavigateToTab event)
+    public void onNavigateToPageEvent(NavigationEvent.NavigateToPage event)
     {
-        if(!this.mainActivityFragmentActive)
+        if (!this.mainActivityFragmentActive)
         {
             setStoredEvent(event);
         }
     }
 
-    private void setStoredEvent(NavigationEvent.NavigateToTab storedEvent)
+    private void setStoredEvent(NavigationEvent.NavigateToPage storedEvent)
     {
         this.storedEvent = storedEvent;
     }
@@ -57,7 +57,7 @@ public class MainActivityFragmentNavigationHelper
     private void updateFragmentActiveStatus(boolean active)
     {
         this.mainActivityFragmentActive = active;
-        if(this.mainActivityFragmentActive)
+        if (this.mainActivityFragmentActive)
         {
             repostStoredEvent();
         }
@@ -65,16 +65,12 @@ public class MainActivityFragmentNavigationHelper
 
     private void repostStoredEvent()
     {
-        if(this.storedEvent != null)
+        if (this.storedEvent != null)
         {
             bus.post(this.storedEvent);
         }
         this.storedEvent = null;
     }
-
-
-
-
 
 
 }

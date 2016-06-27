@@ -12,8 +12,8 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.element.BookingCancellationPolicyListItemView;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.payments.model.PaymentInfo;
 
 import butterknife.Bind;
 import butterknife.OnClick;

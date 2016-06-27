@@ -10,8 +10,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.library.util.UIUtils;
+import com.handy.portal.payments.model.PaymentInfo;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;

@@ -14,7 +14,8 @@ import com.handy.portal.payments.ui.fragment.PaymentsFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.payments.ui.fragment.SelectPaymentMethodFragment;
-import com.squareup.otto.Bus;
+
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Singleton;
 
@@ -43,7 +44,7 @@ public final class PaymentsModule
 {
     @Provides
     @Singleton
-    final PaymentsManager providePaymentsManager(Bus bus, final DataManager dataManager)
+    final PaymentsManager providePaymentsManager(EventBus bus, final DataManager dataManager)
     {
         return new PaymentsManager(bus, dataManager);
     }

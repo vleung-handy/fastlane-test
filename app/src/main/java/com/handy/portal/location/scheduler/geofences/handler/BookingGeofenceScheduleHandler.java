@@ -15,12 +15,12 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.Geofence;
 import com.google.android.gms.location.GeofencingEvent;
 import com.google.android.gms.location.LocationServices;
+import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.LocationEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.model.LocationUpdate;
 import com.handy.portal.location.scheduler.geofences.model.BookingGeofenceStrategy;
 import com.handy.portal.location.scheduler.handler.ScheduleHandler;
-import com.handy.portal.library.util.SystemUtils;
 
 import java.util.ArrayList;
 import java.util.LinkedList;

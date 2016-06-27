@@ -14,11 +14,12 @@ import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.location.model.LocationBatchUpdate;
-import com.handy.portal.location.model.LocationUpdate;
 import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.library.util.Utils;
-import com.squareup.otto.Bus;
+import com.handy.portal.location.model.LocationBatchUpdate;
+import com.handy.portal.location.model.LocationUpdate;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.Date;
 
@@ -32,7 +33,7 @@ public class LocationPingService extends Service implements
     private static final long MAXIMUM_LOCATION_AGE_MILLIS = 5000;
 
     @Inject
-    Bus mBus;
+    EventBus mBus;
 
     private GoogleApiClient mGoogleApiClient;
     private String mEventName;

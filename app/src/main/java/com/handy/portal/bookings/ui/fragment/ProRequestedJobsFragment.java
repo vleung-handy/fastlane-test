@@ -19,7 +19,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.element.ProRequestedJobsExpandableListView;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
@@ -28,8 +28,9 @@ import com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -59,23 +60,24 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     TextView mFetchErrorText;
 
     @Inject
-    protected Bus mBus;
+    protected EventBus mBus;
 
     private View mFragmentView; //this saves the exact view state including the scroll position
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.REQUESTED_JOBS;
+        return MainViewPage.REQUESTED_JOBS;
     }
 
-    private ExpandableListView.OnChildClickListener onProRequestedJobsListChildClickListener = new ExpandableListView.OnChildClickListener() {
+    private ExpandableListView.OnChildClickListener onProRequestedJobsListChildClickListener = new ExpandableListView.OnChildClickListener()
+    {
         @Override
         public boolean onChildClick(final ExpandableListView parent, final View v, final int groupPosition, final int childPosition, final long id)
         {
             ExpandableListAdapter expandableListAdapter = parent.getExpandableListAdapter();
             Booking booking = (Booking) expandableListAdapter.getChild(groupPosition, childPosition);
-            if(booking != null)
+            if (booking != null)
             {
                 navigateToJobDetails(booking);
             }
@@ -83,7 +85,8 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         }
     };
 
-    private SwipeRefreshLayout.OnRefreshListener onProRequestedJobsListRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+    private SwipeRefreshLayout.OnRefreshListener onProRequestedJobsListRefreshListener = new SwipeRefreshLayout.OnRefreshListener()
+    {
         @Override
         public void onRefresh()
         {
@@ -133,7 +136,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
         arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
         arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.JOB_DETAILS, arguments,
+        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.JOB_DETAILS, arguments,
                 TransitionStyle.JOB_LIST_TO_DETAILS, true));
     }
 
@@ -142,7 +145,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
     {
         //this saves the exact view state, including scroll position
-        if(mFragmentView == null)
+        if (mFragmentView == null)
         {
             mFragmentView = inflater.inflate(R.layout.fragment_pro_requested_jobs_inbox, container, false);
         }
@@ -166,22 +169,31 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
 
         //this fragment doesn't use the universal overlay, so make sure it's hidden
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
         setActionBar(R.string.your_requests, true);
         mJobListSwipeRefreshLayout.setRefreshing(false);
-        if(!mProRequestedJobsExpandableListView.hasValidData())
+        if (!mProRequestedJobsExpandableListView.hasValidData())
         {
             showContentViewAndHideOthers(mLoadingOverlay);
             requestProRequestedJobs(true);
         }
     }
 
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
+    }
+
     /**
      * hides all the content views in this fragment
      * except the given content view
+     *
      * @param contentView
      */
     private void showContentViewAndHideOthers(@NonNull View contentView)
@@ -220,7 +232,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     {
         setRefreshingIndicator(false);
         List<BookingsWrapper> proRequestedJobsList = event.getProRequestedJobs();
-        if(proRequestedJobsList == null)
+        if (proRequestedJobsList == null)
         {
             Crashlytics.logException(new Exception("pro requested jobs list is null"));
             onError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.SERVER));
@@ -241,6 +253,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
      * need this because the empty view is also a swipe refresh layout
      * and on error we don't know which refresh layout
      * triggered the request
+     *
      * @param isRefreshing
      */
     private void setRefreshingIndicator(boolean isRefreshing)
@@ -254,7 +267,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         setRefreshingIndicator(false);
 
         //show the try again error screen
-        if(error != null && error.getType() == DataManager.DataManagerError.Type.NETWORK)
+        if (error != null && error.getType() == DataManager.DataManagerError.Type.NETWORK)
         {
             mFetchErrorText.setText(R.string.error_fetching_connectivity_issue);
         }

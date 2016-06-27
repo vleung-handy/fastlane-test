@@ -12,9 +12,10 @@ import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.model.PaymentGroup;
 import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 import com.stripe.android.model.Token;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -26,7 +27,7 @@ import javax.inject.Inject;
 
 public class PaymentsManager
 {
-    private final Bus mBus;
+    private final EventBus mBus;
     private final DataManager mDataManager;
 
     //TODO: We're using a cache for what is currently one value, maybe look into Guava Suppliers in future
@@ -44,7 +45,7 @@ public class PaymentsManager
     }
 
     @Inject
-    public PaymentsManager(final Bus bus, final DataManager dataManager)
+    public PaymentsManager(final EventBus bus, final DataManager dataManager)
     {
         mBus = bus;
         mBus.register(this);
