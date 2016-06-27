@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
@@ -55,7 +57,12 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme);
         mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING); //should not be null
-
+        if(mBooking == null)
+        {
+            Crashlytics.logException(new Exception("Booking is null in customer no show dialog fragment"));
+            Toast.makeText(getContext(), R.string.error_fetching_booking_details, Toast.LENGTH_LONG).show();
+            dismiss();
+        }
     }
 
     public static CustomerNoShowDialogFragment newInstance(@NonNull Booking booking)
@@ -88,6 +95,7 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+        if(mBooking == null) return;
         updateHeaderWithBookingPaymentInfo();
         populateInstructionsList(INSTRUCTION_LIST_STRING_RESOURCE_IDS);
     }

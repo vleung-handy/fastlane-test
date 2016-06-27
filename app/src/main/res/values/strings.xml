@@ -143,6 +143,7 @@
     <string name="error_fetching_available_jobs">There was an error fetching your available jobs</string>
     <string name="error_fetching_scheduled_jobs">There was an error fetching your scheduled jobs</string>
     <string name="error_fetching_matching_jobs">There was an error searching for matching jobs</string>
+    <string name="error_fetching_booking_details">There was an error fetching your booking details</string>
     <string name="error_fetching_connectivity_issue">Oops! There was an error with your internet connection</string>
     <string name="try_again">Try Again</string>
     <string name="no_scheduled_jobs">You have not claimed any jobs for this day</string>
