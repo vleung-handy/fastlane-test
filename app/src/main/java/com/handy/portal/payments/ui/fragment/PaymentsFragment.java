@@ -28,6 +28,7 @@ import com.handy.portal.payments.model.AnnualPaymentSummaries;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
+import com.handy.portal.payments.model.PaymentFlow;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.payments.ui.element.PaymentsBatchListView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
@@ -66,6 +67,9 @@ public final class PaymentsFragment extends ActionBarFragment
     @Bind(R.id.fetch_error_view)
     ViewGroup fetchErrorView;
 
+    @Bind(R.id.payment_method_info_text)
+    TextView mPaymentMethodInfoText;
+
     //TODO: refactor request protocols when we can use new pagination API that allows us to get the N next batches
 
     private View fragmentView;
@@ -84,6 +88,31 @@ public final class PaymentsFragment extends ActionBarFragment
         return fragmentView;
     }
 
+    @Subscribe
+    public void onGetPaymentFlowSuccess(PaymentEvent.ReceivePaymentFlowSuccess event)
+    {
+        //TODO remove, test only
+        PaymentFlow paymentFlow = event.paymentFlow;
+        String accountDetails = paymentFlow.getAccountDetails();
+
+        if (accountDetails != null)
+        {
+            mPaymentMethodInfoText.setText("Payment method: " +
+                    (paymentFlow.isBankAccount() ? "Bank Account " : "Debit Card ")
+                    + "(" + accountDetails + ")");
+        }
+        else
+        {
+            mPaymentMethodInfoText.setText("N/A");
+        }
+    }
+
+    @Subscribe
+    public void onGetPaymentFlowError(PaymentEvent.ReceivePaymentFlowError event)
+    {
+        showToast("receive payment flow error");
+    }
+
     @Override
     protected MainViewPage getAppPage()
     {
@@ -97,6 +126,8 @@ public final class PaymentsFragment extends ActionBarFragment
         setActionBar(R.string.payments, false);
 
         bus.register(this);
+
+        bus.post(new PaymentEvent.RequestPaymentFlow());
 
         if (paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData())//if initial batch has not been received yet
         {

@@ -202,7 +202,7 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveStripeTokenFromDebitCardError(StripeEvent.ReceiveStripeTokenFromDebitCardError event)
     {
-        onFailure(R.string.update_debit_card_failed);
+        onFailure("receive stripe token from debit card error: " + event.getErrorMessage());
     }
 
     private void onFailure(int errorStringId)
@@ -210,6 +210,13 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
         resetStates();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         showToast(errorStringId, Toast.LENGTH_LONG);
+    }
+
+    private void onFailure(String string)
+    {
+        resetStates();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        showToast(string, Toast.LENGTH_LONG);
     }
 
     private void checkSuccess()
@@ -243,7 +250,7 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveCreateDebitCardRecipientError(PaymentEvent.ReceiveCreateDebitCardRecipientError event)
     {
-        onFailure(R.string.update_debit_card_failed);
+        onFailure("create debit card recipient error: " + event.getErrorMessage());
     }
 
     @Subscribe
@@ -256,6 +263,7 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveCreateDebitCardForChargeError(PaymentEvent.ReceiveCreateDebitCardForChargeError event)
     {
-        onFailure(R.string.update_debit_card_failed);
+
+        onFailure("create debit card for charge error: " + event.getErrorMessage());
     }
 }

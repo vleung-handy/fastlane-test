@@ -2,6 +2,7 @@ package com.handy.portal.payments;
 
 import android.support.annotation.NonNull;
 
+import com.google.gson.annotations.SerializedName;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
@@ -219,9 +220,18 @@ public abstract class PaymentEvent extends HandyEvent
 
     public static class ReceiveCreateDebitCardRecipientError extends ReceiveErrorEvent
     {
+        @SerializedName("message")
+        private String mErrorMessage;
+
         public ReceiveCreateDebitCardRecipientError(DataManager.DataManagerError error)
         {
             this.error = error;
+            mErrorMessage = error.getMessage();
+        }
+
+        public String getErrorMessage()
+        {
+            return mErrorMessage;
         }
     }
 
@@ -259,9 +269,19 @@ public abstract class PaymentEvent extends HandyEvent
 
     public static class ReceiveCreateDebitCardForChargeError extends ReceiveErrorEvent
     {
+        @SerializedName("message")
+        private String mErrorMessage;
+
         public ReceiveCreateDebitCardForChargeError(DataManager.DataManagerError error)
         {
             this.error = error;
+            mErrorMessage = error.getMessage();
+
+        }
+
+        public String getErrorMessage()
+        {
+            return mErrorMessage;
         }
     }
 

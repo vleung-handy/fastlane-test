@@ -1,5 +1,6 @@
 package com.handy.portal.event;
 
+import com.google.gson.annotations.SerializedName;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.payments.model.BankAccountInfo;
 import com.handy.portal.payments.model.DebitCardInfo;
@@ -63,9 +64,16 @@ public abstract class StripeEvent extends HandyEvent
 
     public static class ReceiveStripeTokenFromDebitCardError extends ReceiveErrorEvent
     {
+        @SerializedName("message")
+        private String mErrorMessage;
         public ReceiveStripeTokenFromDebitCardError(DataManager.DataManagerError error)
         {
             this.error = error;
+        }
+
+        public String getErrorMessage()
+        {
+            return mErrorMessage;
         }
     }
 
