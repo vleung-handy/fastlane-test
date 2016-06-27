@@ -224,6 +224,16 @@ public class ProRequestedJobsFragment extends ActionBarFragment
 
     private List<Date> getDatesForBookings()
     {
+        if (configManager.getConfigurationResponse() != null)
+        {
+            int numDaysForRequestedJobs = configManager.getConfigurationResponse()
+                    .getNumberOfDaysForRequestedJobs();
+            if (numDaysForRequestedJobs != 0)
+            {
+                return DateTimeUtils.getDateWithoutTimeList(new Date(),
+                        numDaysForRequestedJobs);
+            }
+        }
         return DateTimeUtils.getDateWithoutTimeList(new Date(), REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
     }
 
