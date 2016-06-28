@@ -3,7 +3,6 @@ package com.handy.portal;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.test.data.TestFields;
