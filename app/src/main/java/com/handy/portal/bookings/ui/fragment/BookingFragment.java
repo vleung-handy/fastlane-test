@@ -1,7 +1,6 @@
 package com.handy.portal.bookings.ui.fragment;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
@@ -515,13 +515,22 @@ public class BookingFragment extends TimerActionBarFragment
         bus.post(new HandyEvent.CallCustomerClicked());
 
         String phoneNumber = mBooking.getBookingPhone();
+        if (phoneNumber == null)
+        {
+            showInvalidPhoneNumberToast();
+            Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
+            return;
+        }
+
         try
         {
             Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), getContext());
         }
-        catch (ActivityNotFoundException activityException)
+        catch (Exception e)
         {
-            Crashlytics.logException(new RuntimeException("Calling a Phone Number failed", activityException));
+            Toast.makeText(getContext(),
+                    getString(R.string.unable_to_call_customer), Toast.LENGTH_SHORT).show();
+            Crashlytics.logException(new RuntimeException("Calling a Phone Number failed", e));
         }
     }
 
@@ -531,13 +540,22 @@ public class BookingFragment extends TimerActionBarFragment
         bus.post(new HandyEvent.TextCustomerClicked());
 
         String phoneNumber = mBooking.getBookingPhone();
+        if (phoneNumber == null)
+        {
+            showInvalidPhoneNumberToast();
+            Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
+            return;
+        }
+
         try
         {
             Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)), getContext());
         }
-        catch (ActivityNotFoundException activityException)
+        catch (Exception e)
         {
-            Crashlytics.logException(new RuntimeException("Texting a Phone Number failed", activityException));
+            Toast.makeText(getContext(),
+                    getString(R.string.unable_to_text_customer), Toast.LENGTH_SHORT).show();
+            Crashlytics.logException(new RuntimeException("Texting a Phone Number failed", e));
         }
     }
 
@@ -845,5 +863,11 @@ public class BookingFragment extends TimerActionBarFragment
                 mNearbyTransits.addView(transitMarkerView);
             }
         }
+    }
+
+    private void showInvalidPhoneNumberToast()
+    {
+        Toast.makeText(getContext(),
+                getString(R.string.invalid_phone_number), Toast.LENGTH_LONG).show();
     }
 }

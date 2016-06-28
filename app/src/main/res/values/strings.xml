@@ -161,6 +161,9 @@
 
     <string name="call">Call</string>
     <string name="text">Text</string>
+    <string name="invalid_phone_number">We don\'t have a phone number for your customer. Please try to complete the job as planned.</string>
+    <string name="unable_to_call_customer">Unable to call customer.</string>
+    <string name="unable_to_text_customer">Unable to text customer.</string>
     <string name="check_in">Check In</string>
     <string name="check_out">Check Out</string>
     <string name="remove_job">Remove Job</string>
