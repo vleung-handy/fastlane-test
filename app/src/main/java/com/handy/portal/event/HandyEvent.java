@@ -355,7 +355,7 @@ public abstract class HandyEvent
 
     public static class ReceiveAvailableBookingsError extends ReceiveBookingsError
     {
-        public ReceiveAvailableBookingsError(DataManager.DataManagerError error, List<Date> days)
+        public ReceiveAvailableBookingsError(@Nullable DataManager.DataManagerError error, List<Date> days)
         {
             this.days = days;
             this.error = error;
@@ -374,7 +374,7 @@ public abstract class HandyEvent
 
     public static class ReceiveScheduledBookingsError extends ReceiveBookingsError
     {
-        public ReceiveScheduledBookingsError(DataManager.DataManagerError error, List<Date> days)
+        public ReceiveScheduledBookingsError(@Nullable DataManager.DataManagerError error, List<Date> days)
         {
             this.days = days;
             this.error = error;
