@@ -144,8 +144,7 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment
     public void onCompleteReportButtonClicked()
     {
         if(isRemoving() || isDetached()) return;
-        OnReportCustomerNoShowButtonClickedListener onReportCustomerNoShowButtonClickedListener
-                = null;
+        OnReportCustomerNoShowButtonClickedListener onReportCustomerNoShowButtonClickedListener;
         try
         {
             /*
