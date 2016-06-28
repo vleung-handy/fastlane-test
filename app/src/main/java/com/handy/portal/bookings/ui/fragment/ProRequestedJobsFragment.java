@@ -174,7 +174,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         //this fragment doesn't use the universal overlay, so make sure it's hidden
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
-        setActionBar(R.string.your_requests, true);
+        setActionBarTitle(R.string.your_requests);
         mJobListSwipeRefreshLayout.setRefreshing(false);
         if (!mProRequestedJobsExpandableListView.hasValidData())
         {
