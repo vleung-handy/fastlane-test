@@ -4,8 +4,8 @@ import android.location.Location;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.SystemEvent;
 import com.handy.portal.location.LocationEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
@@ -217,7 +217,7 @@ public class LocationManager
     }
 
     @Subscribe
-    public void onBookingChangedOrCreated(HandyEvent.BookingChangedOrCreated event)
+    public void onBookingChangedOrCreated(BookingEvent.ScheduledBookingChangedOrCreated event)
     {
         //when this happens, we should rebuild the schedule
         //TODO: see if building schedule is costly. if so, note which bookings were invalidated and rebuild the schedule only for those bookings

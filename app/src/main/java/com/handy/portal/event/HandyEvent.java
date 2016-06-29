@@ -28,7 +28,6 @@ import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public abstract class HandyEvent
 {
@@ -282,28 +281,6 @@ public abstract class HandyEvent
     }
 
 
-    public static class ReceiveScheduledBookingsBatchSuccess extends RequestBookingsEvent
-    {
-        private final Map<Date, List<Booking>> mDateToBookingMap;
-
-        /**
-         * @param dateToBookingMap should be without time
-         */
-        public ReceiveScheduledBookingsBatchSuccess(Map<Date, List<Booking>> dateToBookingMap)
-        {
-            mDateToBookingMap = dateToBookingMap;
-        }
-
-        /**
-         * these dates should be without time
-         */
-        public Map<Date, List<Booking>> getDateToBookingMap()
-        {
-            return mDateToBookingMap;
-        }
-    }
-
-
     public static abstract class ReceiveBookingsSuccess extends ReceiveSuccessEvent
     {
         public BookingsWrapper bookingsWrapper;
@@ -416,14 +393,7 @@ public abstract class HandyEvent
         }
     }
 
-
-    /**
-     * dispatched when one or more bookings might have changed
-     */
-    public static class BookingChangedOrCreated
-    {
-    }
-//Job Action Requests
+    //Job Action Requests
 
 
     public static class RequestClaimJob extends RequestBookingActionEvent

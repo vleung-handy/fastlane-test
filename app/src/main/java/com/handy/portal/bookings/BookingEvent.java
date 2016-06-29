@@ -154,4 +154,18 @@ public abstract class BookingEvent extends HandyEvent
     {
         public RateCustomerError(DataManager.DataManagerError error) { this.error = error; }
     }
+
+
+    /**
+     * dispatched when one or more scheduled bookings might have changed,
+     * so it should be fired on booking claim/remove or scheduled jobs updated.
+     * we currently don't have a robust way of knowing when a pro's scheduled jobs have changed.
+     * it would be nice to have this event pushed instead.
+     *
+     * currently the location manager listens to this event so it knows when it needs to
+     * re-fetch location schedules
+     */
+    public static class ScheduledBookingChangedOrCreated
+    {
+    }
 }
