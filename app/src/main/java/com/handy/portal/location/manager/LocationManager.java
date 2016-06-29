@@ -4,13 +4,12 @@ import android.location.Location;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.SystemEvent;
 import com.handy.portal.location.LocationEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
-import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.SuccessWrapper;
 
@@ -23,24 +22,22 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-//TODO: clean this up
-
-
 /**
- * listens to location schedule updated event
- * <p/>
- * listens to location update events from the location service
- * <p/>
- * posts location updates to the server
- * <p/>
- * keeps track of the last location
+ * listens to the following events:
+ * - request location schedule event
+ * - location updates
+ * - network reconnected
+ *
+ * and does the following:
+ * - posts batch updates to the server
+ * - remembers failed posts and retries posting on network reconnection
+ * - keeps track of last location (for legacy code)
  */
 public class LocationManager
 {
     private final EventBus mBus;
     private final DataManager mDataManager;
     private final ProviderManager mProviderManager;
-    private final PrefsManager mPrefsManager;
     private Location mLastKnownLocation; //for backwards compatibility with check-in flow
 
     //TODO: adjust these params
@@ -54,14 +51,12 @@ public class LocationManager
     @Inject
     public LocationManager(final EventBus bus,
                            final DataManager dataManager,
-                           final ProviderManager providerManager,
-                           final PrefsManager prefsManager)
+                           final ProviderManager providerManager)
     {
         mBus = bus;
         mBus.register(this);
         mDataManager = dataManager;
         mProviderManager = providerManager;
-        mPrefsManager = prefsManager;
     }
 
     /**
@@ -216,12 +211,14 @@ public class LocationManager
         mFailedLocationBatchUpdates.add(locationBatchUpdate);
     }
 
+    /**
+     * after the user logs out, we don't need the location service,
+     * so request to stop it
+     * @param event
+     */
     @Subscribe
-    public void onBookingChangedOrCreated(BookingEvent.ScheduledBookingChangedOrCreated event)
+    public void OnUserLoggedOut(HandyEvent.UserLoggedOut event)
     {
-        //when this happens, we should rebuild the schedule
-        //TODO: see if building schedule is costly. if so, note which bookings were invalidated and rebuild the schedule only for those bookings
-        mBus.post(new LocationEvent.RequestLocationSchedule());
+        mBus.post(new LocationEvent.RequestStopLocationService());
     }
-
 }

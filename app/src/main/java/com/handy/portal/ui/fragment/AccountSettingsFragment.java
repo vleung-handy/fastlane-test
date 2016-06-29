@@ -166,6 +166,7 @@ public class AccountSettingsFragment extends ActionBarFragment
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i)
                     {
+                        //TODO this logout code should be moved somewhere else
                         mPrefsManager.clear();
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
@@ -191,6 +192,7 @@ public class AccountSettingsFragment extends ActionBarFragment
                         }
                         startActivity(intent);
                         getActivity().finish();
+                        bus.post(new HandyEvent.UserLoggedOut());
                     }
                 });
 

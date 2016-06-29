@@ -46,7 +46,6 @@ import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
-import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.util.DeeplinkMapper;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -180,21 +179,6 @@ public class MainActivityFragment extends InjectedFragment
         }
         handleDeeplink();
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
-    }
-
-    @Subscribe
-    public void onConfigurationResponseRetrieved(HandyEvent.ReceiveConfigurationSuccess event)
-    {
-        // this is a hotfix for a spike on missing location data
-        try
-        {
-            ((MainActivity) getActivity()).showNecessaryLocationSettingsAndPermissionsBlockers();
-            ((MainActivity) getActivity()).startLocationServiceIfNecessary();
-        }
-        catch (Exception e)
-        {
-            Crashlytics.logException(e);
-        }
     }
 
     @Subscribe

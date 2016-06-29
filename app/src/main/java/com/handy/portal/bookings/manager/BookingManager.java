@@ -1,10 +1,11 @@
-package com.handy.portal.bookings;
+package com.handy.portal.bookings.manager;
 
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.Booking.BookingType;
 import com.handy.portal.bookings.model.BookingClaimDetails;
@@ -313,8 +314,14 @@ public class BookingManager
                                 mBus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(bookingsWrapper, day));
                             }
 
-                            // always fire this whenever we request schedule from the server
-                            mBus.post(new BookingEvent.ScheduledBookingChangedOrCreated());
+                            /*
+                            this complements the original request event.
+
+                            this is required because some components need to get notified
+                            (just once, which is why we can't use the above event)
+                            that the original request was responded to
+                             */
+                            mBus.post(new HandyEvent.ReceiveScheduledBookingsBatchSuccess());
                         }
 
                         @Override
@@ -394,8 +401,6 @@ public class BookingManager
                 invalidateCachesForAllDays();
 
                 mBus.post(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, event.source));
-                mBus.post(new BookingEvent.ScheduledBookingChangedOrCreated());
-
             }
 
             @Override
@@ -418,7 +423,6 @@ public class BookingManager
             public void onSuccess(JobClaimResponse response)
             {
                 mBus.post(new HandyEvent.ReceiveClaimJobsSuccess(response));
-                mBus.post(new BookingEvent.ScheduledBookingChangedOrCreated());
             }
 
             @Override
@@ -447,7 +451,6 @@ public class BookingManager
                 invalidateCachesForAllDays();
 
                 mBus.post(new HandyEvent.ReceiveRemoveJobSuccess(booking));
-                mBus.post(new BookingEvent.ScheduledBookingChangedOrCreated());
             }
 
             @Override

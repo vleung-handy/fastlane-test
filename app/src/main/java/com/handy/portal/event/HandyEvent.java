@@ -125,6 +125,11 @@ public abstract class HandyEvent
         }
     }
 
+    //fired when the user has been logged out
+    public static class UserLoggedOut extends HandyEvent
+    {
+
+    }
 
     public static class ReceiveLoginSuccess extends ReceiveSuccessEvent
     {
@@ -321,6 +326,21 @@ public abstract class HandyEvent
             this.bookingsWrapper = bookingsWrapper;
             this.day = day;
         }
+    }
+
+    /*
+        TODO: the above ReceiveScheduledBookingsSuccess event should be renamed
+        so that this event can have naming parity with its request class
+
+        this complements the original request event.
+
+        this is required because some components need to get notified
+        (just once, which is why we can't use the above event)
+        that the original request was responded to
+     */
+    public static class ReceiveScheduledBookingsBatchSuccess extends ReceiveSuccessEvent
+    {
+        //currently don't care about holding data. add if needed
     }
 
 
