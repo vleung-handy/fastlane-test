@@ -22,4 +22,10 @@ public class TestUsers
             "123456",
             "test_persistence_token_two"
     );
+
+    public static TestUser CANCEL_BOOKING_TEST_PROVIDER = new TestUser(
+            "6460000001",
+            "123456",
+            "test_persistence_token_1"
+    );
 }

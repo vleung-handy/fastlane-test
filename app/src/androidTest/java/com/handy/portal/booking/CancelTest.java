@@ -19,17 +19,17 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
-//note that animations should be disabled on the device running these tests
 @RunWith(AndroidJUnit4.class)
-public class CheckInTest
+public class CancelTest
 {
-    private static final TestUser TEST_USER = TestUsers.BOOKINGS_NY_PROVIDER;
+    private static final TestUser TEST_USER = TestUsers.CANCEL_BOOKING_TEST_PROVIDER;
 
     @Rule
     public ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<SplashActivity>(
@@ -45,36 +45,35 @@ public class CheckInTest
     };
 
     @Test
-    public void testBookingCheckIn()
+    public void testBookingCancel()
     {
         ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
 
-        //click the scheduled jobs tab
+        // click the scheduled jobs tab
         onView(allOf(withId(R.id.tab_title), withText(R.string.tab_schedule))).perform(click());
 
-        //click the first scheduled job
+        // click the first scheduled job
         ViewUtil.waitForViewVisible(R.id.scheduled_jobs_list_view, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         onData(is(instanceOf(Booking.class)))
                 .atPosition(0)
                 .perform(click());
 
-        //wait for booking action button to be visible and verify it says "on my way"
+        // wait for booking action button to be visible and verify it says "on my way"
         ViewUtil.waitForViewVisibility(
                 allOf(withId(R.id.booking_action_button), withText(R.string.on_my_way)),
                 true,
                 ViewUtil.LONG_MAX_WAIT_TIME_MS);
-        //on my way
-        onView(withId(R.id.booking_action_button)).perform(click());
 
-        //wait for booking action button to be visible and verify it says "check in"
-        ViewUtil.waitForViewVisibility(
-                allOf(withId(R.id.booking_action_button), withText(R.string.check_in)),
-                true,
-                ViewUtil.LONG_MAX_WAIT_TIME_MS);
-        //check in
-        onView(withId(R.id.booking_action_button)).perform(click());
+        // click job support
+        onView(withId(R.id.booking_support_button)).perform(scrollTo(), click());
 
-        //wait for booking action button to be visible and verify it says "continue to check out"
-        ViewUtil.waitForTextVisible(R.string.continue_to_check_out, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+        // click Cancel Job
+        onView(withText(R.string.cancel_job)).perform(click());
+
+        // click Remove Job
+        onView(withText(R.string.remove_job)).perform(click());
+
+        //wait for returning to scheduled booking list
+        ViewUtil.waitForTextVisible(R.string.no_scheduled_jobs, ViewUtil.LONG_MAX_WAIT_TIME_MS);
     }
 }

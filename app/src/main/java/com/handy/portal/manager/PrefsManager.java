@@ -15,7 +15,7 @@ public class PrefsManager
 {
     private static final String SECURE_PREFS_KEY = "secure_prefs_key";
     private static final String DEFAULT_PREFS = "prefs.xml";
-    private static final String BOOKING_INSTRUCTIONS_PREFS = "booking_instructions_preferences";
+    public static final String BOOKING_INSTRUCTIONS_PREFS = "booking_instructions_preferences";
 
     private final SharedPreferences mDefaultPrefs;
     private final SharedPreferences mBookingInstructionsPrefs;
