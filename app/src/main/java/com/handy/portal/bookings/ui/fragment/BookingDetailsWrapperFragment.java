@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.google.gson.Gson;
@@ -39,6 +40,7 @@ import com.handy.portal.constant.WarningButtonsText;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
+import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
@@ -48,6 +50,7 @@ import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.LocationData;
+import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
@@ -352,6 +355,20 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         mBooking = event.booking;
         updateDisplay();
+
+        PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
+        if(paymentInfo == null)
+        {
+            Crashlytics.logException(new Exception("Payment info is null for booking " + mBooking.getId()));
+        }
+        else
+        {
+            String paymentInfoFormatted = CurrencyUtils.formatPriceWithoutCents(paymentInfo.getAmount(), paymentInfo.getCurrencySymbol());
+            String toastMessageFormatted =
+                    getString(R.string.customer_no_show_success_message_formatted, paymentInfoFormatted);
+            showToast(toastMessageFormatted, Toast.LENGTH_LONG);
+        }
+
     }
 
     @Subscribe
