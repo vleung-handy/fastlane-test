@@ -22,6 +22,8 @@ import com.handy.portal.helpcenter.constants.HelpCenterUrl;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.library.ui.widget.BulletListItem;
 import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.payments.model.PaymentInfo;
 
 import org.greenrobot.eventbus.EventBus;
@@ -62,7 +64,9 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment
             Crashlytics.logException(new Exception("Booking is null in customer no show dialog fragment"));
             Toast.makeText(getContext(), R.string.error_fetching_booking_details, Toast.LENGTH_LONG).show();
             dismiss();
+            return;
         }
+        mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerNoShowModalShown(mBooking.getId())));
     }
 
     public static CustomerNoShowDialogFragment newInstance(@NonNull Booking booking)

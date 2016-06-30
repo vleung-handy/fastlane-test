@@ -249,4 +249,18 @@ public class ScheduledJobsLog extends EventLog
             mSelectedDate = selectedDate;
         }
     }
+
+    public static class CustomerNoShowModalShown extends ScheduledJobsLog
+    {
+        private static final String EVENT_TYPE = "customer_no_show_modal_shown";
+
+        @SerializedName("booking_id")
+        private String mBookingId;
+
+        public CustomerNoShowModalShown(String bookingId)
+        {
+            super(EVENT_TYPE);
+            mBookingId = bookingId;
+        }
+    }
 }
