@@ -5,7 +5,6 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.test.data.TestFields;
 import com.handy.portal.test.data.TestUsers;
 import com.handy.portal.test.model.TestField;
 import com.handy.portal.test.model.TestUser;
@@ -27,7 +26,14 @@ public class UpdatePersonalInfoTest
 {
     private static final TestUser TEST_USER = TestUsers.BOOKINGS_NY_PROVIDER;
     private static final TestField[] TEST_UPDATE_PERSONAL_INFO_FIELDS
-            = TestFields.UPDATE_PERSONAL_INFO_FIELDS;
+            = new TestField[]{
+            new TestField(R.id.provider_address_edit_text, "New Address 1"),
+            new TestField(R.id.provider_address2_edit_text, "Apt 1234 Floor 5"),
+            new TestField(R.id.provider_city_edit_text, "New City"),
+            new TestField(R.id.provider_state_edit_text, "NY"),
+            new TestField(R.id.provider_zip_code_edit_text, "10019"),
+            new TestField(R.id.provider_phone_edit_text, "(987) 654-3210"),
+    };
 
     @Rule
     public ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<SplashActivity>(
