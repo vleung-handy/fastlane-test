@@ -560,6 +560,7 @@
     </plurals>
 
     <string name="customer_no_show_payment_info_formatted">To receive %1$s by the end of the day, make sure you follow the steps below.</string>
+    <string name="customer_no_show_success_message_formatted">Report successful! You made %1$s, which will show up in the Payments page by the end of the day.</string>
     <string name="customer_no_show_instructions_list_item_check_in">Check in on time at job location.</string>
     <string name="customer_no_show_instructions_list_item_contact_customer">Call or text the customer.</string>
     <string name="customer_no_show_instructions_list_item_wait_for_customer">Wait nearby for 30 minutes after checking in. Then tap \'Complete Report\' to finish.</string>
