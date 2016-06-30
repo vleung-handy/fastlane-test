@@ -116,8 +116,10 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="tab_claim">Claim</string>
+    <string name="tab_requests">Requests</string>
     <string name="tab_schedule">Schedule</string>
     <string name="tab_notifications">Notifications</string>
+    <string name="tab_alerts">Alerts</string>
     <string name="tab_more">More</string>
     <string name="title_activity_please_update">PleaseUpdateActivity</string>
     <string name="available_jobs">Available Jobs</string>
