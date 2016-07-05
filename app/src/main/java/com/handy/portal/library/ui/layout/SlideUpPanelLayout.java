@@ -24,7 +24,6 @@ public class SlideUpPanelLayout extends RelativeLayout
 {
     private LinearLayout mPanel;
     private View mPanelOverlay;
-    private boolean mPanelShown = false;
 
     @Bind(R.id.slide_up_panel_title)
     TextView mPanelTitle;
@@ -62,7 +61,7 @@ public class SlideUpPanelLayout extends RelativeLayout
     // TODO: considering breaking this up to showPanel and SetPanel
     public void showPanel(int titleStringId, View content)
     {
-        if (!mPanelShown)
+        if (!mPanel.isShown())
         {
             mPanelTitle.setText(titleStringId);
             mPanelContent.removeAllViews();
@@ -72,22 +71,18 @@ public class SlideUpPanelLayout extends RelativeLayout
             showElement(mPanel, R.anim.slide_up);
 
             setOnBackPressedListener();
-
-            mPanelShown = true;
         }
     }
 
     @OnClick(R.id.slide_up_panel_close)
     public void hidePanel()
     {
-        if (mPanelShown)
+        if (mPanel.isShown())
         {
             hideElement(mPanel, R.anim.slide_down);
             hideElement(mPanelOverlay, R.anim.fade_out);
 
             ((BaseActivity) getContext()).clearOnBackPressedListenerStack();
-
-            mPanelShown = false;
         }
     }
 
