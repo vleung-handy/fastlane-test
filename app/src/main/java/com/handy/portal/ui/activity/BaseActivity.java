@@ -27,6 +27,7 @@ import com.handy.portal.logger.handylogger.model.GoogleApiLog;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.setup.SetupData;
 import com.handy.portal.setup.SetupEvent;
 import com.handy.portal.setup.step.AcceptTermsStep;
@@ -54,6 +55,9 @@ public abstract class BaseActivity extends AppCompatActivity
 {
     @Inject
     PrefsManager mPrefsManager;
+
+    @Inject
+    ConfigManager mConfigManager;
 
     private AppUpdateEventListener mAppUpdateEventListener;
     protected boolean allowCallbacks;
@@ -151,6 +155,7 @@ public abstract class BaseActivity extends AppCompatActivity
     protected void onResume()
     {
         super.onResume();
+        LocationUtils.showLocationBlockersOrStartServiceIfNecessary(this, isLocationServiceEnabled());
         bus.post(new LogEvent.SendLogsEvent());
     }
 
@@ -415,5 +420,24 @@ public abstract class BaseActivity extends AppCompatActivity
             bus.unregister(this);
             mBaseActivity.onSetupFailure();
         }
+    }
+
+    private boolean isLocationServiceEnabled()
+    {
+        ConfigurationResponse configurationResponse = mConfigManager.getConfigurationResponse();
+        return configurationResponse != null
+                && (configurationResponse.isLocationScheduleServiceEnabled()
+                || configurationResponse.isBookingGeofenceServiceEnabled());
+    }
+    /**
+     * TODO: this is temporary to handle case in which config response comes back later
+     * ideally, we should probably block the app until the config response is received
+     *
+     * @param event
+     */
+    @Subscribe
+    public void onReceiveConfigurationResponse(HandyEvent.ReceiveConfigurationSuccess event)
+    {
+        LocationUtils.showLocationBlockersOrStartServiceIfNecessary(this, isLocationServiceEnabled());
     }
 }

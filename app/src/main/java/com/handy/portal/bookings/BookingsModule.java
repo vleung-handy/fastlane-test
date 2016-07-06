@@ -1,5 +1,6 @@
 package com.handy.portal.bookings;
 
+import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.BookingDetailsWrapperFragment;
 import com.handy.portal.bookings.ui.fragment.BookingFragment;

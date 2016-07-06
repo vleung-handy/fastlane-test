@@ -72,4 +72,12 @@ public abstract class LocationEvent
     public static class RequestLocationSchedule extends HandyEvent.RequestEvent
     {
     }
+
+    public static class RequestStopLocationService extends HandyEvent.RequestEvent
+    {
+    }
+
+    public static class LocationServiceStarted extends HandyEvent
+    {
+    }
 }

@@ -14,8 +14,8 @@ import android.widget.LinearLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
-import com.handy.portal.bookings.BookingModalsManager;
-import com.handy.portal.bookings.BookingModalsManager.BookingsForDaysAheadModalsManager;
+import com.handy.portal.bookings.manager.BookingModalsManager;
+import com.handy.portal.bookings.manager.BookingModalsManager.BookingsForDaysAheadModalsManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
@@ -48,7 +48,7 @@ import javax.inject.Inject;
 
 import butterknife.Bind;
 
-import static com.handy.portal.bookings.BookingModalsManager.BookingsForDaysAheadModalsManager.BookingsForDaysAheadModalType;
+import static com.handy.portal.bookings.manager.BookingModalsManager.BookingsForDaysAheadModalsManager.BookingsForDaysAheadModalType;
 
 public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.ReceiveAvailableBookingsSuccess>
 {
