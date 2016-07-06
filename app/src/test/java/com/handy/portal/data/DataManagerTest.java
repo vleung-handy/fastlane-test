@@ -8,6 +8,7 @@ import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
+import com.handy.portal.retrofit.logevents.EventLogService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.updater.model.UpdateDetails;
 import org.greenrobot.eventbus.EventBus;
@@ -43,7 +44,8 @@ public class DataManagerTest extends RobolectricGradleTestWrapper
     PrefsManager prefsManager;
     @Mock
     LoginManager loginManager;
-
+    @Mock
+    EventLogService eventLogService;
 
     private DataManager dataManager;
 
@@ -55,7 +57,7 @@ public class DataManagerTest extends RobolectricGradleTestWrapper
     {
         initMocks(this);
 
-        dataManager = new DataManager(service, endpoint, stripeService);
+        dataManager = new DataManager(service, endpoint, stripeService, eventLogService);
     }
 
     @Test

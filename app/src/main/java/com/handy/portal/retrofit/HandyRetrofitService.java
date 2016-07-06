@@ -1,6 +1,5 @@
 package com.handy.portal.retrofit;
 
-import com.google.gson.JsonObject;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.model.ProviderSettings;
@@ -295,7 +294,4 @@ public interface HandyRetrofitService
     void requestOnboardingSupplies(@Path("id") String providerId,
                                    @Query("onboarding_supplies") Boolean value,
                                    HandyRetrofitCallback cb);
-
-    @POST("/events")
-    void postLogs(@Body JsonObject eventLogBundle, HandyRetrofitCallback cb);
 }
