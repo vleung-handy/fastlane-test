@@ -443,6 +443,7 @@ public class MainActivityFragment extends InjectedFragment
                 .init(R.string.tab_claim, R.drawable.ic_menu_search);
         mRequestsButton = new TabButton(getContext()).init(R.string.tab_requests,
                 R.drawable.ic_menu_requests);
+        mRequestsButton.setId(R.id.tab_nav_pro_requested_jobs);
         mScheduleButton = new TabButton(getContext())
                 .init(R.string.tab_schedule, R.drawable.ic_menu_schedule);
         mAlertsButton = new TabButton(getContext())
