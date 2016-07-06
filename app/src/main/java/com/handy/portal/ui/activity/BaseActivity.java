@@ -155,7 +155,6 @@ public abstract class BaseActivity extends AppCompatActivity
     protected void onResume()
     {
         super.onResume();
-        //TODO: it is not ideal to have this in BaseActivity
         LocationUtils.showLocationBlockersOrStartServiceIfNecessary(this, isLocationServiceEnabled());
         bus.post(new LogEvent.SendLogsEvent());
     }

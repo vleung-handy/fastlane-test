@@ -217,7 +217,7 @@ public class LocationManager
      * @param event
      */
     @Subscribe
-    public void OnUserLoggedOut(HandyEvent.UserLoggedOut event)
+    public void onUserLoggedOut(HandyEvent.UserLoggedOut event)
     {
         mBus.post(new LocationEvent.RequestStopLocationService());
     }
