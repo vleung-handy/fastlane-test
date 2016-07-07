@@ -303,7 +303,7 @@ public final class ApplicationModule
     @Singleton
     final EventBus provideBus(final Mixpanel mixpanel)
     {
-        return new MainBus();
+        return new MainBus(mixpanel);
     }
 
     @Provides
