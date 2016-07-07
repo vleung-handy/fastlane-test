@@ -206,6 +206,11 @@ public class ProfileUpdateFragment extends ActionBarFragment
 
     private boolean validate()
     {
+        if (mFormDefinitionWrapper == null)
+        {
+            // Server issue, assigned as part of success callback
+            return false;
+        }
         Map<String, FieldDefinition> fieldDefinitionMap = mFormDefinitionWrapper.getFieldDefinitionsForForm(FormDefinitionKey.UPDATE_PROVIDER_INFO);
         if (fieldDefinitionMap == null) { return true; }
 
@@ -232,6 +237,8 @@ public class ProfileUpdateFragment extends ActionBarFragment
 
     private void updateFormWithDefinitions()
     {
+        if (mFormDefinitionWrapper == null)
+        { return; }
         Map<String, FieldDefinition> fieldDefinitionMap = mFormDefinitionWrapper.getFieldDefinitionsForForm(FormDefinitionKey.UPDATE_PROVIDER_INFO);
         if (fieldDefinitionMap != null)
         {
