@@ -20,7 +20,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -29,25 +29,25 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     @Inject
     ProviderManager providerManager;
 
-    @Bind(R.id.bank_account_details)
+    @BindView(R.id.bank_account_details)
     TextView bankAccountDetails;
 
-    @Bind(R.id.debit_card_details)
+    @BindView(R.id.debit_card_details)
     TextView debitCardDetails;
 
-    @Bind(R.id.payment_method_container)
+    @BindView(R.id.payment_method_container)
     ViewGroup paymentMethodContainer;
 
-    @Bind(R.id.debit_card_option)
+    @BindView(R.id.debit_card_option)
     ViewGroup debitCardOption;
 
-    @Bind(R.id.verified_indicator)
+    @BindView(R.id.verified_indicator)
     View verifiedIndicator;
 
-    @Bind(R.id.failed_indicator)
+    @BindView(R.id.failed_indicator)
     View failedIndicator;
 
-    @Bind(R.id.pending_indicator)
+    @BindView(R.id.pending_indicator)
     View pendingIndicator;
 
     @OnClick(R.id.debit_card_option)

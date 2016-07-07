@@ -13,20 +13,20 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class BookingCancellationPolicyListItemView extends RelativeLayout
 {
-    @Bind(R.id.cancellation_policy_list_item_left_text)
+    @BindView(R.id.cancellation_policy_list_item_left_text)
     TextView mLeftText;
-    @Bind(R.id.cancellation_policy_list_item_waived_fee_text)
+    @BindView(R.id.cancellation_policy_list_item_waived_fee_text)
     TextView mWaivedFeeText;
-    @Bind(R.id.cancellation_policy_list_item_fee_text)
+    @BindView(R.id.cancellation_policy_list_item_fee_text)
     TextView mFeeText;
-    @Bind(R.id.cancellation_policy_list_item_active_indicator)
+    @BindView(R.id.cancellation_policy_list_item_active_indicator)
     ImageView mActiveItemIndicator;
-    @Bind(R.id.cancellation_policy_list_item_divider)
+    @BindView(R.id.cancellation_policy_list_item_divider)
     View mDivider;
 
     public BookingCancellationPolicyListItemView(final Context context)

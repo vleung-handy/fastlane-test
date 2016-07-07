@@ -16,7 +16,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.ui.activity.BaseActivity;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -25,11 +25,11 @@ public class SlideUpPanelLayout extends RelativeLayout
     private LinearLayout mPanel;
     private View mPanelOverlay;
 
-    @Bind(R.id.slide_up_panel_title)
+    @BindView(R.id.slide_up_panel_title)
     TextView mPanelTitle;
-    @Bind(R.id.slide_up_panel_content)
+    @BindView(R.id.slide_up_panel_content)
     FrameLayout mPanelContent;
-    @Bind(R.id.slide_up_panel_close)
+    @BindView(R.id.slide_up_panel_close)
     View mIconX;
 
 

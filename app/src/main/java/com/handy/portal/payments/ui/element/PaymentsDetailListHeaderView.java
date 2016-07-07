@@ -10,21 +10,21 @@ import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PaymentsDetailListHeaderView extends LinearLayout
 {
-    @Bind(R.id.payment_detail_date_range_text)
+    @BindView(R.id.payment_detail_date_range_text)
     TextView paymentDetailDateRangeText;
 
-    @Bind(R.id.payments_detail_total_payment_text)
+    @BindView(R.id.payments_detail_total_payment_text)
     TextView paymentDetailTotalPaymentText;
 
-    @Bind(R.id.payments_detail_expect_deposit_date)
+    @BindView(R.id.payments_detail_expect_deposit_date)
     TextView paymentDetailExpectDepositDate;
 
-    @Bind(R.id.payments_detail_expect_deposit_date_layout)
+    @BindView(R.id.payments_detail_expect_deposit_date_layout)
     LinearLayout paymentsDetailExpectDepositLayout;
 
     public PaymentsDetailListHeaderView(Context context)

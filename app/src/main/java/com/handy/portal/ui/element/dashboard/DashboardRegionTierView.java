@@ -22,22 +22,22 @@ import com.handy.portal.model.dashboard.ProviderEvaluation;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DashboardRegionTierView extends FrameLayout
 {
-    @Bind(R.id.complete_jobs_unlock_text)
+    @BindView(R.id.complete_jobs_unlock_text)
     TextView mCompleteJobsUnlockText;
-    @Bind(R.id.region_name_service_text)
+    @BindView(R.id.region_name_service_text)
     TextView mRegionNameServiceText;
-    @Bind(R.id.tier_header_text)
+    @BindView(R.id.tier_header_text)
     TextView mTierHeaderText;
-    @Bind(R.id.region_tier_middle_column)
+    @BindView(R.id.region_tier_middle_column)
     TextView mRegionTierMiddleColumn;
-    @Bind(R.id.rate_header_text)
+    @BindView(R.id.rate_header_text)
     TextView mRateHeaderText;
-    @Bind(R.id.tiers_layout)
+    @BindView(R.id.tiers_layout)
     LinearLayout mTiersLayout;
 
     private boolean mIsTwoColumns = false;

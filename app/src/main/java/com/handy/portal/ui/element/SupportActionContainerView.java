@@ -21,13 +21,13 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 // TODO: convert this into linearlayout
 public class SupportActionContainerView extends FrameLayout
 {
-    @Bind(R.id.support_actions_container)
+    @BindView(R.id.support_actions_container)
     ViewGroup supportActionsContainer;
 
     public SupportActionContainerView(final Context context)

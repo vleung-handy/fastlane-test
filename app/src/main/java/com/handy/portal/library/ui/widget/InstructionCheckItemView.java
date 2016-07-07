@@ -16,16 +16,16 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class InstructionCheckItemView extends FrameLayout
 {
-    @Bind(R.id.main_layout)
+    @BindView(R.id.main_layout)
     ViewGroup mMainLayout;
-    @Bind(R.id.checklist_item_check_box)
+    @BindView(R.id.checklist_item_check_box)
     CheckBox mCheckBox;
-    @Bind(R.id.checklist_item_title_description)
+    @BindView(R.id.checklist_item_title_description)
     TextView mTitleDescriptionTextView;
 
     // cannot user selector for alpha because it doesn't work for pre lollipop

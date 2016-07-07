@@ -46,7 +46,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 
 import static com.handy.portal.bookings.manager.BookingModalsManager.BookingsForDaysAheadModalsManager.BookingsForDaysAheadModalType;
 
@@ -55,15 +55,15 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     private final static int DEFAULT_NUM_DAYS_SPANNING_AVAILABLE_BOOKINGS = 7; //includes Today
     private static final String SOURCE_AVAILABLE_JOBS_LIST = "available_jobs_list";
 
-    @Bind(R.id.available_jobs_list_view)
+    @BindView(R.id.available_jobs_list_view)
     BookingListView mAvailableJobsListView;
-    @Bind(R.id.available_bookings_dates_scroll_view_layout)
+    @BindView(R.id.available_bookings_dates_scroll_view_layout)
     LinearLayout mAvailableJobsDatesScrollViewLayout;
-    @Bind(R.id.available_bookings_empty)
+    @BindView(R.id.available_bookings_empty)
     SwipeRefreshLayout mNoAvailableBookingsLayout;
-    @Bind(R.id.layout_job_access_locked)
+    @BindView(R.id.layout_job_access_locked)
     BookingsAccessLockedView mJobAccessLockedLayout;
-    @Bind(R.id.toggle_available_job_notification)
+    @BindView(R.id.toggle_available_job_notification)
     SwitchCompat mToggleAvailableJobNotification;
 
     BookingsBannerView mJobAccessUnlockedBannerLayout;

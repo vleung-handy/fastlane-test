@@ -39,7 +39,7 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -51,19 +51,19 @@ public final class PaymentsFragment extends ActionBarFragment
     ConfigManager mConfigManager;
 
     //TODO: investigate using @Produce and make manager handle more of this logic
-    @Bind(R.id.slide_up_panel_container)
+    @BindView(R.id.slide_up_panel_container)
     SlideUpPanelLayout mSlideUpPanelLayout;
 
-    @Bind(R.id.payments_scroll_view)
+    @BindView(R.id.payments_scroll_view)
     ScrollView scrollView;
 
-    @Bind(R.id.payments_batch_list_view)
+    @BindView(R.id.payments_batch_list_view)
     PaymentsBatchListView paymentsBatchListView;
 
-    @Bind(R.id.fetch_error_text)
+    @BindView(R.id.fetch_error_text)
     TextView fetchErrorText;
 
-    @Bind(R.id.fetch_error_view)
+    @BindView(R.id.fetch_error_view)
     ViewGroup fetchErrorView;
 
     //TODO: refactor request protocols when we can use new pagination API that allows us to get the N next batches

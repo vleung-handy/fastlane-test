@@ -14,14 +14,14 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
 import com.handy.portal.onboarding.viewmodel.BookingViewModel;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class OnboardingJobView extends FrameLayout implements CompoundButton.OnCheckedChangeListener
 {
-    @Bind(R.id.check_box)
+    @BindView(R.id.check_box)
     CheckBox mCheckBox;
-    @Bind(R.id.job_container)
+    @BindView(R.id.job_container)
     ViewGroup mJobContainer;
 
     private Drawable mCheckedDrawable;

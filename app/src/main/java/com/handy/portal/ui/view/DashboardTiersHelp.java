@@ -11,14 +11,14 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DashboardTiersHelp extends FrameLayout
 {
-    @Bind(R.id.tiers_help_title)
+    @BindView(R.id.tiers_help_title)
     TextView mTiersHelpTitle;
-    @Bind(R.id.tiers_help_body)
+    @BindView(R.id.tiers_help_body)
     TextView mTiersHelpBody;
 
     public DashboardTiersHelp(final Context context)

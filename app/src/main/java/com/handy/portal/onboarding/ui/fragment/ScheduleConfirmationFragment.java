@@ -39,7 +39,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
@@ -47,19 +47,19 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
     @Inject
     PrefsManager mPrefsManager;
 
-    @Bind(R.id.jobs_container)
+    @BindView(R.id.jobs_container)
     ViewGroup mJobsContainer;
-    @Bind(R.id.supplies_container)
+    @BindView(R.id.supplies_container)
     ViewGroup mSuppliesContainer;
-    @Bind(R.id.supplies_header)
+    @BindView(R.id.supplies_header)
     ViewGroup mSuppliesHeader;
-    @Bind(R.id.edit_supplies_button)
+    @BindView(R.id.edit_supplies_button)
     TextView mEditSuppliesButton;
-    @Bind(R.id.shipping_view)
+    @BindView(R.id.shipping_view)
     SimpleContentLayout mShippingView;
-    @Bind(R.id.payment_view)
+    @BindView(R.id.payment_view)
     LabelAndValueView mPaymentView;
-    @Bind(R.id.order_total_view)
+    @BindView(R.id.order_total_view)
     LabelAndValueView mOrderTotalView;
     private ArrayList<Booking> mPendingBookings;
     private SuppliesOrderInfo mSuppliesOrderInfo;

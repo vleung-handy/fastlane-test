@@ -15,30 +15,30 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DateButtonView extends RelativeLayout implements Checkable
 {
-    @Bind(R.id.date_month_text)
+    @BindView(R.id.date_month_text)
     protected TextView mMonthText;
 
-    @Bind(R.id.date_day_of_week_text)
+    @BindView(R.id.date_day_of_week_text)
     protected TextView mDayOfWeekText;
 
-    @Bind(R.id.date_day_of_month_text)
+    @BindView(R.id.date_day_of_month_text)
     protected TextView mDayOfMonthText;
 
-    @Bind(R.id.provider_requested_indicator_image)
+    @BindView(R.id.provider_requested_indicator_image)
     protected ImageView mRequestedIndicator;
 
-    @Bind(R.id.claimed_job_exists_indicator_image)
+    @BindView(R.id.claimed_job_exists_indicator_image)
     protected ImageView mClaimedJobExistsIndicator;
 
-    @Bind(R.id.selected_day_indicator_image)
+    @BindView(R.id.selected_day_indicator_image)
     protected ImageView mSelectedDayIndicator;
 
-    @Bind(R.id.today_text)
+    @BindView(R.id.today_text)
     protected TextView mTodayText;
 
     private static final String DATE_FORMAT = "MMM E d";

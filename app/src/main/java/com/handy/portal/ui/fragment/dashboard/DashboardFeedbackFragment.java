@@ -19,17 +19,17 @@ import com.handy.portal.model.dashboard.ProviderFeedback;
 import com.handy.portal.ui.element.dashboard.DashboardFeedbackView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DashboardFeedbackFragment extends ActionBarFragment
 {
-    @Bind(R.id.layout_dashboard_feedback)
+    @BindView(R.id.layout_dashboard_feedback)
     LinearLayout mFeedbackLayout;
-    @Bind(R.id.no_result_view)
+    @BindView(R.id.no_result_view)
     ViewGroup mNoResultView;
-    @Bind(R.id.no_result_text)
+    @BindView(R.id.no_result_text)
     TextView mNoResultText;
 
     private ProviderEvaluation mEvaluation;

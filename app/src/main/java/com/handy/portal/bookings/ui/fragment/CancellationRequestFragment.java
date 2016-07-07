@@ -32,7 +32,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -41,15 +41,15 @@ public class CancellationRequestFragment extends ActionBarFragment
     @Inject
     PrefsManager mPrefsManager;
 
-    @Bind(R.id.cancellation_address)
+    @BindView(R.id.cancellation_address)
     TextView mAddressTextView;
-    @Bind(R.id.cancellation_date)
+    @BindView(R.id.cancellation_date)
     TextView mDateTextView;
-    @Bind(R.id.cancellation_time)
+    @BindView(R.id.cancellation_time)
     TextView mTimeTextView;
-    @Bind(R.id.cancellation_fee_amount)
+    @BindView(R.id.cancellation_fee_amount)
     TextView mFeeAmountTextView;
-    @Bind(R.id.cancellation_reasons)
+    @BindView(R.id.cancellation_reasons)
     RadioGroup mReasonsRadioGroup;
 
     private Booking mBooking;

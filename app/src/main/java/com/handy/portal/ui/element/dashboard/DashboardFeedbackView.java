@@ -27,7 +27,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DashboardFeedbackView extends FrameLayout implements View.OnClickListener
@@ -35,11 +35,11 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
     @Inject
     EventBus mBus;
 
-    @Bind(R.id.dashboard_feedback_title)
+    @BindView(R.id.dashboard_feedback_title)
     TextView mTitle;
-    @Bind(R.id.dashboard_feedback_description)
+    @BindView(R.id.dashboard_feedback_description)
     TextView mDescription;
-    @Bind(R.id.dashboard_feedback_tips)
+    @BindView(R.id.dashboard_feedback_tips)
     LinearLayout mTips;
 
     public DashboardFeedbackView(final Context context, @NonNull final ProviderFeedback providerFeedback)

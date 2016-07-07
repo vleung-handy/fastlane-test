@@ -10,12 +10,12 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class BulletTextView extends FrameLayout
 {
-    @Bind(R.id.text_with_bullet)
+    @BindView(R.id.text_with_bullet)
     TextView mTextView;
 
     public BulletTextView(final Context context, CharSequence text)

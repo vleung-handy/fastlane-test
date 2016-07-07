@@ -9,14 +9,14 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class LabelAndValueView extends FrameLayout
 {
-    @Bind(R.id.label)
+    @BindView(R.id.label)
     TextView mLabel;
-    @Bind(R.id.value)
+    @BindView(R.id.value)
     TextView mValue;
 
     public LabelAndValueView(final Context context)

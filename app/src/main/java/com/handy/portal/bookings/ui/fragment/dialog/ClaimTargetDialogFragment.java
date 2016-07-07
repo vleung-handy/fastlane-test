@@ -18,30 +18,30 @@ import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.payments.model.PaymentInfo;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ClaimTargetDialogFragment extends DialogFragment //TODO: consolidate some of this logic with other dialog fragments
 {
-    @Bind(R.id.claim_target_frame_layout)
+    @BindView(R.id.claim_target_frame_layout)
     protected FrameLayout frameLayout;
 
-    @Bind(R.id.claim_target_window_layout)
+    @BindView(R.id.claim_target_window_layout)
     protected LinearLayout windowLayout;
 
-    @Bind(R.id.claim_target_title)
+    @BindView(R.id.claim_target_title)
     protected TextView claimTargetTitle;
 
-    @Bind(R.id.claim_target_progress_icons_container)
+    @BindView(R.id.claim_target_progress_icons_container)
     protected LinearLayout progressIconsContainer;
 
-    @Bind(R.id.claim_target_info_text)
+    @BindView(R.id.claim_target_info_text)
     protected TextView textClaimTarget;
 
-    @Bind(R.id.expected_pay_label)
+    @BindView(R.id.expected_pay_label)
     protected TextView textExpectedPayLabel;
 
-    @Bind(R.id.claim_target_expected_pay_dollars_text)
+    @BindView(R.id.claim_target_expected_pay_dollars_text)
     protected TextView textExpectedPayDollars;
 
     final Handler handler = new Handler();

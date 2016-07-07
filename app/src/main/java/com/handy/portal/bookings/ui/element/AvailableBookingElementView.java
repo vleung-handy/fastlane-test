@@ -13,36 +13,36 @@ import com.handy.portal.constant.PartnerNames;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.model.Address;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class AvailableBookingElementView extends BookingElementView
 {
-    @Bind(R.id.booking_entry_payment)
+    @BindView(R.id.booking_entry_payment)
     BookingDetailsPaymentView mPayment;
 
-    @Bind(R.id.booking_entry_payment_bonus_text)
+    @BindView(R.id.booking_entry_payment_bonus_text)
     TextView mBonusPaymentText;
 
-    @Bind(R.id.booking_entry_area_text)
+    @BindView(R.id.booking_entry_area_text)
     TextView mBookingAreaTextView;
 
-    @Bind(R.id.booking_entry_service_text)
+    @BindView(R.id.booking_entry_service_text)
     TextView mBookingServiceTextView;
 
-    @Bind(R.id.booking_entry_partner_text)
+    @BindView(R.id.booking_entry_partner_text)
     TextView mPartnerText;
 
-    @Bind(R.id.booking_entry_listing_message_title_view)
+    @BindView(R.id.booking_entry_listing_message_title_view)
     BookingMessageTitleView mBookingMessageTitleView;
 
-    @Bind(R.id.booking_entry_date_text)
+    @BindView(R.id.booking_entry_date_text)
     TextView mTimeText;
 
-    @Bind(R.id.booking_entry_distance_text)
+    @BindView(R.id.booking_entry_distance_text)
     TextView mFormattedDistanceText;
 
-    @Bind(R.id.booking_list_entry_left_strip_indicator)
+    @BindView(R.id.booking_list_entry_left_strip_indicator)
     ImageView mLeftStripIndicator;
 
     public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent)

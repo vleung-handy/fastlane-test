@@ -51,7 +51,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -63,13 +63,13 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     ConfigManager mConfigManager;
     @Inject
     PrefsManager mPrefsManager;
-    @Bind(R.id.fetch_error_view)
+    @BindView(R.id.fetch_error_view)
     View mFetchErrorView;
-    @Bind(R.id.fetch_error_text)
+    @BindView(R.id.fetch_error_text)
     TextView mErrorText;
-    @Bind(R.id.refresh_layout)
+    @BindView(R.id.refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
-    @Bind(R.id.bookings_content)
+    @BindView(R.id.bookings_content)
     LinearLayout mBookingsContent;
 
     protected String mMessage;

@@ -29,7 +29,7 @@ import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -40,39 +40,39 @@ public class BookingTransactionsFragment extends ActionBarFragment
     @Inject
     ConfigManager mConfigManager;
 
-    @Bind(R.id.booking_transactions_banner_text)
+    @BindView(R.id.booking_transactions_banner_text)
     BookingResultBannerTextView mBannerText;
-    @Bind(R.id.booking_transactions_location_text)
+    @BindView(R.id.booking_transactions_location_text)
     TextView mLocationText;
-    @Bind(R.id.booking_transactions_date_text)
+    @BindView(R.id.booking_transactions_date_text)
     TextView mDateText;
-    @Bind(R.id.booking_transactions_time_text)
+    @BindView(R.id.booking_transactions_time_text)
     TextView mTimeText;
-    @Bind(R.id.booking_transactions_unassigned_time_text)
+    @BindView(R.id.booking_transactions_unassigned_time_text)
     TextView mUnassignedTimeText;
-    @Bind(R.id.booking_transactions_unassigned_help_text)
+    @BindView(R.id.booking_transactions_unassigned_help_text)
     TextView mUnassignedHelpText;
-    @Bind(R.id.booking_transactions_check_in_time_text)
+    @BindView(R.id.booking_transactions_check_in_time_text)
     TextView mCheckInTimeText;
-    @Bind(R.id.booking_transactions_check_in_label)
+    @BindView(R.id.booking_transactions_check_in_label)
     TextView mCheckInLabelText;
-    @Bind(R.id.booking_transactions_late_text)
+    @BindView(R.id.booking_transactions_late_text)
     TextView mLateText;
-    @Bind(R.id.booking_transactions_check_out_time_text)
+    @BindView(R.id.booking_transactions_check_out_time_text)
     TextView mCheckOutTimeText;
-    @Bind(R.id.booking_transactions_check_out_label)
+    @BindView(R.id.booking_transactions_check_out_label)
     TextView mCheckOutLabelText;
-    @Bind(R.id.booking_transactions_check_out_help_text)
+    @BindView(R.id.booking_transactions_check_out_help_text)
     TextView mCheckOutHelpText;
-    @Bind(R.id.booking_transactions_transactions_layout)
+    @BindView(R.id.booking_transactions_transactions_layout)
     ViewGroup mTransactionsLayout;
-    @Bind(R.id.booking_transactions_net_earnings_amount_text)
+    @BindView(R.id.booking_transactions_net_earnings_amount_text)
     TextView mNetEarningAmountText;
-    @Bind(R.id.booking_transactions_job_number_text)
+    @BindView(R.id.booking_transactions_job_number_text)
     TextView mJobNumberText;
-    @Bind(R.id.booking_transactions_help_text)
+    @BindView(R.id.booking_transactions_help_text)
     TextView mHelpText;
-    @Bind(R.id.booking_transactions_transactions_summary_layout)
+    @BindView(R.id.booking_transactions_transactions_summary_layout)
     ViewGroup mTransactionSummary;
 
 

@@ -22,7 +22,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -33,19 +33,19 @@ public class ActivationWelcomeActivity extends AppCompatActivity
 
     private List<Integer> mDrawables;
 
-    @Bind(R.id.left_center_view)
+    @BindView(R.id.left_center_view)
     View mLeftCenterView;
 
-    @Bind(R.id.right_center_view)
+    @BindView(R.id.right_center_view)
     View mRightCenterView;
 
-    @Bind(R.id.middle_view)
+    @BindView(R.id.middle_view)
     View mCenterView;
 
-    @Bind(R.id.tv_title)
+    @BindView(R.id.tv_title)
     TextView mTvTitle;
 
-    @Bind(R.id.loading_overlay)
+    @BindView(R.id.loading_overlay)
     RelativeLayout mLoadingOverlay;
 
     @Inject

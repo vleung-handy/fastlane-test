@@ -16,7 +16,7 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.library.ui.fragment.dialog.PopupDialogFragment;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 /**
@@ -26,13 +26,13 @@ import butterknife.OnClick;
  */
 public abstract class JobAccessDialogFragment extends PopupDialogFragment
 {
-    @Bind(R.id.fragment_dialog_job_access_title)
+    @BindView(R.id.fragment_dialog_job_access_title)
     TextView mTitle;
-    @Bind(R.id.fragment_dialog_job_access_description)
+    @BindView(R.id.fragment_dialog_job_access_description)
     TextView mDescription;
-    @Bind(R.id.fragment_dialog_job_access_header_image)
+    @BindView(R.id.fragment_dialog_job_access_header_image)
     ImageView mHeaderImage;
-    @Bind(R.id.fragment_dialog_job_access_action_button)
+    @BindView(R.id.fragment_dialog_job_access_action_button)
     Button mActionButton;
 
     protected abstract BookingsWrapper.PriorityAccessInfo getPriorityAccessFromBundle();

@@ -13,7 +13,7 @@ import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.library.util.UIUtils;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 //Not setting up a clean UI hierarchy with AvailableBookingElement because ScheduledBookingElement is going to radically change soon to a google calendar style view
@@ -21,17 +21,17 @@ import butterknife.ButterKnife;
 
 public class ScheduledBookingElementView extends BookingElementView
 {
-    @Bind(R.id.booking_entry_address_text)
+    @BindView(R.id.booking_entry_address_text)
     TextView mAddressTextView;
-    @Bind(R.id.booking_entry_claimed_indicator)
+    @BindView(R.id.booking_entry_claimed_indicator)
     ImageView mClaimedIndicator;
-    @Bind(R.id.booking_entry_status_text)
+    @BindView(R.id.booking_entry_status_text)
     TextView mStatusText;
-    @Bind(R.id.booking_entry_completed_indicator)
+    @BindView(R.id.booking_entry_completed_indicator)
     ImageView mCompletedIndicator;
-    @Bind(R.id.booking_entry_service_text)
+    @BindView(R.id.booking_entry_service_text)
     TextView mBookingServiceTextView;
-    @Bind(R.id.booking_entry_date_text)
+    @BindView(R.id.booking_entry_date_text)
     TextView mTimeText;
 
     public View initView(Context context, Booking booking, View convertView, ViewGroup parent)

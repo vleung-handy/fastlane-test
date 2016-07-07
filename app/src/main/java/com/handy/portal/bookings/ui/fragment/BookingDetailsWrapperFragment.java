@@ -63,7 +63,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -76,11 +76,11 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     @Inject
     PrefsManager mPrefsManager;
 
-    @Bind(R.id.booking_details_slide_up_panel_container)
+    @BindView(R.id.booking_details_slide_up_panel_container)
     SlideUpPanelLayout mSlideUpPanelContainer;
-    @Bind(R.id.fetch_error_view)
+    @BindView(R.id.fetch_error_view)
     View mFetchErrorView;
-    @Bind(R.id.fetch_error_text)
+    @BindView(R.id.fetch_error_text)
     TextView mErrorText;
 
     private Booking mBooking;

@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -20,9 +20,9 @@ import butterknife.ButterKnife;
  */
 public class LeftIndicatorTextView extends FrameLayout
 {
-    @Bind(R.id.left_indicator_text_view_indicator_image)
+    @BindView(R.id.left_indicator_text_view_indicator_image)
     ImageView mLeftIndicatorImage;
-    @Bind(R.id.left_indicator_text_view_indicator_text)
+    @BindView(R.id.left_indicator_text_view_indicator_text)
     TextView mText;
 
     public LeftIndicatorTextView(final Context context)
