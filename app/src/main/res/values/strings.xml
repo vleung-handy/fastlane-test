@@ -293,6 +293,7 @@
     <string name="edit_your_profile">Edit Your Profile</string>
     <string name="update_profile_success">Successfully updated profile information</string>
     <string name="update_profile_failed">Failed to update profile information</string>
+    <string name="failed_to_open_help">Failed to open help center!</string>
 
     <!-- Performance Dashboard -->
     <string name="ratings_and_feedback">Ratings &amp; Feedback</string>
