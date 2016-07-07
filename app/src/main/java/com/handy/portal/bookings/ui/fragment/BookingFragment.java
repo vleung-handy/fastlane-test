@@ -58,6 +58,7 @@ import com.handy.portal.model.LocationData;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.fragment.TimerActionBarFragment;
+import com.handy.portal.ui.view.FlowLayout;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -125,7 +126,7 @@ public class BookingFragment extends TimerActionBarFragment
     @Bind(R.id.booking_nearby_transit_layout)
     ViewGroup mBookingNearbyTransitLayout;
     @Bind(R.id.nearby_transits)
-    LinearLayout mNearbyTransits;
+    FlowLayout mNearbyTransits;
     @Bind(R.id.booking_job_number_text)
     TextView mJobNumberText;
     @Bind(R.id.booking_action_button)

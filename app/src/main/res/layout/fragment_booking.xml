@@ -47,19 +47,19 @@
                     />
 
                 <com.handy.portal.bookings.ui.element.BookingDetailsProRequestInfoView
+                    android:id="@+id/booking_details_display_message_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/white"
-                    android:id="@+id/booking_details_display_message_layout"
                     android:layout_marginBottom="@dimen/default_margin"
+                    android:background="@color/white"
                     android:visibility="gone"
                     />
 
                 <RelativeLayout
                     android:id="@+id/booking_customer_contact_layout"
-                    android:background="@drawable/border_gray_bottom"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@drawable/border_gray_bottom"
                     android:padding="@dimen/default_padding"
                     >
 
@@ -104,10 +104,10 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/white"
                     android:divider="@drawable/divider_gray"
                     android:dividerPadding="@dimen/default_padding"
                     android:orientation="vertical"
-                    android:background="@color/white"
                     android:showDividers="middle"
                     >
 
@@ -370,16 +370,16 @@
                             android:textSize="@dimen/default_text_size"
                             />
 
-                        <LinearLayout
+                        <com.handy.portal.ui.view.FlowLayout
                             android:id="@+id/nearby_transits"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:paddingTop="@dimen/default_padding_half"
                             android:paddingEnd="@dimen/extra_padding"
                             android:paddingLeft="@dimen/extra_padding"
                             android:paddingRight="@dimen/extra_padding"
                             android:paddingStart="@dimen/extra_padding"
+                            android:paddingTop="@dimen/default_padding_half"
                             />
 
                     </LinearLayout>
