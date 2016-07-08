@@ -16,6 +16,7 @@ public interface PrefsKey
     @StringDef({
             LAST_PROVIDER_ID,
             AUTH_TOKEN,
+            ENVIRONMENT,
             ENVIRONMENT_PREFIX,
             EVENT_LOG_BUNDLES,
             SAME_DAY_LATE_DISPATCH_AVAILABLE_JOB_NOTIFICATION_EXPLAINED,
