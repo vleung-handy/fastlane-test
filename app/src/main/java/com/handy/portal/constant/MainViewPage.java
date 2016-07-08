@@ -11,6 +11,7 @@ import com.handy.portal.bookings.ui.fragment.NearbyBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.ProRequestedJobsFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
+import com.handy.portal.bookings.ui.fragment.SoftwareLicensesFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.notification.ui.fragment.NotificationsFragment;
@@ -41,7 +42,7 @@ import java.io.Serializable;
 /**
  * a content page/fragment of this application that will be displayed inside
  * the main content view of MainActivityFragment
- *
+ * <p/>
  * easily deeplink-able - see DeeplinkMapper
  */
 public enum MainViewPage implements Serializable
@@ -55,6 +56,7 @@ public enum MainViewPage implements Serializable
     CANCELLATION_REQUEST(CancellationRequestFragment.class),
     NOT_IN_PROGRESS_JOB_DETAILS(BookingFragment.class),
     SEND_RECEIPT_CHECKOUT(SendReceiptCheckoutFragment.class),
+    SOFTWARE_LICENSES(SoftwareLicensesFragment.class),
 
     NOTIFICATIONS(NotificationsFragment.class),
 

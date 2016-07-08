@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.action.CustomDeepLinkAction;
 import com.handy.portal.bookings.BookingsModule;
+import com.handy.portal.bookings.ui.fragment.SoftwareLicensesFragment;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
@@ -131,6 +132,7 @@ import retrofit.converter.GsonConverter;
         ActivationWelcomeActivity.class,
         RequestSuppliesWebViewFragment.class,
         DashboardTiersFragment.class,
+        SoftwareLicensesFragment.class,
 },
         includes = {
                 HelpModule.class,
