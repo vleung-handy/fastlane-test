@@ -15,7 +15,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:alpha="0.5"
-        tools:src="@drawable/ic_menu_notifications"
+        tools:src="@drawable/ic_menu_alerts"
         />
 
     <TextView
