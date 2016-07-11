@@ -8,7 +8,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -16,11 +16,11 @@ import butterknife.ButterKnife;
  */
 public class DialogBlockerView extends LinearLayout
 {
-    @Bind(R.id.dialog_blocker_title)
+    @BindView(R.id.dialog_blocker_title)
     TextView mTitle;
-    @Bind(R.id.dialog_blocker_message)
+    @BindView(R.id.dialog_blocker_message)
     TextView mMessage;
-    @Bind(R.id.dialog_blocker_action_button)
+    @BindView(R.id.dialog_blocker_action_button)
     Button mActionButton;
 
     public DialogBlockerView(final Context context)

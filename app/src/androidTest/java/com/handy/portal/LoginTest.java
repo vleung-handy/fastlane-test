@@ -5,6 +5,7 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.handy.portal.test.data.TestUsers;
 import com.handy.portal.test.model.TestUser;
+import com.handy.portal.test.util.TermsPageUtil;
 import com.handy.portal.test.util.TextViewUtil;
 import com.handy.portal.test.util.ViewUtil;
 import com.handy.portal.ui.activity.LoginActivity;
@@ -54,22 +55,7 @@ public class LoginTest
         TextViewUtil.updateEditTextView(R.id.pin_code_edit_text, TEST_USER.getPinCode());
         onView(withId(R.id.login_button)).perform(click());
 
-        //accept all the terms
-        while (true) //accept any required terms
-        {
-            try
-            {
-                ViewUtil.waitForViewVisible(R.id.accept_checkbox, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
-                ViewUtil.waitForViewVisible(R.id.accept_button, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
-                onView(withId(R.id.accept_checkbox)).perform(click());
-                onView(withId(R.id.accept_button)).perform(click());
-            }
-            catch (Exception e)
-            {
-                e.printStackTrace();
-                break;
-            }
-        }
+        TermsPageUtil.acceptAllTermsIfPresent();
 
         //TODO support testing with the system permissions dialog in Android 6.0
 //        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)

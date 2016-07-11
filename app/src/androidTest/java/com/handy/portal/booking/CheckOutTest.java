@@ -1,12 +1,15 @@
 package com.handy.portal.booking;
 
+import android.content.Context;
 import android.content.Intent;
+import android.support.test.espresso.PerformException;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.test.ViewMatchers;
 import com.handy.portal.test.data.TestUsers;
 import com.handy.portal.test.model.TestUser;
@@ -14,6 +17,8 @@ import com.handy.portal.test.util.ViewUtil;
 import com.handy.portal.ui.activity.SplashActivity;
 
 import org.hamcrest.Matcher;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,6 +49,22 @@ public class CheckOutTest
         }
     };
 
+    @Before
+    public void setUp()
+    {
+        mActivityRule.getActivity().getApplicationContext()
+                .getSharedPreferences(PrefsManager.BOOKING_INSTRUCTIONS_PREFS, Context.MODE_PRIVATE)
+                .edit().clear().commit();
+    }
+
+    @After
+    public void tearDown()
+    {
+        mActivityRule.getActivity().getApplicationContext()
+                .getSharedPreferences(PrefsManager.BOOKING_INSTRUCTIONS_PREFS, Context.MODE_PRIVATE)
+                .edit().clear().commit();
+    }
+
     @Test
     public void testBookingCheckOut()
     {
@@ -51,6 +72,17 @@ public class CheckOutTest
 
         //click the scheduled jobs tab
         onView(allOf(withId(R.id.tab_title), withText(R.string.tab_schedule))).perform(click());
+
+        // This dialog only shows up sometimes, don't fail if it does not show
+        try
+        {
+            ViewUtil.waitForViewVisible(R.id.confirm_booking_action_button, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+            onView(withId(R.id.confirm_booking_action_button)).perform(click());
+        }
+        catch (PerformException e)
+        {
+
+        }
 
         //click the first scheduled job
         ViewUtil.waitForViewVisible(R.id.booking_entry_details_layout, ViewUtil.LONG_MAX_WAIT_TIME_MS);

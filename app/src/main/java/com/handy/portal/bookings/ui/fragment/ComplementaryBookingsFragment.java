@@ -35,25 +35,25 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ComplementaryBookingsFragment extends ActionBarFragment
 {
-    @Bind(R.id.loading_overlay)
+    @BindView(R.id.loading_overlay)
     View loadingOverlay;
-    @Bind(R.id.complementary_bookings_empty)
+    @BindView(R.id.complementary_bookings_empty)
     View noBookingsView;
-    @Bind(R.id.earlier_bookings)
+    @BindView(R.id.earlier_bookings)
     ViewGroup earlierBookingsContainer;
-    @Bind(R.id.later_bookings)
+    @BindView(R.id.later_bookings)
     ViewGroup laterBookingsContainer;
-    @Bind(R.id.claimed_bookings)
+    @BindView(R.id.claimed_bookings)
     ViewGroup claimedBookingsContainer;
-    @Bind(R.id.fetch_error_view)
+    @BindView(R.id.fetch_error_view)
     View errorView;
-    @Bind(R.id.fetch_error_text)
+    @BindView(R.id.fetch_error_text)
     TextView errorText;
 
     @Inject

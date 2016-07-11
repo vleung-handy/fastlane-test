@@ -19,17 +19,17 @@ import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class BookingTransactionsWrapperFragment extends ActionBarFragment
 {
-    @Bind(R.id.container)
+    @BindView(R.id.container)
     ViewGroup mContainer;
-    @Bind(R.id.fetch_error_view)
+    @BindView(R.id.fetch_error_view)
     View mFetchErrorView;
-    @Bind(R.id.fetch_error_text)
+    @BindView(R.id.fetch_error_text)
     TextView mErrorText;
 
     private String mRequestedBookingId;

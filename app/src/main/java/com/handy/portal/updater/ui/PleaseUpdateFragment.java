@@ -34,7 +34,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -46,21 +46,21 @@ public class PleaseUpdateFragment extends InjectedFragment
     @Inject
     VersionManager mVersionManager;
 
-    @Bind(R.id.update_image)
+    @BindView(R.id.update_image)
     ImageView mUpdateImage;
-    @Bind(R.id.update_button)
+    @BindView(R.id.update_button)
     View mUpdateButton;
-    @Bind(R.id.update_text)
+    @BindView(R.id.update_text)
     TextView mUpdateText;
-    @Bind(R.id.grant_access_button)
+    @BindView(R.id.grant_access_button)
     Button mGrantAccessButton;
-    @Bind(R.id.grant_permissions_section)
+    @BindView(R.id.grant_permissions_section)
     LinearLayout mGrantPermissionsSection;
-    @Bind(R.id.install_update_section)
+    @BindView(R.id.install_update_section)
     LinearLayout mInstallUpdateSection;
-    @Bind(R.id.manual_download_text)
+    @BindView(R.id.manual_download_text)
     TextView manualDownloadText;
-    @Bind(R.id.app_update_fragment_update_later_button)
+    @BindView(R.id.app_update_fragment_update_later_button)
     Button mUpdateLaterButton;
 
     private boolean mAlreadyAskedPermissions = false;

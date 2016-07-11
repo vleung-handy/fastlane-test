@@ -9,14 +9,15 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
-import com.handy.portal.bookings.BookingManager;
-import com.handy.portal.bookings.BookingModalsManager;
+import com.handy.portal.bookings.manager.BookingManager;
+import com.handy.portal.bookings.manager.BookingModalsManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.util.FontUtils;
 import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.manager.LocationManager;
+import com.handy.portal.location.manager.LocationScheduleUpdateManager;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
@@ -107,6 +108,8 @@ public class BaseApplication extends MultiDexApplication
     UserInterfaceUpdateManager userInterfaceUpdateManager;
     @Inject
     SetupManager setupManager;
+    @Inject
+    LocationScheduleUpdateManager mLocationScheduleUpdateManager;
 
     @Inject
     EventBus bus;

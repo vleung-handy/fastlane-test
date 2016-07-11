@@ -21,22 +21,22 @@ import com.handy.portal.ui.activity.TermsActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
 public class TermsFragment extends InjectedFragment
 {
-    @Bind(R.id.loading_overlay)
+    @BindView(R.id.loading_overlay)
     protected View mLoadingOverlay;
-    @Bind(R.id.terms_web_view)
+    @BindView(R.id.terms_web_view)
     protected HandyWebView mTermsWebView;
-    @Bind(R.id.accept_button)
+    @BindView(R.id.accept_button)
     protected Button mAcceptButton;
-    @Bind(R.id.accept_checkbox)
+    @BindView(R.id.accept_checkbox)
     protected CheckBox mAcceptCheckbox;
-    @Bind(R.id.instructions)
+    @BindView(R.id.instructions)
     protected TextView mInstructionsText;
 
     private TermsDetails mTerms;

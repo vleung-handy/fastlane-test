@@ -14,7 +14,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.library.ui.fragment.dialog.SlideUpDialogFragment;
 import com.handy.portal.library.util.Utils;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -26,7 +26,7 @@ import butterknife.OnClick;
  */
 public abstract class ConfirmBookingActionDialogFragment extends SlideUpDialogFragment
 {
-    @Bind(R.id.confirm_booking_action_button)
+    @BindView(R.id.confirm_booking_action_button)
     Button mConfirmBookingActionButton;
 
     protected Booking mBooking;

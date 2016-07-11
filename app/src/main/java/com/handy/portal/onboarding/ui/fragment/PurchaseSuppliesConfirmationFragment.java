@@ -36,40 +36,40 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Map;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragment
 {
-    @Bind(R.id.shipping_summary)
+    @BindView(R.id.shipping_summary)
     SimpleContentLayout mShippingSummary;
-    @Bind(R.id.edit_address_form)
+    @BindView(R.id.edit_address_form)
     View mEditAddressForm;
-    @Bind(R.id.address_1_field)
+    @BindView(R.id.address_1_field)
     FormFieldTableRow mAddress1Field;
-    @Bind(R.id.address_2_field)
+    @BindView(R.id.address_2_field)
     FormFieldTableRow mAddress2Field;
-    @Bind(R.id.city_field)
+    @BindView(R.id.city_field)
     FormFieldTableRow mCityField;
-    @Bind(R.id.state_field)
+    @BindView(R.id.state_field)
     FormFieldTableRow mStateField;
-    @Bind(R.id.zip_field)
+    @BindView(R.id.zip_field)
     FormFieldTableRow mZipField;
-    @Bind(R.id.cancel_edit_address)
+    @BindView(R.id.cancel_edit_address)
     View mCancelEditAddress;
-    @Bind(R.id.credit_card_number_field)
+    @BindView(R.id.credit_card_number_field)
     FormFieldTableRow mCreditCardNumberField;
-    @Bind(R.id.expiration_date_field)
+    @BindView(R.id.expiration_date_field)
     DateFormFieldTableRow mExpirationDateField;
-    @Bind(R.id.security_code_field)
+    @BindView(R.id.security_code_field)
     FormFieldTableRow mSecurityCodeField;
-    @Bind(R.id.order_summary)
+    @BindView(R.id.order_summary)
     SimpleContentLayout mOrderSummary;
-    @Bind(R.id.payment_summary)
+    @BindView(R.id.payment_summary)
     SimpleContentLayout mPaymentSummary;
-    @Bind(R.id.edit_payment_form)
+    @BindView(R.id.edit_payment_form)
     View mEditPaymentForm;
-    @Bind(R.id.cancel_edit_payment)
+    @BindView(R.id.cancel_edit_payment)
     View mCancelEditPayment;
 
     private Map<String, FieldDefinition> mPaymentFieldDefinitions;

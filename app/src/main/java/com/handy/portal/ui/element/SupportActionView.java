@@ -19,7 +19,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -28,9 +28,9 @@ public class SupportActionView extends FrameLayout
     @Inject
     EventBus mBus;
 
-    @Bind(R.id.support_action_icon)
+    @BindView(R.id.support_action_icon)
     ImageView mIcon;
-    @Bind(R.id.support_action_text)
+    @BindView(R.id.support_action_text)
     TextView mText;
 
     private Booking.Action mAction;

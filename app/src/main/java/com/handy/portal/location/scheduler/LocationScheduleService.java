@@ -27,7 +27,12 @@ import javax.inject.Inject;
 
 
 /**
- * listens to the location schedule updated event and starts the schedule handler accordingly
+ * listens to the location schedule updated event and
+ * starts the schedule handler accordingly
+ *
+ * note that it makes no direct requests for the location schedule,
+ * because LocationScheduleUpdateManager is entirely responsible for that
+ *
  * <p/>
  * responsible for handling google api client
  */
@@ -75,7 +80,12 @@ public class LocationScheduleService extends Service
         mBus.register(this);
         mGoogleApiClient.connect();
 
-        requestLocationStrategies();
+        mBus.post(new LocationEvent.LocationServiceStarted());
+        /*
+            a manager listens to this event and will
+            subsequently request location schedules if necessary
+         */
+
 
         return START_STICKY;
     }
@@ -98,14 +108,6 @@ public class LocationScheduleService extends Service
         super.onDestroy();
     }
 
-    /**
-     * ask for the location schedule (location manager will respond to this)
-     */
-    private void requestLocationStrategies()
-    {
-        mBus.post(new LocationEvent.RequestLocationSchedule());
-    }
-
     @Subscribe
     public void onLocationQueryScheduleReceived(LocationEvent.ReceiveLocationScheduleSuccess event)
     {
@@ -116,6 +118,12 @@ public class LocationScheduleService extends Service
             handleNewLocationStrategies(locationScheduleStrategies);
         }
         //TODO: optimize if the schedule did NOT change!!!!!
+    }
+
+    @Subscribe
+    public void OnRequestStopLocationService(LocationEvent.RequestStopLocationService event)
+    {
+        stopSelf();
     }
 
     /**

@@ -35,7 +35,7 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -43,19 +43,19 @@ public final class NotificationsFragment extends ActionBarFragment
 {
     private static final int NUMBER_OF_NOTIFICATIONS_PER_REQUEST = 20;
 
-    @Bind(R.id.notifications_list_view)
+    @BindView(R.id.notifications_list_view)
     NotificationsListView mNotificationsListView;
 
-    @Bind(R.id.fetch_error_view)
+    @BindView(R.id.fetch_error_view)
     ViewGroup mFetchErrorView;
 
-    @Bind(R.id.fetch_error_text)
+    @BindView(R.id.fetch_error_text)
     TextView mFetchErrorTextView;
 
-    @Bind(R.id.refresh_layout)
+    @BindView(R.id.refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
 
-    @Bind(R.id.no_notifications_view)
+    @BindView(R.id.no_notifications_view)
     LinearLayout mNoNotificationsView;
 
     private View mFragmentView;

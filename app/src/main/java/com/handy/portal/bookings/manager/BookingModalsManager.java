@@ -1,4 +1,4 @@
-package com.handy.portal.bookings;
+package com.handy.portal.bookings.manager;
 
 import android.support.annotation.NonNull;
 

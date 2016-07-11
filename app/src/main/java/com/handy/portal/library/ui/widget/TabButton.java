@@ -17,16 +17,16 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TabButton extends FrameLayout
 {
-    @Bind(R.id.tab_icon)
+    @BindView(R.id.tab_icon)
     ImageView mTabIcon;
-    @Bind(R.id.tab_title)
+    @BindView(R.id.tab_title)
     TextView mTabTitle;
-    @Bind(R.id.tab_unread_count)
+    @BindView(R.id.tab_unread_count)
     TextView mTabUnreadCount;
     private TabButtonGroup mGroup;
 

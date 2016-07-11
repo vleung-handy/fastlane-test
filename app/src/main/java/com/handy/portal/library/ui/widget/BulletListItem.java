@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -22,10 +22,10 @@ import butterknife.ButterKnife;
  */
 public class BulletListItem extends FrameLayout
 {
-    @Bind(R.id.list_item_bullet_image_view)
+    @BindView(R.id.list_item_bullet_image_view)
     ImageView mBulletImageView;
 
-    @Bind(R.id.list_item_text)
+    @BindView(R.id.list_item_text)
     TextView mText;
 
     public BulletListItem(final Context context)

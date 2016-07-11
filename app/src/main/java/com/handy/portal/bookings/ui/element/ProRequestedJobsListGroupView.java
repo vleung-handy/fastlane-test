@@ -12,12 +12,12 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.library.util.DateTimeUtils;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ProRequestedJobsListGroupView extends FrameLayout
 {
-    @Bind(R.id.pro_requested_jobs_list_group_title_text)
+    @BindView(R.id.pro_requested_jobs_list_group_title_text)
     protected TextView titleText;
 
     public ProRequestedJobsListGroupView(Context context)

@@ -77,6 +77,4 @@ public class CheckInTest
         //wait for booking action button to be visible and verify it says "continue to check out"
         ViewUtil.waitForTextVisible(R.string.continue_to_check_out, ViewUtil.LONG_MAX_WAIT_TIME_MS);
     }
-
-
 }

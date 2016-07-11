@@ -13,12 +13,12 @@ import android.widget.LinearLayout;
 import com.handy.portal.R;
 import com.squareup.picasso.Picasso;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class YoutubeImagePlaceholderView extends FrameLayout
 {
-    @Bind(R.id.video_image)
+    @BindView(R.id.video_image)
     ImageView mVideoImage;
 
     private String mId;

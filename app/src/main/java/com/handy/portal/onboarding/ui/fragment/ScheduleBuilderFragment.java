@@ -20,12 +20,12 @@ import com.handy.portal.onboarding.viewmodel.BookingsWrapperViewModel;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 
 public class ScheduleBuilderFragment extends OnboardingSubflowFragment
         implements OnboardingJobsViewGroup.OnJobCheckedChangedListener
 {
-    @Bind(R.id.jobs_container)
+    @BindView(R.id.jobs_container)
     ViewGroup mJobsContainer;
 
     private List<BookingsWrapper> mBookingsWrappers;

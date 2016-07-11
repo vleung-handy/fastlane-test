@@ -18,6 +18,8 @@
           type="id"/>
     <item name="action_bar_title"
           type="id"/>
+    <item name="tab_nav_pro_requested_jobs"
+          type="id"/>
     <item name="tab_nav_item_more"
           type="id"/>
 </resources>

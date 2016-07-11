@@ -11,14 +11,14 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DashboardWelcomeView extends FrameLayout
 {
-    @Bind(R.id.welcome_back_text)
+    @BindView(R.id.welcome_back_text)
     TextView mWelcomeBackText;
-    @Bind(R.id.pro_status_text)
+    @BindView(R.id.pro_status_text)
     TextView mProStatusText;
 
     public DashboardWelcomeView(final Context context)

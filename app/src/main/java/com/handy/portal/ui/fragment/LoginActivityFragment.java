@@ -42,27 +42,27 @@ import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivityFragment extends InjectedFragment
 {
-    @Bind(R.id.phone_input_layout)
+    @BindView(R.id.phone_input_layout)
     RelativeLayout phoneInputLayout;
-    @Bind(R.id.pin_code_input_layout)
+    @BindView(R.id.pin_code_input_layout)
     RelativeLayout pinCodeInputLayout;
-    @Bind(R.id.phone_number_edit_text)
+    @BindView(R.id.phone_number_edit_text)
     PhoneInputTextView phoneNumberEditText;
-    @Bind(R.id.pin_code_edit_text)
+    @BindView(R.id.pin_code_edit_text)
     PinCodeInputTextView pinCodeEditText;
-    @Bind(R.id.login_instructions_text)
+    @BindView(R.id.login_instructions_text)
     TextView instructionsText;
-    @Bind(R.id.login_button)
+    @BindView(R.id.login_button)
     Button loginButton;
-    @Bind(R.id.back_button)
+    @BindView(R.id.back_button)
     ImageButton backButton;
-    @Bind(R.id.slide_up_panel_container)
+    @BindView(R.id.slide_up_panel_container)
     SlideUpPanelLayout mSlideUpPanelLayout;
 
 

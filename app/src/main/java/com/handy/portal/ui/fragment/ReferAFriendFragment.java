@@ -27,7 +27,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -38,21 +38,21 @@ public class ReferAFriendFragment extends ActionBarFragment
     @Inject
     ProviderManager mProviderManager;
 
-    @Bind(R.id.envelope)
+    @BindView(R.id.envelope)
     View mEnvelope;
-    @Bind(R.id.envelope_shadow)
+    @BindView(R.id.envelope_shadow)
     View mEnvelopeShadow;
-    @Bind(R.id.bling)
+    @BindView(R.id.bling)
     View mBling;
 
-    @Bind(R.id.title)
+    @BindView(R.id.title)
     TextView mTitleText;
-    @Bind(R.id.referral_code_text)
+    @BindView(R.id.referral_code_text)
     TextView mReferralCodeText;
 
-    @Bind(R.id.fetch_error_view)
+    @BindView(R.id.fetch_error_view)
     ViewGroup fetchErrorLayout;
-    @Bind(R.id.fetch_error_text)
+    @BindView(R.id.fetch_error_text)
     TextView fetchErrorText;
 
     private View fragmentView;

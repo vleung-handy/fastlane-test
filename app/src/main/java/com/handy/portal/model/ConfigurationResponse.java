@@ -52,6 +52,9 @@ public class ConfigurationResponse
     @SerializedName("customer_no_show_modal_enabled")
     private boolean mCustomerNoShowModalEnabled;
 
+    @SerializedName("number_of_days_for_requested_jobs")
+    private int mNumberOfDaysForRequestedJobs;
+
     public boolean isCustomerNoShowModalEnabled()
     {
         return mCustomerNoShowModalEnabled;
@@ -70,6 +73,11 @@ public class ConfigurationResponse
     public boolean isBookingGeofenceServiceEnabled()
     {
         return mBookingGeofenceServiceEnabled;
+    }
+
+    public boolean isLocationServiceEnabled()
+    {
+        return mLocationScheduleServiceEnabled || mBookingGeofenceServiceEnabled;
     }
 
     public boolean isBoxedSuppliesEnabled()
@@ -120,6 +128,11 @@ public class ConfigurationResponse
     public boolean shouldUseHelpCenterWebView()
     {
         return mHelpCenterInfo != null && mHelpCenterInfo.shouldUseHelpCenterWebView();
+    }
+
+    public int getNumberOfDaysForRequestedJobs()
+    {
+        return mNumberOfDaysForRequestedJobs;
     }
 
     public int getNumberOfDaysForAvailableJobs()

@@ -9,15 +9,15 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 public class DashboardTiersHeaderView extends FrameLayout
 {
-    @Bind(R.id.current_week_completed_jobs_text)
+    @BindView(R.id.current_week_completed_jobs_text)
     TextView mCurrentWeekCompletedJobsText;
-    @Bind(R.id.current_week_text)
+    @BindView(R.id.current_week_text)
     TextView mCurrentWeekText;
 
     public DashboardTiersHeaderView(final Context context)
