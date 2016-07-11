@@ -2,6 +2,8 @@ package com.handy.portal.location.manager;
 
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.location.LocationEvent;
+import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.model.ConfigurationResponse;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -23,11 +25,13 @@ import javax.inject.Inject;
 public class LocationScheduleUpdateManager
 {
     private final EventBus mBus;
+    private final ConfigManager mConfigManager;
 
     @Inject
-    public LocationScheduleUpdateManager(final EventBus bus)
+    public LocationScheduleUpdateManager(final EventBus bus, final ConfigManager configManager)
     {
         mBus = bus;
+        mConfigManager = configManager;
         mBus.register(this);
     }
 
@@ -35,36 +39,49 @@ public class LocationScheduleUpdateManager
     @Subscribe
     public void onReceiveClaimJobSuccess(HandyEvent.ReceiveClaimJobSuccess event)
     {
-        mBus.post(new LocationEvent.RequestLocationSchedule());
+        requestLocationScheduleIfNecessary();
     }
 
     @Subscribe
     public void onReceiveClaimJobsSuccess(HandyEvent.ReceiveClaimJobsSuccess event)
     {
-        mBus.post(new LocationEvent.RequestLocationSchedule());
+        requestLocationScheduleIfNecessary();
     }
 
     @Subscribe
     public void onReceiveRemoveJobSuccess(HandyEvent.ReceiveRemoveJobSuccess event)
     {
-        mBus.post(new LocationEvent.RequestLocationSchedule());
+        requestLocationScheduleIfNecessary();
     }
 
     @Subscribe
     public void onReceiveScheduledBookingsBatchSuccess(HandyEvent.ReceiveScheduledBookingsBatchSuccess event)
     {
-        mBus.post(new LocationEvent.RequestLocationSchedule());
+        requestLocationScheduleIfNecessary();
     }
 
     @Subscribe
     public void onLoginSuccess(HandyEvent.ReceiveLoginSuccess event)
     {
-        mBus.post(new LocationEvent.RequestLocationSchedule());
+        requestLocationScheduleIfNecessary();
     }
 
     @Subscribe
     public void onLocationServiceStarted(LocationEvent.LocationServiceStarted event)
     {
-        mBus.post(new LocationEvent.RequestLocationSchedule());
+        requestLocationScheduleIfNecessary();
+    }
+
+    /**
+     * requests the location schedule if config params are on
+     * TODO clean way to get reference to a context so we can check if service is running?
+     */
+    private void requestLocationScheduleIfNecessary()
+    {
+        ConfigurationResponse configurationResponse = mConfigManager.getConfigurationResponse();
+        if(configurationResponse != null && configurationResponse.isLocationServiceEnabled())
+        {
+            mBus.post(new LocationEvent.RequestLocationSchedule());
+        }
     }
 }
