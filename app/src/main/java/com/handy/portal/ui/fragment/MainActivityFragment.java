@@ -100,6 +100,8 @@ public class MainActivityFragment extends InjectedFragment
     TabbedLayout mContentFrame;
     @BindView(R.id.build_version_text)
     TextView mBuildVersionText;
+    @BindView(R.id.software_licenses_text)
+    TextView mSoftwareLicensesText;
 
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private MainViewPage currentPage = null;
@@ -419,6 +421,14 @@ public class MainActivityFragment extends InjectedFragment
     {
         registerBottomNavListeners();
         registerNavDrawerListeners();
+        mSoftwareLicensesText.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(final View v)
+            {
+                bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SOFTWARE_LICENSES, true));
+            }
+        });
     }
 
     private void registerBottomNavListeners()
