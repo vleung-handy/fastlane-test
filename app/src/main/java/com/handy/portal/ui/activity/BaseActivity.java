@@ -426,9 +426,9 @@ public abstract class BaseActivity extends AppCompatActivity
     {
         ConfigurationResponse configurationResponse = mConfigManager.getConfigurationResponse();
         return configurationResponse != null
-                && (configurationResponse.isLocationScheduleServiceEnabled()
-                || configurationResponse.isBookingGeofenceServiceEnabled());
+                && configurationResponse.isLocationServiceEnabled();
     }
+
     /**
      * TODO: this is temporary to handle case in which config response comes back later
      * ideally, we should probably block the app until the config response is received

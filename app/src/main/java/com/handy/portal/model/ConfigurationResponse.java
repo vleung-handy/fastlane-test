@@ -75,6 +75,11 @@ public class ConfigurationResponse
         return mBookingGeofenceServiceEnabled;
     }
 
+    public boolean isLocationServiceEnabled()
+    {
+        return mLocationScheduleServiceEnabled || mBookingGeofenceServiceEnabled;
+    }
+
     public boolean isBoxedSuppliesEnabled()
     {
         return mBoxedSuppliesEnabled;
