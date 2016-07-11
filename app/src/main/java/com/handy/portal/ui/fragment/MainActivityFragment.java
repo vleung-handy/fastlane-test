@@ -431,7 +431,7 @@ public class MainActivityFragment extends InjectedFragment
         mScheduleButton = new TabButton(getContext())
                 .init(R.string.tab_schedule, R.drawable.ic_menu_schedule);
         mAlertsButton = new TabButton(getContext())
-                .init(R.string.tab_alerts, R.drawable.ic_menu_notifications);
+                .init(R.string.tab_alerts, R.drawable.ic_menu_alerts);
         mButtonMore = new TabButton(getContext())
                 .init(R.string.tab_more, R.drawable.ic_menu_more);
         mButtonMore.setId(R.id.tab_nav_item_more);
