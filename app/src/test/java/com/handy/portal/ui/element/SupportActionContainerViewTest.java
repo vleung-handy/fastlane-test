@@ -2,24 +2,17 @@ package com.handy.portal.ui.element;
 
 import android.view.View;
 
-import com.handy.portal.BuildConfig;
+import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.util.SupportActionUtils;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricGradleTestRunner;
 import org.robolectric.RuntimeEnvironment;
-import org.robolectric.annotation.Config;
 
 import static org.junit.Assert.assertEquals;
 
-@RunWith(RobolectricGradleTestRunner.class)
-@Config(constants = BuildConfig.class,
-        packageName = "com.handy.portal",
-        sdk = 19)
-public class SupportActionContainerViewTest
+public class SupportActionContainerViewTest extends RobolectricGradleTestWrapper
 {
     private SupportActionContainerView mView;
 

@@ -4,6 +4,9 @@ import android.app.Application;
 
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
+import com.handy.portal.bookings.ui.fragment.BookingDetailsWrapperFragment;
+import com.handy.portal.bookings.ui.fragment.BookingFragment;
+import com.handy.portal.bookings.ui.fragment.InProgressBookingFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragmentTest;
@@ -29,6 +32,8 @@ import com.handy.portal.payments.ui.fragment.PaymentsFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsFragmentTest;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
+import com.handy.portal.retrofit.logevents.EventLogService;
+import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
@@ -50,6 +55,7 @@ import dagger.Module;
 import dagger.Provides;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 @Module(injects = {
@@ -75,6 +81,9 @@ import static org.mockito.Mockito.when;
         SendReceiptCheckoutFragmentTest.class,
         PaymentBatchListAdapter.class,
         BaseActivity.SetupHandler.class,
+        BookingDetailsWrapperFragment.class,
+        BookingFragment.class,
+        InProgressBookingFragment.class,
 }, library = true)
 public class TestApplicationModule
 {
@@ -101,9 +110,10 @@ public class TestApplicationModule
     }
 
     @Provides
+    @Singleton
     final HandyRetrofitEndpoint provideHandyEndpoint()
     {
-        return mock(HandyRetrofitEndpoint.class);
+        return new HandyRetrofitEndpoint(mApplication);
     }
 
     @Provides
@@ -114,16 +124,20 @@ public class TestApplicationModule
 
     @Provides
     @Singleton
-    final DataManager provideDataManager()
+    final DataManager provideDataManager(final HandyRetrofitEndpoint endpoint)
     {
-        return mock(TestDataManager.class);
+        return new TestDataManager(
+                mock(HandyRetrofitService.class),
+                endpoint,
+                mock(StripeRetrofitService.class),
+                mock(EventLogService.class));
     }
 
     @Provides
     @Singleton
     final EventBus provideBus()
     {
-        return mock(EventBus.class);
+        return spy(new EventBus());
     }
 
     @Provides
@@ -139,9 +153,11 @@ public class TestApplicationModule
     }
 
     @Provides
-    final BookingManager provideBookingManager()
+    @Singleton
+    final BookingManager provideBookingManager(final EventBus bus,
+                                               final DataManager dataManager)
     {
-        return mock(BookingManager.class);
+        return new BookingManager(bus, dataManager);
     }
 
     @Provides
