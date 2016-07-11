@@ -17,6 +17,12 @@ public class TestUsers
             "test_persistence_token"
     );
 
+    public static TestUser ONBOARDING_TEST_PROVIDER = new TestUser(
+            "6460000002",
+            "123456",
+            "test_persistence_token_onboarding"
+    );
+
     public static TestUser CHECK_OUT_TEST_PROVIDER = new TestUser(
             "6466669879",
             "123456",
