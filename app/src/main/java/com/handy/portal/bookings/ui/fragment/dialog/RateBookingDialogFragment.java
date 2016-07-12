@@ -41,7 +41,7 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -52,17 +52,17 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     @Inject
     EventBus mBus;
 
-    @Bind(R.id.rate_booking_amount_text)
+    @BindView(R.id.rate_booking_amount_text)
     TextView mAmountText;
-    @Bind(R.id.rate_booking_bonus_amount_text)
+    @BindView(R.id.rate_booking_bonus_amount_text)
     TextView mBonusAmountText;
-    @Bind(R.id.rate_booking_experience_text)
+    @BindView(R.id.rate_booking_experience_text)
     TextView mExperienceText;
-    @Bind(R.id.rate_booking_comment_text)
+    @BindView(R.id.rate_booking_comment_text)
     EditText mCommentText;
-    @Bind(R.id.rate_booking_rating_radiogroup)
+    @BindView(R.id.rate_booking_rating_radiogroup)
     RadioGroup mRatingRadioGroup;
-    @Bind(R.id.rate_booking_submit_button)
+    @BindView(R.id.rate_booking_submit_button)
     Button mSubmitButton;
 
     public static final String FRAGMENT_TAG = "fragment_dialog_rate_booking";

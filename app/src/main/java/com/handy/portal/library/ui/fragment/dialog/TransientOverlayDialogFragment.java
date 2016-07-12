@@ -14,7 +14,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TransientOverlayDialogFragment extends DialogFragment //TODO: make other transient dialog fragments extend from this
@@ -23,9 +23,9 @@ public class TransientOverlayDialogFragment extends DialogFragment //TODO: make 
     private int imageId = R.drawable.ic_success_circle;
     private int textId = R.string.special_empty_string;
 
-    @Bind(R.id.transition_overlay_image)
+    @BindView(R.id.transition_overlay_image)
     ImageView icon;
-    @Bind(R.id.transition_overlay_text)
+    @BindView(R.id.transition_overlay_text)
     TextView display;
 
     public static TransientOverlayDialogFragment newInstance(int animationId, int imageId, int textId)

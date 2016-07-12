@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -17,13 +17,13 @@ import butterknife.ButterKnife;
  */
 public class BookingsAccessLockedView extends FrameLayout
 {
-    @Bind(R.id.layout_job_access_locked_title)
+    @BindView(R.id.layout_job_access_locked_title)
     TextView mTitleText;
 
-    @Bind(R.id.layout_job_access_locked_description)
+    @BindView(R.id.layout_job_access_locked_description)
     TextView mDescriptionText;
 
-    @Bind(R.id.layout_job_access_locked_keep_rate_info_button)
+    @BindView(R.id.layout_job_access_locked_keep_rate_info_button)
     TextView mKeepRateInfoButton;
 
     public BookingsAccessLockedView(final Context context)

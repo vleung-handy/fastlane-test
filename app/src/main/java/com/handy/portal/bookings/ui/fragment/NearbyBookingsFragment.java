@@ -43,7 +43,7 @@ import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class NearbyBookingsFragment extends ActionBarFragment
@@ -54,19 +54,19 @@ public class NearbyBookingsFragment extends ActionBarFragment
     @Inject
     ProviderManager mProviderManager;
 
-    @Bind(R.id.nearby_bookings_description)
+    @BindView(R.id.nearby_bookings_description)
     TextView mDescriptionText;
-    @Bind(R.id.nearby_bookings_map)
+    @BindView(R.id.nearby_bookings_map)
     ViewGroup mMapContainer;
-    @Bind(R.id.booking_info_timer)
+    @BindView(R.id.booking_info_timer)
     TextView mBookingTimerText;
-    @Bind(R.id.booking_info_address)
+    @BindView(R.id.booking_info_address)
     TextView mBookingAddressText;
-    @Bind(R.id.booking_info_time)
+    @BindView(R.id.booking_info_time)
     TextView mBookingTimeText;
-    @Bind(R.id.booking_info_claim_button)
+    @BindView(R.id.booking_info_claim_button)
     Button mBookingClaimButton;
-    @Bind(R.id.booking_info_distance)
+    @BindView(R.id.booking_info_distance)
     TextView mBookingDistanceText;
 
     private ArrayList<Booking> mBookings;

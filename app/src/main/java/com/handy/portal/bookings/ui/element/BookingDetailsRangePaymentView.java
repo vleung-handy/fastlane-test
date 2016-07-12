@@ -11,14 +11,14 @@ import android.widget.FrameLayout;
 import com.handy.portal.R;
 import com.handy.portal.payments.model.PaymentInfo;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class BookingDetailsRangePaymentView extends FrameLayout
 {
-    @Bind(R.id.minimum_payment)
+    @BindView(R.id.minimum_payment)
     BookingDetailsSinglePaymentView mMinimumPayment;
-    @Bind(R.id.maximum_payment)
+    @BindView(R.id.maximum_payment)
     BookingDetailsSinglePaymentView mMaximumPayment;
 
     public BookingDetailsRangePaymentView(final Context context)

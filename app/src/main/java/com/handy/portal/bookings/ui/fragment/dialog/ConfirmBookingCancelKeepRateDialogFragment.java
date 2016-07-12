@@ -22,23 +22,23 @@ import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 
 public class ConfirmBookingCancelKeepRateDialogFragment extends ConfirmBookingActionDialogFragment
 {
     public static final String FRAGMENT_TAG = ConfirmBookingCancelKeepRateDialogFragment.class.getSimpleName();
 
-    @Bind(R.id.keep_rate)
+    @BindView(R.id.keep_rate)
     View mKeepRateView;
-    @Bind(R.id.old_keep_rate)
+    @BindView(R.id.old_keep_rate)
     TextView mOldKeepRateText;
-    @Bind(R.id.new_keep_rate)
+    @BindView(R.id.new_keep_rate)
     TextView mNewKeepRateText;
-    @Bind(R.id.no_keep_rate)
+    @BindView(R.id.no_keep_rate)
     View mNoKeepRateView;
-    @Bind(R.id.no_fee_notice)
+    @BindView(R.id.no_fee_notice)
     View mNoFeeNoticeView;
-    @Bind(R.id.withholding_fee_notice)
+    @BindView(R.id.withholding_fee_notice)
     TextView mWithholdingFeeNoticeText;
 
     @Inject

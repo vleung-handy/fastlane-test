@@ -38,7 +38,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -46,17 +46,17 @@ public class ProRequestedJobsFragment extends ActionBarFragment
 {
     public static final int REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE = 14;//TODO: Make this a config param
 
-    @Bind(R.id.fragment_pro_requested_jobs_list_view)
+    @BindView(R.id.fragment_pro_requested_jobs_list_view)
     ProRequestedJobsExpandableListView mProRequestedJobsExpandableListView;
-    @Bind(R.id.pro_requested_bookings_empty)
+    @BindView(R.id.pro_requested_bookings_empty)
     SafeSwipeRefreshLayout mEmptyJobsSwipeRefreshLayout;
-    @Bind(R.id.fragment_pro_requested_jobs_list_swipe_refresh_layout)
+    @BindView(R.id.fragment_pro_requested_jobs_list_swipe_refresh_layout)
     SafeSwipeRefreshLayout mJobListSwipeRefreshLayout;
-    @Bind(R.id.loading_overlay)
+    @BindView(R.id.loading_overlay)
     RelativeLayout mLoadingOverlay;
-    @Bind(R.id.fetch_error_view)
+    @BindView(R.id.fetch_error_view)
     LinearLayout mFetchErrorView;
-    @Bind(R.id.fetch_error_text)
+    @BindView(R.id.fetch_error_text)
     TextView mFetchErrorText;
 
     @Inject
@@ -174,7 +174,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         //this fragment doesn't use the universal overlay, so make sure it's hidden
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
-        setActionBar(R.string.your_requests, true);
+        setActionBarTitle(R.string.your_requests);
         mJobListSwipeRefreshLayout.setRefreshing(false);
         if (!mProRequestedJobsExpandableListView.hasValidData())
         {
@@ -224,6 +224,16 @@ public class ProRequestedJobsFragment extends ActionBarFragment
 
     private List<Date> getDatesForBookings()
     {
+        if (configManager.getConfigurationResponse() != null)
+        {
+            int numDaysForRequestedJobs = configManager.getConfigurationResponse()
+                    .getNumberOfDaysForRequestedJobs();
+            if (numDaysForRequestedJobs != 0)
+            {
+                return DateTimeUtils.getDateWithoutTimeList(new Date(),
+                        numDaysForRequestedJobs);
+            }
+        }
         return DateTimeUtils.getDateWithoutTimeList(new Date(), REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
     }
 

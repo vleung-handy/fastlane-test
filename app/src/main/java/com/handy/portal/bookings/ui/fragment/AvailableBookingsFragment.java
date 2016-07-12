@@ -8,17 +8,14 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SwitchCompat;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
-import com.handy.portal.bookings.BookingEvent;
-import com.handy.portal.bookings.BookingModalsManager;
-import com.handy.portal.bookings.BookingModalsManager.BookingsForDaysAheadModalsManager;
+import com.handy.portal.bookings.manager.BookingModalsManager;
+import com.handy.portal.bookings.manager.BookingModalsManager.BookingsForDaysAheadModalsManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
@@ -31,7 +28,6 @@ import com.handy.portal.bookings.ui.fragment.dialog.JobAccessUnlockedDialogFragm
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
@@ -50,32 +46,30 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 
-import static com.handy.portal.bookings.BookingModalsManager.BookingsForDaysAheadModalsManager.BookingsForDaysAheadModalType;
+import static com.handy.portal.bookings.manager.BookingModalsManager.BookingsForDaysAheadModalsManager.BookingsForDaysAheadModalType;
 
 public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.ReceiveAvailableBookingsSuccess>
 {
     private final static int DEFAULT_NUM_DAYS_SPANNING_AVAILABLE_BOOKINGS = 7; //includes Today
     private static final String SOURCE_AVAILABLE_JOBS_LIST = "available_jobs_list";
 
-    @Bind(R.id.available_jobs_list_view)
+    @BindView(R.id.available_jobs_list_view)
     BookingListView mAvailableJobsListView;
-    @Bind(R.id.available_bookings_dates_scroll_view_layout)
+    @BindView(R.id.available_bookings_dates_scroll_view_layout)
     LinearLayout mAvailableJobsDatesScrollViewLayout;
-    @Bind(R.id.available_bookings_empty)
+    @BindView(R.id.available_bookings_empty)
     SwipeRefreshLayout mNoAvailableBookingsLayout;
-    @Bind(R.id.layout_job_access_locked)
+    @BindView(R.id.layout_job_access_locked)
     BookingsAccessLockedView mJobAccessLockedLayout;
-    @Bind(R.id.toggle_available_job_notification)
+    @BindView(R.id.toggle_available_job_notification)
     SwitchCompat mToggleAvailableJobNotification;
 
     BookingsBannerView mJobAccessUnlockedBannerLayout;
 
     @Inject
     BookingModalsManager mBookingModalsManager;
-
-    private MenuItem mMenuProRequestedJobs;
 
     @Override
     protected MainViewPage getAppPage()
@@ -122,12 +116,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 mToggleAvailableJobNotification.setVisibility(View.VISIBLE);
             }
             setLateDispatchOptInToggleListener();
-
-            if (configManager.getConfigurationResponse() != null &&
-                    configManager.getConfigurationResponse().isPendingRequestsInboxEnabled())
-            {
-                requestRequestedAvailableJobs();
-            }
         }
     }
 
@@ -138,59 +126,11 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         super.onPause();
     }
 
-    private void requestRequestedAvailableJobs()
-    {
-        //TODO: Days should be behind a config param, just using a static const until then
-        List<Date> datesForBookings = DateTimeUtils.getDateWithoutTimeList(new Date(), ProRequestedJobsFragment.REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
-        bus.post(new BookingEvent.RequestProRequestedJobs(datesForBookings, true));
-    }
-
-    @Subscribe
-    public void onReceiveProRequestedJobsSuccess(BookingEvent.ReceiveProRequestedJobsSuccess event)
-    {
-        List<BookingsWrapper> proRequestedJobsList = event.getProRequestedJobs();
-        if (mMenuProRequestedJobs != null && proRequestedJobsList != null)
-        {
-            //not bound because manually inflated
-            TextView displayCountText = (TextView) mMenuProRequestedJobs.getActionView().findViewById(R.id.action_pro_requested_jobs_layout_count_text);
-            if (displayCountText == null)
-            {
-                return;
-            }
-
-            //Show and update count
-            int countOfRequestedJobs = 0;
-            for (BookingsWrapper wrapper : event.getProRequestedJobs())
-            {
-                countOfRequestedJobs += wrapper.getBookings().size();
-            }
-
-            //If no unclaimed jobs don't show icon and count
-            if (countOfRequestedJobs > 0)
-            {
-                displayCountText.setVisibility(View.VISIBLE);
-                displayCountText.setText(Integer.toString(countOfRequestedJobs));
-            }
-            else
-            {
-                //hide the counter
-                displayCountText.setVisibility(View.INVISIBLE);
-            }
-        }
-    }
-
     @Override
     public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
     {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_available_bookings, menu);
-        mMenuProRequestedJobs = menu.findItem(R.id.action_pro_requested_jobs);
-        initProRequestedJobsMenuItem();
-    }
-
-    private void showProRequestedJobsInbox()
-    {
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.REQUESTED_JOBS, null, TransitionStyle.SLIDE_UP, true));
     }
 
     protected BookingListView getBookingListView()
@@ -289,33 +229,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.DateClicked(dateOfBookings, bookingsForDay.size())));
         super.afterDisplayBookings(bookingsForDay, dateOfBookings);
-    }
-
-    private void initProRequestedJobsMenuItem()
-    {
-        if (mMenuProRequestedJobs != null)
-        {
-            if (mConfigManager.getConfigurationResponse() != null
-                    && mConfigManager.getConfigurationResponse().isPendingRequestsInboxEnabled())
-            {
-                requestRequestedAvailableJobs();
-                mMenuProRequestedJobs.setVisible(true);
-
-                //Need to use the click listener instead of menu listener in the action view because of the custom view
-                mMenuProRequestedJobs.getActionView().setOnClickListener(new View.OnClickListener()
-                {
-                    @Override
-                    public void onClick(final View v)
-                    {
-                        showProRequestedJobsInbox();
-                    }
-                });
-            }
-            else
-            {
-                mMenuProRequestedJobs.setVisible(false);
-            }
-        }
     }
 
     /**

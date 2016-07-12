@@ -27,21 +27,21 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.Date;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.ReceiveScheduledBookingsSuccess>
 {
     private static final String SOURCE_SCHEDULED_JOBS_LIST = "scheduled_jobs_list";
-    @Bind(R.id.scheduled_jobs_list_view)
+    @BindView(R.id.scheduled_jobs_list_view)
     BookingListView mScheduledJobsListView;
-    @Bind(R.id.scheduled_bookings_dates_scroll_view_layout)
+    @BindView(R.id.scheduled_bookings_dates_scroll_view_layout)
     LinearLayout mScheduledJobsDatesScrollViewLayout;
-    @Bind(R.id.scheduled_bookings_empty)
+    @BindView(R.id.scheduled_bookings_empty)
     SwipeRefreshLayout mNoScheduledBookingsLayout;
-    @Bind(R.id.find_jobs_for_day_button)
+    @BindView(R.id.find_jobs_for_day_button)
     Button mFindJobsForDayButton;
-    @Bind(R.id.find_matching_jobs_button_container)
+    @BindView(R.id.find_matching_jobs_button_container)
     ViewGroup mFindMatchingJobsButtonContainer;
 
     @Override

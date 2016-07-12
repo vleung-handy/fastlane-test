@@ -28,22 +28,22 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
 {
-    @Bind(R.id.debit_card_number_field)
+    @BindView(R.id.debit_card_number_field)
     FormFieldTableRow debitCardNumberField;
 
-    @Bind(R.id.expiration_date_field)
+    @BindView(R.id.expiration_date_field)
     DateFormFieldTableRow expirationDateField;
 
-    @Bind(R.id.security_code_field)
+    @BindView(R.id.security_code_field)
     FormFieldTableRow securityCodeField;
 
-    @Bind(R.id.tax_id_field)
+    @BindView(R.id.tax_id_field)
     FormFieldTableRow taxIdField;
 
     @Inject

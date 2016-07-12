@@ -29,7 +29,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -38,19 +38,19 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     @Inject
     EventBus mBus;
 
-    @Bind(R.id.weekly_tier_text)
+    @BindView(R.id.weekly_tier_text)
     TextView mWeeklyTierText;
-    @Bind(R.id.tier_hourly_rate)
+    @BindView(R.id.tier_hourly_rate)
     TextView mTierHourlyRateText;
-    @Bind(R.id.first_feedback_title)
+    @BindView(R.id.first_feedback_title)
     TextView mFirstFeedbackTitleText;
-    @Bind(R.id.dashboard_first_review)
+    @BindView(R.id.dashboard_first_review)
     ViewGroup mFirstReview;
-    @Bind(R.id.review_text)
+    @BindView(R.id.review_text)
     TextView mReviewText;
-    @Bind(R.id.five_star_reviews_count)
+    @BindView(R.id.five_star_reviews_count)
     TextView mReviewsCountText;
-    @Bind(R.id.review_date)
+    @BindView(R.id.review_date)
     TextView mReviewDate;
 
     private ProviderEvaluation mProviderEvaluation;

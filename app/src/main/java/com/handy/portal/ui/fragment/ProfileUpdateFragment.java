@@ -38,35 +38,35 @@ import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ProfileUpdateFragment extends ActionBarFragment
 {
-    @Bind(R.id.provider_name_edit_text)
+    @BindView(R.id.provider_name_edit_text)
     EditText mNameText;
-    @Bind(R.id.provider_email_edit_text)
+    @BindView(R.id.provider_email_edit_text)
     EditText mEmailText;
-    @Bind(R.id.provider_email_error_indicator)
+    @BindView(R.id.provider_email_error_indicator)
     ImageView mEmailError;
-    @Bind(R.id.provider_address_edit_text)
+    @BindView(R.id.provider_address_edit_text)
     EditText mAddressText;
-    @Bind(R.id.provider_address2_edit_text)
+    @BindView(R.id.provider_address2_edit_text)
     EditText mAddress2Text;
-    @Bind(R.id.provider_address_error_indicator)
+    @BindView(R.id.provider_address_error_indicator)
     ImageView mAddressError;
-    @Bind(R.id.provider_city_edit_text)
+    @BindView(R.id.provider_city_edit_text)
     EditText mCityText;
-    @Bind(R.id.provider_state_edit_text)
+    @BindView(R.id.provider_state_edit_text)
     EditText mStateText;
-    @Bind(R.id.provider_zip_code_edit_text)
+    @BindView(R.id.provider_zip_code_edit_text)
     EditText mZipCodeText;
-    @Bind(R.id.provider_area_error_indicator)
+    @BindView(R.id.provider_area_error_indicator)
     ImageView mAreaError;
-    @Bind(R.id.provider_phone_edit_text)
+    @BindView(R.id.provider_phone_edit_text)
     EditText mPhoneText;
-    @Bind(R.id.provider_phone_error_indicator)
+    @BindView(R.id.provider_phone_error_indicator)
     ImageView mPhoneError;
 
     @Inject
@@ -206,6 +206,11 @@ public class ProfileUpdateFragment extends ActionBarFragment
 
     private boolean validate()
     {
+        if (mFormDefinitionWrapper == null)
+        {
+            // Server issue, assigned as part of success callback
+            return false;
+        }
         Map<String, FieldDefinition> fieldDefinitionMap = mFormDefinitionWrapper.getFieldDefinitionsForForm(FormDefinitionKey.UPDATE_PROVIDER_INFO);
         if (fieldDefinitionMap == null) { return true; }
 
@@ -232,6 +237,8 @@ public class ProfileUpdateFragment extends ActionBarFragment
 
     private void updateFormWithDefinitions()
     {
+        if (mFormDefinitionWrapper == null)
+        { return; }
         Map<String, FieldDefinition> fieldDefinitionMap = mFormDefinitionWrapper.getFieldDefinitionsForForm(FormDefinitionKey.UPDATE_PROVIDER_INFO);
         if (fieldDefinitionMap != null)
         {

@@ -16,8 +16,8 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
 import butterknife.BindInt;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -32,13 +32,13 @@ public class CollapsibleContentLayout extends LinearLayout
     private static final int CHEVRON_DEGREES_COLLAPSED = 0;
     private static final float PIVOT_CENTER = 0.5f;
     private ViewGroup mContent;
-    @Bind(R.id.icon)
+    @BindView(R.id.icon)
     ImageView mIcon;
-    @Bind(R.id.title)
+    @BindView(R.id.title)
     TextView mTitle;
-    @Bind(R.id.subtitle)
+    @BindView(R.id.subtitle)
     TextView mSubtitle;
-    @Bind(R.id.chevron)
+    @BindView(R.id.chevron)
     ImageView mChevron;
     @BindInt(R.integer.chevron_rotation_duration_millis)
     int mChevronRotationDurationMillis;

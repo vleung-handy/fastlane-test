@@ -20,15 +20,15 @@ import com.handy.portal.onboarding.model.supplies.SuppliesSection;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 
 public class PurchaseSuppliesFragment extends OnboardingSubflowFragment
 {
-    @Bind(R.id.cost_summary)
+    @BindView(R.id.cost_summary)
     SimpleContentLayout mCostSummary;
-    @Bind(R.id.delivery_summary)
+    @BindView(R.id.delivery_summary)
     SimpleContentLayout mDeliverySummary;
-    @Bind(R.id.products_summary)
+    @BindView(R.id.products_summary)
     SimpleContentLayout mProductsSummary;
 
     private SuppliesInfo mSuppliesInfo;

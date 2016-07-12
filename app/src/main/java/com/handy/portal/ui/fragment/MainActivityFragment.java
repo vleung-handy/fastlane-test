@@ -23,6 +23,9 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
+import com.handy.portal.bookings.BookingEvent;
+import com.handy.portal.bookings.model.BookingsWrapper;
+import com.handy.portal.bookings.ui.fragment.ProRequestedJobsFragment;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
@@ -34,6 +37,7 @@ import com.handy.portal.library.ui.fragment.dialog.TransientOverlayDialogFragmen
 import com.handy.portal.library.ui.layout.TabbedLayout;
 import com.handy.portal.library.ui.widget.TabButton;
 import com.handy.portal.library.ui.widget.TabButtonGroup;
+import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
@@ -42,14 +46,16 @@ import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
-import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.util.DeeplinkMapper;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivityFragment extends InjectedFragment
@@ -60,39 +66,42 @@ public class MainActivityFragment extends InjectedFragment
     ConfigManager mConfigManager;
     /////////////Bad useless injection that breaks if not in?
 
-    @Bind(R.id.tabs)
+    @BindView(R.id.tabs)
     TabButtonGroup mTabs;
     private TabButton mJobsButton;
+    private TabButton mRequestsButton;
     private TabButton mScheduleButton;
-    private TabButton mNotificationsButton;
+    private TabButton mAlertsButton;
     private TabButton mButtonMore;
 
-    @Bind(R.id.loading_overlay)
+    @BindView(R.id.loading_overlay)
     View mLoadingOverlayView;
-    @Bind(R.id.nav_link_payments)
+    @BindView(R.id.nav_link_payments)
     RadioButton mNavLinkPayments;
-    @Bind(R.id.nav_link_ratings_and_feedback)
+    @BindView(R.id.nav_link_ratings_and_feedback)
     RadioButton mNavLinkRatingsAndFeedback;
-    @Bind(R.id.nav_link_refer_a_friend)
+    @BindView(R.id.nav_link_refer_a_friend)
     RadioButton mNavLinkReferAFriend;
-    @Bind(R.id.nav_link_account_settings)
+    @BindView(R.id.nav_link_account_settings)
     RadioButton mNavAccountSettings;
-    @Bind(R.id.nav_link_video_library)
+    @BindView(R.id.nav_link_video_library)
     RadioButton mNavLinkVideoLibrary;
-    @Bind(R.id.nav_link_help)
+    @BindView(R.id.nav_link_help)
     RadioButton mNavLinkHelp;
-    @Bind(R.id.drawer_layout)
+    @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
-    @Bind(R.id.navigation_drawer)
+    @BindView(R.id.navigation_drawer)
     RelativeLayout mNavigationDrawer;
-    @Bind(R.id.nav_tray_links)
+    @BindView(R.id.nav_tray_links)
     RadioGroup mNavTrayLinks;
-    @Bind(R.id.navigation_header)
+    @BindView(R.id.navigation_header)
     TextView mNavigationHeader;
-    @Bind(R.id.content_frame)
+    @BindView(R.id.content_frame)
     TabbedLayout mContentFrame;
-    @Bind(R.id.build_version_text)
+    @BindView(R.id.build_version_text)
     TextView mBuildVersionText;
+    @BindView(R.id.software_licenses_text)
+    TextView mSoftwareLicensesText;
 
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private MainViewPage currentPage = null;
@@ -152,6 +161,13 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Override
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        initProRequestedJobs();
+    }
+
+    @Override
     public void onResume()
     {
         super.onResume();
@@ -168,24 +184,9 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onConfigurationResponseRetrieved(HandyEvent.ReceiveConfigurationSuccess event)
-    {
-        // this is a hotfix for a spike on missing location data
-        try
-        {
-            ((MainActivity) getActivity()).showNecessaryLocationSettingsAndPermissionsBlockers();
-            ((MainActivity) getActivity()).startLocationServiceIfNecessary();
-        }
-        catch (Exception e)
-        {
-            Crashlytics.logException(e);
-        }
-    }
-
-    @Subscribe
     public void onReceiveUnreadCountSuccess(NotificationEvent.ReceiveUnreadCountSuccess event)
     {
-        mNotificationsButton.setUnreadCount(event.getUnreadCount());
+        mAlertsButton.setUnreadCount(event.getUnreadCount());
     }
 
     private void setDeeplinkData(final Bundle savedInstanceState)
@@ -334,6 +335,12 @@ public class MainActivityFragment extends InjectedFragment
                 mNavTrayLinks.clearCheck();
             }
             break;
+            case REQUESTED_JOBS:
+            {
+                mRequestsButton.toggle();
+                mNavTrayLinks.clearCheck();
+            }
+            break;
             case SEND_RECEIPT_CHECKOUT:
             case SCHEDULED_JOBS:
             {
@@ -343,7 +350,7 @@ public class MainActivityFragment extends InjectedFragment
             break;
             case NOTIFICATIONS:
             {
-                mNotificationsButton.toggle();
+                mAlertsButton.toggle();
                 mNavTrayLinks.clearCheck();
             }
             break;
@@ -387,42 +394,75 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
+    @Subscribe
+    public void onReceiveProRequestedJobsSuccess(BookingEvent.ReceiveProRequestedJobsSuccess event)
+    {
+        List<BookingsWrapper> proRequestedJobsList = event.getProRequestedJobs();
+        if (mRequestsButton != null && proRequestedJobsList != null)
+        {
+            //Show and update count
+            int countOfRequestedJobs = 0;
+            for (BookingsWrapper wrapper : event.getProRequestedJobs())
+            {
+                countOfRequestedJobs += wrapper.getBookings().size();
+            }
+
+            //If no unclaimed jobs don't show icon and count
+            if (countOfRequestedJobs > 0)
+            {
+                mRequestsButton.setUnreadCount(countOfRequestedJobs);
+            }
+        }
+    }
+
 //Click Listeners
 
     private void registerButtonListeners()
     {
         registerBottomNavListeners();
         registerNavDrawerListeners();
+        mSoftwareLicensesText.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(final View v)
+            {
+                bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SOFTWARE_LICENSES, true));
+            }
+        });
     }
 
     private void registerBottomNavListeners()
     {
         mJobsButton = new TabButton(getContext())
                 .init(R.string.tab_claim, R.drawable.ic_menu_search);
+        mRequestsButton = new TabButton(getContext()).init(R.string.tab_requests,
+                R.drawable.ic_menu_requests);
+        mRequestsButton.setId(R.id.tab_nav_pro_requested_jobs);
         mScheduleButton = new TabButton(getContext())
                 .init(R.string.tab_schedule, R.drawable.ic_menu_schedule);
-        mNotificationsButton = new TabButton(getContext())
-                .init(R.string.tab_notifications, R.drawable.ic_menu_notifications);
+        mAlertsButton = new TabButton(getContext())
+                .init(R.string.tab_alerts, R.drawable.ic_menu_alerts);
         mButtonMore = new TabButton(getContext())
                 .init(R.string.tab_more, R.drawable.ic_menu_more);
         mButtonMore.setId(R.id.tab_nav_item_more);
-        mTabs.setTabs(mJobsButton, mScheduleButton, mNotificationsButton, mButtonMore);
+        mTabs.setTabs(mJobsButton, mRequestsButton, mScheduleButton, mAlertsButton, mButtonMore);
 
         mJobsButton.setOnClickListener(
                 new TabOnClickListener(mJobsButton, MainViewPage.AVAILABLE_JOBS));
+        mRequestsButton.setOnClickListener(new TabOnClickListener(mRequestsButton, MainViewPage.REQUESTED_JOBS));
         mScheduleButton.setOnClickListener(
                 new TabOnClickListener(mScheduleButton, MainViewPage.SCHEDULED_JOBS));
         mButtonMore.setOnClickListener(new MoreButtonOnClickListener());
 
         if (getConfigurationResponse() != null && getConfigurationResponse().shouldShowNotificationMenuButton())
         {
-            mNotificationsButton.setOnClickListener(
-                    new TabOnClickListener(mNotificationsButton, MainViewPage.NOTIFICATIONS));
-            mNotificationsButton.setVisibility(View.VISIBLE);
+            mAlertsButton.setOnClickListener(
+                    new TabOnClickListener(mAlertsButton, MainViewPage.NOTIFICATIONS));
+            mAlertsButton.setVisibility(View.VISIBLE);
         }
         else
         {
-            mNotificationsButton.setVisibility(View.GONE);
+            mAlertsButton.setVisibility(View.GONE);
         }
     }
 
@@ -626,5 +666,26 @@ public class MainActivityFragment extends InjectedFragment
         }
         startActivity(new Intent(getActivity(), LoginActivity.class));
         getActivity().finish();
+    }
+
+    private void initProRequestedJobs()
+    {
+        if (mConfigManager.getConfigurationResponse() != null
+                && mConfigManager.getConfigurationResponse().isPendingRequestsInboxEnabled())
+        {
+            requestRequestedAvailableJobs();
+            mRequestsButton.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mRequestsButton.setVisibility(View.GONE);
+        }
+    }
+
+    private void requestRequestedAvailableJobs()
+    {
+        //TODO: Days should be behind a config param, just using a static const until then
+        List<Date> datesForBookings = DateTimeUtils.getDateWithoutTimeList(new Date(), ProRequestedJobsFragment.REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
+        bus.post(new BookingEvent.RequestProRequestedJobs(datesForBookings, true));
     }
 }

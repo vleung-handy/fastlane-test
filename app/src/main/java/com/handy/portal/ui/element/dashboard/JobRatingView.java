@@ -9,15 +9,15 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 public class JobRatingView extends FrameLayout
 {
-    @Bind(R.id.number_text)
+    @BindView(R.id.number_text)
     TextView mNumberText;
-    @Bind(R.id.description_text)
+    @BindView(R.id.description_text)
     TextView mDescriptionText;
 
     public JobRatingView(final Context context)

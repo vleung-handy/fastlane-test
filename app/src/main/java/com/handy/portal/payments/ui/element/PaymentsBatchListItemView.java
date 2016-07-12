@@ -14,22 +14,22 @@ import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentGroup;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PaymentsBatchListItemView extends TableLayout
 {
 
-    @Bind(R.id.payments_batch_list_item_date_text)
+    @BindView(R.id.payments_batch_list_item_date_text)
     protected TextView dateText;
 
-    @Bind(R.id.payments_batch_list_item_payment_amount_text)
+    @BindView(R.id.payments_batch_list_item_payment_amount_text)
     protected TextView paymentAmountText;
 
-    @Bind(R.id.payments_batch_list_item_job_info_text)
+    @BindView(R.id.payments_batch_list_item_job_info_text)
     protected TextView jobInfoText;
 
-    @Bind(R.id.payments_batch_list_item_status_text)
+    @BindView(R.id.payments_batch_list_item_status_text)
     protected TextView statusText;
 
     public PaymentsBatchListItemView(Context context)

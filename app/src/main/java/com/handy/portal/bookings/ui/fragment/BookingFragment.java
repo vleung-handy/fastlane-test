@@ -1,7 +1,6 @@
 package com.handy.portal.bookings.ui.fragment;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -19,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
@@ -58,6 +58,7 @@ import com.handy.portal.model.LocationData;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.fragment.TimerActionBarFragment;
+import com.handy.portal.ui.view.FlowLayout;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -67,7 +68,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -80,55 +81,55 @@ public class BookingFragment extends TimerActionBarFragment
     @Inject
     PrefsManager mPrefsManager;
 
-    @Bind(R.id.booking_details_display_message_layout)
+    @BindView(R.id.booking_details_display_message_layout)
     BookingDetailsProRequestInfoView mBookingDetailsProRequestInfoView;
-    @Bind(R.id.booking_scroll_view)
+    @BindView(R.id.booking_scroll_view)
     ScrollView mScrollView;
-    @Bind(R.id.booking_no_show_banner_text)
+    @BindView(R.id.booking_no_show_banner_text)
     View mNoShowBanner;
-    @Bind(R.id.booking_map_view)
+    @BindView(R.id.booking_map_view)
     BookingMapView mBookingMapView;
-    @Bind(R.id.booking_customer_contact_layout)
+    @BindView(R.id.booking_customer_contact_layout)
     ViewGroup mBookingCustomerContactLayout;
-    @Bind(R.id.booking_customer_name_text)
+    @BindView(R.id.booking_customer_name_text)
     TextView mCustomerNameText;
-    @Bind(R.id.booking_address_title_text)
+    @BindView(R.id.booking_address_title_text)
     TextView mBookingAddressTitleText;
-    @Bind(R.id.booking_address_text)
+    @BindView(R.id.booking_address_text)
     TextView mBookingAddressText;
-    @Bind(R.id.booking_address_location_description_text)
+    @BindView(R.id.booking_address_location_description_text)
     TextView mBookingAddressLocationDescriptionText;
-    @Bind(R.id.booking_call_customer_view)
+    @BindView(R.id.booking_call_customer_view)
     ImageView mCallCustomerView;
-    @Bind(R.id.booking_message_customer_view)
+    @BindView(R.id.booking_message_customer_view)
     ImageView mMessageCustomerView;
-    @Bind(R.id.booking_get_directions_layout)
+    @BindView(R.id.booking_get_directions_layout)
     ViewGroup mGetDirectionsLayout;
-    @Bind(R.id.booking_job_date_text)
+    @BindView(R.id.booking_job_date_text)
     TextView mJobDateText;
-    @Bind(R.id.booking_job_time_text)
+    @BindView(R.id.booking_job_time_text)
     TextView mJobTimeText;
-    @Bind(R.id.booking_job_payment_text)
+    @BindView(R.id.booking_job_payment_text)
     TextView mJobPaymentText;
-    @Bind(R.id.booking_job_payment_bonus_text)
+    @BindView(R.id.booking_job_payment_bonus_text)
     TextView mJobPaymentBonusText;
-    @Bind(R.id.booking_frequency_text)
+    @BindView(R.id.booking_frequency_text)
     TextView mFrequencyTest;
-    @Bind(R.id.booking_support_button)
+    @BindView(R.id.booking_support_button)
     Button mSupportButton;
-    @Bind(R.id.booking_action_helper_text)
+    @BindView(R.id.booking_action_helper_text)
     TextView mBookingDetailsActionHelperText;
-    @Bind(R.id.booking_job_instructions_list_layout)
+    @BindView(R.id.booking_job_instructions_list_layout)
     LinearLayout mInstructionsLayout;
-    @Bind(R.id.booking_reveal_notice_text)
+    @BindView(R.id.booking_reveal_notice_text)
     TextView mRevealNoticeText;
-    @Bind(R.id.booking_nearby_transit_layout)
+    @BindView(R.id.booking_nearby_transit_layout)
     ViewGroup mBookingNearbyTransitLayout;
-    @Bind(R.id.nearby_transits)
-    LinearLayout mNearbyTransits;
-    @Bind(R.id.booking_job_number_text)
+    @BindView(R.id.nearby_transits)
+    FlowLayout mNearbyTransits;
+    @BindView(R.id.booking_job_number_text)
     TextView mJobNumberText;
-    @Bind(R.id.booking_action_button)
+    @BindView(R.id.booking_action_button)
     Button mActionButton;
 
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
@@ -515,13 +516,22 @@ public class BookingFragment extends TimerActionBarFragment
         bus.post(new HandyEvent.CallCustomerClicked());
 
         String phoneNumber = mBooking.getBookingPhone();
+        if (phoneNumber == null)
+        {
+            showInvalidPhoneNumberToast();
+            Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
+            return;
+        }
+
         try
         {
             Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), getContext());
         }
-        catch (ActivityNotFoundException activityException)
+        catch (Exception e)
         {
-            Crashlytics.logException(new RuntimeException("Calling a Phone Number failed", activityException));
+            Toast.makeText(getContext(),
+                    getString(R.string.unable_to_call_customer), Toast.LENGTH_SHORT).show();
+            Crashlytics.logException(new RuntimeException("Calling a Phone Number failed", e));
         }
     }
 
@@ -531,13 +541,22 @@ public class BookingFragment extends TimerActionBarFragment
         bus.post(new HandyEvent.TextCustomerClicked());
 
         String phoneNumber = mBooking.getBookingPhone();
+        if (phoneNumber == null)
+        {
+            showInvalidPhoneNumberToast();
+            Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
+            return;
+        }
+
         try
         {
             Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)), getContext());
         }
-        catch (ActivityNotFoundException activityException)
+        catch (Exception e)
         {
-            Crashlytics.logException(new RuntimeException("Texting a Phone Number failed", activityException));
+            Toast.makeText(getContext(),
+                    getString(R.string.unable_to_text_customer), Toast.LENGTH_SHORT).show();
+            Crashlytics.logException(new RuntimeException("Texting a Phone Number failed", e));
         }
     }
 
@@ -845,5 +864,11 @@ public class BookingFragment extends TimerActionBarFragment
                 mNearbyTransits.addView(transitMarkerView);
             }
         }
+    }
+
+    private void showInvalidPhoneNumberToast()
+    {
+        Toast.makeText(getContext(),
+                getString(R.string.invalid_phone_number), Toast.LENGTH_LONG).show();
     }
 }

@@ -32,7 +32,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -41,23 +41,23 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
     @Inject
     ProviderManager mProviderManager;
 
-    @Bind(R.id.dashboard_layout)
+    @BindView(R.id.dashboard_layout)
     ViewGroup mDashboardLayout;
-    @Bind(R.id.fetch_error_view)
+    @BindView(R.id.fetch_error_view)
     View mFetchErrorView;
-    @Bind(R.id.fetch_error_text)
+    @BindView(R.id.fetch_error_text)
     TextView mFetchErrorTextView;
-    @Bind(R.id.dashboard_welcome_view)
+    @BindView(R.id.dashboard_welcome_view)
     DashboardWelcomeView mDashboardWelcomeView;
-    @Bind(R.id.dashboard_ratings_view_pager)
+    @BindView(R.id.dashboard_ratings_view_pager)
     ViewPager mRatingsProPerformanceViewPager;
-    @Bind(R.id.dashboard_ratings_view_pager_indicator_view)
+    @BindView(R.id.dashboard_ratings_view_pager_indicator_view)
     CirclePageIndicatorView mCirclePageIndicatorView;
-    @Bind(R.id.dashboard_options_view)
+    @BindView(R.id.dashboard_options_view)
     DashboardOptionsPerformanceView mDashboardOptionsPerformanceView;
-    @Bind(R.id.lifetime_rating_text)
+    @BindView(R.id.lifetime_rating_text)
     TextView mLifetimeRatingText;
-    @Bind(R.id.dashboard_rating_threshold)
+    @BindView(R.id.dashboard_rating_threshold)
     TextView mRatingThresholdText;
 
     ProviderEvaluation mProviderEvaluation;

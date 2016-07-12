@@ -27,17 +27,20 @@ public class RoundedTextView extends TextView
     public RoundedTextView(Context context, AttributeSet attrs)
     {
         super(context, attrs);
+        init();
     }
 
     public RoundedTextView(Context context, AttributeSet attrs, int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
+        init();
     }
 
     @TargetApi(21)
     public RoundedTextView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
     {
         super(context, attrs, defStyleAttr, defStyleRes);
+        init();
     }
 
     private void init()

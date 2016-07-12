@@ -20,20 +20,20 @@ import com.handy.portal.library.util.FontUtils;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.payments.model.Transaction;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TransactionView extends FrameLayout
 {
-    @Bind(R.id.transaction_title_text)
+    @BindView(R.id.transaction_title_text)
     TextView mTitleText;
-    @Bind(R.id.transaction_amount_text)
+    @BindView(R.id.transaction_amount_text)
     TextView mAmountText;
-    @Bind(R.id.transaction_batches_layout)
+    @BindView(R.id.transaction_batches_layout)
     ViewGroup mBatchesLayout;
-    @Bind(R.id.transaction_policy_description_text)
+    @BindView(R.id.transaction_policy_description_text)
     TextView mPolicyDescriptionText;
-    @Bind(R.id.transaction_outstanding_text)
+    @BindView(R.id.transaction_outstanding_text)
     TextView mOutstandingText;
 
     public TransactionView(final Context context)

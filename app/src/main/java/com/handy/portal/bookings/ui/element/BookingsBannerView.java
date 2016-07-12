@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -20,16 +20,16 @@ import butterknife.ButterKnife;
  */
 public class BookingsBannerView extends LinearLayout
 {
-    @Bind(R.id.layout_bookings_banner_title)
+    @BindView(R.id.layout_bookings_banner_title)
     TextView mBannerTitleText;
 
-    @Bind(R.id.layout_bookings_banner_description)
+    @BindView(R.id.layout_bookings_banner_description)
     TextView mBannerDescriptionText;
 
-    @Bind(R.id.layout_bookings_banner_left_image)
+    @BindView(R.id.layout_bookings_banner_left_image)
     ImageView mBannerLeftImage;
 
-    @Bind(R.id.layout_bookings_banner_content)
+    @BindView(R.id.layout_bookings_banner_content)
     View mBannerContent;
 
     public BookingsBannerView(final Context context)

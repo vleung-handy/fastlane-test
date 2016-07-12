@@ -2,7 +2,7 @@ package com.handy.portal.core;
 
 import android.app.Application;
 
-import com.handy.portal.bookings.BookingManager;
+import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
@@ -96,6 +96,7 @@ public class TestApplicationModule
     {
         EnvironmentModifier environmentModifier = mock(EnvironmentModifier.class);
         when(environmentModifier.getEnvironmentPrefix()).thenReturn("ms");
+        when(environmentModifier.getEnvironment()).thenReturn(EnvironmentModifier.Environment.MS);
         return environmentModifier;
     }
 

@@ -24,7 +24,6 @@
 
     <!-- Generic Single Word -->
     <string name="success">Success</string>
-    <string name="set">Set</string>
     <string name="cancel">Cancel</string>
     <string name="ok">OK</string>
     <string name="error">Error</string>
@@ -37,7 +36,6 @@
     <string name="local">Local</string>
     <string name="mobile_staging">Mobile Staging</string>
     <string name="staging">Staging</string>
-    <string name="production">Production</string>
     <string name="enter_domain">Enter Domain or IP Address</string>
     <string name="enter_q_environment_number">Enter Q Environment Number</string>
     <string name="q_environment_number_hint">e.g. q123</string>
@@ -46,6 +44,7 @@
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Navigation drawer opened</string>
     <string name="navigation_drawer_close">Navigation drawer closed</string>
+    <string name="software_licenses">Software Licenses</string>
 
     <string name="phone_number_hint">Cell Phone Number</string>
     <string name="pin_code_hint">PIN Code</string>
@@ -118,8 +117,10 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="tab_claim">Claim</string>
+    <string name="tab_requests">Requests</string>
     <string name="tab_schedule">Schedule</string>
     <string name="tab_notifications">Notifications</string>
+    <string name="tab_alerts">Alerts</string>
     <string name="tab_more">More</string>
     <string name="title_activity_please_update">PleaseUpdateActivity</string>
     <string name="available_jobs">Available Jobs</string>
@@ -163,6 +164,9 @@
 
     <string name="call">Call</string>
     <string name="text">Text</string>
+    <string name="invalid_phone_number">We don\'t have a phone number for your customer. Please try to complete the job as planned.</string>
+    <string name="unable_to_call_customer">Unable to call customer.</string>
+    <string name="unable_to_text_customer">Unable to text customer.</string>
     <string name="check_in">Check In</string>
     <string name="check_out">Check Out</string>
     <string name="remove_job">Remove Job</string>
@@ -290,6 +294,7 @@
     <string name="edit_your_profile">Edit Your Profile</string>
     <string name="update_profile_success">Successfully updated profile information</string>
     <string name="update_profile_failed">Failed to update profile information</string>
+    <string name="failed_to_open_help">Failed to open help center!</string>
 
     <!-- Performance Dashboard -->
     <string name="ratings_and_feedback">Ratings &amp; Feedback</string>

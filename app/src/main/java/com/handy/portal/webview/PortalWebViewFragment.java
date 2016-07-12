@@ -20,12 +20,12 @@ import com.handy.portal.ui.fragment.ActionBarFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PortalWebViewFragment extends ActionBarFragment
 {
-    @Bind(R.id.portal_web_view)
+    @BindView(R.id.portal_web_view)
     WebView webView;
 
     @Override

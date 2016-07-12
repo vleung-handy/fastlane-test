@@ -11,12 +11,12 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class CheckoutCompletedTaskView extends FrameLayout
 {
-    @Bind(R.id.task_text)
+    @BindView(R.id.task_text)
     TextView mTaskText;
 
     public CheckoutCompletedTaskView(final Context context)

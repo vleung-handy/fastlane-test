@@ -25,7 +25,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class FiveStarRatingPercentageView extends FrameLayout
@@ -33,13 +33,13 @@ public class FiveStarRatingPercentageView extends FrameLayout
     @Inject
     EventBus mBus;
 
-    @Bind(R.id.five_star_percentage_number)
+    @BindView(R.id.five_star_percentage_number)
     TextView mFiveStarPercentageNumber;
-    @Bind(R.id.five_star_percentage_sign)
+    @BindView(R.id.five_star_percentage_sign)
     TextView mFiveStarPercentageSign;
-    @Bind(R.id.dynamicArcView)
+    @BindView(R.id.dynamicArcView)
     DecoView mDynamicArcView;
-    @Bind(R.id.five_star_percentage_info_wrapper)
+    @BindView(R.id.five_star_percentage_info_wrapper)
     RelativeLayout mFiveStarPercentageInfoWrapper;
 
     private int mColor;

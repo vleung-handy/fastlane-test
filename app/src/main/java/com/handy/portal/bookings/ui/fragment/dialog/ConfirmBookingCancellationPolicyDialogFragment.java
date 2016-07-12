@@ -15,19 +15,19 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.payments.model.PaymentInfo;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 public abstract class ConfirmBookingCancellationPolicyDialogFragment
         extends ConfirmBookingActionDialogFragment
 {
-    @Bind(R.id.fragment_dialog_confirm_booking_cancellation_policy_content)
+    @BindView(R.id.fragment_dialog_confirm_booking_cancellation_policy_content)
     LinearLayout mCancellationPolicyContent;
-    @Bind(R.id.fragment_dialog_confirm_booking_show_cancellation_policy_button)
+    @BindView(R.id.fragment_dialog_confirm_booking_show_cancellation_policy_button)
     TextView mShowCancellationPolicyButton;
-    @Bind(R.id.confirm_booking_action_title)
+    @BindView(R.id.confirm_booking_action_title)
     TextView mConfirmBookingActionTitle;
-    @Bind(R.id.confirm_booking_action_subtitle)
+    @BindView(R.id.confirm_booking_action_subtitle)
     TextView mConfirmBookingActionSubtitle;
 
     protected Booking.Action mAction;

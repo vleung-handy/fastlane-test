@@ -12,27 +12,27 @@ import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we can make this more linked with the batch adapter data
 {
-    @Bind(R.id.payments_current_week_date_range_text)
+    @BindView(R.id.payments_current_week_date_range_text)
     TextView currentWeekDateRangeText;
 
-    @Bind(R.id.payments_current_week_total_earnings)
+    @BindView(R.id.payments_current_week_total_earnings)
     TextView currentWeekTotalEarningsText;
 
-    @Bind(R.id.payments_current_week_fees)
+    @BindView(R.id.payments_current_week_fees)
     TextView currentWeekFeesText;
 
-    @Bind(R.id.payments_current_week_expected_payment)
+    @BindView(R.id.payments_current_week_expected_payment)
     TextView currentWeekExpectedPaymentText;
 
-    @Bind(R.id.payments_current_week_remaining_fees)
+    @BindView(R.id.payments_current_week_remaining_fees)
     TextView currentWeekRemainingFeesText;
 
-    @Bind(R.id.payments_current_week_remaining_fees_row)
+    @BindView(R.id.payments_current_week_remaining_fees_row)
     ViewGroup currentWeekRemainingFeesRow;
 
     public PaymentsBatchListHeaderView(Context context)

@@ -22,21 +22,21 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 public class OutstandingFeesFragment extends ActionBarFragment
 {
-    @Bind(R.id.fetch_error_view)
+    @BindView(R.id.fetch_error_view)
     ViewGroup mFetchErrorView;
-    @Bind(R.id.fetch_error_text)
+    @BindView(R.id.fetch_error_text)
     TextView mFetchErrorText;
-    @Bind(R.id.total_fees_text)
+    @BindView(R.id.total_fees_text)
     TextView mTotalFeesText;
-    @Bind(R.id.no_outstanding_fees_layout)
+    @BindView(R.id.no_outstanding_fees_layout)
     ViewGroup mNoOutstandingFeesLayout;
-    @Bind(R.id.outstanding_fee_breakdown_layout)
+    @BindView(R.id.outstanding_fee_breakdown_layout)
     ViewGroup mOutstandingFeeBreakdownLayout;
 
     private View fragmentView;

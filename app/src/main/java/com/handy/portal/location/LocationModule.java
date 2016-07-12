@@ -7,7 +7,6 @@ import com.handy.portal.location.scheduler.geofences.handler.BookingGeofenceSche
 import com.handy.portal.location.scheduler.tracking.handler.LocationTrackingScheduleHandler;
 import com.handy.portal.location.ui.LocationPermissionsBlockerDialogFragment;
 import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
-import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -34,9 +33,8 @@ public final class LocationModule
     @Singleton
     final LocationManager provideLocationManager(final EventBus bus,
                                                  final DataManager dataManager,
-                                                 final ProviderManager providerManager,
-                                                 final PrefsManager prefsManager)
+                                                 final ProviderManager providerManager)
     {
-        return new LocationManager(bus, dataManager, providerManager, prefsManager);
+        return new LocationManager(bus, dataManager, providerManager);
     }
 }

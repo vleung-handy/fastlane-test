@@ -28,7 +28,6 @@ import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public abstract class HandyEvent
 {
@@ -126,6 +125,11 @@ public abstract class HandyEvent
         }
     }
 
+    //fired when the user has been logged out
+    public static class UserLoggedOut extends HandyEvent
+    {
+
+    }
 
     public static class ReceiveLoginSuccess extends ReceiveSuccessEvent
     {
@@ -282,28 +286,6 @@ public abstract class HandyEvent
     }
 
 
-    public static class ReceiveScheduledBookingsBatchSuccess extends RequestBookingsEvent
-    {
-        private final Map<Date, List<Booking>> mDateToBookingMap;
-
-        /**
-         * @param dateToBookingMap should be without time
-         */
-        public ReceiveScheduledBookingsBatchSuccess(Map<Date, List<Booking>> dateToBookingMap)
-        {
-            mDateToBookingMap = dateToBookingMap;
-        }
-
-        /**
-         * these dates should be without time
-         */
-        public Map<Date, List<Booking>> getDateToBookingMap()
-        {
-            return mDateToBookingMap;
-        }
-    }
-
-
     public static abstract class ReceiveBookingsSuccess extends ReceiveSuccessEvent
     {
         public BookingsWrapper bookingsWrapper;
@@ -346,6 +328,21 @@ public abstract class HandyEvent
         }
     }
 
+    /*
+        TODO: the above ReceiveScheduledBookingsSuccess event should be renamed
+        so that this event can have naming parity with its request class
+
+        this complements the original request event.
+
+        this is required because some components need to get notified
+        (just once, which is why we can't use the above event)
+        that the original request was responded to
+     */
+    public static class ReceiveScheduledBookingsBatchSuccess extends ReceiveSuccessEvent
+    {
+        //currently don't care about holding data. add if needed
+    }
+
 
     public static class ReceiveBookingsError extends ReceiveErrorEvent
     {
@@ -355,7 +352,7 @@ public abstract class HandyEvent
 
     public static class ReceiveAvailableBookingsError extends ReceiveBookingsError
     {
-        public ReceiveAvailableBookingsError(DataManager.DataManagerError error, List<Date> days)
+        public ReceiveAvailableBookingsError(@Nullable DataManager.DataManagerError error, List<Date> days)
         {
             this.days = days;
             this.error = error;
@@ -374,7 +371,7 @@ public abstract class HandyEvent
 
     public static class ReceiveScheduledBookingsError extends ReceiveBookingsError
     {
-        public ReceiveScheduledBookingsError(DataManager.DataManagerError error, List<Date> days)
+        public ReceiveScheduledBookingsError(@Nullable DataManager.DataManagerError error, List<Date> days)
         {
             this.days = days;
             this.error = error;
@@ -416,14 +413,7 @@ public abstract class HandyEvent
         }
     }
 
-
-    /**
-     * dispatched when one or more bookings might have changed
-     */
-    public static class BookingChangedOrCreated
-    {
-    }
-//Job Action Requests
+    //Job Action Requests
 
 
     public static class RequestClaimJob extends RequestBookingActionEvent

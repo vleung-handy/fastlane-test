@@ -10,7 +10,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -19,9 +19,9 @@ import butterknife.ButterKnife;
  */
 public class BookingDetailsProRequestInfoView extends FrameLayout
 {
-    @Bind(R.id.booking_details_display_message_title_layout)
+    @BindView(R.id.booking_details_display_message_title_layout)
     BookingMessageTitleView mBookingMessageTitleView;
-    @Bind(R.id.booking_details_display_message_body_text)
+    @BindView(R.id.booking_details_display_message_body_text)
     TextView mMessageBodyText;
 
     public BookingDetailsProRequestInfoView(final Context context)
