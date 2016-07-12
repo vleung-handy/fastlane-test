@@ -87,7 +87,7 @@ public class UrbanAirshipManager
                 }
             });
         }
-        catch (IllegalStateException e)
+        catch (IllegalStateException | IllegalArgumentException e)
         {
             Crashlytics.logException(e);
         }
