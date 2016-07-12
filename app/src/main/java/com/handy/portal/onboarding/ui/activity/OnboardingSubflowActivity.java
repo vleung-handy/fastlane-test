@@ -15,6 +15,7 @@ import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowData;
 import com.handy.portal.onboarding.model.subflow.SubflowType;
 import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
+import com.handy.portal.onboarding.ui.fragment.IDVerificationFragment;
 import com.handy.portal.onboarding.ui.fragment.OnboardingStatusFragment;
 import com.handy.portal.onboarding.ui.fragment.OnboardingSubflowFragment;
 import com.handy.portal.onboarding.ui.fragment.PurchaseSuppliesFragment;
@@ -116,6 +117,9 @@ public class OnboardingSubflowActivity extends BaseActivity
                 Bundle arguments = getFragmentArguments(fragment);
                 arguments.putBoolean(BundleKeys.DISALLOW_EXIT, true);
                 fragment.setArguments(arguments);
+                break;
+            case ID_VERIFICATION:
+                fragment = IDVerificationFragment.newInstance();
                 break;
             case CLAIM:
                 fragment = SchedulePreferencesFragment.newInstance();
@@ -223,4 +227,5 @@ public class OnboardingSubflowActivity extends BaseActivity
         final int miniPercentJump = mPercentRange / (mSubflowType.getNumberOfSteps() + 1); // + 1 to exaggerate transition between subflows
         return mPercentComplete + (mSubflowStepCount * miniPercentJump);
     }
+
 }

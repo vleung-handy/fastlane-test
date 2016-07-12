@@ -353,6 +353,10 @@ public class DataManager
                 new SuccessWrapperRetroFitCallback(cb));
     }
 
+    public void finishIdVerification(final String finishIdVerificationUrl)
+    {
+        mService.finishIdVerification(finishIdVerificationUrl);
+    }
 
     public interface Callback<T>
     {

@@ -66,4 +66,7 @@ public class BundleKeys
 
     // Flow
     public static final String FLOW_STEP_ID = "flow_step_id";
+
+    // Jumio URL
+    public static final String JUMIO_URL = "jumio_url";
 }

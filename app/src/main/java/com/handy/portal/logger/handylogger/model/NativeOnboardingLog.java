@@ -316,4 +316,116 @@ public class NativeOnboardingLog extends EventLog
             super(EVENT_TYPE, EVENT_CONTEXT, booking);
         }
     }
+
+
+    /**
+     * Jumio ID verification
+     */
+    public static class NativeIDVerificationStartedLog extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "native_id_verification_started";
+
+        public NativeIDVerificationStartedLog()
+        {
+            super(EVENT_TYPE);
+        }
+    }
+
+
+    /**
+     * Jumio ID verification in app flow completed
+     */
+    public static class NativeIDVerificationCompletedLog extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "native_id_verification_completed";
+
+        public NativeIDVerificationCompletedLog()
+        {
+            super(EVENT_TYPE);
+        }
+    }
+
+
+    /**
+     * Jumio ID verification in app flow failed
+     */
+    public static class NativeIDVerificationFailedLog extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "native_id_verification_failed";
+
+        public NativeIDVerificationFailedLog()
+        {
+            super(EVENT_TYPE);
+        }
+    }
+
+
+    /**
+     * Jumio ID verification in app flow failed
+     */
+    public static class NativeIDVerificationCancelledLog extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "native_id_verification_cancelled";
+
+        public NativeIDVerificationCancelledLog()
+        {
+            super(EVENT_TYPE);
+        }
+    }
+
+
+    /**
+     * Jumio ID verification web flow
+     */
+    public static class WebIDVerificationFlowStarted extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "web_id_verification_flow_started";
+
+        public WebIDVerificationFlowStarted()
+        {
+            super(EVENT_TYPE);
+        }
+    }
+
+
+    /**
+     * Camera permission granted for Jumio ID verification
+     */
+    public static class CameraPermissionGrantedLog extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "camera_permission_granted";
+
+        public CameraPermissionGrantedLog()
+        {
+            super(EVENT_TYPE);
+        }
+    }
+
+
+    /**
+     * Camera permission denied for Jumio ID verification
+     */
+    public static class CameraPermissionDeniedLog extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "camera_permission_denied";
+
+        public CameraPermissionDeniedLog()
+        {
+            super(EVENT_TYPE);
+        }
+    }
+
+
+    /**
+     * Camera settings opened for Jumio ID verification
+     */
+    public static class CameraSettingsOpenedLog extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "camera_settings_opened";
+
+        public CameraSettingsOpenedLog()
+        {
+            super(EVENT_TYPE);
+        }
+    }
 }

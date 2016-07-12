@@ -22,7 +22,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class ScheduleBuilderFragment extends OnboardingSubflowFragment
+public class ScheduleBuilderFragment extends OnboardingSubflowUIFragment
         implements OnboardingJobsViewGroup.OnJobCheckedChangedListener
 {
     @BindView(R.id.jobs_container)

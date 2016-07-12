@@ -36,6 +36,22 @@ public class SubflowData implements Serializable
     @SerializedName("header")
     private StatusHeader mHeader;
 
+    // ID Verification
+    @SerializedName("full_name")
+    private String mFullName;
+    @SerializedName("candidate_id")
+    private String mCandidateId;
+    @SerializedName("jumio_token")
+    private String mJumioToken;
+    @SerializedName("jumio_secret")
+    private String mJumioSecret;
+    @SerializedName("scan_reference")
+    private String mScanReference;
+    @SerializedName("jumio_url")
+    private String mJumioUrl;
+    @SerializedName("after_finish")
+    private String mAfterFinishUrl;
+
     public String getApplicationStatus()
     {
         return mApplicationStatus;
@@ -76,5 +92,40 @@ public class SubflowData implements Serializable
     public ArrayList<Zipcluster> getZipclusters()
     {
         return mZipclusters;
+    }
+
+    public String getFullName()
+    {
+        return mFullName;
+    }
+
+    public String getCandidateId()
+    {
+        return mCandidateId;
+    }
+
+    public String getJumioToken()
+    {
+        return mJumioToken;
+    }
+
+    public String getJumioSecret()
+    {
+        return mJumioSecret;
+    }
+
+    public String getJumioURL()
+    {
+        return mJumioUrl;
+    }
+
+    public String getAfterFinishUrl()
+    {
+        return mAfterFinishUrl;
+    }
+
+    public String getScanReference()
+    {
+        return mScanReference;
     }
 }
