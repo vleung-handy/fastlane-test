@@ -49,29 +49,33 @@ public class CheckInTest
     {
         ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
 
-        //click the scheduled jobs tab
+        // click the scheduled jobs tab
         onView(allOf(withId(R.id.tab_title), withText(R.string.tab_schedule))).perform(click());
 
-        //click the first scheduled job
+        // click the first scheduled job
         ViewUtil.waitForViewVisible(R.id.scheduled_jobs_list_view, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         onData(is(instanceOf(Booking.class)))
                 .atPosition(0)
                 .perform(click());
 
-        //wait for booking action button to be visible and verify it says "on my way"
+        // wait for booking action button to be visible and verify it says "on my way"
         ViewUtil.waitForViewVisibility(
                 allOf(withId(R.id.booking_action_button), withText(R.string.on_my_way)),
                 true,
                 ViewUtil.LONG_MAX_WAIT_TIME_MS);
-        //on my way
+
+        // make sure map is visible
+        ViewUtil.waitForViewVisible(R.id.booking_map_view, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
+
+        // click on my way
         onView(withId(R.id.booking_action_button)).perform(click());
 
-        //wait for booking action button to be visible and verify it says "check in"
+        // wait for booking action button to be visible and verify it says "check in"
         ViewUtil.waitForViewVisibility(
                 allOf(withId(R.id.booking_action_button), withText(R.string.check_in)),
                 true,
                 ViewUtil.LONG_MAX_WAIT_TIME_MS);
-        //check in
+        // check in
         onView(withId(R.id.booking_action_button)).perform(click());
 
         //wait for booking action button to be visible and verify it says "continue to check out"
