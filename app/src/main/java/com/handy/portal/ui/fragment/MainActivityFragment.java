@@ -445,7 +445,7 @@ public class MainActivityFragment extends InjectedFragment
         mButtonMore = new TabButton(getContext())
                 .init(R.string.tab_more, R.drawable.ic_menu_more);
         mButtonMore.setId(R.id.tab_nav_item_more);
-        mTabs.setTabs(mJobsButton, mRequestsButton, mScheduleButton, mAlertsButton, mButtonMore);
+        mTabs.setTabs(mJobsButton, mScheduleButton, mRequestsButton, mAlertsButton, mButtonMore);
 
         mJobsButton.setOnClickListener(
                 new TabOnClickListener(mJobsButton, MainViewPage.AVAILABLE_JOBS));
