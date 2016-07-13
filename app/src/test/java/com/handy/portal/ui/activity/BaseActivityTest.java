@@ -13,8 +13,8 @@ import org.mockito.ArgumentCaptor;
 import org.robolectric.Robolectric;
 import org.robolectric.util.ActivityController;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
-import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertThat;
@@ -26,14 +26,13 @@ import static org.robolectric.Shadows.shadowOf;
 
 public class BaseActivityTest extends RobolectricGradleTestWrapper
 {
-    private ActivityController<LoginActivity> activityController;
+    private ActivityController<TestActivity> activityController;
     private BaseActivity activity;
 
     @Before
     public void setUp() throws Exception
     {
-        // TODO: Test BaseActivity directly, not one of its subclasses
-        activityController = Robolectric.buildActivity(LoginActivity.class).create();
+        activityController = Robolectric.buildActivity(TestActivity.class).create();
         activity = activityController.get();
     }
 
@@ -43,7 +42,6 @@ public class BaseActivityTest extends RobolectricGradleTestWrapper
         activityController.resume();
         ArgumentCaptor<Object> argument = ArgumentCaptor.forClass(Object.class);
         verify(activity.bus, atLeastOnce()).post(argument.capture());
-        //TODO: Verify that only one instance of RequestUpdateCheck is in the captor value
         assertThat(argument.getAllValues(), hasItem(instanceOf(AppUpdateEvent.RequestUpdateCheck.class)));
     }
 
@@ -60,7 +58,7 @@ public class BaseActivityTest extends RobolectricGradleTestWrapper
         Intent expectedIntent = new Intent(activity, PleaseUpdateActivity.class);
         Intent actualIntent = shadowOf(activity).getNextStartedActivity();
 
-        assertThat(actualIntent, equalTo(expectedIntent));
+        assertEquals(actualIntent.getComponent(), expectedIntent.getComponent());
     }
 
     @Test
