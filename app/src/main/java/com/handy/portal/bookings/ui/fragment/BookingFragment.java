@@ -498,7 +498,7 @@ public class BookingFragment extends TimerActionBarFragment
     public void onReceiveZipClusterPolygonsSuccess(final BookingEvent.ReceiveZipClusterPolygonsSuccess event)
     {
         Booking.BookingStatus bookingStatus = mBooking.inferBookingStatus(getLoggedInUserId());
-        mBookingMapView.setDisplay(mBooking, mSource, bookingStatus, event.zipClusterPolygons);
+        mBookingMapView.setDisplay(mBooking, bookingStatus, event.zipClusterPolygons);
     }
 
     @OnClick(R.id.booking_get_directions_layout)
@@ -584,7 +584,7 @@ public class BookingFragment extends TimerActionBarFragment
             }
             else
             {
-                mBookingMapView.setDisplay(mBooking, mSource, bookingStatus, null);
+                mBookingMapView.setDisplay(mBooking, bookingStatus, null);
             }
         }
         else
