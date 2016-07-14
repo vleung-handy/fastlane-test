@@ -1,5 +1,8 @@
 package com.handy.portal;
 
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+
 import org.greenrobot.eventbus.EventBus;
 import org.mockito.ArgumentCaptor;
 
@@ -24,16 +27,27 @@ public class TestUtils
         return null;
     }
 
-    public static <T> T getFirstMatchingBusEvent(EventBus bus, Class klass)
+    public static <T> T getFirstMatchingBusEvent(EventBus bus, Class<T> klass)
     {
         ArgumentCaptor<T> captor = ArgumentCaptor.forClass(klass);
         verify(bus, atLeastOnce()).post(captor.capture());
-        for (Object event : captor.getAllValues())
+        for (T event : captor.getAllValues())
         {
             if (klass.isInstance(event))
             {
-                return (T) event;
+                return event;
             }
+        }
+        return null;
+    }
+
+    public static Fragment getScreenFragment(FragmentManager fragmentManager)
+    {
+        List<Fragment> fragments = fragmentManager.getFragments();
+        for (int i = fragments.size() - 1; i >= 0; --i)
+        {
+            if (fragments.get(i) != null)
+            { return fragments.get(i); }
         }
         return null;
     }
