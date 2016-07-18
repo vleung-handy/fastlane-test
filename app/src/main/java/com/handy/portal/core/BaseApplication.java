@@ -115,7 +115,7 @@ public class BaseApplication extends MultiDexApplication
     EventBus bus;
 
     @Override
-    public final void onCreate()
+    public void onCreate()
     {
         super.onCreate();
         createObjectGraph();
@@ -131,13 +131,6 @@ public class BaseApplication extends MultiDexApplication
                 .setDefaultFontPath(FontUtils.CIRCULAR_BOOK)
                 .setFontAttrId(R.attr.fontPath)
                 .build());
-
-//        if (BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_PROD)) {
-//            NewRelic.withApplicationToken("AA7a37dccf925fd1e474142399691d1b6b3f84648b").start(this);
-//        }
-//        else {
-//            NewRelic.withApplicationToken("AAbaf8c55fb9788d1664e82661d94bc18ea7c39aa6").start(this);
-//        }
 
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks()
         {

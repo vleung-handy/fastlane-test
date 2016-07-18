@@ -3,6 +3,7 @@ package com.handy.portal.data;
 import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.ProviderKey;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
@@ -15,6 +16,7 @@ import java.util.Date;
 import java.util.List;
 
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
 public class TestDataManager extends DataManager
@@ -26,6 +28,15 @@ public class TestDataManager extends DataManager
     public TestDataManager(final HandyRetrofitService service, final HandyRetrofitEndpoint endpoint, final StripeRetrofitService stripeService, final EventLogService eventLogService)
     {
         super(service, endpoint, stripeService, eventLogService);
+    }
+
+    @Override
+    public void getConfiguration(final Callback<ConfigurationResponse> cb)
+    {
+        ConfigurationResponse configurationResponse = spy(new ConfigurationResponse());
+        when(configurationResponse.shouldShowNotificationMenuButton()).thenReturn(true);
+        when(configurationResponse.isPendingRequestsInboxEnabled()).thenReturn(true);
+        cb.onSuccess(configurationResponse);
     }
 
     @Override

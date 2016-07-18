@@ -178,9 +178,9 @@ public class TestApplicationModule
 
     @Provides
     @Singleton
-    final ConfigManager provideConfigManager()
+    final ConfigManager provideConfigManager(final DataManager dataManager, final EventBus bus)
     {
-        return mock(ConfigManager.class);
+        return new ConfigManager(dataManager, bus);
     }
 
     @Provides
