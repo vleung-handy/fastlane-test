@@ -2,10 +2,7 @@ package com.handy.portal.data;
 
 import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.ProviderPersonalInfo;
-import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.retrofit.logevents.EventLogService;
@@ -38,9 +35,6 @@ public class TestDataManager extends DataManager
         when(configurationResponse.isPendingRequestsInboxEnabled()).thenReturn(true);
         cb.onSuccess(configurationResponse);
     }
-
-    @Override
-    public void updateProviderProfile(final String providerId, final TypeSafeMap<ProviderKey> params, final Callback<ProviderPersonalInfo> cb) { }
 
     @Override
     public void getBookingDetails(final String bookingId, final Booking.BookingType type, final Callback<Booking> cb)
