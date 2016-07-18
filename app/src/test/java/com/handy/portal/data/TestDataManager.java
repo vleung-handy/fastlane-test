@@ -1,7 +1,12 @@
 package com.handy.portal.data;
 
+import android.text.format.DateUtils;
+
 import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.dashboard.model.ProviderEvaluation;
+import com.handy.portal.dashboard.model.ProviderFeedback;
+import com.handy.portal.dashboard.model.ProviderRating;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -37,6 +42,13 @@ public class TestDataManager extends DataManager
     }
 
     @Override
+    public void getProviderEvaluation(final String providerId, final Callback<ProviderEvaluation> cb)
+    {
+        ProviderEvaluation evaluation = createProviderEvaluation();
+        cb.onSuccess(evaluation);
+    }
+
+    @Override
     public void getBookingDetails(final String bookingId, final Booking.BookingType type, final Callback<Booking> cb)
     {
         switch (bookingId)
@@ -59,7 +71,50 @@ public class TestDataManager extends DataManager
         }
     }
 
-    public static Booking createMockBooking(String bookingId, @BookingProgress.Progress int bookingProgress)
+    // Factory Methods
+    public static ProviderEvaluation createProviderEvaluation()
+    {
+        ProviderEvaluation.Rating lifeRating = new ProviderEvaluation.Rating(40, 44, 42, 30, 3.6,
+                "positive", "", new Date(System.currentTimeMillis() - DateUtils.YEAR_IN_MILLIS), new Date());
+        ProviderEvaluation.Rating rollingRating = new ProviderEvaluation.Rating(16, 17, 15, 10, 4.0,
+                "positive", "", new Date(System.currentTimeMillis() - DateUtils.WEEK_IN_MILLIS * 4), new Date());
+        ProviderEvaluation.Rating weekRating = new ProviderEvaluation.Rating(3, 5, 5, 3, 5.0,
+                "positive", "", new Date(System.currentTimeMillis() - DateUtils.WEEK_IN_MILLIS), new Date());
+        ProviderEvaluation.PayRates payRates = createPayRates();
+
+        List<ProviderFeedback> feedback = new ArrayList<>();
+        feedback.add(createProviderFeedback());
+
+        List<ProviderRating> ratings = new ArrayList<>();
+        ratings.add(new ProviderRating(2, 123, 5, 123, new Date(), "Mobile", "Nice job"));
+        ratings.add(new ProviderRating(3, 1234, 5, 1234, new Date(), "Web", "Great job"));
+
+        return spy(new ProviderEvaluation(rollingRating, lifeRating, weekRating, payRates, 4.2, ratings, feedback, ratings));
+    }
+
+    private static ProviderFeedback createProviderFeedback()
+    {
+        ProviderFeedback.FeedbackTip textTip = new ProviderFeedback.FeedbackTip(ProviderFeedback.FeedbackTip.DATA_TYPE_TEXT, "Do a better job next time :P");
+        ProviderFeedback.FeedbackTip videoTip = new ProviderFeedback.FeedbackTip(ProviderFeedback.FeedbackTip.DATA_TYPE_VIDEO_ID, "fake_id");
+        List<ProviderFeedback.FeedbackTip> tips = new ArrayList<>();
+        tips.add(textTip);
+        tips.add(videoTip);
+        return new ProviderFeedback("Feedback", "Tips", tips);
+    }
+
+    private static ProviderEvaluation.PayRates createPayRates()
+    {
+        List<ProviderEvaluation.Incentive> incentives = new ArrayList<>();
+        incentives.add(new ProviderEvaluation.Incentive(
+                "Region Name", "Cleaning", new ArrayList<ProviderEvaluation.Tier>(), 0, 1, "$",
+                ProviderEvaluation.Incentive.TIERED_TYPE));
+        List<ProviderEvaluation.TiersServiceDescription> descriptions = new ArrayList<>();
+        descriptions.add(new ProviderEvaluation.TiersServiceDescription("Title", "Body"));
+
+        return new ProviderEvaluation.PayRates(incentives, descriptions);
+    }
+
+    private static Booking createMockBooking(String bookingId, @BookingProgress.Progress int bookingProgress)
     {
         Booking booking = mock(Booking.class);
         when(booking.getId()).thenReturn(bookingId);
@@ -72,7 +127,7 @@ public class TestDataManager extends DataManager
         return booking;
     }
 
-    public static List<Booking.BookingInstructionUpdateRequest> createCustomerPreferences()
+    private static List<Booking.BookingInstructionUpdateRequest> createCustomerPreferences()
     {
         List<Booking.BookingInstructionUpdateRequest> customerPreferences = new ArrayList<>();
 

@@ -21,7 +21,7 @@
             android:orientation="vertical"
             >
 
-            <com.handy.portal.ui.element.dashboard.DashboardWelcomeView
+            <com.handy.portal.dashboard.view.DashboardWelcomeView
                 android:id="@+id/dashboard_welcome_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -36,7 +36,7 @@
                 />
 
             <!-- Negative margin hack hides the mysterious gray divider above this view-->
-            <com.handy.portal.ui.element.dashboard.CirclePageIndicatorView
+            <com.handy.portal.dashboard.view.CirclePageIndicatorView
                 android:id="@+id/dashboard_ratings_view_pager_indicator_view"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/circle_page_indicator_height"
@@ -44,7 +44,7 @@
                 android:paddingTop="@dimen/circle_indicator_padding"
                 />
 
-            <com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView
+            <com.handy.portal.dashboard.view.DashboardOptionsPerformanceView
                 android:id="@+id/dashboard_options_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
