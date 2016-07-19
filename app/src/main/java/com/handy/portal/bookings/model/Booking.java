@@ -429,11 +429,6 @@ public class Booking implements Comparable<Booking>, Serializable
         return mMinimumHours > 0 && mMinimumHours < mHours;
     }
 
-    public boolean hasFlexPayRate()
-    {
-        return getHourlyRate() != null && hasFlexibleHours();
-    }
-
     public Date getCheckInTime()
     {
         return mCheckInTime;
