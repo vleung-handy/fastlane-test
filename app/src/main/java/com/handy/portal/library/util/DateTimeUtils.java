@@ -411,15 +411,38 @@ public final class DateTimeUtils
         return getLocalTime12HoursFormatter().format(cal.getTime()).toLowerCase();
     }
 
-    public static CountDownTimer setCountDownTimer(final TextView textView, long timeRemainMillis)
+    public static CountDownTimer setCountDownTimer(final TextView textView, long timeRemainMillis, final int stringId)
     {
         return new CountDownTimer(timeRemainMillis, DateUtils.SECOND_IN_MILLIS)
         {
             @Override
             public void onTick(final long millisUntilFinished)
             {
-                textView.setText(textView.getContext().getString(R.string.start_timer_formatted,
+                System.out.println("On tick : " + millisUntilFinished);
+
+                textView.setText(textView.getContext().getString(stringId,
                         DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)));
+            }
+
+            @Override
+            public void onFinish() { }
+        }.start();
+    }
+
+    public static CountDownTimer setCountUpTimer(final TextView textView, final long startTime, final int stringId)
+    {
+        return new CountDownTimer(startTime, DateUtils.SECOND_IN_MILLIS)
+        {
+            @Override
+            public void onTick(final long millisUntilFinished)
+            {
+                long duration = startTime - System.currentTimeMillis();
+
+                //never want to show negative timers
+                duration = Math.abs(duration);
+
+                textView.setText(textView.getContext().getString(stringId,
+                        DateTimeUtils.millisecondsToFormattedString(duration)));
             }
 
             @Override

@@ -3,6 +3,7 @@ package com.handy.portal.ui.fragment;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -42,6 +43,7 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.ConnectivityManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
@@ -63,6 +65,8 @@ public class MainActivityFragment extends InjectedFragment
     PrefsManager mPrefsManager;
     @Inject
     ConfigManager mConfigManager;
+    @Inject
+    ConnectivityManager mConnectivityManager;
     /////////////Bad useless injection that breaks if not in?
 
     @BindView(R.id.tabs)
@@ -104,6 +108,9 @@ public class MainActivityFragment extends InjectedFragment
 
     @BindView(R.id.connectivity_indicator)
     TextView mConnectivityIndicator;
+
+
+    private CountDownTimer mCountdownTimer;
 
 
     private ActionBarDrawerToggle mActionBarDrawerToggle;
@@ -190,7 +197,53 @@ public class MainActivityFragment extends InjectedFragment
     {
         System.out.println("Received connectivity status update " + event.hasConnectivity);
         mConnectivityIndicator.setVisibility(event.hasConnectivity ? View.GONE : View.VISIBLE);
+
+        final long offlineStartTime = mConnectivityManager.getOfflineStartTime();
+
+        System.out.println("Time offline : " + offlineStartTime);
+
+        //mConnectivityIndicator.setText("data is old : " + timeOffline);
+
+        //setOfflineCountTimer(timeOffline);
+
+        if (mCountdownTimer != null) { mCountdownTimer.cancel(); } // cancel the previous counter
+        //mCountdownTimer = DateTimeUtils.setCountDownTimer(mConnectivityIndicator, timeOffline, R.string.offline_timer);
+
+        mCountdownTimer = DateTimeUtils.setCountUpTimer(mConnectivityIndicator, offlineStartTime, R.string.offline_timer);
+
+//        mCountdownTimer = new CountDownTimer(offlineStartTime, DateUtils.SECOND_IN_MILLIS)
+//        {
+//            @Override
+//            public void onTick(final long millisUntilFinished)
+//            {
+//                long offlineDuration = offlineStartTime - System.currentTimeMillis();
+//
+//                mConnectivityIndicator.setText(mConnectivityIndicator.getContext().getString(R.string.offline_timer,
+//                        DateTimeUtils.millisecondsToFormattedString(offlineDuration)));
+//            }
+//
+//            @Override
+//            public void onFinish() { }
+//        }.start();
+
+
     }
+
+//    public CountDownTimer setOfflineCountTimer(final long timeToDisplay)
+//    {
+//        return new CountDownTimer(timeToDisplay, DateUtils.SECOND_IN_MILLIS)
+//        {
+//            @Override
+//            public void onTick(final long millisUntilFinished)
+//            {
+//                mConnectivityIndicator.setText(getString(R.string.offline_timer, DateTimeUtils.millisecondsToFormattedString(timeToDisplay)));
+//            }
+//
+//            @Override
+//            public void onFinish() { }
+//        }.start();
+//    }
+
 
     private void setDeeplinkData(final Bundle savedInstanceState)
     {
@@ -257,6 +310,7 @@ public class MainActivityFragment extends InjectedFragment
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(false));
         mDrawerLayout.removeDrawerListener(mActionBarDrawerToggle);
         bus.unregister(this);
+        if (mCountdownTimer != null) { mCountdownTimer.cancel(); }
         super.onPause();
     }
 

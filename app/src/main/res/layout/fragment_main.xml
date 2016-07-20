@@ -15,19 +15,18 @@
         android:orientation="vertical"
         >
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/toolbar_top_padding"
+            android:background="?attr/colorPrimary"
+            />
+
         <TextView
             android:id="@+id/connectivity_indicator"
             android:layout_width="match_parent"
             android:layout_height="@dimen/toolbar_top_padding"
             android:text="OFFLINE MODE!"
             android:background="@color/error_red"
-            android:visibility="gone"
-            />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/toolbar_top_padding"
-            android:background="?attr/colorPrimary"
             />
 
         <com.handy.portal.library.ui.widget.HandyToolbar

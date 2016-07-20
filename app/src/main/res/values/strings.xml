@@ -575,4 +575,6 @@
     <string name="customer_no_show_view_policy_button">View Policy</string>
 
 
+    <string name="offline_timer">Offline for %1$s</string>
+
 </resources>

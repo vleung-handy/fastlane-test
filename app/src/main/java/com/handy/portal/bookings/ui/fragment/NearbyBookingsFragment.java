@@ -257,7 +257,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
     {
         if (mCounter != null) { mCounter.cancel(); } // cancel the previous counter
 
-        mCounter = DateTimeUtils.setCountDownTimer(mBookingTimerText, timeRemainMillis);
+        mCounter = DateTimeUtils.setCountDownTimer(mBookingTimerText, timeRemainMillis, R.string.start_timer_formatted);
     }
 
 }

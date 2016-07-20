@@ -16,6 +16,9 @@ public class ConnectivityManager
 
     private boolean hasConnectivity = true;
 
+    private long offlineStartTime = 0;
+
+
     @Inject
     public ConnectivityManager(final EventBus bus)
     {
@@ -27,8 +30,29 @@ public class ConnectivityManager
         return hasConnectivity;
     }
 
+//    public long getTimeOffline()
+//    {
+////        mCounter = DateTimeUtils.setActionBarCountdownTimer(getContext(), getActionBar(),
+////                startDate.getTime() - System.currentTimeMillis(),
+////                R.string.start_timer_lowercase_formatted);
+//        return Math.abs(offlineStartTime - System.currentTimeMillis());
+//    }
+
+    public long getOfflineStartTime()
+    {
+        return offlineStartTime;
+    }
+
+
+
     public void setHasConnectivity(final boolean hasConnectivity)
     {
+        if (this.hasConnectivity() == true && hasConnectivity == false)
+        {
+            offlineStartTime = System.currentTimeMillis();
+        }
+
+
         this.hasConnectivity = hasConnectivity;
         mBus.post(new HandyEvent.ConnectivityStatusUpdate(this.hasConnectivity()));
     }
