@@ -60,7 +60,7 @@ public class HandyConnectivityManager
 
     public void requestRefreshConnectivityStatus(Context context)
     {
-        System.out.println("Someone said check your connectivity");
+        System.out.println("CSD - Someone said check your connectivity");
         //todo add a timer or something to stop a stampede
         refreshConnectivityStatus(context);
 

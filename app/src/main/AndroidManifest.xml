@@ -207,6 +207,13 @@
             android:value="AIzaSyCKCHTy6QgYdpLXtEpoDs22MI0JnqP8_mc"
             />
 
+        <receiver android:name=".receiver.ConnectivityReceiver">
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
+            </intent-filter>
+        </receiver>
+
         <!-- URBAN AIRSHIP -->
 
 
