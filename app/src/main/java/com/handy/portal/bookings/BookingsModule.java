@@ -4,6 +4,7 @@ import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.BookingDetailsWrapperFragment;
 import com.handy.portal.bookings.ui.fragment.BookingFragment;
+import com.handy.portal.bookings.ui.fragment.BookingsMapFragment;
 import com.handy.portal.bookings.ui.fragment.CancellationRequestFragment;
 import com.handy.portal.bookings.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.InProgressBookingFragment;
@@ -47,7 +48,8 @@ import dagger.Provides;
                 EarlyAccessTrialDialogFragment.class,
                 JobAccessUnlockedDialogFragment.class,
                 ProRequestedJobsFragment.class,
-                CustomerNoShowDialogFragment.class
+                CustomerNoShowDialogFragment.class,
+                BookingsMapFragment.class,
         })
 public final class BookingsModule
 {

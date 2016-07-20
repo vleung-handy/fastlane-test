@@ -9,6 +9,9 @@ import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -16,6 +19,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
@@ -37,11 +41,13 @@ import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.model.Address;
 import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -216,6 +222,42 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             }
 
             requestAllBookings();
+        }
+    }
+
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
+    {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_bookings, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.action_map:
+                ArrayList<Booking> bookings = new ArrayList<>();
+                for (Booking b : mBookingsForSelectedDay)
+                {
+                    if (b.getAddress() != null)
+                    { bookings.add(b); }
+                }
+
+                if (bookings.size() > 0)
+                {
+                    Bundle args = new Bundle();
+                    Address address = bookings.get(0).getAddress();
+                    bookings.addAll(mBookingsForSelectedDay);
+                    args.putSerializable(BundleKeys.BOOKINGS, bookings);
+                    args.putParcelable(BundleKeys.MAP_CENTER,
+                            new LatLng(address.getLatitude(), address.getLongitude()));
+                    bus.post(new NavigationEvent.NavigateToPage(MainViewPage.JOBS_MAP, args, true));
+                }
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

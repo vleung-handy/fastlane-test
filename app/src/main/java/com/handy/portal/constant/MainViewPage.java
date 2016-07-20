@@ -5,6 +5,7 @@ import android.support.annotation.Nullable;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.BookingDetailsWrapperFragment;
 import com.handy.portal.bookings.ui.fragment.BookingFragment;
+import com.handy.portal.bookings.ui.fragment.BookingsMapFragment;
 import com.handy.portal.bookings.ui.fragment.CancellationRequestFragment;
 import com.handy.portal.bookings.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.NearbyBookingsFragment;
@@ -51,6 +52,7 @@ public enum MainViewPage implements Serializable
     SCHEDULED_JOBS(ScheduledBookingsFragment.class),
     COMPLEMENTARY_JOBS(ComplementaryBookingsFragment.class),
     NEARBY_JOBS(NearbyBookingsFragment.class),
+    JOBS_MAP(BookingsMapFragment.class),
     JOB_DETAILS(BookingDetailsWrapperFragment.class),
     JOB_PAYMENT_DETAILS(BookingTransactionsWrapperFragment.class),
     CANCELLATION_REQUEST(CancellationRequestFragment.class),
