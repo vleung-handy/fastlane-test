@@ -21,6 +21,7 @@ import com.handy.portal.location.LocationModule;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.ConnectivityManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.PageNavigationManager;
@@ -470,6 +471,15 @@ public final class ApplicationModule
     {
         return new SetupManager(bus, dataManager);
     }
+
+    @Provides
+    @Singleton
+    final ConnectivityManager provideConnectivityManager(final EventBus bus)
+    {
+        return new ConnectivityManager(bus);
+    }
+
+
 
     private String getDeviceCarrier()
     {

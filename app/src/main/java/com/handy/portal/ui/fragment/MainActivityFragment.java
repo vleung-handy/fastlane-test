@@ -102,6 +102,10 @@ public class MainActivityFragment extends InjectedFragment
     @BindView(R.id.software_licenses_text)
     TextView mSoftwareLicensesText;
 
+    @BindView(R.id.connectivity_indicator)
+    TextView mConnectivityIndicator;
+
+
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private MainViewPage currentPage = null;
 
@@ -179,6 +183,13 @@ public class MainActivityFragment extends InjectedFragment
     public void onReceiveUnreadCountSuccess(NotificationEvent.ReceiveUnreadCountSuccess event)
     {
         mAlertsButton.setUnreadCount(event.getUnreadCount());
+    }
+
+    @Subscribe
+    public void onReceiveConnectivityStatusUpdate(HandyEvent.ConnectivityStatusUpdate event)
+    {
+        System.out.println("Received connectivity status update " + event.hasConnectivity);
+        mConnectivityIndicator.setVisibility(event.hasConnectivity ? View.GONE : View.VISIBLE);
     }
 
     private void setDeeplinkData(final Bundle savedInstanceState)

@@ -19,6 +19,7 @@ import com.handy.portal.bookings.ui.fragment.dialog.EarlyAccessTrialDialogFragme
 import com.handy.portal.bookings.ui.fragment.dialog.JobAccessUnlockedDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.manager.ConnectivityManager;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -54,8 +55,10 @@ public final class BookingsModule
     @Provides
     @Singleton
     final BookingManager provideBookingManager(final EventBus bus,
-                                               final DataManager dataManager)
+                                               final DataManager dataManager,
+                                               final ConnectivityManager connectivityManager
+    )
     {
-        return new BookingManager(bus, dataManager);
+        return new BookingManager(bus, dataManager, connectivityManager);
     }
 }

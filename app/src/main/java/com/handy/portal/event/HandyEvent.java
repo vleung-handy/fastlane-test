@@ -919,6 +919,16 @@ public abstract class HandyEvent
 //Unclassified events - events should go below here by default unless they fit another category
 
 
+    public static class ConnectivityStatusUpdate extends HandyEvent
+    {
+        public boolean hasConnectivity;
+
+        public ConnectivityStatusUpdate(boolean hasConnectivity)
+        {
+            this.hasConnectivity = hasConnectivity;
+        }
+    }
+
     public static class SetLoadingOverlayVisibility extends HandyEvent
     {
         public boolean isVisible;
@@ -1058,4 +1068,6 @@ public abstract class HandyEvent
             return mStepId;
         }
     }
+
+
 }

@@ -3,6 +3,7 @@ package com.handy.portal.ui.activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.handy.portal.R;
@@ -10,6 +11,7 @@ import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.ConnectivityManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.notification.NotificationUtils;
 import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragment;
@@ -28,6 +30,8 @@ public class MainActivity extends BaseActivity
     ProviderManager providerManager;
     @Inject
     ConfigManager mConfigManager;
+    @Inject
+    ConnectivityManager mConnectivityManager;
 
     private NotificationBlockerDialogFragment mNotificationBlockerDialogFragment
             = new NotificationBlockerDialogFragment();
@@ -57,6 +61,7 @@ public class MainActivity extends BaseActivity
         providerManager.prefetch();
         checkIfUserShouldUpdatePaymentInfo();
         checkIfNotificationIsEnabled();
+        checkConnectivity();
     }
 
     @Override
@@ -64,6 +69,27 @@ public class MainActivity extends BaseActivity
     {
         bus.unregister(this);
         super.onPause();
+    }
+
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event)
+    {
+        System.out.println("onKeyDown(" + keyCode + ", " + event + ")");
+
+        if (keyCode == KeyEvent.KEYCODE_O)
+        {
+            mConnectivityManager.setHasConnectivity(!mConnectivityManager.hasConnectivity());
+            System.out.println("Toggling online mode : new value : " + mConnectivityManager.hasConnectivity());
+        }
+
+        if (keyCode == KeyEvent.KEYCODE_R)
+        {
+            System.out.println("Forcing a refresh of connectivity status");
+            mConnectivityManager.requestRefreshConnectivityStatus(this);
+        }
+
+        return super.onKeyDown(keyCode, event);
     }
 
     private void checkIfUserShouldUpdatePaymentInfo()
@@ -79,6 +105,13 @@ public class MainActivity extends BaseActivity
             FragmentUtils.safeLaunchDialogFragment(mNotificationBlockerDialogFragment, this,
                     NotificationBlockerDialogFragment.FRAGMENT_TAG);
         }
+    }
+
+    private void checkConnectivity()
+    {
+        //boolean hasConnectivity = true;
+        //mConnectivityManager.setHasConnectivity(hasConnectivity);
+        mConnectivityManager.requestRefreshConnectivityStatus(this);
     }
 
     private void setFullScreen()
