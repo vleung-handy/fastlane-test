@@ -257,7 +257,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                     mBooking, getLocationData())));
         }
         /*
-            else, mBooking hasn't been set yet.
+            else, booking hasn't been set yet.
             one obvious case in which this could happen
             is when this event is the result of a previous instance of this fragment
          */

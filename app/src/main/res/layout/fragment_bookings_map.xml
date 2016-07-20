@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical"
+    >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+
+        <!--<FrameLayout-->
+            <!--android:id="@+id/nearby_bookings_map"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="match_parent"-->
+            <!--/>-->
+        <com.handy.portal.bookings.ui.element.BookingsMapView
+            android:id="@+id/bookings_map_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+        <!--<TextView-->
+            <!--android:padding="@dimen/extra_padding_medium"-->
+            <!--android:id="@+id/nearby_bookings_description"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:background="@color/black_trans"-->
+            <!--android:textSize="@dimen/xsmall_text_size"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:textColor="@color/white"-->
+            <!--tools:text="@string/nearby_booking_formatted"-->
+            <!--/>-->
+    </FrameLayout>
+
+    <!--<FrameLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="125dp"-->
+        <!--&gt;-->
+
+        <!--<include-->
+            <!--layout="@layout/element_booking_info"/>-->
+    <!--</FrameLayout>-->
+
+</LinearLayout>

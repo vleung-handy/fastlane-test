@@ -19,7 +19,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.maps.model.LatLng;
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
@@ -41,7 +40,6 @@ import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.model.Address;
 import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
@@ -241,18 +239,18 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 ArrayList<Booking> bookings = new ArrayList<>();
                 for (Booking b : mBookingsForSelectedDay)
                 {
-                    if (b.getAddress() != null)
+                    if (b.getZipClusterId() != null)
                     { bookings.add(b); }
                 }
 
                 if (bookings.size() > 0)
                 {
                     Bundle args = new Bundle();
-                    Address address = bookings.get(0).getAddress();
-                    bookings.addAll(mBookingsForSelectedDay);
+//                    Address address = bookings.get(0).getAddress();
+//                    bookings.addAll(bookings);
                     args.putSerializable(BundleKeys.BOOKINGS, bookings);
-                    args.putParcelable(BundleKeys.MAP_CENTER,
-                            new LatLng(address.getLatitude(), address.getLongitude()));
+//                    args.putParcelable(BundleKeys.MAP_CENTER,
+//                            new LatLng(address.getLatitude(), address.getLongitude()));
                     bus.post(new NavigationEvent.NavigateToPage(MainViewPage.JOBS_MAP, args, true));
                 }
                 return true;

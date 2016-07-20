@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
@@ -23,7 +24,9 @@ import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polygon;
 import com.google.android.gms.maps.model.PolygonOptions;
+import com.google.android.gms.maps.model.Polyline;
 import com.handy.portal.R;
 import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
@@ -78,7 +81,7 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
     {
         if (mBooking == null)
         {
-            Crashlytics.log("mBooking is null in onMapReady()");
+            Crashlytics.log("booking is null in onMapReady()");
             return;
         }
 
@@ -117,6 +120,20 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
         }
 
         positionCamera(map, points);
+        map.setOnPolygonClickListener(new GoogleMap.OnPolygonClickListener() {
+            @Override
+            public void onPolygonClick(final Polygon polygon)
+            {
+                Log.i("", "on polygon click: " + polygon.getId());
+            }
+        });
+        map.setOnPolylineClickListener(new GoogleMap.OnPolylineClickListener() {
+            @Override
+            public void onPolylineClick(final Polyline polyline)
+            {
+                Log.i("", "on polygon line click: " + polyline.getId());
+            }
+        });
     }
 
     public void setDisplay(@NonNull Booking booking, Booking.BookingStatus bookingStatus,
@@ -298,7 +315,7 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
             {
                 case MotionEvent.ACTION_DOWN:
                 case MotionEvent.ACTION_UP:
-                    mScrollView.requestDisallowInterceptTouchEvent(true);
+//                    mScrollView.requestDisallowInterceptTouchEvent(true);
                     break;
             }
             return super.dispatchTouchEvent(event);

@@ -23,6 +23,30 @@ public abstract class BookingEvent extends HandyEvent
         }
     }
 
+    public static class RequestZipClusterPolygonsWithAssociatedBooking extends RequestEvent
+    {
+        public final String zipClusterId;
+        public Booking booking;
+
+        public RequestZipClusterPolygonsWithAssociatedBooking(String zipClusterId, Booking booking)
+        {
+            this.zipClusterId = zipClusterId;
+            this.booking = booking;
+        }
+    }
+
+
+    public static class ReceiveZipClusterPolygonsWithAssociatedBookingSuccess extends ReceiveSuccessEvent
+    {
+        public final ZipClusterPolygons zipClusterPolygons;
+        public Booking booking; //fixme hacky
+
+        public ReceiveZipClusterPolygonsWithAssociatedBookingSuccess(ZipClusterPolygons zipClusterPolygons, Booking booking)
+        {
+            this.zipClusterPolygons = zipClusterPolygons;
+            this.booking = booking;
+        }
+    }
 
     public static class RequestProRequestedJobs extends RequestEvent
     {

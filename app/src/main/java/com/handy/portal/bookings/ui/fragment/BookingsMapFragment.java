@@ -1,45 +1,45 @@
 package com.handy.portal.bookings.ui.fragment;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.maps.model.LatLng;
 import com.handy.portal.R;
+import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
-import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
+import com.handy.portal.bookings.ui.element.BookingsMapView;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.Country;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.library.util.MathUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.NearbyJobsLog;
 import com.handy.portal.manager.ProviderManager;
-import com.handy.portal.model.Address;
-import com.handy.portal.model.Provider;
-import com.handy.portal.payments.model.PaymentInfo;
+import com.handy.portal.model.ZipClusterPolygons;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -47,59 +47,79 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class BookingsMapFragment extends ActionBarFragment
-        implements NearbyBookingsMapFragment.MarkerClickedCallback
+        implements NearbyBookingsMapFragment.MarkerClickedCallback, BookingsMapView.BookingsMapListener
 {
     private static final String SOURCE = "nearby_jobs_view";
 
     @Inject
     ProviderManager mProviderManager;
 
-    @BindView(R.id.nearby_bookings_description)
-    TextView mDescriptionText;
-    @BindView(R.id.nearby_bookings_map)
-    ViewGroup mMapContainer;
-    @BindView(R.id.booking_info_timer)
-    TextView mBookingTimerText;
-    @BindView(R.id.booking_info_address)
-    TextView mBookingAddressText;
-    @BindView(R.id.booking_info_time)
-    TextView mBookingTimeText;
-    @BindView(R.id.booking_info_claim_button)
-    Button mBookingClaimButton;
-    @BindView(R.id.booking_info_distance)
-    TextView mBookingDistanceText;
+//    @BindView(R.id.nearby_bookings_description)
+//    TextView mDescriptionText;
+//    @BindView(R.id.nearby_bookings_map)
+//    ViewGroup mMapContainer;
+//    @BindView(R.id.booking_info_timer)
+//    TextView mBookingTimerText;
+//    @BindView(R.id.booking_info_address)
+//    TextView mBookingAddressText;
+//    @BindView(R.id.booking_info_time)
+//    TextView mBookingTimeText;
+//    @BindView(R.id.booking_info_claim_button)
+//    Button mBookingClaimButton;
+//    @BindView(R.id.booking_info_distance)
+//    TextView mBookingDistanceText;
+    @BindView(R.id.bookings_map_view)
+    BookingsMapView mBookingsMapView;
 
+    //all bookings for selected day
     private ArrayList<Booking> mBookings;
     private LatLng mCenter;
     private CountDownTimer mCounter;
     private double mKilometer;
-
+    private LinkedList<ZipClusterPolygons> mPolygonsBuffer = new LinkedList<>();
     @Nullable
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState)
     {
-        View view = inflater.inflate(R.layout.fragment_nearby_bookings, container, false);
+        View view = inflater.inflate(R.layout.fragment_bookings_map, container, false);
         ButterKnife.bind(this, view);
 
         Bundle args = getArguments();
         mBookings = (ArrayList<Booking>) args.getSerializable(BundleKeys.BOOKINGS);
-        mCenter = args.getParcelable(BundleKeys.MAP_CENTER);
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        NearbyBookingsMapFragment fragment =
-                NearbyBookingsMapFragment.newInstance(mBookings, mCenter);
-        transaction.replace(mMapContainer.getId(), fragment);
-        transaction.commit();
+//        mCenter = args.getParcelable(BundleKeys.MAP_CENTER);
+//        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+//        NearbyBookingsMapFragment fragment =
+//                NearbyBookingsMapFragment.newInstance(mBookings, mCenter);
+//        transaction.replace(mMapContainer.getId(), fragment);
+//        transaction.commit();
 
-        if (mBookings.size() > 1)
-        {
-            mDescriptionText.setText(getString(R.string.nearby_booking_formatted, mBookings.size()));
-        }
-        else if (mBookings.size() == 1)
-        {
-            mDescriptionText.setText(getString(R.string.nearby_booking_one));
-        }
+//        if (mBookings.size() > 1)
+//        {
+//            mDescriptionText.setText(getString(R.string.nearby_booking_formatted, mBookings.size()));
+//        }
+//        else if (mBookings.size() == 1)
+//        {
+//            mDescriptionText.setText(getString(R.string.nearby_booking_one));
+//        }
+        mBookingsMapView.setBookingsMapListener(this);
         return view;
+    }
+
+    private void requestZipClusters()
+    {
+        //FIXME wait for map ready
+        for(Booking booking : mBookings)
+        {
+            bus.post(new BookingEvent.RequestZipClusterPolygonsWithAssociatedBooking(booking.getZipClusterId(), booking));
+        }
+    }
+
+    @Override
+    public void onLowMemory()
+    {
+        super.onLowMemory();
+        mBookingsMapView.onLowMemory();
     }
 
     @Override
@@ -107,6 +127,41 @@ public class BookingsMapFragment extends ActionBarFragment
     {
         super.onViewCreated(view, savedInstanceState);
         setActionBar(R.string.available_jobs, false);
+        mBookingsMapView.onCreate(savedInstanceState);
+//        mBookingsMapView.disableParentScrolling(mScrollView);
+    }
+
+    @Override
+    public void onDestroy()
+    {
+        try
+        {
+            mBookingsMapView.onDestroy();
+        }
+        catch (NullPointerException e)
+        {
+            Log.e(getClass().getSimpleName(),
+                    "Error while attempting MapView.onDestroy(), ignoring exception", e);
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState)
+    {
+        super.onSaveInstanceState(outState);
+        try
+        {
+            /*
+                similar to the exception thrown by mBookingsMapView.onDestroy()
+                not caused by mBookingsMapView = null
+             */
+            mBookingsMapView.onSaveInstanceState(outState);
+        }
+        catch (Exception e)
+        {
+            Crashlytics.log("Error while attempting MapView.onSaveInstanceState(). Ignoring exception: " + e.getMessage());
+        }
     }
 
     @Override
@@ -114,6 +169,7 @@ public class BookingsMapFragment extends ActionBarFragment
     {
         super.onResume();
         bus.register(this);
+        mBookingsMapView.onResume();
         bus.post(new LogEvent.AddLogEvent(
                 new NearbyJobsLog.Shown(mBookings.size())));
     }
@@ -121,6 +177,7 @@ public class BookingsMapFragment extends ActionBarFragment
     @Override
     public void onPause()
     {
+        mBookingsMapView.onPause();
         super.onPause();
         bus.unregister(this);
         if (mCounter != null) { mCounter.cancel(); }
@@ -150,7 +207,7 @@ public class BookingsMapFragment extends ActionBarFragment
     public void markerClicked(final Booking booking)
     {
         bus.post(new LogEvent.AddLogEvent(new NearbyJobsLog.PinSelected(booking.getId())));
-        setBookingInfoDisplay(booking);
+//        setBookingInfoDisplay(booking);
     }
 
     @Override
@@ -164,6 +221,12 @@ public class BookingsMapFragment extends ActionBarFragment
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new HandyEvent.RequestClaimJob(booking, SOURCE, null));
         }
+    }
+
+    @Subscribe
+    public void onReceiveZipClusterPolygonsWithAssociatedBookingSuccess(BookingEvent.ReceiveZipClusterPolygonsWithAssociatedBookingSuccess event)
+    {
+        mBookingsMapView.drawPolygon(event.zipClusterPolygons, event.booking);
     }
 
     @Subscribe
@@ -192,56 +255,41 @@ public class BookingsMapFragment extends ActionBarFragment
         showToast(errorMessage);
     }
 
-    private void setBookingInfoDisplay(final Booking booking)
+    @Override
+    public void onMapReady()
     {
-        Address address = booking.getAddress();
-        PaymentInfo paymentInfo = booking.getPaymentToProvider();
-
-        setCountDownTimer(booking.getStartDate().getTime() - System.currentTimeMillis());
-
-        mBookingAddressText.setText(booking.getAddress().getShortRegion());
-
-        String startTime = DateTimeUtils.CLOCK_FORMATTER_12HR.format(booking.getStartDate());
-        String endTime = DateTimeUtils.CLOCK_FORMATTER_12HR.format(booking.getEndDate());
-        mBookingTimeText.setText(getString(R.string.time_interval_formatted, startTime, endTime));
-
-        mKilometer = MathUtils.getDistance(mCenter.latitude, mCenter.longitude,
-                address.getLatitude(), address.getLongitude());
-        Provider provider = mProviderManager.getCachedActiveProvider();
-        final String distance;
-        if (provider != null && !Country.US.equalsIgnoreCase(provider.getCountry()))
-        {
-            distance = getString(R.string.kilometers_away_formatted,
-                    MathUtils.TWO_DECIMALS_FORMAT.format(mKilometer));
-        }
-        else
-        {
-            distance = getString(R.string.miles_away_formatted,
-                    MathUtils.TWO_DECIMALS_FORMAT.format(mKilometer * MathUtils.MILES_PER_KILOMETER));
-        }
-        mBookingDistanceText.setText(distance);
-
-        final ConfirmBookingActionDialogFragment dialogFragment =
-                ConfirmBookingClaimDialogFragment.newInstance(booking);
-        mBookingClaimButton.setText(getString(R.string.claim_n_dollar_job_formatted,
-                paymentInfo.getCurrencySymbol() + paymentInfo.getAdjustedAmount()));
-        mBookingClaimButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(final View v)
-            {
-                if (dialogFragment.isVisible()) { return; }
-                dialogFragment.setTargetFragment(BookingsMapFragment.this, RequestCode.CONFIRM_REQUEST);
-                dialogFragment.show(getFragmentManager(), ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
-            }
-        });
+        requestZipClusters();
     }
 
-    private void setCountDownTimer(long timeRemainMillis)
+    @Override
+    public void onZipClusterPolygonClicked(final List<Booking> associatedBookings)
     {
-        if (mCounter != null) { mCounter.cancel(); } // cancel the previous counter
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        CharSequence[] ids = new CharSequence[associatedBookings.size()];
+        for (int i = 0; i < associatedBookings.size(); ++i)
+        {
+            Booking b = associatedBookings.get(i);
+            Booking.DisplayAttributes proRequestDisplayAttributes = b.getProviderRequestDisplayAttributes();
 
-        mCounter = DateTimeUtils.setCountDownTimer(mBookingTimerText, timeRemainMillis);
+            String dollarAmount = CurrencyUtils.formatPriceWithCents(b.getPaymentToProvider().getAmount(), b.getPaymentToProvider().getCurrencySymbol());
+            String requestedText = b.isRequested() && proRequestDisplayAttributes != null
+                    && proRequestDisplayAttributes.getListingTitle() != null ? proRequestDisplayAttributes.getListingTitle() : "";
+            ids[i] = (requestedText) +  "\n" +
+                    DateTimeUtils.formatDateRange(DateTimeUtils.LOCAL_TIME_12_HOURS, b.getStartDate(), b.getEndDate()) + "\t\t" + dollarAmount
+                    ;
+        }
+        builder.setTitle("Available jobs")
+                .setItems(ids, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which)
+                    {
+                        Booking booking = associatedBookings.get(which);
+                        Bundle arguments= new Bundle();
+                        arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
+                        arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
+                        arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
+                        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.JOB_DETAILS, arguments, true));
+                    }
+                });
+        builder.create().show();
     }
-
 }
