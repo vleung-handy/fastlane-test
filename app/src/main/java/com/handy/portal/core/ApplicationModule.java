@@ -21,7 +21,7 @@ import com.handy.portal.location.LocationModule;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.manager.ConnectivityManager;
+import com.handy.portal.manager.HandyConnectivityManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.PageNavigationManager;
@@ -474,9 +474,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final ConnectivityManager provideConnectivityManager(final EventBus bus)
+    final HandyConnectivityManager provideConnectivityManager(final EventBus bus)
     {
-        return new ConnectivityManager(bus);
+        return new HandyConnectivityManager(bus);
     }
 
 

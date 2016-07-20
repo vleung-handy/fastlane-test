@@ -16,7 +16,7 @@ import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.manager.ConnectivityManager;
+import com.handy.portal.manager.HandyConnectivityManager;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
@@ -37,7 +37,7 @@ public class BookingManager
 {
     private final EventBus mBus;
     private final DataManager mDataManager;
-    private final ConnectivityManager mConnectivityManager;
+    private final HandyConnectivityManager mHandyConnectivityManager;
 
     //Active timed caches
     private final Cache<Date, BookingsWrapper> availableBookingsCache;
@@ -64,12 +64,12 @@ public class BookingManager
     }
 
     @Inject
-    public BookingManager(final EventBus bus, final DataManager dataManager, final ConnectivityManager connectivityManager)
+    public BookingManager(final EventBus bus, final DataManager dataManager, final HandyConnectivityManager handyConnectivityManager)
     {
         mBus = bus;
         mBus.register(this);
         mDataManager = dataManager;
-        mConnectivityManager = connectivityManager;
+        mHandyConnectivityManager = handyConnectivityManager;
 
         this.availableBookingsCache = CacheBuilder.newBuilder()
                 .maximumSize(100)
@@ -199,7 +199,7 @@ public class BookingManager
         String bookingId = event.bookingId;
         BookingType type = event.type;
 
-        if (mConnectivityManager.hasConnectivity())
+        if (mHandyConnectivityManager.hasConnectivity())
         {
             mDataManager.getBookingDetails(bookingId, type, new DataManager.Callback<Booking>()
             {
@@ -234,7 +234,7 @@ public class BookingManager
     public void onRequestAvailableBookings(final HandyEvent.RequestAvailableBookings event)
     {
 
-        if (mConnectivityManager.hasConnectivity())
+        if (mHandyConnectivityManager.hasConnectivity())
         {
             final List<Date> datesToRequest = new ArrayList<>();
             for (Date date : event.dates)
@@ -360,7 +360,7 @@ public class BookingManager
             without errors
          */
 
-        if (mConnectivityManager.hasConnectivity())
+        if (mHandyConnectivityManager.hasConnectivity())
         {
             boolean matchingCache = false;
 
@@ -463,9 +463,9 @@ public class BookingManager
     {
         //testStuff();
 
-        System.out.println("CSD getting scheduled : have connection? : " + mConnectivityManager.hasConnectivity());
+        System.out.println("CSD getting scheduled : have connection? : " + mHandyConnectivityManager.hasConnectivity());
 
-        if (mConnectivityManager.hasConnectivity())
+        if (mHandyConnectivityManager.hasConnectivity())
         {
             final List<Date> datesToRequest = new ArrayList<>();
             for (Date date : event.dates)

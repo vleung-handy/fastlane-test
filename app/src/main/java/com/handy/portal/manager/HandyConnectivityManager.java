@@ -1,6 +1,7 @@
 package com.handy.portal.manager;
 
 import android.content.Context;
+import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.widget.Toast;
 
@@ -10,7 +11,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
-public class ConnectivityManager
+public class HandyConnectivityManager
 {
     private final EventBus mBus;
 
@@ -20,7 +21,7 @@ public class ConnectivityManager
 
 
     @Inject
-    public ConnectivityManager(final EventBus bus)
+    public HandyConnectivityManager(final EventBus bus)
     {
         mBus = bus;
     }
@@ -71,17 +72,17 @@ public class ConnectivityManager
 
         System.out.println("Refresh connection status");
 
-        android.net.ConnectivityManager cm = (android.net.ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         if (activeNetwork != null)
         { // connected to the internet
-            if (activeNetwork.getType() == android.net.ConnectivityManager.TYPE_WIFI)
+            if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI)
             {
                 // connected to wifi
                 Toast.makeText(context, activeNetwork.getTypeName(), Toast.LENGTH_SHORT).show();
                 haveConnection = true;
             }
-            else if (activeNetwork.getType() == android.net.ConnectivityManager.TYPE_MOBILE)
+            else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE)
             {
                 // connected to the mobile provider's data plan
                 Toast.makeText(context, activeNetwork.getTypeName(), Toast.LENGTH_SHORT).show();

@@ -43,7 +43,7 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.manager.ConnectivityManager;
+import com.handy.portal.manager.HandyConnectivityManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
@@ -66,7 +66,7 @@ public class MainActivityFragment extends InjectedFragment
     @Inject
     ConfigManager mConfigManager;
     @Inject
-    ConnectivityManager mConnectivityManager;
+    HandyConnectivityManager mHandyConnectivityManager;
     /////////////Bad useless injection that breaks if not in?
 
     @BindView(R.id.tabs)
@@ -198,7 +198,7 @@ public class MainActivityFragment extends InjectedFragment
         System.out.println("Received connectivity status update " + event.hasConnectivity);
         mConnectivityIndicator.setVisibility(event.hasConnectivity ? View.GONE : View.VISIBLE);
 
-        final long offlineStartTime = mConnectivityManager.getOfflineStartTime();
+        final long offlineStartTime = mHandyConnectivityManager.getOfflineStartTime();
 
         System.out.println("Time offline : " + offlineStartTime);
 

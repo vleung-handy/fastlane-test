@@ -11,7 +11,7 @@ import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.manager.ConnectivityManager;
+import com.handy.portal.manager.HandyConnectivityManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.notification.NotificationUtils;
 import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragment;
@@ -31,7 +31,7 @@ public class MainActivity extends BaseActivity
     @Inject
     ConfigManager mConfigManager;
     @Inject
-    ConnectivityManager mConnectivityManager;
+    HandyConnectivityManager mHandyConnectivityManager;
 
     private NotificationBlockerDialogFragment mNotificationBlockerDialogFragment
             = new NotificationBlockerDialogFragment();
@@ -79,14 +79,14 @@ public class MainActivity extends BaseActivity
 
         if (keyCode == KeyEvent.KEYCODE_O)
         {
-            mConnectivityManager.setHasConnectivity(!mConnectivityManager.hasConnectivity());
-            System.out.println("Toggling online mode : new value : " + mConnectivityManager.hasConnectivity());
+            mHandyConnectivityManager.setHasConnectivity(!mHandyConnectivityManager.hasConnectivity());
+            System.out.println("Toggling online mode : new value : " + mHandyConnectivityManager.hasConnectivity());
         }
 
         if (keyCode == KeyEvent.KEYCODE_R)
         {
             System.out.println("Forcing a refresh of connectivity status");
-            mConnectivityManager.requestRefreshConnectivityStatus(this);
+            mHandyConnectivityManager.requestRefreshConnectivityStatus(this);
         }
 
         return super.onKeyDown(keyCode, event);
@@ -111,7 +111,7 @@ public class MainActivity extends BaseActivity
     {
         //boolean hasConnectivity = true;
         //mConnectivityManager.setHasConnectivity(hasConnectivity);
-        mConnectivityManager.requestRefreshConnectivityStatus(this);
+        mHandyConnectivityManager.requestRefreshConnectivityStatus(this);
     }
 
     private void setFullScreen()
