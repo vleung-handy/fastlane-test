@@ -711,7 +711,7 @@ public class MainActivityFragment extends InjectedFragment
     private void requestRequestedAvailableJobs()
     {
         //TODO: Days should be behind a config param, just using a static const until then
-        List<Date> datesForBookings = DateTimeUtils.getDateWithoutTimeList(new Date(), ProRequestedJobsFragment.REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
+        List<Date> datesForBookings = DateTimeUtils.getDateWithoutTimeList(new Date(), ProRequestedJobsFragment.DEFAULT_REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
         bus.post(new BookingEvent.RequestProRequestedJobs(datesForBookings, true));
     }
 }

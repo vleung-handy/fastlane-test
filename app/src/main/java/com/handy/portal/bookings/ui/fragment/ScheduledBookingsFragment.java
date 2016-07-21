@@ -32,6 +32,7 @@ import butterknife.OnClick;
 
 public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.ReceiveScheduledBookingsSuccess>
 {
+    public static final int SCHEDULED_REQUEST_NUM_DAYS = 28;
     private static final String SOURCE_SCHEDULED_JOBS_LIST = "scheduled_jobs_list";
     @BindView(R.id.scheduled_jobs_list_view)
     BookingListView mScheduledJobsListView;
@@ -223,9 +224,9 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected int numberOfDaysToDisplay()
+    protected int getNumberOfDaysToDisplay()
     {
-        return 28;
+        return SCHEDULED_REQUEST_NUM_DAYS;
     }
 
     @Subscribe

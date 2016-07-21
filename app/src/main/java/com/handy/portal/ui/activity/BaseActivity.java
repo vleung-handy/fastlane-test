@@ -32,6 +32,7 @@ import com.handy.portal.setup.SetupData;
 import com.handy.portal.setup.SetupEvent;
 import com.handy.portal.setup.step.AcceptTermsStep;
 import com.handy.portal.setup.step.AppUpdateStep;
+import com.handy.portal.setup.step.PrefetchDataStep;
 import com.handy.portal.setup.step.SetConfigurationStep;
 import com.handy.portal.setup.step.SetProviderProfileStep;
 import com.handy.portal.updater.AppUpdateEvent;
@@ -402,6 +403,7 @@ public abstract class BaseActivity extends AppCompatActivity
                             setupData.getConfigurationResponse()))
                     .addStep(new SetProviderProfileStep(mBaseActivity,
                             setupData.getProviderProfile()))
+                    .addStep(new PrefetchDataStep(mBaseActivity))
                     .setOnFlowCompleteListener(new Flow.OnFlowCompleteListener()
                     {
                         @Override

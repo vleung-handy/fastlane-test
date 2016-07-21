@@ -36,6 +36,8 @@ public class MainActivity extends BaseActivity
     private NotificationBlockerDialogFragment mNotificationBlockerDialogFragment
             = new NotificationBlockerDialogFragment();
 
+    private boolean mFirstResume = true;
+
     @Override
     protected boolean shouldTriggerSetup()
     {
@@ -62,6 +64,11 @@ public class MainActivity extends BaseActivity
         checkIfUserShouldUpdatePaymentInfo();
         checkIfNotificationIsEnabled();
         checkConnectivity();
+
+        if (mFirstResume)
+        {
+
+        }
     }
 
     @Override
@@ -87,6 +94,7 @@ public class MainActivity extends BaseActivity
         {
             System.out.println("Forcing a refresh of connectivity status");
             mHandyConnectivityManager.requestRefreshConnectivityStatus(this);
+
         }
 
         return super.onKeyDown(keyCode, event);

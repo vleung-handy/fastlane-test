@@ -40,7 +40,7 @@ import butterknife.OnClick;
 
 public class ProRequestedJobsFragment extends ActionBarFragment
 {
-    public static final int REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE = 14;//TODO: Make this a config param
+    public static final int DEFAULT_REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE = 14;
 
     @BindView(R.id.fragment_pro_requested_jobs_list_view)
     ProRequestedJobsExpandableListView mProRequestedJobsExpandableListView;
@@ -218,7 +218,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
                         numDaysForRequestedJobs);
             }
         }
-        return DateTimeUtils.getDateWithoutTimeList(new Date(), REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
+        return DateTimeUtils.getDateWithoutTimeList(new Date(), DEFAULT_REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
     }
 
     @Subscribe
