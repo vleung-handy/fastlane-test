@@ -15,10 +15,8 @@ public class HandyConnectivityManager
 {
     private final EventBus mBus;
 
-    private boolean hasConnectivity = true;
-
-    private long offlineStartTime = 0;
-
+    private boolean mHasConnectivity = true;
+    private long mOfflineStartTime = 0;
 
     @Inject
     public HandyConnectivityManager(final EventBus bus)
@@ -28,34 +26,20 @@ public class HandyConnectivityManager
 
     public boolean hasConnectivity()
     {
-        return hasConnectivity;
+        return mHasConnectivity;
     }
 
-//    public long getTimeOffline()
-//    {
-////        mCounter = DateTimeUtils.setActionBarCountdownTimer(getContext(), getActionBar(),
-////                startDate.getTime() - System.currentTimeMillis(),
-////                R.string.start_timer_lowercase_formatted);
-//        return Math.abs(offlineStartTime - System.currentTimeMillis());
-//    }
-
-    public long getOfflineStartTime()
-    {
-        return offlineStartTime;
-    }
-
-
+    public long getOfflineStartTime() { return mOfflineStartTime; }
 
     public void setHasConnectivity(final boolean hasConnectivity)
     {
-        if (this.hasConnectivity() == true && hasConnectivity == false)
+        if (mHasConnectivity && !hasConnectivity)
         {
-            offlineStartTime = System.currentTimeMillis();
+            mOfflineStartTime = System.currentTimeMillis();
         }
 
-
-        this.hasConnectivity = hasConnectivity;
-        mBus.post(new HandyEvent.ConnectivityStatusUpdate(this.hasConnectivity()));
+        mHasConnectivity = hasConnectivity;
+        mBus.post(new HandyEvent.ConnectivityStatusUpdate(mHasConnectivity, mOfflineStartTime));
     }
 
     public void requestRefreshConnectivityStatus(Context context)
@@ -63,12 +47,12 @@ public class HandyConnectivityManager
         System.out.println("CSD - Someone said check your connectivity");
         //todo add a timer or something to stop a stampede
         refreshConnectivityStatus(context);
-
     }
 
     private void refreshConnectivityStatus(Context context)
     {
         boolean haveConnection = false;
+        boolean hadConnection = mHasConnectivity;
 
         System.out.println("Refresh connection status");
 
@@ -79,31 +63,26 @@ public class HandyConnectivityManager
             if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI)
             {
                 // connected to wifi
-                Toast.makeText(context, activeNetwork.getTypeName(), Toast.LENGTH_SHORT).show();
                 haveConnection = true;
             }
             else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE)
             {
                 // connected to the mobile provider's data plan
-                Toast.makeText(context, activeNetwork.getTypeName(), Toast.LENGTH_SHORT).show();
                 haveConnection = true;
             }
-            else
-            {
-                Toast.makeText(context, "I aint got no internets, or at least no matching network type", Toast.LENGTH_SHORT).show();
-            }
         }
-        else
+
+        if (haveConnection && !hadConnection)
         {
-            // not connected to the internet
-            Toast.makeText(context, "I aint got no internets", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Connection Restored", Toast.LENGTH_SHORT).show();
         }
+        else if (!haveConnection && hadConnection)
+        {
+            Toast.makeText(context, "Connection Lost", Toast.LENGTH_SHORT).show();
+        }
+
 
         System.out.println("Result of connection check " + haveConnection);
-        //todo : update member var of connection status
-
         setHasConnectivity(haveConnection);
-
-
     }
 }

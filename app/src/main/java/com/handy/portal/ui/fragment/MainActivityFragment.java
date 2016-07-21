@@ -184,6 +184,8 @@ public class MainActivityFragment extends InjectedFragment
         }
         handleDeeplink();
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
+
+        refreshConnectivityDisplay(mHandyConnectivityManager.hasConnectivity(), mHandyConnectivityManager.getOfflineStartTime());
     }
 
     @Subscribe
@@ -192,58 +194,20 @@ public class MainActivityFragment extends InjectedFragment
         mAlertsButton.setUnreadCount(event.getUnreadCount());
     }
 
+    //TODO: If we minimize, regain connectivity, and resume this fragment isn't listening in time to hear the change
+
+    private void refreshConnectivityDisplay(boolean hasConnectivity, long offlineTimeStart)
+    {
+        mConnectivityIndicator.setVisibility(hasConnectivity ? View.GONE : View.VISIBLE);
+        if (mCountdownTimer != null) { mCountdownTimer.cancel(); } // cancel the previous counter
+        mCountdownTimer = DateTimeUtils.setCountUpTimer(mConnectivityIndicator, offlineTimeStart, R.string.offline_timer);
+    }
+
     @Subscribe
     public void onReceiveConnectivityStatusUpdate(HandyEvent.ConnectivityStatusUpdate event)
     {
-        System.out.println("Received connectivity status update " + event.hasConnectivity);
-        mConnectivityIndicator.setVisibility(event.hasConnectivity ? View.GONE : View.VISIBLE);
-
-        final long offlineStartTime = mHandyConnectivityManager.getOfflineStartTime();
-
-        System.out.println("Time offline : " + offlineStartTime);
-
-        //mConnectivityIndicator.setText("data is old : " + timeOffline);
-
-        //setOfflineCountTimer(timeOffline);
-
-        if (mCountdownTimer != null) { mCountdownTimer.cancel(); } // cancel the previous counter
-        //mCountdownTimer = DateTimeUtils.setCountDownTimer(mConnectivityIndicator, timeOffline, R.string.offline_timer);
-
-        mCountdownTimer = DateTimeUtils.setCountUpTimer(mConnectivityIndicator, offlineStartTime, R.string.offline_timer);
-
-//        mCountdownTimer = new CountDownTimer(offlineStartTime, DateUtils.SECOND_IN_MILLIS)
-//        {
-//            @Override
-//            public void onTick(final long millisUntilFinished)
-//            {
-//                long offlineDuration = offlineStartTime - System.currentTimeMillis();
-//
-//                mConnectivityIndicator.setText(mConnectivityIndicator.getContext().getString(R.string.offline_timer,
-//                        DateTimeUtils.millisecondsToFormattedString(offlineDuration)));
-//            }
-//
-//            @Override
-//            public void onFinish() { }
-//        }.start();
-
-
+        refreshConnectivityDisplay(event.hasConnectivity, event.offlineStartTime);
     }
-
-//    public CountDownTimer setOfflineCountTimer(final long timeToDisplay)
-//    {
-//        return new CountDownTimer(timeToDisplay, DateUtils.SECOND_IN_MILLIS)
-//        {
-//            @Override
-//            public void onTick(final long millisUntilFinished)
-//            {
-//                mConnectivityIndicator.setText(getString(R.string.offline_timer, DateTimeUtils.millisecondsToFormattedString(timeToDisplay)));
-//            }
-//
-//            @Override
-//            public void onFinish() { }
-//        }.start();
-//    }
-
 
     private void setDeeplinkData(final Bundle savedInstanceState)
     {

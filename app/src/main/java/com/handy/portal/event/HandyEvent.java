@@ -922,10 +922,12 @@ public abstract class HandyEvent
     public static class ConnectivityStatusUpdate extends HandyEvent
     {
         public boolean hasConnectivity;
+        public long offlineStartTime;
 
-        public ConnectivityStatusUpdate(boolean hasConnectivity)
+        public ConnectivityStatusUpdate(boolean hasConnectivity, long offlineStartTime)
         {
             this.hasConnectivity = hasConnectivity;
+            this.offlineStartTime = offlineStartTime;
         }
     }
 
