@@ -223,13 +223,12 @@ public abstract class HandyEvent
     public static class RequestBookingsEvent extends RequestEvent
     {
         public boolean useCachedIfPresent;
+        public List<Date> dates;
     }
 
 
     public static class RequestAvailableBookings extends RequestBookingsEvent
     {
-        public final List<Date> dates;
-
         public RequestAvailableBookings(List<Date> dates, boolean useCachedIfPresent)
         {
             this.dates = dates;
@@ -237,6 +236,15 @@ public abstract class HandyEvent
         }
     }
 
+
+    public static class RequestScheduledBookings extends RequestBookingsEvent
+    {
+        public RequestScheduledBookings(List<Date> dates, boolean useCachedIfPresent)
+        {
+            this.dates = dates;
+            this.useCachedIfPresent = useCachedIfPresent;
+        }
+    }
 
     public static class RequestOnboardingJobs extends RequestEvent
     {
@@ -262,29 +270,52 @@ public abstract class HandyEvent
     }
 
 
-    public static class RequestScheduledBookings extends RequestBookingsEvent
+    public static class RequestProRequestedJobs extends RequestBookingsEvent
     {
-        public final List<Date> dates;
+        private List<Date> mDatesForBookings;
+        private boolean mUseCachedIfPresent;
 
-        public RequestScheduledBookings(List<Date> dates, boolean useCachedIfPresent)
+        public RequestProRequestedJobs(List<Date> datesForBookings, boolean useCachedIfPresent)
         {
-            this.dates = dates;
-            this.useCachedIfPresent = useCachedIfPresent;
+            mDatesForBookings = datesForBookings;
+            mUseCachedIfPresent = useCachedIfPresent;
+        }
+
+        public boolean useCachedIfPresent()
+        {
+            return mUseCachedIfPresent;
+        }
+
+        public List<Date> getDatesForBookings()
+        {
+            return mDatesForBookings;
         }
     }
 
 
-    public static class RequestScheduledBookingsBatch extends RequestBookingsEvent
+    public static class ReceiveProRequestedJobsSuccess extends ReceiveSuccessEvent
     {
-        public final List<Date> dates;
+        public final List<BookingsWrapper> mProRequestedJobs;
 
-        public RequestScheduledBookingsBatch(List<Date> dates, boolean useCachedIfPresent)
+        public ReceiveProRequestedJobsSuccess(List<BookingsWrapper> proRequestedJobs)
         {
-            this.dates = dates;
-            this.useCachedIfPresent = useCachedIfPresent;
+            mProRequestedJobs = proRequestedJobs;
+        }
+
+        public List<BookingsWrapper> getProRequestedJobs()
+        {
+            return mProRequestedJobs;
         }
     }
 
+
+    public static class ReceiveProRequestedJobsError extends ReceiveErrorEvent
+    {
+        public ReceiveProRequestedJobsError(@Nullable DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 
     public static abstract class ReceiveBookingsSuccess extends ReceiveSuccessEvent
     {
@@ -296,6 +327,16 @@ public abstract class HandyEvent
     public static class ReceiveAvailableBookingsSuccess extends ReceiveBookingsSuccess
     {
         public ReceiveAvailableBookingsSuccess(BookingsWrapper bookingsWrapper, Date day)
+        {
+            this.bookingsWrapper = bookingsWrapper;
+            this.day = day;
+        }
+    }
+
+
+    public static class ReceiveScheduledBookingsSuccess extends ReceiveBookingsSuccess
+    {
+        public ReceiveScheduledBookingsSuccess(BookingsWrapper bookingsWrapper, Date day)
         {
             this.bookingsWrapper = bookingsWrapper;
             this.day = day;
@@ -315,16 +356,6 @@ public abstract class HandyEvent
         public BookingsListWrapper getBookingsListWrapper()
         {
             return mBookingsListWrapper;
-        }
-    }
-
-
-    public static class ReceiveScheduledBookingsSuccess extends ReceiveBookingsSuccess
-    {
-        public ReceiveScheduledBookingsSuccess(BookingsWrapper bookingsWrapper, Date day)
-        {
-            this.bookingsWrapper = bookingsWrapper;
-            this.day = day;
         }
     }
 

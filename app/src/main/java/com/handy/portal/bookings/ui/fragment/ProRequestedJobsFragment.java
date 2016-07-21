@@ -203,7 +203,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     private void requestProRequestedJobs(boolean useCachedIfPresent)
     {
         List<Date> datesForBookings = getDatesForBookings();
-        bus.post(new BookingEvent.RequestProRequestedJobs(datesForBookings, useCachedIfPresent));
+        bus.post(new HandyEvent.RequestProRequestedJobs(datesForBookings, useCachedIfPresent));
     }
 
     private List<Date> getDatesForBookings()

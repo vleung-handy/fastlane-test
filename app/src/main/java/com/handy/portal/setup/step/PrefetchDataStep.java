@@ -4,7 +4,6 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.google.common.collect.Lists;
-import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.flow.FlowStep;
@@ -82,7 +81,7 @@ public class PrefetchDataStep extends FlowStep
     {
         //if config response took a while this may be late so allow cached
         System.out.println("CSD Pre requesting requested");
-        mBus.post(new BookingEvent.RequestProRequestedJobs(generateDatesFromToday(configurationResponse.getNumberOfDaysForRequestedJobs()), true));
+        mBus.post(new HandyEvent.RequestProRequestedJobs(generateDatesFromToday(configurationResponse.getNumberOfDaysForRequestedJobs()), true));
     }
 
     private List<Date> generateDatesFromToday(int numDays)
