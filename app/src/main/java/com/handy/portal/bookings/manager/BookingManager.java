@@ -33,6 +33,13 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
+//all communication will be done through the bus
+//booking manager
+//requests and caches data about bookings
+//responds to requests for data about bookings or lists of bookings
+//listens and responds to requests to claim / cancel
+
+
 public class BookingManager
 {
     private final EventBus mBus;
@@ -46,17 +53,13 @@ public class BookingManager
     private final Cache<Date, BookingsWrapper> requestedBookingsCache;
 
     //Offline eternal-ish caches
+    private final List<Cache<Date, BookingsWrapper>> offlineCaches; //all of them for easy finding of a specific booking in any cache
     private final Cache<Date, BookingsWrapper> offline_availableBookingsCache;
     private final Cache<Date, BookingsWrapper> offline_scheduledBookingsCache;
     private final Cache<Date, BookingsWrapper> offline_complementaryBookingsCache;
     private final Cache<Date, BookingsWrapper> offline_requestedBookingsCache;
 
-    private final List<Cache<Date, BookingsWrapper>> offlineCaches;
-
-
-    private Map<RequestType, List<List<Date>>> mOutboundsRequestsByType;
-
-    //private List<List<Date>> mOutboundsRequests; //track what is currently outbound so we don't dupe requests
+    private Map<RequestType, List<List<Date>>> mOutboundsRequestsByType; //track outbound requests so we don't send multiple requests for the same data while waiting for a response
 
 
     private enum RequestType
@@ -84,7 +87,6 @@ public class BookingManager
         mOutboundsRequestsByType.put(RequestType.SCHEDULED, new ArrayList<List<Date>>());
         mOutboundsRequestsByType.put(RequestType.REQUESTED, new ArrayList<List<Date>>());
         mOutboundsRequestsByType.put(RequestType.COMPLEMENTARY, new ArrayList<List<Date>>());
-
 
         mBus = bus;
         mBus.register(this);
@@ -133,85 +135,30 @@ public class BookingManager
 
     }
 
-
-    private void testStuff()
-    {
-//hunt through the caches looking for it
-        System.out.println("CSD testing stuff");
-        for (Cache c : offlineCaches)
-        {
-            System.out.println("CSD see a cache");
-
-            //Iterable<BookingsWrapper> keys = c.asMap().values();
-
-            Iterable<BookingsWrapper> values = c.asMap().values();
-
-            for (BookingsWrapper wrapper : values)
-            {
-                System.out.println("CSD see a wrapper");
-                for (Booking b : wrapper.getBookings())
-                {
-                    System.out.println("CSD See a booking value " + b.getId());
-                }
-            }
-
-            //Map<Integer, Integer> result = c.getAllPresent(keys);
-
-            //c.getAllPresent();
-
-//                Integer keyInL1 = Iterables.get( cache.asMap().keySet(), 0 );
-//                127         Integer keyInL2 = Iterables.get( cacheService.getMap().keySet(), 0 );
-//                128
-//                129         Iterable<Integer> keys = Lists.newArrayList( keyInL1, keyInL2, 1000 );
-//                130         Map<Integer, Integer> result = cache.getAllPresent( keys );
-
-//                for (Map.Entry<Date, BookingsWrapper> entry : c.asMap().entrySet()) {
-//                    Date key = entry.getKey();
-//                    BookingsWrapper value = entry.getValue();
-//                    value.getBookings()
-//                }
-//
-//                for(Iterable i : c.getAllPresent())
-//                {
-//
-//                }
-        }
-
-
-    }
-
-    private void findSingleBookingInOfflineCaches(String bookingId)
+    //Hunt through all offline caches looking for a single booking by ID, null if not found
+    private Booking findSingleBookingInOfflineCaches(String bookingId)
     {
         for (Cache c : offlineCaches)
         {
             Iterable<BookingsWrapper> values = c.asMap().values();
             for (BookingsWrapper wrapper : values)
             {
-                //System.out.println("CSD see a wrapper");
                 for (Booking b : wrapper.getBookings())
                 {
-                    //System.out.println("CSD See a booking value " + b.getId());
                     if (b.getId().equals(bookingId))
                     {
-                        System.out.println("Found a match! : " + bookingId);
-                        mBus.post(new HandyEvent.ReceiveBookingDetailsSuccess(b));
-                        return;
+                        return b;
                     }
                 }
             }
         }
-
-        //couldn't find it in the cachces
-        System.out.println("Sorry we couldn't find it in the caches :(");
-        //TODO: say something about being in offline mode?
-        mBus.post(new HandyEvent.ReceiveBookingDetailsError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.NETWORK, "Go online to see booking details")));
+        return null;
     }
 
-
+    //Check if a given date range is already contained within a pending request so we don't dupe request
+    //TODO: We currently request all data if any data is missing from the outbound match, could make it smarter but need to ensure nothing requests expecting a
     private boolean isMatchingOutboundRequest(List<List<Date>> outboundRequests, List<Date> requestedDates)
     {
-        System.out.println("CSD - Checking outbound");
-
         if (requestedDates == null || requestedDates.isEmpty())
         {
             return true;
@@ -221,19 +168,15 @@ public class BookingManager
         {
             if (outboundDateList != null && !outboundDateList.isEmpty())
             {
-                System.out.println("CSD - checking for outbound match :  \n " + requestedDates.toString() + " \n " + outboundDateList.toString());
-
                 //straight up match
                 if (outboundDateList.equals(requestedDates))
                 {
-                    System.out.println("CSD - bam we got a straight up match, we are already in flight, just wait");
                     return true;
                 }
 
                 //or if our request is a subset
                 if (outboundDateList.contains(requestedDates))
                 {
-                    System.out.println("CSD - the rare subset match! saving dat data");
                     return true;
                 }
 
@@ -250,7 +193,6 @@ public class BookingManager
                 if (elementMatch)
                 {
                     //by hand element check matches
-                    System.out.println("CSD - by hand element check match!!!");
                     return true;
                 }
 
@@ -261,14 +203,7 @@ public class BookingManager
         return false;
     }
 
-
-
-    //all communication will be done through the bus
-    //booking manager
-    //requests and caches data about bookings
-    //responds to requests for data about bookings or lists of bookings
-    //listens and responds to requests to claim / cancel
-
+    //Get booking details for a single booking, does not use cached data unless we are in offline mode
     @Subscribe
     public void onRequestBookingDetails(final HandyEvent.RequestBookingDetails event)
     {
@@ -303,10 +238,17 @@ public class BookingManager
                 }
             });
         }
-        else
+        else //offline
         {
-            //testStuff();
-            findSingleBookingInOfflineCaches(bookingId);
+            Booking b = findSingleBookingInOfflineCaches(bookingId);
+            if (b != null)
+            {
+                mBus.post(new HandyEvent.ReceiveBookingDetailsSuccess(b));
+            }
+            else
+            {
+                mBus.post(new HandyEvent.ReceiveBookingDetailsError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.NETWORK, "Go online to see booking details")));
+            }
         }
 
 
@@ -315,14 +257,14 @@ public class BookingManager
     @Subscribe
     public void onRequestAvailableBookings(final HandyEvent.RequestAvailableBookings event)
     {
-
         if (event.dates == null || event.dates.isEmpty())
         {
-            System.out.println("CSD - making a bad or empty request returning client error");
+            //bad or empty list, return client error
             mBus.post(new HandyEvent.ReceiveAvailableBookingsError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.CLIENT), event.dates));
             return;
         }
 
+        //Check if requesting data from network is an option
         if (mHandyConnectivityManager.hasConnectivity())
         {
             final List<Date> datesToRequest = new ArrayList<>();
@@ -330,81 +272,38 @@ public class BookingManager
             for (Date date : event.dates)
             {
                 final Date dateWithoutTime = DateTimeUtils.getDateWithoutTime(date);
-                System.out.println("CSD - AVAIL - checking date for cached : " + date.toString() + " : " + dateWithoutTime);
-                System.out.println("CSD - AVAIL - cache size is ? : " + availableBookingsCache.asMap().keySet().size() + " : hashcode : " + availableBookingsCache.hashCode());
 
                 if (event.useCachedIfPresent)
                 {
-                    System.out.println("CSD - use cached if present is okay");
-
-                    int manualCount = 0;
-                    for (Date availableBookingsCacheKey : availableBookingsCache.asMap().keySet())
-                    {
-                        manualCount++;
-                    }
-                    System.out.println("CSD - manual count : " + manualCount + " : size check : " + availableBookingsCache.asMap().keySet().size());
-
-                    //FIXME: WAIT, maybe not, something else is wrong....
-                    //This isn't working because it is doing direct object check, not date comparison, oof. getIfPresent fail
-
-                    boolean handCompareMatch = false;
-
-                    for (Date availableBookingsCacheKey : availableBookingsCache.asMap().keySet())
-                    {
-                        System.out.println("CSD - Hand comparing : request : " + dateWithoutTime.toString() + " : cache :  " + availableBookingsCacheKey.toString());
-                        if (availableBookingsCacheKey.equals(dateWithoutTime))
-                        {
-                            System.out.println("CSD - hand match iterator");
-                            handCompareMatch = true;
-                            break;
-                        }
-                    }
-
-                    boolean handCompareMatch2 = false;
-                    if (availableBookingsCache.asMap().keySet().contains(dateWithoutTime))
-                    {
-                        System.out.println("CSD - hand match using contains instead");
-                        handCompareMatch2 = true;
-                    }
-
-//cachedbookings uses object comparison not value comparison
+                    //Check if we already have this date in our available bookings cache, if so send it back immediately instead of requesting again
                     final BookingsWrapper cachedBookings = availableBookingsCache.getIfPresent(dateWithoutTime);
-
-                    System.out.println("CSD Cache check : " + handCompareMatch + " : " + handCompareMatch2 + " : " + (cachedBookings != null));
-
-
-
                     if (cachedBookings != null)
                     {
-                        System.out.println("CSD - avail - sending cache match for dateWithoutTime : " + dateWithoutTime);
                         mBus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(cachedBookings, dateWithoutTime));
 
                     }
                     else
                     {
-                        System.out.println("CSD - avail - not in cached bookings : " + dateWithoutTime);
                         datesToRequest.add(dateWithoutTime);
                     }
                 }
                 else
                 {
-                    System.out.println("CSD - avail - not going to use cache explicitly : " + dateWithoutTime);
                     datesToRequest.add(dateWithoutTime);
                 }
             }
 
+            //If we have some data we need to request from the network
             if (!datesToRequest.isEmpty())
             {
-                System.out.println("CSD - AVAIL non empty request list : " + datesToRequest.toString() + " : " + datesToRequest.size());
-
+                //Check to see if a request for these dates is already in flight so we don't dupe requests
                 boolean alreadyOutbound = isMatchingOutboundRequest(mOutboundsRequestsByType.get(RequestType.AVAILABLE), datesToRequest);
                 if (!alreadyOutbound)
                 {
-                    System.out.println("CSD - AVAIL NEW STUFF, DO THE DATA : " + datesToRequest.toString() + " : " + datesToRequest.size());
-
-                    //add to our outbound request
+                    //add to our outbound request tracker
                     mOutboundsRequestsByType.get(RequestType.AVAILABLE).add(datesToRequest);
 
+                    //Ask for the data
                     mDataManager.getAvailableBookings(datesToRequest.toArray(new Date[datesToRequest.size()]),
                             null,
                             new DataManager.Callback<BookingsListWrapper>()
@@ -412,43 +311,33 @@ public class BookingManager
                                 @Override
                                 public void onSuccess(final BookingsListWrapper bookingsListWrapper)
                                 {
+                                    //we got back our request, remove it from the outbound tracking
+                                    mOutboundsRequestsByType.get(RequestType.AVAILABLE).remove(datesToRequest);
+
                                     if (bookingsListWrapper != null && bookingsListWrapper.getBookingsWrappers() != null)
                                     {
                                         for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
                                         {
                                             Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
                                             Crashlytics.log("Received available bookings for " + day);
-
-                                            System.out.println("CSD - Received available bookings for " + day);
-
-                                            System.out.println("CSD cache size was : " + availableBookingsCache.size());
+                                            //Update our caches
                                             availableBookingsCache.put(day, bookingsWrapper);
-                                            System.out.println("CSD cache size now : " + availableBookingsCache.size());
-
                                             offline_availableBookingsCache.put(day, bookingsWrapper); //additive right now since not clearing
-
+                                            //Send back the received data
                                             mBus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(bookingsWrapper, day));
-
                                         }
-
-                                        //we got back out request, remove it from the outbound tracking
-                                        System.out.println("Removing the outbound tracker for this request : " + datesToRequest.toString());
-                                        mOutboundsRequestsByType.get(RequestType.AVAILABLE).remove(datesToRequest);
-
                                     }
                                     else
                                     {
                                         mBus.post(new HandyEvent.ReceiveAvailableBookingsError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.SERVER), datesToRequest));
-
-                                        //we got back out request, remove it from the outbound tracking
-                                        System.out.println("Removing the outbound tracker for this request : " + datesToRequest.toString());
-                                        mOutboundsRequestsByType.get(RequestType.AVAILABLE).remove(datesToRequest);
                                     }
                                 }
 
                                 @Override
                                 public void onError(final DataManager.DataManagerError error)
                                 {
+                                    //we got back our request, remove it from the outbound tracking
+                                    mOutboundsRequestsByType.get(RequestType.AVAILABLE).remove(datesToRequest);
                                     mBus.post(new HandyEvent.ReceiveAvailableBookingsError(error, datesToRequest));
                                 }
                             }
@@ -465,13 +354,11 @@ public class BookingManager
                 System.out.println("CSD - avail - full cache match, already sent the cached data");
             }
         }
-        else
+        else //offline mode
         {
-            //use the semi-eternal cache
+            //use the offline cache
             List<Date> missingDates = new ArrayList<>();
             boolean sentSomething = false;
-
-            System.out.println("CSD - You are offline, using the offline cache which should be at worst the same as latest");
             for (Date date : event.dates)
             {
                 final Date day = DateTimeUtils.getDateWithoutTime(date);
@@ -487,14 +374,15 @@ public class BookingManager
                 }
             }
 
-            //we have some leftover dates but nothing to do about it :(
+            //TODO: There could be missing and non-missing dates in a batch we don't make that clear to user
+
+            //we have a full failure, send an error
             if (!missingDates.isEmpty() && !sentSomething)
             {
                 mBus.post(new HandyEvent.ReceiveAvailableBookingsError(
-                        new DataManager.DataManagerError(DataManager.DataManagerError.Type.NETWORK, "offline availaa cache fail"),
+                        new DataManager.DataManagerError(DataManager.DataManagerError.Type.NETWORK, "Requires network connection"),
                         missingDates));
             }
-
         }
     }
 
@@ -530,9 +418,10 @@ public class BookingManager
 
         if (event.getDatesForBookings() == null || event.getDatesForBookings().isEmpty())
         {
-            System.out.println("making a bad or empty request, returning empty list");
+            //bad or empty list, return client error
+            mBus.post(new BookingEvent.ReceiveProRequestedJobsError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.CLIENT)));
+            return;
         }
-
 
         if (mHandyConnectivityManager.hasConnectivity())
         {
@@ -618,8 +507,6 @@ public class BookingManager
                 {
                     System.out.println("outbound already for requested matching outbound, just wait");
                 }
-
-
             }
         }
         else //offline mode
@@ -636,8 +523,8 @@ public class BookingManager
                 }
             }
 
-            //best we've got even without a match, send it
-            if (bookingsListWrapper.isEmpty())
+            //best we've got even without a match, send it even if it is only partial
+            if (!bookingsListWrapper.isEmpty())
             {
                 mBus.post(new BookingEvent.ReceiveProRequestedJobsSuccess(bookingsListWrapper));
             }
@@ -653,12 +540,11 @@ public class BookingManager
     @Subscribe
     public void onRequestScheduledBookings(final HandyEvent.RequestScheduledBookings event)
     {
-
-        System.out.println("CSD getting scheduled : have connection? : " + mHandyConnectivityManager.hasConnectivity());
-
         if (event.dates == null || event.dates.isEmpty())
         {
-            System.out.println("making a bad or empty request, returning empty list");
+            //bad or empty list, return client error
+            mBus.post(new BookingEvent.ReceiveScheduledBookingsError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.CLIENT), event.dates));
+            return;
         }
 
         if (mHandyConnectivityManager.hasConnectivity())
@@ -672,7 +558,6 @@ public class BookingManager
                     final BookingsWrapper cachedBookings = scheduledBookingsCache.getIfPresent(day);
                     if (cachedBookings != null)
                     {
-                        Log.d(getClass().getName(), "received scheduled bookings: " + day.toString());
                         mBus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(cachedBookings, day));
                     }
                     else
@@ -699,19 +584,20 @@ public class BookingManager
                                 @Override
                                 public void onSuccess(final BookingsListWrapper bookingsListWrapper)
                                 {
+                                    //remove the outbound tracker
+                                    mOutboundsRequestsByType.get(RequestType.SCHEDULED).remove(datesToRequest);
+
                                     for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
                                     {
                                         Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
-                                        Log.d(getClass().getName(), "received scheduled bookings: " + day.toString());
                                         Crashlytics.log("Received scheduled bookings for " + day);
+
+                                        //update our caches
                                         scheduledBookingsCache.put(day, bookingsWrapper);
                                         offline_scheduledBookingsCache.put(day, bookingsWrapper);
 
                                         mBus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(bookingsWrapper, day));
                                     }
-
-                                    mOutboundsRequestsByType.get(RequestType.SCHEDULED).remove(datesToRequest);
-
                                 /*
                                 this complements the original request event.
 
@@ -733,13 +619,13 @@ public class BookingManager
                 }
                 else
                 {
-                    System.out.println("scheduled jobs matches outbound tracking");
+                    System.out.println("CSD - scheduled jobs matches outbound tracking");
                 }
             }
             else
             {
                 //can we end up in a bad state with no response?
-                System.out.println("no dates left to request, cache should have covered it all or no requests actually made");
+                System.out.println("CSD - no dates left to request, cache should have covered it all or no requests actually made");
             }
         }
         else //offline mode
@@ -763,9 +649,10 @@ public class BookingManager
                 //Since we are offline we do not send mBus.post(new HandyEvent.ReceiveScheduledBookingsBatchSuccess());
             }
 
+
             if (!missingDates.isEmpty() && !returnedSomething)
             {
-                System.out.println("Returning error for the missing dates");
+                System.out.println("CSD - scheduled - Returning error for the missing dates");
                 mBus.post(new HandyEvent.ReceiveScheduledBookingsError(
                         new DataManager.DataManagerError(DataManager.DataManagerError.Type.NETWORK, "Offline mode"),
                         missingDates));
@@ -778,6 +665,7 @@ public class BookingManager
     @Subscribe
     public void onRequestNearbyBookings(BookingEvent.RequestNearbyBookings event)
     {
+        //TODO: Worth caching? called rarely
         mDataManager.getNearbyBookings(event.getRegionId(), event.getLatitude(), event.getLongitude(),
                 new DataManager.Callback<BookingsWrapper>()
                 {
@@ -798,6 +686,8 @@ public class BookingManager
     @Subscribe
     public void onRequestComplementaryBookings(HandyEvent.RequestComplementaryBookings event)
     {
+        //TODO: Offline mode
+
         final Date day = DateTimeUtils.getDateWithoutTime(event.date);
         final BookingsWrapper cachedComplementaryBookings = complementaryBookingsCache.getIfPresent(day);
         if (cachedComplementaryBookings != null)
@@ -826,6 +716,7 @@ public class BookingManager
         }
     }
 
+
     @Subscribe
     public void onRequestClaimJob(final HandyEvent.RequestClaimJob event)
     {
@@ -838,8 +729,7 @@ public class BookingManager
             @Override
             public void onSuccess(BookingClaimDetails bookingClaimDetails)
             {
-                //have to invalidate cache for all days because we need updated priority access info
-                //TODO investigate something better
+                //have to invalidate cache for all days because we need updated priority access info :(
                 invalidateCachesForAllDays();
 
                 mBus.post(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, event.source));
@@ -848,7 +738,7 @@ public class BookingManager
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                //still need to invalidate so we don't allow them to click on same booking
+                //still need to invalidate so we don't allow them to click on same booking with old/bad data
                 invalidateCachesForDay(day);
                 mBus.post(new HandyEvent.ReceiveClaimJobError(event.booking, event.source, error));
             }
@@ -889,7 +779,6 @@ public class BookingManager
             public void onSuccess(Booking booking)
             {
                 //have to invalidate cache for all days because we need updated priority access info
-                //TODO investigate something better
                 invalidateCachesForAllDays();
 
                 mBus.post(new HandyEvent.ReceiveRemoveJobSuccess(booking));
@@ -898,7 +787,7 @@ public class BookingManager
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                //still need to invalidate so we don't allow them to click on same booking
+                //need to invalidate so we don't allow them to click on same booking
                 invalidateCachesForDay(day);
                 mBus.post(new HandyEvent.ReceiveRemoveJobError(error));
             }
