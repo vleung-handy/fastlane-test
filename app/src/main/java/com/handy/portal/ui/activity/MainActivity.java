@@ -1,7 +1,11 @@
 package com.handy.portal.ui.activity;
 
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.NotificationCompat;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
@@ -57,6 +61,32 @@ public class MainActivity extends BaseActivity
         providerManager.prefetch();
         checkIfUserShouldUpdatePaymentInfo();
         checkIfNotificationIsEnabled();
+//        testNotification();
+    }
+
+    public void testNotification()
+    {
+        NotificationManager notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+        notificationManager.cancelAll();
+
+//        NotificationCompat.InboxStyle style = new NotificationCompat.InboxStyle();
+//        style.setBigContentTitle("Big content title");
+//        style.setSummaryText("summary text");
+
+        android.support.v4.app.NotificationCompat.Action action =
+                new NotificationCompat.Action.Builder(android.R.drawable.ic_menu_call, "Call", null).build();
+
+        Notification notification = new NotificationCompat.Builder(this)
+                .setContentTitle("Title title title")
+                .setContentText("Content")
+                .setSmallIcon(R.drawable.ic_alert_circle)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.ic_alarm_clock))
+                .setOngoing(true)
+                .addAction(action)
+//                .setStyle(style)
+                .build();
+
+        notificationManager.notify(0, notification);
     }
 
     @Override

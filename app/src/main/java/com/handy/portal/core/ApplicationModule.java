@@ -39,7 +39,7 @@ import com.handy.portal.onboarding.OnboardingModule;
 import com.handy.portal.onboarding.ui.activity.ActivationWelcomeActivity;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsModule;
-import com.handy.portal.receiver.HandyPushReceiver;
+import com.handy.portal.push.receiver.HandyPushReceiver;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
