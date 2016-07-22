@@ -215,7 +215,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 mDateDateButtonViewMap.get(mSelectedDay).setChecked(true);
             }
 
-            System.out.println("CSD - bookings frag on resume, going to request all");
             requestAllBookings();
         }
     }
@@ -223,20 +222,17 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     @OnClick(R.id.try_again_button)
     public void doRequestBookingsAgain()
     {
-        System.out.println("CSD - do request bookings again");
         requestBookingsForSelectedDay(true, true);
     }
 
     private void requestAllBookings()
     {
-        System.out.println("CSD - requesting all bookings");
         requestBookingsForSelectedDay(true, true);
         requestBookingsForOtherDays(mSelectedDay);
     }
 
     private void requestBookingsForSelectedDay(boolean showOverlay, boolean useCachedIfPresent)
     {
-        System.out.println("CSD going to request bookings for selected day : " + mSelectedDay.toString() + " cache okay ? : " + useCachedIfPresent);
         requestBookings(Lists.newArrayList(mSelectedDay), showOverlay, useCachedIfPresent);
     }
 
@@ -255,7 +251,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 dates.add(day);
             }
         }
-        System.out.println("CSD going to request bookings for all but excluded day : " + dayToExclude.toString() + " !!! " + dates.toString());
         requestBookings(dates, false, true);
     }
 
@@ -351,8 +346,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
         Context context = getActivity();
 
-        System.out.println("CSD init date buttons");
-
         for (int i = 0; i < getNumberOfDaysToDisplay(); i++)
         {
             LayoutInflater.from(context).inflate(R.layout.element_date_button, datesLayout);
@@ -371,7 +364,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                     bus.post(new HandyEvent.DateClicked(getTrackingType(), day));
                     selectDay(day);
                     beforeRequestBookings();
-                    System.out.println("CSD - click - going to request bookings for a given day : " + day.toString());
                     requestBookings(Lists.newArrayList(day), true, true);
                 }
             });

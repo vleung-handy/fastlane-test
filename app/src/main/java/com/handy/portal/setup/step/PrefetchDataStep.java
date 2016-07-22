@@ -42,22 +42,13 @@ public class PrefetchDataStep extends FlowStep
     @Override
     public void execute()
     {
-        //mProviderManager.setProviderProfile(mProviderProfile);
         //don't block, just a blind fetch to decrease time to live data
-
-        System.out.println("Prefetching all the things");
-
         ConfigurationResponse configurationResponse = mConfigManager.getConfigurationResponse();
-
-        if (configurationResponse != null)
+        if (configurationResponse != null) //this can't be null unless something crazy has happend, but still
         {
             prefetchAvailableJobs(configurationResponse);
             prefetchScheduledJobs();
             prefetchRequestedJobs(configurationResponse);
-        }
-        else
-        {
-            System.out.println("CSD - WTF BBQ");
         }
 
         complete();
@@ -66,21 +57,18 @@ public class PrefetchDataStep extends FlowStep
     private void prefetchAvailableJobs(@NonNull ConfigurationResponse configurationResponse)
     {
         //if config response took a while this may be late so allow cached
-        System.out.println("CSD Pre requesting available : " + configurationResponse.getNumberOfDaysForAvailableJobs());
         mBus.post(new HandyEvent.RequestAvailableBookings(generateDatesFromToday(configurationResponse.getNumberOfDaysForAvailableJobs()), true));
     }
 
     private void prefetchScheduledJobs()
     {
         //if config response took a while this may be late so allow cached
-        System.out.println("CSD Pre requesting scheduled");
         mBus.post(new HandyEvent.RequestScheduledBookings(generateDatesFromToday(ScheduledBookingsFragment.SCHEDULED_REQUEST_NUM_DAYS), true));
     }
 
     private void prefetchRequestedJobs(@NonNull ConfigurationResponse configurationResponse)
     {
         //if config response took a while this may be late so allow cached
-        System.out.println("CSD Pre requesting requested");
         mBus.post(new HandyEvent.RequestProRequestedJobs(generateDatesFromToday(configurationResponse.getNumberOfDaysForRequestedJobs()), true));
     }
 

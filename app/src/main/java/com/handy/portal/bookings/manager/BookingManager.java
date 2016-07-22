@@ -50,7 +50,7 @@ public class BookingManager
     private final Cache<Date, BookingsWrapper> complementaryBookingsCache;
     private final Cache<Date, BookingsWrapper> requestedBookingsCache;
 
-    //Offline eternal-ish caches
+    //Offline non-expiring caches
     private final List<Cache<Date, BookingsWrapper>> offlineCaches; //all of them for easy finding of a specific booking in any cache
     private final Cache<Date, BookingsWrapper> offline_availableBookingsCache;
     private final Cache<Date, BookingsWrapper> offline_scheduledBookingsCache;
@@ -59,7 +59,6 @@ public class BookingManager
 
     private Map<RequestType, List<List<Date>>> mOutboundsRequestsByType; //track outbound requests so we don't send multiple requests for the same data while waiting for a response
 
-
     private enum RequestType
     {
         AVAILABLE,
@@ -67,7 +66,6 @@ public class BookingManager
         REQUESTED,
         COMPLEMENTARY
     }
-
 
     /*
     keys used in QueryMap requests
@@ -345,93 +343,6 @@ public class BookingManager
         return null;
     }
 
-
-    private DataManager.Callback<BookingsListWrapper> generateCallback(final RequestType requestType, final List<Date> datesToRequest)
-    {
-        DataManager.Callback<BookingsListWrapper> bookingsCallback = new DataManager.Callback<BookingsListWrapper>()
-        {
-            @Override
-            public void onSuccess(final BookingsListWrapper bookingsListWrapper)
-            {
-                //we got back our request, remove it from the outbound tracking
-                mOutboundsRequestsByType.get(requestType).remove(datesToRequest);
-
-                if (bookingsListWrapper != null && bookingsListWrapper.getBookingsWrappers() != null)
-                {
-                    for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
-                    {
-                        Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
-                        Crashlytics.log("Received " + requestType + "  bookings for " + day);
-                        //Update our caches
-                        getCacheForRequestType(requestType).put(day, bookingsWrapper);
-                        getOfflineCacheForRequestType(requestType).put(day, bookingsWrapper); //additive right now since not clearing
-
-                        //Send back the received data
-                        sendBookingsRequestSuccess(requestType, bookingsWrapper, day);
-                    }
-
-                    if (requestType == RequestType.SCHEDULED)
-                    {
-                        //This lets location scheduling work with pre-activation claim bookings
-                        /*
-                        this complements the original request event.
-
-                        this is required because some components need to get notified
-                        (just once, which is why we can't use the above event)
-                        that the original request was responded to
-                         */
-                        mBus.post(new HandyEvent.ReceiveScheduledBookingsBatchSuccess());
-                    }
-                }
-                else
-                {
-                    sendBookingsRequestError(DataManager.DataManagerError.Type.SERVER, requestType, datesToRequest);
-                }
-            }
-
-            @Override
-            public void onError(final DataManager.DataManagerError error)
-            {
-                //we got back our request, remove it from the outbound tracking
-                mOutboundsRequestsByType.get(requestType).remove(datesToRequest);
-                sendBookingsRequestError(error, requestType, datesToRequest);
-            }
-        };
-
-        return bookingsCallback;
-    }
-
-    private void makeRequestCall(final RequestType requestType, final List<Date> datesToRequest)
-    {
-        System.out.println("CSD - make request call " + requestType + " : " + datesToRequest);
-
-        //add to our outbound request tracker
-        mOutboundsRequestsByType.get(requestType).add(datesToRequest);
-
-        //generate the callback to handle the return data or error
-        DataManager.Callback<BookingsListWrapper> bookingsCallback = generateCallback(requestType, datesToRequest);
-
-        switch (requestType)
-        {
-            case AVAILABLE:
-            {
-                mDataManager.getAvailableBookings(
-                        datesToRequest.toArray(new Date[datesToRequest.size()]),
-                        null,
-                        bookingsCallback);
-            }
-            break;
-
-            case SCHEDULED:
-            {
-                mDataManager.getScheduledBookings(
-                        datesToRequest.toArray(new Date[datesToRequest.size()]),
-                        bookingsCallback);
-            }
-            break;
-        }
-    }
-
 //
 //Available and Scheduled
 //
@@ -469,20 +380,12 @@ public class BookingManager
             {
                 //Check to see if a request for these dates is already in flight so we don't dupe requests
                 boolean alreadyOutbound = isMatchingOutboundRequest(mOutboundsRequestsByType.get(requestType), datesToRequest);
-                if (!alreadyOutbound)
+                if (!alreadyOutbound) //otherwise just wait
                 {
                     makeRequestCall(requestType, datesToRequest);
                 }
-                else
-                {
-                    System.out.println("CSD " + requestType + "  HOLD YOUR HORSES ALREADY RUNNING : " + datesToRequest.toString() + " : " + datesToRequest.size());
-                }
             }
-            else
-            {
-                //TODO: dates to request is empty, is there anyway we can get in a bad state because of this? maybe?
-                System.out.println("CSD - " + requestType + "  - full cache match, already sent the cached data");
-            }
+            //else {} TODO: dates to request is empty, is there anyway we can get in a bad state because of this? maybe?
         }
         else //offline mode
         {
@@ -563,6 +466,90 @@ public class BookingManager
             }
         }
         return datesToRequest;
+    }
+
+    private void makeRequestCall(final RequestType requestType, final List<Date> datesToRequest)
+    {
+        //add to our outbound request tracker
+        mOutboundsRequestsByType.get(requestType).add(datesToRequest);
+
+        //generate the callback to handle the return data or error
+        DataManager.Callback<BookingsListWrapper> bookingsCallback = generateCallback(requestType, datesToRequest);
+
+        switch (requestType)
+        {
+            case AVAILABLE:
+            {
+                mDataManager.getAvailableBookings(
+                        datesToRequest.toArray(new Date[datesToRequest.size()]),
+                        null,
+                        bookingsCallback);
+            }
+            break;
+
+            case SCHEDULED:
+            {
+                mDataManager.getScheduledBookings(
+                        datesToRequest.toArray(new Date[datesToRequest.size()]),
+                        bookingsCallback);
+            }
+            break;
+        }
+    }
+
+    private DataManager.Callback<BookingsListWrapper> generateCallback(final RequestType requestType, final List<Date> datesToRequest)
+    {
+        DataManager.Callback<BookingsListWrapper> bookingsCallback = new DataManager.Callback<BookingsListWrapper>()
+        {
+            @Override
+            public void onSuccess(final BookingsListWrapper bookingsListWrapper)
+            {
+                //we got back our request, remove it from the outbound tracking
+                mOutboundsRequestsByType.get(requestType).remove(datesToRequest);
+
+                if (bookingsListWrapper != null && bookingsListWrapper.getBookingsWrappers() != null)
+                {
+                    for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
+                    {
+                        Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
+                        Crashlytics.log("Received " + requestType + "  bookings for " + day);
+                        //Update our caches
+                        getCacheForRequestType(requestType).put(day, bookingsWrapper);
+                        getOfflineCacheForRequestType(requestType).put(day, bookingsWrapper); //additive right now since not clearing
+
+                        //Send back the received data
+                        sendBookingsRequestSuccess(requestType, bookingsWrapper, day);
+                    }
+
+                    if (requestType == RequestType.SCHEDULED)
+                    {
+                        //This lets location scheduling work with pre-activation claim bookings
+                        /*
+                        this complements the original request event.
+
+                        this is required because some components need to get notified
+                        (just once, which is why we can't use the above event)
+                        that the original request was responded to
+                         */
+                        mBus.post(new HandyEvent.ReceiveScheduledBookingsBatchSuccess());
+                    }
+                }
+                else
+                {
+                    sendBookingsRequestError(DataManager.DataManagerError.Type.SERVER, requestType, datesToRequest);
+                }
+            }
+
+            @Override
+            public void onError(final DataManager.DataManagerError error)
+            {
+                //we got back our request, remove it from the outbound tracking
+                mOutboundsRequestsByType.get(requestType).remove(datesToRequest);
+                sendBookingsRequestError(error, requestType, datesToRequest);
+            }
+        };
+
+        return bookingsCallback;
     }
 
 //
@@ -646,7 +633,7 @@ public class BookingManager
             if (!matchingCache)
             {
                 boolean alreadyOutbound = isMatchingOutboundRequest(mOutboundsRequestsByType.get(RequestType.REQUESTED), requestedDates);
-                if (!alreadyOutbound)
+                if (!alreadyOutbound) //otherwise just wait
                 {
                     Map<String, Object> options = new HashMap<>();
                     options.put(BookingRequestKeys.IS_PROVIDER_REQUESTED, true);
@@ -687,10 +674,6 @@ public class BookingManager
                                 }
                             }
                     );
-                }
-                else
-                {
-                    System.out.println("pro requested jobs - outbound already for requested matching outbound, just wait");
                 }
             }
         }
@@ -1011,8 +994,6 @@ public class BookingManager
 
     private void invalidateCachesForAllDays()
     {
-        System.out.println("CSD - INVALID ALL CACHES");
-
         availableBookingsCache.invalidateAll();
         scheduledBookingsCache.invalidateAll();
         complementaryBookingsCache.invalidateAll();
@@ -1027,8 +1008,6 @@ public class BookingManager
 
     private void invalidateCachesForDay(Date day)
     {
-        System.out.println("CSD - INVALID CACHE FOR DAY : " + day.toString());
-
         availableBookingsCache.invalidate(day);
         scheduledBookingsCache.invalidate(day);
         complementaryBookingsCache.invalidate(day);
