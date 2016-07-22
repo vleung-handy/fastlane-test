@@ -826,7 +826,9 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     {
         mFetchErrorView.setVisibility(View.GONE);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestBookingDetails(bookingId, type, bookingDate));
+        //THIS "true" IS A BIG CHANGE TO MATCH WHAT IOS IS DOING. We are going to increase our error rate b/c of out of date already claimed bookings but we increase responsiveness
+        //bus.post(new HandyEvent.RequestBookingDetails(bookingId, type, bookingDate));
+        bus.post(new HandyEvent.RequestBookingDetails(bookingId, type, bookingDate, true)); //this true allows using the timedCaches data
     }
 
     private void requestRemoveJob()

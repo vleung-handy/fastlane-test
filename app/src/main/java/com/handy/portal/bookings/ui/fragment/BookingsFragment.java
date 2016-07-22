@@ -413,7 +413,11 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
         arguments.putString(BundleKeys.BOOKING_SOURCE, getBookingSourceName());
         arguments.putSerializable(BundleKeys.PAGE, getAppPage());
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.JOB_DETAILS, arguments,
-                TransitionStyle.JOB_LIST_TO_DETAILS, true));
+
+        bus.post(new NavigationEvent.NavigateToPage(
+                MainViewPage.JOB_DETAILS,
+                arguments,
+                TransitionStyle.JOB_LIST_TO_DETAILS,
+                true));
     }
 }

@@ -45,6 +45,7 @@ public class BookingManager
     private final HandyConnectivityManager mHandyConnectivityManager;
 
     //Active timed caches
+    private final List<Cache<Date, BookingsWrapper>> timedCaches; //all of them for easy finding of a specific booking in any cache
     private final Cache<Date, BookingsWrapper> availableBookingsCache;
     private final Cache<Date, BookingsWrapper> scheduledBookingsCache;
     private final Cache<Date, BookingsWrapper> complementaryBookingsCache;
@@ -89,6 +90,7 @@ public class BookingManager
         mDataManager = dataManager;
         mHandyConnectivityManager = handyConnectivityManager;
 
+        //Timed caches, expire after a duration to ensure reasonable data freshness
         this.availableBookingsCache = CacheBuilder.newBuilder()
                 .maximumSize(100)
                 .expireAfterWrite(2, TimeUnit.MINUTES)
@@ -108,6 +110,13 @@ public class BookingManager
                 .maximumSize(100)
                 .expireAfterWrite(5, TimeUnit.MINUTES)
                 .build();
+
+        this.timedCaches = new ArrayList<Cache<Date, BookingsWrapper>>();
+        timedCaches.add(this.availableBookingsCache);
+        timedCaches.add(this.scheduledBookingsCache);
+        timedCaches.add(this.complementaryBookingsCache);
+        timedCaches.add(this.requestedBookingsCache);
+
 
         //Offline caches, don't expire from time, written to additively, they are our backups
         this.offline_availableBookingsCache = CacheBuilder.newBuilder()
@@ -131,10 +140,10 @@ public class BookingManager
 
     }
 
-    //Hunt through all offline caches looking for a single booking by ID, null if not found
-    private Booking findSingleBookingInOfflineCaches(String bookingId)
+    //Hunt through all caches looking for a single booking by ID, null if not found
+    private Booking findSingleBookingInCaches(String bookingId, List<Cache<Date, BookingsWrapper>> caches)
     {
-        for (Cache c : offlineCaches)
+        for (Cache c : caches)
         {
             Iterable<BookingsWrapper> values = c.asMap().values();
             for (BookingsWrapper wrapper : values)
@@ -199,7 +208,7 @@ public class BookingManager
         return false;
     }
 
-    //Get booking details for a single booking, does not use cached data unless we are in offline mode
+    //Get booking details for a single booking
     @Subscribe
     public void onRequestBookingDetails(final HandyEvent.RequestBookingDetails event)
     {
@@ -214,32 +223,47 @@ public class BookingManager
 
         if (mHandyConnectivityManager.hasConnectivity())
         {
-            mDataManager.getBookingDetails(bookingId, type, new DataManager.Callback<Booking>()
+            boolean foundCachedBooking = false;
+            //THIS IS A BIG CHANGE TO MATCH WHAT IOS IS DOING. We are going to increase our error rate b/c of out of date already claimed bookings but we increase responsiveness
+            if (event.useCachedIfPresent)
             {
-                @Override
-                public void onSuccess(Booking booking)
+                Booking cachedBooking = findSingleBookingInCaches(event.bookingId, timedCaches);
+                if (cachedBooking != null)
                 {
-                    mBus.post(new HandyEvent.ReceiveBookingDetailsSuccess(booking));
+                    mBus.post(new HandyEvent.ReceiveBookingDetailsSuccess(cachedBooking));
+                    foundCachedBooking = true;
                 }
+            }
 
-                @Override
-                public void onError(DataManager.DataManagerError error)
+            if (!foundCachedBooking)
+            {
+                mDataManager.getBookingDetails(bookingId, type, new DataManager.Callback<Booking>()
                 {
-                    mBus.post(new HandyEvent.ReceiveBookingDetailsError(error));
-                    if (event.date != null && error.getType() != DataManager.DataManagerError.Type.NETWORK)
+                    @Override
+                    public void onSuccess(Booking booking)
                     {
-                        Date day = DateTimeUtils.getDateWithoutTime(event.date);
-                        invalidateCachesForDay(day);
+                        mBus.post(new HandyEvent.ReceiveBookingDetailsSuccess(booking));
                     }
-                }
-            });
+
+                    @Override
+                    public void onError(DataManager.DataManagerError error)
+                    {
+                        mBus.post(new HandyEvent.ReceiveBookingDetailsError(error));
+                        if (event.date != null && error.getType() != DataManager.DataManagerError.Type.NETWORK)
+                        {
+                            Date day = DateTimeUtils.getDateWithoutTime(event.date);
+                            invalidateCachesForDay(day);
+                        }
+                    }
+                });
+            }
         }
         else //offline
         {
-            Booking b = findSingleBookingInOfflineCaches(bookingId);
-            if (b != null)
+            Booking cachedBooking = findSingleBookingInCaches(bookingId, offlineCaches);
+            if (cachedBooking != null)
             {
-                mBus.post(new HandyEvent.ReceiveBookingDetailsSuccess(b));
+                mBus.post(new HandyEvent.ReceiveBookingDetailsSuccess(cachedBooking));
             }
             else
             {

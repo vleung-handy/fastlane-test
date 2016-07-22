@@ -414,12 +414,22 @@ public abstract class HandyEvent
         public final String bookingId;
         public final BookingType type;
         public final Date date;
+        public final boolean useCachedIfPresent;
 
         public RequestBookingDetails(String bookingId, BookingType type, Date date)
         {
             this.bookingId = bookingId;
             this.type = type;
             this.date = date;
+            this.useCachedIfPresent = false;
+        }
+
+        public RequestBookingDetails(String bookingId, BookingType type, Date date, boolean useCachedIfPresent)
+        {
+            this.bookingId = bookingId;
+            this.type = type;
+            this.date = date;
+            this.useCachedIfPresent = useCachedIfPresent;
         }
     }
 
