@@ -3,7 +3,6 @@ package com.handy.portal.ui.activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
-import android.view.KeyEvent;
 import android.view.View;
 
 import com.handy.portal.R;
@@ -71,27 +70,26 @@ public class MainActivity extends BaseActivity
         super.onPause();
     }
 
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event)
-    {
-        System.out.println("onKeyDown(" + keyCode + ", " + event + ")");
-
-        if (keyCode == KeyEvent.KEYCODE_O)
-        {
-            mHandyConnectivityManager.setHasConnectivity(!mHandyConnectivityManager.hasConnectivity());
-            System.out.println("Toggling online mode : new value : " + mHandyConnectivityManager.hasConnectivity());
-        }
-
-        if (keyCode == KeyEvent.KEYCODE_R)
-        {
-            System.out.println("Forcing a refresh of connectivity status");
-            mHandyConnectivityManager.requestRefreshConnectivityStatus(this);
-
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event)
+//    {
+//        System.out.println("onKeyDown(" + keyCode + ", " + event + ")");
+//
+//        if (keyCode == KeyEvent.KEYCODE_O)
+//        {
+//            mHandyConnectivityManager.setHasConnectivity(!mHandyConnectivityManager.hasConnectivity());
+//            System.out.println("Toggling online mode : new value : " + mHandyConnectivityManager.hasConnectivity());
+//        }
+//
+//        if (keyCode == KeyEvent.KEYCODE_R)
+//        {
+//            System.out.println("Forcing a refresh of connectivity status");
+//            mHandyConnectivityManager.requestRefreshConnectivityStatus(this);
+//
+//        }
+//
+//        return super.onKeyDown(keyCode, event);
+//    }
 
     private void checkIfUserShouldUpdatePaymentInfo()
     {

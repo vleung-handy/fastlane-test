@@ -255,7 +255,7 @@ public final class NotificationsFragment extends ActionBarFragment
         mNotificationsListView.appendData(notificationMessages);
 
         //COPY PASTA
-        boolean isFirstRequest = true; //always counts as first time for from cache read
+        //boolean isFirstRequest = true; //always counts as first time for from cache read
 
         cleanUpView();
         markUnreadNotificationsAsRead(notificationMessages);
@@ -343,7 +343,6 @@ public final class NotificationsFragment extends ActionBarFragment
             {
                 if (mNotificationsListView != null)
                 {
-                    System.out.println("fwniofwenfiewoewfefw");
                     requestNotifications(false);
                 }
             }
@@ -358,11 +357,6 @@ public final class NotificationsFragment extends ActionBarFragment
 
     private void requestNotifications(boolean refresh)
     {
-
-        boolean a1 = mNotificationsListView.shouldRequestMoreNotifications();
-        boolean a2 = refresh;
-        boolean a3 = !isRequestingNotifications;
-
         if ((mNotificationsListView.shouldRequestMoreNotifications() || refresh) && !isRequestingNotifications)
         {
             isRequestingNotifications = true;
