@@ -109,7 +109,7 @@ public class BookingManager
                 .expireAfterWrite(5, TimeUnit.MINUTES)
                 .build();
 
-        //Offline caches
+        //Offline caches, don't expire from time, written to additively, they are our backups
         this.offline_availableBookingsCache = CacheBuilder.newBuilder()
                 .maximumSize(100)
                 .build();

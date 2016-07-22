@@ -20,7 +20,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
-public class PrefetchDataStep extends FlowStep
+public class PrefetchBookingDataStep extends FlowStep
 {
     @Inject
     ConfigManager mConfigManager;
@@ -28,7 +28,7 @@ public class PrefetchDataStep extends FlowStep
     @Inject
     EventBus mBus;
 
-    public PrefetchDataStep(final Context context)
+    public PrefetchBookingDataStep(final Context context)
     {
         Utils.inject(context, this);
     }
