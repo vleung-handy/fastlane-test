@@ -244,6 +244,39 @@ public final class NotificationsFragment extends ActionBarFragment
         }
     }
 
+    //TODO: This has a bunch of copy pasta from onReceiveNotificationMessagesSuccess but I don't understand this class logic enough to refactor it
+    @Subscribe
+    public void onReceiveNotificationMessagesCacheSuccess(NotificationEvent.ReceiveNotificationMessagesCacheSuccess event)
+    {
+        //The cache comes back with all of its messages at once so we clear before appending them all
+        NotificationMessage[] notificationMessages = event.getAllCachedNotificationMessages();
+        mNotificationsListView.reset();
+        mNotificationsListView.stopRequestingNotifications(); //normally after a reset we would request more, but not in offline/cache case
+        mNotificationsListView.appendData(notificationMessages);
+
+        //COPY PASTA
+        boolean isFirstRequest = true; //always counts as first time for from cache read
+
+        cleanUpView();
+        markUnreadNotificationsAsRead(notificationMessages);
+        markActionlessUninteractedNotificationsAsInteracted(notificationMessages);
+
+        if (mNotificationsListView.isEmpty())
+        {
+            mNoNotificationsView.setVisibility(View.VISIBLE);
+            mRefreshLayout.setVisibility(View.GONE);
+        }
+        else
+        {
+            mNoNotificationsView.setVisibility(View.GONE);
+            mRefreshLayout.setVisibility(View.VISIBLE);
+            mNotificationsListView.setFooterVisible(true);
+            mNotificationsListView.setFooterText(R.string.no_more_notifications);
+        }
+        //END COPY PASTA
+    }
+
+
     @Subscribe
     public void onReceiveNotificationMessagesError(NotificationEvent.ReceiveNotificationMessagesError event)
     {
@@ -310,6 +343,7 @@ public final class NotificationsFragment extends ActionBarFragment
             {
                 if (mNotificationsListView != null)
                 {
+                    System.out.println("fwniofwenfiewoewfefw");
                     requestNotifications(false);
                 }
             }
@@ -324,10 +358,16 @@ public final class NotificationsFragment extends ActionBarFragment
 
     private void requestNotifications(boolean refresh)
     {
+
+        boolean a1 = mNotificationsListView.shouldRequestMoreNotifications();
+        boolean a2 = refresh;
+        boolean a3 = !isRequestingNotifications;
+
         if ((mNotificationsListView.shouldRequestMoreNotifications() || refresh) && !isRequestingNotifications)
         {
             isRequestingNotifications = true;
             Integer untilId = refresh ? null : mNotificationsListView.getLastNotificationId();
+            //TODO BUG: When reading from cache/offline mode this call triggers a re-request which ends up with the footer text being incorrect
             bus.post(new NotificationEvent.RequestNotificationMessages(null, untilId, NUMBER_OF_NOTIFICATIONS_PER_REQUEST));
             mNotificationsListView.showFooter(R.string.load_notifications);
         }

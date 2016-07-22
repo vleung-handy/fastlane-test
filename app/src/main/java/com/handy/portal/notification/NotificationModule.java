@@ -1,6 +1,7 @@
 package com.handy.portal.notification;
 
 import com.handy.portal.data.DataManager;
+import com.handy.portal.manager.HandyConnectivityManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragment;
 import com.handy.portal.notification.ui.fragment.NotificationsFragment;
@@ -28,8 +29,8 @@ public final class NotificationModule
 {
     @Provides
     @Singleton
-    final NotificationMessageManager provideNotificationMessageManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager)
+    final NotificationMessageManager provideNotificationMessageManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final HandyConnectivityManager connectivityManager)
     {
-        return new NotificationMessageManager(bus, dataManager, prefsManager);
+        return new NotificationMessageManager(bus, dataManager, prefsManager, connectivityManager);
     }
 }

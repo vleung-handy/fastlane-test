@@ -96,4 +96,21 @@ public class NotificationMessage implements Serializable
     {
         return DateTimeUtils.formatDateToNumberTimeUnit(getCreatedAt());
     }
+
+    @Override
+    public boolean equals(Object obj)
+    {
+        if (!(obj instanceof NotificationMessage))
+        { return false; }
+        if (obj == this)
+        { return true; }
+        NotificationMessage rhs = (NotificationMessage) obj;
+        return this.getId() == rhs.getId();
+    }
+
+    @Override
+    public int hashCode()
+    {
+        return (int) (mId / 11);
+    }
 }
