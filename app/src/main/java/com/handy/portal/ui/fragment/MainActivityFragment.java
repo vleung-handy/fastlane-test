@@ -674,6 +674,7 @@ public class MainActivityFragment extends InjectedFragment
             CookieSyncManager.getInstance().sync();
         }
         startActivity(new Intent(getActivity(), LoginActivity.class));
+        bus.post(new HandyEvent.UserLoggedOut());
         getActivity().finish();
     }
 

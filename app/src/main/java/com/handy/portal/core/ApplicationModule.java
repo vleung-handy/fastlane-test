@@ -345,9 +345,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final ProviderManager provideProviderManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager)
+    final ProviderManager provideProviderManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final HandyConnectivityManager connectivityManager)
     {
-        return new ProviderManager(bus, dataManager, prefsManager);
+        return new ProviderManager(bus, dataManager, prefsManager, connectivityManager);
     }
 
     @Provides

@@ -39,6 +39,8 @@ public class ProviderManager
     private final EventBus mBus;
     private final DataManager mDataManager;
     private final PrefsManager mPrefsManager;
+    private final HandyConnectivityManager mConnectivityManager;
+
     private Cache<String, Provider> mProviderCache;
     private static final String PROVIDER_CACHE_KEY = "provider";
     private Cache<String, ProviderProfile> mProviderProfileCache;
@@ -47,11 +49,18 @@ public class ProviderManager
     private static final String PROVIDER_SETTINGS_CACHE_KEY = "provider_settings";
     private static final String RATINGS_KEY = "ratings";
 
-    public ProviderManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager)
+    private static final String PROVIDER_EVALUATION_CACHE_KEY = "provider_evaluation";
+    private Cache<String, ProviderEvaluation> mProviderEvaluationCache;
+    private Cache<String, ProviderEvaluation> mOffline_ProviderEvaluationCache;
+
+    public ProviderManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final HandyConnectivityManager connectivityManager)
     {
         mBus = bus;
+        bus.register(this);
         mDataManager = dataManager;
         mPrefsManager = prefsManager;
+        mConnectivityManager = connectivityManager;
+
         mProviderCache = CacheBuilder.newBuilder()
                 .maximumSize(10)
                 .expireAfterWrite(1, TimeUnit.DAYS)
@@ -64,7 +73,31 @@ public class ProviderManager
                 .maximumSize(10)
                 .expireAfterWrite(1, TimeUnit.HOURS)
                 .build();
-        bus.register(this);
+
+        //evaluations change more frequently so we should keep them on a tighter cache
+        mProviderEvaluationCache = CacheBuilder.newBuilder()
+                .maximumSize(1)
+                .expireAfterWrite(2, TimeUnit.MINUTES)
+                .build();
+        mOffline_ProviderEvaluationCache = CacheBuilder.newBuilder()
+                .maximumSize(1)
+                .build();
+
+    }
+
+    @Subscribe
+    public void onRequestProviderInfo(HandyEvent.UserLoggedOut event)
+    {
+        invalidateCaches();
+    }
+
+    private void invalidateCaches()
+    {
+        mProviderCache.invalidateAll();
+        mProviderProfileCache.invalidateAll();
+        mProviderSettingsCache.invalidateAll();
+        mProviderEvaluationCache.invalidateAll();
+        mOffline_ProviderEvaluationCache.invalidateAll();
     }
 
     public void prefetch()
@@ -257,21 +290,44 @@ public class ProviderManager
     {
         String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
 
-        mDataManager.getProviderEvaluation(providerId, new DataManager.Callback<ProviderEvaluation>()
+        //evaluation changes the fast, only a 2 minute cache, so we have offline backup
+        if (mConnectivityManager.hasConnectivity())
         {
-            @Override
-            public void onSuccess(final ProviderEvaluation providerEvaluation)
+            ProviderEvaluation cachedEvaluation = mProviderEvaluationCache.getIfPresent(PROVIDER_EVALUATION_CACHE_KEY);
+            if (cachedEvaluation != null)
             {
-                mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationSuccess(providerEvaluation));
+                mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationSuccess(cachedEvaluation));
             }
-
-            @Override
-            public void onError(final DataManager.DataManagerError error)
+            mDataManager.getProviderEvaluation(providerId, new DataManager.Callback<ProviderEvaluation>()
             {
-                mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationError(error));
-            }
-        });
+                @Override
+                public void onSuccess(final ProviderEvaluation providerEvaluation)
+                {
+                    mProviderEvaluationCache.put(PROVIDER_EVALUATION_CACHE_KEY, providerEvaluation);
+                    mOffline_ProviderEvaluationCache.put(PROVIDER_EVALUATION_CACHE_KEY, providerEvaluation);
+                    mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationSuccess(providerEvaluation));
+                }
 
+                @Override
+                public void onError(final DataManager.DataManagerError error)
+                {
+                    mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationError(error));
+                }
+            });
+        }
+        else
+        {
+            ProviderEvaluation offLineCachedEvaluation = mOffline_ProviderEvaluationCache.getIfPresent(PROVIDER_EVALUATION_CACHE_KEY);
+            //using the offline cached data
+            if (offLineCachedEvaluation != null)
+            {
+                mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationSuccess(offLineCachedEvaluation));
+            }
+            else
+            {
+                mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.NETWORK)));
+            }
+        }
     }
 
     @Subscribe

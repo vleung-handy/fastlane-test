@@ -146,6 +146,12 @@ public class BookingManager
 
     }
 
+    @Subscribe
+    public void onRequestProviderInfo(HandyEvent.UserLoggedOut event)
+    {
+        invalidateCachesForAllDays();
+    }
+
     //Hunt through all caches looking for a single booking by ID, null if not found
     private Booking findSingleBookingInCaches(String bookingId, List<Cache<Date, BookingsWrapper>> caches)
     {
