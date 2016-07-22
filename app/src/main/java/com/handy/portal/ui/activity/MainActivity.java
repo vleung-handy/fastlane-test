@@ -87,6 +87,7 @@ public class MainActivity extends BaseActivity
         {
             System.out.println("Forcing a refresh of connectivity status");
             mHandyConnectivityManager.requestRefreshConnectivityStatus(this);
+
         }
 
         return super.onKeyDown(keyCode, event);

@@ -42,7 +42,6 @@ import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -94,7 +93,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected abstract boolean shouldShowClaimedIndicator(List<Booking> bookingsForDay);
 
-    protected abstract int numberOfDaysToDisplay();
+    protected abstract int getNumberOfDaysToDisplay();
 
     protected abstract void beforeRequestBookings();
 
@@ -228,7 +227,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     private void requestAllBookings()
     {
         requestBookingsForSelectedDay(true, true);
-
         requestBookingsForOtherDays(mSelectedDay);
     }
 
@@ -239,19 +237,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     private void requestBookingsForOtherDays(Date dayToExclude)
     {
-        List<Date> dates = Lists.newArrayList();
-        for (int i = 0; i < numberOfDaysToDisplay(); i++)
-        {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date());
-            calendar.add(Calendar.DATE, i);
-            Date day = DateTimeUtils.getDateWithoutTime(calendar.getTime());
-
-            if (!day.equals(dayToExclude))
-            {
-                dates.add(day);
-            }
-        }
+        List<Date> dates = DateTimeUtils.generateDatesFromToday(getNumberOfDaysToDisplay());
+        dates.remove(dayToExclude);
         requestBookings(dates, false, true);
     }
 
@@ -343,20 +330,16 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         LinearLayout datesLayout = getDatesLayout();
         datesLayout.removeAllViews();
 
-        mDateDateButtonViewMap = new HashMap<>(numberOfDaysToDisplay());
+        mDateDateButtonViewMap = new HashMap<>(getNumberOfDaysToDisplay());
 
         Context context = getActivity();
 
-        for (int i = 0; i < numberOfDaysToDisplay(); i++)
+        List<Date> dates = DateTimeUtils.generateDatesFromToday(getNumberOfDaysToDisplay());
+        for (int i = 0; i < getNumberOfDaysToDisplay(); i++)
         {
             LayoutInflater.from(context).inflate(R.layout.element_date_button, datesLayout);
             final DateButtonView dateButtonView = (DateButtonView) datesLayout.getChildAt(datesLayout.getChildCount() - 1);
-
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date());
-            calendar.add(Calendar.DATE, i);
-            final Date day = DateTimeUtils.getDateWithoutTime(calendar.getTime());
-
+            final Date day = dates.get(i);
             dateButtonView.init(day);
             dateButtonView.setOnClickListener(new View.OnClickListener()
             {
@@ -368,7 +351,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                     requestBookings(Lists.newArrayList(day), true, true);
                 }
             });
-
             mDateDateButtonViewMap.put(day, dateButtonView);
         }
     }

@@ -44,8 +44,6 @@ public class HandyConnectivityManager
 
     public void requestRefreshConnectivityStatus(Context context)
     {
-        System.out.println("CSD - Someone said check your connectivity");
-        //todo add a timer or something to stop a stampede
         refreshConnectivityStatus(context);
     }
 
@@ -53,8 +51,6 @@ public class HandyConnectivityManager
     {
         boolean haveConnection = false;
         boolean hadConnection = mHasConnectivity;
-
-        System.out.println("Refresh connection status");
 
         ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();

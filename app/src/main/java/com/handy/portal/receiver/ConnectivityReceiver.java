@@ -50,8 +50,6 @@ public class ConnectivityReceiver extends BaseIntentReceiver
         boolean isConnected = activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
 
-        System.out.println("CSD - I heard from connect receiover that connected value is now  : " + isConnected);
-
         mHandyConnectivityManager.requestRefreshConnectivityStatus(context);
 
         super.onReceive(context, intent);
