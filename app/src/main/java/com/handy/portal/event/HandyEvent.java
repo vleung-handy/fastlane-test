@@ -272,23 +272,20 @@ public abstract class HandyEvent
 
     public static class RequestProRequestedJobs extends RequestBookingsEvent
     {
-        private List<Date> mDatesForBookings;
-        private boolean mUseCachedIfPresent;
-
         public RequestProRequestedJobs(List<Date> datesForBookings, boolean useCachedIfPresent)
         {
-            mDatesForBookings = datesForBookings;
-            mUseCachedIfPresent = useCachedIfPresent;
+            dates = datesForBookings;
+            useCachedIfPresent = useCachedIfPresent;
         }
 
         public boolean useCachedIfPresent()
         {
-            return mUseCachedIfPresent;
+            return useCachedIfPresent;
         }
 
         public List<Date> getDatesForBookings()
         {
-            return mDatesForBookings;
+            return dates;
         }
     }
 

@@ -313,6 +313,14 @@ public class BookingManager
         {
             return scheduledBookingsCache;
         }
+        else if (requestType == RequestType.REQUESTED)
+        {
+            return requestedBookingsCache;
+        }
+        else if (requestType == RequestType.COMPLEMENTARY)
+        {
+            return complementaryBookingsCache;
+        }
         return null;
     }
 
@@ -325,6 +333,14 @@ public class BookingManager
         else if (requestType == RequestType.SCHEDULED)
         {
             return offline_scheduledBookingsCache;
+        }
+        else if (requestType == RequestType.REQUESTED)
+        {
+            return offline_requestedBookingsCache;
+        }
+        else if (requestType == RequestType.COMPLEMENTARY)
+        {
+            return offline_complementaryBookingsCache;
         }
         return null;
     }
@@ -345,7 +361,7 @@ public class BookingManager
                     for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
                     {
                         Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
-                        Crashlytics.log("Received available bookings for " + day);
+                        Crashlytics.log("Received " + requestType + "  bookings for " + day);
                         //Update our caches
                         getCacheForRequestType(requestType).put(day, bookingsWrapper);
                         getOfflineCacheForRequestType(requestType).put(day, bookingsWrapper); //additive right now since not clearing
@@ -416,9 +432,11 @@ public class BookingManager
         }
     }
 
+//
+//Available and Scheduled
+//
 
-
-
+    //Available and scheduled bookings are very similar
     @Subscribe
     public void onRequestAvailableBookings(final HandyEvent.RequestAvailableBookings event)
     {
@@ -431,13 +449,7 @@ public class BookingManager
         handleBookingsRequest(RequestType.SCHEDULED, event);
     }
 
-    //
-//    public void onRequestProRequestedBookings(final HandyEvent.RequestProRequestedJobs event)
-//    {
-//        handleBookingsRequest(RequestType.REQUESTED, event);
-//    }
-
-    private void handleBookingsRequest(final RequestType requestType, HandyEvent.RequestBookingsEvent event)
+    private void handleBookingsRequest(final RequestType requestType, final HandyEvent.RequestBookingsEvent event)
     {
         if (event.dates == null || event.dates.isEmpty())
         {
@@ -448,34 +460,9 @@ public class BookingManager
         //Check if requesting data from network is an option
         if (mHandyConnectivityManager.hasConnectivity())
         {
-            final List<Date> datesToRequest = new ArrayList<>();
-            for (Date date : event.dates)
-            {
-                final Date dateWithoutTime = DateTimeUtils.getDateWithoutTime(date);
-                if (event.useCachedIfPresent)
-                {
-                    //Check if we already have this date in our available bookings cache, if so send it back immediately instead of requesting again
-                    BookingsWrapper cachedBookings = null;
-                    Cache<Date, BookingsWrapper> cache = getCacheForRequestType(requestType);
-                    if (cache != null)
-                    {
-                        cachedBookings = cache.getIfPresent(dateWithoutTime);
-                    }
+            final List<Date> datesToRequest;
 
-                    if (cachedBookings != null)
-                    {
-                        sendBookingsRequestSuccess(requestType, cachedBookings, dateWithoutTime);
-                    }
-                    else
-                    {
-                        datesToRequest.add(dateWithoutTime);
-                    }
-                }
-                else
-                {
-                    datesToRequest.add(dateWithoutTime);
-                }
-            }
+            datesToRequest = getDatesThatNeedData(requestType, event);
 
             //If we have some data we need to request from the network
             if (!datesToRequest.isEmpty())
@@ -493,7 +480,7 @@ public class BookingManager
             }
             else
             {
-                //dates to request is empty, is there anyway we can get in a bad state because of this?
+                //TODO: dates to request is empty, is there anyway we can get in a bad state because of this? maybe?
                 System.out.println("CSD - " + requestType + "  - full cache match, already sent the cached data");
             }
         }
@@ -527,137 +514,61 @@ public class BookingManager
         }
     }
 
-//    @Subscribe
-//    public void onRequestAvailableBookings(final HandyEvent.RequestAvailableBookings event)
-//    {
-//        if (event.dates == null || event.dates.isEmpty())
-//        {
-//            //bad or empty list, return client error
-//            mBus.post(new HandyEvent.ReceiveAvailableBookingsError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.CLIENT), event.dates));
-//            return;
-//        }
+    private List<Date> getDatesThatNeedData(final RequestType requestType, final HandyEvent.RequestBookingsEvent event)
+    {
+        List<Date> requestedDates = null;
+        switch (requestType)
+        {
+            case AVAILABLE:
+            case SCHEDULED:
+            {
+                requestedDates = handleNonRequestBookingCacheCheck(requestType, event);
+            }
+            break;
+
+            //TODO: it was hard to add requested and complementary bookings because they are slightly different return types, to do later
+        }
+        return requestedDates;
+    }
+
+    //returns the list of dates we need to request
+    private List<Date> handleNonRequestBookingCacheCheck(final RequestType requestType, final HandyEvent.RequestBookingsEvent event)
+    {
+        final List<Date> datesToRequest = new ArrayList<>();
+        for (Date date : event.dates)
+        {
+            final Date dateWithoutTime = DateTimeUtils.getDateWithoutTime(date);
+            if (event.useCachedIfPresent)
+            {
+                //Check if we already have this date in our bookings cache, if so send it back immediately instead of requesting again
+                BookingsWrapper cachedBookings = null;
+                Cache<Date, BookingsWrapper> cache = getCacheForRequestType(requestType);
+                if (cache != null)
+                {
+                    cachedBookings = cache.getIfPresent(dateWithoutTime);
+                }
+
+                if (cachedBookings != null)
+                {
+                    sendBookingsRequestSuccess(requestType, cachedBookings, dateWithoutTime);
+                }
+                else
+                {
+                    datesToRequest.add(dateWithoutTime);
+                }
+            }
+            else
+            {
+                datesToRequest.add(dateWithoutTime);
+            }
+        }
+        return datesToRequest;
+    }
+
 //
-//        //Check if requesting data from network is an option
-//        if (mHandyConnectivityManager.hasConnectivity())
-//        {
-//            final List<Date> datesToRequest = new ArrayList<>();
+//End Available and Scheduled
 //
-//            for (Date date : event.dates)
-//            {
-//                final Date dateWithoutTime = DateTimeUtils.getDateWithoutTime(date);
-//
-//                if (event.useCachedIfPresent)
-//                {
-//                    //Check if we already have this date in our available bookings cache, if so send it back immediately instead of requesting again
-//                    final BookingsWrapper cachedBookings = availableBookingsCache.getIfPresent(dateWithoutTime);
-//                    if (cachedBookings != null)
-//                    {
-//                        mBus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(cachedBookings, dateWithoutTime));
-//
-//                    }
-//                    else
-//                    {
-//                        datesToRequest.add(dateWithoutTime);
-//                    }
-//                }
-//                else
-//                {
-//                    datesToRequest.add(dateWithoutTime);
-//                }
-//            }
-//
-//            //If we have some data we need to request from the network
-//            if (!datesToRequest.isEmpty())
-//            {
-//                //Check to see if a request for these dates is already in flight so we don't dupe requests
-//                boolean alreadyOutbound = isMatchingOutboundRequest(mOutboundsRequestsByType.get(RequestType.AVAILABLE), datesToRequest);
-//                if (!alreadyOutbound)
-//                {
-//                    //add to our outbound request tracker
-//                    mOutboundsRequestsByType.get(RequestType.AVAILABLE).add(datesToRequest);
-//
-//                    //Ask for the data
-//                    mDataManager.getAvailableBookings(datesToRequest.toArray(new Date[datesToRequest.size()]),
-//                            null,
-//                            new DataManager.Callback<BookingsListWrapper>()
-//                            {
-//                                @Override
-//                                public void onSuccess(final BookingsListWrapper bookingsListWrapper)
-//                                {
-//                                    //we got back our request, remove it from the outbound tracking
-//                                    mOutboundsRequestsByType.get(RequestType.AVAILABLE).remove(datesToRequest);
-//
-//                                    if (bookingsListWrapper != null && bookingsListWrapper.getBookingsWrappers() != null)
-//                                    {
-//                                        for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
-//                                        {
-//                                            Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
-//                                            Crashlytics.log("Received available bookings for " + day);
-//                                            //Update our caches
-//                                            availableBookingsCache.put(day, bookingsWrapper);
-//                                            offline_availableBookingsCache.put(day, bookingsWrapper); //additive right now since not clearing
-//                                            //Send back the received data
-//                                            mBus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(bookingsWrapper, day));
-//                                        }
-//                                    }
-//                                    else
-//                                    {
-//                                        mBus.post(new HandyEvent.ReceiveAvailableBookingsError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.SERVER), datesToRequest));
-//                                    }
-//                                }
-//
-//                                @Override
-//                                public void onError(final DataManager.DataManagerError error)
-//                                {
-//                                    //we got back our request, remove it from the outbound tracking
-//                                    mOutboundsRequestsByType.get(RequestType.AVAILABLE).remove(datesToRequest);
-//                                    mBus.post(new HandyEvent.ReceiveAvailableBookingsError(error, datesToRequest));
-//                                }
-//                            }
-//                    );
-//                }
-//                else
-//                {
-//                    System.out.println("CSD AVAIL HOLD YOUR HORSES ALREADY RUNNING : " + datesToRequest.toString() + " : " + datesToRequest.size());
-//                }
-//            }
-//            else
-//            {
-//                //dates to request is empty, is there anyway we can get in a bad state because of this?
-//                System.out.println("CSD - avail - full cache match, already sent the cached data");
-//            }
-//        }
-//        else //offline mode
-//        {
-//            //use the offline cache
-//            List<Date> missingDates = new ArrayList<>();
-//            boolean sentSomething = false;
-//            for (Date date : event.dates)
-//            {
-//                final Date day = DateTimeUtils.getDateWithoutTime(date);
-//                final BookingsWrapper cachedBookings = offline_availableBookingsCache.getIfPresent(day);
-//                if (cachedBookings != null)
-//                {
-//                    sentSomething = true;
-//                    mBus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(cachedBookings, day));
-//                }
-//                else
-//                {
-//                    missingDates.add(date);
-//                }
-//            }
-//
-//            //TODO: There could be missing and non-missing dates in a batch we don't make that clear to user
-//
-//            //we have a full failure, send an error
-//            if (!missingDates.isEmpty() && !sentSomething)
-//            {
-//                mBus.post(new HandyEvent.ReceiveAvailableBookingsError(
-//                        new DataManager.DataManagerError(DataManager.DataManagerError.Type.NETWORK, "Requires network connection"),
-//                        missingDates));
-//            }
-//        }
-//    }
+
 
     @Subscribe
     public void onRequestOnboardingJobs(HandyEvent.RequestOnboardingJobs event)
@@ -680,6 +591,7 @@ public class BookingManager
         );
     }
 
+    //PRO REQUESTED JOBS HAVE SLIGHTLY DIFFERENT LOGIC AND FORMAT which is hard to standardize
     @Subscribe
     public void onRequestProRequestedJobs(HandyEvent.RequestProRequestedJobs event)
     {
@@ -778,7 +690,7 @@ public class BookingManager
                 }
                 else
                 {
-                    System.out.println("outbound already for requested matching outbound, just wait");
+                    System.out.println("pro requested jobs - outbound already for requested matching outbound, just wait");
                 }
             }
         }
@@ -809,131 +721,6 @@ public class BookingManager
             }
         }
     }
-
-//    @Subscribe
-//    public void onRequestScheduledBookings(final HandyEvent.RequestScheduledBookings event)
-//    {
-//        if (event.dates == null || event.dates.isEmpty())
-//        {
-//            //bad or empty list, return client error
-//            mBus.post(new BookingEvent.ReceiveScheduledBookingsError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.CLIENT), event.dates));
-//            return;
-//        }
-//
-//        if (mHandyConnectivityManager.hasConnectivity())
-//        {
-//            final List<Date> datesToRequest = new ArrayList<>();
-//            for (Date date : event.dates)
-//            {
-//                final Date day = DateTimeUtils.getDateWithoutTime(date);
-//                if (event.useCachedIfPresent)
-//                {
-//                    final BookingsWrapper cachedBookings = scheduledBookingsCache.getIfPresent(day);
-//                    if (cachedBookings != null)
-//                    {
-//                        mBus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(cachedBookings, day));
-//                    }
-//                    else
-//                    {
-//                        datesToRequest.add(day);
-//                    }
-//                }
-//                else
-//                {
-//                    datesToRequest.add(day);
-//                }
-//            }
-//
-//            if (!datesToRequest.isEmpty())
-//            {
-//                boolean alreadyOutbound = isMatchingOutboundRequest(mOutboundsRequestsByType.get(RequestType.SCHEDULED), datesToRequest);
-//                if (!alreadyOutbound)
-//                {
-//                    mOutboundsRequestsByType.get(RequestType.SCHEDULED).add(datesToRequest);
-//
-//                    mDataManager.getScheduledBookings(datesToRequest.toArray(new Date[datesToRequest.size()]),
-//                            new DataManager.Callback<BookingsListWrapper>()
-//                            {
-//                                @Override
-//                                public void onSuccess(final BookingsListWrapper bookingsListWrapper)
-//                                {
-//                                    //remove the outbound tracker
-//                                    mOutboundsRequestsByType.get(RequestType.SCHEDULED).remove(datesToRequest);
-//
-//                                    for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
-//                                    {
-//                                        Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
-//                                        Crashlytics.log("Received scheduled bookings for " + day);
-//
-//                                        //update our caches
-//                                        scheduledBookingsCache.put(day, bookingsWrapper);
-//                                        offline_scheduledBookingsCache.put(day, bookingsWrapper);
-//
-//                                        mBus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(bookingsWrapper, day));
-//                                    }
-//                                /*
-//                                this complements the original request event.
-//
-//                                this is required because some components need to get notified
-//                                (just once, which is why we can't use the above event)
-//                                that the original request was responded to
-//                                 */
-//                                    mBus.post(new HandyEvent.ReceiveScheduledBookingsBatchSuccess());
-//                                }
-//
-//                                @Override
-//                                public void onError(final DataManager.DataManagerError error)
-//                                {
-//                                    mBus.post(new HandyEvent.ReceiveScheduledBookingsError(error, datesToRequest));
-//                                    mOutboundsRequestsByType.get(RequestType.SCHEDULED).remove(datesToRequest);
-//                                }
-//                            }
-//                    );
-//                }
-//                else
-//                {
-//                    System.out.println("CSD - scheduled jobs matches outbound tracking");
-//                }
-//            }
-//            else
-//            {
-//                //can we end up in a bad state with no response?
-//                System.out.println("CSD - no dates left to request, cache should have covered it all or no requests actually made");
-//            }
-//        }
-//        else //offline mode
-//        {
-//            List<Date> missingDates = new ArrayList<>();
-//            boolean returnedSomething = false;
-//            for (Date date : event.dates)
-//            {
-//                final Date day = DateTimeUtils.getDateWithoutTime(date);
-//                final BookingsWrapper cachedBookings = offline_scheduledBookingsCache.getIfPresent(day);
-//                if (cachedBookings != null)
-//                {
-//                    Log.d(getClass().getName(), "using offline scheduled bookings: " + day.toString());
-//                    mBus.post(new HandyEvent.ReceiveScheduledBookingsSuccess(cachedBookings, day));
-//                    returnedSomething = true;
-//                }
-//                else
-//                {
-//                    missingDates.add(day);
-//                }
-//                //Since we are offline we do not send mBus.post(new HandyEvent.ReceiveScheduledBookingsBatchSuccess());
-//            }
-//
-//
-//            if (!missingDates.isEmpty() && !returnedSomething)
-//            {
-//                System.out.println("CSD - scheduled - Returning error for the missing dates");
-//                mBus.post(new HandyEvent.ReceiveScheduledBookingsError(
-//                        new DataManager.DataManagerError(DataManager.DataManagerError.Type.NETWORK, "Offline mode"),
-//                        missingDates));
-//            }
-//
-//
-//        }
-//    }
 
     @Subscribe
     public void onRequestNearbyBookings(BookingEvent.RequestNearbyBookings event)
