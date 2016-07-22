@@ -3,7 +3,6 @@ package com.handy.portal.setup.step;
 import android.content.Context;
 import android.support.annotation.NonNull;
 
-import com.google.common.collect.Lists;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.flow.FlowStep;
@@ -13,10 +12,6 @@ import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.ConfigurationResponse;
 
 import org.greenrobot.eventbus.EventBus;
-
-import java.util.Calendar;
-import java.util.Date;
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -57,32 +52,22 @@ public class PrefetchBookingDataStep extends FlowStep
     private void prefetchAvailableJobs(@NonNull ConfigurationResponse configurationResponse)
     {
         //if config response took a while this may be late so allow cached
-        mBus.post(new HandyEvent.RequestAvailableBookings(generateDatesFromToday(configurationResponse.getNumberOfDaysForAvailableJobs()), true));
+        mBus.post(new HandyEvent.RequestAvailableBookings(
+                DateTimeUtils.generateDatesFromToday(configurationResponse.getNumberOfDaysForAvailableJobs()), true));
     }
 
     private void prefetchScheduledJobs()
     {
         //if config response took a while this may be late so allow cached
-        mBus.post(new HandyEvent.RequestScheduledBookings(generateDatesFromToday(ScheduledBookingsFragment.SCHEDULED_REQUEST_NUM_DAYS), true));
+        mBus.post(new HandyEvent.RequestScheduledBookings(
+                DateTimeUtils.generateDatesFromToday(ScheduledBookingsFragment.SCHEDULED_REQUEST_NUM_DAYS), true));
     }
 
     private void prefetchRequestedJobs(@NonNull ConfigurationResponse configurationResponse)
     {
         //if config response took a while this may be late so allow cached
-        mBus.post(new HandyEvent.RequestProRequestedJobs(generateDatesFromToday(configurationResponse.getNumberOfDaysForRequestedJobs()), true));
-    }
-
-    private List<Date> generateDatesFromToday(int numDays)
-    {
-        List<Date> dates = Lists.newArrayList();
-        Calendar calendar = Calendar.getInstance();
-        for (int i = 0; i < numDays; i++)
-        {
-            calendar.setTime(new Date());
-            calendar.add(Calendar.DATE, i);
-            dates.add(DateTimeUtils.getDateWithoutTime(calendar.getTime()));
-        }
-        return dates;
+        mBus.post(new HandyEvent.RequestProRequestedJobs(
+                DateTimeUtils.generateDatesFromToday(configurationResponse.getNumberOfDaysForRequestedJobs()), true));
     }
 
 }

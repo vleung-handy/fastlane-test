@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.text.format.DateUtils;
 import android.widget.TextView;
 
+import com.google.common.collect.Lists;
 import com.handy.portal.R;
 
 import java.text.ParseException;
@@ -608,5 +609,18 @@ public final class DateTimeUtils
         {
             return (days / DAYS_IN_A_WEEK) + "w";
         }
+    }
+
+    public static List<Date> generateDatesFromToday(int numDays)
+    {
+        List<Date> dates = Lists.newArrayList();
+        Calendar calendar = Calendar.getInstance();
+        for (int i = 0; i < numDays; i++)
+        {
+            calendar.setTime(new Date());
+            calendar.add(Calendar.DATE, i);
+            dates.add(DateTimeUtils.getDateWithoutTime(calendar.getTime()));
+        }
+        return dates;
     }
 }
