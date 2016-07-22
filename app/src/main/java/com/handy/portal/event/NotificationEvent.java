@@ -158,4 +158,23 @@ public abstract class NotificationEvent extends HandyEvent
             this.error = error;
         }
     }
+
+
+    //Supporting offline mode, sending back everything in the cache instead of data to append
+    public static class ReceiveNotificationMessagesCacheSuccess extends ReceiveSuccessEvent
+    {
+        //Linked hashset maintains order of insertion
+        private final NotificationMessage[] mAllCachedNotificationMessages;
+
+        public NotificationMessage[] getAllCachedNotificationMessages()
+        {
+            return mAllCachedNotificationMessages;
+        }
+
+        public ReceiveNotificationMessagesCacheSuccess(NotificationMessage[] notificationMessages)
+        {
+            mAllCachedNotificationMessages = notificationMessages;
+        }
+    }
+
 }

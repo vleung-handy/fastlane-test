@@ -28,7 +28,7 @@ public class ConnectivityReceiver extends BaseIntentReceiver
     {
         Utils.inject(context, this);
 
-        System.out.println("Connectivity receiver has received something");
+        //System.out.println("Connectivity receiver has received something");
 
 //        final String action = intent.getAction();
 //        if (action.equals(WifiManager.SUPPLICANT_CONNECTION_CHANGE_ACTION))
