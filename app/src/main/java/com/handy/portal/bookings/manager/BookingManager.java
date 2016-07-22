@@ -9,12 +9,15 @@ import com.handy.portal.bookings.model.Booking.BookingType;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
+import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.HandyConnectivityManager;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
@@ -43,6 +46,7 @@ public class BookingManager
     private final EventBus mBus;
     private final DataManager mDataManager;
     private final HandyConnectivityManager mHandyConnectivityManager;
+    private final ConfigManager mConfigManager;
 
     //Active timed caches
     private final List<Cache<Date, BookingsWrapper>> timedCaches; //all of them for easy finding of a specific booking in any cache
@@ -77,8 +81,10 @@ public class BookingManager
     }
 
     @Inject
-    public BookingManager(final EventBus bus, final DataManager dataManager, final HandyConnectivityManager handyConnectivityManager)
+    public BookingManager(final EventBus bus, final DataManager dataManager, final HandyConnectivityManager handyConnectivityManager, final ConfigManager configManager)
     {
+        mConfigManager = configManager;
+
         mOutboundsRequestsByType = new HashMap<>();
         mOutboundsRequestsByType.put(RequestType.AVAILABLE, new ArrayList<List<Date>>());
         mOutboundsRequestsByType.put(RequestType.SCHEDULED, new ArrayList<List<Date>>());
@@ -798,7 +804,7 @@ public class BookingManager
             {
                 //have to invalidate cache for all days because we need updated priority access info :(
                 invalidateCachesForAllDays();
-
+                fetchAllBookingData(); //so its there when you want it instead of waiting for JIT
                 mBus.post(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, event.source));
             }
 
@@ -872,8 +878,8 @@ public class BookingManager
             public void onSuccess(Booking booking)
             {
                 mBus.post(new HandyEvent.ReceiveNotifyJobOnMyWaySuccess(booking));
-                invalidateScheduledBookingCache(
-                        DateTimeUtils.getDateWithoutTime(booking.getStartDate()));
+                Date bookingDate = DateTimeUtils.getDateWithoutTime(booking.getStartDate());
+                invalidateScheduledBookingCache(bookingDate);
             }
 
             @Override
@@ -915,8 +921,8 @@ public class BookingManager
             public void onSuccess(Booking booking)
             {
                 mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(booking));
-                invalidateScheduledBookingCache(
-                        DateTimeUtils.getDateWithoutTime(booking.getStartDate()));
+                Date bookingDate = DateTimeUtils.getDateWithoutTime(booking.getStartDate());
+                invalidateScheduledBookingCache(bookingDate);
             }
 
             @Override
@@ -1028,6 +1034,28 @@ public class BookingManager
         offline_complementaryBookingsCache.invalidateAll();
         offline_requestedBookingsCache.invalidateAll();
 
+    }
+
+    //burns a little bandwidth but the common use case of wanting to claim another job will now be more responsive
+    //Bit of a dupe from the prefetchdatastep, could have that step just call this function
+    //Intended to be called after an invalidation but will have no effect if caches are still intact
+    public void fetchAllBookingData()
+    {
+        //refetching and throwing into cache
+        ConfigurationResponse configurationResponse = mConfigManager.getConfigurationResponse();
+        if (configurationResponse == null)
+        {
+            //super weird timing issue, abort
+            return;
+        }
+
+        //fetch available.
+        onRequestAvailableBookings(new HandyEvent.RequestAvailableBookings(
+                DateTimeUtils.generateDatesFromToday(configurationResponse.getNumberOfDaysForAvailableJobs()), true));
+        onRequestScheduledBookings(new HandyEvent.RequestScheduledBookings(
+                DateTimeUtils.generateDatesFromToday(ScheduledBookingsFragment.SCHEDULED_REQUEST_NUM_DAYS), true));
+        onRequestProRequestedJobs(new HandyEvent.RequestProRequestedJobs(
+                DateTimeUtils.generateDatesFromToday(configurationResponse.getNumberOfDaysForRequestedJobs()), true));
     }
 
     private void invalidateCachesForDay(Date day)
