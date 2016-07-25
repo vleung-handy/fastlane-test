@@ -15,8 +15,8 @@ import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
-import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.model.ProviderProfileResponse;
 import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.ZipClusterPolygons;
@@ -227,7 +227,7 @@ class ProviderProfileRetrofitCallback extends TypedHandyRetrofitCallback<Provide
 }
 
 
-class ProviderPersonalInfoHandyRetroFitCallback extends TypedHandyRetrofitCallback<ProviderPersonalInfo>
+class ProviderPersonalInfoHandyRetroFitCallback extends TypedHandyRetrofitCallback<ProviderProfileResponse>
 {
     ProviderPersonalInfoHandyRetroFitCallback(DataManager.Callback callback)
     {

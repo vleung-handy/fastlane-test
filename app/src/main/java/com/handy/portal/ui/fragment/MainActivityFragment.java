@@ -43,7 +43,6 @@ import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.util.DeeplinkMapper;
@@ -158,13 +157,6 @@ public class MainActivityFragment extends InjectedFragment
         registerButtonListeners();
         mBuildVersionText.setText(BuildConfig.VERSION_NAME);
         return view;
-    }
-
-    @Override
-    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
-    {
-        super.onViewCreated(view, savedInstanceState);
-        initProRequestedJobs();
     }
 
     @Override
@@ -435,35 +427,28 @@ public class MainActivityFragment extends InjectedFragment
     {
         mJobsButton = new TabButton(getContext())
                 .init(R.string.tab_claim, R.drawable.ic_menu_search);
+        mJobsButton.setId(R.id.tab_nav_available);
         mRequestsButton = new TabButton(getContext()).init(R.string.tab_requests,
                 R.drawable.ic_menu_requests);
         mRequestsButton.setId(R.id.tab_nav_pro_requested_jobs);
         mScheduleButton = new TabButton(getContext())
                 .init(R.string.tab_schedule, R.drawable.ic_menu_schedule);
+        mScheduleButton.setId(R.id.tab_nav_schedule);
         mAlertsButton = new TabButton(getContext())
                 .init(R.string.tab_alerts, R.drawable.ic_menu_alerts);
+        mAlertsButton.setId(R.id.tab_nav_alert);
         mButtonMore = new TabButton(getContext())
                 .init(R.string.tab_more, R.drawable.ic_menu_more);
         mButtonMore.setId(R.id.tab_nav_item_more);
-        mTabs.setTabs(mJobsButton, mRequestsButton, mScheduleButton, mAlertsButton, mButtonMore);
+        mTabs.setTabs(mJobsButton, mScheduleButton, mRequestsButton, mAlertsButton, mButtonMore);
 
         mJobsButton.setOnClickListener(
                 new TabOnClickListener(mJobsButton, MainViewPage.AVAILABLE_JOBS));
-        mRequestsButton.setOnClickListener(new TabOnClickListener(mRequestsButton, MainViewPage.REQUESTED_JOBS));
         mScheduleButton.setOnClickListener(
                 new TabOnClickListener(mScheduleButton, MainViewPage.SCHEDULED_JOBS));
         mButtonMore.setOnClickListener(new MoreButtonOnClickListener());
 
-        if (getConfigurationResponse() != null && getConfigurationResponse().shouldShowNotificationMenuButton())
-        {
-            mAlertsButton.setOnClickListener(
-                    new TabOnClickListener(mAlertsButton, MainViewPage.NOTIFICATIONS));
-            mAlertsButton.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            mAlertsButton.setVisibility(View.GONE);
-        }
+        initOptionalTabs();
     }
 
     private void registerNavDrawerListeners()
@@ -642,11 +627,6 @@ public class MainActivityFragment extends InjectedFragment
         transaction.commit();
     }
 
-    private ConfigurationResponse getConfigurationResponse()
-    {
-        return mConfigManager.getConfigurationResponse();
-    }
-
     @SuppressWarnings("deprecation")
     private void logOutProvider()
     {
@@ -668,13 +648,30 @@ public class MainActivityFragment extends InjectedFragment
         getActivity().finish();
     }
 
-    private void initProRequestedJobs()
+    private void initOptionalTabs()
     {
-        if (mConfigManager.getConfigurationResponse() != null
-                && mConfigManager.getConfigurationResponse().isPendingRequestsInboxEnabled())
+        if (mConfigManager == null || mConfigManager.getConfigurationResponse() == null)
         {
-            requestRequestedAvailableJobs();
+            return;
+        }
+
+        if (mConfigManager.getConfigurationResponse().shouldShowNotificationMenuButton())
+        {
+            mAlertsButton.setOnClickListener(
+                    new TabOnClickListener(mAlertsButton, MainViewPage.NOTIFICATIONS));
+            mAlertsButton.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mAlertsButton.setVisibility(View.GONE);
+        }
+
+        if (mConfigManager.getConfigurationResponse().isPendingRequestsInboxEnabled())
+        {
+            mRequestsButton.setOnClickListener(
+                    new TabOnClickListener(mRequestsButton, MainViewPage.REQUESTED_JOBS));
             mRequestsButton.setVisibility(View.VISIBLE);
+            requestRequestedAvailableJobs();
         }
         else
         {
