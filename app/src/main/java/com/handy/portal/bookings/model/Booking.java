@@ -469,6 +469,7 @@ public class Booking implements Comparable<Booking>, Serializable
         UNAVAILABLE,
     }
 
+
     public static class DisplayAttributes implements Serializable
     {
         @SerializedName("listing_title")
@@ -494,6 +495,7 @@ public class Booking implements Comparable<Booking>, Serializable
             return mDetailsBody;
         }
     }
+
 
     public enum ArrivalTimeOption //TODO: better system to enforce values in sync with server?
     {
@@ -882,6 +884,18 @@ public class Booking implements Comparable<Booking>, Serializable
             return copiedList;
         }
 
+        public BookingInstruction() {}
+
+        public BookingInstruction(final String id, final String instructionType, final String description, final String machineName, final String title, final boolean instructionCompleted)
+        {
+            mId = id;
+            mInstructionType = instructionType;
+            mDescription = description;
+            mMachineName = machineName;
+            mTitle = title;
+            mInstructionCompleted = instructionCompleted;
+        }
+
         public String getId() { return mId; }
 
         public String getInstructionType() { return mInstructionType; }
@@ -898,14 +912,13 @@ public class Booking implements Comparable<Booking>, Serializable
 
     public static class BookingInstructionUpdateRequest extends BookingInstruction
     {
+        public BookingInstructionUpdateRequest() { }
+
         public BookingInstructionUpdateRequest(BookingInstruction bookingInstruction)
         {
-            mId = bookingInstruction.getId();
-            mInstructionType = bookingInstruction.getInstructionType();
-            mDescription = bookingInstruction.getDescription();
-            mMachineName = bookingInstruction.getMachineName();
-            mTitle = bookingInstruction.getTitle();
-            mInstructionCompleted = bookingInstruction.isInstructionCompleted();
+            super(bookingInstruction.getId(), bookingInstruction.getInstructionType(),
+                    bookingInstruction.getDescription(), bookingInstruction.getMachineName(),
+                    bookingInstruction.getTitle(), bookingInstruction.isInstructionCompleted());
         }
 
         public void setInstructionCompleted(boolean instructionCompleted)
@@ -977,6 +990,12 @@ public class Booking implements Comparable<Booking>, Serializable
         private String mMachineName;
         @SerializedName("name")
         private String mDisplayName;
+
+        public ServiceInfo(final String machineName, final String displayName)
+        {
+            mMachineName = machineName;
+            mDisplayName = displayName;
+        }
 
         public String getMachineName()
         {

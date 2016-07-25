@@ -154,7 +154,11 @@ public final class NotificationsFragment extends ActionBarFragment
             if (!TextUtils.isNullOrEmpty(deeplink))
             {
                 final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
-                bus.post(new NavigationEvent.NavigateToPage(page, deeplinkData));
+                if (page != null)
+                {
+                    bus.post(new NavigationEvent.NavigateToPage(page, deeplinkData,
+                            !page.isTopLevel()));
+                }
             }
         }
     }

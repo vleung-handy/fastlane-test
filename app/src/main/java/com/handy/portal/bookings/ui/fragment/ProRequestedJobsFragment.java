@@ -26,17 +26,13 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.library.util.Utils;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
-import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,9 +54,6 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     LinearLayout mFetchErrorView;
     @BindView(R.id.fetch_error_text)
     TextView mFetchErrorText;
-
-    @Inject
-    protected EventBus mBus;
 
     private View mFragmentView; //this saves the exact view state including the scroll position
 
@@ -94,13 +87,6 @@ public class ProRequestedJobsFragment extends ActionBarFragment
             requestProRequestedJobs(false);
         }
     };
-
-    @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        Utils.inject(getActivity(), this);
-    }
 
     /**
      * updates and shows the job list view based on the given jobs list
@@ -136,7 +122,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
         arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
         arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
-        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.JOB_DETAILS, arguments,
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.JOB_DETAILS, arguments,
                 TransitionStyle.JOB_LIST_TO_DETAILS, true));
     }
 
@@ -193,8 +179,6 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     /**
      * hides all the content views in this fragment
      * except the given content view
-     *
-     * @param contentView
      */
     private void showContentViewAndHideOthers(@NonNull View contentView)
     {
@@ -219,7 +203,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     private void requestProRequestedJobs(boolean useCachedIfPresent)
     {
         List<Date> datesForBookings = getDatesForBookings();
-        mBus.post(new BookingEvent.RequestProRequestedJobs(datesForBookings, useCachedIfPresent));
+        bus.post(new BookingEvent.RequestProRequestedJobs(datesForBookings, useCachedIfPresent));
     }
 
     private List<Date> getDatesForBookings()
@@ -263,8 +247,6 @@ public class ProRequestedJobsFragment extends ActionBarFragment
      * need this because the empty view is also a swipe refresh layout
      * and on error we don't know which refresh layout
      * triggered the request
-     *
-     * @param isRefreshing
      */
     private void setRefreshingIndicator(boolean isRefreshing)
     {

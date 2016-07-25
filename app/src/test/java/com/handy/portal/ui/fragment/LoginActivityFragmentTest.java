@@ -13,13 +13,13 @@ import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.constants.HelpCenterUrl;
+import com.handy.portal.library.ui.widget.InputTextField;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.SplashActivity;
-import com.handy.portal.library.ui.widget.InputTextField;
-import org.greenrobot.eventbus.EventBus;
 
+import org.greenrobot.eventbus.EventBus;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -30,6 +30,7 @@ import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowToast;
 import org.robolectric.util.ActivityController;
 
+import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNull;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertNotNull;
@@ -102,7 +103,8 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
         receiveLoginRequest(true, null);
 
         Intent expectedIntent = new Intent(activity, SplashActivity.class);
-        assertThat(shadowOf(activity).getNextStartedActivity(), equalTo(expectedIntent));
+        Intent actualIntent = shadowOf(activity).getNextStartedActivity();
+        assertEquals(actualIntent.getComponent(), expectedIntent.getComponent());
     }
 
     @Test

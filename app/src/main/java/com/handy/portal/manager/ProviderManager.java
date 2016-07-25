@@ -15,8 +15,8 @@ import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.model.Provider;
-import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.model.ProviderProfileResponse;
 import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TypeSafeMap;
@@ -106,14 +106,16 @@ public class ProviderManager
     public void onUpdateProviderProfile(ProfileEvent.RequestProfileUpdate event)
     {
         String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
-        mDataManager.updateProviderProfile(providerId, getProfileParams(event), new DataManager.Callback<ProviderPersonalInfo>()
+        mDataManager.updateProviderProfile(providerId, getProfileParams(event), new DataManager.Callback<ProviderProfileResponse>()
         {
             @Override
-            public void onSuccess(ProviderPersonalInfo response)
+            public void onSuccess(ProviderProfileResponse response)
             {
-                mBus.post(new ProfileEvent.ReceiveProfileUpdateSuccess(response));
+                ProviderProfile providerProfile = response.getProviderProfile();
+                mProviderProfileCache.put(PROVIDER_PROFILE_CACHE_KEY, providerProfile);
+                mBus.post(new ProfileEvent.ReceiveProfileUpdateSuccess(
+                        providerProfile.getProviderPersonalInfo()));
                 requestProviderInfo();
-                requestProviderProfile();
             }
 
             @Override

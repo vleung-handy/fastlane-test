@@ -90,6 +90,10 @@ public enum MainViewPage implements Serializable
 
     REQUESTED_JOBS(ProRequestedJobsFragment.class);
 
+    private static final MainViewPage[] TOP_LEVEL_PAGES = {
+            AVAILABLE_JOBS, SCHEDULED_JOBS, REQUESTED_JOBS, NOTIFICATIONS, DASHBOARD, PAYMENTS,
+            REFER_A_FRIEND, ACCOUNT_SETTINGS, DASHBOARD_VIDEO_LIBRARY, HELP_WEBVIEW
+    };
     private Class mClassType;
     private
     @WebUrlManager.TargetPage
@@ -117,5 +121,17 @@ public enum MainViewPage implements Serializable
     String getWebViewTarget()
     {
         return mWebViewTarget;
+    }
+
+    public boolean isTopLevel()
+    {
+        for (final MainViewPage page : TOP_LEVEL_PAGES)
+        {
+            if (page == this)
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }

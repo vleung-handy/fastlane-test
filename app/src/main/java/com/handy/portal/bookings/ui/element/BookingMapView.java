@@ -48,7 +48,6 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
     private static final int MAP_POLYGON_FILL_COLOR = 0x80FF5C5C; //Can not store in colors.xml, colors.xml doesn't use alpha correctly
 
     private Booking mBooking;
-    private String mSource;
     private Booking.BookingStatus mStatus;
     private ZipClusterPolygons mPolygons;
     private TouchableWrapper mTouchableWrapper;
@@ -120,12 +119,10 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
         positionCamera(map, points);
     }
 
-    public void setDisplay(
-            @NonNull Booking booking, @Nullable String bookingSource, Booking.BookingStatus bookingStatus,
-            @Nullable ZipClusterPolygons polygons)
+    public void setDisplay(@NonNull Booking booking, Booking.BookingStatus bookingStatus,
+                           @Nullable ZipClusterPolygons polygons)
     {
         mBooking = booking;
-        mSource = bookingSource;
         mStatus = bookingStatus;
         mPolygons = polygons;
         getMapAsync(this);
