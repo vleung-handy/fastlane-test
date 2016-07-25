@@ -24,6 +24,7 @@ repositories {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     maven { url "http://dl.bintray.com/urbanairship/android" }
     maven { url "https://jitpack.io" }
+    maven { url "https://raw.githubusercontent.com/layerhq/releases-android/master/releases/" }
     flatDir {
         dirs 'libs'
     }
@@ -208,6 +209,10 @@ dependencies {
 
     //Stripe payment processing
     compile 'com.stripe:stripe-android:1.0.4'
+
+    compile 'com.layer.sdk:layer-sdk:0.21.1'
+    compile 'com.google.android.gms:play-services-gcm:7.5.0'
+    compile 'org.slf4j:slf4j-nop:1.5.8'
 
     //Testing
     testCompile 'org.robolectric:robolectric:3.2-SNAPSHOT'

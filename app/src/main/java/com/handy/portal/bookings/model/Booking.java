@@ -47,6 +47,9 @@ public class Booking implements Comparable<Booking>, Serializable
     @SerializedName("reveal_date")
     private Date mRevealDate;
 
+    @SerializedName("conversation_id")
+    private String mConversationId;
+
     @SerializedName("check_in_summary")
     private CheckInSummary mCheckInSummary;
     @SerializedName("eta_lateness_minutes")
@@ -1118,4 +1121,8 @@ public class Booking implements Comparable<Booking>, Serializable
         public String getZipClusterId() { return mZipClusterId; }
     }
 
+    public String getConversationId()
+    {
+        return mConversationId;
+    }
 }

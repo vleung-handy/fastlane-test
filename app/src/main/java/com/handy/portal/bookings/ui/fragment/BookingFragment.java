@@ -560,6 +560,13 @@ public class BookingFragment extends TimerActionBarFragment
         }
     }
 
+    @OnClick(R.id.booking_layer_message_customer_view)
+    public void layerMessageCustomer(){
+        Bundle args = new Bundle();
+        args.putSerializable(BundleKeys.BOOKING, mBooking);
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.LAYER_MESSAGE, args, true));
+    }
+
     private void setActionButtonVisibility()
     {
         if (mHideActionButtons)

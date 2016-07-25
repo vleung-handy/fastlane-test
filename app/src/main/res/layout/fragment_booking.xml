@@ -99,6 +99,19 @@
                         android:src="@drawable/customer_message"
                         tools:alpha="0.5"
                         />
+
+                    <ImageView
+                        android:id="@+id/booking_layer_message_customer_view"
+                        android:layout_width="@dimen/customer_action_width_height"
+                        android:layout_height="@dimen/customer_action_width_height"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="@dimen/default_margin_x2"
+                        android:layout_marginRight="@dimen/default_margin_x2"
+                        android:layout_toLeftOf="@id/booking_message_customer_view"
+                        android:layout_toStartOf="@id/booking_message_customer_view"
+                        android:src="@drawable/customer_message"
+                        tools:alpha="0.5"
+                        />
                 </RelativeLayout>
 
                 <LinearLayout

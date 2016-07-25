@@ -498,4 +498,20 @@
         <item name="android:divider">?android:attr/dividerVertical</item>
         <item name="android:showDividers">middle</item>
     </style>
+
+    <!-- Layer Chat -->
+    <style name="ChatHeaderStyle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:gravity">center</item>
+        <item name="android:textStyle">italic</item>
+        <item name="android:textColor">@color/very_light_gray</item>
+    </style>
+
+    <style name="ChatTextStyle" parent="TextAppearance.AppCompat.Subhead">
+    </style>
+
+    <style name="ChatStatusStyle" parent="TextAppearance.AppCompat.Caption">
+        <item name="android:textColor">@color/very_light_gray</item>
+        <item name="android:textSize">10sp</item>
+    </style>
+
 </resources>

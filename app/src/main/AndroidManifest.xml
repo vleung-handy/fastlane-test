@@ -51,6 +51,20 @@
 
     <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE"/>
 
+    <!-- Layer -->
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
+
+    <!-- Signature-only permissions -->
+    <permission android:name="com.myapp.package.permission.LAYER_PUSH"
+                android:protectionLevel="signature"/>
+    <uses-permission android:name="com.myapp.package.permission.LAYER_PUSH"/>
+    <uses-permission android:name="com.myapp.package.permission.C2D_MESSAGE"/>
+
+    <!-- LayerClient.sendLogs() permissions -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_LOGS"/>
+
+
     <!-- <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/> -->
     <application
         android:name=".core.BaseApplication"
@@ -309,6 +323,26 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Translucent"
             />
+
+        <!-- Layer -->
+        <!-- Your custom "com.layer.sdk.PUSH" notification Receiver -->
+        <!--<receiver android:name=".LayerPushReceiver">-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.layer.sdk.PUSH"/>-->
+                <!--<category android:name="com.myapp.package"/>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
+
+        <!-- Layer's GCM Receiver and Service -->
+        <receiver android:name="com.layer.sdk.services.GcmBroadcastReceiver"
+                  android:permission="com.google.android.c2dm.permission.SEND">
+            <intent-filter android:priority="950">
+                <action android:name="com.google.android.c2dm.intent.REGISTRATION"/>
+                <action android:name="com.google.android.c2dm.intent.RECEIVE"/>
+                <category android:name="com.myapp.package"/>
+            </intent-filter>
+        </receiver>
+        <service android:name="com.layer.sdk.services.GcmIntentService"/>
     </application>
 
 </manifest>
