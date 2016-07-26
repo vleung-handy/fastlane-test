@@ -240,6 +240,18 @@ public class Booking implements Comparable<Booking>, Serializable
         return mHourlyRate;
     }
 
+    public String getCurrencySymbol()
+    {
+        if (getHourlyRate() != null)
+        {
+            return getHourlyRate().getCurrencySymbol();
+        }
+        else
+        {
+            return getPaymentToProvider().getCurrencySymbol();
+        }
+    }
+
     public boolean isRequested()
     {
         return mIsRequested;
@@ -427,11 +439,6 @@ public class Booking implements Comparable<Booking>, Serializable
     public boolean hasFlexibleHours()
     {
         return mMinimumHours > 0 && mMinimumHours < mHours;
-    }
-
-    public boolean hasFlexPayRate()
-    {
-        return getHourlyRate() != null && hasFlexibleHours();
     }
 
     public Date getCheckInTime()

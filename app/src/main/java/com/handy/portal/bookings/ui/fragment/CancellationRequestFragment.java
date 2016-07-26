@@ -197,7 +197,7 @@ public class CancellationRequestFragment extends ActionBarFragment
 
         mFeeAmountTextView.setText(getString(R.string.fee_formatted,
                 CurrencyUtils.formatPriceWithCents(mAction.getFeeAmount(),
-                        mBooking.getPaymentToProvider().getCurrencySymbol())));
+                        mBooking.getCurrencySymbol())));
 
         for (String reason : mAction.getRemoveReasons())
         {

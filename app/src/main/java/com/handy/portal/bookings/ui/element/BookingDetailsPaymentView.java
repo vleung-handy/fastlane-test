@@ -40,16 +40,20 @@ public class BookingDetailsPaymentView extends FrameLayout
         float minimumHours = booking.getMinimumHours();
         float hours = booking.getHours();
         final PaymentInfo hourlyRate = booking.getHourlyRate();
-        if (hourlyRate != null && minimumHours > 0 && minimumHours < hours)
+        if (hourlyRate != null)
         {
-            addBookingDetailsRangePaymentView(hourlyRate, minimumHours, hours);
+            if (booking.hasFlexibleHours())
+            {
+                addBookingDetailsRangePaymentView(hourlyRate, minimumHours, hours);
+            }
+            else
+            {
+                addBookingDetailsSinglePaymentView(hourlyRate, hours);
+            }
         }
         else
         {
-            final BookingDetailsSinglePaymentView view =
-                    new BookingDetailsSinglePaymentView(getContext());
-            view.init(booking.getPaymentToProvider(), BookingDetailsSinglePaymentView.Size.MEDIUM);
-            addView(view);
+            addBookingDetailsSinglePaymentView(booking.getPaymentToProvider());
         }
     }
 
@@ -67,6 +71,23 @@ public class BookingDetailsPaymentView extends FrameLayout
                 .withCurrencySymbol(hourlyRate.getCurrencySymbol())
                 .build();
         view.init(minimumPaymentInfo, maximumPaymentInfo);
+        addView(view);
+    }
+
+    private void addBookingDetailsSinglePaymentView(final PaymentInfo hourlyRate, final float hours)
+    {
+        final PaymentInfo paymentInfo = new PaymentInfo.Builder()
+                .withAmount((int) (hourlyRate.getAmount() * hours))
+                .withCurrencySymbol(hourlyRate.getCurrencySymbol())
+                .build();
+        addBookingDetailsSinglePaymentView(paymentInfo);
+    }
+
+    private void addBookingDetailsSinglePaymentView(final PaymentInfo paymentInfo)
+    {
+        final BookingDetailsSinglePaymentView view =
+                new BookingDetailsSinglePaymentView(getContext());
+        view.init(paymentInfo, BookingDetailsSinglePaymentView.Size.MEDIUM);
         addView(view);
     }
 }
