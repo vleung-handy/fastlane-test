@@ -81,7 +81,7 @@ public class ConfirmBookingCancelKeepRateDialogFragment extends ConfirmBookingAc
             final int withholdingAmountCents = removeAction.getFeeAmount();
             if (withholdingAmountCents > 0)
             {
-                final String currencySymbol = mBooking.getPaymentToProvider().getCurrencySymbol();
+                final String currencySymbol = mBooking.getCurrencySymbol();
                 final String feeFormatted = CurrencyUtils.formatPriceWithCents(withholdingAmountCents, currencySymbol);
                 setWithholdingFee(feeFormatted);
                 mNoFeeNoticeView.setVisibility(View.GONE);
