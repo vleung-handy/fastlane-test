@@ -14,6 +14,26 @@ public class ScheduledJobsLog extends EventLog
         super(eventType, EVENT_CONTEXT);
     }
 
+    public static class TextCustomerSelected extends ScheduledJobsLog
+    {
+        private static final String EVENT_TYPE = "text_customer_selected";
+
+        public TextCustomerSelected()
+        {
+            super(EVENT_TYPE);
+        }
+    }
+
+    public static class CallCustomerSelected extends ScheduledJobsLog
+    {
+        private static final String EVENT_TYPE = "call_customer_selected";
+
+        public CallCustomerSelected()
+        {
+            super(EVENT_TYPE);
+        }
+    }
+
     public static class DateClicked extends ScheduledJobsLog
     {
         private static final String EVENT_TYPE = "date_selected";

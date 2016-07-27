@@ -52,6 +52,7 @@ import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
+import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.LocationData;
@@ -525,6 +526,7 @@ public class BookingFragment extends TimerActionBarFragment
     public void callCustomer()
     {
         bus.post(new HandyEvent.CallCustomerClicked());
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CallCustomerSelected()));
 
         String phoneNumber = mBooking.getBookingPhone();
         if (phoneNumber == null)
@@ -550,6 +552,7 @@ public class BookingFragment extends TimerActionBarFragment
     public void messageCustomer()
     {
         bus.post(new HandyEvent.TextCustomerClicked());
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.TextCustomerSelected()));
 
         String phoneNumber = mBooking.getBookingPhone();
         if (phoneNumber == null)

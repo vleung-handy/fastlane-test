@@ -44,4 +44,14 @@ public class AppLog extends EventLog
         }
     }
 
+    public static class AuthenticationErrorShown extends AppLog
+    {
+        private static final String EVENT_TYPE = "authentication_error_shown";
+        
+        public AuthenticationErrorShown()
+        {
+            super(EVENT_TYPE);
+        }
+    }
+
 }

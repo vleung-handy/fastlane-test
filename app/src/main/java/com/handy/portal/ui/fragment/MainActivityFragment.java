@@ -39,6 +39,7 @@ import com.handy.portal.library.ui.widget.TabButton;
 import com.handy.portal.library.ui.widget.TabButtonGroup;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
 import com.handy.portal.manager.ConfigManager;
@@ -312,6 +313,7 @@ public class MainActivityFragment extends InjectedFragment
     {
         logOutProvider();
         showToast(R.string.handy_account_no_longer_active);
+        bus.post(new LogEvent.AddLogEvent(new AppLog.AuthenticationErrorShown()));
     }
 
     @Subscribe
