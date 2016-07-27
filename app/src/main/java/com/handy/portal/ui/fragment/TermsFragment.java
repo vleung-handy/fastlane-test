@@ -16,6 +16,8 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.view.HandyWebView;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.TermsLog;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.ui.activity.TermsActivity;
 
@@ -55,6 +57,7 @@ public class TermsFragment extends InjectedFragment
     {
         super.onCreate(savedInstanceState);
         mTerms = (TermsDetails) getArguments().getSerializable(BundleKeys.TERMS);
+        bus.post(new LogEvent.AddLogEvent(new TermsLog.Shown(mTerms == null ? null : mTerms.getCode())));
     }
 
     @Nullable
@@ -90,6 +93,7 @@ public class TermsFragment extends InjectedFragment
         {
             mLoadingOverlay.setVisibility(View.VISIBLE);
             bus.post(new HandyEvent.AcceptTerms(mTerms));
+            bus.post(new LogEvent.AddLogEvent(new TermsLog.Accepted(mTerms == null ? null : mTerms.getCode())));
         }
         else
         {

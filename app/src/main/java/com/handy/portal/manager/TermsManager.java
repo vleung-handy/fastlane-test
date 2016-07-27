@@ -2,6 +2,8 @@ package com.handy.portal.manager;
 
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.TermsLog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -37,6 +39,7 @@ public class TermsManager
                     public void onError(DataManager.DataManagerError error)
                     {
                         bus.post(new HandyEvent.AcceptTermsError());
+                        bus.post(new LogEvent.AddLogEvent(new TermsLog.Error(error.getMessage())));
                     }
                 });
     }
