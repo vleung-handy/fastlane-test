@@ -357,7 +357,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         updateDisplay();
 
         PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
-        if(paymentInfo == null)
+        if (paymentInfo == null)
         {
             Crashlytics.logException(new Exception("Payment info is null for booking " + mBooking.getId()));
         }
@@ -656,7 +656,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
 
     private void showCustomerNoShowDialogFragment()
     {
-        if(getChildFragmentManager().findFragmentByTag(CustomerNoShowDialogFragment.FRAGMENT_TAG) == null)
+        if (getChildFragmentManager().findFragmentByTag(CustomerNoShowDialogFragment.FRAGMENT_TAG) == null)
         {
             CustomerNoShowDialogFragment customerNoShowDialogFragment =
                     CustomerNoShowDialogFragment.newInstance(mBooking);
@@ -691,7 +691,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         boolean customerNoShowModalEnabled =
                 configManager.getConfigurationResponse() != null
                         && configManager.getConfigurationResponse().isCustomerNoShowModalEnabled();
-        if(customerNoShowModalEnabled)
+        if (customerNoShowModalEnabled)
         {
             showCustomerNoShowDialogFragment();
         }
@@ -860,9 +860,9 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
 
     /**
      * interface method called by the customer no show dialog fragment
-     *
+     * <p/>
      * this fragment's onPause() isn't called when launching a DialogFragment,
-     so this is already resumed (and bus is registered) at this point
+     * so this is already resumed (and bus is registered) at this point
      */
     @Override
     public void onReportCustomerNoShowButtonClicked()

@@ -10,6 +10,12 @@ import com.handy.portal.bookings.ui.fragment.InProgressBookingFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragmentTest;
+import com.handy.portal.dashboard.fragment.DashboardFeedbackFragment;
+import com.handy.portal.dashboard.fragment.DashboardReviewsFragment;
+import com.handy.portal.dashboard.fragment.DashboardTiersFragment;
+import com.handy.portal.dashboard.fragment.RatingsAndFeedbackFragment;
+import com.handy.portal.dashboard.view.DashboardFeedbackView;
+import com.handy.portal.dashboard.view.DashboardOptionsPerformanceView;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.TestDataManager;
 import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
@@ -84,6 +90,12 @@ import static org.mockito.Mockito.when;
         BookingDetailsWrapperFragment.class,
         BookingFragment.class,
         InProgressBookingFragment.class,
+        RatingsAndFeedbackFragment.class,
+        DashboardOptionsPerformanceView.class,
+        DashboardFeedbackFragment.class,
+        DashboardFeedbackView.class,
+        DashboardReviewsFragment.class,
+        DashboardTiersFragment.class,
 }, library = true)
 public class TestApplicationModule
 {
