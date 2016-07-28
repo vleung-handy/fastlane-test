@@ -706,6 +706,8 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         mSlideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestNotifyJobUpdateArrivalTime(bookingId, arrivalTimeOption));
+        bus.post(new LogEvent.AddLogEvent(
+                new ScheduledJobsLog.UpdateArrivalTimeSubmitted(mBooking.getId(), arrivalTimeOption)));
     }
 
     private void requestReportNoShow()
@@ -713,6 +715,8 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         mSlideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestReportNoShow(mBooking.getId(), getLocationData()));
+        bus.post(new LogEvent.AddLogEvent(
+                new ScheduledJobsLog.ReportCustomerNoShowSubmitted(mBooking.getId())));
     }
 
     private void requestCancelNoShow()
@@ -720,6 +724,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         mSlideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new HandyEvent.RequestCancelNoShow(mBooking.getId(), getLocationData()));
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CancelCustomerNoShowSubmitted(mBooking.getId())));
     }
 
     private LocationData getLocationData()

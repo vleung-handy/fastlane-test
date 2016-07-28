@@ -283,4 +283,98 @@ public class ScheduledJobsLog extends EventLog
             mBookingId = bookingId;
         }
     }
+
+    //TODO add this to schema lib
+    public static class ReportCustomerNoShowSubmitted extends ScheduledJobsLog
+    {
+        private static final String EVENT_TYPE = "report_customer_no_show_submitted";
+
+        @SerializedName("booking_id")
+        private String mBookingId;
+
+        public ReportCustomerNoShowSubmitted(String bookingId)
+        {
+            super(EVENT_TYPE);
+            mBookingId = bookingId;
+        }
+    }
+
+    //TODO
+    public static class ReportCustomerNoShowSuccess extends ScheduledJobsLog
+    {
+        private static final String EVENT_TYPE = "report_customer_no_show_success";
+
+        @SerializedName("booking_id")
+        private String mBookingId;
+
+        public ReportCustomerNoShowSuccess(String bookingId)
+        {
+            super(EVENT_TYPE);
+            mBookingId = bookingId;
+        }
+    }
+
+    //TODO add this to schema lib
+    public static class CancelCustomerNoShowSubmitted extends ScheduledJobsLog
+    {
+        private static final String EVENT_TYPE = "cancel_customer_no_show_submitted";
+
+        @SerializedName("booking_id")
+        private String mBookingId;
+
+        public CancelCustomerNoShowSubmitted(String bookingId)
+        {
+            super(EVENT_TYPE);
+            mBookingId = bookingId;
+        }
+    }
+
+    public static class CancelCustomerNoShowSuccess extends ScheduledJobsLog
+    {
+        private static final String EVENT_TYPE = "cancel_customer_no_show_success";
+
+        @SerializedName("booking_id")
+        private String mBookingId;
+
+        public CancelCustomerNoShowSuccess(String bookingId)
+        {
+            super(EVENT_TYPE);
+            mBookingId = bookingId;
+        }
+    }
+
+    //TODO add this to schema lib
+    public static class UpdateArrivalTimeSubmitted extends ScheduledJobsLog
+    {
+        private static final String EVENT_TYPE = "update_arrival_time_submitted";
+
+        @SerializedName("booking_id")
+        private String mBookingId;
+        @SerializedName("arrival_time")
+        private String mArrivalTimeOption;
+
+        public UpdateArrivalTimeSubmitted(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
+        {
+            super(EVENT_TYPE);
+            mBookingId = bookingId;
+            mArrivalTimeOption = arrivalTimeOption == null ? null : arrivalTimeOption.getValue();
+        }
+    }
+
+    public static class UpdateArrivalTimeSuccess extends ScheduledJobsLog
+    {
+        private static final String EVENT_TYPE = "update_arrival_time_success";
+
+        @SerializedName("booking_id")
+        private String mBookingId;
+        @SerializedName("arrival_time")
+        private String mArrivalTimeOption;
+
+        public UpdateArrivalTimeSuccess(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
+        {
+            super(EVENT_TYPE);
+            mBookingId = bookingId;
+            mArrivalTimeOption = arrivalTimeOption == null ? null : arrivalTimeOption.getValue();
+        }
+    }
 }
