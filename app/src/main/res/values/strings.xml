@@ -373,6 +373,7 @@
     <string name="will_be_charged">You’ll be charged a&#160;</string>
     <string name="fee_formatted">%1$s fee.</string>
     <string name="confirm_cancellation">Confirm Cancellation</string>
+    <string name="too_far">You must be closer to the booking to check in.</string>
 
     <!-- Special -->
     <string name="special_empty_string"> </string>
