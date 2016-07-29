@@ -28,9 +28,6 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
 {
     private MainActivityFragment mFragment;
 
-    // NOTE: Robolectric does not support nested fragments. So the methods such as onCreate() of
-    // the new fragments are not called.
-
     @Before
     public void setUp() throws Exception
     {
@@ -50,22 +47,18 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
     @Test
     public void testScheduleTab() throws Exception
     {
-        mFragment.mTabs.findViewById(R.id.tab_nav_schedule).performClick();
-        Fragment currentFragment = TestUtils.getScreenFragment(mFragment.getFragmentManager());
-        assertThat(currentFragment, instanceOf(ScheduledBookingsFragment.class));
-        assertEquals(mFragment.getString(R.string.scheduled_jobs),
-                ((AppCompatActivity) mFragment.getActivity()).getSupportActionBar().getTitle());
+        testNavigation(R.id.tab_nav_schedule, ScheduledBookingsFragment.class, R.string.scheduled_jobs);
     }
 
-    // TODO: add title check if newer Robolectric supports nested fragments
     @Test
     public void testRequestTab() throws Exception
     {
         mFragment.mTabs.findViewById(R.id.tab_nav_pro_requested_jobs).performClick();
         Fragment currentFragment = TestUtils.getScreenFragment(mFragment.getFragmentManager());
         assertThat(currentFragment, instanceOf(ProRequestedJobsFragment.class));
-//        assertEquals(mFragment.getString(R.string.your_requests),
-//                ((AppCompatActivity) mFragment.getActivity()).getSupportActionBar().getTitle());
+        assertEquals(mFragment.getString(R.string.your_requests),
+                ((AppCompatActivity) mFragment.getActivity()).getSupportActionBar().getTitle());
+        // testNavigation doesn't work here because getActivity().findViewById() fails
     }
 
     @Test
@@ -74,54 +67,51 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
         mFragment.mTabs.findViewById(R.id.tab_nav_alert).performClick();
         Fragment currentFragment = TestUtils.getScreenFragment(mFragment.getFragmentManager());
         assertThat(currentFragment, instanceOf(NotificationsFragment.class));
+        // Robolectric having trouble rendering NotificationsListView, cannot test for title
     }
 
     @Test
     public void testRatingFeedbackNav() throws Exception
     {
-        mFragment.mNavTrayLinks.findViewById(R.id.nav_link_ratings_and_feedback).performClick();
-        Fragment currentFragment = TestUtils.getScreenFragment(mFragment.getFragmentManager());
-        assertThat(currentFragment, instanceOf(RatingsAndFeedbackFragment.class));
+        testNavigation(R.id.nav_link_ratings_and_feedback, RatingsAndFeedbackFragment.class, R.string.ratings_and_feedback);
     }
 
     @Test
     public void testPaymentsNav() throws Exception
     {
-        mFragment.mNavTrayLinks.findViewById(R.id.nav_link_payments).performClick();
-        Fragment currentFragment = TestUtils.getScreenFragment(mFragment.getFragmentManager());
-        assertThat(currentFragment, instanceOf(PaymentsFragment.class));
+        testNavigation(R.id.nav_link_payments, PaymentsFragment.class, R.string.payments);
     }
 
     @Test
     public void testReferAFriendNav() throws Exception
     {
-        mFragment.mNavTrayLinks.findViewById(R.id.nav_link_refer_a_friend).performClick();
-        Fragment currentFragment = TestUtils.getScreenFragment(mFragment.getFragmentManager());
-        assertThat(currentFragment, instanceOf(ReferAFriendFragment.class));
+        testNavigation(R.id.nav_link_refer_a_friend, ReferAFriendFragment.class, R.string.refer_a_friend);
     }
 
     @Test
     public void testAccountSettingsNav() throws Exception
     {
-        mFragment.mNavTrayLinks.findViewById(R.id.nav_link_account_settings).performClick();
-        Fragment currentFragment = TestUtils.getScreenFragment(mFragment.getFragmentManager());
-        assertThat(currentFragment, instanceOf(AccountSettingsFragment.class));
+        testNavigation(R.id.nav_link_account_settings, AccountSettingsFragment.class, R.string.account_settings);
     }
 
     @Test
     public void testVideoLibraryNav() throws Exception
     {
-        mFragment.mNavTrayLinks.findViewById(R.id.nav_link_video_library).performClick();
-        Fragment currentFragment = TestUtils.getScreenFragment(mFragment.getFragmentManager());
-        assertThat(currentFragment, instanceOf(DashboardVideoLibraryFragment.class));
+        testNavigation(R.id.nav_link_video_library, DashboardVideoLibraryFragment.class, R.string.video_library);
     }
 
     @Test
     public void testHelpNav() throws Exception
     {
-        mFragment.mNavTrayLinks.findViewById(R.id.nav_link_help).performClick();
-        Fragment currentFragment = TestUtils.getScreenFragment(mFragment.getFragmentManager());
-        assertThat(currentFragment, instanceOf(HelpWebViewFragment.class));
+        testNavigation(R.id.nav_link_help, HelpWebViewFragment.class, R.string.help);
     }
 
+    private void testNavigation(final int viewId, final Class<?> fragmentClass, final int stringId)
+    {
+        mFragment.getActivity().findViewById(viewId).performClick();
+        Fragment currentFragment = TestUtils.getScreenFragment(mFragment.getFragmentManager());
+        assertThat(currentFragment, instanceOf(fragmentClass));
+        assertEquals(mFragment.getString(stringId),
+                ((AppCompatActivity) mFragment.getActivity()).getSupportActionBar().getTitle());
+    }
 }
