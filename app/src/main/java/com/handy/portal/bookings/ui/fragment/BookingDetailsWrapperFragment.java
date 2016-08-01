@@ -426,6 +426,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                     ScheduledJobsLog.RemoveJobLog.POPUP,
                     getRemovalTypeFromBookingRemoveAction(removeAction),
                     removeAction != null ? removeAction.getFeeAmount() : 0,
+                    removeAction != null ? removeAction.getWaivedAmount() : 0,
                     removeAction != null ? removeAction.getWarningText() : null
             )));
             TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
@@ -493,6 +494,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 ScheduledJobsLog.RemoveJobLog.POPUP,
                 getRemovalTypeFromBookingRemoveAction(removeAction),
                 removeAction != null ? removeAction.getFeeAmount() : 0,
+                removeAction != null ? removeAction.getWaivedAmount() : 0,
                 removeAction != null ? removeAction.getWarningText() : null,
                 errorMessage
         )));
@@ -783,11 +785,11 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         return false;
     }
 
-    private void showRemoveJobWarningDialog(final String warning, final Booking.Action action)
+    private void showRemoveJobWarningDialog(final String warning, @NonNull final Booking.Action action)
     {
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
                 mBooking, ScheduledJobsLog.RemoveJobLog.POPUP, action.getFeeAmount(),
-                action.getWarningText())));
+                action.getWaivedAmount(), action.getWarningText())));
         bus.post(new HandyEvent.ShowConfirmationRemoveJob());
 
         boolean customWarningDialogShown = showCustomRemoveJobWarningDialogIfNecessary();
@@ -838,6 +840,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 ScheduledJobsLog.RemoveJobLog.POPUP,
                 null,
                 removeAction != null ? removeAction.getFeeAmount() : 0,
+                removeAction != null ? removeAction.getWaivedAmount() : 0,
                 warning
         )));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
