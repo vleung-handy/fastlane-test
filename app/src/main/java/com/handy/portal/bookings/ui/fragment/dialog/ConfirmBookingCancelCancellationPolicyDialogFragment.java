@@ -58,6 +58,7 @@ public class ConfirmBookingCancelCancellationPolicyDialogFragment
                     ScheduledJobsLog.RemoveJobLog.CANCELLATION_POLICY,
                     null, //don't have a remove reason
                     mAction.getFeeAmount(),
+                    mAction.getWaivedAmount(),
                     mAction.getWarningText()
             )));
         }
