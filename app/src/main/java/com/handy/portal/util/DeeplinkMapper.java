@@ -27,6 +27,7 @@ public class DeeplinkMapper
         deeplinkMap.put("ratings_and_feedback", MainViewPage.DASHBOARD);
         deeplinkMap.put("ratings_and_feedback/videos", MainViewPage.DASHBOARD_VIDEO_LIBRARY);
         deeplinkMap.put("ratings_and_feedback/feedback", MainViewPage.DASHBOARD_FEEDBACK);
+        deeplinkMap.put("ratings_and_feedback/tiers", MainViewPage.DASHBOARD_TIERS);
 
         deeplinkMap.put("refer", MainViewPage.REFER_A_FRIEND);
 
