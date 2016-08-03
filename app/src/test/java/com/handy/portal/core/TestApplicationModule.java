@@ -7,11 +7,20 @@ import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.BookingDetailsWrapperFragment;
 import com.handy.portal.bookings.ui.fragment.BookingFragment;
 import com.handy.portal.bookings.ui.fragment.InProgressBookingFragment;
+import com.handy.portal.bookings.ui.fragment.ProRequestedJobsFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragmentTest;
+import com.handy.portal.dashboard.fragment.DashboardFeedbackFragment;
+import com.handy.portal.dashboard.fragment.DashboardReviewsFragment;
+import com.handy.portal.dashboard.fragment.DashboardTiersFragment;
+import com.handy.portal.dashboard.fragment.DashboardVideoLibraryFragment;
+import com.handy.portal.dashboard.fragment.RatingsAndFeedbackFragment;
+import com.handy.portal.dashboard.view.DashboardFeedbackView;
+import com.handy.portal.dashboard.view.DashboardOptionsPerformanceView;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.TestDataManager;
+import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.mixpanel.Mixpanel;
@@ -25,6 +34,7 @@ import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.UserInterfaceUpdateManager;
 import com.handy.portal.model.Provider;
+import com.handy.portal.notification.ui.fragment.NotificationsFragment;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.payments.ui.element.PaymentsBatchListView;
 import com.handy.portal.payments.ui.fragment.PaymentsDetailFragment;
@@ -39,10 +49,12 @@ import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.TestActivity;
 import com.handy.portal.ui.element.SupportActionView;
+import com.handy.portal.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragmentTest;
 import com.handy.portal.ui.fragment.ProfileUpdateFragment;
+import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.securepreferences.SecurePreferences;
@@ -84,6 +96,18 @@ import static org.mockito.Mockito.when;
         BookingDetailsWrapperFragment.class,
         BookingFragment.class,
         InProgressBookingFragment.class,
+        RatingsAndFeedbackFragment.class,
+        DashboardOptionsPerformanceView.class,
+        DashboardFeedbackFragment.class,
+        DashboardFeedbackView.class,
+        DashboardReviewsFragment.class,
+        DashboardTiersFragment.class,
+        ProRequestedJobsFragment.class,
+        NotificationsFragment.class,
+        ReferAFriendFragment.class,
+        AccountSettingsFragment.class,
+        DashboardVideoLibraryFragment.class,
+        HelpWebViewFragment.class,
 }, library = true)
 public class TestApplicationModule
 {

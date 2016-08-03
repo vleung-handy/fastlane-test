@@ -12,6 +12,14 @@ import com.handy.portal.action.CustomDeepLinkAction;
 import com.handy.portal.bookings.BookingsModule;
 import com.handy.portal.bookings.ui.fragment.SoftwareLicensesFragment;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.dashboard.fragment.DashboardFeedbackFragment;
+import com.handy.portal.dashboard.fragment.DashboardReviewsFragment;
+import com.handy.portal.dashboard.fragment.DashboardTiersFragment;
+import com.handy.portal.dashboard.fragment.DashboardVideoLibraryFragment;
+import com.handy.portal.dashboard.fragment.RatingsAndFeedbackFragment;
+import com.handy.portal.dashboard.view.DashboardFeedbackView;
+import com.handy.portal.dashboard.view.DashboardOptionsPerformanceView;
+import com.handy.portal.dashboard.view.FiveStarRatingPercentageView;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpModule;
@@ -37,6 +45,8 @@ import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.notification.NotificationModule;
 import com.handy.portal.onboarding.OnboardingModule;
 import com.handy.portal.onboarding.ui.activity.ActivationWelcomeActivity;
+import com.handy.portal.onboarding.ui.fragment.CameraPermissionsBlockerDialogFragment;
+import com.handy.portal.onboarding.ui.fragment.IDVerificationFragment;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsModule;
 import com.handy.portal.receiver.HandyPushReceiver;
@@ -56,9 +66,6 @@ import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.element.SupportActionView;
-import com.handy.portal.ui.element.dashboard.DashboardFeedbackView;
-import com.handy.portal.ui.element.dashboard.DashboardOptionsPerformanceView;
-import com.handy.portal.ui.element.dashboard.FiveStarRatingPercentageView;
 import com.handy.portal.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
@@ -67,11 +74,6 @@ import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesWebViewFragment;
 import com.handy.portal.ui.fragment.TermsFragment;
-import com.handy.portal.ui.fragment.dashboard.DashboardFeedbackFragment;
-import com.handy.portal.ui.fragment.dashboard.DashboardReviewsFragment;
-import com.handy.portal.ui.fragment.dashboard.DashboardTiersFragment;
-import com.handy.portal.ui.fragment.dashboard.DashboardVideoLibraryFragment;
-import com.handy.portal.ui.fragment.dashboard.RatingsAndFeedbackFragment;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateActivity;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
@@ -133,6 +135,8 @@ import retrofit.converter.GsonConverter;
         RequestSuppliesWebViewFragment.class,
         DashboardTiersFragment.class,
         SoftwareLicensesFragment.class,
+        CameraPermissionsBlockerDialogFragment.class,
+        IDVerificationFragment.class,
 },
         includes = {
                 HelpModule.class,

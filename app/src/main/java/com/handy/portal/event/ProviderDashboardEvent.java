@@ -1,10 +1,10 @@
 package com.handy.portal.event;
 
 
+import com.handy.portal.dashboard.model.ProviderEvaluation;
+import com.handy.portal.dashboard.model.ProviderFeedback;
+import com.handy.portal.dashboard.model.ProviderRating;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.model.dashboard.ProviderEvaluation;
-import com.handy.portal.model.dashboard.ProviderFeedback;
-import com.handy.portal.model.dashboard.ProviderRating;
 
 import java.util.List;
 

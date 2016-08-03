@@ -357,7 +357,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         updateDisplay();
 
         PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
-        if(paymentInfo == null)
+        if (paymentInfo == null)
         {
             Crashlytics.logException(new Exception("Payment info is null for booking " + mBooking.getId()));
         }
@@ -426,6 +426,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                     ScheduledJobsLog.RemoveJobLog.POPUP,
                     getRemovalTypeFromBookingRemoveAction(removeAction),
                     removeAction != null ? removeAction.getFeeAmount() : 0,
+                    removeAction != null ? removeAction.getWaivedAmount() : 0,
                     removeAction != null ? removeAction.getWarningText() : null
             )));
             TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
@@ -493,6 +494,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 ScheduledJobsLog.RemoveJobLog.POPUP,
                 getRemovalTypeFromBookingRemoveAction(removeAction),
                 removeAction != null ? removeAction.getFeeAmount() : 0,
+                removeAction != null ? removeAction.getWaivedAmount() : 0,
                 removeAction != null ? removeAction.getWarningText() : null,
                 errorMessage
         )));
@@ -656,7 +658,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
 
     private void showCustomerNoShowDialogFragment()
     {
-        if(getChildFragmentManager().findFragmentByTag(CustomerNoShowDialogFragment.FRAGMENT_TAG) == null)
+        if (getChildFragmentManager().findFragmentByTag(CustomerNoShowDialogFragment.FRAGMENT_TAG) == null)
         {
             CustomerNoShowDialogFragment customerNoShowDialogFragment =
                     CustomerNoShowDialogFragment.newInstance(mBooking);
@@ -691,7 +693,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         boolean customerNoShowModalEnabled =
                 configManager.getConfigurationResponse() != null
                         && configManager.getConfigurationResponse().isCustomerNoShowModalEnabled();
-        if(customerNoShowModalEnabled)
+        if (customerNoShowModalEnabled)
         {
             showCustomerNoShowDialogFragment();
         }
@@ -783,11 +785,11 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         return false;
     }
 
-    private void showRemoveJobWarningDialog(final String warning, final Booking.Action action)
+    private void showRemoveJobWarningDialog(final String warning, @NonNull final Booking.Action action)
     {
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
                 mBooking, ScheduledJobsLog.RemoveJobLog.POPUP, action.getFeeAmount(),
-                action.getWarningText())));
+                action.getWaivedAmount(), action.getWarningText())));
         bus.post(new HandyEvent.ShowConfirmationRemoveJob());
 
         boolean customWarningDialogShown = showCustomRemoveJobWarningDialogIfNecessary();
@@ -838,6 +840,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 ScheduledJobsLog.RemoveJobLog.POPUP,
                 null,
                 removeAction != null ? removeAction.getFeeAmount() : 0,
+                removeAction != null ? removeAction.getWaivedAmount() : 0,
                 warning
         )));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
@@ -860,9 +863,9 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
 
     /**
      * interface method called by the customer no show dialog fragment
-     *
+     * <p/>
      * this fragment's onPause() isn't called when launching a DialogFragment,
-     so this is already resumed (and bus is registered) at this point
+     * so this is already resumed (and bus is registered) at this point
      */
     @Override
     public void onReportCustomerNoShowButtonClicked()

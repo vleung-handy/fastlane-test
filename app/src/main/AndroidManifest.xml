@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.handy.portal"
           xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
     >
 
     <!-- Google Maps Permissions -->
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true"
+        />
+
     <!--
          The following two permissions are not required to use
          Google Maps Android API v2, but are recommended.
@@ -54,11 +61,12 @@
     <!-- <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/> -->
     <application
         android:name=".core.BaseApplication"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme"
         >
+
         <service
             android:name=".location.scheduler.LocationScheduleService"
             android:exported="false"
@@ -303,6 +311,12 @@
                 <category android:name="${applicationId}"/>
             </intent-filter>
         </receiver>
+
+        <activity
+            android:name="com.jumio.nv.NetverifyActivity"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden"
+            android:theme="@style/JumioTheme"
+            />
 
         <activity
             android:name=".onboarding.ui.activity.ActivationWelcomeActivity"

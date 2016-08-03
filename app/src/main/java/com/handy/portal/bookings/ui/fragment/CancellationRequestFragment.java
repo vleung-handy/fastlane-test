@@ -73,6 +73,7 @@ public class CancellationRequestFragment extends ActionBarFragment
                 mBooking,
                 ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
                 mAction.getFeeAmount(),
+                mAction.getWaivedAmount(),
                 mAction.getWarningText()
         )));
         return view;
@@ -134,6 +135,7 @@ public class CancellationRequestFragment extends ActionBarFragment
                     ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
                     selectedReason,
                     mAction.getFeeAmount(),
+                    mAction.getWaivedAmount(),
                     mAction.getWarningText()
             )));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
@@ -151,6 +153,7 @@ public class CancellationRequestFragment extends ActionBarFragment
                     ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
                     getSelectedReason(),
                     mAction.getFeeAmount(),
+                    mAction.getWaivedAmount(),
                     mAction.getWarningText()
             )));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
@@ -175,6 +178,7 @@ public class CancellationRequestFragment extends ActionBarFragment
                 ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
                 getSelectedReason(),
                 mAction.getFeeAmount(),
+                mAction.getWaivedAmount(),
                 mAction.getWarningText(),
                 errorMessage
         )));
@@ -197,7 +201,7 @@ public class CancellationRequestFragment extends ActionBarFragment
 
         mFeeAmountTextView.setText(getString(R.string.fee_formatted,
                 CurrencyUtils.formatPriceWithCents(mAction.getFeeAmount(),
-                        mBooking.getPaymentToProvider().getCurrencySymbol())));
+                        mBooking.getCurrencySymbol())));
 
         for (String reason : mAction.getRemoveReasons())
         {
