@@ -72,6 +72,7 @@
     <string name="claim_job">Claim Job</string>
     <string name="switch_job">Switch Job</string>
     <string name="confirm_claim">Confirm Claim</string>
+    <string name="confirm_switch">Confirm Switch</string>
     <string name="claim_series">Claim Series</string>
     <string name="on_my_way">On My Way</string>
 

@@ -107,6 +107,16 @@ public abstract class AvailableJobsLog extends EventLog
         }
     }
 
+    public static class ConfirmSwitchSubmitted extends AvailableJobsLog
+    {
+        private static final String EVENT_TYPE = "confirm_switch_submitted";
+
+        public ConfirmSwitchSubmitted()
+        {
+            super(EVENT_TYPE);
+        }
+    }
+
     public static abstract class AvailableJobsBookingClaimLog extends JobsLog
     {
         @SerializedName("claim_source")

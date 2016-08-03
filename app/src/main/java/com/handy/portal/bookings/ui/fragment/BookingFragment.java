@@ -36,6 +36,7 @@ import com.handy.portal.bookings.ui.element.BookingDetailsProRequestInfoView;
 import com.handy.portal.bookings.ui.element.BookingMapView;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.SwapBookingClaimDialogFragment;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.PrefsKey;
@@ -801,8 +802,20 @@ public class BookingFragment extends TimerActionBarFragment
     private boolean showConfirmBookingClaimDialogIfNecessary()
     {
         final Booking.Action claimAction = mBooking.getAction(Booking.Action.ACTION_CLAIM);
-
-        if (claimAction != null && claimAction.getExtras() != null)
+        if (mBooking.canSwap())
+        {
+            if (getChildFragmentManager()
+                    .findFragmentByTag(SwapBookingClaimDialogFragment.FRAGMENT_TAG) == null)
+            {
+                final SwapBookingClaimDialogFragment dialogFragment =
+                        SwapBookingClaimDialogFragment.newInstance(mBooking);
+                dialogFragment.setTargetFragment(BookingFragment.this, RequestCode.CONFIRM_SWITCH);
+                FragmentUtils.safeLaunchDialogFragment(dialogFragment, this,
+                        SwapBookingClaimDialogFragment.FRAGMENT_TAG);
+            }
+            return true;
+        }
+        else if (claimAction != null && claimAction.getExtras() != null)
         {
             Booking.Action.Extras.CancellationPolicy cancellationPolicy = claimAction.getExtras().getCancellationPolicy();
             if (cancellationPolicy != null)
