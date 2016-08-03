@@ -88,4 +88,8 @@ public class BookingDetailsProRequestInfoView extends FrameLayout
         }
     }
 
+    public void showSwapIcon()
+    {
+        mBookingMessageTitleView.showSwapIcon();
+    }
 }
