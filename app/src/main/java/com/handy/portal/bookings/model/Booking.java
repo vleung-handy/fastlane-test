@@ -119,6 +119,10 @@ public class Booking implements Comparable<Booking>, Serializable
     @SerializedName("total_earings")
     private int mTotalEarningsInCents;
 
+    // Schedule Conflict
+    @SerializedName("schedule_conflict")
+    private Booking mConflictingBooking;
+
     private List<BookingInstructionUpdateRequest> mCustomerPreferences;
 
     public DisplayAttributes getProviderRequestDisplayAttributes()
@@ -466,6 +470,11 @@ public class Booking implements Comparable<Booking>, Serializable
         {
             return mAddress != null ? mAddress.getShortRegion() : "";
         }
+    }
+
+    public Booking getConflictingBooking()
+    {
+        return mConflictingBooking;
     }
 
     //Basic booking statuses inferrable from mProviderId
