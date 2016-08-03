@@ -6,6 +6,8 @@ public enum SubflowType
 {
     @SerializedName("status")
     STATUS(1),
+    @SerializedName("id_verification")
+    ID_VERIFICATION(1),
     @SerializedName("claim")
     CLAIM(2),
     @SerializedName("supplies")

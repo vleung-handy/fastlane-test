@@ -352,6 +352,12 @@ public class ProviderManager
                 });
     }
 
+    @Subscribe
+    public void onRequestIdVerificationFinish(final ProviderSettingsEvent.RequestIdVerificationFinish event)
+    {
+        mDataManager.finishIdVerification(event.getFinishIdVerificationUrl());
+    }
+
     private void requestProviderInfo()
     {
         mDataManager.getProviderInfo(new DataManager.Callback<Provider>()

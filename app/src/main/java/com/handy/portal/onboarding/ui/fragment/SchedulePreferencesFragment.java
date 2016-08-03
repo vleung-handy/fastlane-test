@@ -31,7 +31,7 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class SchedulePreferencesFragment extends OnboardingSubflowFragment
+public class SchedulePreferencesFragment extends OnboardingSubflowUIFragment
 {
     @BindView(R.id.date_field)
     StaticFieldTableRow mDateField;

@@ -39,7 +39,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowFragment
+public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFragment
 {
     @BindView(R.id.shipping_summary)
     SimpleContentLayout mShippingSummary;

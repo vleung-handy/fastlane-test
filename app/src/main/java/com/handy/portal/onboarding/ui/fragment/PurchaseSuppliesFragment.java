@@ -22,7 +22,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class PurchaseSuppliesFragment extends OnboardingSubflowFragment
+public class PurchaseSuppliesFragment extends OnboardingSubflowUIFragment
 {
     @BindView(R.id.cost_summary)
     SimpleContentLayout mCostSummary;

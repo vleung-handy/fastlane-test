@@ -72,4 +72,21 @@ public class ProviderSettingsEvent extends HandyEvent
             this.error = error;
         }
     }
+
+
+    // No success or error callbacks for now
+    public static class RequestIdVerificationFinish extends RequestEvent
+    {
+        private final String mFinishIdVerificationUrl;
+
+        public RequestIdVerificationFinish(final String finishIdVerificationUrl)
+        {
+            mFinishIdVerificationUrl = finishIdVerificationUrl;
+        }
+
+        public String getFinishIdVerificationUrl()
+        {
+            return mFinishIdVerificationUrl;
+        }
+    }
 }

@@ -18,6 +18,40 @@
     <style name="AppTheme.PopupOverlay"
            parent="ThemeOverlay.AppCompat.Light"/>
 
+    <style name="JumioTheme"
+           parent="Theme.Netverify">
+        <item name="colorPrimary">@color/handy_blue</item>
+        <item name="colorPrimaryDark">@color/partner_blue</item>
+        <item name="colorAccent">@color/handy_blue</item>
+        <item name="colorControlActivated">@color/handy_blue</item>
+        <item name="netverify_scanBackground">@color/white</item>
+        <item name="background">@color/handy_bg</item>
+        <item name="netverify_scanOptionsLoadingBackground">@color/handy_blue</item>
+        <item name="jumio_dialogPositiveButtonTextColor">@color/handy_blue</item>
+        <item name="netverify_submissionProgressSuccessBackground">@color/handy_blue</item>
+        <item name="netverify_scanOverlayTemplateValid">@color/handy_blue_pressed</item>
+        <item name="netverify_helpBackground">@color/handy_bg</item>
+        <item name="netverify_helpTitle">@color/black</item>
+        <item name="netverify_helpProgressString">@color/tertiary_gray</item>
+        <item name="netverify_helpNote">@color/tertiary_gray</item>
+        <item name="netverify_helpInstructions">@color/tertiary_gray</item>
+    </style>
+
+    <style name="Netverify.Confirmation.Button.Negative"
+           parent="Button">
+        <item name="android:background">@color/tertiary_gray</item>
+    </style>
+
+    <style name="Netverify.Confirmation.Button.Positive"
+           parent="Button">
+        <item name="android:background">@color/cleaner_green</item>
+    </style>
+
+    <style name="Netverify.Confirmation.Hint"
+           parent="">
+        <item name="android:theme">@style/AppTheme</item>
+    </style>
+
     <!-- Screen themes -->
     <style name="LoginTheme"
            parent="Theme.AppCompat.Light.NoActionBar">
