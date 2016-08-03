@@ -121,7 +121,7 @@ public class Booking implements Comparable<Booking>, Serializable
 
     // Schedule Conflict
     @SerializedName("schedule_conflict")
-    private Booking mConflictingBooking;
+    private Booking mSwappableBooking;
 
     private List<BookingInstructionUpdateRequest> mCustomerPreferences;
 
@@ -472,9 +472,14 @@ public class Booking implements Comparable<Booking>, Serializable
         }
     }
 
-    public Booking getConflictingBooking()
+    public Booking getSwappableBooking()
     {
-        return mConflictingBooking;
+        return mSwappableBooking;
+    }
+
+    public boolean canSwap()
+    {
+        return mSwappableBooking != null;
     }
 
     //Basic booking statuses inferrable from mProviderId

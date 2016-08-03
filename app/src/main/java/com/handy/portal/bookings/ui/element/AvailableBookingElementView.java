@@ -111,7 +111,7 @@ public class AvailableBookingElementView extends BookingElementView
             mLeftStripIndicator.setVisibility(View.VISIBLE);
 
             // Schedule Conflict
-            if (booking.getConflictingBooking() != null)
+            if (booking.canSwap())
             {
                 mBookingMessageTitleView.showSwapIcon();
             }

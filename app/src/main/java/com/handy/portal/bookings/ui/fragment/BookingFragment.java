@@ -215,7 +215,7 @@ public class BookingFragment extends TimerActionBarFragment
             {
                 mBookingDetailsProRequestInfoView.setVisibility(View.VISIBLE); //GONE by default
                 mBookingDetailsProRequestInfoView.setDisplayModel(displayAttributes);
-                if (mBooking.getConflictingBooking() != null)
+                if (mBooking.canSwap())
                 {
                     mBookingDetailsProRequestInfoView.showSwapIcon();
                 }
@@ -659,7 +659,7 @@ public class BookingFragment extends TimerActionBarFragment
         {
             case CLAIM:
             {
-                mActionButton.setText(mBooking.getConflictingBooking() != null ? R.string.switch_job : R.string.claim_job);
+                mActionButton.setText(mBooking.canSwap() ? R.string.switch_job : R.string.claim_job);
                 mActionButton.setVisibility(action.isEnabled() ? View.VISIBLE : View.GONE);
                 mActionButton.setOnClickListener(new View.OnClickListener()
                 {
