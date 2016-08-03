@@ -3,6 +3,7 @@ package com.handy.portal.bookings.ui.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -707,11 +708,18 @@ public class BookingFragment extends TimerActionBarFragment
                     @Override
                     public void onClick(final View v)
                     {
-                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSubmitted(
-                                mBooking, getLocationData())));
-                        bus.post(new HandyEvent.RequestNotifyJobCheckIn(
-                                mBooking.getId(), getLocationData()));
+                        if (isUserInRangeOfBooking())
+                        {
+                            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+                            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSubmitted(
+                                    mBooking, getLocationData())));
+                            bus.post(new HandyEvent.RequestNotifyJobCheckIn(
+                                    mBooking.getId(), getLocationData()));
+                        }
+                        else
+                        {
+                            showToast(R.string.too_far);
+                        }
                     }
                 });
 
@@ -754,6 +762,31 @@ public class BookingFragment extends TimerActionBarFragment
                 break;
             }
         }
+    }
+
+    private boolean isUserInRangeOfBooking()
+    {
+        Booking.Action checkInAction = mBooking.getAction(Booking.Action.ACTION_CHECK_IN);
+        Location userLocation = ((BaseActivity) getActivity()).getLastLocation();
+        Address address = mBooking.getAddress();
+
+        if (checkInAction == null || checkInAction.getCheckInConfig() == null ||
+                userLocation == null || address == null)
+        {
+            return true;
+        }
+
+        Booking.Action.CheckInConfig config = checkInAction.getCheckInConfig();
+        int maxDistanceInMeters = config.getMaxDistanceInMeters();
+        int toleranceInMeters = config.getToleranceInMeters();
+
+        Location bookingLocation = new Location("");
+        bookingLocation.setLatitude(address.getLatitude());
+        bookingLocation.setLongitude(address.getLongitude());
+        float userAccuracyInMeters = userLocation.getAccuracy();
+        float userDistanceInMeters = userLocation.distanceTo(bookingLocation);
+
+        return userDistanceInMeters <= maxDistanceInMeters && userAccuracyInMeters <= toleranceInMeters;
     }
 
     /**

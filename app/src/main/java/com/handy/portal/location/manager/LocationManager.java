@@ -1,6 +1,5 @@
 package com.handy.portal.location.manager;
 
-import android.location.Location;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -38,7 +37,6 @@ public class LocationManager
     private final EventBus mBus;
     private final DataManager mDataManager;
     private final ProviderManager mProviderManager;
-    private Location mLastKnownLocation; //for backwards compatibility with check-in flow
 
     //TODO: adjust these params
 //    private final long LAST_UPDATE_TIME_INTERVAL_MILLISEC = 2 * DateTimeUtils.MILLISECONDS_IN_SECOND;
@@ -57,17 +55,6 @@ public class LocationManager
         mBus.register(this);
         mDataManager = dataManager;
         mProviderManager = providerManager;
-    }
-
-    /**
-     * for backwards compatibility with check-in flow which requires this
-     * TODO can remove this when everyone switches over to location service
-     *
-     * @return
-     */
-    public Location getLastKnownLocation()
-    {
-        return mLastKnownLocation;
     }
 
     @Subscribe
@@ -90,16 +77,6 @@ public class LocationManager
                 mBus.post(new LocationEvent.ReceiveLocationScheduleError(error));
             }
         });
-    }
-
-    @Subscribe
-    public void onReceiveLocationUpdate(final LocationEvent.LocationUpdated event)
-    {
-        /*
-        basic way to keep track of last known location for backwards compatibility with
-        the check-in flow which requires it
-         */
-        mLastKnownLocation = event.getLocationUpdate();
     }
 
     /**

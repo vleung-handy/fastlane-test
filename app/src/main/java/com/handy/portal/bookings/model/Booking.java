@@ -660,6 +660,8 @@ public class Booking implements Comparable<Booking>, Serializable
         private String mHelpRedirectPath;
         @SerializedName("extras")
         private Extras mExtras;
+        @SerializedName("checkin_config")
+        private CheckInConfig mCheckInConfig;
 
 
         public Extras getExtras()
@@ -726,6 +728,24 @@ public class Booking implements Comparable<Booking>, Serializable
         {
             return mExtras != null ? mExtras.getKeepRate() : null;
         }
+
+        public CheckInConfig getCheckInConfig()
+        {
+            return mCheckInConfig;
+        }
+
+        public static class CheckInConfig implements Serializable
+        {
+            @SerializedName("tolerance")
+            private int mToleranceInMeters;
+            @SerializedName("distance")
+            private int mMaxDistanceInMeters;
+
+            public int getToleranceInMeters() { return mToleranceInMeters; }
+
+            public int getMaxDistanceInMeters() { return mMaxDistanceInMeters; }
+        }
+
 
         public static class Extras implements Serializable
         {
@@ -1144,5 +1164,4 @@ public class Booking implements Comparable<Booking>, Serializable
         @Nullable
         public String getZipClusterId() { return mZipClusterId; }
     }
-
 }
