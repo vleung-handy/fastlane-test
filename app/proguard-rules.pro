@@ -93,3 +93,23 @@
    public *;
 }
 -keep public class * extends com.urbanairship.Autopilot
+
+
+-keep class com.jumio.** { *; }
+-keep class jumio.** { *; }
+-keepattributes Signature
+-keepattributes *Annotation*
+-keep class com.squareup.okhttp.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+-dontwarn com.squareup.okhttp.**
+-dontwarn okio.**
+-dontnote
+-keep class net.sf.scuba.smartcards.IsoDepCardService {*;}
+-keep class org.jmrtd.** { *; }
+-keep class net.sf.scuba.** {*;}
+-keep class org.spongycastle.** {*;}
+-keep class org.ejbca.** {*;}
+-dontwarn java.nio.**
+-dontwarn org.codehaus.**
+-dontwarn org.ejbca.**
+-dontwarn org.spongycastle.**

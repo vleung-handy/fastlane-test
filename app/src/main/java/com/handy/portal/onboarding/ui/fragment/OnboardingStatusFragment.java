@@ -41,7 +41,7 @@ import java.util.ArrayList;
 
 import butterknife.BindView;
 
-public class OnboardingStatusFragment extends OnboardingSubflowFragment
+public class OnboardingStatusFragment extends OnboardingSubflowUIFragment
 {
     @BindView(R.id.jobs_collapsible)
     CollapsibleContentLayout mJobsCollapsible;

@@ -29,6 +29,7 @@ import com.handy.portal.bookings.ui.fragment.ProRequestedJobsFragment;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
+import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.NotificationEvent;
@@ -63,6 +64,8 @@ public class MainActivityFragment extends InjectedFragment
     PrefsManager mPrefsManager;
     @Inject
     ConfigManager mConfigManager;
+    @Inject
+    EnvironmentModifier mEnvironmentModifier;
     /////////////Bad useless injection that breaks if not in?
 
     @BindView(R.id.tabs)
@@ -630,6 +633,10 @@ public class MainActivityFragment extends InjectedFragment
     @SuppressWarnings("deprecation")
     private void logOutProvider()
     {
+        //want to remain in the current environment after user is logged out
+        EnvironmentModifier.Environment currentEnvironment = mEnvironmentModifier.getEnvironment();
+        String currentEnvironmentPrefix = mEnvironmentModifier.getEnvironmentPrefix();
+
         mPrefsManager.clear();
         clearFragmentBackStack();
 
@@ -644,6 +651,9 @@ public class MainActivityFragment extends InjectedFragment
             CookieManager.getInstance().removeAllCookie();
             CookieSyncManager.getInstance().sync();
         }
+
+        mEnvironmentModifier.setEnvironment(currentEnvironment, currentEnvironmentPrefix, null);
+
         startActivity(new Intent(getActivity(), LoginActivity.class));
         getActivity().finish();
     }

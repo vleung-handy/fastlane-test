@@ -450,6 +450,12 @@
     <string name="change_location_permissions_dialog_message">Please grant location permissions so your customers are aware of your arrival time.</string>
     <string name="change_location_permissions_dialog_action_button">Go to Settings</string>
 
+    <!-- Jumio ID Verification -->
+    <string name="allow_camera_title">Allow camera access</string>
+    <string name="camera_required_id_verification">We need to use your camera to scan your ID. Please open Settings, go to Permissions, and allow access.</string>
+    <string name="open_settings_now">Open settings now</string>
+    <string name="camera_broken_html"><![CDATA[<u>My camera is broken.</u>]]></string>
+
     <!-- Checkout -->
     <string name="send_your_receipt">Send Your Receipt</string>
     <string name="started_with_space">Started: &#160;</string>
@@ -573,6 +579,5 @@
     <string name="customer_no_show_header_title">Customer No Show</string>
     <string name="customer_no_show_complete_report_button">Complete Report</string>
     <string name="customer_no_show_view_policy_button">View Policy</string>
-
 
 </resources>

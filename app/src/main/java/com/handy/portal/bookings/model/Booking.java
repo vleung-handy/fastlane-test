@@ -240,6 +240,18 @@ public class Booking implements Comparable<Booking>, Serializable
         return mHourlyRate;
     }
 
+    public String getCurrencySymbol()
+    {
+        if (getHourlyRate() != null)
+        {
+            return getHourlyRate().getCurrencySymbol();
+        }
+        else
+        {
+            return getPaymentToProvider().getCurrencySymbol();
+        }
+    }
+
     public boolean isRequested()
     {
         return mIsRequested;
@@ -427,11 +439,6 @@ public class Booking implements Comparable<Booking>, Serializable
     public boolean hasFlexibleHours()
     {
         return mMinimumHours > 0 && mMinimumHours < mHours;
-    }
-
-    public boolean hasFlexPayRate()
-    {
-        return getHourlyRate() != null && hasFlexibleHours();
     }
 
     public Date getCheckInTime()
@@ -686,6 +693,26 @@ public class Booking implements Comparable<Booking>, Serializable
         }
 
         public int getFeeAmount() { return mExtras.getFeeAmount(); }
+
+        public int getWaivedAmount()
+        {
+            if (mExtras == null || mExtras.getCancellationPolicy() == null) { return 0; }
+
+            Extras.CancellationPolicy.CancellationPolicyItem[] items =
+                    mExtras.getCancellationPolicy().getCancellationPolicyItems();
+
+            if (items == null || items.length == 0) { return 0; }
+
+            int waivedAmount = 0;
+            for (Extras.CancellationPolicy.CancellationPolicyItem item : items)
+            {
+                if (item.getWaivedPaymentInfo() != null)
+                {
+                    waivedAmount += item.getWaivedPaymentInfo().getAmount();
+                }
+            }
+            return waivedAmount;
+        }
 
         public List<String> getRemoveReasons() { return mExtras.getRemoveReasons(); }
 

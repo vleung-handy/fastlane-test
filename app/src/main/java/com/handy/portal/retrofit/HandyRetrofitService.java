@@ -80,18 +80,20 @@ public interface HandyRetrofitService
                            @Query("longitude") double longitude,
                            HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
     @PUT(JOBS_PATH + "{id}/claim")
     void claimBooking(@Path("id") String bookingId,
-                      @Query("type") String type,
+                      @Field("type") String type,
                       HandyRetrofitCallback cb);
 
     @PUT(JOBS_PATH + "claim_jobs")
     void claimBookings(@Body JobClaimRequest jobClaimRequest,
                        HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
     @PUT(JOBS_PATH + "{id}/remove")
     void removeBooking(@Path("id") String bookingId,
-                       @Query("type") String type,
+                       @Field("type") String type,
                        HandyRetrofitCallback cb);
 
     @GET(JOBS_PATH + "{id}")
@@ -270,8 +272,8 @@ public interface HandyRetrofitService
     @FormUrlEncoded
     @POST(PROVIDERS_PATH + "{id}/notifications/mark_as_interacted")
     void postMarkNotificationsAsInteracted(@Path("id") String providerId,
-                                     @Field("notification_ids[]") ArrayList<Integer> notificationIds,
-                                     HandyRetrofitCallback cb);
+                                           @Field("notification_ids[]") ArrayList<Integer> notificationIds,
+                                           HandyRetrofitCallback cb);
 
     @GET(PROVIDERS_PATH + "{id}/notifications/unread_count")
     void getNotificationsUnreadCount(@Path("id") String providerId, HandyRetrofitCallback cb);
@@ -294,4 +296,7 @@ public interface HandyRetrofitService
     void requestOnboardingSupplies(@Path("id") String providerId,
                                    @Query("onboarding_supplies") Boolean value,
                                    HandyRetrofitCallback cb);
+
+    @POST("{url}")
+    void finishIdVerification(@Path("url") String finishIdVerificationUrl);
 }

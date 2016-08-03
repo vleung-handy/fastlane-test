@@ -63,11 +63,11 @@ public class ConfirmBookingCancelKeepRateDialogFragment extends ConfirmBookingAc
         final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
         if (removeAction != null)
         {
-            final int withholdingAmountCents = removeAction.getFeeAmount();
             mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
                     mBooking,
                     ScheduledJobsLog.RemoveJobLog.KEEP_RATE,
-                    withholdingAmountCents,
+                    removeAction.getFeeAmount(),
+                    removeAction.getWaivedAmount(),
                     removeAction.getWarningText()
             )));
         }
@@ -81,7 +81,7 @@ public class ConfirmBookingCancelKeepRateDialogFragment extends ConfirmBookingAc
             final int withholdingAmountCents = removeAction.getFeeAmount();
             if (withholdingAmountCents > 0)
             {
-                final String currencySymbol = mBooking.getPaymentToProvider().getCurrencySymbol();
+                final String currencySymbol = mBooking.getCurrencySymbol();
                 final String feeFormatted = CurrencyUtils.formatPriceWithCents(withholdingAmountCents, currencySymbol);
                 setWithholdingFee(feeFormatted);
                 mNoFeeNoticeView.setVisibility(View.GONE);
@@ -143,6 +143,7 @@ public class ConfirmBookingCancelKeepRateDialogFragment extends ConfirmBookingAc
                     ScheduledJobsLog.RemoveJobLog.KEEP_RATE,
                     null, //don't have a remove reason
                     removeAction.getFeeAmount(),
+                    removeAction.getWaivedAmount(),
                     removeAction.getWarningText()
             )));
         }

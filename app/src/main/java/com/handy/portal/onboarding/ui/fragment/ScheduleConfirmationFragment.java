@@ -42,7 +42,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class ScheduleConfirmationFragment extends OnboardingSubflowFragment
+public class ScheduleConfirmationFragment extends OnboardingSubflowUIFragment
 {
     @Inject
     PrefsManager mPrefsManager;
