@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.handy.portal.R;
 
@@ -39,6 +40,10 @@ public class ChatRecyclerAdapter extends RecyclerView.Adapter<ChatViewHolder>
         {
             layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_divider, parent, false);
         }
+        else if (viewType == ChatItem.Type.IMAGE.ordinal())
+        {
+            layoutView = LayoutInflater.from(parent.getContext()).inflate(R.layout.chat_image, parent, false);
+        }
 
         ChatViewHolder rcv = new ChatViewHolder(layoutView, mDefaultMargin);
         return rcv;
@@ -58,10 +63,14 @@ public class ChatRecyclerAdapter extends RecyclerView.Adapter<ChatViewHolder>
         {
             holder.updateState(mList.get(position));
         }
+        else if (holder.getItemViewType() == ChatItem.Type.IMAGE.ordinal())
+        {
+            holder.setupImage(mList.get(position));
+        }
         else
         {
             ChatItem item = mList.get(position);
-//            ((TextView) holder.itemView.findViewById(R.id.text_message)).setText(item.getMessage().getMessage());
+            ((TextView) holder.itemView.findViewById(R.id.text_message)).setText(item.getMessage().getMessage());
         }
     }
 
@@ -71,4 +80,3 @@ public class ChatRecyclerAdapter extends RecyclerView.Adapter<ChatViewHolder>
         return this.mList.size();
     }
 }
-

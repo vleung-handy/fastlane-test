@@ -198,7 +198,9 @@ public class SplashActivity extends BaseActivity
     @SuppressWarnings("deprecation")
     private void processInjectedCredentials()
     {
-        final String authToken = getIntent().getStringExtra(PrefsKey.AUTH_TOKEN);
+//        String authToken = getIntent().getStringExtra(PrefsKey.AUTH_TOKEN);
+
+        String authToken = "7c1f37ca4bed18bd96198e003d56376103cf800f9c74531cee6269604980ae3ebf62d904dfc33aaeec7c0c49fa22a9e013bb124ef985b9c0f95a1d7ce8719de4";
         if (authToken != null)
         {
             //want to set even if empty string, in the case of testing

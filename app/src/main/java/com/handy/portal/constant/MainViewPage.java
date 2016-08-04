@@ -13,7 +13,7 @@ import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.bookings.ui.fragment.SoftwareLicensesFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
-import com.handy.portal.layer.LayerMessageFragment;
+import com.handy.portal.layer.LayerFragment;
 import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.notification.ui.fragment.NotificationsFragment;
 import com.handy.portal.payments.ui.fragment.BookingTransactionsWrapperFragment;
@@ -90,7 +90,7 @@ public enum MainViewPage implements Serializable
     PAYMENT_BLOCKING(PaymentBlockingFragment.class),
 
     REQUESTED_JOBS(ProRequestedJobsFragment.class),
-    LAYER_MESSAGE(LayerMessageFragment.class);
+    LAYER_MESSAGE(LayerFragment.class);
 
     private static final MainViewPage[] TOP_LEVEL_PAGES = {
             AVAILABLE_JOBS, SCHEDULED_JOBS, REQUESTED_JOBS, NOTIFICATIONS, DASHBOARD, PAYMENTS,

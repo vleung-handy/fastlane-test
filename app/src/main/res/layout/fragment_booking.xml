@@ -98,6 +98,7 @@
                         android:layout_toStartOf="@id/booking_call_customer_view"
                         android:src="@drawable/customer_message"
                         tools:alpha="0.5"
+                        android:visibility="gone"
                         />
 
                     <ImageView

@@ -15,7 +15,7 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpModule;
-import com.handy.portal.layer.LayerMessageFragment;
+import com.handy.portal.layer.LayerFragment;
 import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.LocationModule;
@@ -78,7 +78,6 @@ import com.handy.portal.updater.ui.PleaseUpdateActivity;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
-import com.layer.sdk.LayerClient;
 import com.squareup.okhttp.OkHttpClient;
 
 import org.greenrobot.eventbus.EventBus;
@@ -135,7 +134,7 @@ import retrofit.converter.GsonConverter;
         RequestSuppliesWebViewFragment.class,
         DashboardTiersFragment.class,
         SoftwareLicensesFragment.class,
-        LayerMessageFragment.class,
+        LayerFragment.class,
 },
         includes = {
                 HelpModule.class,
@@ -472,24 +471,6 @@ public final class ApplicationModule
                                                       final DataManager dataManager)
     {
         return new SetupManager(bus, dataManager);
-    }
-
-    @Provides
-    @Singleton
-    final LayerClient provideLayerClient(final Application application)
-    {
-        LayerClient.applicationCreated(application);
-
-        String appID = "layer:///apps/staging/17d296fa-4e8f-11e6-aca9-940102005074";
-        LayerClient.Options options = new LayerClient.Options();
-        options.historicSyncPolicy(LayerClient.Options.HistoricSyncPolicy.ALL_MESSAGES);
-        LayerClient layerClient = LayerClient.newInstance(application, appID, options);
-
-        //Note: It is possible to register more than one listener for an activity. If you
-        // execute this code more than once in your app, pass in the same listener to avoid
-        // memory leaks and multiple callbacks.
-
-        return layerClient;
     }
 
     private String getDeviceCarrier()

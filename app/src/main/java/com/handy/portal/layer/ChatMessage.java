@@ -11,15 +11,17 @@ public class ChatMessage implements Serializable
     private String mMessage;
     private String mSenderId;
     private Date mDate;
-    private boolean isRead;
+    private boolean mRead;
     private DateFormat mFormatter = new SimpleDateFormat("hh:mm a");
+    private String mId;
 
-    public ChatMessage(final String message, final String senderId, final Date date, final boolean isRead)
+    public ChatMessage(final String messageId, final String message, final String senderId, final Date date, final boolean isRead)
     {
+        mId = messageId;
         mMessage = message;
         mSenderId = senderId;
         mDate = date;
-        this.isRead = isRead;
+        mRead = isRead;
     }
 
     public ChatMessage()
@@ -58,12 +60,22 @@ public class ChatMessage implements Serializable
 
     public boolean isRead()
     {
-        return isRead;
+        return mRead;
     }
 
     public void setRead(final boolean read)
     {
-        isRead = read;
+        mRead = read;
+    }
+
+    public String getId()
+    {
+        return mId;
+    }
+
+    public void setId(final String id)
+    {
+        mId = id;
     }
 
     public String getStatus()
@@ -74,7 +86,7 @@ public class ChatMessage implements Serializable
         }
         else
         {
-            return mFormatter.format(mDate) + " - read";
+            return mFormatter.format(mDate) + " - sent";
         }
     }
 }

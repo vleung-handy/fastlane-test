@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -57,6 +58,8 @@ public final class DateTimeUtils
             new SimpleDateFormat("D", Locale.getDefault());
     public final static SimpleDateFormat YEAR_MONTH_DAY_FORMATTER =
             new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+    private static DateFormat mMonthDayFormatter = new SimpleDateFormat("MMMM dd");
 
     public final static int HOURS_IN_DAY = 24;
     public final static int HOURS_IN_SIX_DAYS = HOURS_IN_DAY * 6;
@@ -585,5 +588,10 @@ public final class DateTimeUtils
         {
             return (days / DAYS_IN_A_WEEK) + "w";
         }
+    }
+
+    public static String getMonthDay(Date date)
+    {
+        return mMonthDayFormatter.format(date);
     }
 }

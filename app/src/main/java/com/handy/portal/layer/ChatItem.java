@@ -1,7 +1,6 @@
 package com.handy.portal.layer;
 
 import android.support.annotation.ColorInt;
-
 public class ChatItem {
 
     private ChatMessage mMessage;
@@ -60,6 +59,6 @@ public class ChatItem {
     }
 
     public enum Type {
-        TITLE, MESSAGE, DATE_DIVIDER
+        TITLE, MESSAGE, DATE_DIVIDER, IMAGE
     }
 }
