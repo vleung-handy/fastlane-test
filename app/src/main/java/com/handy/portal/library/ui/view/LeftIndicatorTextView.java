@@ -1,6 +1,7 @@
 package com.handy.portal.library.ui.view;
 
 import android.content.Context;
+import android.graphics.PorterDuff;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -64,6 +65,12 @@ public class LeftIndicatorTextView extends FrameLayout
     public LeftIndicatorTextView setImageResourceId(int imageResourceId)
     {
         mLeftIndicatorImage.setImageDrawable(ContextCompat.getDrawable(getContext(), imageResourceId));
+        return this;
+    }
+
+    public LeftIndicatorTextView setImageColorFilter(int colorId)
+    {
+        mLeftIndicatorImage.setColorFilter(ContextCompat.getColor(getContext(), colorId), PorterDuff.Mode.SRC_ATOP);
         return this;
     }
 

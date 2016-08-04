@@ -19,13 +19,48 @@
         />
 
     <LinearLayout
-        android:id="@+id/conflicting_jobs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:divider="@drawable/divider_grey"
         android:orientation="vertical"
         android:paddingEnd="@dimen/default_padding"
         android:paddingStart="@dimen/default_padding"
-        android:showDividers="middle"
-        />
+        >
+
+        <FrameLayout
+            android:id="@+id/swappable_job_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="center"
+                android:background="@color/border_mid_gray"
+                />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:paddingEnd="@dimen/default_padding_half"
+                android:paddingStart="@dimen/default_padding_half"
+                android:src="@drawable/ic_swap"
+                android:tint="@color/border_mid_gray"
+                />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/claimable_job_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </LinearLayout>
 </LinearLayout>

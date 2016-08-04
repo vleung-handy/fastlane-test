@@ -24,8 +24,10 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
 {
     @Inject
     EventBus mBus;
-    @BindView(R.id.conflicting_jobs)
-    ViewGroup mConflictingJobsContainer;
+    @BindView(R.id.swappable_job_container)
+    ViewGroup mSwappableJobContainer;
+    @BindView(R.id.claimable_job_container)
+    ViewGroup mClaimableJobContainer;
 
     public static final String FRAGMENT_TAG = SwapBookingClaimDialogFragment.class.getName();
 
@@ -59,25 +61,26 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
     {
         final AvailableBookingElementView bookingViewMediator = new AvailableBookingElementView();
         bookingViewMediator.initView(getActivity(), mBooking.getSwappableBooking(), null,
-                mConflictingJobsContainer);
+                mSwappableJobContainer);
         bookingViewMediator.getBookingMessageTitleView()
                 .setTextColorResourceId(R.color.error_red)
                 .setBodyText(getString(R.string.will_be_cancelled_for_free))
                 .setVisibility(View.VISIBLE);
         final View bookingView = bookingViewMediator.getAssociatedView();
         restyleBookingView(bookingView);
-        mConflictingJobsContainer.addView(bookingView);
+        mSwappableJobContainer.addView(bookingView);
     }
 
     private void initClaimableJob()
     {
         final AvailableBookingElementView bookingViewMediator = new AvailableBookingElementView();
-        bookingViewMediator.initView(getActivity(), mBooking, null, mConflictingJobsContainer);
+        bookingViewMediator.initView(getActivity(), mBooking, null, mClaimableJobContainer);
         bookingViewMediator.getBookingMessageTitleView()
+                .hideSwapIcon()
                 .setBodyText(getString(R.string.will_be_claimed));
         final View bookingView = bookingViewMediator.getAssociatedView();
         restyleBookingView(bookingView);
-        mConflictingJobsContainer.addView(bookingView);
+        mClaimableJobContainer.addView(bookingView);
     }
 
     @Override

@@ -37,11 +37,19 @@ public class BookingMessageTitleView extends LeftIndicatorTextView
         //set specific styles for this view
         setTextColorResourceId(R.color.requested_green)
                 .setImageResourceId(R.drawable.ic_swap)
+                .setImageColorFilter(R.color.requested_green)
                 .setTextSize(R.dimen.small_text_size);
     }
 
-    public void showSwapIcon()
+    public BookingMessageTitleView showSwapIcon()
     {
         getImage().setVisibility(VISIBLE);
+        return this;
+    }
+
+    public BookingMessageTitleView hideSwapIcon()
+    {
+        getImage().setVisibility(GONE);
+        return this;
     }
 }
