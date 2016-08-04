@@ -3,9 +3,11 @@ package com.handy.portal.bookings.ui.fragment.dialog;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
@@ -18,6 +20,8 @@ import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
+import butterknife.BindColor;
+import butterknife.BindDimen;
 import butterknife.BindView;
 
 public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFragment
@@ -28,6 +32,10 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
     ViewGroup mSwappableJobContainer;
     @BindView(R.id.claimable_job_container)
     ViewGroup mClaimableJobContainer;
+    @BindDimen(R.dimen.small_text_size)
+    int mSmallTextSize;
+    @BindColor(R.color.tertiary_gray)
+    int mTertiaryGray;
 
     public static final String FRAGMENT_TAG = SwapBookingClaimDialogFragment.class.getName();
 
@@ -62,12 +70,12 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
         final AvailableBookingElementView bookingViewMediator = new AvailableBookingElementView();
         bookingViewMediator.initView(getActivity(), mBooking.getSwappableBooking(), null,
                 mSwappableJobContainer);
+        final View bookingView = bookingViewMediator.getAssociatedView();
+        restyleBookingView(bookingView);
         bookingViewMediator.getBookingMessageTitleView()
                 .setTextColorResourceId(R.color.error_red)
                 .setBodyText(getString(R.string.will_be_cancelled_for_free))
                 .setVisibility(View.VISIBLE);
-        final View bookingView = bookingViewMediator.getAssociatedView();
-        restyleBookingView(bookingView);
         mSwappableJobContainer.addView(bookingView);
     }
 
@@ -75,11 +83,12 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
     {
         final AvailableBookingElementView bookingViewMediator = new AvailableBookingElementView();
         bookingViewMediator.initView(getActivity(), mBooking, null, mClaimableJobContainer);
-        bookingViewMediator.getBookingMessageTitleView()
-                .hideSwapIcon()
-                .setBodyText(getString(R.string.will_be_claimed));
         final View bookingView = bookingViewMediator.getAssociatedView();
         restyleBookingView(bookingView);
+        bookingViewMediator.getBookingMessageTitleView()
+                .hideSwapIcon()
+                .setTextColorResourceId(R.color.requested_green)
+                .setBodyText(getString(R.string.will_be_claimed));
         mClaimableJobContainer.addView(bookingView);
     }
 
@@ -122,6 +131,26 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
         if (leftStrip != null)
         {
             leftStrip.setVisibility(View.GONE);
+        }
+
+        restyleTextViews(bookingView);
+    }
+
+    private void restyleTextViews(final View view)
+    {
+        if (view instanceof ViewGroup)
+        {
+            final ViewGroup group = (ViewGroup) view;
+            for (int i = 0; i < group.getChildCount(); i++)
+            {
+                restyleTextViews(group.getChildAt(i));
+            }
+        }
+        else if (view instanceof TextView)
+        {
+            final TextView textView = (TextView) view;
+            textView.setTextColor(mTertiaryGray);
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mSmallTextSize);
         }
     }
 }
