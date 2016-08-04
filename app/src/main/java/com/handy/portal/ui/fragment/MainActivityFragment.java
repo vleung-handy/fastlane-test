@@ -662,6 +662,8 @@ public class MainActivityFragment extends InjectedFragment
     {
         if (mConfigManager == null || mConfigManager.getConfigurationResponse() == null)
         {
+            mAlertsButton.setVisibility(View.GONE);
+            mRequestsButton.setVisibility(View.GONE);
             return;
         }
 
