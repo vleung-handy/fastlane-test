@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
+import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.element.ProRequestedJobsExpandableListView;
@@ -40,8 +41,6 @@ import butterknife.OnClick;
 
 public class ProRequestedJobsFragment extends ActionBarFragment
 {
-    public static final int REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE = 14;//TODO: Make this a config param
-
     @BindView(R.id.fragment_pro_requested_jobs_list_view)
     ProRequestedJobsExpandableListView mProRequestedJobsExpandableListView;
     @BindView(R.id.pro_requested_bookings_empty)
@@ -218,7 +217,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
                         numDaysForRequestedJobs);
             }
         }
-        return DateTimeUtils.getDateWithoutTimeList(new Date(), REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
+        return DateTimeUtils.getDateWithoutTimeList(new Date(), BookingManager.REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
     }
 
     @Subscribe

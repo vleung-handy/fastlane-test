@@ -25,7 +25,6 @@ import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.model.BookingsWrapper;
-import com.handy.portal.bookings.ui.fragment.ProRequestedJobsFragment;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
@@ -38,7 +37,6 @@ import com.handy.portal.library.ui.fragment.dialog.TransientOverlayDialogFragmen
 import com.handy.portal.library.ui.layout.TabbedLayout;
 import com.handy.portal.library.ui.widget.TabButton;
 import com.handy.portal.library.ui.widget.TabButtonGroup;
-import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
@@ -50,7 +48,6 @@ import com.handy.portal.util.DeeplinkMapper;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -693,8 +690,6 @@ public class MainActivityFragment extends InjectedFragment
 
     private void requestRequestedAvailableJobs()
     {
-        //TODO: Days should be behind a config param, just using a static const until then
-        List<Date> datesForBookings = DateTimeUtils.getDateWithoutTimeList(new Date(), ProRequestedJobsFragment.REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
-        bus.post(new BookingEvent.RequestProRequestedJobs(datesForBookings, true));
+        bus.post(new BookingEvent.RequestProRequestedJobs(null, true));
     }
 }
