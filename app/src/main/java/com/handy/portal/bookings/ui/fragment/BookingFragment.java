@@ -660,7 +660,7 @@ public class BookingFragment extends TimerActionBarFragment
         {
             case CLAIM:
             {
-                mActionButton.setText(mBooking.canSwap() ? R.string.switch_job : R.string.claim_job);
+                mActionButton.setText(mBooking.canSwap() ? R.string.replace_job : R.string.claim_job);
                 mActionButton.setVisibility(action.isEnabled() ? View.VISIBLE : View.GONE);
                 mActionButton.setOnClickListener(new View.OnClickListener()
                 {

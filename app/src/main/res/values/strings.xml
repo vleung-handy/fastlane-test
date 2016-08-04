@@ -70,10 +70,10 @@
     <string name="claim">Claim</string>
     <string name="claimed">Claimed</string>
     <string name="claim_job">Claim Job</string>
-    <string name="switch_job">Switch Job</string>
+    <string name="replace_job">Replace Job</string>
     <string name="confirm_claim">Confirm Claim</string>
-    <string name="confirm_switch">Confirm Switch</string>
-    <string name="confirm_your_upgrade">Confirm your upgrade</string>
+    <string name="confirm_replacement">Confirm Replacement</string>
+    <string name="review_your_update">Review your job update</string>
     <string name="claim_series">Claim Series</string>
     <string name="on_my_way">On My Way</string>
 
@@ -583,5 +583,9 @@
     <string name="customer_no_show_header_title">Customer No Show</string>
     <string name="customer_no_show_complete_report_button">Complete Report</string>
     <string name="customer_no_show_view_policy_button">View Policy</string>
+
+    <!-- Schedule Swap -->
+    <string name="will_be_cancelled_for_free">This claimed job will be cancelled for free</string>
+    <string name="will_be_claimed">This requested job will be claimed</string>
 
 </resources>

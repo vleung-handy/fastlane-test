@@ -7,14 +7,15 @@
     >
 
     <TextView
-        style="@style/TextView.XLarge.Bold"
+        style="@style/TextView.Large.Bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="@dimen/default_padding"
         android:layout_marginRight="@dimen/default_padding"
+        android:layout_marginTop="@dimen/default_margin"
         android:gravity="center"
-        android:text="@string/confirm_your_upgrade"
+        android:text="@string/review_your_update"
         />
 
     <LinearLayout
@@ -23,7 +24,8 @@
         android:layout_height="wrap_content"
         android:divider="@drawable/divider_grey"
         android:orientation="vertical"
-        android:padding="@dimen/default_padding"
+        android:paddingEnd="@dimen/default_padding"
+        android:paddingStart="@dimen/default_padding"
         android:showDividers="middle"
         />
 </LinearLayout>

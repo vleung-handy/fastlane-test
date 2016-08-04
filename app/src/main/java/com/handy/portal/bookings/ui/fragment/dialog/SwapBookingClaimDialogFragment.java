@@ -51,12 +51,18 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
         super.onViewCreated(view, savedInstanceState);
         initSwappableJob();
         initClaimableJob();
+        hideDismissButton();
     }
 
     private void initSwappableJob()
     {
         final AvailableBookingElementView bookingViewMediator = new AvailableBookingElementView();
-        bookingViewMediator.initView(getActivity(), mBooking, null, mConflictingJobsContainer);
+        bookingViewMediator.initView(getActivity(), mBooking.getSwappableBooking(), null,
+                mConflictingJobsContainer);
+        bookingViewMediator.getBookingMessageTitleView()
+                .setTextColorResourceId(R.color.error_red)
+                .setBodyText(getString(R.string.will_be_cancelled_for_free))
+                .setVisibility(View.VISIBLE);
         final View bookingView = bookingViewMediator.getAssociatedView();
         restyleBookingView(bookingView);
         mConflictingJobsContainer.addView(bookingView);
@@ -66,6 +72,8 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
     {
         final AvailableBookingElementView bookingViewMediator = new AvailableBookingElementView();
         bookingViewMediator.initView(getActivity(), mBooking, null, mConflictingJobsContainer);
+        bookingViewMediator.getBookingMessageTitleView()
+                .setBodyText(getString(R.string.will_be_claimed));
         final View bookingView = bookingViewMediator.getAssociatedView();
         restyleBookingView(bookingView);
         mConflictingJobsContainer.addView(bookingView);
@@ -74,7 +82,6 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
     @Override
     protected void onConfirmBookingActionButtonClicked()
     {
-
         final Intent intent = new Intent();
         intent.putExtra(BundleKeys.BOOKING, mBooking);
         if (getTargetFragment() != null)
@@ -95,7 +102,7 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
     @Override
     protected String getConfirmButtonText()
     {
-        return getString(R.string.confirm_switch);
+        return getString(R.string.confirm_replacement);
     }
 
     private void restyleBookingView(final View bookingView)

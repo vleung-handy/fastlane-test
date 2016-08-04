@@ -136,6 +136,11 @@ public class AvailableBookingElementView extends BookingElementView
         return convertView;
     }
 
+    public BookingMessageTitleView getBookingMessageTitleView()
+    {
+        return mBookingMessageTitleView;
+    }
+
     private void setPartnerText(String partner)
     {
         if (partner != null && partner.equalsIgnoreCase(PartnerNames.AIRBNB))

@@ -28,6 +28,8 @@ public abstract class ConfirmBookingActionDialogFragment extends SlideUpDialogFr
 {
     @BindView(R.id.confirm_booking_action_button)
     Button mConfirmBookingActionButton;
+    @BindView(R.id.confirm_booking_action_dismiss_button)
+    View mDismissButton;
 
     protected Booking mBooking;
 
@@ -100,5 +102,10 @@ public abstract class ConfirmBookingActionDialogFragment extends SlideUpDialogFr
     public void onDismissButtonClicked()
     {
         dismiss();
+    }
+
+    protected void hideDismissButton()
+    {
+        mDismissButton.setVisibility(View.GONE);
     }
 }
