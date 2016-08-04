@@ -397,3 +397,11 @@ class SetupDataRetrofitCallback extends TypedHandyRetrofitCallback<SetupData>
         super(callback);
     }
 }
+
+class FinishIDVerificationCallback extends TypedHandyRetrofitCallback<HashMap<String, String>>
+{
+    FinishIDVerificationCallback(final DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}

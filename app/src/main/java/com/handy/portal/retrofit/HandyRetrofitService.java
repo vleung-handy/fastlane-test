@@ -7,6 +7,7 @@ import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import retrofit.http.Body;
@@ -292,11 +293,14 @@ public interface HandyRetrofitService
     @GET(PROVIDERS_PATH + "{id}/feedback")
     void getProviderFeedback(@Path("id") String providerId, HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
     @POST(PROVIDERS_PATH + "{id}/onboarding_supplies")
     void requestOnboardingSupplies(@Path("id") String providerId,
-                                   @Query("onboarding_supplies") Boolean value,
+                                   @Field("onboarding_supplies") Boolean value,
                                    HandyRetrofitCallback cb);
 
-    @POST("{url}")
-    void finishIdVerification(@Path("url") String finishIdVerificationUrl);
+    @POST("/{url}")
+    void finishIdVerification(@Path(value = "url", encode = false) String finishIdVerificationUrl,
+                              @Body HashMap<String, String> map,
+                              HandyRetrofitCallback cb);
 }
