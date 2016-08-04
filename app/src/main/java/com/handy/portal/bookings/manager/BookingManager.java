@@ -389,9 +389,17 @@ public class BookingManager
     {
         String bookingId = event.booking.getId();
         BookingType bookingType = event.booking.getType();
+        String claimSwitchJobId = null;
+        BookingType claimSwitchJobType = null;
+        if (event.booking.canSwap())
+        {
+            claimSwitchJobId = event.booking.getSwappableBooking().getId();
+            claimSwitchJobType = event.booking.getSwappableBooking().getType();
+        }
         final Date day = DateTimeUtils.getDateWithoutTime(event.booking.getStartDate());
 
-        mDataManager.claimBooking(bookingId, bookingType, new DataManager.Callback<BookingClaimDetails>()
+        mDataManager.claimBooking(bookingId, bookingType, claimSwitchJobId, claimSwitchJobType,
+                new DataManager.Callback<BookingClaimDetails>()
         {
             @Override
             public void onSuccess(BookingClaimDetails bookingClaimDetails)

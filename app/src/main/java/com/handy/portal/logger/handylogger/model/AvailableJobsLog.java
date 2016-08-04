@@ -107,11 +107,21 @@ public abstract class AvailableJobsLog extends EventLog
         }
     }
 
-    public static class ConfirmSwitchSubmitted extends AvailableJobsLog
+    public static class ConfirmSwapShown extends AvailableJobsLog
     {
-        private static final String EVENT_TYPE = "confirm_switch_submitted";
+        private static final String EVENT_TYPE = "confirm_swap_shown";
 
-        public ConfirmSwitchSubmitted()
+        public ConfirmSwapShown()
+        {
+            super(EVENT_TYPE);
+        }
+    }
+
+    public static class ConfirmSwapSubmitted extends AvailableJobsLog
+    {
+        private static final String EVENT_TYPE = "confirm_swap_submitted";
+
+        public ConfirmSwapSubmitted()
         {
             super(EVENT_TYPE);
         }

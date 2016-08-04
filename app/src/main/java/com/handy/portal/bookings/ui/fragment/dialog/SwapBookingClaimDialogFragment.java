@@ -52,6 +52,7 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
         initSwappableJob();
         initClaimableJob();
         hideDismissButton();
+        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ConfirmSwapShown()));
     }
 
     private void initSwappableJob()
@@ -89,7 +90,7 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK,
                     intent);
         }
-        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ConfirmSwitchSubmitted()));
+        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ConfirmSwapSubmitted()));
         dismiss();
     }
 

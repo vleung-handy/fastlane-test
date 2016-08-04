@@ -809,7 +809,7 @@ public class BookingFragment extends TimerActionBarFragment
             {
                 final SwapBookingClaimDialogFragment dialogFragment =
                         SwapBookingClaimDialogFragment.newInstance(mBooking);
-                dialogFragment.setTargetFragment(BookingFragment.this, RequestCode.CONFIRM_SWITCH);
+                dialogFragment.setTargetFragment(BookingFragment.this, RequestCode.CONFIRM_SWAP);
                 FragmentUtils.safeLaunchDialogFragment(dialogFragment, this,
                         SwapBookingClaimDialogFragment.FRAGMENT_TAG);
             }
@@ -839,6 +839,7 @@ public class BookingFragment extends TimerActionBarFragment
         {
             switch (requestCode)
             {
+                case RequestCode.CONFIRM_SWAP:
                 case RequestCode.CONFIRM_REQUEST:
                     requestClaimJob();
                     break;
