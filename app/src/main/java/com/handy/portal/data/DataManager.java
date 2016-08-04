@@ -353,9 +353,9 @@ public class DataManager
                 new SuccessWrapperRetroFitCallback(cb));
     }
 
-    public void finishIdVerification(final String finishIdVerificationUrl)
+    public void finishIdVerification(final String finishIdVerificationUrl, final Callback<HashMap<String, String>> cb)
     {
-        mService.finishIdVerification(finishIdVerificationUrl);
+        mService.finishIdVerification(finishIdVerificationUrl, new HashMap<String, String>(), new FinishIDVerificationCallback(cb));
     }
 
     public interface Callback<T>
