@@ -13,6 +13,7 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.library.util.FontUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 
@@ -34,6 +35,8 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
     ViewGroup mClaimableJobContainer;
     @BindDimen(R.dimen.small_text_size)
     int mSmallTextSize;
+    @BindDimen(R.dimen.xsmall_text_size)
+    int mXSmallTextSize;
     @BindColor(R.color.tertiary_gray)
     int mTertiaryGray;
 
@@ -134,6 +137,15 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
         }
 
         restyleTextViews(bookingView);
+
+        final TextView bonusText = (TextView) bookingView
+                .findViewById(R.id.booking_entry_payment_bonus_text);
+        if (bonusText != null && bonusText.getVisibility() == View.VISIBLE)
+        {
+            bonusText.setTypeface(FontUtils.getFont(getActivity(), FontUtils.CIRCULAR_BOOK));
+            bonusText.setTextColor(mTertiaryGray);
+            bonusText.setTextSize(TypedValue.COMPLEX_UNIT_PX, mXSmallTextSize);
+        }
     }
 
     private void restyleTextViews(final View view)
