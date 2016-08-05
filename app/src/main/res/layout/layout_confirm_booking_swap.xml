@@ -52,7 +52,7 @@
                 android:paddingEnd="@dimen/default_padding_half"
                 android:paddingStart="@dimen/default_padding_half"
                 android:src="@drawable/ic_swap"
-                android:tint="@color/border_mid_gray"
+                android:tint="@color/light_gray"
                 />
         </FrameLayout>
 

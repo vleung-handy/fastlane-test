@@ -29,7 +29,7 @@
             android:id="@+id/booking_entry_listing_message_title_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/extra_margin"
+            android:layout_marginBottom="@dimen/default_margin_half"
             android:visibility="gone"
             tools:visibility="visible"
             />
@@ -73,30 +73,22 @@
                     tools:text="Somewhere out there very very very very very very very very very very far"
                     />
 
-
-                <LinearLayout
-                    android:id="@+id/booking_entry_date_layout"
+                <TextView
+                    android:id="@+id/booking_entry_date_text"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/extra_margin"
-                    >
-
-                    <TextView
-                        android:id="@+id/booking_entry_date_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/dark_gray"
-                        android:textSize="@dimen/default_text_size"
-                        tools:text="10:00am -  1:00pm"
-                        />
-                </LinearLayout>
+                    android:layout_marginTop="@dimen/extra_margin_xsmall"
+                    android:textColor="@color/dark_gray"
+                    android:textSize="@dimen/default_text_size"
+                    tools:text="10:00am -  1:00pm"
+                    />
 
                 <TextView
                     android:id="@+id/booking_entry_service_text"
                     style="@style/TextView.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/extra_margin"
+                    android:layout_marginTop="@dimen/extra_margin_xsmall"
                     android:textColor="@color/tertiary_gray"
                     tools:text="One Time · 2-3.5 hour job"
                     />
@@ -108,10 +100,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_marginLeft="@dimen/default_padding"
+                android:layout_marginStart="@dimen/default_padding"
                 android:gravity="center_vertical|end"
                 android:orientation="vertical"
-                android:layout_marginStart="@dimen/default_padding"
-                android:layout_marginLeft="@dimen/default_padding"
                 >
 
                 <TextView
