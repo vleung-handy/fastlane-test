@@ -33,10 +33,21 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
         mMainContainer.setCardBackgroundColor(item.getBgColor());
         mTextMessage.setTextColor(item.getTextColor());
         mTextMessage.setText(item.getMessage().getMessage());
-        mTextStatus.setText(item.getMessage().getStatus());
-
+        setStatus(item);
         adjustMargins(item);
+    }
 
+
+    private void setStatus(ChatItem item)
+    {
+        if (item.getGravity() != Gravity.RIGHT)
+        {
+            mTextStatus.setText(item.getMessage().getStatus().replace("sent", "read"));
+        }
+        else
+        {
+            mTextStatus.setText(item.getMessage().getStatus());
+        }
     }
 
     @NonNull
@@ -61,6 +72,6 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
                 .into(mImageView);
 
         adjustMargins(item);
-        mTextStatus.setText(item.getMessage().getStatus());
+        setStatus(item);
     }
 }

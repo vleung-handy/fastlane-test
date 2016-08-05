@@ -142,11 +142,13 @@
                     />
             </intent-filter>
         </activity>
+
+        <!--TODO: JIA: this used to be adjustResize for softinputmode. Investigate this-->
         <activity
             android:name=".ui.activity.MainActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize"
+            android:windowSoftInputMode="adjustPan"
             >
         </activity>
         <activity
