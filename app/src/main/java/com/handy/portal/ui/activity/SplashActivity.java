@@ -1,7 +1,5 @@
 package com.handy.portal.ui.activity;
 
-import android.app.AlarmManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
@@ -81,8 +79,8 @@ public class SplashActivity extends BaseActivity
 
         mAuthToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
 
-        AlarmManager am = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
-        am.setTimeZone("UTC");
+//        AlarmManager am = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+//        am.setTimeZone("UTC");
     }
 
     @Override
