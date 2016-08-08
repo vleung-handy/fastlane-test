@@ -27,6 +27,8 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout;
 import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -121,6 +123,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
         arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
         arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
+        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.Clicked(booking)));
         bus.post(new NavigationEvent.NavigateToPage(MainViewPage.JOB_DETAILS, arguments,
                 TransitionStyle.JOB_LIST_TO_DETAILS, true));
     }
