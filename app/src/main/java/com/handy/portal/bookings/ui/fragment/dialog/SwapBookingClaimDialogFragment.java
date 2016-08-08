@@ -118,7 +118,7 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
     @Override
     protected String getConfirmButtonText()
     {
-        return getString(R.string.confirm_replacement);
+        return getString(R.string.confirm_upgrade);
     }
 
     private void restyleBookingView(final View bookingView)

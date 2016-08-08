@@ -70,9 +70,9 @@
     <string name="claim">Claim</string>
     <string name="claimed">Claimed</string>
     <string name="claim_job">Claim Job</string>
-    <string name="replace_job">Replace Job</string>
+    <string name="upgrade_job">Upgrade Job</string>
     <string name="confirm_claim">Confirm Claim</string>
-    <string name="confirm_replacement">Confirm Replacement</string>
+    <string name="confirm_upgrade">Confirm Upgrade</string>
     <string name="review_your_update">Review your job update</string>
     <string name="claim_series">Claim Series</string>
     <string name="on_my_way">On My Way</string>

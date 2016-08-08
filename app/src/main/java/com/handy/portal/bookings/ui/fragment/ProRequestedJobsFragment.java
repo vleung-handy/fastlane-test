@@ -120,6 +120,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     private void navigateToJobDetails(@NonNull Booking booking)
     {
         Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.BOOKING, booking);
         arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
         arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
         arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());

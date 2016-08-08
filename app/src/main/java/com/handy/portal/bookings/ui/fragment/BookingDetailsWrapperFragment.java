@@ -106,6 +106,8 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         Bundle arguments = getArguments();
         if (arguments == null) { return; }
 
+        mBooking = (Booking) arguments.getSerializable(BundleKeys.BOOKING);
+
         mRequestedBookingId = arguments.getString(BundleKeys.BOOKING_ID);
 
         // TODO: pass enum value as serializable instead of string wrapping/unwrapping
@@ -131,12 +133,22 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     }
 
     @Override
+    public void onStart()
+    {
+        super.onStart();
+        if (mBooking != null)
+        {
+            onReceiveBookingDetailsSuccess(new HandyEvent.ReceiveBookingDetailsSuccess(mBooking));
+        }
+    }
+
+    @Override
     public void onResume()
     {
         super.onResume();
         bus.register(this);
 
-        if (!MainActivityFragment.clearingBackStack)
+        if (!MainActivityFragment.clearingBackStack && mBooking == null)
         {
             requestBookingDetails(mRequestedBookingId, mRequestedBookingType, mAssociatedBookingDate);
         }
