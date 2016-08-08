@@ -34,6 +34,8 @@ import javax.inject.Inject;
 
 public class BookingManager
 {
+    public static final int REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE = 14; // TODO: Make this a config param
+
     private final EventBus mBus;
     private final DataManager mDataManager;
 
@@ -196,11 +198,11 @@ public class BookingManager
     @Subscribe
     public void onRequestProRequestedJobs(BookingEvent.RequestProRequestedJobs event)
     {
-        /*
-            FIXME: would rather use a serialized request model for the options
-            but don't know how to pass it as a QueryMap
-            without errors
-         */
+        List<Date> datesForBookings = event.getDatesForBookings();
+        if (datesForBookings == null)
+        {
+            datesForBookings = DateTimeUtils.getDateWithoutTimeList(new Date(), BookingManager.REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
+        }
 
         boolean matchingCache = false;
 
@@ -210,7 +212,7 @@ public class BookingManager
             List<BookingsWrapper> bookingsListWrapper = new ArrayList<>();
             //check our cache to see if we have a hit for the dates, do not need to check options since they are always the same for this request
             //not going to be smart and assemble stuff now, just see if everything matches, otherwise ignor
-            for (Date date : event.getDatesForBookings())
+            for (Date date : datesForBookings)
             {
                 final BookingsWrapper bookingsWrapper = requestedBookingsCache.getIfPresent(date);
                 //cut out early if something doesn't fit, then just go do request
@@ -237,7 +239,7 @@ public class BookingManager
         {
             Map<String, Object> options = new HashMap<>();
             options.put(BookingRequestKeys.IS_PROVIDER_REQUESTED, true);
-            mDataManager.getAvailableBookings(event.getDatesForBookings().toArray(new Date[event.getDatesForBookings().size()]),
+            mDataManager.getAvailableBookings(datesForBookings.toArray(new Date[datesForBookings.size()]),
                     options,
                     new DataManager.Callback<BookingsListWrapper>()
                     {
@@ -389,9 +391,17 @@ public class BookingManager
     {
         String bookingId = event.booking.getId();
         BookingType bookingType = event.booking.getType();
+        String claimSwitchJobId = null;
+        BookingType claimSwitchJobType = null;
+        if (event.booking.canSwap())
+        {
+            claimSwitchJobId = event.booking.getSwappableBooking().getId();
+            claimSwitchJobType = event.booking.getSwappableBooking().getType();
+        }
         final Date day = DateTimeUtils.getDateWithoutTime(event.booking.getStartDate());
 
-        mDataManager.claimBooking(bookingId, bookingType, new DataManager.Callback<BookingClaimDetails>()
+        mDataManager.claimBooking(bookingId, bookingType, claimSwitchJobId, claimSwitchJobType,
+                new DataManager.Callback<BookingClaimDetails>()
         {
             @Override
             public void onSuccess(BookingClaimDetails bookingClaimDetails)
@@ -624,6 +634,7 @@ public class BookingManager
         scheduledBookingsCache.invalidateAll();
         complementaryBookingsCache.invalidateAll();
         requestedBookingsCache.invalidateAll();
+        onRequestProRequestedJobs(new BookingEvent.RequestProRequestedJobs(null, false));
     }
 
     private void invalidateCachesForDay(Date day)

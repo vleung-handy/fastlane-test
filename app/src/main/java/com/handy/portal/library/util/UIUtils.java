@@ -238,21 +238,24 @@ public final class UIUtils
     public static void setService(final TextView serviceTextView, final Booking booking)
     {
         Booking.ServiceInfo serviceInfo = booking.getServiceInfo();
-        if (serviceInfo.isHomeCleaning())
+        if (serviceInfo != null)
         {
-            final Context context = serviceTextView.getContext();
-            String frequencyInfo = UIUtils.getFrequencyInfo(booking, context);
-            if (booking.isUK() &&
-                    booking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES)
-                            .size() > 0)
+            if (serviceInfo.isHomeCleaning())
             {
-                frequencyInfo += " \u22C5 " + context.getString(R.string.supplies);
+                final Context context = serviceTextView.getContext();
+                String frequencyInfo = UIUtils.getFrequencyInfo(booking, context);
+                if (booking.isUK() &&
+                        booking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES)
+                                .size() > 0)
+                {
+                    frequencyInfo += " \u22C5 " + context.getString(R.string.supplies);
+                }
+                serviceTextView.setText(frequencyInfo);
             }
-            serviceTextView.setText(frequencyInfo);
-        }
-        else
-        {
-            serviceTextView.setText(serviceInfo.getDisplayName());
+            else
+            {
+                serviceTextView.setText(serviceInfo.getDisplayName());
+            }
         }
         appendTimeWindow(serviceTextView, booking.getMinimumHours(), booking.getHours());
     }

@@ -36,6 +36,7 @@ import com.handy.portal.bookings.ui.element.BookingDetailsProRequestInfoView;
 import com.handy.portal.bookings.ui.element.BookingMapView;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.SwapBookingClaimDialogFragment;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.PrefsKey;
@@ -215,6 +216,10 @@ public class BookingFragment extends TimerActionBarFragment
             {
                 mBookingDetailsProRequestInfoView.setVisibility(View.VISIBLE); //GONE by default
                 mBookingDetailsProRequestInfoView.setDisplayModel(displayAttributes);
+                if (mBooking.canSwap())
+                {
+                    mBookingDetailsProRequestInfoView.showSwapIcon();
+                }
             }
         }
     }
@@ -655,7 +660,7 @@ public class BookingFragment extends TimerActionBarFragment
         {
             case CLAIM:
             {
-                mActionButton.setText(R.string.claim_job);
+                mActionButton.setText(mBooking.canSwap() ? R.string.replace_job : R.string.claim_job);
                 mActionButton.setVisibility(action.isEnabled() ? View.VISIBLE : View.GONE);
                 mActionButton.setOnClickListener(new View.OnClickListener()
                 {
@@ -797,8 +802,20 @@ public class BookingFragment extends TimerActionBarFragment
     private boolean showConfirmBookingClaimDialogIfNecessary()
     {
         final Booking.Action claimAction = mBooking.getAction(Booking.Action.ACTION_CLAIM);
-
-        if (claimAction != null && claimAction.getExtras() != null)
+        if (mBooking.canSwap())
+        {
+            if (getChildFragmentManager()
+                    .findFragmentByTag(SwapBookingClaimDialogFragment.FRAGMENT_TAG) == null)
+            {
+                final SwapBookingClaimDialogFragment dialogFragment =
+                        SwapBookingClaimDialogFragment.newInstance(mBooking);
+                dialogFragment.setTargetFragment(BookingFragment.this, RequestCode.CONFIRM_SWAP);
+                FragmentUtils.safeLaunchDialogFragment(dialogFragment, this,
+                        SwapBookingClaimDialogFragment.FRAGMENT_TAG);
+            }
+            return true;
+        }
+        else if (claimAction != null && claimAction.getExtras() != null)
         {
             Booking.Action.Extras.CancellationPolicy cancellationPolicy = claimAction.getExtras().getCancellationPolicy();
             if (cancellationPolicy != null)
@@ -822,6 +839,7 @@ public class BookingFragment extends TimerActionBarFragment
         {
             switch (requestCode)
             {
+                case RequestCode.CONFIRM_SWAP:
                 case RequestCode.CONFIRM_REQUEST:
                     requestClaimJob();
                     break;
