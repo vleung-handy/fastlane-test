@@ -125,9 +125,14 @@ public class DataManager
         mService.getComplementaryBookings(bookingId, type.toString().toLowerCase(), new BookingsWrapperRetroFitCallback(cb));
     }
 
-    public void claimBooking(String bookingId, BookingType type, final Callback<BookingClaimDetails> cb)
+    public void claimBooking(String bookingId, BookingType type, String claimSwitchJobId, BookingType claimSwitchJobType, final Callback<BookingClaimDetails> cb)
     {
-        mService.claimBooking(bookingId, type.toString().toLowerCase(), new BookingClaimHandyRetroFitCallback(cb));
+        mService.claimBooking(
+                bookingId,
+                type.toString().toLowerCase(),
+                claimSwitchJobId,
+                claimSwitchJobType != null ? claimSwitchJobType.toString().toLowerCase() : null,
+                new BookingClaimHandyRetroFitCallback(cb));
     }
 
     public void claimBookings(JobClaimRequest jobClaimRequest, final Callback<JobClaimResponse> cb)

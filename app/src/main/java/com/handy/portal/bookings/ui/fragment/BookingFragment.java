@@ -3,6 +3,7 @@ package com.handy.portal.bookings.ui.fragment;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -35,6 +36,7 @@ import com.handy.portal.bookings.ui.element.BookingDetailsProRequestInfoView;
 import com.handy.portal.bookings.ui.element.BookingMapView;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.SwapBookingClaimDialogFragment;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.PrefsKey;
@@ -214,6 +216,10 @@ public class BookingFragment extends TimerActionBarFragment
             {
                 mBookingDetailsProRequestInfoView.setVisibility(View.VISIBLE); //GONE by default
                 mBookingDetailsProRequestInfoView.setDisplayModel(displayAttributes);
+                if (mBooking.canSwap())
+                {
+                    mBookingDetailsProRequestInfoView.showSwapIcon();
+                }
             }
         }
     }
@@ -654,7 +660,7 @@ public class BookingFragment extends TimerActionBarFragment
         {
             case CLAIM:
             {
-                mActionButton.setText(R.string.claim_job);
+                mActionButton.setText(mBooking.canSwap() ? R.string.upgrade_job : R.string.claim_job);
                 mActionButton.setVisibility(action.isEnabled() ? View.VISIBLE : View.GONE);
                 mActionButton.setOnClickListener(new View.OnClickListener()
                 {
@@ -707,11 +713,18 @@ public class BookingFragment extends TimerActionBarFragment
                     @Override
                     public void onClick(final View v)
                     {
-                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSubmitted(
-                                mBooking, getLocationData())));
-                        bus.post(new HandyEvent.RequestNotifyJobCheckIn(
-                                mBooking.getId(), getLocationData()));
+                        if (isUserInRangeOfBooking())
+                        {
+                            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+                            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSubmitted(
+                                    mBooking, getLocationData())));
+                            bus.post(new HandyEvent.RequestNotifyJobCheckIn(
+                                    mBooking.getId(), getLocationData()));
+                        }
+                        else
+                        {
+                            showToast(R.string.too_far);
+                        }
                     }
                 });
 
@@ -756,6 +769,31 @@ public class BookingFragment extends TimerActionBarFragment
         }
     }
 
+    private boolean isUserInRangeOfBooking()
+    {
+        Booking.Action checkInAction = mBooking.getAction(Booking.Action.ACTION_CHECK_IN);
+        Location userLocation = ((BaseActivity) getActivity()).getLastLocation();
+        Address address = mBooking.getAddress();
+
+        if (checkInAction == null || checkInAction.getCheckInConfig() == null ||
+                userLocation == null || address == null)
+        {
+            return true;
+        }
+
+        Booking.Action.CheckInConfig config = checkInAction.getCheckInConfig();
+        int maxDistanceInMeters = config.getMaxDistanceInMeters();
+        int toleranceInMeters = config.getToleranceInMeters();
+
+        Location bookingLocation = new Location("");
+        bookingLocation.setLatitude(address.getLatitude());
+        bookingLocation.setLongitude(address.getLongitude());
+        float userAccuracyInMeters = userLocation.getAccuracy();
+        float userDistanceInMeters = userLocation.distanceTo(bookingLocation);
+
+        return userDistanceInMeters <= maxDistanceInMeters && userAccuracyInMeters <= toleranceInMeters;
+    }
+
     /**
      * shows the confirm booking claim dialog if the cancellation policy data is there, based on the given booking
      *
@@ -764,8 +802,20 @@ public class BookingFragment extends TimerActionBarFragment
     private boolean showConfirmBookingClaimDialogIfNecessary()
     {
         final Booking.Action claimAction = mBooking.getAction(Booking.Action.ACTION_CLAIM);
-
-        if (claimAction != null && claimAction.getExtras() != null)
+        if (mBooking.canSwap())
+        {
+            if (getChildFragmentManager()
+                    .findFragmentByTag(SwapBookingClaimDialogFragment.FRAGMENT_TAG) == null)
+            {
+                final SwapBookingClaimDialogFragment dialogFragment =
+                        SwapBookingClaimDialogFragment.newInstance(mBooking);
+                dialogFragment.setTargetFragment(BookingFragment.this, RequestCode.CONFIRM_SWAP);
+                FragmentUtils.safeLaunchDialogFragment(dialogFragment, this,
+                        SwapBookingClaimDialogFragment.FRAGMENT_TAG);
+            }
+            return true;
+        }
+        else if (claimAction != null && claimAction.getExtras() != null)
         {
             Booking.Action.Extras.CancellationPolicy cancellationPolicy = claimAction.getExtras().getCancellationPolicy();
             if (cancellationPolicy != null)
@@ -789,6 +839,7 @@ public class BookingFragment extends TimerActionBarFragment
         {
             switch (requestCode)
             {
+                case RequestCode.CONFIRM_SWAP:
                 case RequestCode.CONFIRM_REQUEST:
                     requestClaimJob();
                     break;

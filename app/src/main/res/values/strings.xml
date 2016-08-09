@@ -70,7 +70,10 @@
     <string name="claim">Claim</string>
     <string name="claimed">Claimed</string>
     <string name="claim_job">Claim Job</string>
+    <string name="upgrade_job">Upgrade Job</string>
     <string name="confirm_claim">Confirm Claim</string>
+    <string name="confirm_upgrade">Confirm Upgrade</string>
+    <string name="review_your_update">Review your job update</string>
     <string name="claim_series">Claim Series</string>
     <string name="on_my_way">On My Way</string>
 
@@ -373,6 +376,7 @@
     <string name="will_be_charged">You’ll be charged a&#160;</string>
     <string name="fee_formatted">%1$s fee.</string>
     <string name="confirm_cancellation">Confirm Cancellation</string>
+    <string name="too_far">You must be closer to the booking to check in.</string>
 
     <!-- Special -->
     <string name="special_empty_string"> </string>
@@ -579,5 +583,9 @@
     <string name="customer_no_show_header_title">Customer No Show</string>
     <string name="customer_no_show_complete_report_button">Complete Report</string>
     <string name="customer_no_show_view_policy_button">View Policy</string>
+
+    <!-- Schedule Swap -->
+    <string name="will_be_cancelled_for_free">This claimed job will be cancelled for free</string>
+    <string name="will_be_claimed">This requested job will be claimed</string>
 
 </resources>

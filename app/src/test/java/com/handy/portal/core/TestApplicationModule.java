@@ -11,6 +11,7 @@ import com.handy.portal.bookings.ui.fragment.ProRequestedJobsFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragmentTest;
+import com.handy.portal.bookings.ui.fragment.dialog.SwapBookingClaimDialogFragment;
 import com.handy.portal.dashboard.fragment.DashboardFeedbackFragment;
 import com.handy.portal.dashboard.fragment.DashboardReviewsFragment;
 import com.handy.portal.dashboard.fragment.DashboardTiersFragment;
@@ -108,6 +109,7 @@ import static org.mockito.Mockito.when;
         AccountSettingsFragment.class,
         DashboardVideoLibraryFragment.class,
         HelpWebViewFragment.class,
+        SwapBookingClaimDialogFragment.class,
 }, library = true)
 public class TestApplicationModule
 {
