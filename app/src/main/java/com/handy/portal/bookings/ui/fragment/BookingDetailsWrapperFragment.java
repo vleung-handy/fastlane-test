@@ -47,6 +47,7 @@ import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
+import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.LocationData;
@@ -210,10 +211,18 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     public void onReceiveClaimJobSuccess(final HandyEvent.ReceiveClaimJobSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        BookingClaimDetails bookingClaimDetails = event.bookingClaimDetails;
-        bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimSuccess(bookingClaimDetails.getBooking(), mSource, mSourceExtras, 0.0f)));
+        final BookingClaimDetails bookingClaimDetails = event.bookingClaimDetails;
+        final Booking booking = bookingClaimDetails.getBooking();
+        if (booking.canSwap())
+        {
+            bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimSuccess(booking)));
+        }
+        else
+        {
+            bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimSuccess(booking, mSource, mSourceExtras, 0.0f)));
+        }
 
-        if (bookingClaimDetails.getBooking().isClaimedByMe() || bookingClaimDetails.getBooking().getProviderId().equals(getLoggedInUserId()))
+        if (booking.isClaimedByMe() || booking.getProviderId().equals(getLoggedInUserId()))
         {
             if (bookingClaimDetails.shouldShowClaimTarget())
             {
@@ -222,12 +231,12 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 claimTargetDialogFragment.setDisplayData(claimTargetInfo); //wrong way to pass argument to a fragment
                 claimTargetDialogFragment.show(getFragmentManager(), ClaimTargetDialogFragment.FRAGMENT_TAG);
 
-                returnToPage(MainViewPage.SCHEDULED_JOBS, bookingClaimDetails.getBooking().getStartDate().getTime(), null, null);
+                returnToPage(MainViewPage.SCHEDULED_JOBS, booking.getStartDate().getTime(), null, null);
             }
             else
             {
-                TransitionStyle transitionStyle = (bookingClaimDetails.getBooking().isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
-                returnToPage(MainViewPage.SCHEDULED_JOBS, bookingClaimDetails.getBooking().getStartDate().getTime(), transitionStyle, null);
+                TransitionStyle transitionStyle = (booking.isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
+                returnToPage(MainViewPage.SCHEDULED_JOBS, booking.getStartDate().getTime(), transitionStyle, null);
             }
         }
         else
@@ -240,7 +249,15 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     @Subscribe
     public void onReceiveClaimJobError(final HandyEvent.ReceiveClaimJobError event)
     {
-        bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimError(event.getBooking(), mSource, mSourceExtras, 0.0f, event.error.getMessage())));
+        if (event.getBooking().canSwap())
+        {
+            bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimError(event.getBooking(),
+                    event.error.getMessage())));
+        }
+        else
+        {
+            bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimError(event.getBooking(), mSource, mSourceExtras, 0.0f, event.error.getMessage())));
+        }
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         handleBookingClaimError(event.error.getMessage(),
                 getString(R.string.job_claim_error), getString(R.string.return_to_available_jobs),
