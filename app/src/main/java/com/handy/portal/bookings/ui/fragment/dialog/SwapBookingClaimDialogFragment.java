@@ -15,7 +15,7 @@ import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.library.util.FontUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
+import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -65,7 +65,7 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
         initSwappableJob();
         initClaimableJob();
         hideDismissButton();
-        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ConfirmSwapShown()));
+        mBus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ConfirmSwapShown(mBooking)));
     }
 
     private void initSwappableJob()
@@ -105,7 +105,7 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK,
                     intent);
         }
-        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ConfirmSwapSubmitted()));
+        mBus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ConfirmSwapSubmitted(mBooking)));
         dismiss();
     }
 
