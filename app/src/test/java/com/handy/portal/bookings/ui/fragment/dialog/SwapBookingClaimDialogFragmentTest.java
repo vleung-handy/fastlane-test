@@ -32,8 +32,11 @@ public class SwapBookingClaimDialogFragmentTest extends RobolectricGradleTestWra
         initMocks(this);
         when(booking.getSwappableBooking()).thenReturn(swappableBooking);
         when(booking.getLocationName()).thenReturn("Manhattan");
-        when(swappableBooking.getLocationName()).thenReturn("Queens");
+        when(booking.getType()).thenReturn(Booking.BookingType.BOOKING_PROXY);
         when(booking.isProxy()).thenReturn(true);
+        when(swappableBooking.getLocationName()).thenReturn("Queens");
+        when(swappableBooking.isProxy()).thenReturn(true);
+        when(swappableBooking.getType()).thenReturn(Booking.BookingType.BOOKING_PROXY);
         when(swappableBooking.isProxy()).thenReturn(true);
         dialog = SwapBookingClaimDialogFragment.newInstance(booking);
         SupportFragmentTestUtil.startFragment(dialog);
