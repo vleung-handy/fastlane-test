@@ -398,12 +398,7 @@ public class MainActivityFragment extends InjectedFragment
             {
                 countOfRequestedJobs += wrapper.getBookings().size();
             }
-
-            //If no unclaimed jobs don't show icon and count
-            if (countOfRequestedJobs > 0)
-            {
-                mRequestsButton.setUnreadCount(countOfRequestedJobs);
-            }
+            mRequestsButton.setUnreadCount(countOfRequestedJobs);
         }
     }
 
