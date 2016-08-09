@@ -85,8 +85,8 @@ public interface HandyRetrofitService
     @PUT(JOBS_PATH + "{id}/claim")
     void claimBooking(@Path("id") String bookingId,
                       @Field("type") String type,
-                      @Field("claim_switch_job_id") String claimSwitchJobId,
-                      @Field("claim_switch_job_type") String claimSwitchJobType,
+                      @Field("claim_swap_job_id") String claimSwitchJobId,
+                      @Field("claim_swap_job_type") String claimSwitchJobType,
                       HandyRetrofitCallback cb);
 
     @PUT(JOBS_PATH + "claim_jobs")
