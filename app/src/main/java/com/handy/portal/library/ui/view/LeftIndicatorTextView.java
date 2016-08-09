@@ -73,4 +73,8 @@ public class LeftIndicatorTextView extends FrameLayout
         return this;
     }
 
+    public ImageView getImage()
+    {
+        return mLeftIndicatorImage;
+    }
 }

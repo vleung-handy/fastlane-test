@@ -109,6 +109,12 @@ public class AvailableBookingElementView extends BookingElementView
             //show the green strip indicator on the left of this entry.
             //if no listing title don't show this because it doesn't convey any information by itself
             mLeftStripIndicator.setVisibility(View.VISIBLE);
+
+            // Schedule Conflict
+            if (booking.canSwap())
+            {
+                mBookingMessageTitleView.showSwapIcon();
+            }
         }
         else
         {
@@ -128,6 +134,11 @@ public class AvailableBookingElementView extends BookingElementView
         mAssociatedView = convertView;
 
         return convertView;
+    }
+
+    public BookingMessageTitleView getBookingMessageTitleView()
+    {
+        return mBookingMessageTitleView;
     }
 
     private void setPartnerText(String partner)
