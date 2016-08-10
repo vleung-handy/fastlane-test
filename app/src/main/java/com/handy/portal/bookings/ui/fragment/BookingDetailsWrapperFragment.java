@@ -213,7 +213,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         final BookingClaimDetails bookingClaimDetails = event.bookingClaimDetails;
         final Booking booking = bookingClaimDetails.getBooking();
-        if (booking.canSwap())
+        if (mBooking != null && mBooking.canSwap())
         {
             bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimSuccess(booking)));
         }
@@ -249,7 +249,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     @Subscribe
     public void onReceiveClaimJobError(final HandyEvent.ReceiveClaimJobError event)
     {
-        if (event.getBooking().canSwap())
+        if (mBooking != null && mBooking.canSwap())
         {
             bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimError(event.getBooking(),
                     event.error.getMessage())));
