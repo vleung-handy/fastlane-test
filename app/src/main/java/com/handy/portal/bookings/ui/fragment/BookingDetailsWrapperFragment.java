@@ -215,7 +215,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         final Booking booking = bookingClaimDetails.getBooking();
         if (mBooking != null && mBooking.isRequested())
         {
-            bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimSuccess(booking)));
+            bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimSuccess(mBooking)));
         }
         else
         {
@@ -251,7 +251,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     {
         if (mBooking != null && mBooking.isRequested())
         {
-            bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimError(event.getBooking(),
+            bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimError(mBooking,
                     event.error.getMessage())));
         }
         else
