@@ -208,7 +208,10 @@ public class BookingManager
             public void onSuccess(final HashMap<String, Object> response)
             {
                 final Integer count = (Integer) response.get(JOBS_COUNT_KEY);
-                mBus.post(new BookingEvent.ReceiveProRequestedJobsCountSuccess(count));
+                if (count != null)
+                {
+                    mBus.post(new BookingEvent.ReceiveProRequestedJobsCountSuccess(count));
+                }
             }
 
             @Override
