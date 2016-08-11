@@ -94,9 +94,11 @@ public class DataManager
         return mEndpoint.getBaseUrl();
     }
 
-    public void getJobsCount(final Map<String, Object> options, final Callback<HashMap<String, Object>> cb)
+    public void getJobsCount(final List<Date> dates,
+                             final Map<String, Object> options,
+                             final Callback<HashMap<String, Object>> cb)
     {
-        mService.getJobsCount(options, new JobsCountHandyRetroFitCallback(cb));
+        mService.getJobsCount(dates, options, new JobsCountHandyRetroFitCallback(cb));
     }
 
     public void getAvailableBookings(Date[] dates, Map<String, Object> additionalOptions, final Callback<BookingsListWrapper> cb)

@@ -201,25 +201,25 @@ public class BookingManager
             final BookingEvent.RequestProRequestedJobsCount event)
     {
         final Map<String, Object> options = new HashMap<>();
+        final List<Date> dates = DateTimeUtils.getDateWithoutTimeList(new Date(),
+                BookingManager.REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
         options.put(BookingRequestKeys.IS_PROVIDER_REQUESTED, true);
-        mDataManager.getJobsCount(options, new DataManager.Callback<HashMap<String, Object>>()
-        {
-            @Override
-            public void onSuccess(final HashMap<String, Object> response)
-            {
-                final Integer count = (Integer) response.get(JOBS_COUNT_KEY);
-                if (count != null)
+        mDataManager.getJobsCount(dates, options,
+                new DataManager.Callback<HashMap<String, Object>>()
                 {
-                    mBus.post(new BookingEvent.ReceiveProRequestedJobsCountSuccess(count));
-                }
-            }
+                    @Override
+                    public void onSuccess(final HashMap<String, Object> response)
+                    {
+                        int count = (int) ((double) response.get(JOBS_COUNT_KEY));
+                        mBus.post(new BookingEvent.ReceiveProRequestedJobsCountSuccess(count));
+                    }
 
-            @Override
-            public void onError(final DataManager.DataManagerError error)
-            {
-                // Ignore
-            }
-        });
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        // Ignore
+                    }
+                });
     }
 
     @Subscribe
