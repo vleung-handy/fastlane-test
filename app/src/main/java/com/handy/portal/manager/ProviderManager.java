@@ -355,16 +355,17 @@ public class ProviderManager
     @Subscribe
     public void onRequestIdVerificationFinish(final ProviderSettingsEvent.RequestIdVerificationFinish event)
     {
-        mDataManager.finishIdVerification(event.getFinishIdVerificationUrl(), new DataManager.Callback<HashMap<String, String>>()
-        {
-            @Override
-            public void onSuccess(final HashMap<String, String> response)
-            { }
+        mDataManager.finishIdVerification(event.getFinishIdVerificationUrl(),
+                event.getScanReference(), new DataManager.Callback<HashMap<String, String>>()
+                {
+                    @Override
+                    public void onSuccess(final HashMap<String, String> response)
+                    { }
 
-            @Override
-            public void onError(final DataManager.DataManagerError error)
-            { }
-        });
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    { }
+                });
     }
 
     private void requestProviderInfo()

@@ -78,15 +78,23 @@ public class ProviderSettingsEvent extends HandyEvent
     public static class RequestIdVerificationFinish extends RequestEvent
     {
         private final String mFinishIdVerificationUrl;
+        private final String mScanReference;
 
-        public RequestIdVerificationFinish(final String finishIdVerificationUrl)
+        public RequestIdVerificationFinish(final String finishIdVerificationUrl,
+                                           final String scanReference)
         {
             mFinishIdVerificationUrl = finishIdVerificationUrl;
+            mScanReference = scanReference;
         }
 
         public String getFinishIdVerificationUrl()
         {
             return mFinishIdVerificationUrl;
+        }
+
+        public String getScanReference()
+        {
+            return mScanReference;
         }
     }
 }

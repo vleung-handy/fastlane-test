@@ -7,7 +7,6 @@ import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -307,8 +306,9 @@ public interface HandyRetrofitService
                                    @Field("onboarding_supplies") Boolean value,
                                    HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
     @POST("/{url}")
     void finishIdVerification(@Path(value = "url", encode = false) String finishIdVerificationUrl,
-                              @Body HashMap<String, String> map,
+                              @Field("scan_reference") String scanReference,
                               HandyRetrofitCallback cb);
 }

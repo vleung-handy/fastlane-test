@@ -177,11 +177,20 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
         {
             if (resultCode == Activity.RESULT_OK)
             {
-                // Empty POST to the server after id verification completed
-                bus.post(new ProviderSettingsEvent.RequestIdVerificationFinish(mSubflowData.getAfterFinishUrl()));
+                String scanReference = (data == null) ? "" : data.getStringExtra(NetverifySDK.EXTRA_SCAN_REFERENCE);
+                if (Strings.isNullOrEmpty(scanReference))
+                {
+                    cancel(new Intent());
+                }
+                else
+                {
+                    // Send scan reference to the server after id verification completed
+                    bus.post(new ProviderSettingsEvent.RequestIdVerificationFinish(
+                            mSubflowData.getAfterFinishUrl(), scanReference));
 
-                bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NativeIDVerificationCompletedLog()));
-                terminate(new Intent());
+                    bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NativeIDVerificationCompletedLog()));
+                    terminate(new Intent());
+                }
             }
             else if (resultCode == Activity.RESULT_CANCELED)
             {
