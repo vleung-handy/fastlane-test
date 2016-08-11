@@ -162,7 +162,14 @@ public class MainActivityFragment extends InjectedFragment
         super.onResume();
         bus.register(this);
 
-        bus.post(new NotificationEvent.RequestUnreadCount());
+        if (mRequestsButton != null && mRequestsButton.getVisibility() == View.VISIBLE)
+        {
+            bus.post(new BookingEvent.RequestProRequestedJobsCount());
+        }
+        if (mAlertsButton != null && mAlertsButton.getVisibility() == View.VISIBLE)
+        {
+            bus.post(new NotificationEvent.RequestUnreadCount());
+        }
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
         if (currentPage == null)
         {
@@ -175,7 +182,10 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onReceiveUnreadCountSuccess(NotificationEvent.ReceiveUnreadCountSuccess event)
     {
-        mAlertsButton.setUnreadCount(event.getUnreadCount());
+        if (mAlertsButton != null)
+        {
+            mAlertsButton.setUnreadCount(event.getUnreadCount());
+        }
     }
 
     private void setDeeplinkData(final Bundle savedInstanceState)
@@ -666,7 +676,6 @@ public class MainActivityFragment extends InjectedFragment
             mRequestsButton.setOnClickListener(
                     new TabOnClickListener(mRequestsButton, MainViewPage.REQUESTED_JOBS));
             mRequestsButton.setVisibility(View.VISIBLE);
-            requestRequestedAvailableJobsCount();
         }
         else
         {
@@ -674,8 +683,4 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
-    private void requestRequestedAvailableJobsCount()
-    {
-        bus.post(new BookingEvent.RequestProRequestedJobsCount());
-    }
 }

@@ -35,6 +35,7 @@ import javax.inject.Inject;
 public class BookingManager
 {
     public static final int REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE = 14; // TODO: Make this a config param
+    public static final String JOBS_COUNT_KEY = "count";
 
     private final EventBus mBus;
     private final DataManager mDataManager;
@@ -199,7 +200,23 @@ public class BookingManager
     public void onRequestProRequestedJobsCount(
             final BookingEvent.RequestProRequestedJobsCount event)
     {
-        // FIXME: Implement
+        final Map<String, Object> options = new HashMap<>();
+        options.put(BookingRequestKeys.IS_PROVIDER_REQUESTED, true);
+        mDataManager.getJobsCount(options, new DataManager.Callback<HashMap<String, Object>>()
+        {
+            @Override
+            public void onSuccess(final HashMap<String, Object> response)
+            {
+                final Integer count = (Integer) response.get(JOBS_COUNT_KEY);
+                mBus.post(new BookingEvent.ReceiveProRequestedJobsCountSuccess(count));
+            }
+
+            @Override
+            public void onError(final DataManager.DataManagerError error)
+            {
+                // Ignore
+            }
+        });
     }
 
     @Subscribe

@@ -61,6 +61,9 @@ public interface HandyRetrofitService
     void getConfigParams(@Query("key[]") String[] key,
                          HandyRetrofitCallback cb);
 
+    @GET(JOBS_PATH + "jobs_count")
+    void getJobsCount(@QueryMap Map<String, Object> options, HandyRetrofitCallback cb);
+
     @GET(JOBS_PATH + "available_jobs")
     void getAvailableBookings(@Query("dates[]") Date[] dates,
                               @QueryMap Map<String, Object> options,
