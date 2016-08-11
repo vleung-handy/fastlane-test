@@ -196,6 +196,13 @@ public class BookingManager
     }
 
     @Subscribe
+    public void onRequestProRequestedJobsCount(
+            final BookingEvent.RequestProRequestedJobsCount event)
+    {
+        // FIXME: Implement
+    }
+
+    @Subscribe
     public void onRequestProRequestedJobs(BookingEvent.RequestProRequestedJobs event)
     {
         List<Date> datesForBookings = event.getDatesForBookings();
@@ -634,7 +641,9 @@ public class BookingManager
         scheduledBookingsCache.invalidateAll();
         complementaryBookingsCache.invalidateAll();
         requestedBookingsCache.invalidateAll();
-        onRequestProRequestedJobs(new BookingEvent.RequestProRequestedJobs(null, false));
+        // We want to get requested jobs count again because forcing cache invalidation implies
+        // claiming or removing a job which will affect requested jobs count.
+        onRequestProRequestedJobsCount(new BookingEvent.RequestProRequestedJobsCount());
     }
 
     private void invalidateCachesForDay(Date day)
