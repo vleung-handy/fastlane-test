@@ -164,6 +164,15 @@ class BookingsWrapperRetroFitCallback extends TypedHandyRetrofitCallback<Booking
 }
 
 
+class JobsCountHandyRetroFitCallback extends TypedHandyRetrofitCallback<HashMap<String, Object>>
+{
+    JobsCountHandyRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+
 class PinRequestDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<PinRequestDetails>
 {
     PinRequestDetailsResponseHandyRetroFitCallback(DataManager.Callback callback)
@@ -397,6 +406,7 @@ class SetupDataRetrofitCallback extends TypedHandyRetrofitCallback<SetupData>
         super(callback);
     }
 }
+
 
 class FinishIDVerificationCallback extends TypedHandyRetrofitCallback<HashMap<String, String>>
 {

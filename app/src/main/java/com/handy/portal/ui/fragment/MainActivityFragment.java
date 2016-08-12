@@ -24,7 +24,6 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
-import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
@@ -47,8 +46,6 @@ import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.util.DeeplinkMapper;
 
 import org.greenrobot.eventbus.Subscribe;
-
-import java.util.List;
 
 import javax.inject.Inject;
 
@@ -165,7 +162,14 @@ public class MainActivityFragment extends InjectedFragment
         super.onResume();
         bus.register(this);
 
-        bus.post(new NotificationEvent.RequestUnreadCount());
+        if (mRequestsButton != null && mRequestsButton.getVisibility() == View.VISIBLE)
+        {
+            bus.post(new BookingEvent.RequestProRequestedJobsCount());
+        }
+        if (mAlertsButton != null && mAlertsButton.getVisibility() == View.VISIBLE)
+        {
+            bus.post(new NotificationEvent.RequestUnreadCount());
+        }
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
         if (currentPage == null)
         {
@@ -178,7 +182,10 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onReceiveUnreadCountSuccess(NotificationEvent.ReceiveUnreadCountSuccess event)
     {
-        mAlertsButton.setUnreadCount(event.getUnreadCount());
+        if (mAlertsButton != null)
+        {
+            mAlertsButton.setUnreadCount(event.getUnreadCount());
+        }
     }
 
     private void setDeeplinkData(final Bundle savedInstanceState)
@@ -387,18 +394,12 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onReceiveProRequestedJobsSuccess(BookingEvent.ReceiveProRequestedJobsSuccess event)
+    public void onReceiveProRequestedJobsCountSuccess(
+            final BookingEvent.ReceiveProRequestedJobsCountSuccess event)
     {
-        List<BookingsWrapper> proRequestedJobsList = event.getProRequestedJobs();
-        if (mRequestsButton != null && proRequestedJobsList != null)
+        if (mRequestsButton != null)
         {
-            //Show and update count
-            int countOfRequestedJobs = 0;
-            for (BookingsWrapper wrapper : event.getProRequestedJobs())
-            {
-                countOfRequestedJobs += wrapper.getBookings().size();
-            }
-            mRequestsButton.setUnreadCount(countOfRequestedJobs);
+            mRequestsButton.setUnreadCount(event.getCount());
         }
     }
 
@@ -675,7 +676,6 @@ public class MainActivityFragment extends InjectedFragment
             mRequestsButton.setOnClickListener(
                     new TabOnClickListener(mRequestsButton, MainViewPage.REQUESTED_JOBS));
             mRequestsButton.setVisibility(View.VISIBLE);
-            requestRequestedAvailableJobs();
         }
         else
         {
@@ -683,8 +683,4 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
-    private void requestRequestedAvailableJobs()
-    {
-        bus.post(new BookingEvent.RequestProRequestedJobs(null, true));
-    }
 }

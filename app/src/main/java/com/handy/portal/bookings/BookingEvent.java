@@ -154,4 +154,23 @@ public abstract class BookingEvent extends HandyEvent
     {
         public RateCustomerError(DataManager.DataManagerError error) { this.error = error; }
     }
+
+
+    public static class RequestProRequestedJobsCount extends RequestEvent {}
+
+
+    public static class ReceiveProRequestedJobsCountSuccess extends ReceiveSuccessEvent
+    {
+        private int mCount;
+
+        public ReceiveProRequestedJobsCountSuccess(final int count)
+        {
+            mCount = count;
+        }
+
+        public int getCount()
+        {
+            return mCount;
+        }
+    }
 }
