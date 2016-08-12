@@ -1,6 +1,7 @@
 package com.handy.portal.event;
 
 import com.handy.portal.data.DataManager;
+import com.handy.portal.library.util.IDVerificationUtils;
 import com.handy.portal.model.ProviderSettings;
 
 public class ProviderSettingsEvent extends HandyEvent
@@ -75,26 +76,53 @@ public class ProviderSettingsEvent extends HandyEvent
 
 
     // No success or error callbacks for now
-    public static class RequestIdVerificationFinish extends RequestEvent
+    public static class RequestIdVerificationStart extends RequestEvent
     {
-        private final String mFinishIdVerificationUrl;
-        private final String mScanReference;
+        private final String mBeforeIdVerificationStartUrl;
 
-        public RequestIdVerificationFinish(final String finishIdVerificationUrl,
-                                           final String scanReference)
+        public RequestIdVerificationStart(final String beforeIdVerificationStartUrl)
         {
-            mFinishIdVerificationUrl = finishIdVerificationUrl;
-            mScanReference = scanReference;
+            mBeforeIdVerificationStartUrl = beforeIdVerificationStartUrl;
         }
 
-        public String getFinishIdVerificationUrl()
+        public String getBeforeIdVerificationStartUrl()
         {
-            return mFinishIdVerificationUrl;
+            return mBeforeIdVerificationStartUrl;
+        }
+    }
+
+
+    // No success or error callbacks for now
+    public static class RequestIdVerificationFinish extends RequestEvent
+    {
+        private final String mAfterIdVerificationFinishUrl;
+        private final String mScanReference;
+        @IDVerificationUtils.IdVerificationStatus
+        private final String mStatus;
+
+        public RequestIdVerificationFinish(final String afterIdVerificationFinishUrl,
+                                           final String scanReference,
+                                           @IDVerificationUtils.IdVerificationStatus final String status)
+        {
+            mAfterIdVerificationFinishUrl = afterIdVerificationFinishUrl;
+            mScanReference = scanReference;
+            mStatus = status;
+        }
+
+        public String getAfterIdVerificationFinishUrl()
+        {
+            return mAfterIdVerificationFinishUrl;
         }
 
         public String getScanReference()
         {
             return mScanReference;
+        }
+
+        @IDVerificationUtils.IdVerificationStatus
+        public String getStatus()
+        {
+            return mStatus;
         }
     }
 }

@@ -45,12 +45,12 @@ public class SubflowData implements Serializable
     private String mJumioToken;
     @SerializedName("jumio_secret")
     private String mJumioSecret;
-    @SerializedName("scan_reference")
-    private String mScanReference;
     @SerializedName("jumio_url")
     private String mJumioUrl;
+    @SerializedName("before_start")
+    private String mBeforeIdVerificationStartUrl;
     @SerializedName("after_finish")
-    private String mAfterFinishUrl;
+    private String mAfterIdVerificationFinishUrl;
 
     public String getApplicationStatus()
     {
@@ -119,13 +119,13 @@ public class SubflowData implements Serializable
         return mJumioUrl;
     }
 
-    public String getAfterFinishUrl()
+    public String getBeforeIdVerificationStartUrl()
     {
-        return mAfterFinishUrl;
+        return mBeforeIdVerificationStartUrl;
     }
 
-    public String getScanReference()
+    public String getAfterIdVerificationFinishUrl()
     {
-        return mScanReference;
+        return mAfterIdVerificationFinishUrl;
     }
 }

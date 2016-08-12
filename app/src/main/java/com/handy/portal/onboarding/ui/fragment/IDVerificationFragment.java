@@ -37,7 +37,7 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
     private boolean showCameraBlocker;
     private OnboardingDetails mOnboardingDetails;
     private NetverifySDK mNetverifySDK;
-    private String mAfterFinishUrl;
+    private String mAfterIdVerificationFinishUrl;
 
 
     public static IDVerificationFragment newInstance()
@@ -55,8 +55,6 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
 
     private void initializeJumioIDVerification()
     {
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NativeIDVerificationStartedLog()));
-
         if (ContextCompat.checkSelfPermission(getContext(),
                 Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED)
@@ -76,26 +74,33 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
         else
         {
             bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.CameraPermissionGrantedLog()));
+            bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NativeIDVerificationStartedLog()));
 
             SubflowData subflowData =
                     mOnboardingDetails.getSubflowDataByType(SubflowType.ID_VERIFICATION);
 
+            // ID verification start whether or not jumio sdk init works
+            if (subflowData != null && !Strings.isNullOrEmpty(subflowData.getBeforeIdVerificationStartUrl()))
+            {
+                bus.post(new ProviderSettingsEvent.RequestIdVerificationStart(
+                        subflowData.getBeforeIdVerificationStartUrl()
+                ));
+            }
+
             if (NetverifySDK.isSupportedPlatform() && subflowData != null &&
                     !Strings.isNullOrEmpty(subflowData.getJumioSecret())
                     && !Strings.isNullOrEmpty(subflowData.getJumioToken()) &&
-                    !Strings.isNullOrEmpty(subflowData.getFullName())
-                    && !Strings.isNullOrEmpty(subflowData.getScanReference()) &&
-                    !Strings.isNullOrEmpty(subflowData.getCandidateId()) &&
-                    !Strings.isNullOrEmpty(subflowData.getAfterFinishUrl()))
+                    !Strings.isNullOrEmpty(subflowData.getFullName()) &&
+                    !Strings.isNullOrEmpty(subflowData.getCandidateId())
+                    && !Strings.isNullOrEmpty(subflowData.getAfterIdVerificationFinishUrl()))
             {
                 try
                 {
-                    mAfterFinishUrl = subflowData.getAfterFinishUrl();
+                    mAfterIdVerificationFinishUrl = subflowData.getAfterIdVerificationFinishUrl();
 
                     mNetverifySDK = NetverifySDK.create(getActivity(), subflowData.getJumioToken(),
                             subflowData.getJumioSecret(), JumioDataCenter.US);
                     mNetverifySDK.setName(subflowData.getFullName());
-                    mNetverifySDK.setMerchantScanReference(subflowData.getScanReference());
                     mNetverifySDK.setCustomerId(subflowData.getCandidateId());
 
                     mNetverifySDK.setEnableEpassport(true);
@@ -120,9 +125,12 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
                     initJumioBlocker();
                 }
             }
-            else if (subflowData != null && !Strings.isNullOrEmpty(subflowData.getJumioURL()))
+            else if (subflowData != null &&
+                    !Strings.isNullOrEmpty(subflowData.getAfterIdVerificationFinishUrl()))
             {
                 // Platform not supported or subflow data not valid
+                mAfterIdVerificationFinishUrl = subflowData.getAfterIdVerificationFinishUrl();
+                jumioAfterFinishCallback("", IDVerificationUtils.ID_VERIFICATION_INIT_ERROR);
                 initJumioWebFlow(subflowData);
             }
         }
@@ -175,57 +183,59 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == NetverifySDK.REQUEST_CODE)
         {
+            final String scanReference = (data == null) ? "" : data.getStringExtra(NetverifySDK.EXTRA_SCAN_REFERENCE);
+
+            if (Strings.isNullOrEmpty(scanReference))
+            {
+                cancel(new Intent());
+            }
+
             if (resultCode == Activity.RESULT_OK)
             {
-                String scanReference = (data == null) ? "" : data.getStringExtra(NetverifySDK.EXTRA_SCAN_REFERENCE);
-                if (Strings.isNullOrEmpty(scanReference))
-                {
-                    cancel(new Intent());
-                }
-                else
-                {
-                    // Send scan reference to the server after id verification completed
-                    bus.post(new ProviderSettingsEvent.RequestIdVerificationFinish(
-                            mSubflowData.getAfterFinishUrl(), scanReference));
-
-                    bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NativeIDVerificationCompletedLog()));
-                    terminate(new Intent());
-                }
+                bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NativeIDVerificationCompletedLog()));
+                jumioAfterFinishCallback(scanReference, IDVerificationUtils.ID_VERIFICATION_SUCCESS);
+                terminate(new Intent());
             }
             else if (resultCode == Activity.RESULT_CANCELED)
             {
-                int errorCode =
-                        data.getIntExtra(NetverifySDK.EXTRA_ERROR_CODE, 0);
-                String errorMessage =
-                        data.getStringExtra(NetverifySDK.EXTRA_ERROR_MESSAGE);
-
-                if (errorCode != 0 && !Strings.isNullOrEmpty(errorMessage))
-                { Crashlytics.log(errorMessage); }
-
-                // Cancelled by user
-                if (errorCode == 250)
+                if (data != null)
                 {
-                    bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NativeIDVerificationCancelledLog()));
-                }
-                else
-                {
-                    bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NativeIDVerificationFailedLog()));
+                    int errorCode =
+                            data.getIntExtra(NetverifySDK.EXTRA_ERROR_CODE, 0);
+                    String errorMessage =
+                            data.getStringExtra(NetverifySDK.EXTRA_ERROR_MESSAGE);
+
+                    if (errorCode != 0 && !Strings.isNullOrEmpty(errorMessage))
+                    { Crashlytics.log(errorMessage); }
+
+                    // Cancelled by user
+                    if (errorCode == 250)
+                    {
+                        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NativeIDVerificationCancelledLog()));
+                    }
+                    else
+                    {
+                        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NativeIDVerificationFailedLog()));
+                    }
                 }
 
-//                if ((errorCode >= 100 && errorCode <= 160) || errorCode == 230)
-//                {
-//                    // Retry possible
-//                    initializeJumioIDVerification();
-//                }
-//                else
-//                {
-//                    // Retry impossible
-//                    initJumioBlocker();
-//                }
-
+                jumioAfterFinishCallback(scanReference, IDVerificationUtils.ID_VERIFICATION_CANCELLATION);
                 cancel(new Intent());
             }
-            mNetverifySDK.destroy();
+
+            if (mNetverifySDK != null)
+            { mNetverifySDK.destroy(); }
+        }
+    }
+
+    private void jumioAfterFinishCallback(final String scanReference,
+                                          @IDVerificationUtils.IdVerificationStatus final String status)
+    {
+        // Send scan reference to the server after id verification completed
+        if (!Strings.isNullOrEmpty(mAfterIdVerificationFinishUrl))
+        {
+            bus.post(new ProviderSettingsEvent.RequestIdVerificationFinish(
+                    mAfterIdVerificationFinishUrl, scanReference, status));
         }
     }
 
