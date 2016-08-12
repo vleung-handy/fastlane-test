@@ -35,6 +35,7 @@ import javax.inject.Inject;
 public class BookingManager
 {
     public static final int REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE = 14; // TODO: Make this a config param
+    public static final String JOBS_COUNT_KEY = "count";
 
     private final EventBus mBus;
     private final DataManager mDataManager;
@@ -193,6 +194,32 @@ public class BookingManager
                     }
                 }
         );
+    }
+
+    @Subscribe
+    public void onRequestProRequestedJobsCount(
+            final BookingEvent.RequestProRequestedJobsCount event)
+    {
+        final Map<String, Object> options = new HashMap<>();
+        final List<Date> dates = DateTimeUtils.getDateWithoutTimeList(new Date(),
+                BookingManager.REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE);
+        options.put(BookingRequestKeys.IS_PROVIDER_REQUESTED, true);
+        mDataManager.getJobsCount(dates, options,
+                new DataManager.Callback<HashMap<String, Object>>()
+                {
+                    @Override
+                    public void onSuccess(final HashMap<String, Object> response)
+                    {
+                        int count = (int) ((double) response.get(JOBS_COUNT_KEY));
+                        mBus.post(new BookingEvent.ReceiveProRequestedJobsCountSuccess(count));
+                    }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        // Ignore
+                    }
+                });
     }
 
     @Subscribe
@@ -634,7 +661,9 @@ public class BookingManager
         scheduledBookingsCache.invalidateAll();
         complementaryBookingsCache.invalidateAll();
         requestedBookingsCache.invalidateAll();
-        onRequestProRequestedJobs(new BookingEvent.RequestProRequestedJobs(null, false));
+        // We want to get requested jobs count again because forcing cache invalidation implies
+        // claiming or removing a job which will affect requested jobs count.
+        onRequestProRequestedJobsCount(new BookingEvent.RequestProRequestedJobsCount());
     }
 
     private void invalidateCachesForDay(Date day)
