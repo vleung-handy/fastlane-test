@@ -1,5 +1,6 @@
 package com.handy.portal.layer;
 
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -95,6 +96,8 @@ public class LayerFragment extends ActionBarFragment
     private String mConsumerName;
     private boolean mSync = false;
 
+    ProgressDialog mProgressDialog;
+
     private Booking mBooking;
 
     @Override
@@ -113,6 +116,8 @@ public class LayerFragment extends ActionBarFragment
             mBooking = (Booking) getArguments().get(BundleKeys.BOOKING);
         }
 
+        mProgressDialog = new ProgressDialog(getActivity());
+
         mConsumerName = mBooking.getUser().getFullName();
         mBookingId = mBooking.getId();
         mMyId = mBooking.getProviderId();
@@ -128,7 +133,7 @@ public class LayerFragment extends ActionBarFragment
         View view = inflater.inflate(R.layout.fragment_layer, container, false);
         ButterKnife.bind(this, view);
 
-        setActionBarTitle(mMyId + ":" + mConsumerId + ":" + mBookingId);
+        setActionBarTitle("Chat with " + mConsumerName);
 
         mEditMessage.setOnEditorActionListener(new TextView.OnEditorActionListener()
         {
@@ -167,6 +172,7 @@ public class LayerFragment extends ActionBarFragment
 
     private void setupLayer()
     {
+        mProgressDialog.show();
         LayerClient.Options options = new LayerClient.Options();
         options.historicSyncPolicy(LayerClient.Options.HistoricSyncPolicy.ALL_MESSAGES);
 
@@ -249,36 +255,59 @@ public class LayerFragment extends ActionBarFragment
         List<Conversation> conversations = layerClient.getConversationsWithParticipants(mMyId, mConsumerId, mBookingId);
         if (conversations != null && !conversations.isEmpty())
         {
+            if (conversations.size() > 1)
+            {
+                if (getActivity() != null)
+                {
+                    Toast.makeText(getActivity(), "Found " + conversations.size() + " number of conversations", Toast.LENGTH_SHORT).show();
+                }
+            }
             convo = conversations.get(0);
         }
         if (convo == null)
         {
             Log.d(TAG, "initialize: No conversation found with participants : " + mMyId + " and " + mConsumerId + " and booking id: " + mBookingId);
-//            Toast.makeText(this, "initialize: No conversation found with participants : " + mMyId + " and " + mConsumerId + " and booking id: " + mBookingId, Toast.LENGTH_SHORT).show();
+//            Toast.makeText(this, "initialize: No conversation found with participants : " + mMyId + " and " + mProviderId + " and booking id: " + mBookingId, Toast.LENGTH_SHORT).show();
 
             try
             {
                 convo = layerClient.newConversation(mMyId, mConsumerId, mBookingId);
+                convo.syncAllHistoricMessages();
                 Log.d(TAG, "initialize: new convo created with id:" + convo.getId());
                 mIsInitialized = true;
-                Toast.makeText(getActivity(), "New Conversation Created", Toast.LENGTH_SHORT).show();
+
+                if (getActivity() != null)
+                {
+                    Toast.makeText(getActivity(), "New Conversation Created " + convo.getId(), Toast.LENGTH_SHORT).show();
+                }
+                mProgressDialog.dismiss();
             }
             catch (LayerConversationException e)
             {
                 Log.d(TAG, "initialize: conversation already exists, getting existing conversation");
                 convo = e.getConversation();
+                convo.syncAllHistoricMessages();
                 Log.d(TAG, "initialize: existing conversation is:" + convo.getId());
+                if (getActivity() != null)
+                {
+                    Toast.makeText(getActivity(), "Conversation exists " + convo.getId(), Toast.LENGTH_SHORT).show();
+                }
                 mIsInitialized = true;
+                mProgressDialog.dismiss();
             }
 
         }
         else
         {
             Log.d(TAG, "conversation exists with ID: " + convo.getId());
-            Toast.makeText(getActivity(), "Conversation Found", Toast.LENGTH_SHORT).show();
+            if (getActivity() != null)
+            {
+                Toast.makeText(getActivity(), "Conversation Found " + convo.getId(), Toast.LENGTH_SHORT).show();
+            }
             mIsInitialized = true;
             convo.syncAllHistoricMessages();
             drawMessages();
+            mProgressDialog.dismiss();
         }
     }
 
@@ -376,6 +405,10 @@ public class LayerFragment extends ActionBarFragment
         for (int i = mChatItems.size() - 1; i >= 0; i--)
         {
             ChatItem item = mChatItems.get(i);
+            if (item.getMessage() == null || TextUtils.isEmpty(item.getMessage().getId()))
+            {
+                continue;
+            }
             if (item.getMessage().getId().equals(msg.getId().toString()))
             {
                 //item found, just update whatever that was changed.
