@@ -42,7 +42,8 @@ public class ChatViewHolder extends RecyclerView.ViewHolder {
     {
         if (item.getGravity() != Gravity.RIGHT)
         {
-            mTextStatus.setText(item.getMessage().getStatus().replace("sent", "read"));
+            //on the left side, we don't need statuses
+            mTextStatus.setText(item.getMessage().getFormattedDate());
         }
         else
         {

@@ -86,7 +86,12 @@ public class ChatMessage implements Serializable
         }
         else
         {
-            return mFormatter.format(mDate) + " - sent";
+            return mFormatter.format(mDate) + " - read";
         }
+    }
+
+    public String getFormattedDate()
+    {
+        return mFormatter.format(mDate);
     }
 }
