@@ -26,7 +26,7 @@ import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
+import com.handy.portal.logger.handylogger.model.CheckOutFlowLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Address;
@@ -162,7 +162,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             mSubmitButton.setEnabled(false);
             final LocationData locationData = getLocationData();
             mBus.post(new LogEvent.AddLogEvent(
-                    new CheckInFlowLog.CheckOutSubmitted(mBooking, locationData)));
+                    new CheckOutFlowLog.CheckOutSubmitted(mBooking, locationData)));
             mBus.post(new BookingEvent.RateCustomer(
                     mBooking.getId(), bookingRatingScore, getBookingRatingComment()));
         }
