@@ -32,7 +32,9 @@ import com.layer.sdk.LayerClient;
 import com.layer.sdk.changes.LayerChange;
 import com.layer.sdk.changes.LayerChangeEvent;
 import com.layer.sdk.exceptions.LayerConversationException;
+import com.layer.sdk.listeners.LayerAuthenticationListener;
 import com.layer.sdk.listeners.LayerChangeEventListener;
+import com.layer.sdk.listeners.LayerConnectionListener;
 import com.layer.sdk.listeners.LayerSyncListener;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.LayerObject;
@@ -100,6 +102,53 @@ public class LayerFragment extends ActionBarFragment
 
     private Booking mBooking;
 
+    private LayerChangeEventListener mLayerChangeEventListener = new LayerChangeEventListener()
+    {
+        @Override
+        public void onChangeEvent(final LayerChangeEvent event)
+        {
+            if (!mIsInitialized)
+            {
+                Log.d(TAG, "onChangeEvent: ignoring change event because not yet initialized.");
+                return;
+            }
+            Log.d(TAG, "onChangeEvent() called with: event = [" + event + "]");
+            //You can choose to handle changes to conversations or messages however you'd like:
+            List<LayerChange> changes = event.getChanges();
+            for (int i = 0; i < changes.size(); i++)
+            {
+                LayerChange change = changes.get(i);
+                if (change.getObjectType() == LayerObject.Type.MESSAGE)
+                {
+                    Message message = (Message) change.getObject();
+                    Log.d(TAG, "onChangeEvent: TYPE: " + change.getChangeType());
+                    switch (change.getChangeType())
+                    {
+                        case INSERT:
+                            Log.d(TAG, "message: INSERT");
+                            updateRecyclerWithMessage(message);
+                            break;
+                        case UPDATE:
+                            Log.d(TAG, "onChangeEvent: UPDATE");
+                            updateExistingMessage(message);
+                    }
+                }
+            }
+        }
+    };
+    private LayerSyncListener mSyncListener = new SimpleLayerSyncListener()
+    {
+        @Override
+        public void onAfterSync(LayerClient layerClient, LayerSyncListener.SyncType syncType)
+        {
+            Log.d(TAG, "onAfterSync() called with: " + "layerClient = [" + layerClient + "], syncType = [" + syncType + "]");
+            mSync = true;
+            initialize();
+        }
+    };
+    private LayerConnectionListener mConnectionListener = new MyConnectionListener();
+    private LayerAuthenticationListener mAuthListener = new MyAuthenticationListener(this);
+
     @Override
     protected MainViewPage getAppPage()
     {
@@ -122,7 +171,6 @@ public class LayerFragment extends ActionBarFragment
         mBookingId = mBooking.getId();
         mMyId = mBooking.getProviderId();
         mConsumerId = mBooking.getAddress().getUserId();
-        setupLayer();
     }
 
 
@@ -161,6 +209,7 @@ public class LayerFragment extends ActionBarFragment
         mRecyclerView.setAdapter(mAdapter);
 
         addHeader();
+        setupLayer();
 
         return view;
     }
@@ -177,55 +226,13 @@ public class LayerFragment extends ActionBarFragment
         options.historicSyncPolicy(LayerClient.Options.HistoricSyncPolicy.ALL_MESSAGES);
 
         layerClient = LayerClient.newInstance(getActivity(), APP_ID, options);
-        layerClient.registerConnectionListener(new MyConnectionListener());
-        layerClient.registerAuthenticationListener(new MyAuthenticationListener(this));
+        layerClient.registerConnectionListener(mConnectionListener);
+        layerClient.registerAuthenticationListener(mAuthListener);
 
         //looks like certain times, the client need to call sync before it can find conversations.
-        layerClient.registerSyncListener(new SimpleLayerSyncListener()
-        {
-            @Override
-            public void onAfterSync(LayerClient layerClient, LayerSyncListener.SyncType syncType)
-            {
-                Log.d(TAG, "onAfterSync() called with: " + "layerClient = [" + layerClient + "], syncType = [" + syncType + "]");
-                mSync = true;
-                initialize();
-            }
-        });
+        layerClient.registerSyncListener(mSyncListener);
 
-        layerClient.registerEventListener(new LayerChangeEventListener()
-        {
-            @Override
-            public void onChangeEvent(final LayerChangeEvent event)
-            {
-                if (!mIsInitialized)
-                {
-                    Log.d(TAG, "onChangeEvent: ignoring change event because not yet initialized.");
-                    return;
-                }
-                Log.d(TAG, "onChangeEvent() called with: event = [" + event + "]");
-                //You can choose to handle changes to conversations or messages however you'd like:
-                List<LayerChange> changes = event.getChanges();
-                for (int i = 0; i < changes.size(); i++)
-                {
-                    LayerChange change = changes.get(i);
-                    if (change.getObjectType() == LayerObject.Type.MESSAGE)
-                    {
-                        Message message = (Message) change.getObject();
-                        Log.d(TAG, "onChangeEvent: TYPE: " + change.getChangeType());
-                        switch (change.getChangeType())
-                        {
-                            case INSERT:
-                                Log.d(TAG, "message: INSERT");
-                                updateRecyclerWithMessage(message);
-                                break;
-                            case UPDATE:
-                                Log.d(TAG, "onChangeEvent: UPDATE");
-                                updateExistingMessage(message);
-                        }
-                    }
-                }
-            }
-        });
+        layerClient.registerEventListener(mLayerChangeEventListener);
 
         // Asks the LayerSDK to establish a network connection with the Layer service
         layerClient.connect();
@@ -479,6 +486,22 @@ public class LayerFragment extends ActionBarFragment
             mRecyclerView.setVisibility(View.GONE);
             mEmptyView.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void onDestroyView()
+    {
+        super.onDestroyView();
+        if (layerClient.isAuthenticated())
+        {
+            layerClient.deauthenticate();
+        }
+
+        layerClient.disconnect();
+        layerClient.unregisterAuthenticationListener(mAuthListener);
+        layerClient.unregisterConnectionListener(mConnectionListener);
+        layerClient.unregisterSyncListener(mSyncListener);
+        layerClient.unregisterEventListener(mLayerChangeEventListener);
     }
 
     public void authenticated()
