@@ -70,8 +70,8 @@ public class CancelTest
         // click Cancel Job
         onView(withText(R.string.cancel_job)).perform(click());
 
-        // click Remove Job
-        onView(withText(R.string.remove_job)).perform(click());
+        // click Cancel Job on the confirmation dialog
+        onView(withText(R.string.cancel_job)).perform(click());
 
         //wait for returning to scheduled booking list
         ViewUtil.waitForTextVisible(R.string.no_scheduled_jobs, ViewUtil.LONG_MAX_WAIT_TIME_MS);
