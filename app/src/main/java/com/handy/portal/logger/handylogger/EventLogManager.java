@@ -7,6 +7,7 @@ import android.support.annotation.Nullable;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.handy.portal.BuildConfig;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.logger.handylogger.model.Event;
@@ -47,26 +48,29 @@ public class EventLogManager
     @Subscribe
     public void addLog(@NonNull LogEvent.AddLogEvent event)
     {
-        //log the payload to Crashlytics too
-        try
+        if (!BuildConfig.DEBUG)
         {
-            //putting in try/catch block just in case GSON.toJson throws an exception
-            String eventLogJson = GSON.toJson(event.getLog());
-            String crashlyticsLogString =
-                    event.getLog().getEventName()
-                            + ": " + eventLogJson;
-            Crashlytics.log(crashlyticsLogString);
-        }
-        catch (Exception e)
-        {
-            Crashlytics.logException(e);
-        }
+            //log the payload to Crashlytics too
+            try
+            {
+                //putting in try/catch block just in case GSON.toJson throws an exception
+                String eventLogJson = GSON.toJson(event.getLog());
+                String crashlyticsLogString =
+                        event.getLog().getEventName()
+                                + ": " + eventLogJson;
+                Crashlytics.log(crashlyticsLogString);
+            }
+            catch (Exception e)
+            {
+                Crashlytics.logException(e);
+            }
 
-        sLogs.add(new Event(event.getLog()));
-        if (sLogs.size() >= MAX_NUM_PER_BUNDLE)
-        {
-            mBus.post(new LogEvent.SaveLogsEvent());
-            mBus.post(new LogEvent.SendLogsEvent());
+            sLogs.add(new Event(event.getLog()));
+            if (sLogs.size() >= MAX_NUM_PER_BUNDLE)
+            {
+                mBus.post(new LogEvent.SaveLogsEvent());
+                mBus.post(new LogEvent.SendLogsEvent());
+            }
         }
     }
 
