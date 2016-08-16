@@ -45,7 +45,7 @@ public class EventLogManager
     }
 
     @Subscribe
-    public synchronized void addLog(@NonNull LogEvent.AddLogEvent event)
+    public void addLog(@NonNull LogEvent.AddLogEvent event)
     {
         //log the payload to Crashlytics too
         try
@@ -65,13 +65,13 @@ public class EventLogManager
         sLogs.add(new Event(event.getLog()));
         if (sLogs.size() >= MAX_NUM_PER_BUNDLE)
         {
-            saveLogs(null);
-            sendLogs(null);
+            mBus.post(new LogEvent.SaveLogsEvent());
+            mBus.post(new LogEvent.SendLogsEvent());
         }
     }
 
     @Subscribe
-    public synchronized void sendLogs(@Nullable final LogEvent.SendLogsEvent event)
+    public void sendLogs(@Nullable final LogEvent.SendLogsEvent event)
     {
         final List<String> jsonBundleStrings = loadSavedEventBundles();
         if (jsonBundleStrings.size() == 0) { return; }
@@ -95,7 +95,7 @@ public class EventLogManager
     }
 
     @Subscribe
-    public synchronized void saveLogs(@Nullable LogEvent.SaveLogsEvent event)
+    public void saveLogs(@Nullable LogEvent.SaveLogsEvent event)
     {
         if (sLogs.size() > 0)
         {
