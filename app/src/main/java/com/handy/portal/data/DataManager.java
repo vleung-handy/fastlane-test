@@ -12,6 +12,7 @@ import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.dashboard.model.ProviderEvaluation;
 import com.handy.portal.dashboard.model.ProviderFeedback;
 import com.handy.portal.dashboard.model.ProviderRating;
+import com.handy.portal.library.util.IDVerificationUtils;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
@@ -365,9 +366,19 @@ public class DataManager
                 new SuccessWrapperRetroFitCallback(cb));
     }
 
-    public void finishIdVerification(final String finishIdVerificationUrl, final Callback<HashMap<String, String>> cb)
+    public void beforeStartIdVerification(final String beforeIdVerificationStartUrl,
+                                          final Callback<HashMap<String, String>> cb)
     {
-        mService.finishIdVerification(finishIdVerificationUrl, new HashMap<String, String>(), new FinishIDVerificationCallback(cb));
+        mService.beforeStartIdVerification(beforeIdVerificationStartUrl, new HashMap<String, String>(), new FinishIDVerificationCallback(cb));
+    }
+
+    public void finishIdVerification(final String afterIdVerificationFinish,
+                                     final String scanReference,
+                                     @IDVerificationUtils.IdVerificationStatus final String status,
+                                     final Callback<HashMap<String, String>> cb)
+    {
+        mService.finishIdVerification(afterIdVerificationFinish, scanReference,
+                status, new FinishIDVerificationCallback(cb));
     }
 
     public interface Callback<T>
