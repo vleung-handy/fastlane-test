@@ -18,6 +18,7 @@ import com.google.android.gms.maps.model.LatLng;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.NavigationEvent;
@@ -175,18 +176,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     @Subscribe
     public void onReceiveRateCustomerSuccess(final BookingEvent.RateCustomerSuccess event)
     {
-        Address address = mBooking.getAddress();
-        if (address != null)
-        {
-            mPrefsManager.setBookingInstructions(mBooking.getId(), null);
-
-            mBus.post(new BookingEvent.RequestNearbyBookings(mBooking.getRegionId(),
-                    address.getLatitude(), address.getLongitude()));
-        }
-        else
-        {
-            dismiss();
-        }
+        mBus.post(new BookingEvent.RequestPostCheckoutInfo(mBooking.getId()));
     }
 
     @Subscribe
@@ -195,6 +185,25 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         mSubmitButton.setEnabled(true);
         UIUtils.showToast(getContext(), getString(R.string.an_error_has_occurred), Toast.LENGTH_SHORT);
         //allow them to try again. they can always click the X button if they don't want to.
+    }
+
+    @Subscribe
+    public void onReceivePostCheckoutInfoSuccess(
+            final BookingEvent.ReceivePostCheckoutInfoSuccess event)
+    {
+        final PostCheckoutInfo postCheckoutInfo = event.getPostCheckoutInfo();
+        if (!postCheckoutInfo.getSuggestedJobs().isEmpty())
+        {
+            // FIXME: Implement
+        }
+        dismiss();
+    }
+
+    @Subscribe
+    public void onReceivePostCheckoutInfoError(
+            final BookingEvent.ReceivePostCheckoutInfoError event)
+    {
+        dismiss();
     }
 
     @Subscribe
