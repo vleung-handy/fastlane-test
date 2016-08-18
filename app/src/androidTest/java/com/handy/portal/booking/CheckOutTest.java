@@ -114,6 +114,17 @@ public class CheckOutTest
         onView(withId(R.id.rating_button_5)).perform(click());
         onView(withId(R.id.rate_booking_submit_button)).perform(click());
 
+        // If nearby jobs shows up, skip it
+        try
+        {
+            ViewUtil.waitForViewVisible(R.id.nearby_bookings_description, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+            onView(withId(R.id.action_exit)).perform(click());
+        }
+        catch (PerformException e)
+        {
+
+        }
+
         //wait for returning to scheduled booking list
         ViewUtil.waitForViewVisible(R.id.booking_entry_details_layout, ViewUtil.LONG_MAX_WAIT_TIME_MS);
     }
