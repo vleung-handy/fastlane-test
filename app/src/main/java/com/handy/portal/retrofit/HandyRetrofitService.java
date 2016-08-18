@@ -7,8 +7,8 @@ import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit.http.Body;
@@ -207,6 +207,9 @@ public interface HandyRetrofitService
             @Path("booking_id") String bookingId,
             @Body CheckoutRequest request,
             HandyRetrofitCallback cb);
+
+    @GET(BOOKINGS_PATH + "{booking_id}/post_checkout")
+    void requestPostCheckoutInfo(String bookingId, HandyRetrofitCallback cb);
 
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/customer_no_show")
