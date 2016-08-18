@@ -14,14 +14,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.maps.model.LatLng;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.UIUtils;
@@ -30,15 +27,12 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.CheckOutFlowLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.model.Address;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
-import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -202,30 +196,6 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     @Subscribe
     public void onReceivePostCheckoutInfoError(
             final BookingEvent.ReceivePostCheckoutInfoError event)
-    {
-        dismiss();
-    }
-
-    @Subscribe
-    public void onReceiveNearbyBookingsSuccess(final BookingEvent.ReceiveNearbyBookingsSuccess event)
-    {
-        if (event.getBookings().size() > 0)
-        {
-            Address address = mBooking.getAddress();
-            if (address != null)
-            {
-                Bundle args = new Bundle();
-                args.putSerializable(BundleKeys.BOOKINGS, new ArrayList<>(event.getBookings()));
-                args.putParcelable(BundleKeys.MAP_CENTER,
-                        new LatLng(address.getLatitude(), address.getLongitude()));
-                mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.NEARBY_JOBS, args, true));
-            }
-        }
-        dismiss();
-    }
-
-    @Subscribe
-    public void onReceiveNearbyBookingsError(final BookingEvent.ReceiveNearbyBookingsError event)
     {
         dismiss();
     }
