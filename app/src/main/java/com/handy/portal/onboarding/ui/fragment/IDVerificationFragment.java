@@ -73,65 +73,68 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
         }
         else
         {
-            bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.CameraPermissionGrantedLog()));
-            bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NativeIDVerificationStartedLog()));
-
-            SubflowData subflowData =
-                    mOnboardingDetails.getSubflowDataByType(SubflowType.ID_VERIFICATION);
-
-            // ID verification start whether or not jumio sdk init works
-            if (subflowData != null && !Strings.isNullOrEmpty(subflowData.getBeforeIdVerificationStartUrl()))
+            if (mOnboardingDetails != null)
             {
-                bus.post(new ProviderSettingsEvent.RequestIdVerificationStart(
-                        subflowData.getBeforeIdVerificationStartUrl()
-                ));
-            }
+                bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.CameraPermissionGrantedLog()));
+                bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NativeIDVerificationStartedLog()));
 
-            if (NetverifySDK.isSupportedPlatform() && subflowData != null &&
-                    !Strings.isNullOrEmpty(subflowData.getJumioSecret())
-                    && !Strings.isNullOrEmpty(subflowData.getJumioToken()) &&
-                    !Strings.isNullOrEmpty(subflowData.getFullName()) &&
-                    !Strings.isNullOrEmpty(subflowData.getCandidateId())
-                    && !Strings.isNullOrEmpty(subflowData.getAfterIdVerificationFinishUrl()))
-            {
-                try
+                SubflowData subflowData =
+                        mOnboardingDetails.getSubflowDataByType(SubflowType.ID_VERIFICATION);
+
+                // ID verification start whether or not jumio sdk init works
+                if (subflowData != null && !Strings.isNullOrEmpty(subflowData.getBeforeIdVerificationStartUrl()))
                 {
+                    bus.post(new ProviderSettingsEvent.RequestIdVerificationStart(
+                            subflowData.getBeforeIdVerificationStartUrl()
+                    ));
+                }
+
+                if (NetverifySDK.isSupportedPlatform() && subflowData != null &&
+                        !Strings.isNullOrEmpty(subflowData.getJumioSecret())
+                        && !Strings.isNullOrEmpty(subflowData.getJumioToken()) &&
+                        !Strings.isNullOrEmpty(subflowData.getFullName()) &&
+                        !Strings.isNullOrEmpty(subflowData.getCandidateId())
+                        && !Strings.isNullOrEmpty(subflowData.getAfterIdVerificationFinishUrl()))
+                {
+                    try
+                    {
+                        mAfterIdVerificationFinishUrl = subflowData.getAfterIdVerificationFinishUrl();
+
+                        mNetverifySDK = NetverifySDK.create(getActivity(), subflowData.getJumioToken(),
+                                subflowData.getJumioSecret(), JumioDataCenter.US);
+                        mNetverifySDK.setName(subflowData.getFullName());
+                        mNetverifySDK.setCustomerId(subflowData.getCandidateId());
+
+                        mNetverifySDK.setEnableEpassport(true);
+                        ArrayList<NVDocumentType> documentTypes = new ArrayList<>();
+                        documentTypes.add(NVDocumentType.PASSPORT);
+                        documentTypes.add(NVDocumentType.DRIVER_LICENSE);
+                        documentTypes.add(NVDocumentType.IDENTITY_CARD);
+                        mNetverifySDK.setPreselectedDocumentTypes(documentTypes);
+
+                        mNetverifySDK.setRequireFaceMatch(true);
+                        mNetverifySDK.setRequireVerification(true);
+
+                        startActivityForResult(mNetverifySDK.getIntent(), NetverifySDK.REQUEST_CODE);
+                    }
+                    catch (PlatformNotSupportedException e)
+                    {
+                        Crashlytics.logException(e);
+                        IDVerificationUtils.initJumioWebFlow(getContext(), subflowData.getJumioURL());
+                    }
+                    catch (MissingPermissionException e)
+                    {
+                        initJumioBlocker();
+                    }
+                }
+                else if (subflowData != null &&
+                        !Strings.isNullOrEmpty(subflowData.getAfterIdVerificationFinishUrl()))
+                {
+                    // Platform not supported or subflow data not valid
                     mAfterIdVerificationFinishUrl = subflowData.getAfterIdVerificationFinishUrl();
-
-                    mNetverifySDK = NetverifySDK.create(getActivity(), subflowData.getJumioToken(),
-                            subflowData.getJumioSecret(), JumioDataCenter.US);
-                    mNetverifySDK.setName(subflowData.getFullName());
-                    mNetverifySDK.setCustomerId(subflowData.getCandidateId());
-
-                    mNetverifySDK.setEnableEpassport(true);
-                    ArrayList<NVDocumentType> documentTypes = new ArrayList<>();
-                    documentTypes.add(NVDocumentType.PASSPORT);
-                    documentTypes.add(NVDocumentType.DRIVER_LICENSE);
-                    documentTypes.add(NVDocumentType.IDENTITY_CARD);
-                    mNetverifySDK.setPreselectedDocumentTypes(documentTypes);
-
-                    mNetverifySDK.setRequireFaceMatch(true);
-                    mNetverifySDK.setRequireVerification(true);
-
-                    startActivityForResult(mNetverifySDK.getIntent(), NetverifySDK.REQUEST_CODE);
+                    jumioAfterFinishCallback("", IDVerificationUtils.ID_VERIFICATION_INIT_ERROR);
+                    initJumioWebFlow(subflowData);
                 }
-                catch (PlatformNotSupportedException e)
-                {
-                    Crashlytics.logException(e);
-                    IDVerificationUtils.initJumioWebFlow(getContext(), subflowData.getJumioURL());
-                }
-                catch (MissingPermissionException e)
-                {
-                    initJumioBlocker();
-                }
-            }
-            else if (subflowData != null &&
-                    !Strings.isNullOrEmpty(subflowData.getAfterIdVerificationFinishUrl()))
-            {
-                // Platform not supported or subflow data not valid
-                mAfterIdVerificationFinishUrl = subflowData.getAfterIdVerificationFinishUrl();
-                jumioAfterFinishCallback("", IDVerificationUtils.ID_VERIFICATION_INIT_ERROR);
-                initJumioWebFlow(subflowData);
             }
         }
     }
@@ -245,19 +248,21 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
                 findFragmentByTag(CameraPermissionsBlockerDialogFragment.FRAGMENT_TAG);
         if (fragmentByTag == null)
         {
-            CameraPermissionsBlockerDialogFragment fragment = new CameraPermissionsBlockerDialogFragment();
-
-            SubflowData subflowData =
-                    mOnboardingDetails.getSubflowDataByType(SubflowType.ID_VERIFICATION);
-            if (subflowData != null && !Strings.isNullOrEmpty(subflowData.getJumioURL()))
+            if (mOnboardingDetails != null)
             {
-                Bundle args = new Bundle();
-                args.putString(BundleKeys.JUMIO_URL, subflowData.getJumioURL());
-                fragment.setArguments(args);
-            }
+                CameraPermissionsBlockerDialogFragment fragment = new CameraPermissionsBlockerDialogFragment();
+                SubflowData subflowData =
+                        mOnboardingDetails.getSubflowDataByType(SubflowType.ID_VERIFICATION);
+                if (subflowData != null && !Strings.isNullOrEmpty(subflowData.getJumioURL()))
+                {
+                    Bundle args = new Bundle();
+                    args.putString(BundleKeys.JUMIO_URL, subflowData.getJumioURL());
+                    fragment.setArguments(args);
+                }
 
-            FragmentUtils.safeLaunchDialogFragment(fragment, this,
-                    CameraPermissionsBlockerDialogFragment.FRAGMENT_TAG);
+                FragmentUtils.safeLaunchDialogFragment(fragment, this,
+                        CameraPermissionsBlockerDialogFragment.FRAGMENT_TAG);
+            }
         }
     }
 
