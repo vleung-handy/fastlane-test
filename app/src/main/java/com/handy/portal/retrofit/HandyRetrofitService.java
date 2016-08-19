@@ -209,7 +209,7 @@ public interface HandyRetrofitService
             HandyRetrofitCallback cb);
 
     @GET(BOOKINGS_PATH + "{booking_id}/post_checkout")
-    void requestPostCheckoutInfo(String bookingId, HandyRetrofitCallback cb);
+    void requestPostCheckoutInfo(@Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/customer_no_show")

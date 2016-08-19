@@ -17,6 +17,7 @@ import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFra
 import com.handy.portal.bookings.ui.fragment.dialog.CustomerNoShowDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.EarlyAccessTrialDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.JobAccessUnlockedDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.PostCheckoutDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.SwapBookingClaimDialogFragment;
 import com.handy.portal.data.DataManager;
@@ -50,6 +51,7 @@ import dagger.Provides;
                 ProRequestedJobsFragment.class,
                 CustomerNoShowDialogFragment.class,
                 SwapBookingClaimDialogFragment.class,
+                PostCheckoutDialogFragment.class,
         })
 public final class BookingsModule
 {

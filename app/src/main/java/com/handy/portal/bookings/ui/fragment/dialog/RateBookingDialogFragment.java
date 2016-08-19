@@ -21,6 +21,7 @@ import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
@@ -188,7 +189,9 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         final PostCheckoutInfo postCheckoutInfo = event.getPostCheckoutInfo();
         if (!postCheckoutInfo.getSuggestedJobs().isEmpty())
         {
-            // FIXME: Implement
+            FragmentUtils.safeLaunchDialogFragment(
+                    PostCheckoutDialogFragment.newInstance(postCheckoutInfo), getActivity(),
+                    PostCheckoutDialogFragment.TAG);
         }
         dismiss();
     }

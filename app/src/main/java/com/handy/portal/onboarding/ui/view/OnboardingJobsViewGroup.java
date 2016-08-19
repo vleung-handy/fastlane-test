@@ -60,8 +60,16 @@ public class OnboardingJobsViewGroup extends LinearLayout
 
     public void bind(final BookingsWrapperViewModel model)
     {
-        mTitle.setText(Html.fromHtml(
-                DateTimeUtils.getHtmlFormattedDateString(model.getSanitizedDate())));
+        final String sanitizedDate = model.getSanitizedDate();
+        if (sanitizedDate != null)
+        {
+            mTitle.setText(Html.fromHtml(
+                    DateTimeUtils.getHtmlFormattedDateString(sanitizedDate)));
+        }
+        else
+        {
+            mTitle.setVisibility(GONE);
+        }
 
         for (final BookingViewModel bookingViewModel : model.getBookingViewModels())
         {
