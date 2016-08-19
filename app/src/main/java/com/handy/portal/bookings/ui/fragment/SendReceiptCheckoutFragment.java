@@ -29,7 +29,7 @@ import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
+import com.handy.portal.logger.handylogger.model.CheckOutFlowLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.LocationData;
@@ -174,7 +174,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     public void onReceiveNotifyJobCheckOutSuccess(final HandyEvent.ReceiveNotifyJobCheckOutSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOutSuccess(
+        bus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.CheckOutSuccess(
                 mBooking, getLocationData())));
 
         mPrefsManager.setBookingInstructions(mBooking.getId(), null);
@@ -191,7 +191,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     public void onReceiveNotifyJobCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOutSuccess(
+        bus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.CheckOutError(
                 mBooking, getLocationData())));
         handleNotifyCheckOutError(event);
     }
@@ -264,7 +264,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     private void requestNotifyCheckOutJob(String bookingId, CheckoutRequest checkoutRequest, LocationData locationData)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckOutSubmitted(mBooking, locationData)));
+        bus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.CheckOutSubmitted(mBooking, locationData)));
         bus.post(new HandyEvent.RequestNotifyJobCheckOut(bookingId, checkoutRequest));
     }
 
