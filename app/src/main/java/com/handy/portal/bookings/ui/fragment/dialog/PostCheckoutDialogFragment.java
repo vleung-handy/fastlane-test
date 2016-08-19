@@ -8,20 +8,30 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
+import com.handy.portal.onboarding.model.claim.JobClaim;
+import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.onboarding.ui.view.OnboardingJobsViewGroup;
 import com.handy.portal.onboarding.viewmodel.BookingViewModel;
 import com.handy.portal.onboarding.viewmodel.BookingsWrapperViewModel;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class PostCheckoutDialogFragment extends InjectedDialogFragment
         implements OnboardingJobsViewGroup.OnJobCheckedChangedListener
@@ -30,6 +40,9 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
     private static final String KEY_POST_CHECKOUT_INFO = "post_checkout_info";
     private PostCheckoutInfo mPostCheckoutInfo;
     private BookingsWrapperViewModel mBookingsWrapperViewModel;
+
+    @Inject
+    EventBus mBus;
 
     @BindView(R.id.claim_prompt_text)
     TextView mClaimPromptText;
@@ -81,6 +94,62 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
         displayJobs();
     }
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        mBus.register(this);
+    }
+
+    @Override
+    public void onPause()
+    {
+        mBus.unregister(this);
+        super.onPause();
+    }
+
+    @OnClick(R.id.claim_button)
+    public void onClaimButtonClicked()
+    {
+        final List<Booking> selectedBookings = getSelectedBookings();
+        if (!selectedBookings.isEmpty())
+        {
+            ArrayList<JobClaim> jobClaims = new ArrayList<>();
+            for (Booking booking : selectedBookings)
+            {
+                final String jobType = booking.getType().name().toLowerCase();
+                jobClaims.add(new JobClaim(booking.getId(), jobType));
+            }
+            final JobClaimRequest jobClaimRequest = new JobClaimRequest(jobClaims);
+            mBus.post(new HandyEvent.RequestClaimJobs(jobClaimRequest));
+        }
+        else
+        {
+            dismiss();
+        }
+    }
+
+    @OnClick(R.id.close_button)
+    public void onCloseButtonClicked()
+    {
+        dismiss();
+    }
+
+    @Subscribe
+    public void onReceiveClaimJobsSuccess(final HandyEvent.ReceiveClaimJobsSuccess event)
+    {
+        Toast.makeText(getActivity(), getResources().getQuantityString(
+                R.plurals.claim_jobs_success_formatted,
+                event.getJobClaimResponse().getJobs().size()), Toast.LENGTH_LONG).show();
+        dismiss();
+    }
+
+    @Subscribe
+    public void onReceiveClaimJobsError(final HandyEvent.ReceiveClaimJobsError event)
+    {
+        Toast.makeText(getActivity(), R.string.claim_jobs_error, Toast.LENGTH_LONG).show();
+    }
+
     private void displayJobs()
     {
         mJobsContainer.removeAllViews();
@@ -90,6 +159,7 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
         mJobsContainer.addView(jobsViewGroup);
         jobsViewGroup.setOnJobCheckedChangedListener(this);
         jobsViewGroup.bind(mBookingsWrapperViewModel);
+        onJobCheckedChanged();
     }
 
     @Override
