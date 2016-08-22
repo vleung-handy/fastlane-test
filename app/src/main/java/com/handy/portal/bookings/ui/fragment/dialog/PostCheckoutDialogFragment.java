@@ -8,13 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
+import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.onboarding.model.claim.JobClaim;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.onboarding.ui.view.OnboardingJobsViewGroup;
@@ -138,16 +138,16 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
     @Subscribe
     public void onReceiveClaimJobsSuccess(final HandyEvent.ReceiveClaimJobsSuccess event)
     {
-        Toast.makeText(getActivity(), getResources().getQuantityString(
-                R.plurals.claim_jobs_success_formatted,
-                event.getJobClaimResponse().getJobs().size()), Toast.LENGTH_LONG).show();
+        UIUtils.showToast(getActivity(),
+                getResources().getQuantityString(R.plurals.claim_jobs_success_formatted,
+                event.getJobClaimResponse().getJobs().size()));
         dismiss();
     }
 
     @Subscribe
     public void onReceiveClaimJobsError(final HandyEvent.ReceiveClaimJobsError event)
     {
-        Toast.makeText(getActivity(), R.string.claim_jobs_error, Toast.LENGTH_LONG).show();
+        UIUtils.showToast(getActivity(), getString(R.string.claim_jobs_error));
     }
 
     private void displayJobs()

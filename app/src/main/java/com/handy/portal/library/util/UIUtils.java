@@ -394,6 +394,11 @@ public final class UIUtils
         toast.show();
     }
 
+    public static void showToast(Context context, String message)
+    {
+        UIUtils.showToast(context, message, Toast.LENGTH_LONG);
+    }
+
     // Convert a view to bitmap
     public static Bitmap createDrawableFromView(Context context, View view)
     {
