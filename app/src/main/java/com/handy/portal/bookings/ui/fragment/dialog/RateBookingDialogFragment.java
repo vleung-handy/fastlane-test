@@ -185,12 +185,8 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             FragmentUtils.safeLaunchDialogFragment(
                     PostCheckoutDialogFragment.newInstance(postCheckoutInfo), getActivity(),
                     PostCheckoutDialogFragment.TAG);
-            dismiss();
         }
-        else
-        {
-            dismiss();
-        }
+        dismiss();
     }
 
     @Subscribe
