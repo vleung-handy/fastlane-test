@@ -133,6 +133,7 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
             }
             final JobClaimRequest jobClaimRequest = new JobClaimRequest(jobClaims);
             mBus.post(new HandyEvent.RequestClaimJobs(jobClaimRequest));
+            showLoadingOverlay();
         }
         else
         {
@@ -149,6 +150,7 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
     @Subscribe
     public void onReceiveClaimJobsSuccess(final HandyEvent.ReceiveClaimJobsSuccess event)
     {
+        hideLoadingOverlay();
         UIUtils.showToast(getActivity(),
                 getResources().getQuantityString(R.plurals.claim_jobs_success_formatted,
                 event.getJobClaimResponse().getJobs().size()));
@@ -158,7 +160,8 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
     @Subscribe
     public void onReceiveClaimJobsError(final HandyEvent.ReceiveClaimJobsError event)
     {
-        UIUtils.showToast(getActivity(), getString(R.string.claim_jobs_error));
+        hideLoadingOverlay();
+        UIUtils.showToast(getActivity(), getString(R.string.an_error_has_occurred));
     }
 
     private void displayJobs()

@@ -84,4 +84,6 @@
         tools:text="Claim 5 Jobs"
         />
 
+    <include layout="@layout/overlay_loading"/>
+
 </RelativeLayout>

@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -61,8 +60,6 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     EditText mCommentText;
     @BindView(R.id.rate_booking_rating_radiogroup)
     RadioGroup mRatingRadioGroup;
-    @BindView(R.id.rate_booking_submit_button)
-    Button mSubmitButton;
 
     public static final String FRAGMENT_TAG = "fragment_dialog_rate_booking";
 
@@ -158,7 +155,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingSubmitted(bookingRatingScore)));
         if (bookingRatingScore > 0)
         {
-            mSubmitButton.setEnabled(false);
+            showLoadingOverlay();
             final LocationData locationData = getLocationData();
             mBus.post(new LogEvent.AddLogEvent(
                     new CheckOutFlowLog.CheckOutSubmitted(mBooking, locationData)));
@@ -180,7 +177,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     @Subscribe
     public void onRateCustomerError(final BookingEvent.RateCustomerError event)
     {
-        mSubmitButton.setEnabled(true);
+        hideLoadingOverlay();
         UIUtils.showToast(getContext(), getString(R.string.an_error_has_occurred), Toast.LENGTH_SHORT);
         //allow them to try again. they can always click the X button if they don't want to.
     }
@@ -189,6 +186,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     public void onReceivePostCheckoutInfoSuccess(
             final BookingEvent.ReceivePostCheckoutInfoSuccess event)
     {
+        hideLoadingOverlay();
         final PostCheckoutInfo postCheckoutInfo = event.getPostCheckoutInfo();
         if (!postCheckoutInfo.getSuggestedJobs().isEmpty())
         {
@@ -201,6 +199,13 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         {
             dismiss(R.anim.slide_down_to_bottom);
         }
+    }
+
+    @Subscribe
+    public void onReceivePostCheckoutInfoError(
+            final BookingEvent.ReceivePostCheckoutInfoError event)
+    {
+        dismiss(R.anim.slide_down_to_bottom);
     }
 
     private void dismiss(@AnimRes int animResId)
@@ -237,13 +242,6 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         {
             dismiss();
         }
-    }
-
-    @Subscribe
-    public void onReceivePostCheckoutInfoError(
-            final BookingEvent.ReceivePostCheckoutInfoError event)
-    {
-        dismiss(R.anim.slide_down_to_bottom);
     }
 
     private LocationData getLocationData()
