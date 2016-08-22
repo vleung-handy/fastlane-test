@@ -17,6 +17,8 @@ import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.library.util.UIUtils;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.CheckOutFlowLog;
 import com.handy.portal.onboarding.model.claim.JobClaim;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.onboarding.ui.view.SelectableJobsViewGroup;
@@ -133,6 +135,8 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
             }
             final JobClaimRequest jobClaimRequest = new JobClaimRequest(jobClaims);
             mBus.post(new HandyEvent.RequestClaimJobs(jobClaimRequest));
+            mBus.post(new LogEvent.AddLogEvent(
+                    new CheckOutFlowLog.ClaimBatchSubmitted(jobClaims.size())));
             showLoadingOverlay();
         }
         else
@@ -151,9 +155,12 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
     public void onReceiveClaimJobsSuccess(final HandyEvent.ReceiveClaimJobsSuccess event)
     {
         hideLoadingOverlay();
+        final int claimedJobsCount = event.getJobClaimResponse().getJobs().size();
         UIUtils.showToast(getActivity(),
                 getResources().getQuantityString(R.plurals.claim_jobs_success_formatted,
-                event.getJobClaimResponse().getJobs().size()));
+                        claimedJobsCount));
+        mBus.post(new LogEvent.AddLogEvent(
+                new CheckOutFlowLog.ClaimBatchSuccess(claimedJobsCount)));
         dismiss();
     }
 
@@ -161,6 +168,7 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
     public void onReceiveClaimJobsError(final HandyEvent.ReceiveClaimJobsError event)
     {
         hideLoadingOverlay();
+        mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.ClaimBatchError()));
         UIUtils.showToast(getActivity(), getString(R.string.an_error_has_occurred));
     }
 

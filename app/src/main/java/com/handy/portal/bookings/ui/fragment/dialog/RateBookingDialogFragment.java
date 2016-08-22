@@ -25,7 +25,6 @@ import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.CheckOutFlowLog;
-import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.payments.model.PaymentInfo;
@@ -121,7 +120,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             Crashlytics.logException(new Exception("No valid booking passed to RateBookingDialogFragment, aborting rating"));
         }
 
-        mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingShown()));
+        mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.CustomerRatingShown()));
     }
 
     @Override
@@ -149,7 +148,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     {
         //Endpoint is expecting a rating of 1 - 5
         final int bookingRatingScore = getBookingRatingScore();
-        mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingSubmitted(bookingRatingScore)));
+        mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.CustomerRatingSubmitted(bookingRatingScore)));
         if (bookingRatingScore > 0)
         {
             showLoadingOverlay();
@@ -185,6 +184,8 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     {
         hideLoadingOverlay();
         final PostCheckoutInfo postCheckoutInfo = event.getPostCheckoutInfo();
+        mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.ProTeamJobsReturned(
+                postCheckoutInfo.getSuggestedJobs().size())));
         if (!postCheckoutInfo.getSuggestedJobs().isEmpty())
         {
             FragmentUtils.safeLaunchDialogFragment(
