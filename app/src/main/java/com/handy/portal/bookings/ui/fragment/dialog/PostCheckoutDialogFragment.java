@@ -182,11 +182,13 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
         final int selectedJobsCount = getSelectedBookings().size();
         if (selectedJobsCount > 0)
         {
+            mClaimButton.setBackgroundResource(R.drawable.button_green);
             mClaimButton.setText(getResources().getQuantityString(R.plurals.claim_jobs_formatted,
                     selectedJobsCount, selectedJobsCount));
         }
         else
         {
+            mClaimButton.setBackgroundResource(R.drawable.button_gray);
             mClaimButton.setText(R.string.continue_to_without_claiming);
         }
     }
