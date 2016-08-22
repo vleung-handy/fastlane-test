@@ -14,7 +14,7 @@ import com.handy.portal.library.util.FontUtils;
 import com.handy.portal.onboarding.viewmodel.BookingViewModel;
 import com.handy.portal.onboarding.viewmodel.BookingsWrapperViewModel;
 
-public class OnboardingJobsViewGroup extends LinearLayout
+public class SelectableJobsViewGroup extends LinearLayout
         implements CompoundButton.OnCheckedChangeListener
 {
     private TextView mTitle;
@@ -22,7 +22,7 @@ public class OnboardingJobsViewGroup extends LinearLayout
     private int mMarginHalf;
     private OnJobCheckedChangedListener mOnJobCheckedChangedListener;
 
-    public OnboardingJobsViewGroup(Context context)
+    public SelectableJobsViewGroup(Context context)
     {
         super(context);
         init();
@@ -79,7 +79,7 @@ public class OnboardingJobsViewGroup extends LinearLayout
             );
             layoutParams.setMargins(mMargin, mMarginHalf, mMargin, 0);
 
-            OnboardingJobView view = new OnboardingJobView(getContext());
+            SelectableJobView view = new SelectableJobView(getContext());
             view.bind(bookingViewModel);
             view.setLayoutParams(layoutParams);
             view.setOnCheckedChangeListener(this);

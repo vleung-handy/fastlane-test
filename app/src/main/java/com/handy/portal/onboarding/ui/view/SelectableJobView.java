@@ -17,7 +17,7 @@ import com.handy.portal.onboarding.viewmodel.BookingViewModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class OnboardingJobView extends FrameLayout implements CompoundButton.OnCheckedChangeListener
+public class SelectableJobView extends FrameLayout implements CompoundButton.OnCheckedChangeListener
 {
     @BindView(R.id.check_box)
     CheckBox mCheckBox;
@@ -31,19 +31,19 @@ public class OnboardingJobView extends FrameLayout implements CompoundButton.OnC
 
     private BookingViewModel mBookingViewModel;
 
-    public OnboardingJobView(final Context context)
+    public SelectableJobView(final Context context)
     {
         super(context);
         init();
     }
 
-    public OnboardingJobView(final Context context, final AttributeSet attrs)
+    public SelectableJobView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
         init();
     }
 
-    public OnboardingJobView(final Context context, final AttributeSet attrs,
+    public SelectableJobView(final Context context, final AttributeSet attrs,
                              final int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);

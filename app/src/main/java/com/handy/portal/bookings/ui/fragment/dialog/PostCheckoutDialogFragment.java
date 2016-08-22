@@ -19,7 +19,7 @@ import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.onboarding.model.claim.JobClaim;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
-import com.handy.portal.onboarding.ui.view.OnboardingJobsViewGroup;
+import com.handy.portal.onboarding.ui.view.SelectableJobsViewGroup;
 import com.handy.portal.onboarding.viewmodel.BookingViewModel;
 import com.handy.portal.onboarding.viewmodel.BookingsWrapperViewModel;
 
@@ -36,7 +36,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class PostCheckoutDialogFragment extends InjectedDialogFragment
-        implements OnboardingJobsViewGroup.OnJobCheckedChangedListener
+        implements SelectableJobsViewGroup.OnJobCheckedChangedListener
 {
     public static final String TAG = PostCheckoutDialogFragment.class.getSimpleName();
     private static final String KEY_POST_CHECKOUT_INFO = "post_checkout_info";
@@ -169,7 +169,7 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
         mJobsContainer.removeAllViews();
         mBookingsWrapperViewModel = new BookingsWrapperViewModel(
                 mPostCheckoutInfo.getSuggestedJobs(), true);
-        final OnboardingJobsViewGroup jobsViewGroup = new OnboardingJobsViewGroup(getActivity());
+        final SelectableJobsViewGroup jobsViewGroup = new SelectableJobsViewGroup(getActivity());
         mJobsContainer.addView(jobsViewGroup);
         jobsViewGroup.setOnJobCheckedChangedListener(this);
         jobsViewGroup.bind(mBookingsWrapperViewModel);
