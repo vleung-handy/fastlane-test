@@ -30,6 +30,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -154,20 +155,29 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
         UIUtils.showToast(getActivity(),
                 getResources().getQuantityString(R.plurals.claim_jobs_success_formatted,
                         claimedJobsCount));
-        logClaims(event.getJobClaimResponse().getJobs());
-        dismiss();
-    }
 
-    private void logClaims(final List<BookingClaimDetails> claimDetailsList)
-    {
         final List<Booking> bookings = new ArrayList<>();
-        for (BookingClaimDetails claimDetails : claimDetailsList)
+
+        // Logging
+        for (BookingClaimDetails claimDetails : event.getJobClaimResponse().getJobs())
         {
             final Booking booking = claimDetails.getBooking();
             bookings.add(booking);
             mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.ClaimSuccess(booking)));
         }
-        mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.ClaimBatchSuccess(bookings)));
+        if (!bookings.isEmpty())
+        {
+            mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.ClaimBatchSuccess(bookings)));
+            final List<Date> dates = new ArrayList<>();
+            for (Booking booking : bookings)
+            {
+                dates.add(booking.getStartDate());
+            }
+            // Trigger Schedule Refresh
+            mBus.post(new HandyEvent.RequestScheduledBookings(dates, false));
+        }
+
+        dismiss();
     }
 
     @Subscribe
