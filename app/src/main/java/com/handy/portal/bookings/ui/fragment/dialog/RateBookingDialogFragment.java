@@ -2,14 +2,11 @@ package com.handy.portal.bookings.ui.fragment.dialog;
 
 import android.app.Dialog;
 import android.os.Bundle;
-import android.support.annotation.AnimRes;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -76,7 +73,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     public Dialog onCreateDialog(final Bundle savedInstanceState)
     {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.getWindow().setWindowAnimations(R.style.dialog_animation_slide_up_from_bottom);
+        dialog.getWindow().setWindowAnimations(R.style.dialog_animation_slide_up_down_from_bottom);
         return dialog;
     }
 
@@ -144,7 +141,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     @OnClick(R.id.close_button)
     public void onCloseButtonClick()
     {
-        dismiss(R.anim.slide_down_to_bottom);
+        dismiss();
     }
 
     @OnClick(R.id.rate_booking_submit_button)
@@ -193,11 +190,11 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             FragmentUtils.safeLaunchDialogFragment(
                     PostCheckoutDialogFragment.newInstance(postCheckoutInfo), getActivity(),
                     PostCheckoutDialogFragment.TAG);
-            dismiss(R.anim.slide_out_left);
+            dismiss();
         }
         else
         {
-            dismiss(R.anim.slide_down_to_bottom);
+            dismiss();
         }
     }
 
@@ -205,43 +202,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     public void onReceivePostCheckoutInfoError(
             final BookingEvent.ReceivePostCheckoutInfoError event)
     {
-        dismiss(R.anim.slide_down_to_bottom);
-    }
-
-    private void dismiss(@AnimRes int animResId)
-    {
-        final Animation animation = AnimationUtils.loadAnimation(getActivity(), animResId);
-        animation.setAnimationListener(new Animation.AnimationListener()
-        {
-            @Override
-            public void onAnimationStart(final Animation animation)
-            {
-
-            }
-
-            @Override
-            public void onAnimationEnd(final Animation animation)
-            {
-                dismiss();
-            }
-
-            @Override
-            public void onAnimationRepeat(final Animation animation)
-            {
-
-            }
-        });
-        animation.setFillAfter(true);
-        final View dialogView =
-                ((ViewGroup) getDialog().getWindow().getDecorView()).getChildAt(0);
-        if (dialogView != null)
-        {
-            dialogView.startAnimation(animation);
-        }
-        else
-        {
-            dismiss();
-        }
+        dismiss();
     }
 
     private LocationData getLocationData()

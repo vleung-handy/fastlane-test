@@ -78,7 +78,7 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
     public Dialog onCreateDialog(final Bundle savedInstanceState)
     {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.getWindow().setWindowAnimations(R.style.dialog_animation_slide_in_down_from_right);
+        dialog.getWindow().setWindowAnimations(R.style.dialog_animation_slide_up_down_from_bottom);
         return dialog;
     }
 
