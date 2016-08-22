@@ -594,8 +594,8 @@
         <item quantity="other">Claim %1$d Jobs</item>
     </plurals>
     <string name="continue_to_without_claiming">Continue without Claiming</string>
-    <string name="post_checkout_exclamation">We\'re glad it went well!</string>
-    <string name="post_checkout_claim_prompt_formatted">%1$s has more available jobs. Would you like to claim them?</string>
+    <string name="post_checkout_claim_prompt_formatted">%1$s requested you!</string>
+    <string name="post_checkout_claim_prompt_subtitle_formatted">Want to claim their available jobs?</string>
     <string name="post_checkout_claim_subtitle_formatted">If %1$s cancels or reschedules the job, we\'ll do our best to replace it with a similar job.</string>
     <plurals name="claim_jobs_success_formatted">
         <item quantity="one">Awesome! We added the job to your schedule.</item>

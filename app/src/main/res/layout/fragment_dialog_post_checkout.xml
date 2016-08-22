@@ -7,61 +7,72 @@
     android:background="@color/handy_bg"
     >
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_margin"
-        android:layout_marginTop="@dimen/default_margin_large"
-        android:orientation="vertical"
+        android:layout_above="@+id/claim_button"
+        android:layout_alignParentTop="true"
         >
 
-        <TextView
-            style="@style/TextView.Medium"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_margin_half"
-            android:gravity="center"
-            android:text="@string/post_checkout_exclamation"
-            android:textColor="@color/handy_green"
-            />
+            android:layout_marginTop="@dimen/default_margin_large"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/default_padding"
+            android:paddingTop="@dimen/default_padding"
+            >
 
-        <TextView
-            android:id="@+id/claim_prompt_text"
-            style="@style/TextView.Large.Bold"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:gravity="center"
-            android:paddingEnd="@dimen/default_padding_large"
-            android:paddingLeft="@dimen/default_padding_large"
-            android:paddingRight="@dimen/default_padding_large"
-            android:paddingStart="@dimen/default_padding_large"
-            android:text="@string/post_checkout_claim_prompt_formatted"
-            />
+            <TextView
+                android:id="@+id/claim_prompt_text"
+                style="@style/TextView.Large.Bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingEnd="@dimen/default_padding_large"
+                android:paddingLeft="@dimen/default_padding_large"
+                android:paddingRight="@dimen/default_padding_large"
+                android:paddingStart="@dimen/default_padding_large"
+                tools:text="@string/post_checkout_claim_prompt_formatted"
+                />
 
-        <FrameLayout
-            android:id="@+id/jobs_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            />
+            <TextView
+                style="@style/TextView.Large.Bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:gravity="center"
+                android:paddingEnd="@dimen/default_padding_large"
+                android:paddingLeft="@dimen/default_padding_large"
+                android:paddingRight="@dimen/default_padding_large"
+                android:paddingStart="@dimen/default_padding_large"
+                android:text="@string/post_checkout_claim_prompt_subtitle_formatted"
+                />
 
-        <TextView
-            android:id="@+id/claim_subtitle_text"
-            style="@style/TextView.Small"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
-            android:gravity="center"
-            android:paddingEnd="@dimen/default_padding_large"
-            android:paddingLeft="@dimen/default_padding_large"
-            android:paddingRight="@dimen/default_padding_large"
-            android:paddingStart="@dimen/default_padding_large"
-            android:text="@string/post_checkout_claim_subtitle_formatted"
-            android:textColor="@color/subtitle_grey"
-            />
+            <FrameLayout
+                android:id="@+id/jobs_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/claim_subtitle_text"
+                style="@style/TextView.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin_large"
+                android:layout_marginTop="@dimen/default_margin_half"
+                android:gravity="center"
+                android:paddingEnd="@dimen/default_padding_large"
+                android:paddingLeft="@dimen/default_padding_large"
+                android:paddingRight="@dimen/default_padding_large"
+                android:paddingStart="@dimen/default_padding_large"
+                android:text="@string/post_checkout_claim_subtitle_formatted"
+                android:textColor="@color/subtitle_grey"
+                />
+
+        </LinearLayout>
+    </ScrollView>
 
     <ImageButton
         android:id="@+id/close_button"
