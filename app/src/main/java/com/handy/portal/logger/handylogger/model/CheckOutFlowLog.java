@@ -123,11 +123,14 @@ public class CheckOutFlowLog extends EventLog
         private static final String EVENT_TYPE = "pro_team_jobs_returned";
         @SerializedName("num_jobs")
         private int mJobsCount;
+        @SerializedName("booking_ids")
+        private String[] mBookingsIds;
 
-        public ProTeamJobsReturned(final int jobsCount)
+        public ProTeamJobsReturned(@NonNull final List<Booking> bookings)
         {
             super(EVENT_TYPE);
-            mJobsCount = jobsCount;
+            mBookingsIds = extractBookingIds(bookings);
+            mJobsCount = mBookingsIds.length;
         }
     }
 
