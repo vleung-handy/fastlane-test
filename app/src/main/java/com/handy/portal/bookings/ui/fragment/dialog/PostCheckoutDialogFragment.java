@@ -1,6 +1,8 @@
 package com.handy.portal.bookings.ui.fragment.dialog;
 
+import android.app.Dialog;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -69,6 +71,15 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
         setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme);
         mPostCheckoutInfo = (PostCheckoutInfo) getArguments()
                 .getSerializable(KEY_POST_CHECKOUT_INFO);
+    }
+
+    @NonNull
+    @Override
+    public Dialog onCreateDialog(final Bundle savedInstanceState)
+    {
+        Dialog dialog = super.onCreateDialog(savedInstanceState);
+        dialog.getWindow().setWindowAnimations(R.style.dialog_animation_slide_in_down_from_right);
+        return dialog;
     }
 
     @Nullable

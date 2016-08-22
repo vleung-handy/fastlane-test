@@ -29,7 +29,6 @@ import com.handy.portal.bookings.ui.fragment.dialog.ClaimTargetDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingCancelCancellationPolicyDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingCancelKeepRateDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.CustomerNoShowDialogFragment;
-import com.handy.portal.bookings.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.bookings.util.SupportActionUtils;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;

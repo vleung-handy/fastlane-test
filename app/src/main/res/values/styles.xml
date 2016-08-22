@@ -85,6 +85,15 @@
         <item name="android:windowExitAnimation">@anim/slide_down_to_bottom</item>
     </style>
 
+    <style name="dialog_animation_slide_up_from_bottom">
+        <item name="android:windowEnterAnimation">@anim/slide_up_from_bottom</item>
+    </style>
+
+    <style name="dialog_animation_slide_in_down_from_right">
+        <item name="android:windowEnterAnimation">@anim/slide_in_right</item>
+        <item name="android:windowExitAnimation">@anim/slide_down_to_bottom</item>
+    </style>
+
     <!-- Simple font styles -->
     <style name="CircularBold">
         <item name="fontPath">fonts/CircularStd-Bold.otf</item>
