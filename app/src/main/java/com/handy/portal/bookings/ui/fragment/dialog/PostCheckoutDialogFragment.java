@@ -13,6 +13,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
@@ -130,7 +131,7 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
             final JobClaimRequest jobClaimRequest = new JobClaimRequest(jobClaims);
             mBus.post(new HandyEvent.RequestClaimJobs(jobClaimRequest));
             mBus.post(new LogEvent.AddLogEvent(
-                    new CheckOutFlowLog.ClaimBatchSubmitted(jobClaims.size())));
+                    new CheckOutFlowLog.ClaimBatchSubmitted(selectedBookings)));
             showLoadingOverlay();
         }
         else
@@ -153,9 +154,20 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
         UIUtils.showToast(getActivity(),
                 getResources().getQuantityString(R.plurals.claim_jobs_success_formatted,
                         claimedJobsCount));
-        mBus.post(new LogEvent.AddLogEvent(
-                new CheckOutFlowLog.ClaimBatchSuccess(claimedJobsCount)));
+        logClaims(event.getJobClaimResponse().getJobs());
         dismiss();
+    }
+
+    private void logClaims(final List<BookingClaimDetails> claimDetailsList)
+    {
+        final List<Booking> bookings = new ArrayList<>();
+        for (BookingClaimDetails claimDetails : claimDetailsList)
+        {
+            final Booking booking = claimDetails.getBooking();
+            bookings.add(booking);
+            mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.ClaimSuccess(booking)));
+        }
+        mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.ClaimBatchSuccess(bookings)));
     }
 
     @Subscribe

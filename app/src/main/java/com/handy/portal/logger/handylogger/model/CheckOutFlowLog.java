@@ -9,6 +9,8 @@ import com.handy.portal.library.util.LogUtils;
 import com.handy.portal.library.util.MathUtils;
 import com.handy.portal.model.LocationData;
 
+import java.util.List;
+
 public class CheckOutFlowLog extends EventLog
 {
 
@@ -137,11 +139,14 @@ public class CheckOutFlowLog extends EventLog
         private static final String EVENT_TYPE = "claim_batch_submitted";
         @SerializedName("num_jobs")
         private int mJobsCount;
+        @SerializedName("booking_ids")
+        private String[] mBookingsIds;
 
-        public ClaimBatchSubmitted(final int jobsCount)
+        public ClaimBatchSubmitted(@NonNull final List<Booking> bookings)
         {
             super(EVENT_TYPE);
-            mJobsCount = jobsCount;
+            mBookingsIds = extractBookingIds(bookings);
+            mJobsCount = mBookingsIds.length;
         }
     }
 
@@ -149,13 +154,27 @@ public class CheckOutFlowLog extends EventLog
     public static class ClaimBatchSuccess extends CheckOutFlowLog
     {
         private static final String EVENT_TYPE = "claim_batch_success";
+        @SerializedName("booking_ids")
+        private String[] mBookingsIds;
         @SerializedName("num_jobs")
         private int mJobsCount;
 
-        public ClaimBatchSuccess(final int jobsCount)
+        public ClaimBatchSuccess(@NonNull final List<Booking> bookings)
         {
             super(EVENT_TYPE);
-            mJobsCount = jobsCount;
+            mBookingsIds = extractBookingIds(bookings);
+            mJobsCount = mBookingsIds.length;
+        }
+    }
+
+
+    public static class ClaimSuccess extends JobsLog
+    {
+        private static final String EVENT_TYPE = "claim_success";
+
+        public ClaimSuccess(final Booking booking)
+        {
+            super(EVENT_TYPE, EVENT_CONTEXT, booking);
         }
     }
 
@@ -168,5 +187,16 @@ public class CheckOutFlowLog extends EventLog
         {
             super(EVENT_TYPE);
         }
+    }
+
+
+    private static String[] extractBookingIds(final List<Booking> bookings)
+    {
+        final String[] bookingsIds = new String[bookings.size()];
+        for (int i = 0; i < bookings.size(); i++)
+        {
+            bookingsIds[i] = bookings.get(i).getId();
+        }
+        return bookingsIds;
     }
 }
