@@ -65,6 +65,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme);
+        mBus.register(this);
     }
 
     @NonNull
@@ -124,17 +125,10 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     }
 
     @Override
-    public void onResume()
-    {
-        super.onResume();
-        mBus.register(this);
-    }
-
-    @Override
-    public void onPause()
+    public void onDestroy()
     {
         mBus.unregister(this);
-        super.onPause();
+        super.onDestroy();
     }
 
     @OnClick(R.id.close_button)
