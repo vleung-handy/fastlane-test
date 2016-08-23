@@ -24,7 +24,6 @@ import com.handy.portal.data.TestDataManager;
 import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.logger.handylogger.EventLogManager;
-import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.PrefsManager;
@@ -244,12 +243,6 @@ public class TestApplicationModule
     final StripeManager provideStripeManager()
     {
         return mock(StripeManager.class);
-    }
-
-    @Provides
-    final Mixpanel provideMixpanel()
-    {
-        return mock(Mixpanel.class);
     }
 
     @Provides

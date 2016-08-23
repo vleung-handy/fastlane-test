@@ -19,7 +19,6 @@ import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.location.manager.LocationScheduleUpdateManager;
 import com.handy.portal.logger.handylogger.EventLogManager;
-import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
@@ -55,9 +54,6 @@ public class BaseApplication extends MultiDexApplication
     protected ObjectGraph mGraph;
     private int mStarted;
     private boolean mSavedInstance;
-
-    @Inject
-    Mixpanel mixpanel;
 
     //We are injecting all of our event bus listening managers in BaseApplication to start them up for event listening
     @Inject
@@ -144,13 +140,6 @@ public class BaseApplication extends MultiDexApplication
             @Override
             public void onActivityStarted(final Activity activity)
             {
-                ++mStarted;
-
-                if (mStarted == 1)
-                {
-                    if (!mSavedInstance) { mixpanel.trackEventAppOpened(true); }
-                    else { mixpanel.trackEventAppOpened(false); }
-                }
             }
 
             @Override

@@ -23,7 +23,6 @@ import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 
@@ -32,8 +31,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
-
-import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,9 +52,6 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
     View errorView;
     @BindView(R.id.fetch_error_text)
     TextView errorText;
-
-    @Inject
-    Mixpanel mixpanel;
 
     private Booking claimedBooking;
     private List<Booking> complementaryBookings;
@@ -205,13 +199,11 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
         loadingOverlay.setVisibility(View.GONE);
         if (complementaryBookings.isEmpty())
         {
-            mixpanel.track("no complementary jobs found");
             setActionBarTitle(R.string.no_matching_jobs);
             noBookingsView.setVisibility(View.VISIBLE);
         }
         else
         {
-            mixpanel.track("complementary jobs found");
             setActionBarTitle(complementaryBookings.size() == 1 ? getString(R.string.one_matching_job) : getString(R.string.n_matching_jobs, complementaryBookings.size()));
             displayBookings(Lists.newArrayList(complementaryBookings));
         }
@@ -300,10 +292,6 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
         @Override
         public void onClick(View view)
         {
-            if (!booking.getId().equals(claimedBooking.getId()))
-            {
-                mixpanel.track("complementary job clicked");
-            }
             Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
             arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());

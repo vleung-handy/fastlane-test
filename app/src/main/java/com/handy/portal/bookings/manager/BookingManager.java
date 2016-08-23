@@ -11,6 +11,7 @@ import com.handy.portal.bookings.model.Booking.BookingType;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
+import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.data.DataManager;
@@ -562,6 +563,25 @@ public class BookingManager
             public void onError(DataManager.DataManagerError error)
             {
                 mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutError(error));
+            }
+        });
+    }
+
+    @Subscribe
+    public void onRequestPostCheckoutInfo(final BookingEvent.RequestPostCheckoutInfo event)
+    {
+        mDataManager.requestPostCheckoutInfo(event.getBookingId(), new DataManager.Callback<PostCheckoutInfo>()
+        {
+            @Override
+            public void onSuccess(final PostCheckoutInfo postCheckoutInfo)
+            {
+                mBus.post(new BookingEvent.ReceivePostCheckoutInfoSuccess(postCheckoutInfo));
+            }
+
+            @Override
+            public void onError(final DataManager.DataManagerError error)
+            {
+                mBus.post(new BookingEvent.ReceivePostCheckoutInfoError());
             }
         });
     }

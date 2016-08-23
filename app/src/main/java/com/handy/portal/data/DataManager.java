@@ -7,6 +7,7 @@ import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.CheckoutRequest;
+import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.dashboard.model.ProviderEvaluation;
@@ -226,6 +227,11 @@ public class DataManager
     public void notifyCheckOutBooking(String bookingId, CheckoutRequest request, final Callback<Booking> cb)
     {
         mService.checkOut(bookingId, request, new BookingHandyRetroFitCallback(cb));
+    }
+
+    public void requestPostCheckoutInfo(final String bookingId, final Callback<PostCheckoutInfo> cb)
+    {
+        mService.requestPostCheckoutInfo(bookingId, new PostCheckoutInfoHandyRetrofitCallback(cb));
     }
 
     public void notifyUpdateArrivalTimeBooking(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption, final Callback<Booking> cb)

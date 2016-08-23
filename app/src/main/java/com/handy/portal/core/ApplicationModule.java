@@ -27,7 +27,6 @@ import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.LocationModule;
 import com.handy.portal.logger.handylogger.EventLogManager;
-import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
@@ -307,9 +306,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final EventBus provideBus(final Mixpanel mixpanel)
+    final EventBus provideBus()
     {
-        return new MainBus(mixpanel);
+        return new MainBus();
     }
 
     @Provides
@@ -339,9 +338,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final LoginManager provideLoginManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final Mixpanel mixpanel)
+    final LoginManager provideLoginManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager)
     {
-        return new LoginManager(bus, dataManager, prefsManager, mixpanel);
+        return new LoginManager(bus, dataManager, prefsManager);
     }
 
     @Provides
@@ -381,13 +380,6 @@ public final class ApplicationModule
     final PrefsManager providePrefsManager()
     {
         return new PrefsManager(context);
-    }
-
-    @Provides
-    @Singleton
-    final Mixpanel provideMixpanel(final PrefsManager prefsManager)
-    {
-        return new Mixpanel(this.context, prefsManager);
     }
 
     @Provides

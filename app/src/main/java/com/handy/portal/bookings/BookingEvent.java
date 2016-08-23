@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
+import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.ZipClusterPolygons;
@@ -172,5 +173,43 @@ public abstract class BookingEvent extends HandyEvent
         {
             return mCount;
         }
+    }
+
+
+    public static class RequestPostCheckoutInfo extends RequestEvent
+    {
+        private String mBookingId;
+
+        public RequestPostCheckoutInfo(final String bookingId)
+        {
+            mBookingId = bookingId;
+        }
+
+        public String getBookingId()
+        {
+            return mBookingId;
+        }
+    }
+
+
+    public static class ReceivePostCheckoutInfoSuccess extends ReceiveSuccessEvent
+    {
+        private PostCheckoutInfo mPostCheckoutInfo;
+
+        public ReceivePostCheckoutInfoSuccess(final PostCheckoutInfo postCheckoutInfo)
+        {
+            mPostCheckoutInfo = postCheckoutInfo;
+        }
+
+        public PostCheckoutInfo getPostCheckoutInfo()
+        {
+            return mPostCheckoutInfo;
+        }
+    }
+
+
+    public static class ReceivePostCheckoutInfoError extends ReceiveErrorEvent
+    {
+
     }
 }

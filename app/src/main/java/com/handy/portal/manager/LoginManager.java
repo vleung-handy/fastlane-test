@@ -3,7 +3,6 @@ package com.handy.portal.manager;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 
@@ -17,15 +16,13 @@ public class LoginManager
     private final EventBus bus;
     private DataManager dataManager;
     private PrefsManager prefsManager;
-    private Mixpanel mixpanel;
 
     @Inject
-    public LoginManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final Mixpanel mixpanel)
+    public LoginManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager)
     {
         this.bus = bus;
         this.dataManager = dataManager;
         this.prefsManager = prefsManager;
-        this.mixpanel = mixpanel;
         this.bus.register(this);
     }
 
@@ -59,7 +56,6 @@ public class LoginManager
                     {
                         saveLoginDetails(loginDetails);
                         bus.post(new HandyEvent.ReceiveLoginSuccess(loginDetails));
-                        mixpanel.onLoginSuccess();
                     }
 
                     @Override

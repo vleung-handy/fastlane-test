@@ -7,37 +7,31 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.android.gms.maps.model.LatLng;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
-import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
+import com.handy.portal.logger.handylogger.model.CheckOutFlowLog;
 import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.model.Address;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-
-import java.util.ArrayList;
 
 import javax.inject.Inject;
 
@@ -62,8 +56,6 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     EditText mCommentText;
     @BindView(R.id.rate_booking_rating_radiogroup)
     RadioGroup mRatingRadioGroup;
-    @BindView(R.id.rate_booking_submit_button)
-    Button mSubmitButton;
 
     public static final String FRAGMENT_TAG = "fragment_dialog_rate_booking";
 
@@ -73,6 +65,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme);
+        mBus.register(this);
     }
 
     @NonNull
@@ -128,21 +121,14 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             Crashlytics.logException(new Exception("No valid booking passed to RateBookingDialogFragment, aborting rating"));
         }
 
-        mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingShown()));
+        mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.CustomerRatingShown()));
     }
 
     @Override
-    public void onResume()
-    {
-        super.onResume();
-        mBus.register(this);
-    }
-
-    @Override
-    public void onPause()
+    public void onDestroy()
     {
         mBus.unregister(this);
-        super.onPause();
+        super.onDestroy();
     }
 
     @OnClick(R.id.close_button)
@@ -156,13 +142,13 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     {
         //Endpoint is expecting a rating of 1 - 5
         final int bookingRatingScore = getBookingRatingScore();
-        mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerRatingSubmitted(bookingRatingScore)));
+        mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.CustomerRatingSubmitted(bookingRatingScore)));
         if (bookingRatingScore > 0)
         {
-            mSubmitButton.setEnabled(false);
+            showLoadingOverlay();
             final LocationData locationData = getLocationData();
             mBus.post(new LogEvent.AddLogEvent(
-                    new CheckInFlowLog.CheckOutSubmitted(mBooking, locationData)));
+                    new CheckOutFlowLog.CheckOutSubmitted(mBooking, locationData)));
             mBus.post(new BookingEvent.RateCustomer(
                     mBooking.getId(), bookingRatingScore, getBookingRatingComment()));
         }
@@ -175,48 +161,37 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     @Subscribe
     public void onReceiveRateCustomerSuccess(final BookingEvent.RateCustomerSuccess event)
     {
-        Address address = mBooking.getAddress();
-        if (address != null)
-        {
-            mPrefsManager.setBookingInstructions(mBooking.getId(), null);
-
-            mBus.post(new BookingEvent.RequestNearbyBookings(mBooking.getRegionId(),
-                    address.getLatitude(), address.getLongitude()));
-        }
-        else
-        {
-            dismiss();
-        }
+        mBus.post(new BookingEvent.RequestPostCheckoutInfo(mBooking.getId()));
     }
 
     @Subscribe
     public void onRateCustomerError(final BookingEvent.RateCustomerError event)
     {
-        mSubmitButton.setEnabled(true);
+        hideLoadingOverlay();
         UIUtils.showToast(getContext(), getString(R.string.an_error_has_occurred), Toast.LENGTH_SHORT);
         //allow them to try again. they can always click the X button if they don't want to.
     }
 
     @Subscribe
-    public void onReceiveNearbyBookingsSuccess(final BookingEvent.ReceiveNearbyBookingsSuccess event)
+    public void onReceivePostCheckoutInfoSuccess(
+            final BookingEvent.ReceivePostCheckoutInfoSuccess event)
     {
-        if (event.getBookings().size() > 0)
+        hideLoadingOverlay();
+        final PostCheckoutInfo postCheckoutInfo = event.getPostCheckoutInfo();
+        mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.ProTeamJobsReturned(
+                postCheckoutInfo.getSuggestedJobs())));
+        if (!postCheckoutInfo.getSuggestedJobs().isEmpty())
         {
-            Address address = mBooking.getAddress();
-            if (address != null)
-            {
-                Bundle args = new Bundle();
-                args.putSerializable(BundleKeys.BOOKINGS, new ArrayList<>(event.getBookings()));
-                args.putParcelable(BundleKeys.MAP_CENTER,
-                        new LatLng(address.getLatitude(), address.getLongitude()));
-                mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.NEARBY_JOBS, args, true));
-            }
+            FragmentUtils.safeLaunchDialogFragment(
+                    PostCheckoutDialogFragment.newInstance(postCheckoutInfo), getActivity(),
+                    PostCheckoutDialogFragment.TAG);
         }
         dismiss();
     }
 
     @Subscribe
-    public void onReceiveNearbyBookingsError(final BookingEvent.ReceiveNearbyBookingsError event)
+    public void onReceivePostCheckoutInfoError(
+            final BookingEvent.ReceivePostCheckoutInfoError event)
     {
         dismiss();
     }

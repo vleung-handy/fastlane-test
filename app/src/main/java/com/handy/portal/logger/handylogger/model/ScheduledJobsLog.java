@@ -166,34 +166,6 @@ public class ScheduledJobsLog extends EventLog
         }
     }
 
-    // Customer rating events
-
-
-    public static class CustomerRatingShown extends ScheduledJobsLog
-    {
-        private static final String EVENT_TYPE = "customer_rating_shown";
-
-        public CustomerRatingShown()
-        {
-            super(EVENT_TYPE);
-        }
-    }
-
-
-    public static class CustomerRatingSubmitted extends ScheduledJobsLog
-    {
-        private static final String EVENT_TYPE = "customer_rating_submitted";
-
-        @SerializedName("rating")
-        private int mRating;
-
-        public CustomerRatingSubmitted(int rating)
-        {
-            super(EVENT_TYPE);
-            mRating = rating;
-        }
-    }
-
 
     public static class BookingInstructionsShown extends ScheduledJobsLog
     {
