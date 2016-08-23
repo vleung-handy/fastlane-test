@@ -4,7 +4,6 @@ import android.app.Activity;
 
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.logger.mixpanel.annotation.Track;
 import com.handy.portal.updater.model.UpdateDetails;
 
 public abstract class AppUpdateEvent
@@ -43,6 +42,5 @@ public abstract class AppUpdateEvent
     public static class DownloadUpdateSuccessful extends HandyEvent {}
 
 
-    @Track("portal app update download failed")
     public static class DownloadUpdateFailed extends HandyEvent {}
 }
