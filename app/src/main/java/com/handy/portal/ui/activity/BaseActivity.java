@@ -24,7 +24,6 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.GoogleApiLog;
-import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ConfigurationResponse;
@@ -92,8 +91,6 @@ public abstract class BaseActivity extends AppCompatActivity
         return this.allowCallbacks;
     }
 
-    @Inject
-    public Mixpanel mixpanel;
     @Inject
     public EventBus bus;
     @Inject
@@ -277,7 +274,6 @@ public abstract class BaseActivity extends AppCompatActivity
     @Override
     protected void onDestroy()
     {
-        mixpanel.flush();
         super.onDestroy();
     }
 

@@ -33,7 +33,6 @@ import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.LoginLog;
-import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.ui.activity.SplashActivity;
@@ -70,8 +69,6 @@ public class LoginActivityFragment extends InjectedFragment
     EnvironmentModifier environmentModifier;
     @Inject
     BuildConfigWrapper buildConfigWrapper;
-    @Inject
-    Mixpanel mixpanel;
     @Inject
     ProviderManager mProviderManager;
 
@@ -411,7 +408,6 @@ public class LoginActivityFragment extends InjectedFragment
             break;
             case INPUTTING_PHONE_NUMBER:
             {
-                mixpanel.track("portal login shown - phone");
                 instructionsText.setText(R.string.login_instructions_1);
                 phoneInputLayout.setVisibility(View.VISIBLE);
                 pinCodeInputLayout.setVisibility(View.GONE);

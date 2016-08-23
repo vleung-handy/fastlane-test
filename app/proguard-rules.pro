@@ -26,9 +26,6 @@
     public static int e(...);
 }
 
-#Mixpanel
--dontwarn com.mixpanel.**
-
 #Butterknife
 -dontwarn butterknife.internal.**
 -keep class **$$ViewBinder { *; }
