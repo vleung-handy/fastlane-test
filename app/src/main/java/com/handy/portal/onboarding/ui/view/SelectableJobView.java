@@ -10,8 +10,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.FrameLayout;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
-import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
+import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.onboarding.viewmodel.BookingViewModel;
 
 import butterknife.BindView;
@@ -77,40 +78,27 @@ public class SelectableJobView extends FrameLayout implements CompoundButton.OnC
         mOnCheckedChangeListener = onCheckedChangeListener;
     }
 
-    public void bind(final BookingViewModel bookingViewModel)
+    public void bind(final BookingViewModel bookingViewModel,
+                     final Class<? extends BookingElementView> viewClass)
     {
         mBookingViewModel = bookingViewModel;
 
         mJobContainer.removeAllViews();
-        final AvailableBookingElementView elementView = new AvailableBookingElementView();
+        final BookingElementView elementView;
+        try
+        {
+            elementView = viewClass.newInstance();
+        }
+        catch (Exception e)
+        {
+            // This should never happen!
+            Crashlytics.logException(e);
+            return;
+        }
         elementView.initView(getContext(), bookingViewModel.getBooking(), null, mJobContainer);
-        elementView.getBookingMessageTitleView().setVisibility(GONE);
         final View view = elementView.getAssociatedView();
-        hideServiceText(view);
-        hideRequestedIndicator(view);
-        view.setBackground(null);
         mJobContainer.addView(view);
-
         mCheckBox.setChecked(bookingViewModel.isSelected());
-    }
-
-    private void hideServiceText(final View bookingView)
-    {
-        final View view = bookingView.findViewById(R.id.booking_entry_service_text);
-        if (view != null)
-        {
-            view.setVisibility(GONE);
-        }
-    }
-
-    private void hideRequestedIndicator(final View bookingView)
-    {
-        final View leftStrip =
-                bookingView.findViewById(R.id.booking_list_entry_left_strip_indicator);
-        if (leftStrip != null)
-        {
-            leftStrip.setVisibility(View.GONE);
-        }
     }
 
     @Override

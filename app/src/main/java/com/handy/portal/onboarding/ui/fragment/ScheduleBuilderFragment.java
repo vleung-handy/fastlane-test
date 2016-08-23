@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
+import com.handy.portal.bookings.ui.element.OnboardingAvailableBookingElementView;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
@@ -84,7 +85,7 @@ public class ScheduleBuilderFragment extends OnboardingSubflowUIFragment
         {
             final SelectableJobsViewGroup jobsViewGroup = new SelectableJobsViewGroup(getContext());
             jobsViewGroup.setOnJobCheckedChangedListener(this);
-            jobsViewGroup.bind(viewModel);
+            jobsViewGroup.bind(viewModel, OnboardingAvailableBookingElementView.class);
             mJobsContainer.addView(jobsViewGroup);
         }
     }
