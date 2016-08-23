@@ -4,9 +4,8 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.constant.LocationKey;
+import com.handy.portal.library.util.LogUtils;
 import com.handy.portal.library.util.MathUtils;
-import com.handy.portal.model.Address;
 import com.handy.portal.model.LocationData;
 
 public class CheckInFlowLog extends EventLog
@@ -34,11 +33,11 @@ public class CheckInFlowLog extends EventLog
     {
         super(eventType, EVENT_CONTEXT);
         mBookingId = booking.getId();
-        mProLatitude = getLatitude(location);
-        mProLongitude = getLongitude(location);
-        mBookingLatitude = getLatitude(booking);
-        mBookingLongitude = getLongitude(booking);
-        mAccuracy = getAccuracy(location);
+        mProLatitude = LogUtils.getLatitude(location);
+        mProLongitude = LogUtils.getLongitude(location);
+        mBookingLatitude = LogUtils.getLatitude(booking);
+        mBookingLongitude = LogUtils.getLongitude(booking);
+        mAccuracy = LogUtils.getAccuracy(location);
         mDistance = MathUtils.getDistance(mProLatitude, mProLatitude, mBookingLatitude, mBookingLongitude);
     }
 
@@ -104,111 +103,6 @@ public class CheckInFlowLog extends EventLog
         public CheckInError(final Booking booking, final LocationData location)
         {
             super(EVENT_TYPE, booking, location);
-        }
-    }
-
-
-    public static class CheckOutSubmitted extends CheckInFlowLog
-    {
-        private static final String EVENT_TYPE = "manual_checkout_submitted";
-
-        public CheckOutSubmitted(final Booking booking, final LocationData location)
-        {
-            super(EVENT_TYPE, booking, location);
-        }
-    }
-
-
-    public static class CheckOutSuccess extends CheckInFlowLog
-    {
-        private static final String EVENT_TYPE = "manual_checkout_success";
-
-        public CheckOutSuccess(final Booking booking, final LocationData location)
-        {
-            super(EVENT_TYPE, booking, location);
-        }
-    }
-
-
-    public static class CheckOutError extends CheckInFlowLog
-    {
-        private static final String EVENT_TYPE = "manual_checkout_error";
-
-        public CheckOutError(final Booking booking, final LocationData location)
-        {
-            super(EVENT_TYPE, booking, location);
-        }
-    }
-
-    private double getLatitude(final Booking booking)
-    {
-        final Address address = booking.getAddress();
-        final Booking.Coordinates midpoint = booking.getMidpoint();
-        if (address != null)
-        {
-            return address.getLatitude();
-        }
-        else if (midpoint != null)
-        {
-            return midpoint.getLatitude();
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    private double getLongitude(final Booking booking)
-    {
-        final Address address = booking.getAddress();
-        final Booking.Coordinates midpoint = booking.getMidpoint();
-        if (address != null)
-        {
-            return address.getLongitude();
-        }
-        else if (midpoint != null)
-        {
-            return midpoint.getLongitude();
-        }
-        else
-        {
-            return 0;
-        }
-    }
-
-    private double getLatitude(LocationData location)
-    {
-        try
-        {
-            return Double.parseDouble(location.getLocationMap().get(LocationKey.LATITUDE));
-        }
-        catch (Exception e)
-        {
-            return 0;
-        }
-    }
-
-    private double getLongitude(LocationData location)
-    {
-        try
-        {
-            return Double.parseDouble(location.getLocationMap().get(LocationKey.LONGITUDE));
-        }
-        catch (Exception e)
-        {
-            return 0;
-        }
-    }
-
-    private double getAccuracy(LocationData location)
-    {
-        try
-        {
-            return Double.parseDouble(location.getLocationMap().get(LocationKey.ACCURACY));
-        }
-        catch (Exception e)
-        {
-            return 0;
         }
     }
 }

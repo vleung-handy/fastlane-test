@@ -15,7 +15,7 @@ import java.util.List;
 public class BookingsWrapperViewModel
 {
     private final List<BookingViewModel> mBookingViewModels;
-    private final String mSanitizedDate;
+    private String mSanitizedDate;
 
     public BookingsWrapperViewModel(BookingsWrapper bookings)
     {
@@ -27,6 +27,19 @@ public class BookingsWrapperViewModel
         }
 
         mSanitizedDate = bookings.getSanitizedDate();
+    }
+
+    public BookingsWrapperViewModel(final List<Booking> bookings,
+                                    final boolean areBookingsSelectedByDefault)
+    {
+        mBookingViewModels = new ArrayList<>();
+
+        for (Booking b : bookings)
+        {
+            final BookingViewModel bookingViewModel = new BookingViewModel(b);
+            bookingViewModel.setSelected(areBookingsSelectedByDefault);
+            mBookingViewModels.add(bookingViewModel);
+        }
     }
 
     public List<BookingViewModel> getBookingViewModels()

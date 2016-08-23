@@ -3,7 +3,6 @@ package com.handy.portal.manager;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 
@@ -32,8 +31,6 @@ public class LoginManagerTest extends RobolectricGradleTestWrapper
     private DataManager dataManager;
     @Mock
     private PrefsManager prefsManager;
-    @Mock
-    private Mixpanel mixpanel;
 
     @Captor
     private ArgumentCaptor<DataManager.Callback<PinRequestDetails>> pinCodeRequestCallbackCaptor;
@@ -55,7 +52,7 @@ public class LoginManagerTest extends RobolectricGradleTestWrapper
     {
         initMocks(this);
 
-        loginManager = new LoginManager(bus, dataManager, prefsManager, mixpanel);
+        loginManager = new LoginManager(bus, dataManager, prefsManager);
     }
 
     @Test

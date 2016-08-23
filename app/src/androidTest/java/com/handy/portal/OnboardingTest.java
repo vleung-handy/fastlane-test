@@ -1,6 +1,7 @@
 package com.handy.portal;
 
 import android.content.Intent;
+import android.support.test.espresso.NoMatchingViewException;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 import android.view.View;
@@ -80,28 +81,37 @@ public class OnboardingTest
         //click the next button
         onView(withId(R.id.single_action_button)).perform(click());
 
-        //wait for the jobs container
-        ViewUtil.waitForViewVisible(R.id.jobs_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+        // If no jobs match the preferences, don't proceed further
+        try
+        {
+            onView(allOf(withId(android.support.design.R.id.snackbar_text), withText(R.string.no_jobs_matching_preferences)))
+                    .check(matches(isDisplayed()));
+        }
+        catch (NoMatchingViewException e)
+        {
+            //wait for the jobs container
+            ViewUtil.waitForViewVisible(R.id.jobs_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
 
-        //click the first job
-        Matcher<View> firstJobContainerMatcher = ViewMatchers.childAtIndex(withId(R.id.jobs_container), 0);
-        //need to wait for the animation to finish (disabling animations system-wide doesn't disable this one)
-        ViewUtil.waitForViewVisibility(firstJobContainerMatcher, true, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
-        onView(allOf(withParent(firstJobContainerMatcher),
-                isAssignableFrom(FrameLayout.class))).perform(click());
+            //click the first job
+            Matcher<View> firstJobContainerMatcher = ViewMatchers.childAtIndex(withId(R.id.jobs_container), 0);
+            //need to wait for the animation to finish (disabling animations system-wide doesn't disable this one)
+            ViewUtil.waitForViewVisibility(firstJobContainerMatcher, true, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
+            onView(allOf(withParent(firstJobContainerMatcher),
+                    isAssignableFrom(FrameLayout.class))).perform(click());
 
-        //click the next button
-        onView(withId(R.id.single_action_button)).perform(click());
+            //click the next button
+            onView(withId(R.id.single_action_button)).perform(click());
 
-        //click the finish button
-        onView(withId(R.id.single_action_button)).perform(click());
+            //click the finish button
+            onView(withId(R.id.single_action_button)).perform(click());
 
-        //wait for the collapsible jobs button to show up and click it
-        ViewUtil.waitForViewVisible(R.id.jobs_collapsible, ViewUtil.LONG_MAX_WAIT_TIME_MS);
-        onView(withId(R.id.jobs_collapsible)).perform(click());
+            //wait for the collapsible jobs button to show up and click it
+            ViewUtil.waitForViewVisible(R.id.jobs_collapsible, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+            onView(withId(R.id.jobs_collapsible)).perform(click());
 
-        //confirm that this user has a claimed booking
-        onView(ViewMatchers.childAtIndex(withId(R.id.jobs_container), 0))
-                .check(matches(isDisplayed()));
+            //confirm that this user has a claimed booking
+            onView(ViewMatchers.childAtIndex(withId(R.id.jobs_container), 0))
+                    .check(matches(isDisplayed()));
+        }
     }
 }

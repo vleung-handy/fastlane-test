@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/handy_bg"
+    >
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/claim_button"
+        android:layout_alignParentTop="true"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin_large"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/default_padding"
+            android:paddingTop="@dimen/default_padding"
+            >
+
+            <TextView
+                android:id="@+id/claim_prompt_text"
+                style="@style/TextView.Large.Bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:paddingEnd="@dimen/default_padding_large"
+                android:paddingLeft="@dimen/default_padding_large"
+                android:paddingRight="@dimen/default_padding_large"
+                android:paddingStart="@dimen/default_padding_large"
+                tools:text="@string/post_checkout_claim_prompt_formatted"
+                />
+
+            <TextView
+                style="@style/TextView.Large.Bold"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:gravity="center"
+                android:paddingEnd="@dimen/default_padding_large"
+                android:paddingLeft="@dimen/default_padding_large"
+                android:paddingRight="@dimen/default_padding_large"
+                android:paddingStart="@dimen/default_padding_large"
+                android:text="@string/post_checkout_claim_prompt_subtitle_formatted"
+                />
+
+            <FrameLayout
+                android:id="@+id/jobs_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
+
+            <TextView
+                android:id="@+id/claim_subtitle_text"
+                style="@style/TextView.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin_large"
+                android:layout_marginTop="@dimen/default_margin_half"
+                android:gravity="center"
+                android:paddingEnd="@dimen/default_padding_large"
+                android:paddingLeft="@dimen/default_padding_large"
+                android:paddingRight="@dimen/default_padding_large"
+                android:paddingStart="@dimen/default_padding_large"
+                android:text="@string/post_checkout_claim_subtitle_formatted"
+                android:textColor="@color/subtitle_grey"
+                />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <ImageButton
+        android:id="@+id/close_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_gravity="end"
+        android:background="@null"
+        android:padding="@dimen/default_padding"
+        android:src="@drawable/ic_x"
+        />
+
+    <Button
+        android:id="@+id/claim_button"
+        style="@style/Button.Green"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/complete_button_height"
+        android:layout_alignParentBottom="true"
+        tools:text="Claim 5 Jobs"
+        />
+
+    <include layout="@layout/overlay_loading"/>
+
+</RelativeLayout>

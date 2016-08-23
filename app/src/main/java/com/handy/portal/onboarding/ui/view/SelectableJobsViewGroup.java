@@ -9,12 +9,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FontUtils;
 import com.handy.portal.onboarding.viewmodel.BookingViewModel;
 import com.handy.portal.onboarding.viewmodel.BookingsWrapperViewModel;
 
-public class OnboardingJobsViewGroup extends LinearLayout
+public class SelectableJobsViewGroup extends LinearLayout
         implements CompoundButton.OnCheckedChangeListener
 {
     private TextView mTitle;
@@ -22,7 +23,7 @@ public class OnboardingJobsViewGroup extends LinearLayout
     private int mMarginHalf;
     private OnJobCheckedChangedListener mOnJobCheckedChangedListener;
 
-    public OnboardingJobsViewGroup(Context context)
+    public SelectableJobsViewGroup(Context context)
     {
         super(context);
         init();
@@ -58,10 +59,19 @@ public class OnboardingJobsViewGroup extends LinearLayout
         setPadding(0, 0, 0, mMargin);
     }
 
-    public void bind(final BookingsWrapperViewModel model)
+    public void bind(final BookingsWrapperViewModel model,
+                     final Class<? extends BookingElementView> viewClass)
     {
-        mTitle.setText(Html.fromHtml(
-                DateTimeUtils.getHtmlFormattedDateString(model.getSanitizedDate())));
+        final String sanitizedDate = model.getSanitizedDate();
+        if (sanitizedDate != null)
+        {
+            mTitle.setText(Html.fromHtml(
+                    DateTimeUtils.getHtmlFormattedDateString(sanitizedDate)));
+        }
+        else
+        {
+            mTitle.setVisibility(GONE);
+        }
 
         for (final BookingViewModel bookingViewModel : model.getBookingViewModels())
         {
@@ -71,8 +81,8 @@ public class OnboardingJobsViewGroup extends LinearLayout
             );
             layoutParams.setMargins(mMargin, mMarginHalf, mMargin, 0);
 
-            OnboardingJobView view = new OnboardingJobView(getContext());
-            view.bind(bookingViewModel);
+            SelectableJobView view = new SelectableJobView(getContext());
+            view.bind(bookingViewModel, viewClass);
             view.setLayoutParams(layoutParams);
             view.setOnCheckedChangeListener(this);
             addView(view);
