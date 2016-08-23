@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.google.common.base.Strings;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.element.PendingBookingElementView;
@@ -323,7 +324,11 @@ public class OnboardingStatusFragment extends OnboardingSubflowUIFragment
     @Override
     protected String getHeaderText()
     {
-        return mStatusData.getHeader().getTitle();
+        if (mStatusData.getHeader() != null && !Strings.isNullOrEmpty(mStatusData.getHeader().getTitle()))
+        {
+            return mStatusData.getHeader().getTitle();
+        }
+        return null;
     }
 
     @Nullable
