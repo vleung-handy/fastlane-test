@@ -13,7 +13,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
-import com.handy.portal.onboarding.ui.view.OnboardingJobsViewGroup;
+import com.handy.portal.onboarding.ui.view.SelectableJobsViewGroup;
 import com.handy.portal.onboarding.viewmodel.BookingViewModel;
 import com.handy.portal.onboarding.viewmodel.BookingsWrapperViewModel;
 
@@ -23,7 +23,7 @@ import java.util.List;
 import butterknife.BindView;
 
 public class ScheduleBuilderFragment extends OnboardingSubflowUIFragment
-        implements OnboardingJobsViewGroup.OnJobCheckedChangedListener
+        implements SelectableJobsViewGroup.OnJobCheckedChangedListener
 {
     @BindView(R.id.jobs_container)
     ViewGroup mJobsContainer;
@@ -82,7 +82,7 @@ public class ScheduleBuilderFragment extends OnboardingSubflowUIFragment
         mJobsContainer.removeAllViews();
         for (final BookingsWrapperViewModel viewModel : mBookingsWrapperViewModels)
         {
-            final OnboardingJobsViewGroup jobsViewGroup = new OnboardingJobsViewGroup(getContext());
+            final SelectableJobsViewGroup jobsViewGroup = new SelectableJobsViewGroup(getContext());
             jobsViewGroup.setOnJobCheckedChangedListener(this);
             jobsViewGroup.bind(viewModel);
             mJobsContainer.addView(jobsViewGroup);

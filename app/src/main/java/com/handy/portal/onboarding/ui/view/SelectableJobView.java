@@ -17,7 +17,7 @@ import com.handy.portal.onboarding.viewmodel.BookingViewModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class OnboardingJobView extends FrameLayout implements CompoundButton.OnCheckedChangeListener
+public class SelectableJobView extends FrameLayout implements CompoundButton.OnCheckedChangeListener
 {
     @BindView(R.id.check_box)
     CheckBox mCheckBox;
@@ -31,19 +31,19 @@ public class OnboardingJobView extends FrameLayout implements CompoundButton.OnC
 
     private BookingViewModel mBookingViewModel;
 
-    public OnboardingJobView(final Context context)
+    public SelectableJobView(final Context context)
     {
         super(context);
         init();
     }
 
-    public OnboardingJobView(final Context context, final AttributeSet attrs)
+    public SelectableJobView(final Context context, final AttributeSet attrs)
     {
         super(context, attrs);
         init();
     }
 
-    public OnboardingJobView(final Context context, final AttributeSet attrs,
+    public SelectableJobView(final Context context, final AttributeSet attrs,
                              final int defStyleAttr)
     {
         super(context, attrs, defStyleAttr);
@@ -84,8 +84,10 @@ public class OnboardingJobView extends FrameLayout implements CompoundButton.OnC
         mJobContainer.removeAllViews();
         final AvailableBookingElementView elementView = new AvailableBookingElementView();
         elementView.initView(getContext(), bookingViewModel.getBooking(), null, mJobContainer);
+        elementView.getBookingMessageTitleView().setVisibility(GONE);
         final View view = elementView.getAssociatedView();
         hideServiceText(view);
+        hideRequestedIndicator(view);
         view.setBackground(null);
         mJobContainer.addView(view);
 
@@ -98,6 +100,16 @@ public class OnboardingJobView extends FrameLayout implements CompoundButton.OnC
         if (view != null)
         {
             view.setVisibility(GONE);
+        }
+    }
+
+    private void hideRequestedIndicator(final View bookingView)
+    {
+        final View leftStrip =
+                bookingView.findViewById(R.id.booking_list_entry_left_strip_indicator);
+        if (leftStrip != null)
+        {
+            leftStrip.setVisibility(View.GONE);
         }
     }
 
