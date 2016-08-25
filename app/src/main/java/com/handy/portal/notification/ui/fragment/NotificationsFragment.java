@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.google.common.collect.Lists;
@@ -56,7 +55,7 @@ public final class NotificationsFragment extends ActionBarFragment
     SwipeRefreshLayout mRefreshLayout;
 
     @BindView(R.id.no_notifications_view)
-    LinearLayout mNoNotificationsView;
+    SwipeRefreshLayout mNoNotificationsRefreshLayout;
 
     private View mFragmentView;
     private boolean isRequestingNotifications = false;
@@ -221,12 +220,21 @@ public final class NotificationsFragment extends ActionBarFragment
 
         if (isFirstRequest && mNotificationsListView.isEmpty())
         {
-            mNoNotificationsView.setVisibility(View.VISIBLE);
+            mNoNotificationsRefreshLayout.setVisibility(View.VISIBLE);
+            mNoNotificationsRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
+            {
+                @Override
+                public void onRefresh()
+                {
+                    requestNotifications(true);
+                }
+            });
+            mNoNotificationsRefreshLayout.setColorSchemeResources(R.color.handy_blue);
             mRefreshLayout.setVisibility(View.GONE);
         }
         else
         {
-            mNoNotificationsView.setVisibility(View.GONE);
+            mNoNotificationsRefreshLayout.setVisibility(View.GONE);
             mRefreshLayout.setVisibility(View.VISIBLE);
 
             if (mNotificationsListView.shouldRequestMoreNotifications())
@@ -338,6 +346,7 @@ public final class NotificationsFragment extends ActionBarFragment
         mFetchErrorView.setVisibility(View.GONE);
         setLoadingOverlayVisible(false);
         mRefreshLayout.setRefreshing(false);
+        mNoNotificationsRefreshLayout.setRefreshing(false);
         isRequestingNotifications = false;
     }
 }
