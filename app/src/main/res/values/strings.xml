@@ -142,15 +142,15 @@
     <string name="supplies">Supplies</string>
     <string name="full_details_and_more_available_on_date"><![CDATA[Full job details, including exact address, will be available on <b>%1$s</b>. We\u2019ll send you a reminder at that time.]]></string>
     <string name="full_details_and_more_available_on_date_flex"><![CDATA[Depending on the specific customer details you receive, this job may be a minimum of <b>%1$s</b> hours up to a maximum of <b>%2$s</b> hours. The job will not start prior to <b>%3$s</b> and will not end after <b>%4$s</b>. Exact customer and booking details will be sent by 1 hour before job start.<br/><br/>Job payment depends on the number of hours of the booking you receive. It will be minimum <b>%5$s</b> for a <b>%6$s</b> hour booking and maximum <b>%7$s</b> for a <b>%8$s</b> hour booking.]]></string>
-    <string name="no_available_jobs">Sorry, there aren\u2019t any available jobs left for this day</string>
-    <string name="no_pro_requested_jobs">You don\u2019t have any new job requests.</string>
+    <string name="no_available_jobs">Sorry, there aren\'t any available jobs left for this day.</string>
+    <string name="no_pro_requested_jobs">You don\'t have any new job requests.</string>
     <string name="error_fetching_available_jobs">There was an error fetching your available jobs</string>
     <string name="error_fetching_scheduled_jobs">There was an error fetching your scheduled jobs</string>
     <string name="error_fetching_matching_jobs">There was an error searching for matching jobs</string>
     <string name="error_fetching_booking_details">There was an error fetching your booking details</string>
     <string name="error_fetching_connectivity_issue">Oops! There was an error with your internet connection</string>
     <string name="try_again">Try Again</string>
-    <string name="no_scheduled_jobs">You have not claimed any jobs for this day</string>
+    <string name="no_scheduled_jobs">You have not claimed any jobs for this day.</string>
     <string name="return_to_available_jobs">"Return to Jobs"</string>
     <string name="return_to_schedule">"Return to Schedule"</string>
     <string name="job_claim_error">"Error Claiming Job"</string>
@@ -412,7 +412,7 @@
     <string name="load_notifications">Loading more notifications…</string>
     <string name="no_more_notifications">You have no more notifications to load.</string>
     <string name="error_loading_notifications">Oops! There was an error loading your notifications.</string>
-    <string name="no_notifications">No new notifications! Check back later.</string>
+    <string name="no_notifications">You have no new notifications.\nCheck back later.</string>
     <string name="select_action">Select Action</string>
 
     <!-- Late dispatch available job notification toggle -->
