@@ -1,50 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout
     android:id="@+id/no_notifications_view"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center"
-    android:orientation="vertical"
     android:visibility="gone"
+    tools:visibility="visible"
     >
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:clickable="true"
+        android:gravity="center"
+        android:orientation="vertical"
         >
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginLeft="@dimen/notification_image_margin_left"
-            android:layout_marginStart="@dimen/notification_image_margin_left"
-            android:layout_marginTop="@dimen/notification_image_margin_top"
-            android:src="@drawable/postit"
+            android:src="@drawable/ic_no_notifications"
             />
 
-        <ImageView
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:src="@drawable/pin"
+            android:layout_marginBottom="@dimen/default_margin_xlarge"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            android:gravity="center_horizontal"
+            android:text="@string/no_notifications"
+            android:textColor="@color/tertiary_gray"
+            android:textSize="@dimen/large_text_size"
             />
-
-    </RelativeLayout>
-
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin"
-        android:gravity="center_horizontal"
-        android:maxWidth="200dp"
-        android:text="@string/no_notifications"
-        android:textColor="@color/tertiary_gray"
-        android:textSize="@dimen/error_text"
-        />
-
-</LinearLayout>
+    </LinearLayout>
+</com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout>

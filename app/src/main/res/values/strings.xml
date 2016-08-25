@@ -412,7 +412,7 @@
     <string name="load_notifications">Loading more notifications…</string>
     <string name="no_more_notifications">You have no more notifications to load.</string>
     <string name="error_loading_notifications">Oops! There was an error loading your notifications.</string>
-    <string name="no_notifications">No new notifications! Check back later.</string>
+    <string name="no_notifications">You have no new notifications.\nCheck back later.</string>
     <string name="select_action">Select Action</string>
 
     <!-- Late dispatch available job notification toggle -->
