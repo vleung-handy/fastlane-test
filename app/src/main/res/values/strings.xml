@@ -29,6 +29,7 @@
     <string name="error">Error</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
+    <string name="continue_single_word">Continue</string>
 
     <!-- Environment -->
     <string name="select_environment">Select Environment</string>
@@ -583,6 +584,8 @@
     <string name="customer_no_show_header_title">Customer No Show</string>
     <string name="customer_no_show_complete_report_button">Complete Report</string>
     <string name="customer_no_show_view_policy_button">View Policy</string>
+    <string name="got_supplies">Got supplies?</string>
+    <string name="supplies_description_standard_kit">The most successful pros on the platform say their standard kit includes:</string>
 
     <!-- Schedule Swap -->
     <string name="will_be_cancelled_for_free">This claimed job will be cancelled for free</string>
