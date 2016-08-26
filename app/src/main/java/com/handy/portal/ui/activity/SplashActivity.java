@@ -17,6 +17,8 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.onboarding.model.OnboardingDetails;
@@ -78,6 +80,16 @@ public class SplashActivity extends BaseActivity
         }
 
         mAuthToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
+
+        if (mPrefsManager.getBoolean(PrefsKey.APP_FIRST_LAUNCH, true))
+        {
+            bus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(true, true)));
+            mPrefsManager.setBoolean(PrefsKey.APP_FIRST_LAUNCH, false);
+        }
+        else
+        {
+            bus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(false, true)));
+        }
     }
 
     @Override

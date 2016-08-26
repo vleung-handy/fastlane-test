@@ -15,7 +15,6 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.flow.Flow;
 import com.handy.portal.library.util.Utils;
@@ -68,6 +67,7 @@ public abstract class BaseActivity extends AppCompatActivity
     protected static GoogleApiClient googleApiClient;
     protected static Location lastLocation;
     private SetupHandler mSetupHandler;
+    private boolean mWasOpenBefore;
 
     // this is meant to be optionally overridden
     protected boolean shouldTriggerSetup()
@@ -136,16 +136,6 @@ public abstract class BaseActivity extends AppCompatActivity
         onBackPressedListenerStack = new Stack<>();
 
         buildGoogleApiClient();
-
-        if (mPrefsManager.getBoolean(PrefsKey.APP_FIRST_LAUNCH, true))
-        {
-            bus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(true)));
-            mPrefsManager.setBoolean(PrefsKey.APP_FIRST_LAUNCH, false);
-        }
-        else
-        {
-            bus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(false)));
-        }
     }
 
     @Override
@@ -154,6 +144,10 @@ public abstract class BaseActivity extends AppCompatActivity
         super.onResume();
         LocationUtils.showLocationBlockersOrStartServiceIfNecessary(this, isLocationServiceEnabled());
         bus.post(new LogEvent.SendLogsEvent());
+        if (mWasOpenBefore)
+        {
+            bus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(false, false)));
+        }
     }
 
     @Override
@@ -268,6 +262,7 @@ public abstract class BaseActivity extends AppCompatActivity
     {
         bus.post(new LogEvent.SaveLogsEvent());
         bus.unregister(mAppUpdateEventListener);
+        mWasOpenBefore = true;
         super.onPause();
     }
 
