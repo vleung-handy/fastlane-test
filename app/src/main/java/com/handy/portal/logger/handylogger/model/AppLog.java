@@ -20,13 +20,15 @@ public class AppLog extends EventLog
 
         @SerializedName("first_launch")
         private boolean mFirstLaunch;
+        @SerializedName("new_open")
+        private boolean mNewOpen;
 
-        public AppOpenLog(final boolean firstLaunch)
+        public AppOpenLog(final boolean firstLaunch, final boolean newOpen)
         {
             super(EVENT_TYPE);
             mFirstLaunch = firstLaunch;
+            mNewOpen = newOpen;
         }
-
     }
 
 
