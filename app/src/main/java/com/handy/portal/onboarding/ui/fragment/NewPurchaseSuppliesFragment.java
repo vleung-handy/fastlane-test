@@ -45,7 +45,7 @@ public class NewPurchaseSuppliesFragment extends OnboardingSubflowUIFragment
     @Override
     protected String getHeaderText()
     {
-        return getString(R.string.got_supplies);
+        return getString(R.string.do_you_have_supplies);
     }
 
     @Nullable

@@ -101,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:contentDescription="@string/mop"
                 android:scaleType="fitCenter"
-                android:src="@drawable/img_swiffer"
+                android:src="@drawable/img_mop"
                 />
 
             <TextView
@@ -145,7 +145,7 @@
                 android:layout_marginTop="@dimen/supply_margin_top"
                 android:contentDescription="@string/cleaning_solutions"
                 android:scaleType="fitCenter"
-                android:src="@drawable/img_bottles"
+                android:src="@drawable/img_cleaning_solutions"
                 />
 
             <TextView
