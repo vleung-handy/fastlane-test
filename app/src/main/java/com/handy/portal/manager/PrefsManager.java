@@ -61,6 +61,15 @@ public class PrefsManager
         mBookingInstructionsPrefs.edit().clear().apply();
     }
 
+    public void clearButSaveEventLogs()
+    {
+        String eventLogs = mDefaultPrefs.getString(PrefsKey.EVENT_LOG_BUNDLES, "");
+        mDefaultPrefs.edit().clear().commit();
+        mDefaultPrefs.edit().putString(PrefsKey.EVENT_LOG_BUNDLES, eventLogs).apply();
+        mBookingInstructionsPrefs.edit().clear().apply();
+
+    }
+
     public void setBookingInstructions(String bookingId, String value)
     {
         mBookingInstructionsPrefs.edit().putString(bookingId, value).apply();
