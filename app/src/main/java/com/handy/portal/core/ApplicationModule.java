@@ -78,7 +78,7 @@ import com.handy.portal.updater.ui.PleaseUpdateActivity;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
-import com.jakewharton.retrofit.Ok3Client;
+import com.squareup.okhttp.OkHttpClient;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -90,12 +90,11 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import okhttp3.CertificatePinner;
-import okhttp3.OkHttpClient;
 import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
 import retrofit.RetrofitError;
+import retrofit.client.OkClient;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
 
@@ -201,19 +200,8 @@ public final class ApplicationModule
                                                    final EventBus bus)
     {
 
-        final OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
-        okHttpClientBuilder.readTimeout(60, TimeUnit.SECONDS);
-        if (!BuildConfig.DEBUG)
-        {
-            okHttpClientBuilder.certificatePinner(new CertificatePinner.Builder()
-                    .add(configs.getProperty("hostname"),
-                            "sha1/tbHJQrYmt+5isj5s44sk794iYFc=",
-                            "sha1/SXxoaOSEzPC6BgGmxAt/EAcsajw=",
-                            "sha1/blhOM3W9V/bVQhsWAcLYwPU6n24=",
-                            "sha1/T5x9IXmcrQ7YuQxXnxoCmeeQ84c=")
-                    .build());
-        }
-        final OkHttpClient okHttpClient = okHttpClientBuilder.build();
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
 
         final String username = configs.getProperty("api_username");
         final String password = configs.getProperty("api_password");
@@ -258,7 +246,7 @@ public final class ApplicationModule
                     }
                 }).setConverter(new GsonConverter(new GsonBuilder()
                         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-                        .create())).setClient(new Ok3Client(okHttpClient)).build();
+                        .create())).setClient(new OkClient(okHttpClient)).build();
 
         if (buildConfigWrapper.isDebug())
         {
@@ -280,16 +268,15 @@ public final class ApplicationModule
     @Singleton
     final StripeRetrofitService provideStripeService(final StripeRetrofitEndpoint endpoint) //TODO: clean up
     {
-        final OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .readTimeout(60, TimeUnit.SECONDS)
-                .build();
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
 
         final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
                 .setRequestInterceptor(new RequestInterceptor()
                 {
                     @Override
                     public void intercept(RequestFacade request) { }
-                }).setClient(new Ok3Client(okHttpClient)).build();
+                }).setClient(new OkClient(okHttpClient)).build();
         return restAdapter.create(StripeRetrofitService.class);
     }
 
@@ -305,16 +292,15 @@ public final class ApplicationModule
     @Singleton
     final EventLogService provideLogEventsService(final EventLogEndpoint endpoint)
     {
-        final OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                .readTimeout(60, TimeUnit.SECONDS)
-                .build();
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
 
         final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
                 .setRequestInterceptor(new RequestInterceptor()
                 {
                     @Override
                     public void intercept(RequestFacade request) { }
-                }).setClient(new Ok3Client(okHttpClient)).build();
+                }).setClient(new OkClient(okHttpClient)).build();
         return restAdapter.create(EventLogService.class);
     }
 
