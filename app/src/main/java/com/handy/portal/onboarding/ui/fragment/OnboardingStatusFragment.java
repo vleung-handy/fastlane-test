@@ -301,19 +301,22 @@ public class OnboardingStatusFragment extends OnboardingSubflowUIFragment
     @Override
     protected int getHeaderImageType()
     {
-        final StatusHeader.ImageType imageType = mStatusData.getHeader().getImageType();
-        if (imageType != null)
+        if (mStatusData.getHeader() != null)
         {
-            switch (imageType)
+            final StatusHeader.ImageType imageType = mStatusData.getHeader().getImageType();
+            if (imageType != null)
             {
-                case WELCOME:
-                    return HeaderImageTypes.WELCOME;
-                case COMPLETE:
-                    return HeaderImageTypes.COMPLETE;
-                case ERROR:
-                    return HeaderImageTypes.ERROR;
-                default:
-                    return HeaderImageTypes.NONE;
+                switch (imageType)
+                {
+                    case WELCOME:
+                        return HeaderImageTypes.WELCOME;
+                    case COMPLETE:
+                        return HeaderImageTypes.COMPLETE;
+                    case ERROR:
+                        return HeaderImageTypes.ERROR;
+                    default:
+                        return HeaderImageTypes.NONE;
+                }
             }
         }
         return HeaderImageTypes.NONE;
