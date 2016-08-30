@@ -16,6 +16,7 @@ import com.handy.portal.onboarding.model.subflow.SubflowData;
 import com.handy.portal.onboarding.model.subflow.SubflowType;
 import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
 import com.handy.portal.onboarding.ui.fragment.IDVerificationFragment;
+import com.handy.portal.onboarding.ui.fragment.NewPurchaseSuppliesFragment;
 import com.handy.portal.onboarding.ui.fragment.OnboardingStatusFragment;
 import com.handy.portal.onboarding.ui.fragment.OnboardingSubflowFragment;
 import com.handy.portal.onboarding.ui.fragment.PurchaseSuppliesFragment;
@@ -126,6 +127,9 @@ public class OnboardingSubflowActivity extends BaseActivity
                 break;
             case SUPPLIES:
                 fragment = PurchaseSuppliesFragment.newInstance();
+                break;
+            case NEW_SUPPLIES:
+                fragment = NewPurchaseSuppliesFragment.newInstance();
                 break;
             case CONFIRMATION:
                 final ArrayList<Booking> pendingBookings =

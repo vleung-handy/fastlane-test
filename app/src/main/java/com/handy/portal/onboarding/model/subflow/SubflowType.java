@@ -12,6 +12,8 @@ public enum SubflowType
     CLAIM(2),
     @SerializedName("supplies")
     SUPPLIES(2),
+    @SerializedName("supplies_suggestions")
+    NEW_SUPPLIES(1),
     @SerializedName("confirmation")
     CONFIRMATION(1),;
 

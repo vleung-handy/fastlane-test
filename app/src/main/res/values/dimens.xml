@@ -172,6 +172,7 @@
     <!-- Pro Onboarding-->
     <dimen name="onboard_particle_view_width">20dp</dimen>
     <dimen name="onboard_particle_view_width_margin">-60dp</dimen>
+    <dimen name="supply_margin_top">56dp</dimen>
 
     <!-- Payments -->
     <dimen name="outstanding_week_question_mark_width_height">72dp</dimen>

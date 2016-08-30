@@ -167,7 +167,7 @@ public class AccountSettingsFragment extends ActionBarFragment
                     public void onClick(DialogInterface dialogInterface, int i)
                     {
                         //TODO this logout code should be moved somewhere else
-                        mPrefsManager.clear();
+                        mPrefsManager.clearButSaveEventLogs();
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                         {
