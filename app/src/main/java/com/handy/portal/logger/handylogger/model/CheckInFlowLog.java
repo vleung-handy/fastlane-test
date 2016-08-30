@@ -63,11 +63,11 @@ public class CheckInFlowLog extends EventLog
     }
 
 
-    public static class OnMyWayError extends CheckInFlowLog
+    public static class OnMyWayFailure extends CheckInFlowLog
     {
-        private static final String EVENT_TYPE = "on_my_way_error";
+        private static final String EVENT_TYPE = "on_my_way_failure";
 
-        public OnMyWayError(final Booking booking, final LocationData location)
+        public OnMyWayFailure(final Booking booking, final LocationData location)
         {
             super(EVENT_TYPE, booking, location);
         }
@@ -96,11 +96,11 @@ public class CheckInFlowLog extends EventLog
     }
 
 
-    public static class CheckInError extends CheckInFlowLog
+    public static class CheckInFailure extends CheckInFlowLog
     {
-        private static final String EVENT_TYPE = "manual_checkin_error";
+        private static final String EVENT_TYPE = "manual_checkin_failure";
 
-        public CheckInError(final Booking booking, final LocationData location)
+        public CheckInFailure(final Booking booking, final LocationData location)
         {
             super(EVENT_TYPE, booking, location);
         }
