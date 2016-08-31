@@ -8,7 +8,7 @@ import com.handy.portal.core.BaseApplication;
 
 public class EventSuperProperties
 {
-    private static final String ANDROID = "Android";
+    private static final String ANDROID = "android";
     private static final String PROVIDER = "pro";
 
     @SerializedName("product_type")
