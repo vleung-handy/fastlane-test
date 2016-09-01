@@ -77,11 +77,11 @@ public class CheckOutFlowLog extends EventLog
     }
 
 
-    public static class CheckOutError extends CheckOutBookingLog
+    public static class CheckOutFailure extends CheckOutBookingLog
     {
-        private static final String EVENT_TYPE = "manual_checkout_error";
+        private static final String EVENT_TYPE = "manual_checkout_failure";
 
-        public CheckOutError(final Booking booking, final LocationData location)
+        public CheckOutFailure(final Booking booking, final LocationData location)
         {
             super(EVENT_TYPE, booking, location);
         }
@@ -182,11 +182,11 @@ public class CheckOutFlowLog extends EventLog
     }
 
 
-    public static class ClaimBatchError extends CheckOutFlowLog
+    public static class ClaimBatchFailure extends CheckOutFlowLog
     {
-        private static final String EVENT_TYPE = "claim_batch_error";
+        private static final String EVENT_TYPE = "claim_batch_failure";
 
-        public ClaimBatchError()
+        public ClaimBatchFailure()
         {
             super(EVENT_TYPE);
         }
