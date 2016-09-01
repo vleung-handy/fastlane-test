@@ -166,9 +166,8 @@ dependencies {
     //Square libraries, butterknife, dagger, retrofit, picasso
     compile 'com.squareup.dagger:dagger:1.2.2'
     compile 'com.squareup.retrofit:retrofit:1.9.0'
-    compile 'com.squareup.okhttp3:okhttp:3.4.1'
-    compile 'com.squareup.okhttp3:okhttp-urlconnection:3.4.1'
-    compile 'com.jakewharton.retrofit:retrofit1-okhttp3-client:1.1.0'
+    compile 'com.squareup.okhttp:okhttp:2.7.5'
+    compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'
     compile 'com.jakewharton:butterknife:8.1.0'

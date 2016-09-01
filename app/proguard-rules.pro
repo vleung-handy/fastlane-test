@@ -53,14 +53,13 @@
 -dontwarn retrofit.appengine.UrlFetchClient
 -keepattributes Annotation
 -keep class retrofit.** { *; }
--keep class com.jakewharton.retrofit.** { *; }
 -keepclasseswithmembers class * { @retrofit.http.* <methods>; }
 -keepattributes Signature
 
 #OkHttp
--keep class okhttp3.** { *; }
--keep interface okhttp3.** { *; }
--dontwarn okhttp3.**
+-keep class com.squareup.okhttp.** { *; }
+-keep interface com.squareup.okhttp.** { *; }
+-dontwarn com.squareup.okhttp.**
 
 #Newrelic
 -keep class com.newrelic.** { *; }
@@ -97,9 +96,6 @@
 -keep class jumio.** { *; }
 -keepattributes Signature
 -keepattributes *Annotation*
--keep class com.squareup.okhttp.** { *; }
--keep interface com.squareup.okhttp.** { *; }
--dontwarn com.squareup.okhttp.**
 -dontwarn okio.**
 -dontnote
 -keep class net.sf.scuba.smartcards.IsoDepCardService {*;}
