@@ -78,6 +78,7 @@ import com.handy.portal.updater.ui.PleaseUpdateActivity;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
+import com.squareup.okhttp.CertificatePinner;
 import com.squareup.okhttp.OkHttpClient;
 
 import org.greenrobot.eventbus.EventBus;
@@ -202,6 +203,16 @@ public final class ApplicationModule
 
         final OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
+        if (!BuildConfig.DEBUG)
+        {
+            okHttpClient.setCertificatePinner(new CertificatePinner.Builder()
+                    .add(configs.getProperty("hostname"),
+                            "sha1/tbHJQrYmt+5isj5s44sk794iYFc=",
+                            "sha1/SXxoaOSEzPC6BgGmxAt/EAcsajw=",
+                            "sha1/blhOM3W9V/bVQhsWAcLYwPU6n24=",
+                            "sha1/T5x9IXmcrQ7YuQxXnxoCmeeQ84c=")
+                    .build());
+        }
 
         final String username = configs.getProperty("api_username");
         final String password = configs.getProperty("api_password");
