@@ -35,6 +35,8 @@ import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.UserInterfaceUpdateManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.notification.ui.fragment.NotificationsFragment;
+import com.handy.portal.onboarding.ui.activity.OnboardingFlowActivity;
+import com.handy.portal.onboarding.ui.activity.OnboardingSubflowActivity;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.payments.ui.element.PaymentsBatchListView;
 import com.handy.portal.payments.ui.fragment.PaymentsDetailFragment;
@@ -109,6 +111,8 @@ import static org.mockito.Mockito.when;
         DashboardVideoLibraryFragment.class,
         HelpWebViewFragment.class,
         SwapBookingClaimDialogFragment.class,
+        OnboardingFlowActivity.class,
+        OnboardingSubflowActivity.class,
 }, library = true)
 public class TestApplicationModule
 {
