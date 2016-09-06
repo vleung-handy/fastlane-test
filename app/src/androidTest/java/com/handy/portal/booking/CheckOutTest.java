@@ -13,6 +13,7 @@ import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.test.ViewMatchers;
 import com.handy.portal.test.data.TestUsers;
 import com.handy.portal.test.model.TestUser;
+import com.handy.portal.test.util.AppInteractionUtil;
 import com.handy.portal.test.util.ViewUtil;
 import com.handy.portal.ui.activity.SplashActivity;
 
@@ -60,15 +61,14 @@ public class CheckOutTest
     @After
     public void tearDown()
     {
-        mActivityRule.getActivity().getApplicationContext()
-                .getSharedPreferences(PrefsManager.BOOKING_INSTRUCTIONS_PREFS, Context.MODE_PRIVATE)
-                .edit().clear().commit();
+        AppInteractionUtil.logOut();
     }
 
     @Test
     public void testBookingCheckOut()
     {
         ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+        ViewUtil.waitForViewNotVisible(R.id.loading_overlay, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
 
         //click the scheduled jobs tab
         onView(allOf(withId(R.id.tab_title), withText(R.string.tab_schedule))).perform(click());
@@ -76,13 +76,10 @@ public class CheckOutTest
         // This dialog only shows up sometimes, don't fail if it does not show
         try
         {
-            ViewUtil.waitForViewVisible(R.id.confirm_booking_action_button, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+            ViewUtil.waitForViewVisible(R.id.confirm_booking_action_button, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
             onView(withId(R.id.confirm_booking_action_button)).perform(click());
         }
-        catch (PerformException e)
-        {
-
-        }
+        catch (PerformException e) { }
 
         //click the first scheduled job
         ViewUtil.waitForViewVisible(R.id.booking_entry_details_layout, ViewUtil.LONG_MAX_WAIT_TIME_MS);
@@ -120,10 +117,7 @@ public class CheckOutTest
             ViewUtil.waitForViewVisible(R.id.nearby_bookings_description, ViewUtil.LONG_MAX_WAIT_TIME_MS);
             onView(withId(R.id.action_exit)).perform(click());
         }
-        catch (PerformException e)
-        {
-
-        }
+        catch (PerformException e) { }
 
         //wait for returning to scheduled booking list
         ViewUtil.waitForViewVisible(R.id.booking_entry_details_layout, ViewUtil.LONG_MAX_WAIT_TIME_MS);

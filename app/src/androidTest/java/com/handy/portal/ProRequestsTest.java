@@ -8,9 +8,11 @@ import android.support.test.runner.AndroidJUnit4;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.test.data.TestUsers;
 import com.handy.portal.test.model.TestUser;
+import com.handy.portal.test.util.AppInteractionUtil;
 import com.handy.portal.test.util.ViewUtil;
 import com.handy.portal.ui.activity.SplashActivity;
 
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,6 +43,12 @@ public class ProRequestsTest
             return intent;
         }
     };
+
+    @After
+    public void tearDown()
+    {
+        AppInteractionUtil.logOut();
+    }
 
     /**
      * - verifies that the pro requests inbox unread count is 3
