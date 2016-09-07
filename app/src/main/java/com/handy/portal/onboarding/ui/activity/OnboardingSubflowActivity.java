@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.widget.Toolbar;
 
@@ -29,7 +30,8 @@ import java.util.ArrayList;
 public class OnboardingSubflowActivity extends BaseActivity
 {
     private static final String EXTRA_INITIAL_LOAD = "initial_load";
-    private static final String EXTRA_LAUNCHED_TIME_MILLIS = "extra_launched_time_millis";
+    @VisibleForTesting
+    static final String EXTRA_LAUNCHED_TIME_MILLIS = "extra_launched_time_millis";
     private OnboardingDetails mOnboardingDetails;
     private SubflowType mSubflowType;
     private long mLaunchedTimeMillis;
@@ -65,13 +67,13 @@ public class OnboardingSubflowActivity extends BaseActivity
     private void initLaunchedTimeMillis(final Bundle savedInstanceState)
     {
         if (savedInstanceState == null
-                || savedInstanceState.getInt(EXTRA_LAUNCHED_TIME_MILLIS, 0) == 0)
+                || savedInstanceState.getLong(EXTRA_LAUNCHED_TIME_MILLIS, 0) == 0)
         {
             mLaunchedTimeMillis = System.currentTimeMillis();
         }
         else
         {
-            mLaunchedTimeMillis = savedInstanceState.getInt(EXTRA_LAUNCHED_TIME_MILLIS);
+            mLaunchedTimeMillis = savedInstanceState.getLong(EXTRA_LAUNCHED_TIME_MILLIS);
         }
     }
 
@@ -101,6 +103,7 @@ public class OnboardingSubflowActivity extends BaseActivity
         super.onResume();
         final int onboardingTtlMillis =
                 getResources().getInteger(R.integer.onboarding_ttl_mins) * 60 * 1000;
+        final long x = System.currentTimeMillis() - mLaunchedTimeMillis;
         if (System.currentTimeMillis() - mLaunchedTimeMillis >= onboardingTtlMillis)
         {
             cancel(new Intent());

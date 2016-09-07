@@ -37,6 +37,12 @@ import com.handy.portal.model.Provider;
 import com.handy.portal.notification.ui.fragment.NotificationsFragment;
 import com.handy.portal.onboarding.ui.activity.OnboardingFlowActivity;
 import com.handy.portal.onboarding.ui.activity.OnboardingSubflowActivity;
+import com.handy.portal.onboarding.ui.fragment.IDVerificationFragment;
+import com.handy.portal.onboarding.ui.fragment.NewPurchaseSuppliesFragment;
+import com.handy.portal.onboarding.ui.fragment.OnboardingStatusFragment;
+import com.handy.portal.onboarding.ui.fragment.PurchaseSuppliesFragment;
+import com.handy.portal.onboarding.ui.fragment.ScheduleConfirmationFragment;
+import com.handy.portal.onboarding.ui.fragment.SchedulePreferencesFragment;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.payments.ui.element.PaymentsBatchListView;
 import com.handy.portal.payments.ui.fragment.PaymentsDetailFragment;
@@ -113,6 +119,12 @@ import static org.mockito.Mockito.when;
         SwapBookingClaimDialogFragment.class,
         OnboardingFlowActivity.class,
         OnboardingSubflowActivity.class,
+        OnboardingStatusFragment.class,
+        IDVerificationFragment.class,
+        SchedulePreferencesFragment.class,
+        PurchaseSuppliesFragment.class,
+        NewPurchaseSuppliesFragment.class,
+        ScheduleConfirmationFragment.class,
 }, library = true)
 public class TestApplicationModule
 {
