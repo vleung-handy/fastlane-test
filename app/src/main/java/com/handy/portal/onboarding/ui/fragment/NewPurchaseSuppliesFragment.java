@@ -21,6 +21,9 @@ public class NewPurchaseSuppliesFragment extends OnboardingSubflowUIFragment
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
+                NativeOnboardingLog.Types.SUPPLIES_SUGGESTION_SHOWN)));
+
     }
 
     @Override
@@ -59,7 +62,7 @@ public class NewPurchaseSuppliesFragment extends OnboardingSubflowUIFragment
     protected void onPrimaryButtonClicked()
     {
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.Types.PURCHASE_SUPPLIES_SELECTED)));
+                NativeOnboardingLog.Types.SUPPLIES_SUGGESTION_TAPPED)));
         terminate(new Intent());
     }
 
