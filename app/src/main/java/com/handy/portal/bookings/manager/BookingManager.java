@@ -83,6 +83,14 @@ public class BookingManager
                 .build();
     }
 
+    public void clearCache()
+    {
+        availableBookingsCache.invalidateAll();
+        scheduledBookingsCache.invalidateAll();
+        complementaryBookingsCache.invalidateAll();
+        requestedBookingsCache.invalidateAll();
+    }
+
     //all communication will be done through the bus
     //booking manager
     //requests and caches data about bookings

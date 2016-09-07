@@ -1,6 +1,7 @@
 package com.handy.portal;
 
 import android.content.Intent;
+import android.os.Build;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -8,10 +9,12 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.test.data.TestUsers;
 import com.handy.portal.test.model.TestField;
 import com.handy.portal.test.model.TestUser;
+import com.handy.portal.test.util.AppInteractionUtil;
 import com.handy.portal.test.util.TextViewUtil;
 import com.handy.portal.test.util.ViewUtil;
 import com.handy.portal.ui.activity.SplashActivity;
 
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -32,7 +35,8 @@ public class UpdatePersonalInfoTest
             new TestField(R.id.provider_city_edit_text, "New City"),
             new TestField(R.id.provider_state_edit_text, "NY"),
             new TestField(R.id.provider_zip_code_edit_text, "10019"),
-            new TestField(R.id.provider_phone_edit_text, "(987) 654-3210"),
+            new TestField(R.id.provider_phone_edit_text,
+                    Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP ? "9876543210" : "(987) 654-3210"),
     };
 
     @Rule
@@ -48,16 +52,23 @@ public class UpdatePersonalInfoTest
         }
     };
 
+    @After
+    public void tearDown()
+    {
+        AppInteractionUtil.logOut();
+    }
+
     /*
     NOTE: for some reason AWS will run the test regardless of @Ignore
     if the prefix is "test"
     TODO: investigate
      */
+
     /**
      * - Goes to the update personal info page
      * - Enters new info and saves it
      * - Verifies that fields were updated with new info
-     *
+     * <p>
      * Assumptions:
      * - there are no popup modals
      */
@@ -65,6 +76,7 @@ public class UpdatePersonalInfoTest
     public void testPersonalInfo()
     {
         ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+        ViewUtil.waitForViewNotVisible(R.id.loading_overlay, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
 
         ViewUtil.waitForViewVisible(R.id.tab_nav_item_more, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         onView(withId(R.id.tab_nav_item_more)).perform(click());

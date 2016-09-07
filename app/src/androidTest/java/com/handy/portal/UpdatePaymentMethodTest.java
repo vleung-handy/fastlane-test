@@ -7,11 +7,13 @@ import android.support.test.runner.AndroidJUnit4;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.test.data.TestUsers;
 import com.handy.portal.test.model.TestUser;
+import com.handy.portal.test.util.AppInteractionUtil;
 import com.handy.portal.test.util.FormFieldUtil;
 import com.handy.portal.test.util.TextViewUtil;
 import com.handy.portal.test.util.ViewUtil;
 import com.handy.portal.ui.activity.SplashActivity;
 
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -42,6 +44,12 @@ public class UpdatePaymentMethodTest
         }
     };
 
+    @After
+    public void tearDown()
+    {
+        AppInteractionUtil.logOut();
+    }
+
     /**
      * - Goes to the update payment method page
      * - For both bank account + debit card:
@@ -56,6 +64,7 @@ public class UpdatePaymentMethodTest
     public void testUpdateBankAccount()
     {
         ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+        ViewUtil.waitForViewNotVisible(R.id.loading_overlay, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
 
         ViewUtil.waitForViewVisible(R.id.tab_nav_item_more, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         onView(withId(R.id.tab_nav_item_more)).perform(click());
