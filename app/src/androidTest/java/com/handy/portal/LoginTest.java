@@ -5,11 +5,13 @@ import android.support.test.runner.AndroidJUnit4;
 
 import com.handy.portal.test.data.TestUsers;
 import com.handy.portal.test.model.TestUser;
+import com.handy.portal.test.util.AppInteractionUtil;
 import com.handy.portal.test.util.TermsPageUtil;
 import com.handy.portal.test.util.TextViewUtil;
 import com.handy.portal.test.util.ViewUtil;
 import com.handy.portal.ui.activity.LoginActivity;
 
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -29,6 +31,12 @@ public class LoginTest
     @Rule
     public ActivityTestRule<LoginActivity> mActivityRule =
             new ActivityTestRule<>(LoginActivity.class);
+
+    @After
+    public void tearDown()
+    {
+        AppInteractionUtil.logOut();
+    }
 
     /*
     NOTE: for some reason AWS will run the test regardless of @Ignore

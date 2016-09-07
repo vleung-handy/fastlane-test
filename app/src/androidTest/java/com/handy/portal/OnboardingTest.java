@@ -11,11 +11,13 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.test.ViewMatchers;
 import com.handy.portal.test.data.TestUsers;
 import com.handy.portal.test.model.TestUser;
+import com.handy.portal.test.util.AppInteractionUtil;
 import com.handy.portal.test.util.TermsPageUtil;
 import com.handy.portal.test.util.ViewUtil;
 import com.handy.portal.ui.activity.SplashActivity;
 
 import org.hamcrest.Matcher;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,6 +49,12 @@ public class OnboardingTest
             return intent;
         }
     };
+
+    @After
+    public void tearDown()
+    {
+        AppInteractionUtil.logOut();
+    }
 
     /**
      * Tests the onboarding preactivation claim flow

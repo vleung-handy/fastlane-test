@@ -724,6 +724,9 @@ public class BookingFragment extends TimerActionBarFragment
                         else
                         {
                             showToast(R.string.too_far);
+                            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInFailure(
+                                    mBooking, getLocationData()
+                            )));
                         }
                     }
                 });

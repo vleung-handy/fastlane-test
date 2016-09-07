@@ -191,7 +191,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     public void onReceiveNotifyJobCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.CheckOutError(
+        bus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.CheckOutFailure(
                 mBooking, getLocationData())));
         handleNotifyCheckOutError(event);
     }
