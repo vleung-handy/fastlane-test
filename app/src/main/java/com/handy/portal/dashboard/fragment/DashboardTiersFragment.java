@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.common.base.Strings;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
@@ -127,34 +128,44 @@ public class DashboardTiersFragment extends ActionBarFragment implements Dashboa
 
     private void updateHeader()
     {
-        ProviderEvaluation.Incentive currentIncentive =
-                mEvaluation.getPayRates().getIncentives().get(mCurrentPage);
-
-        if (!Strings.isNullOrEmpty(currentIncentive.getType()))
+        if (mEvaluation != null && mEvaluation.getPayRates() != null &&
+                mEvaluation.getPayRates().getIncentives() != null &&
+                !mEvaluation.getPayRates().getIncentives().isEmpty())
         {
-            switch (currentIncentive.getType())
+            ProviderEvaluation.Incentive currentIncentive =
+                    mEvaluation.getPayRates().getIncentives().get(mCurrentPage);
+
+            if (!Strings.isNullOrEmpty(currentIncentive.getType()))
             {
-                case ProviderEvaluation.Incentive.TIERED_TYPE:
-                case ProviderEvaluation.Incentive.HANDYMEN_TIERED_TYPE:
-                    ProviderEvaluation.Rating weeklyRating = mEvaluation.getWeeklyRating();
-                    mDashboardTiersHeaderView.setDisplay(
-                            weeklyRating.getCompletedBookings(), DateTimeUtils.formatDateRange(
-                                    DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER,
-                                    weeklyRating.getStartDate(), weeklyRating.getEndDate()));
-                    break;
-                case ProviderEvaluation.Incentive.ROLLING_TYPE:
-                case ProviderEvaluation.Incentive.HANDYMEN_ROLLING_TYPE:
-                    ProviderEvaluation.Rating rollingRating = mEvaluation.getRolling();
-                    mDashboardTiersHeaderView.setDisplay(
-                            rollingRating.getCompletedBookings(), DateTimeUtils.formatDateRange(
-                                    DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER,
-                                    rollingRating.getStartDate(), rollingRating.getEndDate()));
-                    break;
+                switch (currentIncentive.getType())
+                {
+                    case ProviderEvaluation.Incentive.TIERED_TYPE:
+                    case ProviderEvaluation.Incentive.HANDYMEN_TIERED_TYPE:
+                        ProviderEvaluation.Rating weeklyRating = mEvaluation.getWeeklyRating();
+                        mDashboardTiersHeaderView.setDisplay(
+                                weeklyRating.getCompletedBookings(), DateTimeUtils.formatDateRange(
+                                        DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER,
+                                        weeklyRating.getStartDate(), weeklyRating.getEndDate()));
+                        break;
+                    case ProviderEvaluation.Incentive.ROLLING_TYPE:
+                    case ProviderEvaluation.Incentive.HANDYMEN_ROLLING_TYPE:
+                        ProviderEvaluation.Rating rollingRating = mEvaluation.getRolling();
+                        mDashboardTiersHeaderView.setDisplay(
+                                rollingRating.getCompletedBookings(), DateTimeUtils.formatDateRange(
+                                        DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER,
+                                        rollingRating.getStartDate(), rollingRating.getEndDate()));
+                        break;
 
+                }
             }
-        }
 
-        bus.post(new LogEvent.AddLogEvent(new DashboardTiersLog.TiersCardViewedLog(
-                currentIncentive.getRegionName(), currentIncentive.getServiceName())));
+            bus.post(new LogEvent.AddLogEvent(new DashboardTiersLog.TiersCardViewedLog(
+                    currentIncentive.getRegionName(), currentIncentive.getServiceName())));
+        }
+        else
+        {
+            Crashlytics.logException(new NullPointerException("Evaluation or incentives was" +
+                    "null/empty"));
+        }
     }
 }
