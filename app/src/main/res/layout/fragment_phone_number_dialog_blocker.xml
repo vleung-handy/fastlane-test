@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_centerVertical="true"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/default_padding"
+    android:paddingLeft="@dimen/default_padding_medium"
+    android:paddingRight="@dimen/default_padding_medium"
+    android:paddingTop="@dimen/default_padding_medium"
+    >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:contentDescription="@string/cd.alert"
+        android:paddingBottom="@dimen/default_padding"
+        android:src="@drawable/ic_alert_circle"
+        />
+
+    <TextView
+        android:id="@+id/dialog_blocker_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="@dimen/lineSpacing"
+        android:text="@string/allow_phone_access"
+        android:textAppearance="@style/TextView.Bold"
+        android:textSize="@dimen/large_text_size"
+        />
+
+    <TextView
+        android:id="@+id/dialog_blocker_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/payment_container_vertical_padding"
+        android:gravity="center_horizontal"
+        android:lineSpacingExtra="@dimen/lineSpacing"
+        android:text="@string/phone_number_permission_description"
+        android:textAppearance="@style/HandyTextAppearanceMedium"
+        android:textColor="@color/dark_gray"
+        />
+
+    <Button
+        android:id="@+id/dialog_blocker_action_button"
+        style="@style/Button.Green.Round"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_padding"
+        android:text="@string/open_settings_now"
+        />
+
+</LinearLayout>
