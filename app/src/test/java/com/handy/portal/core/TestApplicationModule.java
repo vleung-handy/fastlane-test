@@ -40,7 +40,9 @@ import com.handy.portal.onboarding.ui.activity.OnboardingSubflowActivity;
 import com.handy.portal.onboarding.ui.fragment.IDVerificationFragment;
 import com.handy.portal.onboarding.ui.fragment.NewPurchaseSuppliesFragment;
 import com.handy.portal.onboarding.ui.fragment.OnboardingStatusFragment;
+import com.handy.portal.onboarding.ui.fragment.PurchaseSuppliesConfirmationFragment;
 import com.handy.portal.onboarding.ui.fragment.PurchaseSuppliesFragment;
+import com.handy.portal.onboarding.ui.fragment.ScheduleBuilderFragment;
 import com.handy.portal.onboarding.ui.fragment.ScheduleConfirmationFragment;
 import com.handy.portal.onboarding.ui.fragment.SchedulePreferencesFragment;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
@@ -122,7 +124,9 @@ import static org.mockito.Mockito.when;
         OnboardingStatusFragment.class,
         IDVerificationFragment.class,
         SchedulePreferencesFragment.class,
+        ScheduleBuilderFragment.class,
         PurchaseSuppliesFragment.class,
+        PurchaseSuppliesConfirmationFragment.class,
         NewPurchaseSuppliesFragment.class,
         ScheduleConfirmationFragment.class,
 }, library = true)
