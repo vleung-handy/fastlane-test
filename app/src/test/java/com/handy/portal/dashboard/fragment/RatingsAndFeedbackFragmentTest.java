@@ -24,6 +24,7 @@ public class RatingsAndFeedbackFragmentTest extends RobolectricGradleTestWrapper
     @Before
     public void setUp() throws Exception
     {
+        super.setUp();
         mFragment = new RatingsAndFeedbackFragment();
         SupportFragmentTestUtil.startFragment(mFragment, MainActivity.class);
     }

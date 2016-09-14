@@ -68,6 +68,7 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
     @Before
     public void setUp() throws Exception
     {
+        super.setUp();
         initMocks(this);
 
         Context applicationSpy = spy(RuntimeEnvironment.application);

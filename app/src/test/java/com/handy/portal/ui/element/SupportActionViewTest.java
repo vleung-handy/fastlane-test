@@ -26,6 +26,7 @@ public class SupportActionViewTest extends RobolectricGradleTestWrapper
     @Before
     public void setUp() throws Exception
     {
+        super.setUp();
         Booking.Action action = mock(Booking.Action.class);
         when(action.getActionName()).thenReturn(Booking.Action.ACTION_NOTIFY_EARLY);
         mView = new SupportActionView(RuntimeEnvironment.application, action);

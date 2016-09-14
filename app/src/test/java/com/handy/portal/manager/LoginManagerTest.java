@@ -50,6 +50,7 @@ public class LoginManagerTest extends RobolectricGradleTestWrapper
     @Before
     public void setUp() throws Exception
     {
+        super.setUp();
         initMocks(this);
 
         loginManager = new LoginManager(bus, dataManager, prefsManager);

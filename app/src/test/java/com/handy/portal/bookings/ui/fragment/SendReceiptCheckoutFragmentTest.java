@@ -49,6 +49,7 @@ public class SendReceiptCheckoutFragmentTest extends RobolectricGradleTestWrappe
     @Before
     public void setUp() throws Exception
     {
+        super.setUp();
         initMocks(this);
         ((TestBaseApplication) ShadowApplication.getInstance().getApplicationContext()).inject(this);
 

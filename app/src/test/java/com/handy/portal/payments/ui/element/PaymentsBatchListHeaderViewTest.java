@@ -28,6 +28,7 @@ public class PaymentsBatchListHeaderViewTest extends RobolectricGradleTestWrappe
     @Before
     public void setUp() throws Exception
     {
+        super.setUp();
         batchListHeaderView = (PaymentsBatchListHeaderView) LayoutInflater
                 .from(Robolectric.setupActivity(TestActivity.class)).inflate(R.layout.element_payments_batch_list_current_week_header, null);
         remainingRow = batchListHeaderView.findViewById(R.id.payments_current_week_remaining_fees_row);

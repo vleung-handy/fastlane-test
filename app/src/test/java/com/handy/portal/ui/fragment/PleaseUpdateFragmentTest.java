@@ -34,6 +34,7 @@ public class PleaseUpdateFragmentTest extends RobolectricGradleTestWrapper
     @Before
     public void setUp() throws Exception
     {
+        super.setUp();
         fragment = new PleaseUpdateFragment();
         SupportFragmentTestUtil.startFragment(fragment);
 

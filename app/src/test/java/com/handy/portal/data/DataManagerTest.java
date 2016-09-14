@@ -55,6 +55,7 @@ public class DataManagerTest extends RobolectricGradleTestWrapper
     @Before
     public void setUp() throws Exception
     {
+        super.setUp();
         initMocks(this);
 
         dataManager = new DataManager(service, endpoint, stripeService, eventLogService);

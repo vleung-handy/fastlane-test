@@ -25,6 +25,7 @@ public class DashboardReviewsFragmentTest extends RobolectricGradleTestWrapper
     @Before
     public void setUp() throws Exception
     {
+        super.setUp();
         mFragment = new DashboardReviewsFragment();
     }
 

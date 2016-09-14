@@ -63,6 +63,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     @Before
     public void setUp() throws Exception
     {
+        super.setUp();
         ActivityController<LoginActivity> activityController = Robolectric.buildActivity(LoginActivity.class).create();
         activityController.start().resume().visible();
 
