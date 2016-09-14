@@ -43,8 +43,8 @@
     <string name="local_hint">e.g. localhost or 127.0.0.1</string>
 
     <!-- Login -->
-    <string name="allow_phone_access">Allow phone access</string>
-    <string name="phone_number_permission_description">We need access to your phone number in order to make sure we\'re able to connect you with your customers. Please open Settings, go to Permissions, and grant access.</string>
+    <string name="permissions_needed">Permissions needed</string>
+    <string name="permissions_needed_description">Handy Pro needs access to your location and your phone number to work properly. Please open Settings, go to Permissions, and grant access.</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Navigation drawer opened</string>

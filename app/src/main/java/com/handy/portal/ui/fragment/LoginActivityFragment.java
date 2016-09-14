@@ -7,8 +7,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.telephony.TelephonyManager;
@@ -35,14 +33,12 @@ import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.library.ui.widget.PhoneInputTextView;
 import com.handy.portal.library.ui.widget.PinCodeInputTextView;
 import com.handy.portal.library.util.EnvironmentUtils;
-import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.LoginLog;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.LoginDetails;
-import com.handy.portal.onboarding.ui.fragment.PhoneNumberPermissionBlockerDialogFragment;
 import com.handy.portal.ui.activity.SplashActivity;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -79,9 +75,6 @@ public class LoginActivityFragment extends InjectedFragment
     BuildConfigWrapper buildConfigWrapper;
     @Inject
     ProviderManager mProviderManager;
-
-    private boolean mRequestedPermissions;
-    private static final int PHONE_STATE_PERMISSION_CODE = 42;
 
 
     private enum LoginState
@@ -124,7 +117,6 @@ public class LoginActivityFragment extends InjectedFragment
     {
         super.onResume();
         bus.register(this);
-        showPhoneNumberNeededBlockerIfNeeded();
         readPhoneNumber();
     }
 
@@ -278,23 +270,6 @@ public class LoginActivityFragment extends InjectedFragment
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TOP);
         super.startActivity(intent);
-    }
-
-    @Override
-    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults)
-    {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == PHONE_STATE_PERMISSION_CODE)
-        {
-            if (grantResults.length > 0
-                    && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-            {
-                removeBlockerIfNeeded();
-            }
-            else{
-                showPhoneNumberNeededBlockerIfNeeded();
-            }
-        }
     }
 
     //region Private methods
@@ -491,58 +466,19 @@ public class LoginActivityFragment extends InjectedFragment
         }
     }
 
-    private void showPhoneNumberNeededBlockerIfNeeded()
-    {
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.READ_PHONE_STATE)
-                != PackageManager.PERMISSION_GRANTED)
-        {
-            if (!mRequestedPermissions)
-            {
-                requestPermissions(new String[]{Manifest.permission.READ_PHONE_STATE},
-                        PHONE_STATE_PERMISSION_CODE);
-                mRequestedPermissions = true;
-            }
-            else
-            {
-                showBlocker();
-            }
-        }
-        else
-        {
-            removeBlockerIfNeeded();
-        }
-    }
-
-    private void showBlocker()
-    {
-        if (getChildFragmentManager().findFragmentByTag(
-                PhoneNumberPermissionBlockerDialogFragment.FRAGMENT_TAG) == null)
-        {
-            FragmentUtils.safeLaunchDialogFragment(
-                    new PhoneNumberPermissionBlockerDialogFragment(), this,
-                    PhoneNumberPermissionBlockerDialogFragment.FRAGMENT_TAG);
-        }
-    }
-
-    private void removeBlockerIfNeeded()
-    {
-        Fragment fragmentByTag = getChildFragmentManager().findFragmentByTag(
-                PhoneNumberPermissionBlockerDialogFragment.FRAGMENT_TAG);
-        if (fragmentByTag != null &&
-                fragmentByTag instanceof PhoneNumberPermissionBlockerDialogFragment)
-        {
-            ((PhoneNumberPermissionBlockerDialogFragment) fragmentByTag).dismiss();
-        }
-    }
-
     private void readPhoneNumber()
     {
+        // This does not work for all phones
+        // http://stackoverflow.com/questions/29827623/the-phone-return-null-when-i-want-to-get-the-phone-number
         if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE)
                 == PackageManager.PERMISSION_GRANTED && mPhoneNumber == null)
         {
             mPhoneNumber = ((TelephonyManager) getActivity()
                     .getSystemService(Context.TELEPHONY_SERVICE)).getLine1Number();
+            if (mPhoneNumber == null)
+            {
+                mPhoneNumber = "";
+            }
         }
     }
     //endregion

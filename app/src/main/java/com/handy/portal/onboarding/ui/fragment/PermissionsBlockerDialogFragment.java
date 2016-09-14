@@ -2,8 +2,6 @@ package com.handy.portal.onboarding.ui.fragment;
 
 
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -11,14 +9,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.handy.portal.R;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
-import com.handy.portal.library.ui.view.PhoneNumberDialogBlockerView;
+import com.handy.portal.library.ui.view.PermissionsBlockerDialogView;
 import com.handy.portal.library.util.Utils;
 
-public class PhoneNumberPermissionBlockerDialogFragment extends InjectedDialogFragment
+public class PermissionsBlockerDialogFragment extends InjectedDialogFragment
 {
-
-    public static final String FRAGMENT_TAG = PhoneNumberPermissionBlockerDialogFragment.class.getName();
+    public static final String FRAGMENT_TAG =
+            PermissionsBlockerDialogFragment.class.getName();
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
@@ -30,8 +29,10 @@ public class PhoneNumberPermissionBlockerDialogFragment extends InjectedDialogFr
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
     {
-        return new PhoneNumberDialogBlockerView(getContext())
-                .setActionButtonListener(new View.OnClickListener()
+        return new PermissionsBlockerDialogView(getContext())
+                .setText(R.string.permissions_needed,
+                        R.string.permissions_needed_description)
+                .setActionButton(R.string.open_settings_now, new View.OnClickListener()
                 {
                     @Override
                     public void onClick(final View v)
@@ -43,12 +44,5 @@ public class PhoneNumberPermissionBlockerDialogFragment extends InjectedDialogFr
                         dismiss();
                     }
                 });
-    }
-
-    @Override
-    public void onStart()
-    {
-        super.onStart();
-        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
     }
 }

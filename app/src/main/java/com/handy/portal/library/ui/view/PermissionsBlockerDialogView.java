@@ -15,7 +15,7 @@ import butterknife.ButterKnife;
 /**
  * the view used for the blocking dialog fragments
  */
-public class DialogBlockerView extends LinearLayout
+public class PermissionsBlockerDialogView extends LinearLayout
 {
     @BindView(R.id.dialog_blocker_title)
     TextView mTitle;
@@ -24,7 +24,7 @@ public class DialogBlockerView extends LinearLayout
     @BindView(R.id.dialog_blocker_action_button)
     Button mActionButton;
 
-    public DialogBlockerView(final Context context)
+    public PermissionsBlockerDialogView(final Context context)
     {
         super(context);
         initView(context);
@@ -32,24 +32,20 @@ public class DialogBlockerView extends LinearLayout
 
     private void initView(Context context)
     {
-        LayoutInflater.from(context).inflate(R.layout.fragment_dialog_blocker, this);
+        LayoutInflater.from(context).inflate(R.layout.fragment_alert_dialog_blocker, this);
         ButterKnife.bind(this);
     }
 
-    public DialogBlockerView setTitle(int titleResourceId)
+    public PermissionsBlockerDialogView setText(@StringRes int titleResourceId,
+                                                @StringRes int messageResourceId)
     {
         mTitle.setText(titleResourceId);
-        return this;
-    }
-
-    public DialogBlockerView setMessage(int messageResourceId)
-    {
         mMessage.setText(messageResourceId);
         return this;
     }
 
-    public DialogBlockerView setActionButton(@StringRes int buttonTextResourceId,
-                                             OnClickListener onClickListener)
+    public PermissionsBlockerDialogView setActionButton(@StringRes int buttonTextResourceId,
+                                                        OnClickListener onClickListener)
     {
         mActionButton.setText(buttonTextResourceId);
         mActionButton.setOnClickListener(onClickListener);

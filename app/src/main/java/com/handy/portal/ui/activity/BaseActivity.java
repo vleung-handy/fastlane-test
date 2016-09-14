@@ -1,15 +1,20 @@
 package com.handy.portal.ui.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -17,8 +22,12 @@ import com.google.android.gms.location.LocationServices;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.flow.Flow;
+import com.handy.portal.library.util.FragmentUtils;
+import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.location.LocationUtils;
+import com.handy.portal.location.scheduler.LocationScheduleService;
+import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
@@ -26,6 +35,7 @@ import com.handy.portal.logger.handylogger.model.GoogleApiLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ConfigurationResponse;
+import com.handy.portal.onboarding.ui.fragment.PermissionsBlockerDialogFragment;
 import com.handy.portal.setup.SetupData;
 import com.handy.portal.setup.SetupEvent;
 import com.handy.portal.setup.step.AcceptTermsStep;
@@ -68,6 +78,10 @@ public abstract class BaseActivity extends AppCompatActivity
     protected static Location lastLocation;
     private SetupHandler mSetupHandler;
     private boolean mWasOpenBefore;
+    private boolean mHasRequestedPermissionsBefore;
+
+    private static final int ACCESS_FINE_LOCATION_AND_PHONE_STATE_PERMISSIONS_REQUEST_CODE = 42;
+
 
     // this is meant to be optionally overridden
     protected boolean shouldTriggerSetup()
@@ -142,7 +156,7 @@ public abstract class BaseActivity extends AppCompatActivity
     protected void onResume()
     {
         super.onResume();
-        LocationUtils.showLocationBlockersOrStartServiceIfNecessary(this, isLocationServiceEnabled());
+        showRequiredPermissionBlockersOrStartServiceIfNecessary();
         bus.post(new LogEvent.SendLogsEvent());
         if (mWasOpenBefore)
         {
@@ -429,6 +443,126 @@ public abstract class BaseActivity extends AppCompatActivity
     @Subscribe
     public void onReceiveConfigurationResponse(HandyEvent.ReceiveConfigurationSuccess event)
     {
-        LocationUtils.showLocationBlockersOrStartServiceIfNecessary(this, isLocationServiceEnabled());
+        showRequiredPermissionBlockersOrStartServiceIfNecessary();
     }
+
+    //region Private methods
+    private synchronized void showRequiredPermissionBlockersOrStartServiceIfNecessary()
+    {
+        if (!isEverythingGood())
+        {
+            if (!mHasRequestedPermissionsBefore)
+            {
+                mHasRequestedPermissionsBefore = true;
+                ActivityCompat.requestPermissions(this, new String[]{
+                                Manifest.permission.READ_PHONE_STATE,
+                                Manifest.permission.ACCESS_FINE_LOCATION},
+                        ACCESS_FINE_LOCATION_AND_PHONE_STATE_PERMISSIONS_REQUEST_CODE);
+            }
+            else if (ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+                    == PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                            == PackageManager.PERMISSION_GRANTED)
+            {
+                // Both permissions granted, check for location settings or show blocker for that
+                showLocationSettingsBlockerIfNecessaryOrStartLocationService();
+            }
+            else
+            {
+                // Atleast one of them still not granted, show blocker
+                showPermissionsBlocker();
+            }
+        }
+    }
+
+    private void showLocationSettingsBlockerIfNecessaryOrStartLocationService()
+    {
+        //check whether location services setting is on
+        if (!LocationUtils.hasRequiredLocationSettings(this) &&
+                getSupportFragmentManager().findFragmentByTag(LocationSettingsBlockerDialogFragment.FRAGMENT_TAG) == null)
+        //don't want to show this dialog if it's already showing
+        {
+            LocationSettingsBlockerDialogFragment locationSettingsBlockerDialogFragment
+                    = new LocationSettingsBlockerDialogFragment();
+            FragmentUtils.safeLaunchDialogFragment(locationSettingsBlockerDialogFragment, this,
+                    LocationSettingsBlockerDialogFragment.FRAGMENT_TAG);
+        }
+        else
+        {
+            removeAllBlockersIfNeeded();
+            startLocationServiceIfNecessary();
+        }
+    }
+
+    private void startLocationServiceIfNecessary()
+    {
+        if (LocationUtils.hasRequiredLocationPermissions(this)
+                && LocationUtils.hasRequiredLocationSettings(this))
+        {
+            try
+            {
+                Intent locationServiceIntent = new Intent(this, LocationScheduleService.class);
+                if (isLocationServiceEnabled())
+                {
+                    //nothing will happen if it's already running
+                    if (!SystemUtils.isServiceRunning(this, LocationScheduleService.class))
+                    {
+                        startService(locationServiceIntent);
+                    }
+                }
+                else
+                {
+                    //nothing will happen if it's not running
+                    stopService(locationServiceIntent);
+                }
+            }
+            catch (Exception e)
+            {
+                Crashlytics.logException(e);
+            }
+            //at most one service instance will be running
+        }
+    }
+
+    private void showPermissionsBlocker()
+    {
+        if (getSupportFragmentManager().findFragmentByTag(
+                PermissionsBlockerDialogFragment.FRAGMENT_TAG) == null)
+        {
+            FragmentUtils.safeLaunchDialogFragment(
+                    new PermissionsBlockerDialogFragment(), this,
+                    PermissionsBlockerDialogFragment.FRAGMENT_TAG);
+        }
+    }
+
+    private void removeAllBlockersIfNeeded()
+    {
+        // Remove permission blocker if necessary
+        Fragment fragmentByTag = getSupportFragmentManager().findFragmentByTag(
+                PermissionsBlockerDialogFragment.FRAGMENT_TAG);
+        if (fragmentByTag != null &&
+                fragmentByTag instanceof PermissionsBlockerDialogFragment)
+        {
+            ((PermissionsBlockerDialogFragment) fragmentByTag).dismiss();
+        }
+
+        // Remove location settings blocker if necessary
+        fragmentByTag = getSupportFragmentManager().findFragmentByTag(
+                LocationSettingsBlockerDialogFragment.FRAGMENT_TAG);
+        if (fragmentByTag != null &&
+                fragmentByTag instanceof LocationSettingsBlockerDialogFragment)
+        {
+            ((LocationSettingsBlockerDialogFragment) fragmentByTag).dismiss();
+        }
+    }
+
+    private boolean isEverythingGood()
+    {
+        return ActivityCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+                == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                        == PackageManager.PERMISSION_GRANTED &&
+                LocationUtils.hasRequiredLocationSettings(this);
+    }
+    //endregion
 }
