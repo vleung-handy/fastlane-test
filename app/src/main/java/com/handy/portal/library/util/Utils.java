@@ -7,12 +7,15 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.view.Gravity;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.core.BaseApplication;
+import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.ui.activity.BaseActivity;
 
@@ -114,5 +117,16 @@ public final class Utils //TODO: we should reorganize these methods into more sp
             locationData = new LocationData();
         }
         return locationData;
+    }
+
+    public static void dismissDialogFragmentByTag(FragmentActivity activity, String fragmentTag)
+    {
+        Fragment fragmentByTag = activity.getSupportFragmentManager().findFragmentByTag(
+                fragmentTag);
+        if (fragmentByTag != null &&
+                fragmentByTag instanceof InjectedDialogFragment)
+        {
+            ((InjectedDialogFragment)fragmentByTag).dismiss();
+        }
     }
 }
