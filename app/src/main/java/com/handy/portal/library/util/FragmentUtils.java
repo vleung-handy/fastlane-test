@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 
 import com.crashlytics.android.Crashlytics;
+import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 
 /**
  * utility class for fragments
@@ -66,5 +67,21 @@ public class FragmentUtils
             Crashlytics.logException(e);
         }
         return false;
+    }
+
+    /**
+     * Dissmiss a dialog fragment if it is showing
+     * @param activity Activity containing the dialog fragment
+     * @param fragmentTag Tag for the dialog fragment
+     */
+    public static void dismissDialogFragmentByTag(FragmentActivity activity, String fragmentTag)
+    {
+        Fragment fragmentByTag = activity.getSupportFragmentManager().findFragmentByTag(
+                fragmentTag);
+        if (fragmentByTag != null &&
+                fragmentByTag instanceof InjectedDialogFragment)
+        {
+            ((InjectedDialogFragment)fragmentByTag).dismiss();
+        }
     }
 }

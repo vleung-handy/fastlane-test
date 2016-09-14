@@ -19,6 +19,11 @@ public class PermissionsBlockerDialogFragment extends InjectedDialogFragment
     public static final String FRAGMENT_TAG =
             PermissionsBlockerDialogFragment.class.getName();
 
+
+    public static PermissionsBlockerDialogFragment newInstance(){
+        return new PermissionsBlockerDialogFragment();
+    }
+
     @Override
     public void onCreate(final Bundle savedInstanceState)
     {

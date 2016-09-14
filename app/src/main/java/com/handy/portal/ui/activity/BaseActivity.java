@@ -3,14 +3,12 @@ package com.handy.portal.ui.activity;
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
@@ -73,6 +71,9 @@ public abstract class BaseActivity extends AppCompatActivity
     //This is a clear instance where a service would be great but it is too tightly coupled to an activity to break out
     protected static GoogleApiClient googleApiClient;
     protected static Location lastLocation;
+    private static final String[] mRequiredPermissions = new String[]{
+            Manifest.permission.READ_PHONE_STATE, Manifest.permission.ACCESS_FINE_LOCATION
+    };
     private SetupHandler mSetupHandler;
     private boolean mWasOpenBefore;
     private boolean mHasRequestedPermissionsBefore;
@@ -444,7 +445,7 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     //region Private methods
-    private synchronized void showRequiredPermissionBlockersOrStartServiceIfNecessary()
+    private void showRequiredPermissionBlockersOrStartServiceIfNecessary()
     {
         if (!hasRequiredPermissionsAndSettings())
         {
@@ -456,10 +457,7 @@ public abstract class BaseActivity extends AppCompatActivity
                                 Manifest.permission.ACCESS_FINE_LOCATION},
                         ACCESS_FINE_LOCATION_AND_PHONE_STATE_PERMISSIONS_REQUEST_CODE);
             }
-            else if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-                    == PackageManager.PERMISSION_GRANTED &&
-                    ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                            == PackageManager.PERMISSION_GRANTED)
+            else if (Utils.areAllPermissionsGranted(this, mRequiredPermissions))
             {
                 // Both permissions granted, check for location settings or show blocker for that
                 showLocationSettingsBlockerIfNecessaryOrStartLocationService();
@@ -497,7 +495,7 @@ public abstract class BaseActivity extends AppCompatActivity
                 PermissionsBlockerDialogFragment.FRAGMENT_TAG) == null)
         {
             FragmentUtils.safeLaunchDialogFragment(
-                    new PermissionsBlockerDialogFragment(), this,
+                    PermissionsBlockerDialogFragment.newInstance(), this,
                     PermissionsBlockerDialogFragment.FRAGMENT_TAG);
         }
     }
@@ -505,16 +503,13 @@ public abstract class BaseActivity extends AppCompatActivity
     private void dismissAllBlockersIfNeeded()
     {
         // Remove permission blocker if necessary
-        Utils.dismissDialogFragmentByTag(this, PermissionsBlockerDialogFragment.FRAGMENT_TAG);
-        Utils.dismissDialogFragmentByTag(this, LocationSettingsBlockerDialogFragment.FRAGMENT_TAG);
+        FragmentUtils.dismissDialogFragmentByTag(this, PermissionsBlockerDialogFragment.FRAGMENT_TAG);
+        FragmentUtils.dismissDialogFragmentByTag(this, LocationSettingsBlockerDialogFragment.FRAGMENT_TAG);
     }
 
     private boolean hasRequiredPermissionsAndSettings()
     {
-        return ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
-                == PackageManager.PERMISSION_GRANTED &&
-                ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
-                        == PackageManager.PERMISSION_GRANTED &&
+        return Utils.areAllPermissionsGranted(this, mRequiredPermissions) &&
                 LocationUtils.hasRequiredLocationSettings(this);
     }
     //endregion
