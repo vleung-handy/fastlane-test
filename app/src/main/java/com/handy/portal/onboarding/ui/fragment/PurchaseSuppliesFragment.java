@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.RequestCode;
@@ -55,6 +56,12 @@ public class PurchaseSuppliesFragment extends OnboardingSubflowUIFragment
         final SuppliesSection costSection = mSuppliesInfo.getCostSection();
         final SuppliesSection deliverySection = mSuppliesInfo.getDeliverySection();
         final SuppliesSection productsSection = mSuppliesInfo.getProductsSection();
+
+        if (costSection == null || deliverySection == null || productsSection == null)
+        {
+            Crashlytics.logException(new NullPointerException());
+            return;
+        }
 
         mCostSummary.setContent(costSection.getTitle(), costSection.getDescription());
         mDeliverySummary.setContent(deliverySection.getTitle(), deliverySection.getDescription());
