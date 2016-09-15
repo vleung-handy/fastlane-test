@@ -30,6 +30,7 @@ public class BaseActivityTest extends RobolectricGradleTestWrapper
     private BaseActivity activity;
 
     @Before
+    @Override
     public void setUp() throws Exception
     {
         super.setUp();

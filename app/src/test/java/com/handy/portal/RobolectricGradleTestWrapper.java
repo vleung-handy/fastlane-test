@@ -15,7 +15,7 @@ import org.robolectric.shadows.ShadowApplication;
 
 @Ignore
 @RunWith(RobolectricTestRunner.class)
-@Config(sdk = Build.VERSION_CODES.JELLY_BEAN,
+@Config(sdk = Build.VERSION_CODES.LOLLIPOP,
         constants = BuildConfig.class,
         application = TestBaseApplication.class,
         packageName = "com.handy.portal")

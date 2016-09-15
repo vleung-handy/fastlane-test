@@ -23,6 +23,7 @@ public class BookingDetailsWrapperFragmentTest extends RobolectricGradleTestWrap
     private BookingDetailsWrapperFragment mFragment;
 
     @Before
+    @Override
     public void setUp() throws Exception
     {
         super.setUp();

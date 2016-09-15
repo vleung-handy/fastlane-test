@@ -53,6 +53,7 @@ public class DataManagerTest extends RobolectricGradleTestWrapper
     ArgumentCaptor<HandyRetrofitCallback> callbackCaptor;
 
     @Before
+    @Override
     public void setUp() throws Exception
     {
         super.setUp();

@@ -48,6 +48,7 @@ public class LoginManagerTest extends RobolectricGradleTestWrapper
     private LoginManager loginManager;
 
     @Before
+    @Override
     public void setUp() throws Exception
     {
         super.setUp();

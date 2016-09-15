@@ -20,6 +20,7 @@ public class DashboardTiersFragmentTest extends RobolectricGradleTestWrapper
     private DashboardTiersFragment mFragment;
 
     @Before
+    @Override
     public void setUp() throws Exception
     {
         super.setUp();

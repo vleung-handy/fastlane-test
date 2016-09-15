@@ -47,6 +47,7 @@ public class SendReceiptCheckoutFragmentTest extends RobolectricGradleTestWrappe
     private SendReceiptCheckoutFragment fragment;
 
     @Before
+    @Override
     public void setUp() throws Exception
     {
         super.setUp();

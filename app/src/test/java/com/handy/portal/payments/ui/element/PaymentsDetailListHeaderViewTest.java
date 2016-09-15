@@ -25,6 +25,7 @@ public class PaymentsDetailListHeaderViewTest extends RobolectricGradleTestWrapp
     private NeoPaymentBatch neoPaymentBatch;
 
     @Before
+    @Override
     public void setUp() throws Exception
     {
         super.setUp();

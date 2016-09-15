@@ -26,6 +26,7 @@ public class PaymentsBatchListHeaderViewTest extends RobolectricGradleTestWrappe
     private PaymentBatches paymentBatches;
 
     @Before
+    @Override
     public void setUp() throws Exception
     {
         super.setUp();

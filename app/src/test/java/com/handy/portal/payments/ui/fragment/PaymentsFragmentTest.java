@@ -22,6 +22,7 @@ public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
     private PaymentsFragment mFragment;
 
     @Before
+    @Override
     public void setUp() throws Exception
     {
         super.setUp();
