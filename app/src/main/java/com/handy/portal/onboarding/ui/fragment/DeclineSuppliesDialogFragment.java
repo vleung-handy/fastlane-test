@@ -12,6 +12,8 @@ import butterknife.OnClick;
 
 public class DeclineSuppliesDialogFragment extends SlideUpDialogFragment
 {
+    public static final String TAG = DeclineSuppliesDialogFragment.class.getSimpleName();
+
     public static DeclineSuppliesDialogFragment newInstance()
     {
         return new DeclineSuppliesDialogFragment();

@@ -149,7 +149,8 @@ public class PurchaseSuppliesFragment extends OnboardingSubflowUIFragment
                 NativeOnboardingLog.Types.DECLINE_SUPPLIES_SELECTED)));
         final DeclineSuppliesDialogFragment fragment = DeclineSuppliesDialogFragment.newInstance();
         fragment.setTargetFragment(this, RequestCode.DECLINE_SUPPLIES);
-        FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), null);
+        FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(),
+                DeclineSuppliesDialogFragment.TAG);
     }
 
     @Override
