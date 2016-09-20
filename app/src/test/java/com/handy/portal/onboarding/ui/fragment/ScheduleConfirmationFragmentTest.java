@@ -39,7 +39,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.robolectric.Shadows.shadowOf;
@@ -81,8 +80,8 @@ public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapp
     {
         mActivityController = Robolectric.buildActivity(OnboardingSubflowActivity.class, mIntent);
         mActivityController.create().resume().visible();
-        mFragment = spy((ScheduleConfirmationFragment) mActivityController.get()
-                .getSupportFragmentManager().getFragments().get(0));
+        mFragment = (ScheduleConfirmationFragment) mActivityController.get()
+                .getSupportFragmentManager().getFragments().get(0);
     }
 
     @Test

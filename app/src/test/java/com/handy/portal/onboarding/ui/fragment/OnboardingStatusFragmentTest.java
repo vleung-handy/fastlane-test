@@ -32,7 +32,6 @@ import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -64,8 +63,8 @@ public class OnboardingStatusFragmentTest extends RobolectricGradleTestWrapper
         final ActivityController<OnboardingSubflowActivity> activityController =
                 Robolectric.buildActivity(OnboardingSubflowActivity.class, mIntent);
         activityController.create().resume().visible();
-        mFragment = spy((OnboardingStatusFragment) activityController.get()
-                .getSupportFragmentManager().getFragments().get(0));
+        mFragment = (OnboardingStatusFragment) activityController.get().getSupportFragmentManager()
+                .getFragments().get(0);
     }
 
     @Test

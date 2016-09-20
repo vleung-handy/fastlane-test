@@ -46,7 +46,6 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.robolectric.Shadows.shadowOf;
@@ -76,8 +75,8 @@ public class SchedulePreferencesFragmentTest extends RobolectricGradleTestWrappe
     {
         mActivityController = Robolectric.buildActivity(OnboardingSubflowActivity.class, mIntent);
         mActivityController.create().resume().visible();
-        mFragment = spy((SchedulePreferencesFragment) mActivityController.get()
-                .getSupportFragmentManager().getFragments().get(0));
+        mFragment = (SchedulePreferencesFragment) mActivityController.get()
+                .getSupportFragmentManager().getFragments().get(0);
     }
 
     @Test
