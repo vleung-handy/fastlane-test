@@ -12,7 +12,6 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowType;
 import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
-import com.handy.portal.onboarding.ui.fragment.IDVerificationFragment;
 import com.handy.portal.onboarding.ui.fragment.NewPurchaseSuppliesFragment;
 import com.handy.portal.onboarding.ui.fragment.OnboardingStatusFragment;
 import com.handy.portal.onboarding.ui.fragment.PurchaseSuppliesFragment;
@@ -37,7 +36,6 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.robolectric.Shadows.shadowOf;
 
 public class OnboardingSubflowActivityTest extends RobolectricGradleTestWrapper
 {
@@ -67,23 +65,6 @@ public class OnboardingSubflowActivityTest extends RobolectricGradleTestWrapper
                 mActivityController.get().getSupportFragmentManager().getFragments().get(0);
         assertNotNull(subflowFragment);
         assertThat(subflowFragment, instanceOf(OnboardingStatusFragment.class));
-    }
-
-    @Test
-    @Ignore
-    public void shouldLaunchIdVerificationSubflowFragment() throws Exception
-    {
-        when(mIntent.getSerializableExtra(BundleKeys.SUBFLOW_TYPE))
-                .thenReturn(SubflowType.ID_VERIFICATION);
-        shadowOf(mActivityController.get().getApplication())
-                .grantPermissions(android.Manifest.permission.CAMERA);
-
-        mActivityController.create().resume();
-
-        final Fragment subflowFragment =
-                mActivityController.get().getSupportFragmentManager().getFragments().get(0);
-        assertNotNull(subflowFragment);
-        assertThat(subflowFragment, instanceOf(IDVerificationFragment.class));
     }
 
     @Test
