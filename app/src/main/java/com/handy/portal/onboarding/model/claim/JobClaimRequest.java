@@ -14,4 +14,9 @@ public class JobClaimRequest implements Serializable
     {
         mJobs = jobs;
     }
+
+    public ArrayList<JobClaim> getJobs()
+    {
+        return mJobs;
+    }
 }
