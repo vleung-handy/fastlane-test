@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.google.gson.Gson;
@@ -25,10 +26,12 @@ import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.ui.fragment.dialog.ClaimTargetDialogFragment;
-import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingCancelDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingCancelCancellationPolicyDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingCancelKeepRateDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.CustomerNoShowDialogFragment;
 import com.handy.portal.bookings.util.SupportActionUtils;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.constant.SupportActionType;
@@ -36,32 +39,36 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.constant.WarningButtonsText;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
+import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.FragmentUtils;
+import com.handy.portal.library.util.UIUtils;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
+import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.LocationData;
+import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.handy.portal.ui.layout.SlideUpPanelLayout;
-import com.handy.portal.util.FragmentUtils;
-import com.handy.portal.util.UIUtils;
-import com.handy.portal.util.Utils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class BookingDetailsWrapperFragment extends ActionBarFragment implements View.OnClickListener
+public class BookingDetailsWrapperFragment extends ActionBarFragment implements View.OnClickListener, CustomerNoShowDialogFragment.OnReportCustomerNoShowButtonClickedListener
 {
     public static final String SOURCE_LATE_DISPATCH = "late_dispatch";
 
@@ -70,11 +77,11 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     @Inject
     PrefsManager mPrefsManager;
 
-    @Bind(R.id.booking_details_slide_up_panel_container)
+    @BindView(R.id.booking_details_slide_up_panel_container)
     SlideUpPanelLayout mSlideUpPanelContainer;
-    @Bind(R.id.fetch_error_view)
+    @BindView(R.id.fetch_error_view)
     View mFetchErrorView;
-    @Bind(R.id.fetch_error_text)
+    @BindView(R.id.fetch_error_text)
     TextView mErrorText;
 
     private Booking mBooking;
@@ -83,13 +90,13 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     private Date mAssociatedBookingDate;
     private String mSource;
     private Bundle mSourceExtras;
-    private MainViewTab mCurrentTab;
+    private MainViewPage mCurrentPage;
 
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return mCurrentTab;
+        return mCurrentPage;
     }
 
     @Override
@@ -99,6 +106,8 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
 
         Bundle arguments = getArguments();
         if (arguments == null) { return; }
+
+        mBooking = (Booking) arguments.getSerializable(BundleKeys.BOOKING);
 
         mRequestedBookingId = arguments.getString(BundleKeys.BOOKING_ID);
 
@@ -121,15 +130,26 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
             mSource = SOURCE_LATE_DISPATCH;
             mSourceExtras = arguments;
         }
-        mCurrentTab = (MainViewTab) arguments.getSerializable(BundleKeys.TAB);
+        mCurrentPage = (MainViewPage) arguments.getSerializable(BundleKeys.PAGE);
+    }
+
+    @Override
+    public void onStart()
+    {
+        super.onStart();
+        if (mBooking != null)
+        {
+            onReceiveBookingDetailsSuccess(new HandyEvent.ReceiveBookingDetailsSuccess(mBooking));
+        }
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
 
-        if (!MainActivityFragment.clearingBackStack)
+        if (!MainActivityFragment.clearingBackStack && mBooking == null)
         {
             requestBookingDetails(mRequestedBookingId, mRequestedBookingType, mAssociatedBookingDate);
         }
@@ -139,6 +159,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     public void onPause()
     {
         super.onPause();
+        bus.unregister(this);
 
         if (mBooking != null && mBooking.isCheckedIn())
         {
@@ -172,7 +193,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
             final Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.MESSAGE, getString(R.string.job_no_longer_available));
             arguments.putBundle(BundleKeys.EXTRAS, getArguments());
-            returnToTab(MainViewTab.AVAILABLE_JOBS, 0, TransitionStyle.REFRESH_TAB, arguments);
+            returnToPage(MainViewPage.AVAILABLE_JOBS, 0, TransitionStyle.REFRESH_PAGE, arguments);
         }
         else
         {
@@ -190,10 +211,18 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     public void onReceiveClaimJobSuccess(final HandyEvent.ReceiveClaimJobSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        BookingClaimDetails bookingClaimDetails = event.bookingClaimDetails;
-        bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimSuccess(bookingClaimDetails.getBooking(), mSource, mSourceExtras, 0.0f)));
+        final BookingClaimDetails bookingClaimDetails = event.bookingClaimDetails;
+        final Booking booking = bookingClaimDetails.getBooking();
+        if (mBooking != null && mBooking.isRequested())
+        {
+            bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimSuccess(mBooking)));
+        }
+        else
+        {
+            bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimSuccess(booking, mSource, mSourceExtras, 0.0f)));
+        }
 
-        if (bookingClaimDetails.getBooking().isClaimedByMe() || bookingClaimDetails.getBooking().getProviderId().equals(getLoggedInUserId()))
+        if (booking.isClaimedByMe() || booking.getProviderId().equals(getLoggedInUserId()))
         {
             if (bookingClaimDetails.shouldShowClaimTarget())
             {
@@ -202,12 +231,12 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 claimTargetDialogFragment.setDisplayData(claimTargetInfo); //wrong way to pass argument to a fragment
                 claimTargetDialogFragment.show(getFragmentManager(), ClaimTargetDialogFragment.FRAGMENT_TAG);
 
-                returnToTab(MainViewTab.SCHEDULED_JOBS, bookingClaimDetails.getBooking().getStartDate().getTime(), null, null);
+                returnToPage(MainViewPage.SCHEDULED_JOBS, booking.getStartDate().getTime(), null, null);
             }
             else
             {
-                TransitionStyle transitionStyle = (bookingClaimDetails.getBooking().isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
-                returnToTab(MainViewTab.SCHEDULED_JOBS, bookingClaimDetails.getBooking().getStartDate().getTime(), transitionStyle, null);
+                TransitionStyle transitionStyle = (booking.isRecurring() ? TransitionStyle.SERIES_CLAIM_SUCCESS : TransitionStyle.JOB_CLAIM_SUCCESS);
+                returnToPage(MainViewPage.SCHEDULED_JOBS, booking.getStartDate().getTime(), transitionStyle, null);
             }
         }
         else
@@ -220,7 +249,15 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     @Subscribe
     public void onReceiveClaimJobError(final HandyEvent.ReceiveClaimJobError event)
     {
-        bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimError(event.getBooking(), mSource, mSourceExtras, 0.0f, event.error.getMessage())));
+        if (mBooking != null && mBooking.isRequested())
+        {
+            bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimError(mBooking,
+                    event.error.getMessage())));
+        }
+        else
+        {
+            bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimError(event.getBooking(), mSource, mSourceExtras, 0.0f, event.error.getMessage())));
+        }
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         handleBookingClaimError(event.error.getMessage(),
                 getString(R.string.job_claim_error), getString(R.string.return_to_available_jobs),
@@ -243,8 +280,16 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     public void onReceiveNotifyJobOnMyWayError(final HandyEvent.ReceiveNotifyJobOnMyWayError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWayError(
-                mBooking, getLocationData())));
+        if (mBooking != null)
+        {
+            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWayFailure(
+                    mBooking, getLocationData())));
+        }
+        /*
+            else, mBooking hasn't been set yet.
+            one obvious case in which this could happen
+            is when this event is the result of a previous instance of this fragment
+         */
 
         handleNotifyOnMyWayError(event);
     }
@@ -265,7 +310,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     public void onReceiveNotifyJobCheckInError(final HandyEvent.ReceiveNotifyJobCheckInError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInError(
+        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInFailure(
                 mBooking, getLocationData())));
 
         handleNotifyCheckInError(event);
@@ -287,7 +332,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 showUpdateArrivalTimeDialog(mBooking, R.string.notify_customer_of_lateness, Booking.ArrivalTimeOption.lateValues());
                 break;
             case REPORT_NO_SHOW:
-                showCustomerNoShowDialog(event.action);
+                showCustomerNoShowConfirmation(event.action);
                 break;
             case RETRACT_NO_SHOW:
                 requestCancelNoShow();
@@ -339,6 +384,20 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         mBooking = event.booking;
         updateDisplay();
+
+        PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
+        if (paymentInfo == null)
+        {
+            Crashlytics.logException(new Exception("Payment info is null for booking " + mBooking.getId()));
+        }
+        else
+        {
+            String paymentInfoFormatted = CurrencyUtils.formatPriceWithoutCents(paymentInfo.getAmount(), paymentInfo.getCurrencySymbol());
+            String toastMessageFormatted =
+                    getString(R.string.customer_no_show_success_message_formatted, paymentInfoFormatted);
+            showToast(toastMessageFormatted, Toast.LENGTH_LONG);
+        }
+
     }
 
     @Subscribe
@@ -396,10 +455,11 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                     ScheduledJobsLog.RemoveJobLog.POPUP,
                     getRemovalTypeFromBookingRemoveAction(removeAction),
                     removeAction != null ? removeAction.getFeeAmount() : 0,
+                    removeAction != null ? removeAction.getWaivedAmount() : 0,
                     removeAction != null ? removeAction.getWarningText() : null
             )));
             TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
-            returnToTab(MainViewTab.SCHEDULED_JOBS, event.booking.getStartDate().getTime(), transitionStyle, null);
+            returnToPage(MainViewPage.SCHEDULED_JOBS, event.booking.getStartDate().getTime(), transitionStyle, null);
         }
         else
         {
@@ -416,6 +476,34 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         trackRemoveJobError(event.error.getMessage());
         handleBookingRemoveError(event.error.getMessage());
+    }
+
+    @Subscribe
+    public void onReceiveNotifyJobUpdateArrivalTimeSuccess(final HandyEvent.ReceiveNotifyJobUpdateArrivalTimeSuccess event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+
+        //refresh the page with the new booking
+        mBooking = event.booking;
+        updateDisplay();
+
+        showToast(R.string.eta_success, Toast.LENGTH_LONG);
+    }
+
+    @Subscribe
+    public void onReceiveNotifyJobUpdateArrivalTimeError(final HandyEvent.ReceiveNotifyJobUpdateArrivalTimeError event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+
+        String errorMessage = event.error.getMessage();
+        if (errorMessage != null)
+        {
+            showToast(errorMessage);
+        }
+        else
+        {
+            showNetworkErrorToast();
+        }
     }
 
     @NonNull
@@ -435,6 +523,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 ScheduledJobsLog.RemoveJobLog.POPUP,
                 getRemovalTypeFromBookingRemoveAction(removeAction),
                 removeAction != null ? removeAction.getFeeAmount() : 0,
+                removeAction != null ? removeAction.getWaivedAmount() : 0,
                 removeAction != null ? removeAction.getWarningText() : null,
                 errorMessage
         )));
@@ -445,7 +534,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         return mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
     }
 
-    private void returnToTab(MainViewTab targetTab, long epochTime, TransitionStyle transitionStyle, Bundle additionalArguments)
+    private void returnToPage(MainViewPage targetPage, long epochTime, TransitionStyle transitionStyle, Bundle additionalArguments)
     {
         //Return to available jobs with success
         Bundle arguments = new Bundle();
@@ -455,7 +544,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         {
             arguments.putAll(additionalArguments);
         }
-        bus.post(new NavigationEvent.NavigateToTab(targetTab, arguments, transitionStyle));
+        bus.post(new NavigationEvent.NavigateToPage(targetPage, arguments, transitionStyle));
     }
 
     private void handleBookingDetailsError(String errorMessage)
@@ -503,7 +592,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i)
                     {
-                        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, TransitionStyle.REFRESH_TAB));
+                        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SCHEDULED_JOBS, arguments, TransitionStyle.REFRESH_PAGE));
                     }
                 });
 
@@ -596,7 +685,20 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 .show();
     }
 
-    private void showCustomerNoShowDialog(final Booking.Action action)
+    private void showCustomerNoShowDialogFragment()
+    {
+        if (getChildFragmentManager().findFragmentByTag(CustomerNoShowDialogFragment.FRAGMENT_TAG) == null)
+        {
+            CustomerNoShowDialogFragment customerNoShowDialogFragment =
+                    CustomerNoShowDialogFragment.newInstance(mBooking);
+            FragmentUtils.safeLaunchDialogFragment(
+                    customerNoShowDialogFragment,
+                    this,
+                    CustomerNoShowDialogFragment.FRAGMENT_TAG);
+        }
+    }
+
+    private void showCustomerNoShowAlertDialog(@NonNull final Booking.Action action)
     {
         new AlertDialog.Builder(getActivity())
                 .setTitle(R.string.report_customer_no_show)
@@ -613,6 +715,21 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 .setNegativeButton(R.string.back, null)
                 .create()
                 .show();
+    }
+
+    private void showCustomerNoShowConfirmation(@NonNull final Booking.Action action)
+    {
+        boolean customerNoShowModalEnabled =
+                configManager.getConfigurationResponse() != null
+                        && configManager.getConfigurationResponse().isCustomerNoShowModalEnabled();
+        if (customerNoShowModalEnabled)
+        {
+            showCustomerNoShowDialogFragment();
+        }
+        else
+        {
+            showCustomerNoShowAlertDialog(action);
+        }
     }
 
     private void requestNotifyUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
@@ -645,7 +762,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     {
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, action.getHelpRedirectPath());
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP_WEBVIEW, arguments, true));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.HELP_WEBVIEW, arguments, true));
     }
 
     private void unassignJob(@NonNull Booking.Action removeAction)
@@ -653,7 +770,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING, mBooking);
         arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.CANCELLATION_REQUEST, arguments));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.CANCELLATION_REQUEST, arguments));
     }
 
     private void removeJob(@NonNull Booking.Action removeAction)
@@ -672,14 +789,24 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
         if (removeAction != null)
         {
-            final Booking.Action.Extras.KeepRate keepRate = removeAction.getKeepRate();
-            if (keepRate != null)
+            if (removeAction.getExtras() != null
+                    && removeAction.getExtras().getCancellationPolicy() != null)
             {
-                if (getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingCancelDialogFragment.FRAGMENT_TAG) == null)
+                if (getChildFragmentManager().findFragmentByTag(ConfirmBookingCancelCancellationPolicyDialogFragment.FRAGMENT_TAG) == null)
                 {
-                    final DialogFragment fragment = ConfirmBookingCancelDialogFragment.newInstance(mBooking);
+                    final DialogFragment fragment = ConfirmBookingCancelCancellationPolicyDialogFragment.newInstance(mBooking);
                     fragment.setTargetFragment(BookingDetailsWrapperFragment.this, RequestCode.REMOVE_BOOKING);
-                    FragmentUtils.safeLaunchDialogFragment(fragment, getActivity(), ConfirmBookingCancelDialogFragment.FRAGMENT_TAG);
+                    FragmentUtils.safeLaunchDialogFragment(fragment, this, ConfirmBookingCancelCancellationPolicyDialogFragment.FRAGMENT_TAG);
+                }
+                return true;
+            }
+            else if (removeAction.getKeepRate() != null)
+            {
+                if (getChildFragmentManager().findFragmentByTag(ConfirmBookingCancelKeepRateDialogFragment.FRAGMENT_TAG) == null)
+                {
+                    final DialogFragment fragment = ConfirmBookingCancelKeepRateDialogFragment.newInstance(mBooking);
+                    fragment.setTargetFragment(BookingDetailsWrapperFragment.this, RequestCode.REMOVE_BOOKING);
+                    FragmentUtils.safeLaunchDialogFragment(fragment, this, ConfirmBookingCancelKeepRateDialogFragment.FRAGMENT_TAG);
                 }
                 return true;
             }
@@ -687,11 +814,11 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         return false;
     }
 
-    private void showRemoveJobWarningDialog(final String warning, final Booking.Action action)
+    private void showRemoveJobWarningDialog(final String warning, @NonNull final Booking.Action action)
     {
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
                 mBooking, ScheduledJobsLog.RemoveJobLog.POPUP, action.getFeeAmount(),
-                action.getWarningText())));
+                action.getWaivedAmount(), action.getWarningText())));
         bus.post(new HandyEvent.ShowConfirmationRemoveJob());
 
         boolean customWarningDialogShown = showCustomRemoveJobWarningDialogIfNecessary();
@@ -742,6 +869,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 ScheduledJobsLog.RemoveJobLog.POPUP,
                 null,
                 removeAction != null ? removeAction.getFeeAmount() : 0,
+                removeAction != null ? removeAction.getWaivedAmount() : 0,
                 warning
         )));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
@@ -760,5 +888,17 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         {
             showNetworkErrorToast();
         }
+    }
+
+    /**
+     * interface method called by the customer no show dialog fragment
+     * <p/>
+     * this fragment's onPause() isn't called when launching a DialogFragment,
+     * so this is already resumed (and bus is registered) at this point
+     */
+    @Override
+    public void onReportCustomerNoShowButtonClicked()
+    {
+        requestReportNoShow();
     }
 }

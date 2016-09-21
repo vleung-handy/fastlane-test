@@ -1,30 +1,33 @@
 package com.handy.portal.manager;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
+import com.crashlytics.android.Crashlytics;
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.constant.ProviderKey;
+import com.handy.portal.dashboard.model.ProviderEvaluation;
+import com.handy.portal.dashboard.model.ProviderFeedback;
+import com.handy.portal.dashboard.model.ProviderRating;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
+import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.model.Provider;
-import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.model.ProviderProfileResponse;
 import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TypeSafeMap;
-import com.handy.portal.model.dashboard.ProviderEvaluation;
-import com.handy.portal.model.dashboard.ProviderFeedback;
-import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.PaymentFlow;
-import com.handy.portal.util.TextUtils;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +36,7 @@ import java.util.concurrent.TimeUnit;
 
 public class ProviderManager
 {
-    private final Bus mBus;
+    private final EventBus mBus;
     private final DataManager mDataManager;
     private final PrefsManager mPrefsManager;
     private Cache<String, Provider> mProviderCache;
@@ -44,7 +47,7 @@ public class ProviderManager
     private static final String PROVIDER_SETTINGS_CACHE_KEY = "provider_settings";
     private static final String RATINGS_KEY = "ratings";
 
-    public ProviderManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager)
+    public ProviderManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager)
     {
         mBus = bus;
         mDataManager = dataManager;
@@ -69,6 +72,22 @@ public class ProviderManager
         requestProviderInfo();
     }
 
+    public void setProviderProfile(@NonNull final ProviderProfile providerProfile)
+    {
+        /*
+            although redundant, below is needed because provider id is accessed directly from prefs everywhere
+         */
+        setProviderId(providerProfile.getProviderId());
+        mProviderProfileCache.put(PROVIDER_PROFILE_CACHE_KEY, providerProfile);
+    }
+
+    public void setProviderId(final String providerId)
+    {
+        mPrefsManager.setString(PrefsKey.LAST_PROVIDER_ID, providerId);
+        Crashlytics.setUserIdentifier(providerId);
+        //need to update the user identifier whenever provider id is updated
+    }
+
     @Subscribe
     public void onRequestProviderInfo(HandyEvent.RequestProviderInfo event)
     {
@@ -87,14 +106,16 @@ public class ProviderManager
     public void onUpdateProviderProfile(ProfileEvent.RequestProfileUpdate event)
     {
         String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
-        mDataManager.updateProviderProfile(providerId, getProfileParams(event), new DataManager.Callback<ProviderPersonalInfo>()
+        mDataManager.updateProviderProfile(providerId, getProfileParams(event), new DataManager.Callback<ProviderProfileResponse>()
         {
             @Override
-            public void onSuccess(ProviderPersonalInfo response)
+            public void onSuccess(ProviderProfileResponse response)
             {
-                mBus.post(new ProfileEvent.ReceiveProfileUpdateSuccess(response));
+                ProviderProfile providerProfile = response.getProviderProfile();
+                mProviderProfileCache.put(PROVIDER_PROFILE_CACHE_KEY, providerProfile);
+                mBus.post(new ProfileEvent.ReceiveProfileUpdateSuccess(
+                        providerProfile.getProviderPersonalInfo()));
                 requestProviderInfo();
-                requestProviderProfile();
             }
 
             @Override
@@ -236,22 +257,6 @@ public class ProviderManager
     {
         String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
 
-        // TODO: remove this fake data once the api is ready
-//        List<ProviderRating> providerRatingList = new ArrayList<>();
-//        ProviderRating providerRating = new ProviderRating(1, 1, 5, 1, new Date(System.currentTimeMillis()), "Sam", "Excellent Job");
-//        providerRatingList.add(providerRating);
-
-//        List<ProviderFeedback> feedbackList = new ArrayList<>();
-//        feedbackList.add(new ProviderFeedback("Good stuff!", "Good Stuff", new ArrayList<ProviderFeedback.FeedbackTip>()));
-//
-//        ProviderEvaluation providerEvaluation = new ProviderEvaluation(
-//                new ProviderEvaluation.Rating(10, 15, 5, 4.8, "Things are not lookin good!", "No feedback",
-//                        new Date(1000), new Date(10000)),
-//                new ProviderEvaluation.Rating(10, 15, 5, 4.8, "Things are not lookin good!", "No feedback",
-//                        new Date(1000), new Date(10000)), new ProviderEvaluation.Tier("Tier 1", 15), 3.8, providerRatingList, feedbackList);
-
-//        mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationSuccess(providerEvaluation));
-//        mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationError(null));
         mDataManager.getProviderEvaluation(providerId, new DataManager.Callback<ProviderEvaluation>()
         {
             @Override
@@ -347,6 +352,38 @@ public class ProviderManager
                 });
     }
 
+    @Subscribe
+    public void onRequestIdVerificationStart(final ProviderSettingsEvent.RequestIdVerificationStart event)
+    {
+        mDataManager.beforeStartIdVerification(event.getBeforeIdVerificationStartUrl(),
+                new DataManager.Callback<HashMap<String, String>>()
+                {
+                    @Override
+                    public void onSuccess(final HashMap<String, String> response)
+                    { }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    { }
+                });
+    }
+
+    @Subscribe
+    public void onRequestIdVerificationFinish(final ProviderSettingsEvent.RequestIdVerificationFinish event)
+    {
+        mDataManager.finishIdVerification(event.getAfterIdVerificationFinishUrl(),
+                event.getScanReference(), event.getStatus(), new DataManager.Callback<HashMap<String, String>>()
+                {
+                    @Override
+                    public void onSuccess(final HashMap<String, String> response)
+                    { }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    { }
+                });
+    }
+
     private void requestProviderInfo()
     {
         mDataManager.getProviderInfo(new DataManager.Callback<Provider>()
@@ -355,7 +392,7 @@ public class ProviderManager
             public void onSuccess(Provider provider)//TODO: need a way to sync this and provider id received from onLoginSuccess!
             {
                 mProviderCache.put(PROVIDER_CACHE_KEY, provider);
-                mPrefsManager.setString(PrefsKey.LAST_PROVIDER_ID, provider.getId());
+                setProviderId(provider.getId());
                 mBus.post(new HandyEvent.ProviderIdUpdated(provider.getId()));
                 mBus.post(new HandyEvent.ReceiveProviderInfoSuccess(provider));
             }
@@ -384,7 +421,7 @@ public class ProviderManager
             @Override
             public void onError(DataManager.DataManagerError error)
             {
-                mBus.post(new ProfileEvent.ReceiveProviderProfileError());
+                mBus.post(new ProfileEvent.ReceiveProviderProfileError(error));
             }
         });
     }

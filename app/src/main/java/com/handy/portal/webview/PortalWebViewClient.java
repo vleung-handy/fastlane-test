@@ -11,35 +11,33 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.crashlytics.android.Crashlytics;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
-import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.util.DeeplinkMapper;
 import com.handy.portal.util.DeeplinkUtils;
-import com.handy.portal.util.Utils;
-import com.squareup.otto.Bus;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class PortalWebViewClient extends WebViewClient
 {
     private Fragment parentFragment;
     private WebView webView;
-    private GoogleManager googleManager;
-    protected Bus bus;
+    private String mDeviceId;
+    protected EventBus bus;
 
     public PortalWebViewClient(Fragment parentFragment,
                                WebView webView,
-                               GoogleManager gs,
-                               Bus bus)
+                               EventBus bus, String deviceId)
     {
         this.parentFragment = parentFragment;
         this.webView = webView;
-        this.googleManager = gs;
         this.bus = bus;
+        this.mDeviceId = deviceId;
     }
 
     @Override
@@ -56,12 +54,12 @@ public class PortalWebViewClient extends WebViewClient
             final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
             if (deeplink != null)
             {
-                final MainViewTab tab = DeeplinkMapper.getTabForDeeplink(deeplink);
+                final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
                 bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
                         DeeplinkLog.Source.WEBVIEW,
                         uri
                 )));
-                bus.post(new NavigationEvent.NavigateToTab(tab, deeplinkData));
+                bus.post(new NavigationEvent.NavigateToPage(page, deeplinkData));
             }
         }
         else
@@ -150,14 +148,8 @@ public class PortalWebViewClient extends WebViewClient
 
     private void loadUrlWithFromAppParam(String url)
     {
-        if (googleManager == null)
-        {
-            Crashlytics.log("Can not contact google service");
-            return;
-        }
-
         //TODO: This code seems to be duplicated in the PortalWebViewFragment
-        String endOfUrl = "from_app=true&device_id=" + googleManager.getOrSetDeviceId()
+        String endOfUrl = "from_app=true&device_id=" + mDeviceId
                 + "&device_type=android&hide_nav=1"
                 + "&hide_banner=1"
                 + "&hide_payments_tab=1"

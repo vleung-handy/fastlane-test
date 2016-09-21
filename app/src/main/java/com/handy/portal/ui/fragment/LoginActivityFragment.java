@@ -19,49 +19,49 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
-import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.constants.HelpCenterUrl;
+import com.handy.portal.library.ui.fragment.InjectedFragment;
+import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
+import com.handy.portal.library.ui.widget.PhoneInputTextView;
+import com.handy.portal.library.ui.widget.PinCodeInputTextView;
+import com.handy.portal.library.util.EnvironmentUtils;
+import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.LoginLog;
-import com.handy.portal.logger.mixpanel.Mixpanel;
-import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.ui.activity.SplashActivity;
-import com.handy.portal.ui.layout.SlideUpPanelLayout;
-import com.handy.portal.ui.widget.PhoneInputTextView;
-import com.handy.portal.ui.widget.PinCodeInputTextView;
-import com.handy.portal.util.TextUtils;
-import com.handy.portal.util.UIUtils;
-import com.handy.portal.util.Utils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class LoginActivityFragment extends InjectedFragment
 {
-    @Bind(R.id.phone_input_layout)
+    @BindView(R.id.phone_input_layout)
     RelativeLayout phoneInputLayout;
-    @Bind(R.id.pin_code_input_layout)
+    @BindView(R.id.pin_code_input_layout)
     RelativeLayout pinCodeInputLayout;
-    @Bind(R.id.phone_number_edit_text)
+    @BindView(R.id.phone_number_edit_text)
     PhoneInputTextView phoneNumberEditText;
-    @Bind(R.id.pin_code_edit_text)
+    @BindView(R.id.pin_code_edit_text)
     PinCodeInputTextView pinCodeEditText;
-    @Bind(R.id.login_instructions_text)
+    @BindView(R.id.login_instructions_text)
     TextView instructionsText;
-    @Bind(R.id.login_button)
+    @BindView(R.id.login_button)
     Button loginButton;
-    @Bind(R.id.back_button)
+    @BindView(R.id.back_button)
     ImageButton backButton;
-    @Bind(R.id.slide_up_panel_container)
+    @BindView(R.id.slide_up_panel_container)
     SlideUpPanelLayout mSlideUpPanelLayout;
 
 
@@ -70,9 +70,7 @@ public class LoginActivityFragment extends InjectedFragment
     @Inject
     BuildConfigWrapper buildConfigWrapper;
     @Inject
-    Mixpanel mixpanel;
-    @Inject
-    PrefsManager prefsManager;
+    ProviderManager mProviderManager;
 
 
     private enum LoginState
@@ -106,6 +104,20 @@ public class LoginActivityFragment extends InjectedFragment
         bus.post(new LogEvent.AddLogEvent(new LoginLog.Shown()));
 
         return view;
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        bus.register(this);
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     private void registerControlListeners()
@@ -165,7 +177,7 @@ public class LoginActivityFragment extends InjectedFragment
     {
         if (!buildConfigWrapper.isDebug()) { return; }
 
-        UIUtils.createEnvironmentModifierDialog(environmentModifier, getActivity(), null).show();
+        EnvironmentUtils.showEnvironmentModifierDialog(environmentModifier, getActivity(), null);
     }
 
     @OnClick(R.id.login_help_button)
@@ -206,7 +218,7 @@ public class LoginActivityFragment extends InjectedFragment
         storedPhoneNumber = phoneNumber; //remember so they don't have to reinput once they receive their pin
         changeState(LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE);
 
-        if (buildConfigWrapper.isDebug() && !environmentModifier.pinRequestEnabled())
+        if (buildConfigWrapper.isDebug() && !environmentModifier.isPinRequestEnabled())
         {
             // if pin request is disabled, jump to pin input state; this is used for test automation
             // purposes where the seeded value of the pin associated with the provider will be
@@ -376,7 +388,7 @@ public class LoginActivityFragment extends InjectedFragment
         }
 
         String providerId = loginDetails.getProviderId();
-        prefsManager.setString(PrefsKey.LAST_PROVIDER_ID, providerId);//TODO: we need to move away from using PrefsKey.LAST_PROVIDER_ID
+        mProviderManager.setProviderId(providerId);
 
         startActivity(new Intent(this.getActivity(), SplashActivity.class));
     }
@@ -396,7 +408,6 @@ public class LoginActivityFragment extends InjectedFragment
             break;
             case INPUTTING_PHONE_NUMBER:
             {
-                mixpanel.track("portal login shown - phone");
                 instructionsText.setText(R.string.login_instructions_1);
                 phoneInputLayout.setVisibility(View.VISIBLE);
                 pinCodeInputLayout.setVisibility(View.GONE);

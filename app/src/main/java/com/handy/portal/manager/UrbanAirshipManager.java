@@ -10,25 +10,26 @@ import com.handy.portal.action.CustomDeepLinkAction;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 import com.urbanairship.AirshipConfigOptions;
 import com.urbanairship.UAirship;
 import com.urbanairship.actions.DeepLinkAction;
 import com.urbanairship.push.notifications.DefaultNotificationFactory;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * Created by cdavis on 8/10/15.
  */
 public class UrbanAirshipManager
 {
-    private final Bus bus;
+    private final EventBus bus;
     private final DataManager dataManager;
     private final PrefsManager prefsManager;
     private final Application associatedApplication;
     private final CustomDeepLinkAction customDeepLinkAction;
 
-    public UrbanAirshipManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication, final CustomDeepLinkAction customDeepLinkAction)
+    public UrbanAirshipManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication, final CustomDeepLinkAction customDeepLinkAction)
     {
         this.bus = bus;
         this.bus.register(this);
@@ -55,34 +56,41 @@ public class UrbanAirshipManager
         final AirshipConfigOptions options = AirshipConfigOptions.loadDefaultOptions(associatedApplication.getApplicationContext());
         options.inProduction = !BuildConfig.DEBUG;
 
-        UAirship.takeOff(associatedApplication, options, new UAirship.OnReadyCallback()
+        try
         {
-            @Override
-            public void onAirshipReady(final UAirship airship)
+            UAirship.takeOff(associatedApplication, options, new UAirship.OnReadyCallback()
             {
-                final DefaultNotificationFactory defaultNotificationFactory =
-                        new DefaultNotificationFactory(associatedApplication.getApplicationContext());
-
-                defaultNotificationFactory.setColor(ContextCompat.getColor(associatedApplication.getApplicationContext(), R.color.handy_blue));
-                defaultNotificationFactory.setSmallIconId(R.drawable.ic_notification);
-
-                airship.getPushManager().setNotificationFactory(defaultNotificationFactory);
-                airship.getPushManager().setPushEnabled(true);
-                airship.getPushManager().setUserNotificationsEnabled(true); //notifications the user can see as opposed to background data pushes
-
-                //Setup a named user linking this user's id to a UA named user
-                //We may not have a cached provider id when a user first logs in, possible race condition, but the UrbanAirshipManager will hear the ProviderIdUpdated event and update accordingly
-                String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
-                if (providerId != null)
+                @Override
+                public void onAirshipReady(final UAirship airship)
                 {
-                    setUniqueIdentifiers(providerId);
-                }
+                    final DefaultNotificationFactory defaultNotificationFactory =
+                            new DefaultNotificationFactory(associatedApplication.getApplicationContext());
 
-                //Override the default action otherwise it tries to openurl all of our deep links
-                //Init the deep link listener, must be done after takeoff
-                UAirship.shared().getActionRegistry().getEntry(DeepLinkAction.DEFAULT_REGISTRY_NAME).setDefaultAction(customDeepLinkAction);
-            }
-        });
+                    defaultNotificationFactory.setColor(ContextCompat.getColor(associatedApplication.getApplicationContext(), R.color.handy_blue));
+                    defaultNotificationFactory.setSmallIconId(R.drawable.ic_notification);
+
+                    airship.getPushManager().setNotificationFactory(defaultNotificationFactory);
+                    airship.getPushManager().setPushEnabled(true);
+                    airship.getPushManager().setUserNotificationsEnabled(true); //notifications the user can see as opposed to background data pushes
+
+                    //Setup a named user linking this user's id to a UA named user
+                    //We may not have a cached provider id when a user first logs in, possible race condition, but the UrbanAirshipManager will hear the ProviderIdUpdated event and update accordingly
+                    String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+                    if (providerId != null)
+                    {
+                        setUniqueIdentifiers(providerId);
+                    }
+
+                    //Override the default action otherwise it tries to openurl all of our deep links
+                    //Init the deep link listener, must be done after takeoff
+                    UAirship.shared().getActionRegistry().getEntry(DeepLinkAction.DEFAULT_REGISTRY_NAME).setDefaultAction(customDeepLinkAction);
+                }
+            });
+        }
+        catch (IllegalStateException | IllegalArgumentException e)
+        {
+            Crashlytics.logException(e);
+        }
     }
 
     //Update our alias to match the provider id

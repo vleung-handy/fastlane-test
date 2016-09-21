@@ -5,8 +5,9 @@ import com.google.common.cache.CacheBuilder;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.model.ZipClusterPolygons;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.HashSet;
 import java.util.concurrent.TimeUnit;
@@ -15,7 +16,7 @@ import javax.inject.Inject;
 
 public class ZipClusterManager
 {
-    private final Bus mBus;
+    private final EventBus mBus;
     private final DataManager mDataManager;
 
     private final Cache<String, ZipClusterPolygons> mZipClusterCache;
@@ -24,7 +25,7 @@ public class ZipClusterManager
     private final HashSet<String> mRequestInProgressClusters;
 
     @Inject
-    public ZipClusterManager(final Bus bus, final DataManager dataManager)
+    public ZipClusterManager(final EventBus bus, final DataManager dataManager)
     {
         mBus = bus;
         mBus.register(this);

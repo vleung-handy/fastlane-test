@@ -10,26 +10,35 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.flow.Flow;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.location.LocationUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.GoogleApiLog;
-import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.ui.widget.ProgressDialog;
+import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.model.ConfigurationResponse;
+import com.handy.portal.setup.SetupData;
+import com.handy.portal.setup.SetupEvent;
+import com.handy.portal.setup.step.AcceptTermsStep;
+import com.handy.portal.setup.step.AppUpdateStep;
+import com.handy.portal.setup.step.SetConfigurationStep;
+import com.handy.portal.setup.step.SetProviderProfileStep;
 import com.handy.portal.updater.AppUpdateEvent;
 import com.handy.portal.updater.AppUpdateEventListener;
 import com.handy.portal.updater.AppUpdateFlowLauncher;
 import com.handy.portal.updater.ui.PleaseUpdateActivity;
-import com.handy.portal.util.Utils;
-import com.squareup.otto.Bus;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Stack;
 
@@ -42,16 +51,39 @@ public abstract class BaseActivity extends AppCompatActivity
         GoogleApiClient.OnConnectionFailedListener,
         AppUpdateFlowLauncher
 {
+    @Inject
+    PrefsManager mPrefsManager;
+
+    @Inject
+    ConfigManager mConfigManager;
+
     private AppUpdateEventListener mAppUpdateEventListener;
     protected boolean allowCallbacks;
     private Stack<OnBackPressedListener> onBackPressedListenerStack;
-    protected ProgressDialog progressDialog;
 
     //According to android docs this is the preferred way of accessing location instead of using LocationManager
     //will also let us do geofencing and reverse address lookup which is nice
     //This is a clear instance where a service would be great but it is too tightly coupled to an activity to break out
     protected static GoogleApiClient googleApiClient;
     protected static Location lastLocation;
+    private SetupHandler mSetupHandler;
+    private boolean mWasOpenBefore;
+
+    // this is meant to be optionally overridden
+    protected boolean shouldTriggerSetup()
+    {
+        return false;
+    }
+
+    // this is meant to be optionally overridden
+    protected void onSetupComplete(final SetupData setupData)
+    {
+    }
+
+    // this is meant to be optionally overridden
+    protected void onSetupFailure()
+    {
+    }
 
     //Public Properties
     public boolean getAllowCallbacks()
@@ -60,9 +92,7 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     @Inject
-    public Mixpanel mixpanel;
-    @Inject
-    Bus bus;
+    public EventBus bus;
     @Inject
     ConfigManager configManager;
 
@@ -106,6 +136,37 @@ public abstract class BaseActivity extends AppCompatActivity
         onBackPressedListenerStack = new Stack<>();
 
         buildGoogleApiClient();
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        LocationUtils.showLocationBlockersOrStartServiceIfNecessary(this, isLocationServiceEnabled());
+        bus.post(new LogEvent.SendLogsEvent());
+        if (mWasOpenBefore)
+        {
+            bus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(false, false)));
+        }
+    }
+
+    @Override
+    protected void onPostResume()
+    {
+        super.onPostResume();
+        if (!isFinishing() && shouldTriggerSetup())
+        {
+            triggerSetup();
+        }
+    }
+
+    protected void triggerSetup()
+    {
+        if (mSetupHandler == null || !mSetupHandler.isOngoing())
+        {
+            mSetupHandler = new SetupHandler(this);
+            mSetupHandler.start();
+        }
     }
 
     @VisibleForTesting
@@ -200,26 +261,14 @@ public abstract class BaseActivity extends AppCompatActivity
     public void onPause()
     {
         bus.post(new LogEvent.SaveLogsEvent());
-        try
-        {
-             /*
-                 on mostly Samsung Android 5.0 devices (responsible for ~97% of crashes here),
-                 Activity.onPause() can be called without Activity.onResume()
-                 so unregistering the bus here can cause an exception
-              */
-            bus.unregister(mAppUpdateEventListener);
-        }
-        catch (Exception e)
-        {
-            Crashlytics.logException(e); //want more info for now
-        }
+        bus.unregister(mAppUpdateEventListener);
+        mWasOpenBefore = true;
         super.onPause();
     }
 
     @Override
     protected void onDestroy()
     {
-        mixpanel.flush();
         super.onDestroy();
     }
 
@@ -305,5 +354,81 @@ public abstract class BaseActivity extends AppCompatActivity
     public void onConnectionFailed(ConnectionResult var1)
     {
         //TODO: Handle?
+    }
+
+    public static class SetupHandler
+    {
+        @Inject
+        EventBus bus;
+
+        private BaseActivity mBaseActivity;
+        private Flow mSetupFlow;
+
+        public SetupHandler(final BaseActivity baseActivity)
+        {
+            Utils.inject(baseActivity, this);
+            bus.register(this);
+            mBaseActivity = baseActivity;
+        }
+
+        public void start()
+        {
+            bus.post(new SetupEvent.RequestSetupData());
+        }
+
+        public boolean isOngoing()
+        {
+            return mSetupFlow != null && !mSetupFlow.isComplete();
+        }
+
+        @Subscribe
+        public void onReceiveSetupDataSuccess(final SetupEvent.ReceiveSetupDataSuccess event)
+        {
+            final SetupData setupData = event.getSetupData();
+            mSetupFlow = new Flow()
+                    .addStep(new AppUpdateStep()) // this does NOTHING for now
+                    .addStep(new AcceptTermsStep(mBaseActivity,
+                            setupData.getTermsDetails()))
+                    .addStep(new SetConfigurationStep(mBaseActivity,
+                            setupData.getConfigurationResponse()))
+                    .addStep(new SetProviderProfileStep(mBaseActivity,
+                            setupData.getProviderProfile()))
+                    .setOnFlowCompleteListener(new Flow.OnFlowCompleteListener()
+                    {
+                        @Override
+                        public void onFlowComplete()
+                        {
+                            bus.unregister(SetupHandler.this);
+                            mBaseActivity.onSetupComplete(setupData);
+                        }
+                    })
+                    .start();
+        }
+
+        @Subscribe
+        public void onReceiveSetupDataError(final SetupEvent.ReceiveSetupDataError event)
+        {
+            bus.unregister(this);
+            mBaseActivity.onSetupFailure();
+        }
+    }
+
+    private boolean isLocationServiceEnabled()
+    {
+        ConfigurationResponse configurationResponse = mConfigManager.getConfigurationResponse();
+        return configurationResponse != null
+                && configurationResponse.isLocationServiceEnabled();
+    }
+
+    /**
+     * TODO: this is temporary to handle case in which config response comes back later
+     * ideally, we should probably block the app until the config response is received
+     *
+     * @param event
+     */
+    @Subscribe
+    public void onReceiveConfigurationResponse(HandyEvent.ReceiveConfigurationSuccess event)
+    {
+        LocationUtils.showLocationBlockersOrStartServiceIfNecessary(this, isLocationServiceEnabled());
     }
 }

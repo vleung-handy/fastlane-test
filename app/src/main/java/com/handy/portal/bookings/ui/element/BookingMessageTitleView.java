@@ -4,13 +4,13 @@ import android.content.Context;
 import android.util.AttributeSet;
 
 import com.handy.portal.R;
-import com.handy.portal.ui.element.LeftIndicatorTextView;
+import com.handy.portal.library.ui.view.LeftIndicatorTextView;
 
 /**
  * the view that displays the message listing or details title
  * of the booking's display attributes model
  *
- * currently it has a green indicator + green text.
+ * currently it has a green text.
  * would be nice to support multiple styles later.
  */
 public class BookingMessageTitleView extends LeftIndicatorTextView
@@ -34,10 +34,21 @@ public class BookingMessageTitleView extends LeftIndicatorTextView
     protected void init()
     {
         super.init();
-
         //set specific styles for this view
         setTextColorResourceId(R.color.requested_green)
-                .setImageResourceId(R.drawable.circle_green)
+                .setImageResourceId(R.drawable.ic_swap)
                 .setTextSize(R.dimen.small_text_size);
+    }
+
+    public BookingMessageTitleView showSwapIcon()
+    {
+        getImage().setVisibility(VISIBLE);
+        return this;
+    }
+
+    public BookingMessageTitleView hideSwapIcon()
+    {
+        getImage().setVisibility(GONE);
+        return this;
     }
 }

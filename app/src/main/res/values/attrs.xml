@@ -7,9 +7,10 @@
         <attr name="minLength"
               format="integer"/>
     </declare-styleable>
-
-    <declare-styleable name="notification">
-        <attr name="state_read"
-              format="boolean"/>
+    <declare-styleable name="BulletListItem">
+        <attr name="iconDrawable"
+              format="reference"/>
+        <attr name="text"
+              format="string"/>
     </declare-styleable>
 </resources>

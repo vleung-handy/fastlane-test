@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -15,11 +15,12 @@ import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.PaymentFlow;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -28,37 +29,37 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     @Inject
     ProviderManager providerManager;
 
-    @Bind(R.id.bank_account_details)
+    @BindView(R.id.bank_account_details)
     TextView bankAccountDetails;
 
-    @Bind(R.id.debit_card_details)
+    @BindView(R.id.debit_card_details)
     TextView debitCardDetails;
 
-    @Bind(R.id.payment_method_container)
+    @BindView(R.id.payment_method_container)
     ViewGroup paymentMethodContainer;
 
-    @Bind(R.id.debit_card_option)
+    @BindView(R.id.debit_card_option)
     ViewGroup debitCardOption;
 
-    @Bind(R.id.verified_indicator)
+    @BindView(R.id.verified_indicator)
     View verifiedIndicator;
 
-    @Bind(R.id.failed_indicator)
+    @BindView(R.id.failed_indicator)
     View failedIndicator;
 
-    @Bind(R.id.pending_indicator)
+    @BindView(R.id.pending_indicator)
     View pendingIndicator;
 
     @OnClick(R.id.debit_card_option)
     public void onDebitCardOptionClicked()
     {
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.UPDATE_DEBIT_CARD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.UPDATE_DEBIT_CARD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
     @OnClick(R.id.bank_account_option)
     public void onBankAccountOptionClicked()
     {
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.UPDATE_BANK_ACCOUNT, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.UPDATE_BANK_ACCOUNT, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
     @Override
@@ -80,9 +81,19 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     {
         super.onResume();
         setBackButtonEnabled(true);
+
+        bus.register(this);
+
         paymentMethodContainer.setVisibility(View.GONE);
         bus.post(new PaymentEvent.RequestPaymentFlow());
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @Override

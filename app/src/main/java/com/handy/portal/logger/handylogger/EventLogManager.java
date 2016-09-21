@@ -7,14 +7,16 @@ import android.support.annotation.Nullable;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.handy.portal.BuildConfig;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.logger.handylogger.model.Event;
 import com.handy.portal.logger.handylogger.model.EventLogBundle;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.manager.PrefsManager;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,12 +31,12 @@ public class EventLogManager
     private static final Gson GSON = new Gson();
 
     private static List<Event> sLogs = new ArrayList<>();
-    private final Bus mBus;
+    private final EventBus mBus;
     private final DataManager mDataManager;
     private final PrefsManager mPrefsManager;
 
     @Inject
-    public EventLogManager(final Bus bus, final DataManager dataManager,
+    public EventLogManager(final EventBus bus, final DataManager dataManager,
                            final PrefsManager prefsManager)
     {
         mBus = bus;
@@ -44,33 +46,36 @@ public class EventLogManager
     }
 
     @Subscribe
-    public synchronized void addLog(@NonNull LogEvent.AddLogEvent event)
+    public void addLog(@NonNull LogEvent.AddLogEvent event)
     {
-        //log the payload to Crashlytics too
-        try
+        if (!BuildConfig.DEBUG)
         {
-            //putting in try/catch block just in case GSON.toJson throws an exception
-            String eventLogJson = GSON.toJson(event.getLog());
-            String crashlyticsLogString =
-                    event.getLog().getEventName()
-                            + ": " + eventLogJson;
-            Crashlytics.log(crashlyticsLogString);
-        }
-        catch (Exception e)
-        {
-            Crashlytics.logException(e);
-        }
+            //log the payload to Crashlytics too
+            try
+            {
+                //putting in try/catch block just in case GSON.toJson throws an exception
+                String eventLogJson = GSON.toJson(event.getLog());
+                String crashlyticsLogString =
+                        event.getLog().getEventName()
+                                + ": " + eventLogJson;
+                Crashlytics.log(crashlyticsLogString);
+            }
+            catch (Exception e)
+            {
+                Crashlytics.logException(e);
+            }
 
-        sLogs.add(new Event(event.getLog()));
-        if (sLogs.size() >= MAX_NUM_PER_BUNDLE)
-        {
-            saveLogs(null);
-            sendLogs(null);
+            sLogs.add(new Event(event.getLog()));
+            if (sLogs.size() >= MAX_NUM_PER_BUNDLE)
+            {
+                mBus.post(new LogEvent.SaveLogsEvent());
+                mBus.post(new LogEvent.SendLogsEvent());
+            }
         }
     }
 
     @Subscribe
-    public synchronized void sendLogs(@Nullable final LogEvent.SendLogsEvent event)
+    public void sendLogs(@Nullable final LogEvent.SendLogsEvent event)
     {
         final List<String> jsonBundleStrings = loadSavedEventBundles();
         if (jsonBundleStrings.size() == 0) { return; }
@@ -94,7 +99,7 @@ public class EventLogManager
     }
 
     @Subscribe
-    public synchronized void saveLogs(@Nullable LogEvent.SaveLogsEvent event)
+    public void saveLogs(@Nullable LogEvent.SaveLogsEvent event)
     {
         if (sLogs.size() > 0)
         {
@@ -127,6 +132,13 @@ public class EventLogManager
 
     private int getProviderId()
     {
-        return Integer.parseInt(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID, "0"));
+        try
+        {
+            return Integer.parseInt(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID, "0"));
+        }
+        catch (Exception e)
+        {
+            return 0;
+        }
     }
 }

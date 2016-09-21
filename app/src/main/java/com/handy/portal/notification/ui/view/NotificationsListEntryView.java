@@ -1,38 +1,32 @@
 package com.handy.portal.notification.ui.view;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
 import android.text.Html;
+import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.notification.model.NotificationImage;
 import com.handy.portal.notification.model.NotificationMessage;
-import com.handy.portal.util.Utils;
-import com.squareup.picasso.Picasso;
+import com.handy.portal.notification.model.NotificationType;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class NotificationsListEntryView extends FrameLayout
 {
-    private static final int[] STATE_READ = {R.attr.state_read};
+    @BindView(R.id.notification_container)
+    ViewGroup mNotificationContainer;
 
-    @Bind(R.id.notification_icon)
+    @BindView(R.id.notification_icon)
     ImageView mNotificationIcon;
 
-    @Bind(R.id.notification_title)
-    TextView mNotificationTitle;
-
-    @Bind(R.id.notification_body)
+    @BindView(R.id.notification_body)
     TextView mNotificationBody;
 
-    @Bind(R.id.notification_time)
+    @BindView(R.id.notification_time)
     TextView mNotificationTime;
-
-    private boolean mIsRead = false;
 
     public NotificationsListEntryView(Context context)
     {
@@ -41,65 +35,48 @@ public class NotificationsListEntryView extends FrameLayout
         ButterKnife.bind(this);
     }
 
-    @Override
-    public int[] onCreateDrawableState(int extraSpace)
-    {
-        final int[] drawableState = super.onCreateDrawableState(extraSpace + 1);
-        if (mIsRead)
-        {
-            mergeDrawableStates(drawableState, STATE_READ);
-        }
-
-        return drawableState;
-    }
-
     public void updateDisplay(NotificationMessage notificationMessage)
     {
-        mNotificationTitle.setText(notificationMessage.getTitle());
-        mNotificationBody.setText(Html.fromHtml(notificationMessage.getHtmlBody()));
-        mNotificationTime.setText(notificationMessage.getFormattedTime());
+        setNotificationBackground(notificationMessage);
+        setNotificationText(notificationMessage);
         setNotificationImage(notificationMessage);
     }
 
-    public void setRead(boolean isRead)
+    public void setNotificationBackground(final NotificationMessage notificationMessage)
     {
-        mIsRead = isRead;
-    }
-
-    private void setNotificationImage(NotificationMessage notificationMessage)
-    {
-        NotificationImage notificationImage = getNotificationImage(notificationMessage);
-
-        if (notificationImage != null)
+        if (notificationMessage.isInteracted())
         {
-            Picasso.with(getContext()).load(notificationImage.getUrl()).into(mNotificationIcon);
-            mNotificationIcon.setBackground(ContextCompat.getDrawable(getContext(), notificationImage.getDrawableBackground()));
+            mNotificationContainer.setBackgroundResource(R.color.handy_bg);
+        }
+        else
+        {
+            mNotificationContainer.setBackgroundResource(R.drawable.button_white);
         }
     }
 
-    private NotificationImage getNotificationImage(NotificationMessage notificationMessage)
+    private void setNotificationText(final NotificationMessage notificationMessage)
     {
-        if (notificationMessage.getImage() == null && !notificationMessage.hasNoImage())
+        if (notificationMessage.isInteracted())
         {
-            float density = getResources().getDisplayMetrics().density;
-            if (density <= Utils.MDPI)
-            {
-                notificationMessage.setImage(Utils.MDPI);
-            }
-            else if (density == Utils.HDPI)
-            {
-                notificationMessage.setImage(Utils.HDPI);
-            }
-            else if (density == Utils.XHDPI)
-            {
-                notificationMessage.setImage(Utils.XHDPI);
-            }
-            else
-            {
-                notificationMessage.setImage(Utils.XXHDPI);
-            }
+            mNotificationBody.setText(Html.fromHtml(notificationMessage.getBody()));
         }
+        else
+        {
+            mNotificationBody.setText(Html.fromHtml(notificationMessage.getHtmlBody()));
+        }
+        mNotificationTime.setText(notificationMessage.getFormattedTime());
+    }
 
-        return notificationMessage.getImage();
+    private void setNotificationImage(final NotificationMessage notificationMessage)
+    {
+        final NotificationType notificationType = notificationMessage.getType();
+        if (notificationMessage.isInteracted())
+        {
+            mNotificationIcon.setImageResource(notificationType.getInactiveIconResId());
+        }
+        else
+        {
+            mNotificationIcon.setImageResource(notificationType.getActiveIconResId());
+        }
     }
 }

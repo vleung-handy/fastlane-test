@@ -7,8 +7,13 @@ import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.CheckoutRequest;
+import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.ProviderKey;
+import com.handy.portal.dashboard.model.ProviderEvaluation;
+import com.handy.portal.dashboard.model.ProviderFeedback;
+import com.handy.portal.dashboard.model.ProviderRating;
+import com.handy.portal.library.util.IDVerificationUtils;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
@@ -16,19 +21,15 @@ import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
-import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.model.ProviderProfileResponse;
 import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.SuccessWrapper;
-import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.model.ZipClusterPolygons;
-import com.handy.portal.model.dashboard.ProviderEvaluation;
-import com.handy.portal.model.dashboard.ProviderFeedback;
-import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.notification.model.NotificationMessages;
-import com.handy.portal.onboarding.model.JobClaimRequest;
-import com.handy.portal.onboarding.model.JobClaimResponse;
+import com.handy.portal.onboarding.model.claim.JobClaimRequest;
+import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
@@ -40,7 +41,9 @@ import com.handy.portal.payments.model.StripeTokenResponse;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
+import com.handy.portal.retrofit.logevents.EventLogService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
+import com.handy.portal.setup.SetupData;
 import com.handy.portal.updater.model.UpdateDetails;
 
 import org.json.JSONObject;
@@ -59,15 +62,23 @@ public class DataManager
     private final HandyRetrofitEndpoint mEndpoint;
 
     private final StripeRetrofitService mStripeService; // should refactor and move somewhere else?
+    private EventLogService mEventLogService;
 
     @Inject
     public DataManager(final HandyRetrofitService service,
                        final HandyRetrofitEndpoint endpoint,
-                       final StripeRetrofitService stripeService)
+                       final StripeRetrofitService stripeService,
+                       final EventLogService eventLogService)
     {
         mService = service;
         mEndpoint = endpoint;
         mStripeService = stripeService;
+        mEventLogService = eventLogService;
+    }
+
+    public void getSetupData(final Callback<SetupData> cb)
+    {
+        mService.getSetupData(new SetupDataRetrofitCallback(cb));
     }
 
     public void getLocationStrategies(String providerId, Callback<LocationScheduleStrategies> cb)
@@ -85,14 +96,25 @@ public class DataManager
         return mEndpoint.getBaseUrl();
     }
 
-    public void getAvailableBookings(Date[] dates, final Callback<BookingsListWrapper> cb)
+    public void getJobsCount(final List<Date> dates,
+                             final Map<String, Object> options,
+                             final Callback<HashMap<String, Object>> cb)
     {
-        mService.getAvailableBookings(dates, new BookingsListWrapperHandyRetroFitCallback(cb));
+        mService.getJobsCount(dates, options, new JobsCountHandyRetroFitCallback(cb));
     }
 
-    public void getOnboardingJobs(final Callback<BookingsListWrapper> cb)
+    public void getAvailableBookings(Date[] dates, Map<String, Object> additionalOptions, final Callback<BookingsListWrapper> cb)
     {
-        mService.getOnboardingJobs(new BookingsListWrapperHandyRetroFitCallback(cb));
+
+        mService.getAvailableBookings(dates, additionalOptions, new BookingsListWrapperHandyRetroFitCallback(cb));
+    }
+
+    public void getOnboardingJobs(final Date startDate,
+                                  final ArrayList<String> preferredZipclusterIds,
+                                  final Callback<BookingsListWrapper> cb)
+    {
+        mService.getOnboardingJobs(startDate, preferredZipclusterIds,
+                new BookingsListWrapperHandyRetroFitCallback(cb));
     }
 
     public void getScheduledBookings(Date[] dates, final Callback<BookingsListWrapper> cb)
@@ -112,9 +134,14 @@ public class DataManager
         mService.getComplementaryBookings(bookingId, type.toString().toLowerCase(), new BookingsWrapperRetroFitCallback(cb));
     }
 
-    public void claimBooking(String bookingId, BookingType type, final Callback<BookingClaimDetails> cb)
+    public void claimBooking(String bookingId, BookingType type, String claimSwitchJobId, BookingType claimSwitchJobType, final Callback<BookingClaimDetails> cb)
     {
-        mService.claimBooking(bookingId, type.toString().toLowerCase(), new BookingClaimHandyRetroFitCallback(cb));
+        mService.claimBooking(
+                bookingId,
+                type.toString().toLowerCase(),
+                claimSwitchJobId,
+                claimSwitchJobType != null ? claimSwitchJobType.toString().toLowerCase() : null,
+                new BookingClaimHandyRetroFitCallback(cb));
     }
 
     public void claimBookings(JobClaimRequest jobClaimRequest, final Callback<JobClaimResponse> cb)
@@ -137,7 +164,7 @@ public class DataManager
         mService.getProviderProfile(providerId, new ProviderProfileRetrofitCallback(cb));
     }
 
-    public void updateProviderProfile(String providerId, TypeSafeMap<ProviderKey> params, Callback<ProviderPersonalInfo> cb)
+    public void updateProviderProfile(String providerId, TypeSafeMap<ProviderKey> params, Callback<ProviderProfileResponse> cb)
     {
         mService.updateProviderProfile(providerId, params.toStringMap(), new ProviderPersonalInfoHandyRetroFitCallback(cb));
     }
@@ -202,6 +229,11 @@ public class DataManager
         mService.checkOut(bookingId, request, new BookingHandyRetroFitCallback(cb));
     }
 
+    public void requestPostCheckoutInfo(final String bookingId, final Callback<PostCheckoutInfo> cb)
+    {
+        mService.requestPostCheckoutInfo(bookingId, new PostCheckoutInfoHandyRetrofitCallback(cb));
+    }
+
     public void notifyUpdateArrivalTimeBooking(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption, final Callback<Booking> cb)
     {
         mService.updateArrivalTime(bookingId, arrivalTimeOption.getValue(), new BookingHandyRetroFitCallback(cb));
@@ -210,6 +242,11 @@ public class DataManager
     public void reportNoShow(String bookingId, TypeSafeMap<ProviderKey> params, Callback<Booking> cb)
     {
         mService.reportNoShow(bookingId, params.toStringMap(), new BookingHandyRetroFitCallback(cb));
+    }
+
+    public void rateCustomer(String bookingId, int rating, String reviewText, Callback<Void> cb)
+    {
+        mService.rateCustomer(bookingId, rating, reviewText, new EmptyHandyRetroFitCallback(cb));
     }
 
     public void requestPinCode(String phoneNumber, final Callback<PinRequestDetails> cb)
@@ -232,16 +269,10 @@ public class DataManager
         mService.checkUpdates(appFlavor, versionCode, new UpdateDetailsResponseHandyRetroFitCallback(cb));
     }
 
-    public void checkForAllPendingTerms(final Callback<TermsDetailsGroup> cb)
-    {
-        mService.checkAllPendingTerms(new TermsDetailsGroupResponseHandyRetroFitCallback(cb));
-    }
-
     public void acceptTerms(String termsCode, final Callback<Void> cb)
     {
         mService.acceptTerms(termsCode, new HandyRetrofitCallback(cb)
         {
-
             public void success(JSONObject response)
             {
                 cb.onSuccess(null);
@@ -294,7 +325,7 @@ public class DataManager
     //Log Events
     public void postLogs(final JsonObject eventLogBundle, final Callback<EventLogResponse> cb)
     {
-        mService.postLogs(eventLogBundle, new LogEventsRetroFitCallback(cb));
+        mEventLogService.postLogs(eventLogBundle, new LogEventsRetroFitCallback(cb));
     }
 
     // Notifications
@@ -306,6 +337,11 @@ public class DataManager
     public void postMarkNotificationsAsRead(String providerId, ArrayList<Integer> notificationIds, Callback<NotificationMessages> cb)
     {
         mService.postMarkNotificationsAsRead(providerId, notificationIds, new NotificationMessagesHandyRetroFitCallback(cb));
+    }
+
+    public void postMarkNotificationsAsInteracted(String providerId, ArrayList<Integer> notificationIds, Callback<NotificationMessages> cb)
+    {
+        mService.postMarkNotificationsAsInteracted(providerId, notificationIds, new NotificationMessagesHandyRetroFitCallback(cb));
     }
 
     public void getNotificationsUnreadCount(final String providerId, final Callback<HashMap<String, Object>> cb)
@@ -336,6 +372,20 @@ public class DataManager
                 new SuccessWrapperRetroFitCallback(cb));
     }
 
+    public void beforeStartIdVerification(final String beforeIdVerificationStartUrl,
+                                          final Callback<HashMap<String, String>> cb)
+    {
+        mService.beforeStartIdVerification(beforeIdVerificationStartUrl, new HashMap<String, String>(), new FinishIDVerificationCallback(cb));
+    }
+
+    public void finishIdVerification(final String afterIdVerificationFinish,
+                                     final String scanReference,
+                                     @IDVerificationUtils.IdVerificationStatus final String status,
+                                     final Callback<HashMap<String, String>> cb)
+    {
+        mService.finishIdVerification(afterIdVerificationFinish, scanReference,
+                status, new FinishIDVerificationCallback(cb));
+    }
 
     public interface Callback<T>
     {

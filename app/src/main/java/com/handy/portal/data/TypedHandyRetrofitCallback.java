@@ -9,23 +9,23 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
+import com.handy.portal.bookings.model.PostCheckoutInfo;
+import com.handy.portal.dashboard.model.ProviderEvaluation;
+import com.handy.portal.dashboard.model.ProviderFeedback;
+import com.handy.portal.dashboard.model.ProviderRating;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
-import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.model.ProviderProfileResponse;
 import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.model.SuccessWrapper;
-import com.handy.portal.model.TermsDetailsGroup;
 import com.handy.portal.model.ZipClusterPolygons;
-import com.handy.portal.model.dashboard.ProviderEvaluation;
-import com.handy.portal.model.dashboard.ProviderFeedback;
-import com.handy.portal.model.dashboard.ProviderRating;
 import com.handy.portal.notification.model.NotificationMessages;
-import com.handy.portal.onboarding.model.JobClaimResponse;
+import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
@@ -35,6 +35,7 @@ import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
 import com.handy.portal.payments.model.StripeTokenResponse;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
+import com.handy.portal.setup.SetupData;
 import com.handy.portal.updater.model.UpdateDetails;
 
 import org.json.JSONObject;
@@ -83,6 +84,15 @@ class BookingHandyRetroFitCallback extends TypedHandyRetrofitCallback<Booking>
 }
 
 
+class PostCheckoutInfoHandyRetrofitCallback extends TypedHandyRetrofitCallback<PostCheckoutInfo>
+{
+    PostCheckoutInfoHandyRetrofitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+
 class PaymentBatchesRetroFitCallback extends TypedHandyRetrofitCallback<PaymentBatches>
 {
     PaymentBatchesRetroFitCallback(DataManager.Callback callback)
@@ -100,6 +110,7 @@ class AnnualPaymentSummariesRetroFitCallback extends TypedHandyRetrofitCallback<
     }
 }
 
+
 class PaymentOutstandingFeesRetroFitCallback extends TypedHandyRetrofitCallback<PaymentOutstandingFees>
 {
     PaymentOutstandingFeesRetroFitCallback(DataManager.Callback callback)
@@ -107,6 +118,7 @@ class PaymentOutstandingFeesRetroFitCallback extends TypedHandyRetrofitCallback<
         super(callback);
     }
 }
+
 
 class NeedsToUpdatePaymentInfoRetroFitCallback extends TypedHandyRetrofitCallback<RequiresPaymentInfoUpdate>
 {
@@ -162,6 +174,15 @@ class BookingsWrapperRetroFitCallback extends TypedHandyRetrofitCallback<Booking
 }
 
 
+class JobsCountHandyRetroFitCallback extends TypedHandyRetrofitCallback<HashMap<String, Object>>
+{
+    JobsCountHandyRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+
 class PinRequestDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<PinRequestDetails>
 {
     PinRequestDetailsResponseHandyRetroFitCallback(DataManager.Callback callback)
@@ -198,14 +219,6 @@ class UpdateDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallb
 }
 
 
-class TermsDetailsGroupResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<TermsDetailsGroup>
-{
-    TermsDetailsGroupResponseHandyRetroFitCallback(DataManager.Callback callback)
-    {
-        super(callback);
-    }
-}
-
 class EmptyHandyRetroFitCallback extends TypedHandyRetrofitCallback<Void>
 {
     EmptyHandyRetroFitCallback(DataManager.Callback callback)
@@ -233,7 +246,7 @@ class ProviderProfileRetrofitCallback extends TypedHandyRetrofitCallback<Provide
 }
 
 
-class ProviderPersonalInfoHandyRetroFitCallback extends TypedHandyRetrofitCallback<ProviderPersonalInfo>
+class ProviderPersonalInfoHandyRetroFitCallback extends TypedHandyRetrofitCallback<ProviderProfileResponse>
 {
     ProviderPersonalInfoHandyRetroFitCallback(DataManager.Callback callback)
     {
@@ -350,6 +363,7 @@ class NotificationMessagesHandyRetroFitCallback extends TypedHandyRetrofitCallba
     }
 }
 
+
 class NotificationUnreadCountHandyRetroFitCallback extends TypedHandyRetrofitCallback<HashMap<String, Object>>
 {
     NotificationUnreadCountHandyRetroFitCallback(DataManager.Callback callback)
@@ -385,9 +399,28 @@ class GetProviderFeedbackRetrofitCallback extends TypedHandyRetrofitCallback<Pro
     }
 }
 
+
 class GetLocationScheduleRetrofitCallback extends TypedHandyRetrofitCallback<LocationScheduleStrategies>
 {
     GetLocationScheduleRetrofitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+
+class SetupDataRetrofitCallback extends TypedHandyRetrofitCallback<SetupData>
+{
+    SetupDataRetrofitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+
+class FinishIDVerificationCallback extends TypedHandyRetrofitCallback<HashMap<String, String>>
+{
+    FinishIDVerificationCallback(final DataManager.Callback callback)
     {
         super(callback);
     }

@@ -121,4 +121,41 @@ public abstract class NotificationEvent extends HandyEvent
             return mUnreadCount;
         }
     }
+
+
+    public static class RequestMarkNotificationsAsInteracted extends RequestEvent
+    {
+        private final ArrayList<Integer> mNotificationIds;
+
+        public RequestMarkNotificationsAsInteracted(ArrayList<Integer> notificationIds)
+        {
+            mNotificationIds = notificationIds;
+        }
+
+        public ArrayList<Integer> getNotificationIds()
+        {
+            return mNotificationIds;
+        }
+    }
+
+
+    public static class ReceiveMarkNotificationsAsInteractedSuccess extends ReceiveSuccessEvent
+    {
+        private NotificationMessage[] mNotificationMessages;
+
+        public ReceiveMarkNotificationsAsInteractedSuccess(
+                final NotificationMessage[] notificationMessages)
+        {
+            mNotificationMessages = notificationMessages;
+        }
+    }
+
+
+    public static class ReceiveMarkNotificationsAsInteractedError extends ReceiveErrorEvent
+    {
+        public ReceiveMarkNotificationsAsInteractedError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 }

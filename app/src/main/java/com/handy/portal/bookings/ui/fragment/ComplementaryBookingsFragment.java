@@ -19,44 +19,39 @@ import com.handy.portal.bookings.ui.element.BookingElementMediator;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import javax.inject.Inject;
-
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ComplementaryBookingsFragment extends ActionBarFragment
 {
-    @Bind(R.id.loading_overlay)
+    @BindView(R.id.loading_overlay)
     View loadingOverlay;
-    @Bind(R.id.complementary_bookings_empty)
+    @BindView(R.id.complementary_bookings_empty)
     View noBookingsView;
-    @Bind(R.id.earlier_bookings)
+    @BindView(R.id.earlier_bookings)
     ViewGroup earlierBookingsContainer;
-    @Bind(R.id.later_bookings)
+    @BindView(R.id.later_bookings)
     ViewGroup laterBookingsContainer;
-    @Bind(R.id.claimed_bookings)
+    @BindView(R.id.claimed_bookings)
     ViewGroup claimedBookingsContainer;
-    @Bind(R.id.fetch_error_view)
+    @BindView(R.id.fetch_error_view)
     View errorView;
-    @Bind(R.id.fetch_error_text)
+    @BindView(R.id.fetch_error_text)
     TextView errorText;
-
-    @Inject
-    Mixpanel mixpanel;
 
     private Booking claimedBooking;
     private List<Booking> complementaryBookings;
@@ -67,9 +62,9 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
     private static final String SOURCE_COMPLEMENTARY_JOBS_LIST = "matching_jobs_list";
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.SCHEDULED_JOBS;
+        return MainViewPage.SCHEDULED_JOBS;
     }
 
     @Override
@@ -117,7 +112,7 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
         else
         {
             showToast(R.string.error_fetching_matching_jobs);
-            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS));
+            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SCHEDULED_JOBS));
         }
 
         loadingOverlay.setVisibility(View.VISIBLE);
@@ -136,10 +131,18 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
     {
         super.onResume();
         setActionBar(R.string.matching_jobs, false);
+        bus.register(this);
         if (!MainActivityFragment.clearingBackStack)
         {
             requestComplementaryBookings();
         }
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @OnClick(R.id.all_jobs_button)
@@ -147,7 +150,7 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
     {
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, claimedBooking.getStartDate().getTime());
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS, arguments));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.AVAILABLE_JOBS, arguments));
     }
 
     @OnClick(R.id.try_again_button)
@@ -196,13 +199,11 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
         loadingOverlay.setVisibility(View.GONE);
         if (complementaryBookings.isEmpty())
         {
-            mixpanel.track("no complementary jobs found");
             setActionBarTitle(R.string.no_matching_jobs);
             noBookingsView.setVisibility(View.VISIBLE);
         }
         else
         {
-            mixpanel.track("complementary jobs found");
             setActionBarTitle(complementaryBookings.size() == 1 ? getString(R.string.one_matching_job) : getString(R.string.n_matching_jobs, complementaryBookings.size()));
             displayBookings(Lists.newArrayList(complementaryBookings));
         }
@@ -291,15 +292,11 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
         @Override
         public void onClick(View view)
         {
-            if (!booking.getId().equals(claimedBooking.getId()))
-            {
-                mixpanel.track("complementary job clicked");
-            }
             Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
             arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
             arguments.putString(BundleKeys.BOOKING_SOURCE, SOURCE_COMPLEMENTARY_JOBS_LIST);
-            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.JOB_DETAILS, arguments, true));
+            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.JOB_DETAILS, arguments, true));
         }
     }
 }

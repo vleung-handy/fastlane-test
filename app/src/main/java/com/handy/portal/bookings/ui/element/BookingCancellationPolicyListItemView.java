@@ -2,6 +2,7 @@ package com.handy.portal.bookings.ui.element;
 
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.graphics.Paint;
 import android.os.Build;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
@@ -12,18 +13,20 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class BookingCancellationPolicyListItemView extends RelativeLayout
 {
-    @Bind(R.id.cancellation_policy_list_item_left_text)
+    @BindView(R.id.cancellation_policy_list_item_left_text)
     TextView mLeftText;
-    @Bind(R.id.cancellation_policy_list_item_right_text)
-    TextView mRightText;
-    @Bind(R.id.cancellation_policy_list_item_active_indicator)
+    @BindView(R.id.cancellation_policy_list_item_waived_fee_text)
+    TextView mWaivedFeeText;
+    @BindView(R.id.cancellation_policy_list_item_fee_text)
+    TextView mFeeText;
+    @BindView(R.id.cancellation_policy_list_item_active_indicator)
     ImageView mActiveItemIndicator;
-    @Bind(R.id.cancellation_policy_list_item_divider)
+    @BindView(R.id.cancellation_policy_list_item_divider)
     View mDivider;
 
     public BookingCancellationPolicyListItemView(final Context context)
@@ -55,6 +58,7 @@ public class BookingCancellationPolicyListItemView extends RelativeLayout
     {
         inflate(getContext(), R.layout.element_cancellation_policy_list_item, this);
         ButterKnife.bind(this);
+        mWaivedFeeText.setPaintFlags(mWaivedFeeText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
     }
 
     public BookingCancellationPolicyListItemView setLeftText(String leftText)
@@ -63,9 +67,23 @@ public class BookingCancellationPolicyListItemView extends RelativeLayout
         return this;
     }
 
-    public BookingCancellationPolicyListItemView setRightText(String rightText)
+    public BookingCancellationPolicyListItemView setWaivedFeeText(final String waivedFeeText)
     {
-        mRightText.setText(rightText);
+        if (waivedFeeText != null)
+        {
+            mWaivedFeeText.setText(waivedFeeText);
+            mWaivedFeeText.setVisibility(VISIBLE);
+        }
+        else
+        {
+            mWaivedFeeText.setVisibility(GONE);
+        }
+        return this;
+    }
+
+    public BookingCancellationPolicyListItemView setFeeText(String feeText)
+    {
+        mFeeText.setText(feeText);
         return this;
     }
 
@@ -84,7 +102,7 @@ public class BookingCancellationPolicyListItemView extends RelativeLayout
         }
         final int textColor = ContextCompat.getColor(getContext(), colorResourceId);
         mLeftText.setTextColor(textColor);
-        mRightText.setTextColor(textColor);
+        mFeeText.setTextColor(textColor);
         return this;
     }
 

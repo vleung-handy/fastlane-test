@@ -39,7 +39,7 @@
             tools:text="January 5, 2016 - February 5, 2016"
             />
 
-        <com.handy.portal.ui.element.dashboard.FiveStarRatingPercentageView
+        <com.handy.portal.dashboard.view.FiveStarRatingPercentageView
             android:id="@+id/five_star_progress_percentage_view"
             android:layout_width="@dimen/percentage_circle_diameter"
             android:layout_height="@dimen/percentage_circle_diameter"
@@ -57,21 +57,21 @@
             android:paddingTop="@dimen/job_ratings_bottom_padding"
             >
 
-            <com.handy.portal.ui.element.dashboard.JobRatingView
+            <com.handy.portal.dashboard.view.JobRatingView
                 android:id="@+id/five_star_ratings_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 />
 
-            <com.handy.portal.ui.element.dashboard.JobRatingView
+            <com.handy.portal.dashboard.view.JobRatingView
                 android:id="@+id/rated_jobs_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 />
 
-            <com.handy.portal.ui.element.dashboard.JobRatingView
+            <com.handy.portal.dashboard.view.JobRatingView
                 android:id="@+id/total_jobs_view"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

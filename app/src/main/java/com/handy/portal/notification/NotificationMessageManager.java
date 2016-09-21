@@ -5,8 +5,9 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.NotificationEvent;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.notification.model.NotificationMessages;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.HashMap;
 
@@ -16,12 +17,12 @@ public class NotificationMessageManager
 {
     private static final String UNREAD_COUNT_KEY = "unread_count";
 
-    private final Bus mBus;
+    private final EventBus mBus;
     private final DataManager mDataManager;
     private final PrefsManager mPrefsManager;
 
     @Inject
-    public NotificationMessageManager(final Bus bus, final DataManager dataManager, final PrefsManager prefsManager)
+    public NotificationMessageManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager)
     {
         mBus = bus;
         mPrefsManager = prefsManager;
@@ -65,6 +66,27 @@ public class NotificationMessageManager
             public void onError(final DataManager.DataManagerError error)
             {
                 mBus.post(new NotificationEvent.ReceiveMarkNotificationsAsReadError(error));
+            }
+        });
+    }
+
+    @Subscribe
+    public void onRequestMarkNotificationsAsInteracted(
+            final NotificationEvent.RequestMarkNotificationsAsInteracted event)
+    {
+        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        mDataManager.postMarkNotificationsAsInteracted(providerId, event.getNotificationIds(), new DataManager.Callback<NotificationMessages>()
+        {
+            @Override
+            public void onSuccess(final NotificationMessages notificationMessages)
+            {
+                mBus.post(new NotificationEvent.ReceiveMarkNotificationsAsInteractedSuccess(notificationMessages.getList()));
+            }
+
+            @Override
+            public void onError(final DataManager.DataManagerError error)
+            {
+                mBus.post(new NotificationEvent.ReceiveMarkNotificationsAsInteractedError(error));
             }
         });
     }

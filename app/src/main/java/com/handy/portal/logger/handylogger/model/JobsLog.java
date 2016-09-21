@@ -37,6 +37,12 @@ public abstract class JobsLog extends EventLog
     private int mBonus;
     @SerializedName("currency_code")
     private String mCurrencyCode;
+    @SerializedName("schedule_swap")
+    private boolean mIsScheduleSwap;
+    @SerializedName("schedule_conflict_booking_id")
+    private String mScheduleConflictBookingId;
+    @SerializedName("schedule_conflict_booking_type")
+    private String mScheduleConflictBookingType;
 
     public JobsLog(final String eventType, final String eventContext, final Booking booking)
     {
@@ -66,6 +72,13 @@ public abstract class JobsLog extends EventLog
         if (booking.getBonusPaymentToProvider() != null)
         {
             mBonus = booking.getBonusPaymentToProvider().getAmount();
+        }
+        if (booking.canSwap())
+        {
+            mIsScheduleSwap = true;
+            final Booking swappableBooking = booking.getSwappableBooking();
+            mScheduleConflictBookingId = swappableBooking.getId();
+            mScheduleConflictBookingType = swappableBooking.getType().name().toLowerCase();
         }
     }
 

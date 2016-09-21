@@ -9,9 +9,8 @@ import android.widget.ExpandableListView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
-import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
@@ -22,23 +21,23 @@ import com.handy.portal.payments.ui.element.PaymentDetailExpandableListView;
 import com.handy.portal.payments.ui.element.PaymentsDetailListHeaderView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public final class PaymentsDetailFragment extends ActionBarFragment implements ExpandableListView.OnChildClickListener
 {
-    @Bind(R.id.payments_detail_list_view)
+    @BindView(R.id.payments_detail_list_view)
     PaymentDetailExpandableListView paymentDetailExpandableListView; //using ExpandableListView because it is the only ListView that offers group view support
-    @Bind(R.id.payment_details_list_header)
+    @BindView(R.id.payment_details_list_header)
     PaymentsDetailListHeaderView paymentsDetailListHeaderView;
 
     private NeoPaymentBatch neoPaymentBatch;
     private View fragmentView;
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.PAYMENTS;
+        return MainViewPage.PAYMENTS;
     }
 
     @Override
@@ -99,13 +98,10 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
                 new PaymentsLog.DetailSelected(paymentGroup.getMachineName())));
 
         final Payment payment = (Payment) parentListAdapter.getChild(groupPosition, childPosition);
-        final String bookingId = payment.getBookingId();
-        final String bookingType = payment.getBookingType() != null ?
-                payment.getBookingType().toUpperCase() : Booking.BookingType.BOOKING.toString();
-        if (bookingId != null)
-        {
-            showBookingDetails(bookingId, bookingType);
-        }
+
+        if (payment.getBookingId() == null || payment.getBookingType() == null) { return false; }
+
+        showBookingDetails(payment.getBookingId(), payment.getBookingType());
         return true;
     }
 
@@ -114,8 +110,8 @@ public final class PaymentsDetailFragment extends ActionBarFragment implements E
         Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.BOOKING_ID, bookingId);
         arguments.putString(BundleKeys.BOOKING_TYPE, bookingType);
-        NavigationEvent.NavigateToTab event =
-                new NavigationEvent.NavigateToTab(MainViewTab.JOB_PAYMENT_DETAILS, arguments, true);
+        NavigationEvent.NavigateToPage event =
+                new NavigationEvent.NavigateToPage(MainViewPage.JOB_PAYMENT_DETAILS, arguments, true);
         bus.post(event);
     }
 }

@@ -8,10 +8,13 @@ import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.event.StripeEvent;
+import com.handy.portal.library.ui.view.DateFormFieldTableRow;
+import com.handy.portal.library.ui.view.FormFieldTableRow;
+import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.definitions.FieldDefinition;
@@ -19,31 +22,29 @@ import com.handy.portal.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.DebitCardInfo;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.ui.view.DateFormFieldTableRow;
-import com.handy.portal.ui.view.FormFieldTableRow;
-import com.handy.portal.util.UIUtils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Map;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
 {
-    @Bind(R.id.debit_card_number_field)
+    @BindView(R.id.debit_card_number_field)
     FormFieldTableRow debitCardNumberField;
 
-    @Bind(R.id.expiration_date_field)
+    @BindView(R.id.expiration_date_field)
     DateFormFieldTableRow expirationDateField;
 
-    @Bind(R.id.security_code_field)
+    @BindView(R.id.security_code_field)
     FormFieldTableRow securityCodeField;
 
-    @Bind(R.id.tax_id_field)
+    @BindView(R.id.tax_id_field)
     FormFieldTableRow taxIdField;
 
     @Inject
@@ -86,9 +87,9 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     }
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.PAYMENTS;
+        return MainViewPage.PAYMENTS;
     }
 
     @Override
@@ -97,11 +98,21 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
         super.onResume();
         setBackButtonEnabled(true);
         resetStates();
+
+        bus.register(this);
+
         if (providerManager.getCachedActiveProvider() != null)
         {
             bus.post(new RegionDefinitionEvent.RequestFormDefinitions(
                     providerManager.getCachedActiveProvider().getCountry(), this.getContext()));
         }
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     public boolean validate()

@@ -3,66 +3,115 @@ package com.handy.portal.ui.fragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 
+import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
+import com.handy.portal.TestUtils;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
-import com.handy.portal.core.TestBaseApplication;
-import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.model.ConfigurationResponse;
+import com.handy.portal.bookings.ui.fragment.ProRequestedJobsFragment;
+import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.dashboard.fragment.DashboardVideoLibraryFragment;
+import com.handy.portal.dashboard.fragment.RatingsAndFeedbackFragment;
+import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
+import com.handy.portal.notification.ui.fragment.NotificationsFragment;
+import com.handy.portal.payments.ui.fragment.PaymentsFragment;
 import com.handy.portal.ui.activity.MainActivity;
 
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
-import org.mockito.Mock;
-import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
-import java.util.List;
-
-import javax.inject.Inject;
-
 import static org.hamcrest.CoreMatchers.instanceOf;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
-import static org.mockito.MockitoAnnotations.initMocks;
 
 public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
 {
     private MainActivityFragment mFragment;
 
-    @Mock
-    private ConfigurationResponse mConfigurationResponse;
-    @Inject
-    ConfigManager mConfigManager;
-
     @Before
     public void setUp() throws Exception
     {
-        initMocks(this);
-        ((TestBaseApplication) ShadowApplication.getInstance().getApplicationContext()).inject(this);
-        when(mConfigManager.getConfigurationResponse()).thenReturn(mConfigurationResponse);
-        when(mConfigurationResponse.shouldShowNotificationMenuButton()).thenReturn(false);
         mFragment = new MainActivityFragment();
         SupportFragmentTestUtil.startFragment(mFragment, MainActivity.class);
     }
 
     @Test
-    public void shouldHaveActionBar() throws Exception
+    public void shouldBeginWithAvailableTab() throws Exception
     {
-        assertNotNull(((AppCompatActivity) mFragment.getActivity()).getSupportActionBar());
+        Fragment currentFragment = TestUtils.getScreenFragment(mFragment.getFragmentManager());
+        assertThat(currentFragment, instanceOf(AvailableBookingsFragment.class));
+        assertEquals(mFragment.getString(R.string.available_jobs),
+                ((AppCompatActivity) mFragment.getActivity()).getSupportActionBar().getTitle());
     }
 
-    @Ignore
     @Test
-    public void givenNoTabSelected_whenActivityResumes_thenLoadJobsScreen() throws Exception
+    public void testScheduleTab() throws Exception
     {
-        assertThat(getScreenFragment(), instanceOf(AvailableBookingsFragment.class));
+        testNavigation(R.id.tab_nav_schedule, ScheduledBookingsFragment.class, R.string.scheduled_jobs);
     }
 
-    public Fragment getScreenFragment()
+    @Test
+    public void testRequestTab() throws Exception
     {
-        List<Fragment> fragments = mFragment.getActivity().getSupportFragmentManager().getFragments();
-        return fragments.get(fragments.size() - 1);
+        mFragment.mTabs.findViewById(R.id.tab_nav_pro_requested_jobs).performClick();
+        Fragment currentFragment = TestUtils.getScreenFragment(mFragment.getFragmentManager());
+        assertThat(currentFragment, instanceOf(ProRequestedJobsFragment.class));
+        assertEquals(mFragment.getString(R.string.your_requests),
+                ((AppCompatActivity) mFragment.getActivity()).getSupportActionBar().getTitle());
+        // testNavigation doesn't work here because getActivity().findViewById() fails
+    }
+
+    @Test
+    public void testAlertTab() throws Exception
+    {
+        mFragment.mTabs.findViewById(R.id.tab_nav_alert).performClick();
+        Fragment currentFragment = TestUtils.getScreenFragment(mFragment.getFragmentManager());
+        assertThat(currentFragment, instanceOf(NotificationsFragment.class));
+        // Robolectric having trouble rendering NotificationsListView, cannot test for title
+    }
+
+    @Test
+    public void testRatingFeedbackNav() throws Exception
+    {
+        testNavigation(R.id.nav_link_ratings_and_feedback, RatingsAndFeedbackFragment.class, R.string.ratings_and_feedback);
+    }
+
+    @Test
+    public void testPaymentsNav() throws Exception
+    {
+        testNavigation(R.id.nav_link_payments, PaymentsFragment.class, R.string.payments);
+    }
+
+    @Test
+    public void testReferAFriendNav() throws Exception
+    {
+        testNavigation(R.id.nav_link_refer_a_friend, ReferAFriendFragment.class, R.string.refer_a_friend);
+    }
+
+    @Test
+    public void testAccountSettingsNav() throws Exception
+    {
+        testNavigation(R.id.nav_link_account_settings, AccountSettingsFragment.class, R.string.account_settings);
+    }
+
+    @Test
+    public void testVideoLibraryNav() throws Exception
+    {
+        testNavigation(R.id.nav_link_video_library, DashboardVideoLibraryFragment.class, R.string.video_library);
+    }
+
+    @Test
+    public void testHelpNav() throws Exception
+    {
+        testNavigation(R.id.nav_link_help, HelpWebViewFragment.class, R.string.help);
+    }
+
+    private void testNavigation(final int viewId, final Class<?> fragmentClass, final int stringId)
+    {
+        mFragment.getActivity().findViewById(viewId).performClick();
+        Fragment currentFragment = TestUtils.getScreenFragment(mFragment.getFragmentManager());
+        assertThat(currentFragment, instanceOf(fragmentClass));
+        assertEquals(mFragment.getString(stringId),
+                ((AppCompatActivity) mFragment.getActivity()).getSupportActionBar().getTitle());
     }
 }

@@ -22,10 +22,12 @@ import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFr
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.Country;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.MathUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.NearbyJobsLog;
@@ -34,15 +36,14 @@ import com.handy.portal.model.Address;
 import com.handy.portal.model.Provider;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.MathUtils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class NearbyBookingsFragment extends ActionBarFragment
@@ -53,19 +54,19 @@ public class NearbyBookingsFragment extends ActionBarFragment
     @Inject
     ProviderManager mProviderManager;
 
-    @Bind(R.id.nearby_bookings_description)
+    @BindView(R.id.nearby_bookings_description)
     TextView mDescriptionText;
-    @Bind(R.id.nearby_bookings_map)
+    @BindView(R.id.nearby_bookings_map)
     ViewGroup mMapContainer;
-    @Bind(R.id.booking_info_timer)
+    @BindView(R.id.booking_info_timer)
     TextView mBookingTimerText;
-    @Bind(R.id.booking_info_address)
+    @BindView(R.id.booking_info_address)
     TextView mBookingAddressText;
-    @Bind(R.id.booking_info_time)
+    @BindView(R.id.booking_info_time)
     TextView mBookingTimeText;
-    @Bind(R.id.booking_info_claim_button)
+    @BindView(R.id.booking_info_claim_button)
     Button mBookingClaimButton;
-    @Bind(R.id.booking_info_distance)
+    @BindView(R.id.booking_info_distance)
     TextView mBookingDistanceText;
 
     private ArrayList<Booking> mBookings;
@@ -84,9 +85,9 @@ public class NearbyBookingsFragment extends ActionBarFragment
     }
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.NEARBY_JOBS;
+        return MainViewPage.NEARBY_JOBS;
     }
 
     @Nullable
@@ -128,6 +129,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
         bus.post(new LogEvent.AddLogEvent(
                 new NearbyJobsLog.Shown(mBookings.size())));
     }
@@ -136,6 +138,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
     public void onPause()
     {
         super.onPause();
+        bus.unregister(this);
         if (mCounter != null) { mCounter.cancel(); }
     }
 
@@ -188,7 +191,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, booking.getStartDate().getTime());
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, null));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SCHEDULED_JOBS, arguments, null));
     }
 
     @Subscribe

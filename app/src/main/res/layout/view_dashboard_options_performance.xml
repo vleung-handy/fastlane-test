@@ -20,24 +20,25 @@
         >
 
         <TextView
-            android:id="@+id/tier_title"
+            android:id="@+id/weekly_tier_text"
             style="@style/TextView.Medium.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            tools:text="Tier 1"
+            tools:text="Weekly Tier - 1"
             />
 
         <TextView
             android:id="@+id/tier_hourly_rate"
+            style="@style/CircularBold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/video_chevron"
             android:layout_toStartOf="@+id/video_chevron"
             android:textColor="@color/tertiary_gray"
-            android:textSize="@dimen/large_text_size"
-            tools:text="$15"
+            android:textSize="@dimen/default_text_size"
+            tools:text="Tier 1: $15/hour"
             />
 
         <ImageView
@@ -49,7 +50,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
-            android:src="@drawable/ic_chevron_dashboard_gray"
+            android:src="@drawable/ic_chevron_gray"
             />
 
     </RelativeLayout>
@@ -110,7 +111,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
-            android:src="@drawable/ic_chevron_dashboard_gray"
+            android:src="@drawable/ic_chevron_gray"
             />
 
     </RelativeLayout>
@@ -163,7 +164,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/default_margin"
                 android:layout_marginStart="@dimen/default_margin"
-                android:src="@drawable/ic_chevron_dashboard_gray"
+                android:src="@drawable/ic_chevron_gray"
                 />
 
         </RelativeLayout>

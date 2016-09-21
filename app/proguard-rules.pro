@@ -26,9 +26,6 @@
     public static int e(...);
 }
 
-#Mixpanel
--dontwarn com.mixpanel.**
-
 #Butterknife
 -dontwarn butterknife.internal.**
 -keep class **$$ViewBinder { *; }
@@ -39,11 +36,12 @@
 -keep class * extends dagger.internal.Binding
 -keep class * extends dagger.internal.ModuleAdapter
 
-#Otto
+#EventBus
+-keepattributes *Annotation*
 -keepclassmembers class ** {
-    @com.squareup.otto.Subscribe public *;
-    @com.squareup.otto.Produce public *;
+    @org.greenrobot.eventbus.Subscribe <methods>;
 }
+-keep enum org.greenrobot.eventbus.ThreadMode { *; }
 
 #Facebook
 -keep class com.facebook.** { *; }
@@ -92,3 +90,20 @@
    public *;
 }
 -keep public class * extends com.urbanairship.Autopilot
+
+
+-keep class com.jumio.** { *; }
+-keep class jumio.** { *; }
+-keepattributes Signature
+-keepattributes *Annotation*
+-dontwarn okio.**
+-dontnote
+-keep class net.sf.scuba.smartcards.IsoDepCardService {*;}
+-keep class org.jmrtd.** { *; }
+-keep class net.sf.scuba.** {*;}
+-keep class org.spongycastle.** {*;}
+-keep class org.ejbca.** {*;}
+-dontwarn java.nio.**
+-dontwarn org.codehaus.**
+-dontwarn org.ejbca.**
+-dontwarn org.spongycastle.**

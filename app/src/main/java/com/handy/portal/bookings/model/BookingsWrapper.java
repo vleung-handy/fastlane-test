@@ -6,21 +6,20 @@ import com.crashlytics.android.Crashlytics;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class BookingsWrapper
+public class BookingsWrapper implements Serializable
 {
     @SerializedName("date")
     private Date date;
-
     @SerializedName("sanitized_date")
     private String sanitizedDate;
-
     @SerializedName("priority_access")
     private PriorityAccessInfo mPriorityAccessInfo;
     @SerializedName("jobs")
-    private List<Booking> bookings;
+    private ArrayList<Booking> bookings;
 
     public static class PriorityAccessInfo implements Serializable
     {
@@ -106,7 +105,7 @@ public class BookingsWrapper
         return mPriorityAccessInfo;
     }
 
-    public final List<Booking> getBookings()
+    public List<Booking> getBookings()
     {
         return bookings;
     }

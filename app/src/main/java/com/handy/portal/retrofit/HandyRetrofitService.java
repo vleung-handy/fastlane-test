@@ -1,13 +1,14 @@
 package com.handy.portal.retrofit;
 
-import com.google.gson.JsonObject;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.model.ProviderSettings;
-import com.handy.portal.onboarding.model.JobClaimRequest;
+import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import retrofit.http.Body;
@@ -21,6 +22,7 @@ import retrofit.http.PUT;
 import retrofit.http.Part;
 import retrofit.http.Path;
 import retrofit.http.Query;
+import retrofit.http.QueryMap;
 import retrofit.mime.TypedInput;
 
 public interface HandyRetrofitService
@@ -43,13 +45,13 @@ public interface HandyRetrofitService
             @Body LocationBatchUpdate locationBatchUpdate,
             HandyRetrofitCallback cb);
 
+    @GET("/setup")
+    void getSetupData(HandyRetrofitCallback cb);
+
     @GET("/check_for_update")
     void checkUpdates(@Query("app_flavor") String appFlavor,
                       @Query("version_code") int versionCode,
                       HandyRetrofitCallback cb);
-
-    @GET("/check_all_pending_terms")
-    void checkAllPendingTerms(HandyRetrofitCallback cb);
 
     @Multipart
     @POST("/accept_terms")
@@ -60,12 +62,20 @@ public interface HandyRetrofitService
     void getConfigParams(@Query("key[]") String[] key,
                          HandyRetrofitCallback cb);
 
+    @GET(JOBS_PATH + "available_jobs_count")
+    void getJobsCount(@Query("dates[]") List<Date> dates,
+                      @QueryMap Map<String, Object> options,
+                      HandyRetrofitCallback cb);
+
     @GET(JOBS_PATH + "available_jobs")
     void getAvailableBookings(@Query("dates[]") Date[] dates,
+                              @QueryMap Map<String, Object> options,
                               HandyRetrofitCallback cb);
 
     @GET(JOBS_PATH + "onboarding_jobs")
-    void getOnboardingJobs(HandyRetrofitCallback cb);
+    void getOnboardingJobs(@Query("start_date") Date startDate,
+                           @Query("preferred_zipclusters[]") ArrayList<String> zipclusterIds,
+                           HandyRetrofitCallback cb);
 
     @GET(JOBS_PATH + "scheduled_jobs")
     void getScheduledBookings(@Query("dates[]") Date[] date,
@@ -77,18 +87,22 @@ public interface HandyRetrofitService
                            @Query("longitude") double longitude,
                            HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
     @PUT(JOBS_PATH + "{id}/claim")
     void claimBooking(@Path("id") String bookingId,
-                      @Query("type") String type,
+                      @Field("type") String type,
+                      @Field("claim_swap_job_id") String claimSwitchJobId,
+                      @Field("claim_swap_job_type") String claimSwitchJobType,
                       HandyRetrofitCallback cb);
 
     @PUT(JOBS_PATH + "claim_jobs")
     void claimBookings(@Body JobClaimRequest jobClaimRequest,
-                      HandyRetrofitCallback cb);
+                       HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
     @PUT(JOBS_PATH + "{id}/remove")
     void removeBooking(@Path("id") String bookingId,
-                       @Query("type") String type,
+                       @Field("type") String type,
                        HandyRetrofitCallback cb);
 
     @GET(JOBS_PATH + "{id}")
@@ -194,6 +208,9 @@ public interface HandyRetrofitService
             @Body CheckoutRequest request,
             HandyRetrofitCallback cb);
 
+    @GET(BOOKINGS_PATH + "{booking_id}/post_checkout")
+    void requestPostCheckoutInfo(@Path("booking_id") String bookingId, HandyRetrofitCallback cb);
+
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/customer_no_show")
     void reportNoShow(@Path("booking_id") String bookingId,
@@ -205,6 +222,13 @@ public interface HandyRetrofitService
     void updateArrivalTime(@Path("booking_id") String bookingId,
                            @Part("lateness") String latenessValue,
                            HandyRetrofitCallback cb);
+
+    @FormUrlEncoded
+    @POST(BOOKINGS_PATH + "{booking_id}/rate_customer")
+    void rateCustomer(@Path("booking_id") String bookingId,
+                      @Field("rating") int rating,
+                      @Field("review_text") String reviewText,
+                      HandyRetrofitCallback cb);
 
     @Multipart
     @POST(SESSIONS_PATH + "request_user_pin")
@@ -257,6 +281,12 @@ public interface HandyRetrofitService
                                      @Field("notification_ids[]") ArrayList<Integer> notificationIds,
                                      HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
+    @POST(PROVIDERS_PATH + "{id}/notifications/mark_as_interacted")
+    void postMarkNotificationsAsInteracted(@Path("id") String providerId,
+                                           @Field("notification_ids[]") ArrayList<Integer> notificationIds,
+                                           HandyRetrofitCallback cb);
+
     @GET(PROVIDERS_PATH + "{id}/notifications/unread_count")
     void getNotificationsUnreadCount(@Path("id") String providerId, HandyRetrofitCallback cb);
 
@@ -274,11 +304,21 @@ public interface HandyRetrofitService
     @GET(PROVIDERS_PATH + "{id}/feedback")
     void getProviderFeedback(@Path("id") String providerId, HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
     @POST(PROVIDERS_PATH + "{id}/onboarding_supplies")
     void requestOnboardingSupplies(@Path("id") String providerId,
-                                   @Query("onboarding_supplies") Boolean value,
+                                   @Field("onboarding_supplies") Boolean value,
                                    HandyRetrofitCallback cb);
 
-    @POST("/events")
-    void postLogs(@Body JsonObject eventLogBundle, HandyRetrofitCallback cb);
+    @POST("/{before_start_url}")
+    void beforeStartIdVerification(@Path(value = "before_start_url", encode = false) String beforeIdVerificationStartUrl,
+                                   @Body HashMap<String, String> map,
+                                   HandyRetrofitCallback cb);
+
+    @FormUrlEncoded
+    @POST("/{after_finish_url}")
+    void finishIdVerification(@Path(value = "after_finish_url", encode = false) String afterIdVerificationFinishUrl,
+                              @Field("scan_reference") String scanReference,
+                              @Field("status") String status,
+                              HandyRetrofitCallback cb);
 }

@@ -11,10 +11,13 @@ import android.view.View;
 
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.core.EnvironmentModifier;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.util.UIUtils;
+import com.handy.portal.library.ui.fragment.InjectedFragment;
+import com.handy.portal.library.util.EnvironmentUtils;
+import com.handy.portal.library.util.UIUtils;
 
 import javax.inject.Inject;
 
@@ -33,7 +36,7 @@ public abstract class ActionBarFragment extends InjectedFragment
     public void onResume()
     {
         super.onResume();
-        bus.post(new NavigationEvent.SelectTab(getTab()));
+        bus.post(new NavigationEvent.SelectPage(getAppPage()));
     }
 
     @Override
@@ -53,24 +56,40 @@ public abstract class ActionBarFragment extends InjectedFragment
         final MenuItem environmentModifierMenuItem = menu.findItem(R.id.action_settings);
         if (environmentModifierMenuItem != null)
         {
-            environmentModifierMenuItem.setTitle(environmentModifier.getEnvironmentPrefix().toUpperCase());
+            setEnvironmentMenuItemTitle(environmentModifierMenuItem);
             environmentModifierMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener()
             {
                 @Override
                 public boolean onMenuItemClick(MenuItem item)
                 {
-                    UIUtils.createEnvironmentModifierDialog(environmentModifier, getActivity(), new EnvironmentModifier.OnEnvironmentChangedListener()
+                    EnvironmentUtils.showEnvironmentModifierDialog(environmentModifier, getActivity(), new EnvironmentModifier.OnEnvironmentChangedListener()
                     {
                         @Override
                         public void onEnvironmentChanged(String newEnvironmentPrefix)
                         {
-                            environmentModifierMenuItem.setTitle(newEnvironmentPrefix.toUpperCase());
+                            setEnvironmentMenuItemTitle(environmentModifierMenuItem);
+                            bus.post(new HandyEvent.LogOutProvider());
                         }
-                    }).show();
+                    });
                     return true;
                 }
             });
         }
+    }
+
+    public void setEnvironmentMenuItemTitle(final MenuItem environmentMenuItemTitle)
+    {
+        String title;
+        final EnvironmentModifier.Environment environment = environmentModifier.getEnvironment();
+        if (environment == EnvironmentModifier.Environment.Q)
+        {
+            title = environmentModifier.getEnvironmentPrefix().toUpperCase();
+        }
+        else
+        {
+            title = environment.name().toUpperCase();
+        }
+        environmentMenuItemTitle.setTitle(title);
     }
 
     public void setActionBarVisible(boolean visible)
@@ -151,5 +170,5 @@ public abstract class ActionBarFragment extends InjectedFragment
         }
     }
 
-    protected MainViewTab getTab() { return null; }
+    protected MainViewPage getAppPage() { return null; }
 }

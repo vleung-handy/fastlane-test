@@ -4,8 +4,8 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.AttributeSet;
 import android.util.TypedValue;
@@ -14,25 +14,26 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.FontUtils;
+import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.payments.model.Transaction;
-import com.handy.portal.util.CurrencyUtils;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.FontUtils;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TransactionView extends FrameLayout
 {
-    @Bind(R.id.transaction_title_text)
+    @BindView(R.id.transaction_title_text)
     TextView mTitleText;
-    @Bind(R.id.transaction_amount_text)
+    @BindView(R.id.transaction_amount_text)
     TextView mAmountText;
-    @Bind(R.id.transaction_batches_layout)
+    @BindView(R.id.transaction_batches_layout)
     ViewGroup mBatchesLayout;
-    @Bind(R.id.transaction_policy_description_text)
+    @BindView(R.id.transaction_policy_description_text)
     TextView mPolicyDescriptionText;
-    @Bind(R.id.transaction_outstanding_text)
+    @BindView(R.id.transaction_outstanding_text)
     TextView mOutstandingText;
 
     public TransactionView(final Context context)
@@ -66,7 +67,7 @@ public class TransactionView extends FrameLayout
         ButterKnife.bind(this);
     }
 
-    public void setDisplay(@NonNull Transaction transaction)
+    public void setDisplay(@NonNull Transaction transaction, @Nullable TextUtils.LaunchWebViewCallback launchWebViewCallback)
     {
         mTitleText.setText(transaction.getTitle());
         mAmountText.setText(CurrencyUtils.formatPriceWithCents(
@@ -96,11 +97,9 @@ public class TransactionView extends FrameLayout
             mPolicyDescriptionText.setVisibility(VISIBLE);
             String description = getResources().getString(
                     R.string.policy_description_formatted, policy.getDescription(), policy.getPolicyUrl());
-            mPolicyDescriptionText.setText(Html.fromHtml(description));
             mPolicyDescriptionText.setLinkTextColor(ContextCompat.getColor(getContext(), R.color.partner_blue));
             mPolicyDescriptionText.setMovementMethod(LinkMovementMethod.getInstance());
+            TextUtils.setTextViewHTML(mPolicyDescriptionText, description, launchWebViewCallback);
         }
-
     }
-
 }

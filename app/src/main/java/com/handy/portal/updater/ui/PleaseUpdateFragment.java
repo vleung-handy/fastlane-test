@@ -23,17 +23,18 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
+import com.handy.portal.library.ui.fragment.InjectedFragment;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppUpdateLog;
-import com.handy.portal.ui.fragment.InjectedFragment;
 import com.handy.portal.updater.AppUpdateEvent;
 import com.handy.portal.updater.VersionManager;
-import com.handy.portal.util.Utils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -45,21 +46,21 @@ public class PleaseUpdateFragment extends InjectedFragment
     @Inject
     VersionManager mVersionManager;
 
-    @Bind(R.id.update_image)
+    @BindView(R.id.update_image)
     ImageView mUpdateImage;
-    @Bind(R.id.update_button)
+    @BindView(R.id.update_button)
     View mUpdateButton;
-    @Bind(R.id.update_text)
+    @BindView(R.id.update_text)
     TextView mUpdateText;
-    @Bind(R.id.grant_access_button)
+    @BindView(R.id.grant_access_button)
     Button mGrantAccessButton;
-    @Bind(R.id.grant_permissions_section)
+    @BindView(R.id.grant_permissions_section)
     LinearLayout mGrantPermissionsSection;
-    @Bind(R.id.install_update_section)
+    @BindView(R.id.install_update_section)
     LinearLayout mInstallUpdateSection;
-    @Bind(R.id.manual_download_text)
+    @BindView(R.id.manual_download_text)
     TextView manualDownloadText;
-    @Bind(R.id.app_update_fragment_update_later_button)
+    @BindView(R.id.app_update_fragment_update_later_button)
     Button mUpdateLaterButton;
 
     private boolean mAlreadyAskedPermissions = false;
@@ -98,6 +99,7 @@ public class PleaseUpdateFragment extends InjectedFragment
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
         if (!mVersionManager.hasRequestedDownload() && !shouldRequestPermissions())
         {
             mGrantPermissionsSection.setVisibility(View.GONE);
@@ -110,6 +112,13 @@ public class PleaseUpdateFragment extends InjectedFragment
             mGrantPermissionsSection.setVisibility(View.VISIBLE);
         }
         showUpdateLaterButtonForUpdateDetails();
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @Subscribe

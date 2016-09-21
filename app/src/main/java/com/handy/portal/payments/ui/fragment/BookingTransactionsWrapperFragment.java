@@ -12,23 +12,24 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.Transaction;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.util.TextUtils;
-import com.squareup.otto.Subscribe;
 
-import butterknife.Bind;
+import org.greenrobot.eventbus.Subscribe;
+
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class BookingTransactionsWrapperFragment extends ActionBarFragment
 {
-    @Bind(R.id.container)
+    @BindView(R.id.container)
     ViewGroup mContainer;
-    @Bind(R.id.fetch_error_view)
+    @BindView(R.id.fetch_error_view)
     View mFetchErrorView;
-    @Bind(R.id.fetch_error_text)
+    @BindView(R.id.fetch_error_text)
     TextView mErrorText;
 
     private String mRequestedBookingId;
@@ -62,7 +63,15 @@ public class BookingTransactionsWrapperFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
         requestBookingPaymentDetails();
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @OnClick(R.id.try_again_button)
@@ -93,7 +102,7 @@ public class BookingTransactionsWrapperFragment extends ActionBarFragment
     public void onReceiveBookingDetailsError(PaymentEvent.ReceiveBookingPaymentDetailsError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        if (event != null && event.error != null && TextUtils.isNullOrEmpty(event.error.getMessage()))
+        if (event != null && event.error != null && !TextUtils.isNullOrEmpty(event.error.getMessage()))
         {
             mErrorText.setText(event.error.getMessage());
         }

@@ -15,23 +15,24 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.util.CurrencyUtils;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.UIUtils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -40,15 +41,15 @@ public class CancellationRequestFragment extends ActionBarFragment
     @Inject
     PrefsManager mPrefsManager;
 
-    @Bind(R.id.cancellation_address)
+    @BindView(R.id.cancellation_address)
     TextView mAddressTextView;
-    @Bind(R.id.cancellation_date)
+    @BindView(R.id.cancellation_date)
     TextView mDateTextView;
-    @Bind(R.id.cancellation_time)
+    @BindView(R.id.cancellation_time)
     TextView mTimeTextView;
-    @Bind(R.id.cancellation_fee_amount)
+    @BindView(R.id.cancellation_fee_amount)
     TextView mFeeAmountTextView;
-    @Bind(R.id.cancellation_reasons)
+    @BindView(R.id.cancellation_reasons)
     RadioGroup mReasonsRadioGroup;
 
     private Booking mBooking;
@@ -72,6 +73,7 @@ public class CancellationRequestFragment extends ActionBarFragment
                 mBooking,
                 ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
                 mAction.getFeeAmount(),
+                mAction.getWaivedAmount(),
                 mAction.getWarningText()
         )));
         return view;
@@ -82,6 +84,20 @@ public class CancellationRequestFragment extends ActionBarFragment
     {
         ButterKnife.bind(this, view);
         init();
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        bus.register(this);
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @Override
@@ -119,6 +135,7 @@ public class CancellationRequestFragment extends ActionBarFragment
                     ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
                     selectedReason,
                     mAction.getFeeAmount(),
+                    mAction.getWaivedAmount(),
                     mAction.getWarningText()
             )));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
@@ -136,6 +153,7 @@ public class CancellationRequestFragment extends ActionBarFragment
                     ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
                     getSelectedReason(),
                     mAction.getFeeAmount(),
+                    mAction.getWaivedAmount(),
                     mAction.getWarningText()
             )));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
@@ -143,7 +161,7 @@ public class CancellationRequestFragment extends ActionBarFragment
             Bundle arguments = new Bundle();
             arguments.putLong(BundleKeys.DATE_EPOCH_TIME, event.booking.getStartDate().getTime());
             //Return to available jobs on that day
-            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SCHEDULED_JOBS, arguments, transitionStyle));
+            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SCHEDULED_JOBS, arguments, transitionStyle));
         }
     }
 
@@ -160,6 +178,7 @@ public class CancellationRequestFragment extends ActionBarFragment
                 ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
                 getSelectedReason(),
                 mAction.getFeeAmount(),
+                mAction.getWaivedAmount(),
                 mAction.getWarningText(),
                 errorMessage
         )));
@@ -182,7 +201,7 @@ public class CancellationRequestFragment extends ActionBarFragment
 
         mFeeAmountTextView.setText(getString(R.string.fee_formatted,
                 CurrencyUtils.formatPriceWithCents(mAction.getFeeAmount(),
-                        mBooking.getPaymentToProvider().getCurrencySymbol())));
+                        mBooking.getCurrencySymbol())));
 
         for (String reason : mAction.getRemoveReasons())
         {

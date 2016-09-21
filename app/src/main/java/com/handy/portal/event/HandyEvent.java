@@ -14,21 +14,18 @@ import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.logger.mixpanel.annotation.Track;
-import com.handy.portal.logger.mixpanel.annotation.TrackField;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.TermsDetails;
-import com.handy.portal.model.TermsDetailsGroup;
-import com.handy.portal.onboarding.model.JobClaimRequest;
-import com.handy.portal.onboarding.model.JobClaimResponse;
+import com.handy.portal.onboarding.model.claim.JobClaimRequest;
+import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 public abstract class HandyEvent
 {
@@ -81,7 +78,6 @@ public abstract class HandyEvent
 //Login
 
 
-    @Track("portal login submitted - phone number")
     public static class RequestPinCode extends HandyEvent
     {
         public String phoneNumber;
@@ -113,7 +109,6 @@ public abstract class HandyEvent
     }
 
 
-    @Track("portal login submitted - pin code")
     public static class RequestLogin extends HandyEvent
     {
         public String phoneNumber;
@@ -126,6 +121,11 @@ public abstract class HandyEvent
         }
     }
 
+    //fired when the user has been logged out
+    public static class UserLoggedOut extends HandyEvent
+    {
+
+    }
 
     public static class ReceiveLoginSuccess extends ReceiveSuccessEvent
     {
@@ -203,10 +203,8 @@ public abstract class HandyEvent
     }
 
 
-    @Track("google play services availability")
     public static class GooglePlayServicesAvailabilityCheck extends HandyEvent
     {
-        @TrackField("available")
         public final boolean available;
 
         public GooglePlayServicesAvailabilityCheck(boolean available)
@@ -214,25 +212,6 @@ public abstract class HandyEvent
             this.available = available;
         }
     }
-
-
-    public static class RequestCheckTerms extends RequestEvent {}
-
-
-    public static class ReceiveCheckTermsSuccess extends ReceiveSuccessEvent
-    {
-        public final TermsDetailsGroup termsDetailsGroup;
-
-        public ReceiveCheckTermsSuccess(@NonNull TermsDetailsGroup termsDetailsGroup)
-        {
-            this.termsDetailsGroup = termsDetailsGroup;
-        }
-    }
-
-
-    public static class ReceiveCheckTermsError extends ReceiveErrorEvent {}
-
-    //Booking Lists
 
 
     public static class RequestBookingsEvent extends RequestEvent
@@ -255,6 +234,25 @@ public abstract class HandyEvent
 
     public static class RequestOnboardingJobs extends RequestEvent
     {
+        private final Date mStartDate;
+        private final ArrayList<String> mPreferredZipclusterIds;
+
+        public RequestOnboardingJobs(final Date startDate,
+                                     final ArrayList<String> preferredZipclusterIds)
+        {
+            mStartDate = startDate;
+            mPreferredZipclusterIds = preferredZipclusterIds;
+        }
+
+        public Date getStartDate()
+        {
+            return mStartDate;
+        }
+
+        public ArrayList<String> getPreferredZipclusterIds()
+        {
+            return mPreferredZipclusterIds;
+        }
     }
 
 
@@ -282,28 +280,6 @@ public abstract class HandyEvent
     }
 
 
-    public static class ReceiveScheduledBookingsBatchSuccess extends RequestBookingsEvent
-    {
-        private final Map<Date, List<Booking>> mDateToBookingMap;
-
-        /**
-         * @param dateToBookingMap should be without time
-         */
-        public ReceiveScheduledBookingsBatchSuccess(Map<Date, List<Booking>> dateToBookingMap)
-        {
-            mDateToBookingMap = dateToBookingMap;
-        }
-
-        /**
-         * these dates should be without time
-         */
-        public Map<Date, List<Booking>> getDateToBookingMap()
-        {
-            return mDateToBookingMap;
-        }
-    }
-
-
     public static abstract class ReceiveBookingsSuccess extends ReceiveSuccessEvent
     {
         public BookingsWrapper bookingsWrapper;
@@ -323,11 +299,16 @@ public abstract class HandyEvent
 
     public static class ReceiveOnboardingJobsSuccess extends ReceiveSuccessEvent
     {
-        public BookingsListWrapper bookings;
+        private BookingsListWrapper mBookingsListWrapper;
 
-        public ReceiveOnboardingJobsSuccess(BookingsListWrapper bookings)
+        public ReceiveOnboardingJobsSuccess(final BookingsListWrapper bookingsListWrapper)
         {
-            this.bookings = bookings;
+            mBookingsListWrapper = bookingsListWrapper;
+        }
+
+        public BookingsListWrapper getBookingsListWrapper()
+        {
+            return mBookingsListWrapper;
         }
     }
 
@@ -341,6 +322,21 @@ public abstract class HandyEvent
         }
     }
 
+    /*
+        TODO: the above ReceiveScheduledBookingsSuccess event should be renamed
+        so that this event can have naming parity with its request class
+
+        this complements the original request event.
+
+        this is required because some components need to get notified
+        (just once, which is why we can't use the above event)
+        that the original request was responded to
+     */
+    public static class ReceiveScheduledBookingsBatchSuccess extends ReceiveSuccessEvent
+    {
+        //currently don't care about holding data. add if needed
+    }
+
 
     public static class ReceiveBookingsError extends ReceiveErrorEvent
     {
@@ -350,7 +346,7 @@ public abstract class HandyEvent
 
     public static class ReceiveAvailableBookingsError extends ReceiveBookingsError
     {
-        public ReceiveAvailableBookingsError(DataManager.DataManagerError error, List<Date> days)
+        public ReceiveAvailableBookingsError(@Nullable DataManager.DataManagerError error, List<Date> days)
         {
             this.days = days;
             this.error = error;
@@ -369,7 +365,7 @@ public abstract class HandyEvent
 
     public static class ReceiveScheduledBookingsError extends ReceiveBookingsError
     {
-        public ReceiveScheduledBookingsError(DataManager.DataManagerError error, List<Date> days)
+        public ReceiveScheduledBookingsError(@Nullable DataManager.DataManagerError error, List<Date> days)
         {
             this.days = days;
             this.error = error;
@@ -411,14 +407,7 @@ public abstract class HandyEvent
         }
     }
 
-
-    /**
-     * dispatched when one or more bookings might have changed
-     */
-    public static class BookingChangedOrCreated
-    {
-    }
-//Job Action Requests
+    //Job Action Requests
 
 
     public static class RequestClaimJob extends RequestBookingActionEvent
@@ -447,7 +436,7 @@ public abstract class HandyEvent
         }
     }
 
-    @Track("cancel claim confirmation accepted")
+
     public static class RequestRemoveJob extends RequestBookingActionEvent
     {
         public final Booking booking;
@@ -460,7 +449,6 @@ public abstract class HandyEvent
     }
 
 
-    @Track("on my way submitted")
     public static class RequestNotifyJobOnMyWay extends RequestBookingActionEvent
     {
         public LocationData locationData;
@@ -473,7 +461,6 @@ public abstract class HandyEvent
     }
 
 
-    @Track("provider checkin submitted")
     public static class RequestNotifyJobCheckIn extends RequestBookingActionEvent
     {
         public LocationData locationData;
@@ -486,7 +473,6 @@ public abstract class HandyEvent
     }
 
 
-    @Track("provider checkout submitted")
     public static class RequestNotifyJobCheckOut extends RequestBookingActionEvent
     {
         public CheckoutRequest checkoutRequest;
@@ -499,10 +485,8 @@ public abstract class HandyEvent
     }
 
 
-    @Track("self reported late submitted")
     public static class RequestNotifyJobUpdateArrivalTime extends RequestBookingActionEvent
     {
-        @TrackField("time_submitted")
         public Booking.ArrivalTimeOption arrivalTimeOption;
 
         public RequestNotifyJobUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
@@ -515,7 +499,6 @@ public abstract class HandyEvent
 //Job Action Receive Successes
 
 
-    @Track("eta")
     public static class ReceiveNotifyJobUpdateArrivalTimeSuccess extends ReceiveBookingSuccessEvent
     {
         public ReceiveNotifyJobUpdateArrivalTimeSuccess(Booking booking)
@@ -525,10 +508,8 @@ public abstract class HandyEvent
     }
 
 
-    @Track("claim job")
     public static class ReceiveClaimJobSuccess extends ReceiveSuccessEvent
     {
-        @TrackField("source")
         public String source;
         public BookingClaimDetails bookingClaimDetails;
 
@@ -539,17 +520,22 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveClaimJobsSuccess extends ReceiveSuccessEvent
     {
-        public JobClaimResponse mJobClaimResponse;
+        private JobClaimResponse mJobClaimResponse;
 
         public ReceiveClaimJobsSuccess(JobClaimResponse jobClaimResponse)
         {
             mJobClaimResponse = jobClaimResponse;
         }
+
+        public JobClaimResponse getJobClaimResponse()
+        {
+            return mJobClaimResponse;
+        }
     }
 
-    @Track("remove job")
     public static class ReceiveRemoveJobSuccess extends ReceiveBookingSuccessEvent
     {
         public ReceiveRemoveJobSuccess(Booking booking)
@@ -558,8 +544,6 @@ public abstract class HandyEvent
         }
     }
 
-
-    @Track("on my way")
     public static class ReceiveNotifyJobOnMyWaySuccess extends ReceiveBookingSuccessEvent
     {
         public ReceiveNotifyJobOnMyWaySuccess(Booking booking)
@@ -568,8 +552,6 @@ public abstract class HandyEvent
         }
     }
 
-
-    @Track("check in")
     public static class ReceiveNotifyJobCheckInSuccess extends ReceiveBookingSuccessEvent
     {
         public ReceiveNotifyJobCheckInSuccess(Booking booking)
@@ -578,8 +560,6 @@ public abstract class HandyEvent
         }
     }
 
-
-    @Track("check out")
     public static class ReceiveNotifyJobCheckOutSuccess extends ReceiveBookingSuccessEvent
     {
         public ReceiveNotifyJobCheckOutSuccess(Booking booking)
@@ -587,7 +567,6 @@ public abstract class HandyEvent
             this.booking = booking;
         }
     }
-
 
     //Job Action Receive Errors
     public static class ReceiveClaimJobError extends ReceiveErrorEvent
@@ -601,7 +580,6 @@ public abstract class HandyEvent
             mSource = source;
             this.error = error;
         }
-
 
         public String getSource()
         {
@@ -622,6 +600,7 @@ public abstract class HandyEvent
             this.error = error;
         }
     }
+
 
     public static class ReceiveRemoveJobError extends ReceiveErrorEvent
     {
@@ -669,7 +648,6 @@ public abstract class HandyEvent
 
 
     // Customer No Show Events
-    @Track("report customer no show")
     public static class RequestReportNoShow extends RequestEvent
     {
         public final String bookingId;
@@ -703,7 +681,6 @@ public abstract class HandyEvent
     }
 
 
-    @Track("cancel customer no show")
     public static class RequestCancelNoShow extends RequestEvent
     {
         public final String bookingId;
@@ -745,10 +722,8 @@ public abstract class HandyEvent
     }
 
 
-    @Track("portal login error")
     public static class LoginError extends AnalyticsEvent
     {
-        @TrackField("source")
         private String source;
 
         public LoginError(String source)
@@ -758,10 +733,8 @@ public abstract class HandyEvent
     }
 
 
-    @Track("portal navigation")
     public static class Navigation extends AnalyticsEvent
     {
-        @TrackField("page")
         private String page;
 
         public Navigation(String page)
@@ -771,12 +744,9 @@ public abstract class HandyEvent
     }
 
 
-    @Track("date scroller date selected")
     public static class DateClicked extends AnalyticsEvent
     {
-        @TrackField("type")
         private String type;
-        @TrackField("date")
         private Date date;
 
         public DateClicked(String type, Date date)
@@ -787,12 +757,9 @@ public abstract class HandyEvent
     }
 
 
-    @Track("booking detail selected")
     public static class BookingSelected extends AnalyticsEvent
     {
-        @TrackField("type")
         private String type;
-        @TrackField("booking_id")
         private String bookingId;
 
         public BookingSelected(String type, String bookingId)
@@ -803,10 +770,8 @@ public abstract class HandyEvent
     }
 
 
-    @Track("claim job error")
     public static class ClaimJobError extends AnalyticsEvent
     {
-        @TrackField("message")
         private String message;
 
         public ClaimJobError(String message)
@@ -816,10 +781,8 @@ public abstract class HandyEvent
     }
 
 
-    @Track("remove job error")
     public static class RemoveJobError extends AnalyticsEvent
     {
-        @TrackField("message")
         private String message;
 
         public RemoveJobError(String message)
@@ -829,10 +792,8 @@ public abstract class HandyEvent
     }
 
 
-    @Track("portal use terms displayed")
     public static class TermsDisplayed extends AnalyticsEvent
     {
-        @TrackField("terms code")
         private String code;
 
         public TermsDisplayed(String code)
@@ -842,10 +803,8 @@ public abstract class HandyEvent
     }
 
 
-    @Track("portal use terms accepted")
     public static class AcceptTerms extends AnalyticsEvent
     {
-        @TrackField("terms code")
         private String code;
 
         public final TermsDetails termsDetails;
@@ -858,10 +817,8 @@ public abstract class HandyEvent
     }
 
 
-    @Track("action triggered")
     public static class ActionTriggered extends AnalyticsEvent
     {
-        @TrackField("action name")
         private String actionName;
 
         public ActionTriggered(BookingActionButtonType actionType)
@@ -871,10 +828,8 @@ public abstract class HandyEvent
     }
 
 
-    @Track("warning dialog accepted")
     public static class ActionWarningAccepted extends AnalyticsEvent
     {
-        @TrackField("action name")
         private String actionName;
 
         public ActionWarningAccepted(BookingActionButtonType actionType)
@@ -889,25 +844,21 @@ public abstract class HandyEvent
     }
 
 
-    @Track("portal use terms error")
     public static class AcceptTermsError extends AnalyticsEvent
     {
     }
 
 
-    @Track("sms customer clicked")
     public static class TextCustomerClicked extends AnalyticsEvent
     {
     }
 
 
-    @Track("call customer clicked")
     public static class CallCustomerClicked extends AnalyticsEvent
     {
     }
 
 
-    @Track("cancel claim confirmation shown")
     public static class ShowConfirmationRemoveJob extends AnalyticsEvent
     {
     }
@@ -942,11 +893,9 @@ public abstract class HandyEvent
     }
 
 
-    @Track("support action triggered")
     public static class SupportActionTriggered
     {
         public final Action action;
-        @TrackField("action name")
         private String actionName;
 
         public SupportActionTriggered(@NonNull Action action)
@@ -1034,8 +983,23 @@ public abstract class HandyEvent
     }
 
 
-    // Pro should be logged out. Error won't be shown but this will allow us to sync our mixpanel
+    // Pro should be logged out. Error won't be shown but this will allow us to sync our
     // tracking with iOS.
-    @Track("portal authentication error shown")
     public static class LogOutProvider extends HandyEvent {}
+
+
+    public static class StepCompleted extends HandyEvent
+    {
+        private final int mStepId;
+
+        public StepCompleted(final int stepId)
+        {
+            mStepId = stepId;
+        }
+
+        public int getStepId()
+        {
+            return mStepId;
+        }
+    }
 }

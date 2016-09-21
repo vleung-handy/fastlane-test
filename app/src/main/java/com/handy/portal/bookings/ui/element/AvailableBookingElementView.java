@@ -10,42 +10,39 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.PartnerNames;
+import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.model.Address;
-import com.handy.portal.util.UIUtils;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class AvailableBookingElementView extends BookingElementView
 {
-    @Bind(R.id.booking_entry_payment)
+    @BindView(R.id.booking_entry_payment)
     BookingDetailsPaymentView mPayment;
 
-    @Bind(R.id.booking_entry_payment_bonus_text)
+    @BindView(R.id.booking_entry_payment_bonus_text)
     TextView mBonusPaymentText;
 
-    @Bind(R.id.booking_entry_area_text)
+    @BindView(R.id.booking_entry_area_text)
     TextView mBookingAreaTextView;
 
-    @Bind(R.id.booking_entry_service_text)
+    @BindView(R.id.booking_entry_service_text)
     TextView mBookingServiceTextView;
 
-    @Bind(R.id.booking_entry_partner_text)
+    @BindView(R.id.booking_entry_partner_text)
     TextView mPartnerText;
 
-    @Bind(R.id.booking_entry_listing_message_title_view)
+    @BindView(R.id.booking_entry_listing_message_title_view)
     BookingMessageTitleView mBookingMessageTitleView;
 
-    @Bind(R.id.booking_entry_start_date_text)
-    TextView mStartTimeText;
+    @BindView(R.id.booking_entry_date_text)
+    TextView mTimeText;
 
-    @Bind(R.id.booking_entry_end_date_text)
-    TextView mEndTimeText;
-
-    @Bind(R.id.booking_entry_distance_text)
+    @BindView(R.id.booking_entry_distance_text)
     TextView mFormattedDistanceText;
 
-    @Bind(R.id.booking_list_entry_left_strip_indicator)
+    @BindView(R.id.booking_list_entry_left_strip_indicator)
     ImageView mLeftStripIndicator;
 
     public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent)
@@ -112,6 +109,12 @@ public class AvailableBookingElementView extends BookingElementView
             //show the green strip indicator on the left of this entry.
             //if no listing title don't show this because it doesn't convey any information by itself
             mLeftStripIndicator.setVisibility(View.VISIBLE);
+
+            // Schedule Conflict
+            if (booking.canSwap())
+            {
+                mBookingMessageTitleView.showSwapIcon();
+            }
         }
         else
         {
@@ -125,12 +128,17 @@ public class AvailableBookingElementView extends BookingElementView
         //Date and Time
         final String formattedStartDate = TIME_OF_DAY_FORMAT.format(booking.getStartDate());
         final String formattedEndDate = TIME_OF_DAY_FORMAT.format(booking.getEndDate());
-        mStartTimeText.setText(formattedStartDate.toLowerCase());
-        mEndTimeText.setText(formattedEndDate.toLowerCase());
+        mTimeText.setText(parentContext.getString(R.string.booking_time,
+                formattedStartDate.toLowerCase(), formattedEndDate.toLowerCase()));
 
-        this.associatedView = convertView;
+        mAssociatedView = convertView;
 
         return convertView;
+    }
+
+    public BookingMessageTitleView getBookingMessageTitleView()
+    {
+        return mBookingMessageTitleView;
     }
 
     private void setPartnerText(String partner)

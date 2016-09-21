@@ -8,4 +8,5 @@ public class HelpCenterUrl
     //TODO return these from the server
     public static final String KEEP_RATE_INFO_REDIRECT_URL = "/articles/218760777";
     public static final String LOGIN_HELP_ABSOLUTE_URL = "https://prohelp.handy.com/hc/en-us/articles/216733288";
+    public static final String CUSTOMER_NO_SHOW_POLICY_REDIRECT_URL = "/articles/216724658";
 }

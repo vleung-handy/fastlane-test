@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.core.PropertiesReader;
+import com.handy.portal.library.util.PropertiesReader;
 import com.securepreferences.SecurePreferences;
 
 import java.util.Properties;
@@ -15,7 +15,7 @@ public class PrefsManager
 {
     private static final String SECURE_PREFS_KEY = "secure_prefs_key";
     private static final String DEFAULT_PREFS = "prefs.xml";
-    private static final String BOOKING_INSTRUCTIONS_PREFS = "booking_instructions_preferences";
+    public static final String BOOKING_INSTRUCTIONS_PREFS = "booking_instructions_preferences";
 
     private final SharedPreferences mDefaultPrefs;
     private final SharedPreferences mBookingInstructionsPrefs;
@@ -59,6 +59,15 @@ public class PrefsManager
     {
         mDefaultPrefs.edit().clear().apply();
         mBookingInstructionsPrefs.edit().clear().apply();
+    }
+
+    public void clearButSaveEventLogs()
+    {
+        String eventLogs = mDefaultPrefs.getString(PrefsKey.EVENT_LOG_BUNDLES, "");
+        mDefaultPrefs.edit().clear().commit();
+        mDefaultPrefs.edit().putString(PrefsKey.EVENT_LOG_BUNDLES, eventLogs).apply();
+        mBookingInstructionsPrefs.edit().clear().apply();
+
     }
 
     public void setBookingInstructions(String bookingId, String value)

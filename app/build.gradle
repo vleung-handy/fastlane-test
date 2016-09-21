@@ -1,3 +1,7 @@
+import org.gradle.logging.StyledTextOutputFactory
+
+import static org.gradle.logging.StyledTextOutput.Style
+
 buildscript {
     repositories {
         flatDir {
@@ -20,6 +24,7 @@ repositories {
     maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
     maven { url "http://dl.bintray.com/urbanairship/android" }
     maven { url "https://jitpack.io" }
+    maven { url 'http://mobile-sdk.jumio.com' }
     flatDir {
         dirs 'libs'
     }
@@ -32,20 +37,28 @@ apply plugin: 'io.fabric'
 apply plugin: 'newrelic'
 apply plugin: 'jacoco'
 apply plugin: 'com.getkeepsafe.dexcount'
+apply plugin: 'android-apt'
 
 apply from: 'jacoco.gradle'
 
+def computeVersionCode(versionName) {
+    def versionNameMatcher = (versionName =~ /^([1-9]\d*)\.(\d{1,2})\.(\d{1,2})$/)
+    if (versionNameMatcher.matches()) {
+        def identifiers = (versionNameMatcher[0] - [versionName])
+        def (major, minor, patch) = identifiers.collect { it.toInteger() }
+        def versionCode = (major * 10000) + (minor * 100) + (patch * 1)
 
-def computeVersionName(versionCode) {
-    def major = (versionCode / 10000).intValue() % 10000
-    def minor = (versionCode / 100).intValue() % 100
-    def bugfix = versionCode % 100
-    "${major}.${minor}.${bugfix}"
+        def out = services.get(StyledTextOutputFactory).create("debug")
+        out.withStyle(Style.Info).println("\nBuilding version ${versionName} (${versionCode})\n")
+        return versionCode
+    } else {
+        throw new InvalidUserDataException("Illegal version name ${versionName}")
+    }
 }
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.2"
+    compileSdkVersion 24
+    buildToolsVersion '24.0.2'
     useLibrary 'org.apache.http.legacy'
     testBuildType "debug"
 
@@ -53,9 +66,9 @@ android {
         multiDexEnabled true
         applicationId "com.handy.portal"
         minSdkVersion 16
-        targetSdkVersion 23
-        versionCode 1201 //0.12.1
-        versionName computeVersionName(versionCode)
+        targetSdkVersion 24
+        versionName '1.2.1'
+        versionCode computeVersionCode(versionName)
         proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -133,41 +146,40 @@ dependencies {
 
     //Multidexing support
     compile 'com.android.support:multidex:1.0.1'
-    compile 'com.android.support:support-v4:23.3.0'
-    compile 'com.android.support:appcompat-v7:23.3.0'
-    compile 'com.android.support:recyclerview-v7:23.3.0'
-    compile 'com.android.support:cardview-v7:23.3.0'
+    compile 'com.android.support:support-v4:24.1.1'
+    compile 'com.android.support:appcompat-v7:24.1.1'
+    compile 'com.android.support:recyclerview-v7:24.1.1'
+    compile 'com.android.support:cardview-v7:24.1.1'
 
     //Recommended for in-app messaging
-    compile 'com.android.support:design:23.3.0'
+    compile 'com.android.support:design:24.1.1'
 
     //Google services
-    compile 'com.google.android.gms:play-services-location:8.4.0'
+    compile 'com.google.android.gms:play-services-location:9.0.2'
     //Recommended for location services
-    compile 'com.google.android.gms:play-services-gcm:8.4.0'
+    compile 'com.google.android.gms:play-services-gcm:9.0.2'
     //Required for Android (GCM) push notifications
 
     //Guava
-    compile 'com.google.guava:guava:18.0'
+    compile 'com.google.guava:guava:19.0'
 
     //Square libraries, butterknife, dagger, retrofit, picasso
     compile 'com.squareup.dagger:dagger:1.2.2'
-    compile 'com.squareup.retrofit:retrofit:1.6.1'
-    compile 'com.squareup:otto:1.3.5'
-    compile 'com.squareup.okhttp:okhttp:2.1.0'
+    compile 'com.squareup.retrofit:retrofit:1.9.0'
+    compile 'com.squareup.okhttp:okhttp:2.7.5'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.1.0'
     compile 'com.squareup.picasso:picasso:2.5.2'
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'
-    compile 'com.jakewharton:butterknife:7.0.1'
+    compile 'com.jakewharton:butterknife:8.1.0'
+    apt 'com.jakewharton:butterknife-compiler:8.1.0'
+
+    compile 'org.greenrobot:eventbus:3.0.0'
 
     // Signature for checkout
     compile 'com.github.gcacace:signature-pad:1.1.0'
 
     // For better visualizing circular graphs
     compile 'com.github.bmarrdev:android-DecoView-charting:v0.9.5'
-
-    //Mixpanel analytics
-    compile 'com.mixpanel.android:mixpanel-android:4.6.4@aar'
 
     //Custom font display
     compile 'uk.co.chrisjenx:calligraphy:2.1.0'
@@ -192,20 +204,31 @@ dependencies {
     // Sticky list header
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
 
+    // Jumio ID Verification
+    compile 'com.jumio.android:core:2.1.1@aar'
+    compile 'com.jumio.android:nv:2.1.1@aar'
+    compile 'com.jumio.android:nv-barcode:2.1.1@aar'
+    compile 'com.jumio.android:javadoc:2.1.1'
+    compile 'com.jumio.android:nv-barcode:2.1.1@aar'
+    compile 'com.jumio.android:nv-mrz:2.1.1@aar'
+    compile 'com.jumio.android:nv-nfc:2.1.1@aar'
+    compile 'net.sf.scuba:scuba-sc-android:0.0.9'
+
     //Stripe payment processing
     compile 'com.stripe:stripe-android:1.0.4'
 
     //Testing
-    testCompile 'org.robolectric:robolectric:3.0'
-    testCompile 'org.robolectric:shadows-support-v4:3.0'
+    testCompile 'org.robolectric:robolectric:3.2-SNAPSHOT'
+    testCompile 'org.robolectric:shadows-support-v4:3.1'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'
 
     //Espresso libraries for automation testing
-    androidTestCompile ('com.android.support.test:runner:0.4.1') {
+    androidTestCompile('com.android.support.test:runner:0.4.1') {
         exclude module: 'support-annotations'
     }
-    androidTestCompile ('com.android.support.test.espresso:espresso-core:2.2.1') {
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.1') {
         exclude module: 'support-annotations'
     }
+    androidTestCompile 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 }

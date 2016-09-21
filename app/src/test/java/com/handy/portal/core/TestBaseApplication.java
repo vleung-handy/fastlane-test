@@ -1,6 +1,8 @@
 package com.handy.portal.core;
 
 import android.content.Context;
+import android.os.Build;
+import android.provider.Settings;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
@@ -10,6 +12,22 @@ import io.fabric.sdk.android.Fabric;
 
 public class TestBaseApplication extends BaseApplication
 {
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onCreate()
+    {
+        super.onCreate();
+        // Enable location service
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+        {
+            Settings.Secure.putInt(getContentResolver(), Settings.Secure.LOCATION_MODE, Settings.Secure.LOCATION_MODE_HIGH_ACCURACY);
+        }
+        else
+        {
+            Settings.Secure.putString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED, "some string");
+        }
+    }
+
     @Override
     protected void attachBaseContext(Context base)
     {

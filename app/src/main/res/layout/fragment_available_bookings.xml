@@ -49,7 +49,7 @@
             even though the refresh layout has 0 height-->
             <include tools:visibility="visible" layout="@layout/layout_available_bookings_empty"/>
 
-            <com.handy.portal.ui.widget.SafeSwipeRefreshLayout
+            <com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout
                 android:id="@+id/refresh_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="0dp"
@@ -60,12 +60,11 @@
                     android:id="@+id/available_jobs_list_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:divider="@color/white_trans"
+                    android:divider="@color/list_divider"
                     android:dividerHeight="1dp"
-                    android:paddingTop="1dp"
                     />
 
-            </com.handy.portal.ui.widget.SafeSwipeRefreshLayout>
+            </com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout>
 
             <!--<include tools:visibility="visible" layout="@layout/layout_available_bookings_empty"/>-->
             <!--TODO the empty bookings layout should ideally show below the job access banner which is the header of the booking list view-->

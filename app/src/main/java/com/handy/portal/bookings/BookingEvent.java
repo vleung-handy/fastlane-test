@@ -1,10 +1,15 @@
 package com.handy.portal.bookings;
 
+import android.support.annotation.Nullable;
+
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.model.BookingsWrapper;
+import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.ZipClusterPolygons;
 
+import java.util.Date;
 import java.util.List;
 
 public abstract class BookingEvent extends HandyEvent
@@ -16,6 +21,54 @@ public abstract class BookingEvent extends HandyEvent
         public RequestZipClusterPolygons(String zipClusterId)
         {
             this.zipClusterId = zipClusterId;
+        }
+    }
+
+
+    public static class RequestProRequestedJobs extends RequestEvent
+    {
+        private List<Date> mDatesForBookings;
+        private boolean mUseCachedIfPresent;
+
+        public RequestProRequestedJobs(List<Date> datesForBookings, boolean useCachedIfPresent)
+        {
+            mDatesForBookings = datesForBookings;
+            mUseCachedIfPresent = useCachedIfPresent;
+        }
+
+        public boolean useCachedIfPresent()
+        {
+            return mUseCachedIfPresent;
+        }
+
+        public List<Date> getDatesForBookings()
+        {
+            return mDatesForBookings;
+        }
+    }
+
+
+    public static class ReceiveProRequestedJobsSuccess extends ReceiveSuccessEvent
+    {
+        public final List<BookingsWrapper> mProRequestedJobs;
+
+        public ReceiveProRequestedJobsSuccess(List<BookingsWrapper> proRequestedJobs)
+        {
+            mProRequestedJobs = proRequestedJobs;
+        }
+
+        public List<BookingsWrapper> getProRequestedJobs()
+        {
+            return mProRequestedJobs;
+        }
+    }
+
+
+    public static class ReceiveProRequestedJobsError extends ReceiveErrorEvent
+    {
+        public ReceiveProRequestedJobsError(@Nullable DataManager.DataManagerError error)
+        {
+            this.error = error;
         }
     }
 
@@ -77,5 +130,86 @@ public abstract class BookingEvent extends HandyEvent
         {
             this.error = error;
         }
+    }
+
+
+    public static class RateCustomer extends RequestEvent
+    {
+        public final String bookingId;
+        public final int rating;
+        public final String reviewText;
+
+        public RateCustomer(String bookingId, int rating, String reviewText)
+        {
+            this.bookingId = bookingId;
+            this.rating = rating;
+            this.reviewText = reviewText;
+        }
+    }
+
+
+    public static class RateCustomerSuccess extends ReceiveSuccessEvent {}
+
+
+    public static class RateCustomerError extends ReceiveErrorEvent
+    {
+        public RateCustomerError(DataManager.DataManagerError error) { this.error = error; }
+    }
+
+
+    public static class RequestProRequestedJobsCount extends RequestEvent {}
+
+
+    public static class ReceiveProRequestedJobsCountSuccess extends ReceiveSuccessEvent
+    {
+        private int mCount;
+
+        public ReceiveProRequestedJobsCountSuccess(final int count)
+        {
+            mCount = count;
+        }
+
+        public int getCount()
+        {
+            return mCount;
+        }
+    }
+
+
+    public static class RequestPostCheckoutInfo extends RequestEvent
+    {
+        private String mBookingId;
+
+        public RequestPostCheckoutInfo(final String bookingId)
+        {
+            mBookingId = bookingId;
+        }
+
+        public String getBookingId()
+        {
+            return mBookingId;
+        }
+    }
+
+
+    public static class ReceivePostCheckoutInfoSuccess extends ReceiveSuccessEvent
+    {
+        private PostCheckoutInfo mPostCheckoutInfo;
+
+        public ReceivePostCheckoutInfoSuccess(final PostCheckoutInfo postCheckoutInfo)
+        {
+            mPostCheckoutInfo = postCheckoutInfo;
+        }
+
+        public PostCheckoutInfo getPostCheckoutInfo()
+        {
+            return mPostCheckoutInfo;
+        }
+    }
+
+
+    public static class ReceivePostCheckoutInfoError extends ReceiveErrorEvent
+    {
+
     }
 }

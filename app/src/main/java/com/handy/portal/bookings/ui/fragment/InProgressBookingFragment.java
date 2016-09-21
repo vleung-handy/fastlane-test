@@ -22,22 +22,22 @@ import com.handy.portal.bookings.constant.BookingActionButtonType;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.element.CustomerRequestsView;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.library.util.UIUtils;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.ui.fragment.TimerActionBarFragment;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.TextUtils;
-import com.handy.portal.util.UIUtils;
-import com.handy.portal.util.Utils;
 
 import java.util.Arrays;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -52,27 +52,27 @@ public class InProgressBookingFragment extends TimerActionBarFragment
     @Inject
     PrefsManager mPrefsManager;
 
-    @Bind(R.id.in_progress_booking_no_show_banner_text)
+    @BindView(R.id.in_progress_booking_no_show_banner_text)
     View mNoShowBannerView;
-    @Bind(R.id.in_progress_booking_customer_name_text)
+    @BindView(R.id.in_progress_booking_customer_name_text)
     TextView mCustomerNameText;
-    @Bind(R.id.in_progress_booking_job_start_time)
+    @BindView(R.id.in_progress_booking_job_start_time)
     TextView mJobStartTimeText;
-    @Bind(R.id.in_progress_booking_call_customer_view)
+    @BindView(R.id.in_progress_booking_call_customer_view)
     View mCallCustomerView;
-    @Bind(R.id.in_progress_booking_message_customer_view)
+    @BindView(R.id.in_progress_booking_message_customer_view)
     View mMessageCustomerView;
-    @Bind(R.id.in_progress_booking_booking_support_button)
+    @BindView(R.id.in_progress_booking_booking_support_button)
     Button mSupportButton;
-    @Bind(R.id.in_progress_booking_note_to_pro_layout)
+    @BindView(R.id.in_progress_booking_note_to_pro_layout)
     ViewGroup mNoteToProLayout;
-    @Bind(R.id.in_progress_booking_note_to_pro_text)
+    @BindView(R.id.in_progress_booking_note_to_pro_text)
     TextView mNoteToProText;
-    @Bind(R.id.in_progress_booking_checklist)
+    @BindView(R.id.in_progress_booking_checklist)
     CustomerRequestsView mCustomerRequestsView;
-    @Bind(R.id.in_progress_booking_details_action_helper_text)
+    @BindView(R.id.in_progress_booking_details_action_helper_text)
     TextView mBookingDetailsActionHelperText;
-    @Bind(R.id.in_progress_booking_action_button)
+    @BindView(R.id.in_progress_booking_action_button)
     Button mActionButton;
 
     private static final Gson GSON = new Gson();
@@ -94,7 +94,7 @@ public class InProgressBookingFragment extends TimerActionBarFragment
     }
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
         return null;
     }
@@ -227,7 +227,7 @@ public class InProgressBookingFragment extends TimerActionBarFragment
         args.putString(BundleKeys.BOOKING_SOURCE, mSource);
         args.putBoolean(BundleKeys.BOOKING_SHOULD_HIDE_ACTION_BUTTONS, true);
 
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.NOT_IN_PROGRESS_JOB_DETAILS, args, true));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.NOT_IN_PROGRESS_JOB_DETAILS, args, true));
     }
 
     @OnClick(R.id.in_progress_booking_action_button)
@@ -238,7 +238,7 @@ public class InProgressBookingFragment extends TimerActionBarFragment
         {
             Bundle bundle = new Bundle();
             bundle.putSerializable(BundleKeys.BOOKING, mBooking);
-            bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle, true));
+            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SEND_RECEIPT_CHECKOUT, bundle, true));
         }
         else
         {
@@ -255,10 +255,21 @@ public class InProgressBookingFragment extends TimerActionBarFragment
         String phoneNumber = mBooking.getBookingPhone();
         if (phoneNumber == null)
         {
+            showInvalidPhoneNumberToast();
             Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
             return;
         }
-        Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), getContext());
+
+        try
+        {
+            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), getContext());
+        }
+        catch (Exception e)
+        {
+            Toast.makeText(getContext(),
+                    getString(R.string.unable_to_call_customer), Toast.LENGTH_SHORT).show();
+            Crashlytics.logException(new RuntimeException("Calling a Phone Number failed", e));
+        }
     }
 
     @OnClick(R.id.in_progress_booking_message_customer_view)
@@ -269,10 +280,21 @@ public class InProgressBookingFragment extends TimerActionBarFragment
         String phoneNumber = mBooking.getBookingPhone();
         if (phoneNumber == null)
         {
+            showInvalidPhoneNumberToast();
             Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
             return;
         }
-        Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)), getContext());
+
+        try
+        {
+            Toast.makeText(getContext(),
+                    getString(R.string.unable_to_text_customer), Toast.LENGTH_SHORT).show();
+            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)), getContext());
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(new RuntimeException("Texting a Phone Number failed", e));
+        }
     }
 
     private void enableActionsIfNeeded(Booking.Action action)
@@ -308,5 +330,11 @@ public class InProgressBookingFragment extends TimerActionBarFragment
                 break;
             }
         }
+    }
+
+    private void showInvalidPhoneNumberToast()
+    {
+        Toast.makeText(getContext(),
+                getString(R.string.invalid_phone_number), Toast.LENGTH_LONG).show();
     }
 }

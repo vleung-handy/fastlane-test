@@ -7,29 +7,29 @@ import android.widget.TableLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.payments.model.LegacyPaymentBatch;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentGroup;
-import com.handy.portal.util.CurrencyUtils;
-import com.handy.portal.util.DateTimeUtils;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class PaymentsBatchListItemView extends TableLayout
 {
 
-    @Bind(R.id.payments_batch_list_item_date_text)
+    @BindView(R.id.payments_batch_list_item_date_text)
     protected TextView dateText;
 
-    @Bind(R.id.payments_batch_list_item_payment_amount_text)
+    @BindView(R.id.payments_batch_list_item_payment_amount_text)
     protected TextView paymentAmountText;
 
-    @Bind(R.id.payments_batch_list_item_job_info_text)
+    @BindView(R.id.payments_batch_list_item_job_info_text)
     protected TextView jobInfoText;
 
-    @Bind(R.id.payments_batch_list_item_status_text)
+    @BindView(R.id.payments_batch_list_item_status_text)
     protected TextView statusText;
 
     public PaymentsBatchListItemView(Context context)
@@ -64,15 +64,15 @@ public class PaymentsBatchListItemView extends TableLayout
             PaymentGroup paymentGroups[] = neoPaymentBatch.getPaymentGroups();
             int numJobs = 0;
             int numFees = 0;
-            for (int i = 0; i < paymentGroups.length; i++)
+            for (PaymentGroup paymentGroup : paymentGroups)
             {
-                if (PaymentGroup.MachineName.completed_jobs.name().equals(paymentGroups[i].getMachineName()))
+                if (PaymentGroup.MachineName.completed_jobs.name().equals(paymentGroup.getMachineName()))
                 {
-                    numJobs = paymentGroups[i].getPayments().length;
+                    numJobs = paymentGroup.getPayments().length;
                 }
-                else if (PaymentGroup.MachineName.withholdings.name().equals(paymentGroups[i].getMachineName()))
+                else if (PaymentGroup.MachineName.withholdings.name().equals(paymentGroup.getMachineName()))
                 {
-                    numFees = paymentGroups[i].getPayments().length;
+                    numFees = paymentGroup.getPayments().length;
                 }
             }
             jobInfoText.setText(getResources().getString(R.string.payment_batch_list_entry_subtitle, numJobs, numFees));
@@ -85,7 +85,8 @@ public class PaymentsBatchListItemView extends TableLayout
             paymentAmountText.setText(CurrencyUtils.formatPriceWithCents(legacyPaymentBatch.getEarnedByProvider(), legacyPaymentBatch.getCurrencySymbol()));
             statusText.setText(legacyPaymentBatch.getStatus());
             statusText.setTextColor(ContextCompat.getColor(getContext(), R.color.tertiary_gray));
-            jobInfoText.setText(getResources().getString(R.string.job_num) + legacyPaymentBatch.getBookingId());
+            jobInfoText.setText(getResources().getString(R.string.job_number_formatted,
+                    Integer.toString(legacyPaymentBatch.getBookingId())));
             setEnabled(false);
         }
 

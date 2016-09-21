@@ -11,10 +11,10 @@ import android.widget.ScrollView;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.ui.fragment.dialog.SlideUpDialogFragment;
-import com.handy.portal.util.Utils;
+import com.handy.portal.library.ui.fragment.dialog.SlideUpDialogFragment;
+import com.handy.portal.library.util.Utils;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -26,8 +26,10 @@ import butterknife.OnClick;
  */
 public abstract class ConfirmBookingActionDialogFragment extends SlideUpDialogFragment
 {
-    @Bind(R.id.confirm_booking_action_button)
+    @BindView(R.id.confirm_booking_action_button)
     Button mConfirmBookingActionButton;
+    @BindView(R.id.confirm_booking_action_dismiss_button)
+    View mDismissButton;
 
     protected Booking mBooking;
 
@@ -100,5 +102,10 @@ public abstract class ConfirmBookingActionDialogFragment extends SlideUpDialogFr
     public void onDismissButtonClicked()
     {
         dismiss();
+    }
+
+    protected void hideDismissButton()
+    {
+        mDismissButton.setVisibility(View.GONE);
     }
 }

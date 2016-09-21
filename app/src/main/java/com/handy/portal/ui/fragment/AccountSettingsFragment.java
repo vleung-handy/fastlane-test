@@ -1,6 +1,8 @@
 package com.handy.portal.ui.fragment;
 
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
@@ -15,8 +17,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handy.portal.R;
+import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
@@ -32,46 +35,49 @@ import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.util.DeeplinkUtils;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class AccountSettingsFragment extends ActionBarFragment
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
     @Inject
     ProviderManager mProviderManager;
     @Inject
     ConfigManager mConfigManager;
     @Inject
     PrefsManager mPrefsManager;
+    @Inject
+    BookingManager mBookingManager;
 
-    @Bind(R.id.provider_name_text)
+    @BindView(R.id.provider_name_text)
     TextView mProviderNameText;
-    @Bind(R.id.verification_status_text)
+    @BindView(R.id.verification_status_text)
     TextView mVerificationStatusText;
-    @Bind(R.id.order_resupply_layout)
+    @BindView(R.id.order_resupply_layout)
     ViewGroup mOrderResupplyLayout;
-    @Bind(R.id.account_settings_layout)
+    @BindView(R.id.account_settings_layout)
     ViewGroup mAccountSettingsLayout;
-    @Bind(R.id.fetch_error_view)
+    @BindView(R.id.fetch_error_view)
     ViewGroup mFetchErrorView;
-    @Bind(R.id.fetch_error_text)
+    @BindView(R.id.fetch_error_text)
     TextView mFetchErrorText;
 
     private ProviderProfile mProviderProfile;
     private View fragmentView;
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.ACCOUNT_SETTINGS;
+        return MainViewPage.ACCOUNT_SETTINGS;
     }
 
     @Nullable
@@ -93,22 +99,30 @@ public class AccountSettingsFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
-        setActionBar(getString(R.string.account_settings), false);
+        bus.register(this);
 
+        setActionBar(getString(R.string.account_settings), false);
         populateInfo();
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @OnClick(R.id.contact_info_layout)
     public void switchToProfile()
     {
         bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileSelected()));
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.PROFILE_UPDATE, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
+        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_UPDATE, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
     @OnClick(R.id.edit_payment_option)
     public void switchToPayments()
     {
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
+        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
     @OnClick(R.id.order_resupply_layout)
@@ -116,8 +130,8 @@ public class AccountSettingsFragment extends ActionBarFragment
     {
         mBus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitSelected()));
 
-        mBus.post(new NavigationEvent.NavigateToTab(
-                MainViewTab.REQUEST_SUPPLIES, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
+        mBus.post(new NavigationEvent.NavigateToPage(
+                MainViewPage.REQUEST_SUPPLIES, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
 
@@ -138,31 +152,56 @@ public class AccountSettingsFragment extends ActionBarFragment
     @OnClick(R.id.log_out_button)
     public void logOut()
     {
-        mPrefsManager.clear();
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getActivity());
+        alertDialogBuilder
+                .setTitle(R.string.log_out)
+                .setMessage(R.string.are_you_sure_log_out)
+                .setNegativeButton(R.string.no, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(final DialogInterface dialog, final int which)
+                    {
+                        dialog.dismiss();
+                    }
+                })
+                .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener()
+                {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i)
+                    {
+                        //TODO this logout code should be moved somewhere else
+                        mPrefsManager.clearButSaveEventLogs();
+                        mBookingManager.clearCache();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        {
-            CookieManager.getInstance().removeAllCookies(null);
-            CookieManager.getInstance().flush();
-        }
-        else
-        {
-            CookieSyncManager.createInstance(getActivity());
-            CookieManager.getInstance().removeAllCookie();
-            CookieSyncManager.getInstance().sync();
-        }
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+                        {
+                            CookieManager.getInstance().removeAllCookies(null);
+                            CookieManager.getInstance().flush();
+                        }
+                        else
+                        {
+                            CookieSyncManager.createInstance(getActivity());
+                            CookieManager.getInstance().removeAllCookie();
+                            CookieSyncManager.getInstance().sync();
+                        }
 
-        final Intent intent = new Intent(getActivity(), LoginActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        final Uri data = getActivity().getIntent().getData();
-        final Bundle deeplinkBundle = DeeplinkUtils.createDeeplinkBundleFromUri(data);
-        if (deeplinkBundle != null)
-        {
-            intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkBundle);
-            intent.putExtra(BundleKeys.DEEPLINK_SOURCE, DeeplinkLog.Source.LINK);
-        }
-        startActivity(intent);
-        getActivity().finish();
+                        final Intent intent = new Intent(getActivity(), LoginActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        final Uri data = getActivity().getIntent().getData();
+                        final Bundle deeplinkBundle = DeeplinkUtils.createDeeplinkBundleFromUri(data);
+                        if (deeplinkBundle != null)
+                        {
+                            intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkBundle);
+                            intent.putExtra(BundleKeys.DEEPLINK_SOURCE, DeeplinkLog.Source.LINK);
+                        }
+                        startActivity(intent);
+                        getActivity().finish();
+                        bus.post(new HandyEvent.UserLoggedOut());
+                    }
+                });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     @Subscribe
@@ -206,7 +245,7 @@ public class AccountSettingsFragment extends ActionBarFragment
     public void onSendIncomeVerificationSuccess(HandyEvent.ReceiveSendIncomeVerificationSuccess event)
     {
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.ACCOUNT_SETTINGS, null, TransitionStyle.SEND_VERIFICAITON_SUCCESS));
+        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.ACCOUNT_SETTINGS, null, TransitionStyle.SEND_VERIFICAITON_SUCCESS));
     }
 
     @Subscribe

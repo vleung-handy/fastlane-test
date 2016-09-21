@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white_pressed"
+    android:orientation="vertical"
+    >
+
+    <!--the top action bar with a title and dismiss button-->
+    <RelativeLayout
+        android:id="@+id/fragment_dialog_customer_no_show_action_bar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/handy_blue"
+        >
+
+        <TextView
+            style="@style/TextView.XLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:text="@string/customer_no_show_action_bar_title"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            />
+
+        <ImageView
+            android:id="@+id/fragment_dialog_customer_no_show_dismiss_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="end"
+            android:padding="@dimen/default_padding"
+            android:src="@drawable/ic_x_white"
+            />
+    </RelativeLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <!-- the header with booking payment info-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:background="@color/white"
+                android:orientation="vertical"
+                android:padding="@dimen/default_padding_large"
+                >
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/default_margin"
+                    android:src="@drawable/ic_customer_no_show"
+                    />
+
+                <TextView
+                    style="@style/TextView.XLarge.Bold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="@dimen/default_margin"
+                    android:text="@string/customer_no_show_header_title"
+                    />
+
+                <TextView
+                    android:id="@+id/fragment_dialog_customer_no_show_payment_info_text"
+                    style="@style/TextView.Large"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    tools:text="In order to receive $45 by the end of the day, make sure you follow the steps below"
+                    />
+            </LinearLayout>
+
+            <!--the customer no show instructions list-->
+            <LinearLayout
+                android:id="@+id/fragment_dialog_customer_no_show_instructions_list"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:orientation="vertical"
+                >
+
+                <com.handy.portal.library.ui.widget.BulletListItem
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:iconDrawable="@drawable/selector_green_checkbox"
+                    app:text="@string/customer_no_show_instructions_list_item_check_in"
+                    tools:visibility="visible"
+                    />
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/fragment_dialog_customer_no_show_view_policy_button"
+                style="@style/TextView.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:gravity="center"
+                android:text="@string/customer_no_show_view_policy_button"
+                android:textColor="@color/handy_blue"
+                />
+
+        </LinearLayout>
+    </ScrollView>
+
+    <Button
+        android:id="@+id/fragment_dialog_customer_no_show_complete_report_button"
+        style="@style/Button.Green"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/complete_button_height"
+        android:layout_gravity="bottom"
+        android:text="@string/customer_no_show_complete_report_button"
+        />
+</LinearLayout>

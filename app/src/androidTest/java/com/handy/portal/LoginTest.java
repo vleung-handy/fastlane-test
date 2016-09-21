@@ -2,39 +2,40 @@ package com.handy.portal;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 
-import com.handy.portal.test.TestUser;
-import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.test.data.TestUsers;
+import com.handy.portal.test.model.TestUser;
+import com.handy.portal.test.util.AppInteractionUtil;
+import com.handy.portal.test.util.TermsPageUtil;
+import com.handy.portal.test.util.TextViewUtil;
+import com.handy.portal.test.util.ViewUtil;
+import com.handy.portal.ui.activity.LoginActivity;
 
-import org.junit.Before;
-import org.junit.Ignore;
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
-import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static android.support.test.espresso.action.ViewActions.typeText;
-import static android.support.test.espresso.assertion.ViewAssertions.matches;
-import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 //note that animations should be disabled on the device running these tests
-@Ignore //TODO ignoring for now because we need to set up seed automation file for this to pass, but we need to set up tests to pass with AWS now
 @RunWith(AndroidJUnit4.class)
-@LargeTest
 public class LoginTest
 {
-    private final TestUser mTestUser = TestUser.TEST_USER_NY;
+//    private UiDevice mDevice; //TODO use this to test for system dialogs
+
+    private static final TestUser TEST_USER = TestUsers.FIRST_TIME_NY_PROVIDER;
 
     @Rule
-    public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(
-            MainActivity.class);
+    public ActivityTestRule<LoginActivity> mActivityRule =
+            new ActivityTestRule<>(LoginActivity.class);
 
-    @Before
-    public void init() {
+    @After
+    public void tearDown()
+    {
+        AppInteractionUtil.logOut();
     }
 
     /*
@@ -42,21 +43,43 @@ public class LoginTest
     if the prefix is "test"
     TODO: investigate
      */
+
     /**
      * Logs in as the test user
-     *
+     * <p>
      * Assumptions:
      * - no one is logged into the app
      * - there are no popup modals (for example, promos)
      */
     @Test
-    public void loginTest()
+    public void testLogin()
     {
         //TODO: for proof of concept. we should make this more readable/reusable
-        onView(withId(R.id.phone_number_edit_text)).perform(click(), typeText(mTestUser.getPhoneNumber()), closeSoftKeyboard());
+        ViewUtil.waitForViewVisible(R.id.phone_number_edit_text, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+        TextViewUtil.updateEditTextView(R.id.phone_number_edit_text, TEST_USER.getPhoneNumber());
         onView(withId(R.id.login_button)).perform(click());
-        onView(withId(R.id.pin_code_edit_text)).perform(click(), typeText(mTestUser.getPinCode()), closeSoftKeyboard());
+
+        ViewUtil.waitForViewVisible(R.id.pin_code_edit_text, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
+        TextViewUtil.updateEditTextView(R.id.pin_code_edit_text, TEST_USER.getPinCode());
         onView(withId(R.id.login_button)).perform(click());
-        onView(withId(R.id.bookings_content)).check(matches(isDisplayed()));
+
+        TermsPageUtil.acceptAllTermsIfPresent();
+
+        //TODO support testing with the system permissions dialog in Android 6.0
+//        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+//        {
+//            //the location permission settings blocker dialog should show
+//            UiObject allowPermissions = mDevice.findObject(new UiSelector().text("Allow"));
+//            if(allowPermissions.exists())
+//            {
+//                try {
+//                    allowPermissions.click();
+//                } catch (UiObjectNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+
+        ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
     }
 }

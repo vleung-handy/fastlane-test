@@ -1,149 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:orientation="vertical"
-
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
     >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        android:paddingEnd="@dimen/default_padding"
-        android:paddingLeft="@dimen/default_padding"
-        android:paddingRight="@dimen/default_padding"
-        android:paddingStart="@dimen/default_padding"
-        android:paddingTop="@dimen/extra_padding_xlarge"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:orientation="vertical"
         >
 
-        <TextView
-            android:id="@+id/tier_label"
-            android:layout_width="0dp"
+        <com.handy.portal.dashboard.view.DashboardTiersHeaderView
+            android:id="@+id/dashboard_tiers_header_view"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             />
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/rating"
-            android:textAppearance="@style/TextView.Bold"
-            android:textColor="@color/black"
-            android:textSize="@dimen/small_text_size"
-            />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/jobs"
-            android:textAppearance="@style/TextView.Bold"
-            android:textColor="@color/black"
-            android:textSize="@dimen/small_text_size"
-            />
-
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="@string/rate"
-            android:textAppearance="@style/TextView.Bold"
-            android:textColor="@color/black"
-            android:textSize="@dimen/small_text_size"
-            />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/default_padding"
-        android:paddingEnd="@dimen/default_padding"
-        android:paddingLeft="@dimen/default_padding"
-        android:paddingRight="@dimen/default_padding"
-        android:paddingStart="@dimen/default_padding"
-        >
-
-        <TextView
-            android:layout_width="0dp"
+        <com.handy.portal.dashboard.view.DashboardTierViewPager
+            android:id="@+id/region_tiers_view_pager"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:singleLine="false"
-            android:text="@string/current_28_days"
-            android:textAppearance="@style/TextView.Bold"
-            android:textColor="@color/handy_blue"
-            android:textSize="@dimen/small_text_size"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingRight="@dimen/default_padding"
+            />
+
+        <!-- Negative margin hack hides the mysterious gray divider above this view-->
+        <com.handy.portal.dashboard.view.CirclePageIndicatorView
+            android:id="@+id/region_tiers_view_pager_indicator_view"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/circle_page_indicator_height"
+            android:layout_marginBottom="@dimen/extra_margin_medium"
+            android:layout_marginTop="@dimen/extra_margin_medium"
             />
 
         <TextView
-            android:id="@+id/trailing_rating_text"
-            android:layout_width="0dp"
+            style="@style/CircularBold"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:background="@color/white"
             android:gravity="center"
-            android:textAppearance="@style/TextView.Bold"
-            android:textColor="@color/handy_blue"
-            android:textSize="@dimen/xxlarge_text_size"
-            tools:text="1.0"
+            android:paddingBottom="@dimen/default_padding"
+            android:paddingEnd="@dimen/tiers_description_side_padding"
+            android:paddingLeft="@dimen/tiers_description_side_padding"
+            android:paddingRight="@dimen/tiers_description_side_padding"
+            android:paddingStart="@dimen/tiers_description_side_padding"
+            android:paddingTop="@dimen/default_padding_medium"
+            android:text="@string/how_it_works"
+            android:textColor="@color/black"
+            android:textSize="@dimen/large_text_size"
+            />
+
+        <LinearLayout
+            android:id="@+id/tiers_help_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/default_padding"
+            android:paddingEnd="@dimen/tiers_description_side_padding"
+            android:paddingLeft="@dimen/tiers_description_side_padding"
+            android:paddingRight="@dimen/tiers_description_side_padding"
+            android:paddingStart="@dimen/tiers_description_side_padding"
             />
 
         <TextView
-            android:id="@+id/trailing_jobs_text"
-            android:layout_width="0dp"
+            android:id="@+id/tiers_legal_text"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textAppearance="@style/TextView.Bold"
-            android:textColor="@color/handy_blue"
-            android:textSize="@dimen/xxlarge_text_size"
-            tools:text="28"
-            />
-
-        <TextView
-            android:id="@+id/trailing_rate_text"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:textAppearance="@style/TextView.Bold"
-            android:textColor="@color/handy_blue"
-            android:textSize="@dimen/xxlarge_text_size"
-            tools:text="$15"
+            android:layout_marginBottom="@dimen/default_margin_medium"
+            android:layout_marginEnd="@dimen/default_margin"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin_medium"
+            android:textColor="@color/tertiary_gray"
+            android:textSize="@dimen/default_text_size"
+            tools:text="@string/tiers_legal_text_html"
             />
 
     </LinearLayout>
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/divider_height"
-        android:background="@color/tertiary_gray"
-        />
-
-    <TextView
-        style="@style/CircularBook"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:lineSpacingExtra="@dimen/line_spacing_dashboard"
-        android:paddingBottom="@dimen/default_padding"
-        android:paddingEnd="@dimen/default_padding"
-        android:paddingLeft="@dimen/default_padding"
-        android:paddingRight="@dimen/default_padding"
-        android:paddingStart="@dimen/default_padding"
-        android:paddingTop="@dimen/extra_padding_xlarge"
-        android:text="@string/payment_tier_info"
-        android:textColor="@color/tertiary_gray"
-        android:textSize="@dimen/default_text_size"
-        />
-
-</LinearLayout>
+</ScrollView>

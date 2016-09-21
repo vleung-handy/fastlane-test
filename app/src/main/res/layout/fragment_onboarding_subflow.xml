@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:id="@+id/progress_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/border_gray_bottom"
+        android:elevation="1dp"
+        android:orientation="vertical"
+        android:padding="@dimen/default_padding"
+        tools:targetApi="lollipop"
+        >
+
+        <TextView
+            android:id="@+id/progress_percent"
+            style="@style/TextView.Small.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:text="85% Complete"
+            />
+
+        <ProgressBar
+            android:id="@+id/progress_bar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/progress_bar_height"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:layout_toEndOf="@+id/progress_percent"
+            android:layout_toRightOf="@+id/progress_percent"
+            android:progressDrawable="@drawable/progress_bar"
+            tools:progress="85"
+            />
+
+    </RelativeLayout>
+
+    <android.support.design.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/single_action_button"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_below="@+id/progress_view"
+        >
+
+        <ScrollView
+            android:id="@+id/scroll_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/border_gray_bottom"
+                    android:orientation="vertical"
+                    android:paddingBottom="@dimen/extra_padding"
+                    >
+
+                    <ImageView
+                        android:id="@+id/header_image"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_marginTop="@dimen/default_margin_large"
+                        tools:src="@drawable/img_avatar_complete"
+                        />
+
+                    <TextView
+                        android:id="@+id/header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/default_margin_half"
+                        android:layout_marginEnd="@dimen/default_margin"
+                        android:layout_marginLeft="@dimen/default_margin"
+                        android:layout_marginRight="@dimen/default_margin"
+                        android:layout_marginStart="@dimen/default_margin"
+                        android:layout_marginTop="@dimen/default_margin"
+                        android:gravity="center"
+                        android:textAppearance="@style/TextView.XLarge.Bold"
+                        android:visibility="gone"
+                        tools:text="@string/enter_payment_information"
+                        tools:visibility="visible"
+                        />
+
+                    <TextView
+                        android:id="@+id/sub_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/default_margin_half"
+                        android:layout_marginEnd="@dimen/default_margin"
+                        android:layout_marginLeft="@dimen/default_margin"
+                        android:layout_marginRight="@dimen/default_margin"
+                        android:layout_marginStart="@dimen/default_margin"
+                        android:gravity="center"
+                        android:textAppearance="@style/TextView.Medium"
+                        android:visibility="gone"
+                        tools:text="We won't charge your card until two weeks after activation"
+                        tools:visibility="visible"
+                        />
+                </LinearLayout>
+
+                <FrameLayout
+                    android:id="@+id/main_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/default_margin_half"
+                    />
+
+                <LinearLayout
+                    android:id="@+id/action_button_group"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/default_margin_half"
+                    android:orientation="vertical"
+                    android:visibility="gone"
+                    >
+
+                    <Button
+                        android:id="@+id/group_primary_button"
+                        style="@style/Button.Green.Round"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="@dimen/default_margin_half"
+                        android:layout_marginEnd="@dimen/default_margin"
+                        android:layout_marginLeft="@dimen/default_margin"
+                        android:layout_marginRight="@dimen/default_margin"
+                        android:layout_marginStart="@dimen/default_margin"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/large_text_size"
+                        android:visibility="gone"
+                        tools:text="@string/yes_supply_kit"
+                        />
+
+                    <Button
+                        android:id="@+id/group_secondary_button"
+                        style="@style/Button.Grey.Round"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:layout_marginBottom="@dimen/default_margin"
+                        android:layout_marginEnd="@dimen/default_margin"
+                        android:layout_marginLeft="@dimen/default_margin"
+                        android:layout_marginRight="@dimen/default_margin"
+                        android:layout_marginStart="@dimen/default_margin"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/large_text_size"
+                        android:visibility="gone"
+                        tools:text="@string/no_supply_kit"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+        </ScrollView>
+    </android.support.design.widget.CoordinatorLayout>
+
+    <Button
+        android:id="@+id/single_action_button"
+        style="@style/Button.Green"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/complete_button_height"
+        android:layout_alignParentBottom="true"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textSize="@dimen/large_text_size"
+        android:visibility="gone"
+        tools:text="@string/purchase_supplies"
+        tools:visibility="visible"
+        />
+
+    <include layout="@layout/overlay_loading"/>
+
+</RelativeLayout>

@@ -24,12 +24,14 @@ import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
@@ -39,8 +41,6 @@ import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.UIUtils;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -51,7 +51,7 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -63,13 +63,13 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     ConfigManager mConfigManager;
     @Inject
     PrefsManager mPrefsManager;
-    @Bind(R.id.fetch_error_view)
+    @BindView(R.id.fetch_error_view)
     View mFetchErrorView;
-    @Bind(R.id.fetch_error_text)
+    @BindView(R.id.fetch_error_text)
     TextView mErrorText;
-    @Bind(R.id.refresh_layout)
+    @BindView(R.id.refresh_layout)
     SwipeRefreshLayout mRefreshLayout;
-    @Bind(R.id.bookings_content)
+    @BindView(R.id.bookings_content)
     LinearLayout mBookingsContent;
 
     protected String mMessage;
@@ -181,7 +181,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                     @Override
                     public void onRefresh()
                     {
-                        requestBookingsForSelectedDay(false);
+                        requestBookingsForSelectedDay(false, false);
                     }
                 };
         final SwipeRefreshLayout noBookingsSwipeRefreshLayout = getNoBookingsSwipeRefreshLayout();
@@ -222,19 +222,19 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     @OnClick(R.id.try_again_button)
     public void doRequestBookingsAgain()
     {
-        requestBookingsForSelectedDay(true);
+        requestBookingsForSelectedDay(true, true);
     }
 
     private void requestAllBookings()
     {
-        requestBookingsForSelectedDay(true);
+        requestBookingsForSelectedDay(true, true);
 
         requestBookingsForOtherDays(mSelectedDay);
     }
 
-    private void requestBookingsForSelectedDay(boolean showOverlay)
+    private void requestBookingsForSelectedDay(boolean showOverlay, boolean useCachedIfPresent)
     {
-        requestBookings(Lists.newArrayList(mSelectedDay), showOverlay, true);
+        requestBookings(Lists.newArrayList(mSelectedDay), showOverlay, useCachedIfPresent);
     }
 
     private void requestBookingsForOtherDays(Date dayToExclude)
@@ -275,7 +275,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     protected void handleBookingsRetrieved(T event)
     {
         BookingsWrapper bookingsWrapper = event.bookingsWrapper;
-        if(bookingsWrapper == null || event.day == null)
+        if (bookingsWrapper == null || event.day == null)
         {
             Crashlytics.logException(new Exception("on receive bookings success bookings wrapper or day is null"));
             return;
@@ -326,7 +326,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         if (event.days.contains(mSelectedDay))
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-            if (event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
+            if (event.error != null && event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
             {
                 mErrorText.setText(R.string.error_fetching_connectivity_issue);
             }
@@ -369,7 +369,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 }
             });
 
-
             mDateDateButtonViewMap.put(day, dateButtonView);
         }
     }
@@ -387,8 +386,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     /**
      * updates the bookings view with the given list of bookings for the given date
-     * @param bookingsWrapper
-     * @param dateOfBookings
      */
     protected void displayBookings(@NonNull BookingsWrapper bookingsWrapper, @NonNull Date dateOfBookings)
     {
@@ -433,8 +430,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
         arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
         arguments.putString(BundleKeys.BOOKING_SOURCE, getBookingSourceName());
-        arguments.putSerializable(BundleKeys.TAB, getTab());
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.JOB_DETAILS, arguments,
+        arguments.putSerializable(BundleKeys.PAGE, getAppPage());
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.JOB_DETAILS, arguments,
                 TransitionStyle.JOB_LIST_TO_DETAILS, true));
     }
 }

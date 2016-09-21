@@ -11,22 +11,28 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.ui.fragment.dialog.PopupDialogFragment;
+import com.handy.portal.library.ui.fragment.dialog.PopupDialogFragment;
 
-import butterknife.Bind;
+import org.greenrobot.eventbus.EventBus;
+
+import javax.inject.Inject;
+
+import butterknife.BindView;
 
 public class PaymentBillBlockerDialogFragment extends PopupDialogFragment //TODO: consolidate some of this logic with other dialog fragments
 {
+    @Inject
+    EventBus mBus;
 
-    @Bind(R.id.payments_bill_blocker_content)
+    @BindView(R.id.payments_bill_blocker_content)
     TextView mPaymentBlockerContentText;
-    @Bind(R.id.payments_bill_blocker_update_now_button)
+    @BindView(R.id.payments_bill_blocker_update_now_button)
     protected Button updateNowButton;
 
-    @Bind(R.id.payments_bill_blocker_later_button)
+    @BindView(R.id.payments_bill_blocker_later_button)
     protected Button laterButton;
 
     public static final String FRAGMENT_TAG = "fragment_dialog_payment_bill_blocker";
@@ -57,7 +63,7 @@ public class PaymentBillBlockerDialogFragment extends PopupDialogFragment //TODO
             @Override
             public void onClick(View v)
             {
-                mBus.post(new NavigationEvent.NavigateToTab(MainViewTab.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.REFRESH_TAB, true));
+                mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.REFRESH_PAGE, true));
                 PaymentBillBlockerDialogFragment.this.dismiss();
             }
         });

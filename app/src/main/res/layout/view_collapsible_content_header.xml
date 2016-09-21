@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_gray_top"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:background="@drawable/button_white"
+        android:padding="@dimen/default_padding"
+        >
+
+        <ImageView
+            android:id="@+id/icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:src="@drawable/ic_onboarding_schedule"
+            />
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/TextView.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/default_margin_half"
+            android:layout_marginStart="@dimen/default_margin_half"
+            android:layout_toEndOf="@+id/icon"
+            android:layout_toRightOf="@+id/icon"
+            tools:text="3 Jobs"
+            />
+
+        <TextView
+            android:id="@+id/subtitle"
+            style="@style/TextView.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignWithParentIfMissing="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="@dimen/default_margin_half"
+            android:layout_marginRight="@dimen/default_margin_half"
+            android:layout_toLeftOf="@+id/chevron"
+            android:layout_toStartOf="@+id/chevron"
+            android:textColor="@color/subtitle_grey"
+            tools:text="Tuesday, May 24, 2016"
+            />
+
+        <ImageView
+            android:id="@+id/chevron"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:rotation="90"
+            android:src="@drawable/ic_chevron_gray"
+            />
+
+    </RelativeLayout>
+</FrameLayout>

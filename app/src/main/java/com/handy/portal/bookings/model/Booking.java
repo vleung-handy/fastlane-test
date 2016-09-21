@@ -119,6 +119,10 @@ public class Booking implements Comparable<Booking>, Serializable
     @SerializedName("total_earings")
     private int mTotalEarningsInCents;
 
+    // Schedule Conflict
+    @SerializedName("schedule_conflict")
+    private Booking mSwappableBooking;
+
     private List<BookingInstructionUpdateRequest> mCustomerPreferences;
 
     public DisplayAttributes getProviderRequestDisplayAttributes()
@@ -238,6 +242,18 @@ public class Booking implements Comparable<Booking>, Serializable
     public PaymentInfo getHourlyRate()
     {
         return mHourlyRate;
+    }
+
+    public String getCurrencySymbol()
+    {
+        if (getHourlyRate() != null)
+        {
+            return getHourlyRate().getCurrencySymbol();
+        }
+        else
+        {
+            return getPaymentToProvider().getCurrencySymbol();
+        }
     }
 
     public boolean isRequested()
@@ -429,11 +445,6 @@ public class Booking implements Comparable<Booking>, Serializable
         return mMinimumHours > 0 && mMinimumHours < mHours;
     }
 
-    public boolean hasFlexPayRate()
-    {
-        return getHourlyRate() != null && hasFlexibleHours();
-    }
-
     public Date getCheckInTime()
     {
         return mCheckInTime;
@@ -461,6 +472,16 @@ public class Booking implements Comparable<Booking>, Serializable
         }
     }
 
+    public Booking getSwappableBooking()
+    {
+        return mSwappableBooking;
+    }
+
+    public boolean canSwap()
+    {
+        return mSwappableBooking != null;
+    }
+
     //Basic booking statuses inferrable from mProviderId
     public enum BookingStatus
     {
@@ -468,6 +489,7 @@ public class Booking implements Comparable<Booking>, Serializable
         CLAIMED,
         UNAVAILABLE,
     }
+
 
     public static class DisplayAttributes implements Serializable
     {
@@ -494,6 +516,7 @@ public class Booking implements Comparable<Booking>, Serializable
             return mDetailsBody;
         }
     }
+
 
     public enum ArrivalTimeOption //TODO: better system to enforce values in sync with server?
     {
@@ -651,6 +674,8 @@ public class Booking implements Comparable<Booking>, Serializable
         private String mHelpRedirectPath;
         @SerializedName("extras")
         private Extras mExtras;
+        @SerializedName("checkin_config")
+        private CheckInConfig mCheckInConfig;
 
 
         public Extras getExtras()
@@ -685,6 +710,26 @@ public class Booking implements Comparable<Booking>, Serializable
 
         public int getFeeAmount() { return mExtras.getFeeAmount(); }
 
+        public int getWaivedAmount()
+        {
+            if (mExtras == null || mExtras.getCancellationPolicy() == null) { return 0; }
+
+            Extras.CancellationPolicy.CancellationPolicyItem[] items =
+                    mExtras.getCancellationPolicy().getCancellationPolicyItems();
+
+            if (items == null || items.length == 0) { return 0; }
+
+            int waivedAmount = 0;
+            for (Extras.CancellationPolicy.CancellationPolicyItem item : items)
+            {
+                if (item.getWaivedPaymentInfo() != null)
+                {
+                    waivedAmount += item.getWaivedPaymentInfo().getAmount();
+                }
+            }
+            return waivedAmount;
+        }
+
         public List<String> getRemoveReasons() { return mExtras.getRemoveReasons(); }
 
         public String getHelpRedirectPath()
@@ -697,6 +742,24 @@ public class Booking implements Comparable<Booking>, Serializable
         {
             return mExtras != null ? mExtras.getKeepRate() : null;
         }
+
+        public CheckInConfig getCheckInConfig()
+        {
+            return mCheckInConfig;
+        }
+
+        public static class CheckInConfig implements Serializable
+        {
+            @SerializedName("tolerance")
+            private int mToleranceInMeters;
+            @SerializedName("distance")
+            private int mMaxDistanceInMeters;
+
+            public int getToleranceInMeters() { return mToleranceInMeters; }
+
+            public int getMaxDistanceInMeters() { return mMaxDistanceInMeters; }
+        }
+
 
         public static class Extras implements Serializable
         {
@@ -771,6 +834,8 @@ public class Booking implements Comparable<Booking>, Serializable
                     private boolean mActive;
                     @SerializedName("fee")
                     private PaymentInfo mPaymentInfo;
+                    @SerializedName("waived_fee")
+                    private PaymentInfo mWaivedPaymentInfo;
 
                     public String getDisplayText()
                     {
@@ -785,6 +850,11 @@ public class Booking implements Comparable<Booking>, Serializable
                     public PaymentInfo getPaymentInfo()
                     {
                         return mPaymentInfo;
+                    }
+
+                    public PaymentInfo getWaivedPaymentInfo()
+                    {
+                        return mWaivedPaymentInfo;
                     }
                 }
             }
@@ -875,6 +945,18 @@ public class Booking implements Comparable<Booking>, Serializable
             return copiedList;
         }
 
+        public BookingInstruction() {}
+
+        public BookingInstruction(final String id, final String instructionType, final String description, final String machineName, final String title, final boolean instructionCompleted)
+        {
+            mId = id;
+            mInstructionType = instructionType;
+            mDescription = description;
+            mMachineName = machineName;
+            mTitle = title;
+            mInstructionCompleted = instructionCompleted;
+        }
+
         public String getId() { return mId; }
 
         public String getInstructionType() { return mInstructionType; }
@@ -891,14 +973,13 @@ public class Booking implements Comparable<Booking>, Serializable
 
     public static class BookingInstructionUpdateRequest extends BookingInstruction
     {
+        public BookingInstructionUpdateRequest() { }
+
         public BookingInstructionUpdateRequest(BookingInstruction bookingInstruction)
         {
-            mId = bookingInstruction.getId();
-            mInstructionType = bookingInstruction.getInstructionType();
-            mDescription = bookingInstruction.getDescription();
-            mMachineName = bookingInstruction.getMachineName();
-            mTitle = bookingInstruction.getTitle();
-            mInstructionCompleted = bookingInstruction.isInstructionCompleted();
+            super(bookingInstruction.getId(), bookingInstruction.getInstructionType(),
+                    bookingInstruction.getDescription(), bookingInstruction.getMachineName(),
+                    bookingInstruction.getTitle(), bookingInstruction.isInstructionCompleted());
         }
 
         public void setInstructionCompleted(boolean instructionCompleted)
@@ -970,6 +1051,12 @@ public class Booking implements Comparable<Booking>, Serializable
         private String mMachineName;
         @SerializedName("name")
         private String mDisplayName;
+
+        public ServiceInfo(final String machineName, final String displayName)
+        {
+            mMachineName = machineName;
+            mDisplayName = displayName;
+        }
 
         public String getMachineName()
         {
@@ -1091,5 +1178,4 @@ public class Booking implements Comparable<Booking>, Serializable
         @Nullable
         public String getZipClusterId() { return mZipClusterId; }
     }
-
 }

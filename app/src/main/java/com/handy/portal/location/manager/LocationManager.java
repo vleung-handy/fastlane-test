@@ -1,6 +1,5 @@
 package com.handy.portal.location.manager;
 
-import android.location.Location;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -10,11 +9,11 @@ import com.handy.portal.event.SystemEvent;
 import com.handy.portal.location.LocationEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
-import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.SuccessWrapper;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -22,25 +21,22 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
-//TODO: clean this up
-
-
 /**
- * listens to location schedule updated event
- * <p/>
- * listens to location update events from the location service
- * <p/>
- * posts location updates to the server
- * <p/>
- * keeps track of the last location
+ * listens to the following events:
+ * - request location schedule event
+ * - location updates
+ * - network reconnected
+ *
+ * and does the following:
+ * - posts batch updates to the server
+ * - remembers failed posts and retries posting on network reconnection
+ * - keeps track of last location (for legacy code)
  */
 public class LocationManager
 {
-    private final Bus mBus;
+    private final EventBus mBus;
     private final DataManager mDataManager;
     private final ProviderManager mProviderManager;
-    private final PrefsManager mPrefsManager;
-    private Location mLastKnownLocation; //for backwards compatibility with check-in flow
 
     //TODO: adjust these params
 //    private final long LAST_UPDATE_TIME_INTERVAL_MILLISEC = 2 * DateTimeUtils.MILLISECONDS_IN_SECOND;
@@ -51,27 +47,14 @@ public class LocationManager
     private final static int MAX_FAILED_LOCATION_BATCH_UPDATES_SIZE = 100;
 
     @Inject
-    public LocationManager(final Bus bus,
+    public LocationManager(final EventBus bus,
                            final DataManager dataManager,
-                           final ProviderManager providerManager,
-                           final PrefsManager prefsManager)
+                           final ProviderManager providerManager)
     {
         mBus = bus;
         mBus.register(this);
         mDataManager = dataManager;
         mProviderManager = providerManager;
-        mPrefsManager = prefsManager;
-    }
-
-    /**
-     * for backwards compatibility with check-in flow which requires this
-     * TODO can remove this when everyone switches over to location service
-     *
-     * @return
-     */
-    public Location getLastKnownLocation()
-    {
-        return mLastKnownLocation;
     }
 
     @Subscribe
@@ -94,16 +77,6 @@ public class LocationManager
                 mBus.post(new LocationEvent.ReceiveLocationScheduleError(error));
             }
         });
-    }
-
-    @Subscribe
-    public void onReceiveLocationUpdate(final LocationEvent.LocationUpdated event)
-    {
-        /*
-        basic way to keep track of last known location for backwards compatibility with
-        the check-in flow which requires it
-         */
-        mLastKnownLocation = event.getLocationUpdate();
     }
 
     /**
@@ -215,12 +188,14 @@ public class LocationManager
         mFailedLocationBatchUpdates.add(locationBatchUpdate);
     }
 
+    /**
+     * after the user logs out, we don't need the location service,
+     * so request to stop it
+     * @param event
+     */
     @Subscribe
-    public void onBookingChangedOrCreated(HandyEvent.BookingChangedOrCreated event)
+    public void onUserLoggedOut(HandyEvent.UserLoggedOut event)
     {
-        //when this happens, we should rebuild the schedule
-        //TODO: see if building schedule is costly. if so, note which bookings were invalidated and rebuild the schedule only for those bookings
-        mBus.post(new LocationEvent.RequestLocationSchedule());
+        mBus.post(new LocationEvent.RequestStopLocationService());
     }
-
 }

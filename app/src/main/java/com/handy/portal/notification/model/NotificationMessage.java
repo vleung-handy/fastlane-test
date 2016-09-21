@@ -1,7 +1,9 @@
 package com.handy.portal.notification.model;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.util.DateTimeUtils;
+import com.handy.portal.library.util.DateTimeUtils;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -12,9 +14,6 @@ public class NotificationMessage implements Serializable
     @SerializedName("id")
     private int mId;
 
-    @SerializedName("title")
-    private String mTitle;
-
     @SerializedName("body")
     private String mBody;
 
@@ -22,7 +21,7 @@ public class NotificationMessage implements Serializable
     private String mHtmlBody;
 
     @SerializedName("type")
-    private String mType;
+    private NotificationType mType;
 
     @SerializedName("created_at")
     private Date mCreatedAt;
@@ -34,25 +33,17 @@ public class NotificationMessage implements Serializable
     private boolean mAvailable;
 
     @SerializedName("read_status")
-    private boolean mReadStatus;
+    private boolean mIsRead;
 
-    @SerializedName("images")
-    private List<NotificationImage> mImages;
+    @SerializedName("interacted_status")
+    private boolean mIsInteracted;
 
     @SerializedName("actions")
     private List<NotificationAction> mActions;
 
-    private NotificationImage mImage;
-    private boolean mHasNoImage = false;
-
     public int getId()
     {
         return mId;
-    }
-
-    public String getTitle()
-    {
-        return mTitle;
     }
 
     public String getBody()
@@ -65,9 +56,10 @@ public class NotificationMessage implements Serializable
         return mHtmlBody;
     }
 
-    public String getType()
+    @NonNull
+    public NotificationType getType()
     {
-        return mType;
+        return mType != null ? mType : NotificationType.ALERT;
     }
 
     public Date getCreatedAt()
@@ -87,12 +79,12 @@ public class NotificationMessage implements Serializable
 
     public boolean isRead()
     {
-        return mReadStatus;
+        return mIsRead;
     }
 
-    public List<NotificationImage> getImages()
+    public boolean isInteracted()
     {
-        return mImages;
+        return mIsInteracted;
     }
 
     public List<NotificationAction> getActions()
@@ -102,36 +94,6 @@ public class NotificationMessage implements Serializable
 
     public String getFormattedTime()
     {
-        return DateTimeUtils.formatDateTo12HourClock(getCreatedAt());
-    }
-
-    public NotificationImage getImage()
-    {
-        return mImage;
-    }
-
-    public void setImage(float scale)
-    {
-        for (NotificationImage image : getImages()) {
-            if (scale == image.getScale())
-            {
-                mImage = image;
-            }
-        }
-
-        if (mImage == null)
-        {
-            mHasNoImage = true;
-        }
-    }
-
-    public boolean hasNoImage()
-    {
-        return mHasNoImage;
-    }
-
-    public void markAsRead()
-    {
-        mReadStatus = true;
+        return DateTimeUtils.formatDateToNumberTimeUnit(getCreatedAt());
     }
 }

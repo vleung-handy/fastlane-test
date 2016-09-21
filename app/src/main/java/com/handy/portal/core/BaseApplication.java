@@ -3,30 +3,31 @@ package com.handy.portal.core;
 import android.app.Activity;
 import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
 import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
-import com.handy.portal.bookings.BookingManager;
-import com.handy.portal.bookings.BookingModalsManager;
+import com.handy.portal.bookings.manager.BookingManager;
+import com.handy.portal.bookings.manager.BookingModalsManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.library.util.FontUtils;
+import com.handy.portal.library.util.PropertiesReader;
+import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.manager.LocationManager;
+import com.handy.portal.location.manager.LocationScheduleUpdateManager;
 import com.handy.portal.logger.handylogger.EventLogManager;
-import com.handy.portal.logger.mixpanel.Mixpanel;
 import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.manager.GoogleManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
+import com.handy.portal.manager.PageNavigationManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.RegionDefinitionsManager;
 import com.handy.portal.manager.StripeManager;
 import com.handy.portal.manager.SystemManager;
-import com.handy.portal.manager.TabNavigationManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.UserInterfaceUpdateManager;
@@ -35,10 +36,11 @@ import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.notification.NotificationMessageManager;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
+import com.handy.portal.setup.SetupManager;
 import com.handy.portal.updater.VersionManager;
-import com.handy.portal.util.FontUtils;
 import com.newrelic.agent.android.NewRelic;
-import com.squareup.otto.Bus;
+
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
@@ -53,16 +55,11 @@ public class BaseApplication extends MultiDexApplication
     private int mStarted;
     private boolean mSavedInstance;
 
-    @Inject
-    Mixpanel mixpanel;
-
     //We are injecting all of our event bus listening managers in BaseApplication to start them up for event listening
     @Inject
     DataManager dataManager;
     @Inject
     HandyRetrofitEndpoint handyRetrofitEndpoint;
-    @Inject
-    GoogleManager googleManager;
     @Inject
     BookingManager bookingManager;
     @Inject
@@ -94,7 +91,7 @@ public class BaseApplication extends MultiDexApplication
     @Inject
     MainActivityFragmentNavigationHelper mainActivityFragmentNavigationHelper;
     @Inject
-    TabNavigationManager tabNavigationManager;
+    PageNavigationManager mPageNavigationManager;
     @Inject
     WebUrlManager webUrlManager;
     @Inject
@@ -105,12 +102,16 @@ public class BaseApplication extends MultiDexApplication
     SystemManager systemManager;
     @Inject
     UserInterfaceUpdateManager userInterfaceUpdateManager;
+    @Inject
+    SetupManager setupManager;
+    @Inject
+    LocationScheduleUpdateManager mLocationScheduleUpdateManager;
 
     @Inject
-    Bus bus;
+    EventBus bus;
 
     @Override
-    public final void onCreate()
+    public void onCreate()
     {
         super.onCreate();
         createObjectGraph();
@@ -118,7 +119,7 @@ public class BaseApplication extends MultiDexApplication
 
         startNewRelic();
         startCrashlytics();
-        sDeviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        sDeviceId = SystemUtils.getDeviceId(getApplicationContext());
         //Start UA
         bus.post(new HandyEvent.StartUrbanAirship());
 
@@ -126,13 +127,6 @@ public class BaseApplication extends MultiDexApplication
                 .setDefaultFontPath(FontUtils.CIRCULAR_BOOK)
                 .setFontAttrId(R.attr.fontPath)
                 .build());
-
-//        if (BuildConfig.FLAVOR.equals(BaseApplication.FLAVOR_PROD)) {
-//            NewRelic.withApplicationToken("AA7a37dccf925fd1e474142399691d1b6b3f84648b").start(this);
-//        }
-//        else {
-//            NewRelic.withApplicationToken("AAbaf8c55fb9788d1664e82661d94bc18ea7c39aa6").start(this);
-//        }
 
         registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks()
         {
@@ -146,13 +140,6 @@ public class BaseApplication extends MultiDexApplication
             @Override
             public void onActivityStarted(final Activity activity)
             {
-                ++mStarted;
-
-                if (mStarted == 1)
-                {
-                    if (!mSavedInstance) { mixpanel.trackEventAppOpened(true); }
-                    else { mixpanel.trackEventAppOpened(false); }
-                }
             }
 
             @Override

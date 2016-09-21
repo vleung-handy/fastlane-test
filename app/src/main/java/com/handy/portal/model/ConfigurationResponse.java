@@ -1,9 +1,6 @@
 package com.handy.portal.model;
 
-import android.support.annotation.Nullable;
-
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.model.onboarding.OnboardingParams;
 
 public class ConfigurationResponse
 {
@@ -37,9 +34,6 @@ public class ConfigurationResponse
     @SerializedName("boxed_supplies_enabled")
     private boolean mBoxedSuppliesEnabled;
 
-    @SerializedName("onboarding_info")
-    private OnboardingParams mOnboardingParams;
-
     @SerializedName("help_center")
     private HelpCenterInfo mHelpCenterInfo;
 
@@ -49,6 +43,28 @@ public class ConfigurationResponse
     @SerializedName("show_payment_transactions")
     private boolean mShowBookingTransactionSummary;
 
+    @SerializedName("weekly_payment_tiers_enabled")
+    private boolean mWeeklyPaymentTiersEnabled;
+
+    @SerializedName("pending_requests_inbox_enabled")
+    private boolean mPendingRequestsInboxEnabled;
+
+    @SerializedName("customer_no_show_modal_enabled")
+    private boolean mCustomerNoShowModalEnabled;
+
+    @SerializedName("number_of_days_for_requested_jobs")
+    private int mNumberOfDaysForRequestedJobs;
+
+    public boolean isCustomerNoShowModalEnabled()
+    {
+        return mCustomerNoShowModalEnabled;
+    }
+
+    public boolean isPendingRequestsInboxEnabled()
+    {
+        return mPendingRequestsInboxEnabled;
+    }
+
     public boolean isLocationScheduleServiceEnabled()
     {
         return mLocationScheduleServiceEnabled;
@@ -57,6 +73,11 @@ public class ConfigurationResponse
     public boolean isBookingGeofenceServiceEnabled()
     {
         return mBookingGeofenceServiceEnabled;
+    }
+
+    public boolean isLocationServiceEnabled()
+    {
+        return mLocationScheduleServiceEnabled || mBookingGeofenceServiceEnabled;
     }
 
     public boolean isBoxedSuppliesEnabled()
@@ -99,25 +120,19 @@ public class ConfigurationResponse
         return mShowLateDispatchOptIn;
     }
 
-    @Nullable
-    public OnboardingParams getOnboardingParams()
+    public boolean shouldShowWeeklyPaymentTiers()
     {
-        return mOnboardingParams;
-    }
-
-    public boolean shouldShowWebOnboarding()
-    {
-        return getOnboardingParams() != null && mOnboardingParams.shouldShowWebOnboarding();
-    }
-
-    public boolean shouldShowNativeOnboarding()
-    {
-        return getOnboardingParams() != null && mOnboardingParams.shouldShowNativeOnboarding();
+        return mWeeklyPaymentTiersEnabled;
     }
 
     public boolean shouldUseHelpCenterWebView()
     {
         return mHelpCenterInfo != null && mHelpCenterInfo.shouldUseHelpCenterWebView();
+    }
+
+    public int getNumberOfDaysForRequestedJobs()
+    {
+        return mNumberOfDaysForRequestedJobs;
     }
 
     public int getNumberOfDaysForAvailableJobs()

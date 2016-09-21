@@ -1,9 +1,9 @@
 package com.handy.portal.bookings.ui.fragment;
 
 import android.app.Activity;
-import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,11 +19,13 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.maps.MapsInitializer;
+import com.google.common.base.Strings;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.constant.BookingActionButtonType;
@@ -34,12 +36,21 @@ import com.handy.portal.bookings.ui.element.BookingDetailsProRequestInfoView;
 import com.handy.portal.bookings.ui.element.BookingMapView;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.SwapBookingClaimDialogFragment;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.ui.view.MapPlaceholderView;
+import com.handy.portal.library.ui.view.RoundedTextView;
+import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.FragmentUtils;
+import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.library.util.UIUtils;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
@@ -49,24 +60,17 @@ import com.handy.portal.model.LocationData;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.fragment.TimerActionBarFragment;
-import com.handy.portal.ui.view.MapPlaceholderView;
-import com.handy.portal.ui.view.RoundedTextView;
-import com.handy.portal.util.CurrencyUtils;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.FragmentUtils;
-import com.handy.portal.util.TextUtils;
-import com.handy.portal.util.UIUtils;
-import com.handy.portal.util.Utils;
-import com.squareup.otto.Subscribe;
+import com.handy.portal.ui.view.FlowLayout;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -79,55 +83,55 @@ public class BookingFragment extends TimerActionBarFragment
     @Inject
     PrefsManager mPrefsManager;
 
-    @Bind(R.id.booking_details_display_message_layout)
+    @BindView(R.id.booking_details_display_message_layout)
     BookingDetailsProRequestInfoView mBookingDetailsProRequestInfoView;
-    @Bind(R.id.booking_scroll_view)
+    @BindView(R.id.booking_scroll_view)
     ScrollView mScrollView;
-    @Bind(R.id.booking_no_show_banner_text)
+    @BindView(R.id.booking_no_show_banner_text)
     View mNoShowBanner;
-    @Bind(R.id.booking_map_view)
+    @BindView(R.id.booking_map_view)
     BookingMapView mBookingMapView;
-    @Bind(R.id.booking_customer_contact_layout)
+    @BindView(R.id.booking_customer_contact_layout)
     ViewGroup mBookingCustomerContactLayout;
-    @Bind(R.id.booking_customer_name_text)
+    @BindView(R.id.booking_customer_name_text)
     TextView mCustomerNameText;
-    @Bind(R.id.booking_address_title_text)
+    @BindView(R.id.booking_address_title_text)
     TextView mBookingAddressTitleText;
-    @Bind(R.id.booking_address_text)
+    @BindView(R.id.booking_address_text)
     TextView mBookingAddressText;
-    @Bind(R.id.booking_address_location_description_text)
+    @BindView(R.id.booking_address_location_description_text)
     TextView mBookingAddressLocationDescriptionText;
-    @Bind(R.id.booking_call_customer_view)
+    @BindView(R.id.booking_call_customer_view)
     ImageView mCallCustomerView;
-    @Bind(R.id.booking_message_customer_view)
+    @BindView(R.id.booking_message_customer_view)
     ImageView mMessageCustomerView;
-    @Bind(R.id.booking_get_directions_layout)
+    @BindView(R.id.booking_get_directions_layout)
     ViewGroup mGetDirectionsLayout;
-    @Bind(R.id.booking_job_date_text)
+    @BindView(R.id.booking_job_date_text)
     TextView mJobDateText;
-    @Bind(R.id.booking_job_time_text)
+    @BindView(R.id.booking_job_time_text)
     TextView mJobTimeText;
-    @Bind(R.id.booking_job_payment_text)
+    @BindView(R.id.booking_job_payment_text)
     TextView mJobPaymentText;
-    @Bind(R.id.booking_job_payment_bonus_text)
+    @BindView(R.id.booking_job_payment_bonus_text)
     TextView mJobPaymentBonusText;
-    @Bind(R.id.booking_frequency_text)
+    @BindView(R.id.booking_frequency_text)
     TextView mFrequencyTest;
-    @Bind(R.id.booking_support_button)
+    @BindView(R.id.booking_support_button)
     Button mSupportButton;
-    @Bind(R.id.booking_action_helper_text)
+    @BindView(R.id.booking_action_helper_text)
     TextView mBookingDetailsActionHelperText;
-    @Bind(R.id.booking_job_instructions_list_layout)
+    @BindView(R.id.booking_job_instructions_list_layout)
     LinearLayout mInstructionsLayout;
-    @Bind(R.id.booking_reveal_notice_text)
+    @BindView(R.id.booking_reveal_notice_text)
     TextView mRevealNoticeText;
-    @Bind(R.id.booking_nearby_transit_layout)
+    @BindView(R.id.booking_nearby_transit_layout)
     ViewGroup mBookingNearbyTransitLayout;
-    @Bind(R.id.nearby_transits)
-    LinearLayout mNearbyTransits;
-    @Bind(R.id.booking_job_number_text)
+    @BindView(R.id.nearby_transits)
+    FlowLayout mNearbyTransits;
+    @BindView(R.id.booking_job_number_text)
     TextView mJobNumberText;
-    @Bind(R.id.booking_action_button)
+    @BindView(R.id.booking_action_button)
     Button mActionButton;
 
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
@@ -196,14 +200,14 @@ public class BookingFragment extends TimerActionBarFragment
      * shows the booking details message view
      * with the message in the booking's pro request display model
      * if the message is present and someone in the proxy/booking requested the pro
-     *
+     * <p/>
      * TODO ugly! would be nice if the display attributes were generic but
      * since there's not enough time to fully generalize this
      * we're making it specific to pro request for now
      */
     private void updateDisplayWithBookingProRequestDisplayAttributes()
     {
-        if(mBooking.isRequested()) //ideally should be decoupled
+        if (mBooking.isRequested()) //ideally should be decoupled
         {
             Booking.DisplayAttributes displayAttributes = mBooking.getProviderRequestDisplayAttributes();
             if (displayAttributes != null
@@ -212,6 +216,10 @@ public class BookingFragment extends TimerActionBarFragment
             {
                 mBookingDetailsProRequestInfoView.setVisibility(View.VISIBLE); //GONE by default
                 mBookingDetailsProRequestInfoView.setDisplayModel(displayAttributes);
+                if (mBooking.canSwap())
+                {
+                    mBookingDetailsProRequestInfoView.showSwapIcon();
+                }
             }
         }
     }
@@ -220,6 +228,8 @@ public class BookingFragment extends TimerActionBarFragment
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
+
         mBookingMapView.onResume();
 
         setDisplay();
@@ -229,6 +239,7 @@ public class BookingFragment extends TimerActionBarFragment
     public void onPause()
     {
         mBookingMapView.onPause();
+        bus.unregister(this);
         super.onPause();
     }
 
@@ -258,7 +269,18 @@ public class BookingFragment extends TimerActionBarFragment
     public void onSaveInstanceState(Bundle outState)
     {
         super.onSaveInstanceState(outState);
-        mBookingMapView.onSaveInstanceState(outState);
+        try
+        {
+            /*
+                similar to the exception thrown by mBookingMapView.onDestroy()
+                not caused by mBookingMapView = null
+             */
+            mBookingMapView.onSaveInstanceState(outState);
+        }
+        catch (Exception e)
+        {
+            Crashlytics.log("Error while attempting MapView.onSaveInstanceState(). Ignoring exception: " + e.getMessage());
+        }
     }
 
     public void setDisplay()
@@ -299,6 +321,8 @@ public class BookingFragment extends TimerActionBarFragment
         if (mBooking.isProxy())
         {
             mBookingAddressTitleText.setText(mBooking.getLocationName());
+            mBookingAddressText.setVisibility(View.GONE);
+
             mBookingAddressText.setVisibility(View.GONE);
 
             if (mBooking.getZipCluster() != null)
@@ -349,7 +373,7 @@ public class BookingFragment extends TimerActionBarFragment
         String formattedDate = DateTimeUtils.DAY_OF_WEEK_MONTH_DAY_FORMATTER.format(startDate);
         String formattedTime = getResources().getString(R.string.dash_formatted,
                 DateTimeUtils.formatDateTo12HourClock(startDate), DateTimeUtils.formatDateTo12HourClock(endDate));
-        String dateTimeText = getTodayTomorrowStringByStartDate(startDate) + formattedDate;
+        String dateTimeText = DateTimeUtils.getTodayTomorrowStringByStartDate(startDate, getContext()) + formattedDate;
         mJobDateText.setText(dateTimeText);
         mJobTimeText.setText(formattedTime.toLowerCase());
 
@@ -358,22 +382,33 @@ public class BookingFragment extends TimerActionBarFragment
 
         final PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
         final PaymentInfo hourlyRate = mBooking.getHourlyRate();
-        if (mBooking.hasFlexPayRate())
+        if (hourlyRate != null)
         {
-            final float minimumHours = mBooking.getMinimumHours();
-            final float maximumHours = mBooking.getHours();
-            final String currencySymbol = hourlyRate.getCurrencySymbol();
-            final String minimumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
-                    (int) (hourlyRate.getAmount() * minimumHours), currencySymbol);
-            final String maximumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
-                    (int) (hourlyRate.getAmount() * maximumHours), currencySymbol);
-            String paymentText = getResources().getString(R.string.dash_formatted,
-                    minimumPaymentFormatted, maximumPaymentFormatted);
-            mJobPaymentText.setText(paymentText);
-
-            if (mBooking.getRevealDate() != null && mBooking.isClaimedByMe())
+            if (mBooking.hasFlexibleHours())
             {
-                setRevealNoticeText(minimumHours, maximumHours, minimumPaymentFormatted, maximumPaymentFormatted);
+                final float minimumHours = mBooking.getMinimumHours();
+                final float maximumHours = mBooking.getHours();
+                final String currencySymbol = hourlyRate.getCurrencySymbol();
+                final String minimumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
+                        (int) (hourlyRate.getAmount() * minimumHours), currencySymbol);
+                final String maximumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
+                        (int) (hourlyRate.getAmount() * maximumHours), currencySymbol);
+                String paymentText = getResources().getString(R.string.dash_formatted,
+                        minimumPaymentFormatted, maximumPaymentFormatted);
+                mJobPaymentText.setText(paymentText);
+
+                if (mBooking.getRevealDate() != null && mBooking.isClaimedByMe())
+                {
+                    setRevealNoticeText(minimumHours, maximumHours, minimumPaymentFormatted,
+                            maximumPaymentFormatted);
+                }
+            }
+            else
+            {
+                final String paymentFormatted = CurrencyUtils.formatPriceWithCents(
+                        (int) (hourlyRate.getAmount() * mBooking.getHours()),
+                        hourlyRate.getCurrencySymbol());
+                mJobPaymentText.setText(paymentFormatted);
             }
         }
         else if (paymentInfo != null)
@@ -480,7 +515,7 @@ public class BookingFragment extends TimerActionBarFragment
     public void onReceiveZipClusterPolygonsSuccess(final BookingEvent.ReceiveZipClusterPolygonsSuccess event)
     {
         Booking.BookingStatus bookingStatus = mBooking.inferBookingStatus(getLoggedInUserId());
-        mBookingMapView.setDisplay(mBooking, mSource, bookingStatus, event.zipClusterPolygons);
+        mBookingMapView.setDisplay(mBooking, bookingStatus, event.zipClusterPolygons);
     }
 
     @OnClick(R.id.booking_get_directions_layout)
@@ -498,13 +533,22 @@ public class BookingFragment extends TimerActionBarFragment
         bus.post(new HandyEvent.CallCustomerClicked());
 
         String phoneNumber = mBooking.getBookingPhone();
+        if (phoneNumber == null)
+        {
+            showInvalidPhoneNumberToast();
+            Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
+            return;
+        }
+
         try
         {
             Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), getContext());
         }
-        catch (ActivityNotFoundException activityException)
+        catch (Exception e)
         {
-            Crashlytics.logException(new RuntimeException("Calling a Phone Number failed", activityException));
+            Toast.makeText(getContext(),
+                    getString(R.string.unable_to_call_customer), Toast.LENGTH_SHORT).show();
+            Crashlytics.logException(new RuntimeException("Calling a Phone Number failed", e));
         }
     }
 
@@ -514,13 +558,22 @@ public class BookingFragment extends TimerActionBarFragment
         bus.post(new HandyEvent.TextCustomerClicked());
 
         String phoneNumber = mBooking.getBookingPhone();
+        if (phoneNumber == null)
+        {
+            showInvalidPhoneNumberToast();
+            Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
+            return;
+        }
+
         try
         {
             Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)), getContext());
         }
-        catch (ActivityNotFoundException activityException)
+        catch (Exception e)
         {
-            Crashlytics.logException(new RuntimeException("Texting a Phone Number failed", activityException));
+            Toast.makeText(getContext(),
+                    getString(R.string.unable_to_text_customer), Toast.LENGTH_SHORT).show();
+            Crashlytics.logException(new RuntimeException("Texting a Phone Number failed", e));
         }
     }
 
@@ -548,7 +601,7 @@ public class BookingFragment extends TimerActionBarFragment
             }
             else
             {
-                mBookingMapView.setDisplay(mBooking, mSource, bookingStatus, null);
+                mBookingMapView.setDisplay(mBooking, bookingStatus, null);
             }
         }
         else
@@ -586,30 +639,6 @@ public class BookingFragment extends TimerActionBarFragment
         return mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
     }
 
-    //returns a today or tomorrow prepend as needed
-    private String getTodayTomorrowStringByStartDate(Date bookingStartDate)
-    {
-        String prepend = "";
-
-        Calendar calendar = Calendar.getInstance();
-
-        Date currentTime = calendar.getTime();
-
-        if (DateTimeUtils.equalCalendarDates(currentTime, bookingStartDate))
-        {
-            prepend = (getContext().getString(R.string.today) + ", ");
-        }
-
-        calendar.add(Calendar.DATE, 1);
-        Date tomorrowTime = calendar.getTime();
-        if (DateTimeUtils.equalCalendarDates(tomorrowTime, bookingStartDate))
-        {
-            prepend = (getContext().getString(R.string.tomorrow) + ", ");
-        }
-
-        return prepend;
-    }
-
     private void requestClaimJob()
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
@@ -631,7 +660,7 @@ public class BookingFragment extends TimerActionBarFragment
         {
             case CLAIM:
             {
-                mActionButton.setText(R.string.claim);
+                mActionButton.setText(mBooking.canSwap() ? R.string.upgrade_job : R.string.claim_job);
                 mActionButton.setVisibility(action.isEnabled() ? View.VISIBLE : View.GONE);
                 mActionButton.setOnClickListener(new View.OnClickListener()
                 {
@@ -684,11 +713,21 @@ public class BookingFragment extends TimerActionBarFragment
                     @Override
                     public void onClick(final View v)
                     {
-                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSubmitted(
-                                mBooking, getLocationData())));
-                        bus.post(new HandyEvent.RequestNotifyJobCheckIn(
-                                mBooking.getId(), getLocationData()));
+                        if (isUserInRangeOfBooking())
+                        {
+                            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+                            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSubmitted(
+                                    mBooking, getLocationData())));
+                            bus.post(new HandyEvent.RequestNotifyJobCheckIn(
+                                    mBooking.getId(), getLocationData()));
+                        }
+                        else
+                        {
+                            showToast(R.string.too_far);
+                            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInFailure(
+                                    mBooking, getLocationData()
+                            )));
+                        }
                     }
                 });
 
@@ -697,7 +736,7 @@ public class BookingFragment extends TimerActionBarFragment
             }
             case CHECK_OUT:
             {
-                mActionButton.setText(R.string.check_out);
+                mActionButton.setText(R.string.continue_to_check_out);
                 mActionButton.setVisibility(action.isEnabled() ? View.VISIBLE : View.GONE);
                 mActionButton.setOnClickListener(new View.OnClickListener()
                 {
@@ -706,7 +745,7 @@ public class BookingFragment extends TimerActionBarFragment
                     {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(BundleKeys.BOOKING, mBooking);
-                        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.SEND_RECEIPT_CHECKOUT, bundle, true));
+                        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SEND_RECEIPT_CHECKOUT, bundle, true));
                     }
                 });
                 initHelperText(action);
@@ -733,6 +772,31 @@ public class BookingFragment extends TimerActionBarFragment
         }
     }
 
+    private boolean isUserInRangeOfBooking()
+    {
+        Booking.Action checkInAction = mBooking.getAction(Booking.Action.ACTION_CHECK_IN);
+        Location userLocation = ((BaseActivity) getActivity()).getLastLocation();
+        Address address = mBooking.getAddress();
+
+        if (checkInAction == null || checkInAction.getCheckInConfig() == null ||
+                userLocation == null || address == null)
+        {
+            return true;
+        }
+
+        Booking.Action.CheckInConfig config = checkInAction.getCheckInConfig();
+        int maxDistanceInMeters = config.getMaxDistanceInMeters();
+        int toleranceInMeters = config.getToleranceInMeters();
+
+        Location bookingLocation = new Location("");
+        bookingLocation.setLatitude(address.getLatitude());
+        bookingLocation.setLongitude(address.getLongitude());
+        float userAccuracyInMeters = userLocation.getAccuracy();
+        float userDistanceInMeters = userLocation.distanceTo(bookingLocation);
+
+        return userDistanceInMeters <= maxDistanceInMeters && userAccuracyInMeters <= toleranceInMeters;
+    }
+
     /**
      * shows the confirm booking claim dialog if the cancellation policy data is there, based on the given booking
      *
@@ -741,13 +805,25 @@ public class BookingFragment extends TimerActionBarFragment
     private boolean showConfirmBookingClaimDialogIfNecessary()
     {
         final Booking.Action claimAction = mBooking.getAction(Booking.Action.ACTION_CLAIM);
-
-        if (claimAction != null && claimAction.getExtras() != null)
+        if (mBooking.canSwap())
+        {
+            if (getChildFragmentManager()
+                    .findFragmentByTag(SwapBookingClaimDialogFragment.FRAGMENT_TAG) == null)
+            {
+                final SwapBookingClaimDialogFragment dialogFragment =
+                        SwapBookingClaimDialogFragment.newInstance(mBooking);
+                dialogFragment.setTargetFragment(BookingFragment.this, RequestCode.CONFIRM_SWAP);
+                FragmentUtils.safeLaunchDialogFragment(dialogFragment, this,
+                        SwapBookingClaimDialogFragment.FRAGMENT_TAG);
+            }
+            return true;
+        }
+        else if (claimAction != null && claimAction.getExtras() != null)
         {
             Booking.Action.Extras.CancellationPolicy cancellationPolicy = claimAction.getExtras().getCancellationPolicy();
             if (cancellationPolicy != null)
             {
-                if (getActivity().getSupportFragmentManager().findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null)
+                if (getChildFragmentManager().findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null)
                 {
                     ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mBooking);
                     confirmBookingDialogFragment.setTargetFragment(BookingFragment.this, RequestCode.CONFIRM_REQUEST);
@@ -766,6 +842,7 @@ public class BookingFragment extends TimerActionBarFragment
         {
             switch (requestCode)
             {
+                case RequestCode.CONFIRM_SWAP:
                 case RequestCode.CONFIRM_REQUEST:
                     requestClaimJob();
                     break;
@@ -794,12 +871,13 @@ public class BookingFragment extends TimerActionBarFragment
             final String minimumPaymentFormatted, final String maximumPaymentFormatted)
     {
         Spanned noticeText;
-        if (mBooking.hasFlexPayRate())
+        if (mBooking.hasFlexibleHours())
         {
             final String minimumHoursFormatted = TextUtils.formatHours(minimumHours);
             final String maximumHoursFormatted = TextUtils.formatHours(maximumHours);
             final String startDateFormatted = DateTimeUtils.formatDetailedDate(mBooking.getStartDate());
             final String endDateFormatted = DateTimeUtils.formatDetailedDate(mBooking.getEndDate());
+
             noticeText = Html.fromHtml(getResources()
                     .getString(R.string.full_details_and_more_available_on_date_flex,
                             minimumHoursFormatted, maximumHoursFormatted,
@@ -807,6 +885,7 @@ public class BookingFragment extends TimerActionBarFragment
                             minimumPaymentFormatted, minimumHoursFormatted,
                             maximumPaymentFormatted, maximumHoursFormatted
                     ));
+
         }
         else
         {
@@ -844,8 +923,17 @@ public class BookingFragment extends TimerActionBarFragment
         for (String transitMarker : transitDescription)
         {
             RoundedTextView transitMarkerView = new RoundedTextView(getContext());
-            transitMarkerView.setText(transitMarker);
-            mNearbyTransits.addView(transitMarkerView);
+            if (!Strings.isNullOrEmpty(transitMarker))
+            {
+                transitMarkerView.setText(transitMarker.trim());
+                mNearbyTransits.addView(transitMarkerView);
+            }
         }
+    }
+
+    private void showInvalidPhoneNumberToast()
+    {
+        Toast.makeText(getContext(),
+                getString(R.string.invalid_phone_number), Toast.LENGTH_LONG).show();
     }
 }

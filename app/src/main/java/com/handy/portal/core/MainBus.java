@@ -1,61 +1,32 @@
 package com.handy.portal.core;
 
-import android.os.Handler;
-import android.os.Looper;
+import com.crashlytics.android.Crashlytics;
 
-import com.handy.portal.logger.mixpanel.Mixpanel;
-import com.squareup.otto.Bus;
-import com.squareup.otto.DeadEvent;
+import org.greenrobot.eventbus.EventBus;
 
-public final class MainBus extends Bus
+public final class MainBus extends EventBus
 {
-    private final Handler mHandler = new Handler(Looper.getMainLooper());
-    private Mixpanel mixpanel;
-
-    public MainBus(final Mixpanel mixpanel)
+    public MainBus()
     {
-        this.mixpanel = mixpanel;
+
     }
 
     @Override
-    public final void register(final Object object)
+    public void unregister(final Object object)
     {
-        if (Looper.myLooper() == Looper.getMainLooper()) super.register(object);
-        else
+        try
         {
-            mHandler.post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    MainBus.super.register(object);
-                }
-            });
+            super.unregister(object);
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e);
         }
     }
 
     @Override
     public void post(final Object event)
     {
-        if (Looper.myLooper() == Looper.getMainLooper())
-        {
-            if (!(event instanceof DeadEvent))
-            {
-                mixpanel.trackEvent(event); // side effect
-            }
-            super.post(event);
-        }
-        else
-        {
-            mHandler.post(new Runnable()
-            {
-                @Override
-                public void run()
-                {
-                    MainBus.super.post(event);
-                }
-            });
-        }
+        super.post(event);
     }
-
 }

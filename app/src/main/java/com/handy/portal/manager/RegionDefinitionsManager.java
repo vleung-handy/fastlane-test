@@ -9,10 +9,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.RegionDefinitionEvent;
+import com.handy.portal.library.util.IOUtils;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
-import com.handy.portal.util.IOUtils;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.IOException;
 
@@ -21,12 +22,12 @@ import javax.inject.Inject;
 //manager for region specific form definitions, etc
 public class RegionDefinitionsManager
 {
-    private final Bus bus;
+    private final EventBus bus;
 
     private final Cache<String, FormDefinitionWrapper> formDefinitionCache;
 
     @Inject
-    public RegionDefinitionsManager(final Bus bus)
+    public RegionDefinitionsManager(final EventBus bus)
     {
         this.bus = bus;
         this.bus.register(this);
@@ -53,12 +54,14 @@ public class RegionDefinitionsManager
                 {
                     formDefinitionWrapper = (new Gson()).fromJson(fileContents, FormDefinitionWrapper.class);//TODO: add exception handling
                     formDefinitionCache.put(region, formDefinitionWrapper);
-                } catch (JsonSyntaxException ex)
+                }
+                catch (JsonSyntaxException ex)
                 {
                     Crashlytics.logException(ex);
                 }
 
-            } catch (IOException e)
+            }
+            catch (IOException e)
             {
                 Crashlytics.logException(e);
             }

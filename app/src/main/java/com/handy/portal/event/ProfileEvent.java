@@ -1,7 +1,6 @@
 package com.handy.portal.event;
 
 import com.handy.portal.data.DataManager;
-import com.handy.portal.logger.mixpanel.annotation.Track;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 
@@ -27,7 +26,13 @@ public abstract class ProfileEvent extends HandyEvent
         }
     }
 
-    public static class ReceiveProviderProfileError extends ReceiveErrorEvent {}
+    public static class ReceiveProviderProfileError extends ReceiveErrorEvent
+    {
+        public ReceiveProviderProfileError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 
     public static class RequestSendResupplyKit extends RequestEvent {}
 
@@ -89,6 +94,5 @@ public abstract class ProfileEvent extends HandyEvent
         }
     }
 
-    @Track("provider edit profile submitted")
     public static class SubmittedProfileUpdate extends HandyEvent {}
 }

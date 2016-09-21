@@ -11,46 +11,48 @@ import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
+import com.handy.portal.logger.handylogger.model.ReferralLog;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ReferralInfo;
-import com.handy.portal.util.Utils;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ReferAFriendFragment extends ActionBarFragment
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
     @Inject
     ProviderManager mProviderManager;
 
-    @Bind(R.id.envelope)
+    @BindView(R.id.envelope)
     View mEnvelope;
-    @Bind(R.id.envelope_shadow)
+    @BindView(R.id.envelope_shadow)
     View mEnvelopeShadow;
-    @Bind(R.id.bling)
+    @BindView(R.id.bling)
     View mBling;
 
-    @Bind(R.id.title)
+    @BindView(R.id.title)
     TextView mTitleText;
-    @Bind(R.id.referral_code_text)
+    @BindView(R.id.referral_code_text)
     TextView mReferralCodeText;
 
-    @Bind(R.id.fetch_error_view)
+    @BindView(R.id.fetch_error_view)
     ViewGroup fetchErrorLayout;
-    @Bind(R.id.fetch_error_text)
+    @BindView(R.id.fetch_error_text)
     TextView fetchErrorText;
 
     private View fragmentView;
@@ -59,9 +61,16 @@ public class ReferAFriendFragment extends ActionBarFragment
     private ReferralInfo mReferralInfo;
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.REFER_A_FRIEND;
+        return MainViewPage.REFER_A_FRIEND;
+    }
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        bus.post(new LogEvent.AddLogEvent(new ProfileLog.ReferralOpen()));
     }
 
     @Nullable
@@ -86,9 +95,17 @@ public class ReferAFriendFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
-        setActionBar(R.string.refer_a_friend, false);
+        bus.register(this);
 
+        setActionBar(R.string.refer_a_friend, false);
         populateInfo();
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @OnClick(R.id.envelope)
@@ -106,6 +123,7 @@ public class ReferAFriendFragment extends ActionBarFragment
         sendIntent.putExtra(Intent.EXTRA_TEXT, mReferralInfo.getReferralLink());
         sendIntent.setType("text/plain");
         Utils.safeLaunchIntent(Intent.createChooser(sendIntent, getContext().getString(R.string.share_with)), getContext());
+        bus.post(new LogEvent.AddLogEvent(new ReferralLog.ReferralCompletedLog()));
     }
 
     @OnClick(R.id.try_again_button)

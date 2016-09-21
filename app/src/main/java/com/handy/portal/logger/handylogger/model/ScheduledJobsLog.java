@@ -54,6 +54,7 @@ public class ScheduledJobsLog extends EventLog
         public static final String REASON_FLOW = "reason_flow";
         public static final String POPUP = "popup";
         public static final String KEEP_RATE = "keep_rate";
+        public static final String CANCELLATION_POLICY = "cancellation_policy";
 
         @SerializedName("removal_type")
         private String mRemovalType;
@@ -61,6 +62,8 @@ public class ScheduledJobsLog extends EventLog
         private String mRemovalReason;
         @SerializedName("withholding_amount")
         private int mFeeAmount;
+        @SerializedName("waived_withholding_amount")
+        private int mWaivedAmount;
         @SerializedName("keep_rate_old")
         private Float mOldKeepRate;
         @SerializedName("keep_rate_new")
@@ -73,12 +76,14 @@ public class ScheduledJobsLog extends EventLog
                             final String removalType,
                             final String removalReason,
                             final int feeAmount,
+                            final int waivedAmount,
                             final String warningMessage)
         {
             super(eventType, EVENT_CONTEXT, booking);
             mRemovalType = removalType;
             mRemovalReason = removalReason;
             mFeeAmount = feeAmount;
+            mWaivedAmount = mWaivedAmount;
             mWarningMessage = warningMessage;
             final Booking.Action removeAction = booking.getAction(Booking.Action.ACTION_REMOVE);
             if (removeAction != null)
@@ -101,9 +106,10 @@ public class ScheduledJobsLog extends EventLog
         public RemoveJobConfirmationShown(final Booking booking,
                                           final String removalType,
                                           final int feeAmount,
+                                          final int waivedAmount,
                                           final String warningMessage)
         {
-            super(EVENT_TYPE, booking, removalType, null, feeAmount, warningMessage);
+            super(EVENT_TYPE, booking, removalType, null, feeAmount, waivedAmount, warningMessage);
         }
     }
 
@@ -116,9 +122,10 @@ public class ScheduledJobsLog extends EventLog
                                   final String removalType,
                                   final String removalReason,
                                   final int feeAmount,
+                                  final int waivedAmount,
                                   final String warningMessage)
         {
-            super(EVENT_TYPE, booking, removalType, removalReason, feeAmount, warningMessage);
+            super(EVENT_TYPE, booking, removalType, removalReason, feeAmount, waivedAmount, warningMessage);
         }
     }
 
@@ -131,9 +138,10 @@ public class ScheduledJobsLog extends EventLog
                                 final String removalType,
                                 final String removalReason,
                                 final int feeAmount,
+                                final int waivedAmount,
                                 final String warningMessage)
         {
-            super(EVENT_TYPE, booking, removalType, removalReason, feeAmount, warningMessage);
+            super(EVENT_TYPE, booking, removalType, removalReason, feeAmount, waivedAmount, warningMessage);
         }
     }
 
@@ -149,39 +157,12 @@ public class ScheduledJobsLog extends EventLog
                               final String removalType,
                               final String removalReason,
                               final int feeAmount,
+                              final int waivedAmount,
                               final String warningMessage,
                               final String errorMessage)
         {
-            super(EVENT_TYPE, booking, removalType, removalReason, feeAmount, warningMessage);
+            super(EVENT_TYPE, booking, removalType, removalReason, feeAmount, waivedAmount, warningMessage);
             mErrorMessage = errorMessage;
-        }
-    }
-
-    // Customer rating events
-
-
-    public static class CustomerRatingShown extends ScheduledJobsLog
-    {
-        private static final String EVENT_TYPE = "customer_rating_shown";
-
-        public CustomerRatingShown()
-        {
-            super(EVENT_TYPE);
-        }
-    }
-
-
-    public static class CustomerRatingSubmitted extends ScheduledJobsLog
-    {
-        private static final String EVENT_TYPE = "customer_rating_submitted";
-
-        @SerializedName("rating")
-        private int mRating;
-
-        public CustomerRatingSubmitted(int rating)
-        {
-            super(EVENT_TYPE);
-            mRating = rating;
         }
     }
 
@@ -246,6 +227,21 @@ public class ScheduledJobsLog extends EventLog
         {
             super(EVENT_TYPE);
             mSelectedDate = selectedDate;
+        }
+    }
+
+
+    public static class CustomerNoShowModalShown extends ScheduledJobsLog
+    {
+        private static final String EVENT_TYPE = "customer_no_show_modal_shown";
+
+        @SerializedName("booking_id")
+        private String mBookingId;
+
+        public CustomerNoShowModalShown(String bookingId)
+        {
+            super(EVENT_TYPE);
+            mBookingId = bookingId;
         }
     }
 }

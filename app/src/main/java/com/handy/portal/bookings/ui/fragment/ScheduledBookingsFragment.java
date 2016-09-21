@@ -14,46 +14,55 @@ import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
 import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
-import com.handy.portal.util.DateTimeUtils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Date;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.OnClick;
 
 public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.ReceiveScheduledBookingsSuccess>
 {
     private static final String SOURCE_SCHEDULED_JOBS_LIST = "scheduled_jobs_list";
-    @Bind(R.id.scheduled_jobs_list_view)
+    @BindView(R.id.scheduled_jobs_list_view)
     BookingListView mScheduledJobsListView;
-    @Bind(R.id.scheduled_bookings_dates_scroll_view_layout)
+    @BindView(R.id.scheduled_bookings_dates_scroll_view_layout)
     LinearLayout mScheduledJobsDatesScrollViewLayout;
-    @Bind(R.id.scheduled_bookings_empty)
+    @BindView(R.id.scheduled_bookings_empty)
     SwipeRefreshLayout mNoScheduledBookingsLayout;
-    @Bind(R.id.find_jobs_for_day_button)
+    @BindView(R.id.find_jobs_for_day_button)
     Button mFindJobsForDayButton;
-    @Bind(R.id.find_matching_jobs_button_container)
+    @BindView(R.id.find_matching_jobs_button_container)
     ViewGroup mFindMatchingJobsButtonContainer;
 
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.SCHEDULED_JOBS;
+        return MainViewPage.SCHEDULED_JOBS;
     }
 
     @Override
     public void onResume()
     {
+        bus.register(this);
         super.onResume();
         setActionBar(R.string.scheduled_jobs, false);
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     protected LinearLayout getDatesLayout()
@@ -172,13 +181,13 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     public void onFindJobsButtonClicked()
     {
         bus.post(new LogEvent.AddLogEvent((new ScheduledJobsLog.FindJobsSelected(mSelectedDay))));
-        TransitionStyle transitionStyle = TransitionStyle.TAB_TO_TAB;
+        TransitionStyle transitionStyle = TransitionStyle.PAGE_TO_PAGE;
         long epochTime = mSelectedDay.getTime();
         //navigate back to available bookings for this day
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
         //Return to available jobs on that day
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.AVAILABLE_JOBS, arguments, transitionStyle));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.AVAILABLE_JOBS, arguments, transitionStyle));
     }
 
     @OnClick(R.id.find_matching_jobs_button)
@@ -190,7 +199,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
         arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
 
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.COMPLEMENTARY_JOBS, arguments, TransitionStyle.SLIDE_UP, true));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.COMPLEMENTARY_JOBS, arguments, TransitionStyle.SLIDE_UP, true));
     }
 
     @Override

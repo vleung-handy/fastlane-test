@@ -20,6 +20,8 @@ import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
+import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.manager.ProviderManager;
@@ -28,44 +30,43 @@ import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
-import com.handy.portal.util.TextUtils;
-import com.handy.portal.util.UIUtils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Map;
 import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ProfileUpdateFragment extends ActionBarFragment
 {
-    @Bind(R.id.provider_name_edit_text)
+    @BindView(R.id.provider_name_edit_text)
     EditText mNameText;
-    @Bind(R.id.provider_email_edit_text)
+    @BindView(R.id.provider_email_edit_text)
     EditText mEmailText;
-    @Bind(R.id.provider_email_error_indicator)
+    @BindView(R.id.provider_email_error_indicator)
     ImageView mEmailError;
-    @Bind(R.id.provider_address_edit_text)
+    @BindView(R.id.provider_address_edit_text)
     EditText mAddressText;
-    @Bind(R.id.provider_address2_edit_text)
+    @BindView(R.id.provider_address2_edit_text)
     EditText mAddress2Text;
-    @Bind(R.id.provider_address_error_indicator)
+    @BindView(R.id.provider_address_error_indicator)
     ImageView mAddressError;
-    @Bind(R.id.provider_city_edit_text)
+    @BindView(R.id.provider_city_edit_text)
     EditText mCityText;
-    @Bind(R.id.provider_state_edit_text)
+    @BindView(R.id.provider_state_edit_text)
     EditText mStateText;
-    @Bind(R.id.provider_zip_code_edit_text)
+    @BindView(R.id.provider_zip_code_edit_text)
     EditText mZipCodeText;
-    @Bind(R.id.provider_area_error_indicator)
+    @BindView(R.id.provider_area_error_indicator)
     ImageView mAreaError;
-    @Bind(R.id.provider_phone_edit_text)
+    @BindView(R.id.provider_phone_edit_text)
     EditText mPhoneText;
-    @Bind(R.id.provider_phone_error_indicator)
+    @BindView(R.id.provider_phone_error_indicator)
     ImageView mPhoneError;
 
     @Inject
@@ -103,6 +104,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
         setBackButtonEnabled(true);
 
         if (mProviderManager.getCachedActiveProvider() != null)
@@ -110,6 +112,13 @@ public class ProfileUpdateFragment extends ActionBarFragment
             bus.post(new RegionDefinitionEvent.RequestFormDefinitions(
                     mProviderManager.getCachedActiveProvider().getCountry(), this.getContext()));
         }
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @OnClick(R.id.profile_update_provider_button)
@@ -197,6 +206,11 @@ public class ProfileUpdateFragment extends ActionBarFragment
 
     private boolean validate()
     {
+        if (mFormDefinitionWrapper == null)
+        {
+            // Server issue, assigned as part of success callback
+            return false;
+        }
         Map<String, FieldDefinition> fieldDefinitionMap = mFormDefinitionWrapper.getFieldDefinitionsForForm(FormDefinitionKey.UPDATE_PROVIDER_INFO);
         if (fieldDefinitionMap == null) { return true; }
 
@@ -223,6 +237,8 @@ public class ProfileUpdateFragment extends ActionBarFragment
 
     private void updateFormWithDefinitions()
     {
+        if (mFormDefinitionWrapper == null)
+        { return; }
         Map<String, FieldDefinition> fieldDefinitionMap = mFormDefinitionWrapper.getFieldDefinitionsForForm(FormDefinitionKey.UPDATE_PROVIDER_INFO);
         if (fieldDefinitionMap != null)
         {

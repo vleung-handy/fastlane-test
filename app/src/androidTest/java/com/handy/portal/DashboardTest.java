@@ -2,7 +2,6 @@ package com.handy.portal;
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 
 import com.handy.portal.ui.activity.MainActivity;
 
@@ -19,9 +18,9 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-@Ignore //TODO ignoring for now because we need to set up seed automation file for this to pass, but we need to set up tests to pass with AWS now
+@Ignore
+//TODO ignoring for now because we need to set up seed automation file for this to pass, but we need to set up tests to pass with AWS now
 @RunWith(AndroidJUnit4.class)
-@LargeTest
 public class DashboardTest
 {
     @Rule
@@ -48,7 +47,7 @@ public class DashboardTest
 
         // Go to to tier page
         onView(withId(R.id.tier_option)).perform(click());
-        onView(withId(R.id.tier_label)).check(matches(isDisplayed()));
+        onView(withId(R.id.current_week_completed_jobs_text)).check(matches(isDisplayed()));
         pressBack();
 
         // Go to to feedback page

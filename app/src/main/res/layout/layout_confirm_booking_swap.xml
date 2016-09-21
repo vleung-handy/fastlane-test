@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    >
+
+    <TextView
+        style="@style/TextView.Large.Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginLeft="@dimen/default_padding"
+        android:layout_marginRight="@dimen/default_padding"
+        android:layout_marginTop="@dimen/default_margin"
+        android:gravity="center"
+        android:text="@string/review_your_update"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/default_padding"
+        android:paddingStart="@dimen/default_padding"
+        >
+
+        <FrameLayout
+            android:id="@+id/swappable_job_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            >
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="center"
+                android:background="@color/border_gray"
+                />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@color/white"
+                android:paddingEnd="@dimen/default_padding_half"
+                android:paddingStart="@dimen/default_padding_half"
+                android:src="@drawable/ic_swap"
+                android:tint="@color/light_gray"
+                />
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/claimable_job_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
+
+    </LinearLayout>
+</LinearLayout>

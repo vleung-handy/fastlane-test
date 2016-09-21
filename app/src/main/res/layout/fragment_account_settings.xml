@@ -9,7 +9,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/log_out_button"
         android:layout_alignParentTop="true"
         android:orientation="vertical"
         >
@@ -63,7 +62,7 @@
                     android:layout_marginLeft="@dimen/default_margin"
                     android:layout_marginStart="@dimen/default_margin"
                     android:contentDescription="@string/chevron_description"
-                    android:src="@drawable/ic_chevron_dashboard_gray"
+                    android:src="@drawable/ic_chevron_gray"
                     />
 
             </RelativeLayout>
@@ -110,7 +109,7 @@
                     android:layout_marginLeft="@dimen/default_margin"
                     android:layout_marginStart="@dimen/default_margin"
                     android:contentDescription="@string/chevron_description"
-                    android:src="@drawable/ic_chevron_dashboard_gray"
+                    android:src="@drawable/ic_chevron_gray"
                     />
 
             </RelativeLayout>
@@ -154,7 +153,7 @@
                         android:layout_marginLeft="@dimen/default_margin"
                         android:layout_marginStart="@dimen/default_margin"
                         android:contentDescription="@string/chevron_description"
-                        android:src="@drawable/ic_chevron_dashboard_gray"
+                        android:src="@drawable/ic_chevron_gray"
                         />
 
                 </RelativeLayout>
@@ -201,23 +200,30 @@
 
             <include layout="@layout/divider"/>
 
+            <RelativeLayout
+                android:id="@+id/log_out_button"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/account_settings_cell_height"
+                android:background="@drawable/background_list_entry"
+                android:clickable="true"
+                android:padding="@dimen/default_padding"
+                >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:text="@string/log_out"
+                    android:textColor="@color/error_red"
+                    android:textSize="@dimen/default_text_size"
+                    />
+
+            </RelativeLayout>
+
+            <include layout="@layout/divider"/>
+
         </LinearLayout>
 
     </LinearLayout>
-
-    <Button
-        android:id="@id/log_out_button"
-        android:layout_width="@dimen/log_out_button_width"
-        android:layout_height="@dimen/log_out_button_height"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="@dimen/default_margin"
-        android:background="@drawable/border_darker_gray_bg_white"
-        style="?android:attr/borderlessButtonStyle"
-        android:text="@string/log_out"
-        android:textAllCaps="false"
-        android:textColor="@color/black"
-        android:textSize="@dimen/large_text_size"
-        />
 
 </RelativeLayout>

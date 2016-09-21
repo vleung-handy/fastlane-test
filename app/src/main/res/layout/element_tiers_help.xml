@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:layout_marginBottom="@dimen/row_margin"
+              android:layout_marginTop="@dimen/row_margin"
+              android:orientation="vertical"
+    >
+
+    <TextView
+        android:id="@+id/tiers_help_title"
+        style="@style/CircularBold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="start"
+        android:textColor="@color/black"
+        android:textSize="@dimen/large_text_size"
+        tools:text="@string/how_it_works"
+        />
+
+    <TextView
+        android:id="@+id/tiers_help_body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="@dimen/default_padding_half"
+        android:textColor="@color/black"
+        android:textSize="@dimen/default_text_size"
+        tools:text="Once you\'ve completed the jobs, your remaining bookings for the week and the claim jobs tab will be updated with the new rate."
+        />
+
+</LinearLayout>

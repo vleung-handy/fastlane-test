@@ -1,6 +1,5 @@
 package com.handy.portal.bookings.ui.fragment;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
@@ -9,15 +8,14 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.SwitchCompat;
 import android.view.Menu;
 import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
-import com.handy.portal.bookings.BookingModalsManager;
-import com.handy.portal.bookings.BookingModalsManager.BookingsForDaysAheadModalsManager;
+import com.handy.portal.bookings.manager.BookingModalsManager;
+import com.handy.portal.bookings.manager.BookingModalsManager.BookingsForDaysAheadModalsManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
@@ -28,46 +26,44 @@ import com.handy.portal.bookings.ui.element.BookingsBannerView;
 import com.handy.portal.bookings.ui.fragment.dialog.EarlyAccessTrialDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.JobAccessUnlockedDialogFragment;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.helpcenter.constants.HelpCenterUrl;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.ProviderProfile;
-import com.handy.portal.onboarding.ui.activity.GettingStartedActivity;
 import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.handy.portal.util.DateTimeUtils;
-import com.handy.portal.util.FragmentUtils;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 
-import static com.handy.portal.bookings.BookingModalsManager.BookingsForDaysAheadModalsManager.BookingsForDaysAheadModalType;
+import static com.handy.portal.bookings.manager.BookingModalsManager.BookingsForDaysAheadModalsManager.BookingsForDaysAheadModalType;
 
 public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.ReceiveAvailableBookingsSuccess>
 {
     private final static int DEFAULT_NUM_DAYS_SPANNING_AVAILABLE_BOOKINGS = 7; //includes Today
     private static final String SOURCE_AVAILABLE_JOBS_LIST = "available_jobs_list";
 
-    @Bind(R.id.available_jobs_list_view)
+    @BindView(R.id.available_jobs_list_view)
     BookingListView mAvailableJobsListView;
-    @Bind(R.id.available_bookings_dates_scroll_view_layout)
+    @BindView(R.id.available_bookings_dates_scroll_view_layout)
     LinearLayout mAvailableJobsDatesScrollViewLayout;
-    @Bind(R.id.available_bookings_empty)
+    @BindView(R.id.available_bookings_empty)
     SwipeRefreshLayout mNoAvailableBookingsLayout;
-    @Bind(R.id.layout_job_access_locked)
+    @BindView(R.id.layout_job_access_locked)
     BookingsAccessLockedView mJobAccessLockedLayout;
-    @Bind(R.id.toggle_available_job_notification)
+    @BindView(R.id.toggle_available_job_notification)
     SwitchCompat mToggleAvailableJobNotification;
 
     BookingsBannerView mJobAccessUnlockedBannerLayout;
@@ -75,13 +71,10 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Inject
     BookingModalsManager mBookingModalsManager;
 
-    private MenuItem mMenuSchedule;
-    private ProviderProfile mProviderProfile;
-
     @Override
-    protected MainViewTab getTab()
+    protected MainViewPage getAppPage()
     {
-        return MainViewTab.AVAILABLE_JOBS;
+        return MainViewPage.AVAILABLE_JOBS;
     }
 
     @Override
@@ -112,10 +105,9 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     public void onResume()
     {
+        bus.register(this);
         super.onResume();
         setActionBar(R.string.available_jobs, false);
-
-        bus.post(new ProfileEvent.RequestProviderProfile(false));
 
         if (!MainActivityFragment.clearingBackStack)
         {
@@ -123,9 +115,15 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
             {
                 mToggleAvailableJobNotification.setVisibility(View.VISIBLE);
             }
-
             setLateDispatchOptInToggleListener();
         }
+    }
+
+    @Override
+    public void onPause()
+    {
+        bus.unregister(this);
+        super.onPause();
     }
 
     @Override
@@ -133,21 +131,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_available_bookings, menu);
-        mMenuSchedule = menu.findItem(R.id.action_initial_jobs);
-
-        updateMenuItems();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(final MenuItem item)
-    {
-        if (item.getItemId() == R.id.action_initial_jobs)
-        {
-            startActivity(new Intent(getContext(), GettingStartedActivity.class));
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
     }
 
     protected BookingListView getBookingListView()
@@ -194,10 +177,9 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     private void goToHelpCenter(final String helpCenterRedirectPath)
     {
-        //don't ever need to support native help center again so ignore the config response
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, helpCenterRedirectPath);
-        bus.post(new NavigationEvent.NavigateToTab(MainViewTab.HELP_WEBVIEW, arguments, true));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.HELP_WEBVIEW, arguments, true));
     }
 
     @Override
@@ -247,34 +229,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.DateClicked(dateOfBookings, bookingsForDay.size())));
         super.afterDisplayBookings(bookingsForDay, dateOfBookings);
-    }
-
-    private void updateMenuItems()
-    {
-
-        if (mMenuSchedule == null)
-        {
-            return;
-        }
-
-        if (mProviderProfile != null
-                && mProviderProfile.getPerformanceInfo() != null
-                && mProviderProfile.getPerformanceInfo().getTotalJobsCount() <= 0)
-        {
-            mMenuSchedule.setVisible(true);
-        }
-        else
-        {
-            mMenuSchedule.setVisible(false);
-        }
-    }
-
-    @Subscribe
-    public void onReceiveProviderProfileSuccess(ProfileEvent.ReceiveProviderProfileSuccess event)
-    {
-        //show the menu option if the pro haven't claimed jobs before.
-        mProviderProfile = event.providerProfile;
-        updateMenuItems();
     }
 
     /**

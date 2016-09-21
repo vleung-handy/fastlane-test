@@ -32,30 +32,18 @@
     <color name="black_disabled">#8A8A8A</color>
     <color name="black_pressed">#A1A1A1</color>
     <color name="nav_sep">#B1B1B1</color>
-    <color name="light_gray">#606060</color>
     <color name="dark_gray">#4A4A4A</color>
-    <color name="dark_gray_pressed">#949494</color>
     <color name="pink">#FFDEDE</color>
     <color name="steel">#8B9BA6</color>
     <color name="cell_sep">#D6D6D6</color>
-    <color name="cell_selected">#D6D6D6</color>
     <color name="cell_disabled">#F0F0F0</color>
     <color name="category_selected">#F6F6F6</color>
-    <color name="error_red">#FF5C5C</color>
-    <color name="error_red_pressed">#F25757</color>
-    <color name="very_light_grey">#9F9794</color>
     <color name="bg_inactive_grey">#9CABB5</color>
     <color name="bg_inactive_grey_50">#809CABB5</color>
-    <color name="bg_active_grey">#8A969E</color>
-    <color name="text_light_grey">#CCCCCC</color>
     <color name="subtitle_grey">#9CABB5</color>
-    <color name="subtitle_grey_disabled">#BFC8CE</color>
     <color name="requested_green">#8BC53E</color>
-    <color name="border_light_grey">#D1D1D1</color>
-    <color name="border_grey">#EEEEEE</color>
-    <color name="shadow_grey">#9CA7B2</color>
-    <color name="helper_text_grey">#A1A1A1</color>
-    <color name="border_mid_grey">#CCCCCC</color>
+    <color name="error_red">#FF5C5C</color>
+    <color name="light_gray">#D1D1D1</color>
     <color name="very_light_gray">#9F9794</color>
     <color name="bg_active_gray">#8A969E</color>
     <color name="text_light_gray">#CCCCCC</color>
@@ -63,15 +51,12 @@
     <color name="shadow_gray">#9CA7B2</color>
     <color name="helper_text_gray">#A1A1A1</color>
     <color name="border_mid_gray">#CCCCCC</color>
-    <color name="list_divider">#E2E2E2</color>
+    <color name="list_divider">#EEEEEE</color>
     <color name="form_label">#999999</color>
     <color name="payments_batch_list_entry_subtitle">#999999</color>
 
     <!--List colors-->
     <color name="section_header_text_color">#999999</color>
-
-    <!--Notification colors-->
-    <color name="inactive_notification_icon_color">#EEEEEE</color>
 
     <!-- Referral -->
     <color name="light_gray_trans">#80C1CAD0</color>

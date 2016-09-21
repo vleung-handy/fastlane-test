@@ -23,36 +23,33 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
+import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewTab;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
+import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.NotificationEvent;
+import com.handy.portal.library.ui.fragment.InjectedFragment;
+import com.handy.portal.library.ui.fragment.dialog.TransientOverlayDialogFragment;
+import com.handy.portal.library.ui.layout.TabbedLayout;
+import com.handy.portal.library.ui.widget.TabButton;
+import com.handy.portal.library.ui.widget.TabButtonGroup;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
-import com.handy.portal.logger.handylogger.model.WebOnboardingLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.onboarding.OnboardingParams;
-import com.handy.portal.model.onboarding.OnboardingSuppliesInfo;
-import com.handy.portal.model.onboarding.OnboardingSuppliesParams;
-import com.handy.portal.onboarding.ui.activity.OnboardWelcomeActivity;
-import com.handy.portal.preactivation.PreActivationFlowActivity;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
-import com.handy.portal.ui.fragment.dialog.TransientOverlayDialogFragment;
-import com.handy.portal.ui.layout.TabbedLayout;
-import com.handy.portal.ui.widget.TabButton;
-import com.handy.portal.ui.widget.TabButtonGroup;
 import com.handy.portal.util.DeeplinkMapper;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivityFragment extends InjectedFragment
@@ -61,67 +58,63 @@ public class MainActivityFragment extends InjectedFragment
     PrefsManager mPrefsManager;
     @Inject
     ConfigManager mConfigManager;
+    @Inject
+    EnvironmentModifier mEnvironmentModifier;
     /////////////Bad useless injection that breaks if not in?
 
-    @Bind(R.id.tabs)
+    @BindView(R.id.tabs)
     TabButtonGroup mTabs;
     private TabButton mJobsButton;
+    private TabButton mRequestsButton;
     private TabButton mScheduleButton;
-    private TabButton mNotificationsButton;
+    private TabButton mAlertsButton;
     private TabButton mButtonMore;
 
-    @Bind(R.id.loading_overlay)
+    @BindView(R.id.loading_overlay)
     View mLoadingOverlayView;
-    @Bind(R.id.nav_link_payments)
+    @BindView(R.id.nav_link_payments)
     RadioButton mNavLinkPayments;
-    @Bind(R.id.nav_link_ratings_and_feedback)
+    @BindView(R.id.nav_link_ratings_and_feedback)
     RadioButton mNavLinkRatingsAndFeedback;
-    @Bind(R.id.nav_link_refer_a_friend)
+    @BindView(R.id.nav_link_refer_a_friend)
     RadioButton mNavLinkReferAFriend;
-    @Bind(R.id.nav_link_account_settings)
+    @BindView(R.id.nav_link_account_settings)
     RadioButton mNavAccountSettings;
-    @Bind(R.id.nav_link_help)
+    @BindView(R.id.nav_link_video_library)
+    RadioButton mNavLinkVideoLibrary;
+    @BindView(R.id.nav_link_help)
     RadioButton mNavLinkHelp;
-    @Bind(R.id.drawer_layout)
+    @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
-    @Bind(R.id.navigation_drawer)
+    @BindView(R.id.navigation_drawer)
     RelativeLayout mNavigationDrawer;
-    @Bind(R.id.nav_tray_links)
+    @BindView(R.id.nav_tray_links)
     RadioGroup mNavTrayLinks;
-    @Bind(R.id.navigation_header)
+    @BindView(R.id.navigation_header)
     TextView mNavigationHeader;
-    @Bind(R.id.content_frame)
+    @BindView(R.id.content_frame)
     TabbedLayout mContentFrame;
-    @Bind(R.id.build_version_text)
+    @BindView(R.id.build_version_text)
     TextView mBuildVersionText;
+    @BindView(R.id.software_licenses_text)
+    TextView mSoftwareLicensesText;
 
     private ActionBarDrawerToggle mActionBarDrawerToggle;
-    private MainViewTab currentTab = null;
+    private MainViewPage currentPage = null;
 
     //Are we currently clearing out the backstack?
     // Other fragments will want to know to avoid re-doing things on their onCreateView
     public static boolean clearingBackStack = false;
 
-    private boolean mOnResumeTransitionToMainTab; //need to catch and hold until onResume so we can catch the response from the bus
-
-    private boolean mConfigAlreadyReceivedThisSession = false; //the first time we get config response back we may need to navigate away
     private Bundle mDeeplinkData;
     private boolean mDeeplinkHandled;
     private String mDeeplinkSource;
-
-    private boolean mNativeOnboardingLaunched = false;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setDeeplinkData(savedInstanceState);
-
-        if (savedInstanceState != null)
-        {
-            mNativeOnboardingLaunched =
-                    savedInstanceState.getBoolean(BundleKeys.NATIVE_ONBOARDING_LAUNCHED, false);
-        }
 
         mActionBarDrawerToggle = new ActionBarDrawerToggle(getActivity(), mDrawerLayout,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close)
@@ -149,11 +142,6 @@ public class MainActivityFragment extends InjectedFragment
     {
         super.onViewStateRestored(savedInstanceState);
         setDeeplinkData(savedInstanceState);
-        if (savedInstanceState != null)
-        {
-            mNativeOnboardingLaunched =
-                    savedInstanceState.getBoolean(BundleKeys.NATIVE_ONBOARDING_LAUNCHED, false);
-        }
     }
 
     @Override
@@ -172,72 +160,31 @@ public class MainActivityFragment extends InjectedFragment
     public void onResume()
     {
         super.onResume();
+        bus.register(this);
 
-        bus.post(new NotificationEvent.RequestUnreadCount());
-        bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
-        if (currentTab == null)
+        if (mRequestsButton != null && mRequestsButton.getVisibility() == View.VISIBLE)
         {
-            switchToTab(MainViewTab.AVAILABLE_JOBS, false);
+            bus.post(new BookingEvent.RequestProRequestedJobsCount());
+        }
+        if (mAlertsButton != null && mAlertsButton.getVisibility() == View.VISIBLE)
+        {
+            bus.post(new NotificationEvent.RequestUnreadCount());
+        }
+        bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
+        if (currentPage == null)
+        {
+            switchToPage(MainViewPage.AVAILABLE_JOBS, false);
         }
         handleDeeplink();
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
     }
 
     @Subscribe
-    public void onConfigurationResponseRetrieved(HandyEvent.ReceiveConfigurationSuccess event)
-    {
-        //If the config response came back for the first time may need to navigate away
-        //Normally the fragment would take care of itself, but this would launch the fragment if needed
-        if (!mConfigAlreadyReceivedThisSession)
-        {
-            mConfigAlreadyReceivedThisSession = true;
-            final ConfigurationResponse configuration = event.getConfigurationResponse();
-            launchPreActivationFlowIfNeeded(configuration);
-            handleOnboardingFlow(configuration);
-        }
-    }
-
-    private void launchPreActivationFlowIfNeeded(final ConfigurationResponse configuration)
-    {
-        OnboardingParams onboardingParams;
-        OnboardingSuppliesParams onboardingSuppliesParams;
-        if (configuration != null
-                && (onboardingParams = configuration.getOnboardingParams()) != null
-                && (onboardingSuppliesParams = onboardingParams.getOnboardingSuppliesParams()) != null
-                && onboardingSuppliesParams.isEnabled())
-        {
-            final OnboardingSuppliesInfo onboardingSuppliesParamsInfo =
-                    onboardingSuppliesParams.getInfo();
-            final Intent intent = new Intent(getActivity(), PreActivationFlowActivity.class);
-            intent.putExtra(BundleKeys.ONBOARDING_SUPPLIES, onboardingSuppliesParamsInfo);
-            startActivity(intent);
-            getActivity().finish();
-        }
-    }
-
-    @Subscribe
     public void onReceiveUnreadCountSuccess(NotificationEvent.ReceiveUnreadCountSuccess event)
     {
-        mNotificationsButton.setUnreadCount(event.getUnreadCount());
-    }
-
-    private void handleOnboardingFlow(final ConfigurationResponse configuration)
-    {
-        if (configuration != null)
+        if (mAlertsButton != null)
         {
-            if (configuration.shouldShowNativeOnboarding())
-            {
-                if (!mNativeOnboardingLaunched)
-                {
-                    mNativeOnboardingLaunched = true;
-                    startActivity(new Intent(getContext(), OnboardWelcomeActivity.class));
-                }
-            }
-            else if (currentTab != null && currentTab != MainViewTab.ONBOARDING_WEBVIEW &&
-                    doesCachedProviderNeedWebOnboarding())
-            {
-                switchToTab(MainViewTab.ONBOARDING_WEBVIEW, false);
-            }
+            mAlertsButton.setUnreadCount(event.getUnreadCount());
         }
     }
 
@@ -258,18 +205,18 @@ public class MainActivityFragment extends InjectedFragment
             final String deeplink = mDeeplinkData.getString(BundleKeys.DEEPLINK);
             if (deeplink != null)
             {
-                final MainViewTab targetTab = DeeplinkMapper.getTabForDeeplink(deeplink);
-                if (targetTab != null)
+                final MainViewPage targetPage = DeeplinkMapper.getPageForDeeplink(deeplink);
+                if (targetPage != null)
                 {
                     bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
                             mDeeplinkSource,
                             mDeeplinkData
                     )));
-                    switchToTab(targetTab, mDeeplinkData, false);
+                    switchToPage(targetPage, mDeeplinkData, false);
                 }
                 else
                 {
-                    // Unable to find a matching tab for deeplink, so ignore it.
+                    // Unable to find a matching page for deeplink, so ignore it.
                     bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
                             mDeeplinkSource,
                             DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
@@ -291,7 +238,6 @@ public class MainActivityFragment extends InjectedFragment
                 outState = new Bundle();
             }
             outState.putBoolean(BundleKeys.DEEPLINK_HANDLED, mDeeplinkHandled);
-            outState.putBoolean(BundleKeys.NATIVE_ONBOARDING_LAUNCHED, mNativeOnboardingLaunched);
             super.onSaveInstanceState(outState);
         }
         catch (IllegalArgumentException e)
@@ -304,9 +250,10 @@ public class MainActivityFragment extends InjectedFragment
     @Override
     public void onPause()
     {
-        super.onPause();
         bus.post(new HandyEvent.UpdateMainActivityFragmentActive(false));
         mDrawerLayout.removeDrawerListener(mActionBarDrawerToggle);
+        bus.unregister(this);
+        super.onPause();
     }
 
 //Event Listeners
@@ -347,12 +294,12 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onSwapFragment(NavigationEvent.SwapFragmentEvent event)
     {
-        trackSwitchToTab(event.targetTab);
+        trackSwitchToPage(event.targetPage);
         setTabVisibility(true);
         setDrawerActive(false);
         swapFragment(event);
         ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
-        currentTab = event.targetTab;
+        currentPage = event.targetPage;
     }
 
     @Subscribe
@@ -375,15 +322,21 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void updateSelectedTabButton(NavigationEvent.SelectTab event)
+    public void updateSelectedTabButton(NavigationEvent.SelectPage event)
     {
-        if (event.tab == null) { return; }
-        switch (event.tab)
+        if (event.page == null) { return; }
+        switch (event.page)
         {
             case AVAILABLE_JOBS:
             case BLOCK_PRO_WEBVIEW:
             {
                 mJobsButton.toggle();
+                mNavTrayLinks.clearCheck();
+            }
+            break;
+            case REQUESTED_JOBS:
+            {
+                mRequestsButton.toggle();
                 mNavTrayLinks.clearCheck();
             }
             break;
@@ -396,7 +349,7 @@ public class MainActivityFragment extends InjectedFragment
             break;
             case NOTIFICATIONS:
             {
-                mNotificationsButton.toggle();
+                mAlertsButton.toggle();
                 mNavTrayLinks.clearCheck();
             }
             break;
@@ -425,6 +378,12 @@ public class MainActivityFragment extends InjectedFragment
                 mNavAccountSettings.toggle();
             }
             break;
+            case DASHBOARD_VIDEO_LIBRARY:
+            {
+                mButtonMore.toggle();
+                mNavLinkVideoLibrary.toggle();
+            }
+            break;
             case HELP_WEBVIEW:
             {
                 mButtonMore.toggle();
@@ -434,62 +393,79 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
+    @Subscribe
+    public void onReceiveProRequestedJobsCountSuccess(
+            final BookingEvent.ReceiveProRequestedJobsCountSuccess event)
+    {
+        if (mRequestsButton != null)
+        {
+            mRequestsButton.setUnreadCount(event.getCount());
+        }
+    }
+
 //Click Listeners
 
     private void registerButtonListeners()
     {
         registerBottomNavListeners();
         registerNavDrawerListeners();
+        mSoftwareLicensesText.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(final View v)
+            {
+                bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SOFTWARE_LICENSES, true));
+            }
+        });
     }
 
     private void registerBottomNavListeners()
     {
         mJobsButton = new TabButton(getContext())
                 .init(R.string.tab_claim, R.drawable.ic_menu_search);
+        mJobsButton.setId(R.id.tab_nav_available);
+        mRequestsButton = new TabButton(getContext()).init(R.string.tab_requests,
+                R.drawable.ic_menu_requests);
+        mRequestsButton.setId(R.id.tab_nav_pro_requested_jobs);
         mScheduleButton = new TabButton(getContext())
                 .init(R.string.tab_schedule, R.drawable.ic_menu_schedule);
-        mNotificationsButton = new TabButton(getContext())
-                .init(R.string.tab_notifications, R.drawable.ic_menu_notifications);
+        mScheduleButton.setId(R.id.tab_nav_schedule);
+        mAlertsButton = new TabButton(getContext())
+                .init(R.string.tab_alerts, R.drawable.ic_menu_alerts);
+        mAlertsButton.setId(R.id.tab_nav_alert);
         mButtonMore = new TabButton(getContext())
                 .init(R.string.tab_more, R.drawable.ic_menu_more);
-        mTabs.setTabs(mJobsButton, mScheduleButton, mNotificationsButton, mButtonMore);
+        mButtonMore.setId(R.id.tab_nav_item_more);
+        mTabs.setTabs(mJobsButton, mScheduleButton, mRequestsButton, mAlertsButton, mButtonMore);
 
         mJobsButton.setOnClickListener(
-                new TabOnClickListener(mJobsButton, MainViewTab.AVAILABLE_JOBS));
+                new TabOnClickListener(mJobsButton, MainViewPage.AVAILABLE_JOBS));
         mScheduleButton.setOnClickListener(
-                new TabOnClickListener(mScheduleButton, MainViewTab.SCHEDULED_JOBS));
+                new TabOnClickListener(mScheduleButton, MainViewPage.SCHEDULED_JOBS));
         mButtonMore.setOnClickListener(new MoreButtonOnClickListener());
 
-        if (getConfigurationResponse() != null && getConfigurationResponse().shouldShowNotificationMenuButton())
-        {
-            mNotificationsButton.setOnClickListener(
-                    new TabOnClickListener(mNotificationsButton, MainViewTab.NOTIFICATIONS));
-            mNotificationsButton.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            mNotificationsButton.setVisibility(View.GONE);
-        }
+        initOptionalTabs();
     }
 
     private void registerNavDrawerListeners()
     {
-        mNavLinkPayments.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.PAYMENTS, null));
-        mNavLinkRatingsAndFeedback.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.DASHBOARD, null));
-        mNavLinkReferAFriend.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.REFER_A_FRIEND, null));
-        mNavAccountSettings.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.ACCOUNT_SETTINGS, null));
-        mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewTab.HELP_WEBVIEW, null));
+        mNavLinkPayments.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.PAYMENTS, null));
+        mNavLinkRatingsAndFeedback.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.DASHBOARD, null));
+        mNavLinkReferAFriend.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.REFER_A_FRIEND, null));
+        mNavAccountSettings.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.ACCOUNT_SETTINGS, null));
+        mNavLinkVideoLibrary.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.DASHBOARD_VIDEO_LIBRARY, null));
+        mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.HELP_WEBVIEW, null));
     }
 
     private class TabOnClickListener implements View.OnClickListener
     {
         private TabButton mTabButton;
-        private MainViewTab mTab;
+        private MainViewPage mPage;
 
-        TabOnClickListener(@Nullable final TabButton tabButton, final MainViewTab tab)
+        TabOnClickListener(@Nullable final TabButton tabButton, final MainViewPage page)
         {
             mTabButton = tabButton;
-            mTab = tab;
+            mPage = page;
         }
 
         @Override
@@ -499,9 +475,9 @@ public class MainActivityFragment extends InjectedFragment
             {
                 mTabButton.toggle();
             }
-            if (mTab != currentTab)
+            if (mPage != currentPage)
             {
-                switchToTab(mTab, true);
+                switchToPage(mPage, true);
             }
         }
     }
@@ -509,31 +485,31 @@ public class MainActivityFragment extends InjectedFragment
 
     private class NavDrawerOnClickListener extends TabOnClickListener
     {
-        private MainViewTab mTab;
+        private MainViewPage mPage;
         private TransitionStyle mTransitionStyle;
 
         NavDrawerOnClickListener(
-                final MainViewTab tab,
+                final MainViewPage mPage,
                 final TransitionStyle transitionStyleOverride
         )
         {
-            super(null, tab);
-            mTab = tab;
+            super(null, mPage);
+            this.mPage = mPage;
             mTransitionStyle = transitionStyleOverride;
         }
 
         @Override
         public void onClick(View view)
         {
-            bus.post(new LogEvent.AddLogEvent(new SideMenuLog.ItemSelected(mTab.name().toLowerCase())));
+            bus.post(new LogEvent.AddLogEvent(new SideMenuLog.ItemSelected(mPage.name().toLowerCase())));
             mButtonMore.toggle();
             if (mTransitionStyle != null)
             {
-                switchToTab(mTab, new Bundle(), mTransitionStyle, false);
+                switchToPage(mPage, new Bundle(), mTransitionStyle, false);
             }
             else
             {
-                switchToTab(mTab, true);
+                switchToPage(mPage, true);
             }
 
             mDrawerLayout.closeDrawers();
@@ -550,27 +526,20 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
-    private void switchToTab(@NonNull MainViewTab tab, boolean userTriggered)
+    private void switchToPage(@NonNull MainViewPage page, boolean userTriggered)
     {
-        switchToTab(tab, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, userTriggered);
+        switchToPage(page, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, userTriggered);
     }
 
-    private void switchToTab(@NonNull MainViewTab targetTab, @NonNull Bundle argumentsBundle, boolean userTriggered)
+    private void switchToPage(@NonNull MainViewPage targetPage, @NonNull Bundle argumentsBundle, boolean userTriggered)
     {
-        switchToTab(targetTab, argumentsBundle, TransitionStyle.NATIVE_TO_NATIVE, userTriggered);
+        switchToPage(targetPage, argumentsBundle, TransitionStyle.NATIVE_TO_NATIVE, userTriggered);
     }
 
-    private void switchToTab(@NonNull MainViewTab targetTab, @NonNull Bundle argumentsBundle,
-                             @NonNull TransitionStyle overrideTransitionStyle, boolean userTriggered)
+    private void switchToPage(@NonNull MainViewPage targetPage, @NonNull Bundle argumentsBundle,
+                              @NonNull TransitionStyle overrideTransitionStyle, boolean userTriggered)
     {
-        //If the user navved away from a non-blocking onboarding log it
-        if (currentTab == MainViewTab.ONBOARDING_WEBVIEW &&
-                targetTab != MainViewTab.ONBOARDING_WEBVIEW && userTriggered)
-        {
-            bus.post(new LogEvent.AddLogEvent(new WebOnboardingLog.Dismissed()));
-        }
-
-        bus.post(new NavigationEvent.NavigateToTab(targetTab, argumentsBundle, overrideTransitionStyle, false));
+        bus.post(new NavigationEvent.NavigateToPage(targetPage, argumentsBundle, overrideTransitionStyle, false));
     }
 
 ///Fragment swapping and related
@@ -584,9 +553,9 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     //analytics event
-    private void trackSwitchToTab(MainViewTab targetTab)
+    private void trackSwitchToPage(MainViewPage targetPage)
     {
-        bus.post(new HandyEvent.Navigation(targetTab.toString().toLowerCase()));
+        bus.post(new HandyEvent.Navigation(targetPage.toString().toLowerCase()));
     }
 
     private void swapFragment(NavigationEvent.SwapFragmentEvent swapFragmentEvent)
@@ -600,11 +569,11 @@ public class MainActivityFragment extends InjectedFragment
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
 
         Fragment newFragment = null;
-        if (swapFragmentEvent.targetTab != null)
+        if (swapFragmentEvent.targetPage != null)
         {
             try
             {
-                newFragment = (Fragment) swapFragmentEvent.targetTab.getClassType().newInstance();
+                newFragment = (Fragment) swapFragmentEvent.targetPage.getClassType().newInstance();
             }
             catch (Exception e)
             {
@@ -654,20 +623,13 @@ public class MainActivityFragment extends InjectedFragment
         transaction.commit();
     }
 
-    private ConfigurationResponse getConfigurationResponse()
-    {
-        return mConfigManager.getConfigurationResponse();
-    }
-
-    private boolean doesCachedProviderNeedWebOnboarding()
-    {
-        return (getConfigurationResponse() != null &&
-                getConfigurationResponse().shouldShowWebOnboarding());
-    }
-
     @SuppressWarnings("deprecation")
     private void logOutProvider()
     {
+        //want to remain in the current environment after user is logged out
+        EnvironmentModifier.Environment currentEnvironment = mEnvironmentModifier.getEnvironment();
+        String currentEnvironmentPrefix = mEnvironmentModifier.getEnvironmentPrefix();
+
         mPrefsManager.clear();
         clearFragmentBackStack();
 
@@ -682,7 +644,43 @@ public class MainActivityFragment extends InjectedFragment
             CookieManager.getInstance().removeAllCookie();
             CookieSyncManager.getInstance().sync();
         }
+
+        mEnvironmentModifier.setEnvironment(currentEnvironment, currentEnvironmentPrefix, null);
+
         startActivity(new Intent(getActivity(), LoginActivity.class));
         getActivity().finish();
     }
+
+    private void initOptionalTabs()
+    {
+        if (mConfigManager == null || mConfigManager.getConfigurationResponse() == null)
+        {
+            mAlertsButton.setVisibility(View.GONE);
+            mRequestsButton.setVisibility(View.GONE);
+            return;
+        }
+
+        if (mConfigManager.getConfigurationResponse().shouldShowNotificationMenuButton())
+        {
+            mAlertsButton.setOnClickListener(
+                    new TabOnClickListener(mAlertsButton, MainViewPage.NOTIFICATIONS));
+            mAlertsButton.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mAlertsButton.setVisibility(View.GONE);
+        }
+
+        if (mConfigManager.getConfigurationResponse().isPendingRequestsInboxEnabled())
+        {
+            mRequestsButton.setOnClickListener(
+                    new TabOnClickListener(mRequestsButton, MainViewPage.REQUESTED_JOBS));
+            mRequestsButton.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mRequestsButton.setVisibility(View.GONE);
+        }
+    }
+
 }

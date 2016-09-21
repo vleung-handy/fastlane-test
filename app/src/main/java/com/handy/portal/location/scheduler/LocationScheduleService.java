@@ -13,23 +13,28 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 import com.handy.portal.event.SystemEvent;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.location.LocationEvent;
 import com.handy.portal.location.scheduler.handler.LocationScheduleStrategiesHandler;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.util.Utils;
-import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
 
 /**
- * listens to the location schedule updated event and starts the schedule handler accordingly
+ * listens to the location schedule updated event and
+ * starts the schedule handler accordingly
+ *
+ * note that it makes no direct requests for the location schedule,
+ * because LocationScheduleUpdateManager is entirely responsible for that
+ *
  * <p/>
  * responsible for handling google api client
- *
  */
 public class LocationScheduleService extends Service
         implements
@@ -38,7 +43,7 @@ public class LocationScheduleService extends Service
         Thread.UncaughtExceptionHandler
 {
     @Inject
-    Bus mBus;
+    EventBus mBus;
     @Inject
     ConfigManager mConfigManager;
 
@@ -75,7 +80,12 @@ public class LocationScheduleService extends Service
         mBus.register(this);
         mGoogleApiClient.connect();
 
-        requestLocationStrategies();
+        mBus.post(new LocationEvent.LocationServiceStarted());
+        /*
+            a manager listens to this event and will
+            subsequently request location schedules if necessary
+         */
+
 
         return START_STICKY;
     }
@@ -83,14 +93,7 @@ public class LocationScheduleService extends Service
     @Override
     public void onDestroy()
     {
-        try
-        {
-            mBus.unregister(this);
-        }
-        catch (Exception e)
-        {
-            //this happens when this isn't registered to the bus. one case is when stopService() is called twice
-        }
+        mBus.unregister(this);
 
         if (mLocationScheduleStrategiesHandler != null)
         {
@@ -105,39 +108,39 @@ public class LocationScheduleService extends Service
         super.onDestroy();
     }
 
-    /**
-     * ask for the location schedule (location manager will respond to this)
-     */
-    private void requestLocationStrategies()
-    {
-        mBus.post(new LocationEvent.RequestLocationSchedule());
-    }
-
     @Subscribe
     public void onLocationQueryScheduleReceived(LocationEvent.ReceiveLocationScheduleSuccess event)
     {
         Log.d(getClass().getName(), "got new location schedule event");
         LocationScheduleStrategies locationScheduleStrategies = event.getLocationScheduleStrategies();
-        if(!locationScheduleStrategies.isEmpty())
+        if (!locationScheduleStrategies.isEmpty())
         {
             handleNewLocationStrategies(locationScheduleStrategies);
         }
         //TODO: optimize if the schedule did NOT change!!!!!
     }
 
+    @Subscribe
+    public void OnRequestStopLocationService(LocationEvent.RequestStopLocationService event)
+    {
+        stopSelf();
+    }
+
     /**
      * delegating bus event here because don't want the handler to subscribe to bus
      * because it does not have a strict lifecycle
+     *
      * @param event
      */
     @Subscribe
     public void onNetworkReconnected(SystemEvent.NetworkReconnected event)
     {
-        if(mLocationScheduleStrategiesHandler != null)
+        if (mLocationScheduleStrategiesHandler != null)
         {
             mLocationScheduleStrategiesHandler.onNetworkReconnected();
         }
     }
+
     /**
      * got a new schedule, create a handler for it
      *

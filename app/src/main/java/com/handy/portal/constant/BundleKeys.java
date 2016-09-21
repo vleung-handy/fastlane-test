@@ -14,17 +14,18 @@ public class BundleKeys
     public static final String BOOKING_TRANSACTIONS = "booking_transactions";
 
     public static final String DATE_EPOCH_TIME = "date_epoch_time";
-    public static final String HELP_NODE = "help_node";
-    public static final String HELP_NODE_ID = "help_node_id";
     public static final String HELP_REDIRECT_PATH = "help_redirect_path";
-    public static final String PATH = "path";
-    public static final String TAB = "tab";
+    public static final String PAGE = "page";
     public static final String PAYMENT_BATCH = "payment_batch";
     public static final String BOOKINGS = "bookings";
     public static final String MAP_CENTER = "map_center";
     public static final String MESSAGE = "message";
     public static final String MESSAGE_ICON = "message_icon";
     public static final String EXTRAS = "extras";
+
+    // Terms
+    public static final String TERMS_GROUP = "terms_group";
+    public static final String TERMS = "terms";
 
     // UrbanAirship
     public static final String HANDY_PUSH_TYPE = "type_id";
@@ -43,20 +44,29 @@ public class BundleKeys
 
     // Dashboard
     public static final String PROVIDER_EVALUATION = "provider_evaluation";
+    public static final String TIERS_TITLE = "tiers_title";
     public static final String YOUTUBE_VIDEO_ID = "youtube_video_id";
 
     // Location
     public static final String EVENT_NAME = "event_name";
 
-    // New Checkout
-    public static final String NOTE_TO_CUSTOMER = "note_to_customer";
-
-    // Payments
-    public static final String CARD_LAST4 = "card_last4";
-    public static final String CARD_TYPE = "card_type";
-
     // Onboarding
-    public static final String ONBOARDING_SUPPLIES = "onboarding_supplies";
     public static final String ALLOW_BACK_NAVIGATION = "allow_back_navigation";
-    public static final String NATIVE_ONBOARDING_LAUNCHED = "native_onboarding_launched";
+    public static final String BOOKINGS_WRAPPERS = "bookings_wrappers";
+    public static final String SUBFLOW_DATA = "subflow_data";
+    public static final String SUBFLOW_TYPE = "subflow_type";
+    public static final String ONBOARDING_DETAILS = "onboarding_details";
+    public static final String SUPPLIES_ORDER_INFO = "supplies_order_info";
+    public static final String FORCE_FINISH = "force_finish";
+    public static final String DISALLOW_EXIT = "disallow_exit";
+    public static final String IS_SINGLE_STEP_MODE = "single_step_mode";
+    public static final String PERCENT_COMPLETE = "percent_complete";
+    public static final String PERCENT_COMPLETE_ADDEND = "percent_complete_addend";
+    public static final String PERCENT_RANGE = "percent_range";
+
+    // Flow
+    public static final String FLOW_STEP_ID = "flow_step_id";
+
+    // Jumio URL
+    public static final String JUMIO_URL = "jumio_url";
 }
