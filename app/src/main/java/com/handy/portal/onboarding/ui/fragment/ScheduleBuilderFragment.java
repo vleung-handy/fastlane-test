@@ -62,7 +62,7 @@ public class ScheduleBuilderFragment extends OnboardingSubflowUIFragment
         displayBookings();
         updateButton();
         bus.post(new LogEvent.AddLogEvent(
-                new NativeOnboardingLog.ScheduleJobsShown(countBookings(mBookingsWrappers))));
+                new NativeOnboardingLog.ScheduleJobsShown(countBookings())));
     }
 
     private void initBookingsWrapperViewModels()
@@ -90,7 +90,7 @@ public class ScheduleBuilderFragment extends OnboardingSubflowUIFragment
         }
     }
 
-    private int countBookings(final List<BookingsWrapper> bookingsWrappers)
+    private int countBookings()
     {
         int bookingsCount = 0;
         for (final BookingsWrapper bookingsWrapper : mBookingsWrappers)

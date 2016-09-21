@@ -16,4 +16,14 @@ public class JobClaim implements Serializable
         mBookingId = bookingId;
         mJobType = jobType;
     }
+
+    public String getBookingId()
+    {
+        return mBookingId;
+    }
+
+    public String getJobType()
+    {
+        return mJobType;
+    }
 }

@@ -105,7 +105,7 @@ public class BookingsWrapper implements Serializable
         return mPriorityAccessInfo;
     }
 
-    public final List<Booking> getBookings()
+    public List<Booking> getBookings()
     {
         return bookings;
     }
