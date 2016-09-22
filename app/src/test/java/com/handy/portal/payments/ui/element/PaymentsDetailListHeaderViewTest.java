@@ -25,8 +25,10 @@ public class PaymentsDetailListHeaderViewTest extends RobolectricGradleTestWrapp
     private NeoPaymentBatch neoPaymentBatch;
 
     @Before
+    @Override
     public void setUp() throws Exception
     {
+        super.setUp();
         paymentsDetailListHeaderView = (PaymentsDetailListHeaderView) LayoutInflater
                 .from(Robolectric.setupActivity(TestActivity.class)).inflate(R.layout.element_payment_details_list_header, null);
         expectDepositLayout = paymentsDetailListHeaderView.findViewById(R.id.payments_detail_expect_deposit_date_layout);

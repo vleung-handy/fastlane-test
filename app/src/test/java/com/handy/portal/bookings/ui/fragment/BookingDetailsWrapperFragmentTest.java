@@ -23,8 +23,10 @@ public class BookingDetailsWrapperFragmentTest extends RobolectricGradleTestWrap
     private BookingDetailsWrapperFragment mFragment;
 
     @Before
+    @Override
     public void setUp() throws Exception
     {
+        super.setUp();
         mFragment = new BookingDetailsWrapperFragment();
     }
 
@@ -47,6 +49,14 @@ public class BookingDetailsWrapperFragmentTest extends RobolectricGradleTestWrap
         args.putString(BundleKeys.BOOKING_ID, TestDataManager.BOOKING_UNCLAIMED_ID);
         mFragment.setArguments(args);
 
+//        ShadowApplication app = Shadows.shadowOf(RuntimeEnvironment.application);
+//        app.grantPermissions(Manifest.permission.READ_PHONE_STATE,
+//                Manifest.permission.ACCESS_FINE_LOCATION);
+//        Context context = mock(Context.class);
+//        when(context.checkCallingOrSelfPermission(android.Manifest.permission.READ_PHONE_STATE)).thenReturn(
+//                PackageManager.PERMISSION_GRANTED);
+//        when(context.checkCallingOrSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION)).thenReturn(
+//                PackageManager.PERMISSION_GRANTED);
         SupportFragmentTestUtil.startFragment(mFragment, MainActivity.class);
 
         assertEquals(mFragment.mFetchErrorView.getVisibility(), View.GONE);
