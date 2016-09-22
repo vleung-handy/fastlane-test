@@ -144,7 +144,7 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
             debitCardInfo.setCvc(securityCodeField.getValue().getText().toString());
             debitCardInfo.setExpMonth(expirationDateField.getMonthValue().getText().toString());
             debitCardInfo.setExpYear(expirationDateField.getYearValue().getText().toString());
-            debitCardInfo.setCurrency(provider.getPaymentCurrencyCode());
+            debitCardInfo.setCurrency(provider.getPaymentCurrencyCode().toLowerCase());
             bus.post(new StripeEvent.RequestStripeTokenFromDebitCard(debitCardInfo, DEBIT_CARD_FOR_CHARGE_REQUEST_ID));
             bus.post(new StripeEvent.RequestStripeTokenFromDebitCard(debitCardInfo, DEBIT_CARD_RECIPIENT_REQUEST_ID));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
