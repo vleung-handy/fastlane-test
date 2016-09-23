@@ -2,57 +2,59 @@ package com.handy.portal.payments.model;
 
 public class DebitCardInfo
 {
-    private String cardNumber;
-    private String expMonth;
-    private String expYear;
-    private String cvc;
-    private String currency;
+    private String mCardNumber;
+    private String mExpMonth;
+    private String mExpYear;
+    private String mCvc;
+    private String mCurrencyCode;
 
     public String getCardNumber()
     {
-        return cardNumber;
+        return mCardNumber;
     }
 
     public void setCardNumber(String cardNumber)
     {
-        this.cardNumber = cardNumber;
+        mCardNumber = cardNumber;
     }
 
     public String getExpMonth()
     {
-        return expMonth;
+        return mExpMonth;
     }
 
     public void setExpMonth(String expMonth)
     {
-        this.expMonth = expMonth;
+        mExpMonth = expMonth;
     }
 
     public String getExpYear()
     {
-        return expYear;
+        return mExpYear;
     }
 
     public void setExpYear(String expYear)
     {
-        this.expYear = expYear;
+        mExpYear = expYear;
     }
 
     public String getCvc()
     {
-        return cvc;
+        return mCvc;
     }
 
     public void setCvc(String cvc)
     {
-        this.cvc = cvc;
+        mCvc = cvc;
     }
 
-    public String getCurrency() {
-        return currency;
+    public String getCurrencyCode()
+    {
+        return mCurrencyCode;
     }
 
-    public void setCurrency(String currency) {
-        this.currency = currency;
+    public void setCurrencyCode(String currencyCode)
+    {
+        mCurrencyCode = currencyCode;
     }
 }
