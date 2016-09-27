@@ -8,9 +8,11 @@ import android.support.test.runner.AndroidJUnit4;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.test.data.TestUsers;
 import com.handy.portal.test.model.TestUser;
+import com.handy.portal.test.util.AppInteractionUtil;
 import com.handy.portal.test.util.ViewUtil;
 import com.handy.portal.ui.activity.SplashActivity;
 
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +42,12 @@ public class ViewPaymentsTest
         }
     };
 
+    @After
+    public void tearDown()
+    {
+        AppInteractionUtil.logOut();
+    }
+
     /**
      * basic test for verifying basic views in payments screen
      * FIXME: need better seed data so this can be tested more thoroughly
@@ -48,6 +56,7 @@ public class ViewPaymentsTest
     public void testViewPayments()
     {
         ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+        ViewUtil.waitForViewNotVisible(R.id.loading_overlay, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
 
         ViewUtil.waitForViewNotVisible(R.id.loading_overlay, ViewUtil.LONG_MAX_WAIT_TIME_MS);
 

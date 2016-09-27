@@ -1,11 +1,16 @@
 package com.handy.portal.ui.fragment;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
+import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,23 +90,25 @@ public class LoginActivityFragment extends InjectedFragment
 
 
     private LoginState currentLoginState;
+    private String mPhoneNumber;
     private String storedPhoneNumber;
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        bus.post(new LogEvent.AddLogEvent(new LoginLog.Shown()));
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState)
     {
         super.onCreateView(inflater, container, savedInstanceState);
-
         View view = inflater.inflate(R.layout.fragment_login, container);
-
         ButterKnife.bind(this, view);
-
         changeState(LoginState.INIT);
-
         registerControlListeners();
-
-        bus.post(new LogEvent.AddLogEvent(new LoginLog.Shown()));
 
         return view;
     }
@@ -111,6 +118,7 @@ public class LoginActivityFragment extends InjectedFragment
     {
         super.onResume();
         bus.register(this);
+        readPhoneNumber();
     }
 
     @Override
@@ -118,58 +126,6 @@ public class LoginActivityFragment extends InjectedFragment
     {
         bus.unregister(this);
         super.onPause();
-    }
-
-    private void registerControlListeners()
-    {
-        loginButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                switch (currentLoginState)
-                {
-                    case INPUTTING_PHONE_NUMBER:
-                    {
-                        bus.post(new LogEvent.AddLogEvent(new LoginLog.PhoneNumberSubmitted()));
-                        if (phoneNumberEditText.validate())
-                        {
-                            sendPhoneNumber(phoneNumberEditText.getPhoneNumber());
-                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(phoneNumberEditText.getWindowToken(), 0);
-                        }
-                    }
-                    break;
-                    case INPUTTING_PIN:
-                    {
-                        bus.post(new LogEvent.AddLogEvent(new LoginLog.PinCodeSubmitted()));
-                        if (pinCodeEditText.validate())
-                        {
-                            sendLoginRequest(storedPhoneNumber, pinCodeEditText.getString());
-                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-                            imm.hideSoftInputFromWindow(pinCodeEditText.getWindowToken(), 0);
-                        }
-                    }
-                    break;
-                }
-            }
-        });
-
-        backButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                switch (currentLoginState)
-                {
-                    case INPUTTING_PIN:
-                    {
-                        changeState(LoginState.INPUTTING_PHONE_NUMBER);
-                    }
-                    break;
-                }
-            }
-        });
     }
 
     @OnClick(R.id.logo)
@@ -202,42 +158,6 @@ public class LoginActivityFragment extends InjectedFragment
         });
         mSlideUpPanelLayout.showPanel(R.string.instructions, instructionView);
     }
-
-    private void goToUrl(String url)
-    {
-        Uri uriUrl = Uri.parse(url);
-        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
-        Utils.safeLaunchIntent(launchBrowser, this.getActivity());
-    }
-
-    //Event Sending
-
-    //Send a request for a pin code based on a phone number
-    private void sendPhoneNumber(String phoneNumber)
-    {
-        storedPhoneNumber = phoneNumber; //remember so they don't have to reinput once they receive their pin
-        changeState(LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE);
-
-        if (buildConfigWrapper.isDebug() && !environmentModifier.isPinRequestEnabled())
-        {
-            // if pin request is disabled, jump to pin input state; this is used for test automation
-            // purposes where the seeded value of the pin associated with the provider will be
-            // preserved on the server side and used on the client side
-            changeState(LoginState.INPUTTING_PIN);
-        }
-        else
-        {
-            bus.post(new HandyEvent.RequestPinCode(phoneNumber));
-        }
-    }
-
-    //send a login request to the server with our phoneNumber and pin
-    private void sendLoginRequest(String phoneNumber, String pinCode)
-    {
-        changeState(LoginState.WAITING_FOR_LOGIN_RESPONSE);
-        bus.post(new HandyEvent.RequestLogin(phoneNumber, pinCode));
-    }
-
     //Event Listening
 
     @Subscribe
@@ -262,7 +182,7 @@ public class LoginActivityFragment extends InjectedFragment
     @Subscribe
     public void onPinCodeRequestError(HandyEvent.ReceivePinCodeError event)
     {
-        bus.post(new LogEvent.AddLogEvent(new LoginLog.Error()));
+        bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(mPhoneNumber)));
         if (currentLoginState == LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE)
         {
             postLoginErrorEvent("server");
@@ -296,14 +216,14 @@ public class LoginActivityFragment extends InjectedFragment
         {
             if (event.loginDetails.getSuccess())
             {
-                bus.post(new LogEvent.AddLogEvent(new LoginLog.Success()));
+                bus.post(new LogEvent.AddLogEvent(new LoginLog.Success(mPhoneNumber)));
                 beginLogin(event.loginDetails);
             }
             else
             {
                 //this should never happen anymore since we changed the HTTP response code for login failure. logging for now just in case
                 Crashlytics.logException(new Exception("Login request success event fired but login details success parameter is false"));
-                bus.post(new LogEvent.AddLogEvent(new LoginLog.Error()));
+                bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(mPhoneNumber)));
                 showToast(R.string.login_error_bad_login);
                 changeState(LoginState.INPUTTING_PIN);
                 pinCodeEditText.highlight();
@@ -314,7 +234,7 @@ public class LoginActivityFragment extends InjectedFragment
     @Subscribe
     public void onLoginRequestError(HandyEvent.ReceiveLoginError event)
     {
-        bus.post(new LogEvent.AddLogEvent(new LoginLog.Error()));
+        bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(mPhoneNumber)));
         if (currentLoginState == LoginState.WAITING_FOR_LOGIN_RESPONSE)
         {
             DataManager.DataManagerError.Type errorType = event.error == null ? null : event.error.getType();
@@ -339,13 +259,107 @@ public class LoginActivityFragment extends InjectedFragment
                 showToast(R.string.login_error_connectivity);
                 Crashlytics.logException(new Exception("Login request error type is null"));
             }
-            bus.post(new LogEvent.AddLogEvent(new LoginLog.Error()));
+            bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(mPhoneNumber)));
             pinCodeEditText.highlight();
             changeState(LoginState.INPUTTING_PIN);
         }
     }
 
-    //Controller
+    @Override
+    public void startActivity(final Intent intent)
+    {
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        super.startActivity(intent);
+    }
+
+    //region Private methods
+    private void registerControlListeners()
+    {
+        loginButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                switch (currentLoginState)
+                {
+                    case INPUTTING_PHONE_NUMBER:
+                    {
+                        bus.post(new LogEvent.AddLogEvent(new LoginLog.PhoneNumberSubmitted(mPhoneNumber)));
+                        if (phoneNumberEditText.validate())
+                        {
+                            sendPhoneNumber(phoneNumberEditText.getPhoneNumber());
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(phoneNumberEditText.getWindowToken(), 0);
+                        }
+                    }
+                    break;
+                    case INPUTTING_PIN:
+                    {
+                        bus.post(new LogEvent.AddLogEvent(new LoginLog.PinCodeSubmitted(mPhoneNumber)));
+                        if (pinCodeEditText.validate())
+                        {
+                            sendLoginRequest(storedPhoneNumber, pinCodeEditText.getString());
+                            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                            imm.hideSoftInputFromWindow(pinCodeEditText.getWindowToken(), 0);
+                        }
+                    }
+                    break;
+                }
+            }
+        });
+
+        backButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                switch (currentLoginState)
+                {
+                    case INPUTTING_PIN:
+                    {
+                        changeState(LoginState.INPUTTING_PHONE_NUMBER);
+                    }
+                    break;
+                }
+            }
+        });
+    }
+
+    private void goToUrl(@NonNull String url)
+    {
+        Uri uriUrl = Uri.parse(url);
+        Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
+        Utils.safeLaunchIntent(launchBrowser, this.getActivity());
+    }
+
+    //Event Sending
+
+    //Send a request for a pin code based on a phone number
+    private void sendPhoneNumber(String phoneNumber)
+    {
+        storedPhoneNumber = phoneNumber; //remember so they don't have to reinput once they receive their pin
+        changeState(LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE);
+
+        if (buildConfigWrapper.isDebug() && !environmentModifier.isPinRequestEnabled())
+        {
+            // if pin request is disabled, jump to pin input state; this is used for test automation
+            // purposes where the seeded value of the pin associated with the provider will be
+            // preserved on the server side and used on the client side
+            changeState(LoginState.INPUTTING_PIN);
+        }
+        else
+        {
+            bus.post(new HandyEvent.RequestPinCode(phoneNumber));
+        }
+    }
+
+    //send a login request to the server with our phoneNumber and pin
+    private void sendLoginRequest(String phoneNumber, String pinCode)
+    {
+        changeState(LoginState.WAITING_FOR_LOGIN_RESPONSE);
+        bus.post(new HandyEvent.RequestLogin(phoneNumber, pinCode));
+    }
 
     private void changeState(LoginState phase)
     {
@@ -453,12 +467,20 @@ public class LoginActivityFragment extends InjectedFragment
         }
     }
 
-    @Override
-    public void startActivity(final Intent intent)
+    private void readPhoneNumber()
     {
-        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        super.startActivity(intent);
+        // This does not work for all phones
+        // http://stackoverflow.com/questions/29827623/the-phone-return-null-when-i-want-to-get-the-phone-number
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_PHONE_STATE)
+                == PackageManager.PERMISSION_GRANTED && mPhoneNumber == null)
+        {
+            mPhoneNumber = ((TelephonyManager) getActivity()
+                    .getSystemService(Context.TELEPHONY_SERVICE)).getLine1Number();
+            if (mPhoneNumber == null)
+            {
+                mPhoneNumber = "";
+            }
+        }
     }
-
+    //endregion
 }

@@ -282,7 +282,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         if (mBooking != null)
         {
-            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWayError(
+            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWayFailure(
                     mBooking, getLocationData())));
         }
         /*
@@ -310,7 +310,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     public void onReceiveNotifyJobCheckInError(final HandyEvent.ReceiveNotifyJobCheckInError event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInError(
+        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInFailure(
                 mBooking, getLocationData())));
 
         handleNotifyCheckInError(event);

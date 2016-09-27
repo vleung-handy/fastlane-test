@@ -9,9 +9,11 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.test.data.TestUsers;
 import com.handy.portal.test.model.TestUser;
+import com.handy.portal.test.util.AppInteractionUtil;
 import com.handy.portal.test.util.ViewUtil;
 import com.handy.portal.ui.activity.SplashActivity;
 
+import org.junit.After;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -44,10 +46,17 @@ public class CheckInTest
         }
     };
 
+    @After
+    public void tearDown()
+    {
+        AppInteractionUtil.logOut();
+    }
+
     @Test
     public void testBookingCheckIn()
     {
         ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+        ViewUtil.waitForViewNotVisible(R.id.loading_overlay, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
 
         // click the scheduled jobs tab
         onView(allOf(withId(R.id.tab_title), withText(R.string.tab_schedule))).perform(click());

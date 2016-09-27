@@ -1,6 +1,7 @@
 package com.handy.portal.library.ui.view;
 
 import android.content.Context;
+import android.support.annotation.StringRes;
 import android.view.LayoutInflater;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -47,7 +48,8 @@ public class DialogBlockerView extends LinearLayout
         return this;
     }
 
-    public DialogBlockerView setActionButton(int buttonTextResourceId, OnClickListener onClickListener)
+    public DialogBlockerView setActionButton(@StringRes int buttonTextResourceId,
+                                             OnClickListener onClickListener)
     {
         mActionButton.setText(buttonTextResourceId);
         mActionButton.setOnClickListener(onClickListener);

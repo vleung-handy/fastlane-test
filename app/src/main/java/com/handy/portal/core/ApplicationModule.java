@@ -23,6 +23,7 @@ import com.handy.portal.dashboard.view.FiveStarRatingPercentageView;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpModule;
+import com.handy.portal.library.ui.view.PermissionsBlockerDialogView;
 import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.LocationModule;
@@ -46,6 +47,7 @@ import com.handy.portal.onboarding.OnboardingModule;
 import com.handy.portal.onboarding.ui.activity.ActivationWelcomeActivity;
 import com.handy.portal.onboarding.ui.fragment.CameraPermissionsBlockerDialogFragment;
 import com.handy.portal.onboarding.ui.fragment.IDVerificationFragment;
+import com.handy.portal.onboarding.ui.fragment.PermissionsBlockerDialogFragment;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsModule;
 import com.handy.portal.receiver.HandyPushReceiver;
@@ -78,6 +80,7 @@ import com.handy.portal.updater.ui.PleaseUpdateActivity;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
+import com.squareup.okhttp.CertificatePinner;
 import com.squareup.okhttp.OkHttpClient;
 
 import org.greenrobot.eventbus.EventBus;
@@ -136,6 +139,8 @@ import retrofit.converter.GsonConverter;
         SoftwareLicensesFragment.class,
         CameraPermissionsBlockerDialogFragment.class,
         IDVerificationFragment.class,
+        PermissionsBlockerDialogFragment.class,
+        PermissionsBlockerDialogView.class,
 },
         includes = {
                 HelpModule.class,
@@ -202,6 +207,16 @@ public final class ApplicationModule
 
         final OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
+        if (!BuildConfig.DEBUG)
+        {
+            okHttpClient.setCertificatePinner(new CertificatePinner.Builder()
+                    .add(configs.getProperty("hostname"),
+                            "sha1/tbHJQrYmt+5isj5s44sk794iYFc=",
+                            "sha1/SXxoaOSEzPC6BgGmxAt/EAcsajw=",
+                            "sha1/blhOM3W9V/bVQhsWAcLYwPU6n24=",
+                            "sha1/T5x9IXmcrQ7YuQxXnxoCmeeQ84c=")
+                    .build());
+        }
 
         final String username = configs.getProperty("api_username");
         final String password = configs.getProperty("api_password");

@@ -96,9 +96,6 @@
 -keep class jumio.** { *; }
 -keepattributes Signature
 -keepattributes *Annotation*
--keep class com.squareup.okhttp.** { *; }
--keep interface com.squareup.okhttp.** { *; }
--dontwarn com.squareup.okhttp.**
 -dontwarn okio.**
 -dontnote
 -keep class net.sf.scuba.smartcards.IsoDepCardService {*;}

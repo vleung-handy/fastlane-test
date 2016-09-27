@@ -185,7 +185,7 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
     public void onReceiveClaimJobsError(final HandyEvent.ReceiveClaimJobsError event)
     {
         hideLoadingOverlay();
-        mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.ClaimBatchError()));
+        mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.ClaimBatchFailure()));
         UIUtils.showToast(getActivity(), getString(R.string.an_error_has_occurred));
     }
 

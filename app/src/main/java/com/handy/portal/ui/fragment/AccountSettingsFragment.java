@@ -17,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handy.portal.R;
+import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
@@ -54,6 +55,8 @@ public class AccountSettingsFragment extends ActionBarFragment
     ConfigManager mConfigManager;
     @Inject
     PrefsManager mPrefsManager;
+    @Inject
+    BookingManager mBookingManager;
 
     @BindView(R.id.provider_name_text)
     TextView mProviderNameText;
@@ -168,6 +171,7 @@ public class AccountSettingsFragment extends ActionBarFragment
                     {
                         //TODO this logout code should be moved somewhere else
                         mPrefsManager.clearButSaveEventLogs();
+                        mBookingManager.clearCache();
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
                         {
