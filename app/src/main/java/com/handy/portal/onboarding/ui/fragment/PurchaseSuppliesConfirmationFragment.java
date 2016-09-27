@@ -146,8 +146,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
     public void onResume()
     {
         super.onResume();
-        bus.register(this)
-        ;
+        bus.register(this);
         if (mAddressFieldDefinitions == null)
         {
             bus.post(new RegionDefinitionEvent.RequestFormDefinitions(Country.US, getActivity()));

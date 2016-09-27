@@ -11,7 +11,7 @@ public class BookingsListWrapper
     @SerializedName("message")
     private String mMessage;
 
-    public final ArrayList<BookingsWrapper> getBookingsWrappers()
+    public ArrayList<BookingsWrapper> getBookingsWrappers()
     {
         return mBookingsWrappers;
     }

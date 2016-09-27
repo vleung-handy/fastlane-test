@@ -20,8 +20,10 @@ public class DashboardTiersFragmentTest extends RobolectricGradleTestWrapper
     private DashboardTiersFragment mFragment;
 
     @Before
+    @Override
     public void setUp() throws Exception
     {
+        super.setUp();
         mFragment = new DashboardTiersFragment();
         Bundle args = new Bundle();
         args.putSerializable(BundleKeys.PROVIDER_EVALUATION, TestDataManager.createProviderEvaluation());

@@ -27,8 +27,10 @@ public class SwapBookingClaimDialogFragmentTest extends RobolectricGradleTestWra
     private SwapBookingClaimDialogFragment dialog;
 
     @Before
+    @Override
     public void setUp() throws Exception
     {
+        super.setUp();
         initMocks(this);
         when(booking.getSwappableBooking()).thenReturn(swappableBooking);
         when(booking.getLocationName()).thenReturn("Manhattan");

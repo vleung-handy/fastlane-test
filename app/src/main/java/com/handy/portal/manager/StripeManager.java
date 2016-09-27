@@ -53,6 +53,7 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
             private static final String CARD_EXP_MONTH = CARD + "[exp_month]";
             private static final String CARD_EXP_YEAR = CARD + "[exp_year]";
             private static final String CARD_CVC = CARD + "[cvc]";
+            private static final String CARD_CURRENCY_CODE = CARD + "[currency]";
         }
     }
 
@@ -135,6 +136,7 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
         params.put(RequestStripeTokenKeys.DebitCard.CARD_EXP_MONTH, debitCardInfo.getExpMonth());
         params.put(RequestStripeTokenKeys.DebitCard.CARD_EXP_YEAR, debitCardInfo.getExpYear());
         params.put(RequestStripeTokenKeys.DebitCard.CARD_CVC, debitCardInfo.getCvc());
+        params.put(RequestStripeTokenKeys.DebitCard.CARD_CURRENCY_CODE, debitCardInfo.getCurrencyCode());
         params.put(RequestStripeTokenKeys.API_KEY, STRIPE_API_KEY_US);
         return params;
     }
