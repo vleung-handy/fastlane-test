@@ -5,14 +5,18 @@ import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.model.ScheduledBookingFindJob;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
 import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
+import com.handy.portal.bookings.ui.element.ScheduledBookingListView;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
@@ -34,7 +38,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
 {
     private static final String SOURCE_SCHEDULED_JOBS_LIST = "scheduled_jobs_list";
     @BindView(R.id.scheduled_jobs_list_view)
-    BookingListView mScheduledJobsListView;
+    ScheduledBookingListView mScheduledJobsListView;
     @BindView(R.id.scheduled_bookings_dates_scroll_view_layout)
     LinearLayout mScheduledJobsDatesScrollViewLayout;
     @BindView(R.id.scheduled_bookings_empty)
@@ -78,7 +82,14 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected BookingListView getBookingListView()
     {
+        mScheduledJobsListView.setSelectedDate(mSelectedDay);
         return mScheduledJobsListView;
+    }
+
+    @Override
+    protected void selectDay(Date day) {
+        super.selectDay(day);
+        mScheduledJobsListView.setSelectedDate(day);
     }
 
     @Override
@@ -154,6 +165,30 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         {
             mFindJobsForDayButton.setVisibility(View.GONE);
         }
+    }
+
+    /**
+     * Overriding because we need to handle Find Jobs
+     * @return
+     */
+    @Override
+    protected AdapterView.OnItemClickListener getOnItemClickListener() {
+        final AdapterView.OnItemClickListener onItemClickListener = super.getOnItemClickListener();
+        return new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
+                Booking booking = (Booking) adapter.getItemAtPosition(position);
+                if (booking != null)
+                {
+                    if(booking instanceof ScheduledBookingFindJob) {
+                        Toast.makeText(getContext(), "TODO: SAMMY Created overlay for results", Toast.LENGTH_LONG).show();
+                    } else {
+                        //Do it the normal way
+                        onItemClickListener.onItemClick(adapter, view, position, id);
+                    }
+                }
+            }
+        };
     }
 
     @Subscribe

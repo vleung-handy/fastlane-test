@@ -484,6 +484,27 @@ public final class DateTimeUtils
         return Math.round((d2.getTime() - d1.getTime()) / (float) (DateUtils.HOUR_IN_MILLIS * HOURS_IN_DAY));
     }
 
+    /**
+     *
+     * @param d1 Date 1
+     * @param d2 Date 2
+     * @return the Subtracted dates in hours. d2 - d1
+     */
+    public static int hoursBetween(Date d1, Date d2)
+    {
+        return Math.round((d2.getTime() - d1.getTime()) / (float) (DateUtils.HOUR_IN_MILLIS));
+    }
+
+    /**
+     *
+     * @param date Date to modify
+     * @param hourToAdd this can be positive or negative. Negative number will subtract
+     * @return A new Date object with the hourToAdd added
+     */
+    public static Date updateDateByAddingHour(Date date, int hourToAdd) {
+        return new Date(date.getTime() + TimeUnit.HOURS.toMillis(hourToAdd));
+    }
+
     private static SimpleDateFormat getClockFormatter12hr()
     {
         CLOCK_FORMATTER_12HR.setTimeZone(TimeZone.getDefault());

@@ -43,12 +43,12 @@
                 android:layout_height="wrap_content"
                 >
 
-                <com.handy.portal.bookings.ui.element.BookingListView
+                <com.handy.portal.bookings.ui.element.ScheduledBookingListView
                     android:id="@+id/scheduled_jobs_list_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:divider="@color/list_divider"
-                    android:dividerHeight="1dp"
+                    android:dividerHeight="10dp"
                     />
             </com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout>
 

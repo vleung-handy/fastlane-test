@@ -210,10 +210,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 mSelectedDay = DateTimeUtils.getDateWithoutTime(new Date());
             }
 
-            if (mDateDateButtonViewMap.containsKey(mSelectedDay))
-            {
-                mDateDateButtonViewMap.get(mSelectedDay).setChecked(true);
-            }
+            selectDay(mSelectedDay);
 
             requestAllBookings();
         }
@@ -373,7 +370,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         }
     }
 
-    private void selectDay(Date day)
+    protected void selectDay(Date day)
     {
         DateButtonView selectedDateButtonView = mDateDateButtonViewMap.get(mSelectedDay);
         if (selectedDateButtonView != null)
@@ -392,14 +389,13 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         List<Booking> bookings = bookingsWrapper.getBookings();
         mBookingsForSelectedDay = bookings;
         getBookingListView().populateList(bookings, getBookingElementViewClass());
-        initListClickListener();
+        getBookingListView().setOnItemClickListener(getOnItemClickListener());
         getNoBookingsSwipeRefreshLayout().setVisibility(bookings.size() > 0 ? View.GONE : View.VISIBLE);
         afterDisplayBookings(bookings, dateOfBookings);
     }
 
-    private void initListClickListener()
-    {
-        getBookingListView().setOnItemClickListener(new AdapterView.OnItemClickListener()
+    protected AdapterView.OnItemClickListener getOnItemClickListener() {
+        return new AdapterView.OnItemClickListener()
         {
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int position, long id)
@@ -420,7 +416,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                     showBookingDetails(booking);
                 }
             }
-        });
+        };
     }
 
     private void showBookingDetails(Booking booking)

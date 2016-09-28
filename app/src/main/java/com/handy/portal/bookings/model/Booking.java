@@ -39,11 +39,11 @@ public class Booking implements Comparable<Booking>, Serializable
     @SerializedName("service")
     private ServiceInfo mServiceInfo;
     @SerializedName("start_date")
-    private Date mStartDate;
+    protected Date mStartDate;
     @SerializedName("status")
     private String mStatus;
     @SerializedName("end_date")
-    private Date mEndDate;
+    protected Date mEndDate;
     @SerializedName("reveal_date")
     private Date mRevealDate;
 
