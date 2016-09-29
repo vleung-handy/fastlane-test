@@ -131,7 +131,9 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected Class<? extends BookingElementView> getBookingElementViewClass()
     {
-        return ScheduledBookingElementView.class;
+        //NOTE: This isn't used any more in the ScheduledBookingListView. It's only here because
+        // the BookingsFragment requires it. Refactoring parent fragment will take too much time
+        return null;
     }
 
     @Override

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/background_list_entry"
+    android:padding="@dimen/default_padding">
+
+    <TextView
+        android:id="@+id/booking_entry_find_job"
+        style="@style/TextView.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/tertiary_gray"
+        tools:text="Find Jobs \n beween 10:00AM-2:00PM" />
+
+</FrameLayout>

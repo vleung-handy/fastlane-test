@@ -224,6 +224,7 @@
     <string name="remove_customer_no_show_question">Remove customer no show report?</string>
 
     <string name="find_jobs_close_to_your_claimed_job">Find jobs close to your claimed job</string>
+    <string name="find_jobs_between">Find Jobs between\n %1$s-%2$s</string>
     <string name="find_matching_jobs">Find Matching Jobs</string>
     <string name="matching_jobs">Matching Jobs</string>
     <string name="no_matching_jobs">No Matching Jobs</string>

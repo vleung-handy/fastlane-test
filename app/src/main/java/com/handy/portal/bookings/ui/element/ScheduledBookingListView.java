@@ -41,6 +41,11 @@ public class ScheduledBookingListView extends BookingListView {
         this.selectedDate = selectedDate;
     }
 
+    /**
+     *
+     * @param bookings
+     * @param elementViewClass This isn't used any more, but to refactor this in the BookingsFragment would take too much time
+     */
     public void populateList(List<Booking> bookings, Class<? extends BookingElementView> elementViewClass) {
         List<Booking> newBookingListWithFindJob = new ArrayList<>();
         //Set it to selected date
@@ -82,12 +87,13 @@ public class ScheduledBookingListView extends BookingListView {
 
         //Check the last time with the end of day
         int hoursBetween = DateTimeUtils.hoursBetween(latestEndDateTime, lastEndDateTime);
-        if (hoursBetween >= hoursThreshold) {
+        //Use 2 hours because being last job of the day, we already added a buffer to the last job
+        if (hoursBetween >= 2) {
             newBookingListWithFindJob.add(new ScheduledBookingFindJob(latestEndDateTime, lastEndDateTime));
         }
 
         ScheduledBookingElementAdapter itemsAdapter =
-                new ScheduledBookingElementAdapter(getContext(), newBookingListWithFindJob, elementViewClass);
+                new ScheduledBookingElementAdapter(getContext(), newBookingListWithFindJob);
         setAdapter(itemsAdapter);
     }
 }
