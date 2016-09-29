@@ -30,6 +30,7 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="continue_single_word">Continue</string>
+    <string name="chat">Chat</string>
 
     <!-- Environment -->
     <string name="select_environment">Select Environment</string>
@@ -608,6 +609,14 @@
         <item quantity="one">Awesome! We added the job to your schedule.</item>
         <item quantity="other">Awesome! We added the jobs to your schedule.</item>
     </plurals>
+
+    <!--Layer Chat-->
+    <string name="login_dialog_message">Logging In&#8230;</string>
+    <string name="logout_dialog_message">Logging out&#8230;</string>
+    <string name="synching">Syncing conversation</string>
+    <string name="notifications_num_more">+%1$d more</string>
+    <string name="notifications_new_messages">%1$d new messages</string>
+    <string name="push_notification_no_content_title">New message (tap to sync)</string>
 
     <!-- Content Descriptions -->
     <string name="cd.alert">Alert</string>

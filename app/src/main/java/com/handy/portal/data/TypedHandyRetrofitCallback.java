@@ -10,6 +10,7 @@ import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
+import com.handy.portal.chat.LayerResponseWrapper;
 import com.handy.portal.dashboard.model.ProviderEvaluation;
 import com.handy.portal.dashboard.model.ProviderFeedback;
 import com.handy.portal.dashboard.model.ProviderRating;
@@ -421,6 +422,15 @@ class SetupDataRetrofitCallback extends TypedHandyRetrofitCallback<SetupData>
 class FinishIDVerificationCallback extends TypedHandyRetrofitCallback<HashMap<String, String>>
 {
     FinishIDVerificationCallback(final DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+
+class GetLayerAuthTokenCallback extends TypedHandyRetrofitCallback<LayerResponseWrapper>
+{
+    GetLayerAuthTokenCallback(final DataManager.Callback callback)
     {
         super(callback);
     }

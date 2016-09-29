@@ -69,4 +69,7 @@ public class BundleKeys
 
     // Jumio URL
     public static final String JUMIO_URL = "jumio_url";
+
+    // Layer
+    public static final String BOOKING_USER = "booking_user";
 }

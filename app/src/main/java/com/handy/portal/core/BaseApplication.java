@@ -38,6 +38,7 @@ import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.setup.SetupManager;
 import com.handy.portal.updater.VersionManager;
+import com.layer.sdk.LayerClient;
 import com.newrelic.agent.android.NewRelic;
 
 import org.greenrobot.eventbus.EventBus;
@@ -117,6 +118,7 @@ public class BaseApplication extends MultiDexApplication
         createObjectGraph();
         inject(this);
 
+        startLayer();
         startNewRelic();
         startCrashlytics();
         sDeviceId = SystemUtils.getDeviceId(getApplicationContext());
@@ -157,6 +159,15 @@ public class BaseApplication extends MultiDexApplication
             @Override
             public void onActivityDestroyed(final Activity activity) { }
         });
+    }
+
+    private void startLayer()
+    {
+        if (BuildConfig.DEBUG)
+        {
+            LayerClient.setLoggingEnabled(this, true);
+        }
+        LayerClient.applicationCreated(this);
     }
 
     protected void startNewRelic()

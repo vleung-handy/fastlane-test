@@ -11,6 +11,8 @@ import com.handy.portal.BuildConfig;
 import com.handy.portal.action.CustomDeepLinkAction;
 import com.handy.portal.bookings.BookingsModule;
 import com.handy.portal.bookings.ui.fragment.SoftwareLicensesFragment;
+import com.handy.portal.chat.ChatModule;
+import com.handy.portal.chat.MessagesListFragment;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.dashboard.fragment.DashboardFeedbackFragment;
 import com.handy.portal.dashboard.fragment.DashboardReviewsFragment;
@@ -141,6 +143,7 @@ import retrofit.converter.GsonConverter;
         IDVerificationFragment.class,
         PermissionsBlockerDialogFragment.class,
         PermissionsBlockerDialogView.class,
+        MessagesListFragment.class,
 },
         includes = {
                 HelpModule.class,
@@ -150,6 +153,7 @@ import retrofit.converter.GsonConverter;
                 BookingsModule.class,
                 OnboardingModule.class,
                 SetupModule.class,
+                ChatModule.class,
         }
 )
 public final class ApplicationModule
@@ -496,4 +500,11 @@ public final class ApplicationModule
         }
         return "";
     }
+
+//    @Provides
+//    @Singleton
+//    public ChatManager provideChatManager(EventBus bus, DataManager dataManager)
+//    {
+//        return new ChatManager(bus, dataManager);
+//    }
 }

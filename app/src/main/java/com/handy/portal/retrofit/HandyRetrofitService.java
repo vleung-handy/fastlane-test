@@ -321,4 +321,11 @@ public interface HandyRetrofitService
                               @Field("scan_reference") String scanReference,
                               @Field("status") String status,
                               HandyRetrofitCallback cb);
+
+    // Layer
+    @GET(PROVIDERS_PATH + "{id}/layer_identity_token")
+    void getLayerAuthToken(
+            @Path("id") String userId, @Query("nonce") String nonce,
+            HandyRetrofitCallback cb
+    );
 }

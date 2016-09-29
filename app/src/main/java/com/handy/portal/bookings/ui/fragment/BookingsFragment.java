@@ -23,6 +23,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
+import com.handy.portal.chat.LayerHelper;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
@@ -41,6 +42,7 @@ import com.handy.portal.model.ProviderSettings;
 import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
+import com.layer.sdk.LayerClient;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -50,6 +52,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -63,6 +66,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     ConfigManager mConfigManager;
     @Inject
     PrefsManager mPrefsManager;
+
     @BindView(R.id.fetch_error_view)
     View mFetchErrorView;
     @BindView(R.id.fetch_error_text)

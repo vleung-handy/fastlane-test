@@ -107,3 +107,7 @@
 -dontwarn org.codehaus.**
 -dontwarn org.ejbca.**
 -dontwarn org.spongycastle.**
+
+# Layer SDK
+-keep class com.layer.** {*; }
+-dontwarn com.layer.**

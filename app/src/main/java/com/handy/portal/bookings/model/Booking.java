@@ -46,6 +46,8 @@ public class Booking implements Comparable<Booking>, Serializable
     private Date mEndDate;
     @SerializedName("reveal_date")
     private Date mRevealDate;
+    @SerializedName("conversation_id")
+    private String mConversationId;
 
     @SerializedName("check_in_summary")
     private CheckInSummary mCheckInSummary;
@@ -217,6 +219,11 @@ public class Booking implements Comparable<Booking>, Serializable
             }
         }
         return false;
+    }
+
+    public String getConversationId()
+    {
+        return mConversationId;
     }
 
     public int getFrequency()

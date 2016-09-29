@@ -12,6 +12,7 @@ import com.handy.portal.bookings.ui.fragment.ProRequestedJobsFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.bookings.ui.fragment.SoftwareLicensesFragment;
+import com.handy.portal.chat.MessagesListFragment;
 import com.handy.portal.dashboard.fragment.DashboardFeedbackFragment;
 import com.handy.portal.dashboard.fragment.DashboardReviewsFragment;
 import com.handy.portal.dashboard.fragment.DashboardTiersFragment;
@@ -87,6 +88,8 @@ public enum MainViewPage implements Serializable
 
     BLOCK_PRO_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
     PAYMENT_BLOCKING(PaymentBlockingFragment.class),
+    // Layer
+    MESSAGES_LIST(MessagesListFragment.class),
 
     REQUESTED_JOBS(ProRequestedJobsFragment.class);
 

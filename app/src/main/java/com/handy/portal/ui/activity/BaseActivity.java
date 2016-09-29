@@ -41,6 +41,7 @@ import com.handy.portal.updater.AppUpdateEvent;
 import com.handy.portal.updater.AppUpdateEventListener;
 import com.handy.portal.updater.AppUpdateFlowLauncher;
 import com.handy.portal.updater.ui.PleaseUpdateActivity;
+import com.layer.sdk.LayerClient;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -58,6 +59,8 @@ public abstract class BaseActivity extends AppCompatActivity
 {
     @Inject
     PrefsManager mPrefsManager;
+    @Inject
+    LayerClient mLayerClient;
 
     @Inject
     ConfigManager mConfigManager;
@@ -154,6 +157,17 @@ public abstract class BaseActivity extends AppCompatActivity
     protected void onResume()
     {
         super.onResume();
+
+        if (mLayerClient == null) { return; }
+        if (mLayerClient.isAuthenticated())
+        {
+            mLayerClient.connect();
+        }
+        else
+        {
+            mLayerClient.authenticate();
+        }
+
         showRequiredPermissionBlockersOrStartServiceIfNecessary();
         bus.post(new LogEvent.SendLogsEvent());
         if (mWasOpenBefore)

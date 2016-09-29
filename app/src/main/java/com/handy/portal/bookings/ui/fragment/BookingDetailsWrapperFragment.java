@@ -72,6 +72,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
 {
     public static final String SOURCE_LATE_DISPATCH = "late_dispatch";
 
+
     private static final Gson GSON = new Gson();
 
     @Inject

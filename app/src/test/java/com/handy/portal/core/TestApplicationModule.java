@@ -12,6 +12,10 @@ import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragmentTest;
 import com.handy.portal.bookings.ui.fragment.dialog.SwapBookingClaimDialogFragment;
+import com.handy.portal.chat.AuthenticationProvider;
+import com.handy.portal.chat.LayerAuthenticationProvider;
+import com.handy.portal.chat.LayerHelper;
+import com.handy.portal.chat.MessagesListFragment;
 import com.handy.portal.dashboard.fragment.DashboardFeedbackFragment;
 import com.handy.portal.dashboard.fragment.DashboardReviewsFragment;
 import com.handy.portal.dashboard.fragment.DashboardTiersFragment;
@@ -67,10 +71,13 @@ import com.handy.portal.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
+import com.layer.sdk.LayerClient;
 import com.securepreferences.SecurePreferences;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 
+import javax.inject.Named;
 import javax.inject.Singleton;
 
 import dagger.Module;
@@ -129,10 +136,13 @@ import static org.mockito.Mockito.when;
         PurchaseSuppliesConfirmationFragment.class,
         NewPurchaseSuppliesFragment.class,
         ScheduleConfirmationFragment.class,
+        MessagesListFragment.class,
 }, library = true)
 public class TestApplicationModule
 {
     private final Application mApplication;
+    private static final String LAYER_APP_ID = "layer:///apps/staging/6178a72e-4e8d-11e6-aca9-940102005074";
+
 
     public TestApplicationModule(final Application application)
     {
@@ -275,5 +285,52 @@ public class TestApplicationModule
     final UrbanAirshipManager providerUrbanAirshipManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication)
     {
         return mock(UrbanAirshipManager.class);
+    }
+
+
+    @Provides
+    @Singleton
+    @Named("baseUrl")
+    public String baseUrl()
+    {
+        return "https://s-handy.handy-internal.com/api/v3/";
+    }
+
+    @Provides
+    @Singleton
+    @Named("layerAppId")
+    public String getLayerAppId()
+    {
+        return mock(String.class);
+    }
+
+
+    @Provides
+    @Singleton
+    public LayerClient providesLayerClient(AuthenticationProvider authProvider, Application application)
+    {
+        return mock(LayerClient.class);
+    }
+
+    @Provides
+    @Singleton
+    public AuthenticationProvider providesAuthenticationProvider(Application application)
+    {
+        return mock(LayerAuthenticationProvider.class);
+    }
+
+    @Provides
+    @Singleton
+    public LayerHelper providesLayerHelper(LayerClient layerClient, AuthenticationProvider authProvider)
+    {
+        return mock(LayerHelper.class);
+    }
+
+    @Provides
+    @Singleton
+    public Picasso providesPicasso(LayerClient layerClient, Application application)
+    {
+        return mock(Picasso.class);
+
     }
 }

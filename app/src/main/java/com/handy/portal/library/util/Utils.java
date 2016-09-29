@@ -16,6 +16,11 @@ import com.handy.portal.core.BaseApplication;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.ui.activity.BaseActivity;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
+
 public final class Utils //TODO: we should reorganize these methods into more specific util classes
 {
     public final static float MDPI = 1.0f;
@@ -114,5 +119,15 @@ public final class Utils //TODO: we should reorganize these methods into more sp
             locationData = new LocationData();
         }
         return locationData;
+    }
+
+    public static String streamToString(InputStream stream) throws IOException
+    {
+        int n = 0;
+        char[] buffer = new char[1024 * 4];
+        InputStreamReader reader = new InputStreamReader(stream, "UTF8");
+        StringWriter writer = new StringWriter();
+        while (-1 != (n = reader.read(buffer))) { writer.write(buffer, 0, n); }
+        return writer.toString();
     }
 }

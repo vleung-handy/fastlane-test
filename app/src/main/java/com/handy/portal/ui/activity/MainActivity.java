@@ -3,6 +3,8 @@ package com.handy.portal.ui.activity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 
 import com.handy.portal.R;
@@ -114,5 +116,13 @@ public class MainActivity extends BaseActivity
                 }
             }
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu)
+    {
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_bookings, menu);
+        return true;
     }
 }

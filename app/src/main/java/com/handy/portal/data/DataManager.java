@@ -8,6 +8,7 @@ import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
+import com.handy.portal.chat.LayerResponseWrapper;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.dashboard.model.ProviderEvaluation;
@@ -385,6 +386,12 @@ public class DataManager
     {
         mService.finishIdVerification(afterIdVerificationFinish, scanReference,
                 status, new FinishIDVerificationCallback(cb));
+    }
+
+    public void getLayerAuthToken(final String userId, final String nonce,
+                                  final Callback<LayerResponseWrapper> cb)
+    {
+        mService.getLayerAuthToken(userId, nonce, new GetLayerAuthTokenCallback(cb));
     }
 
     public interface Callback<T>

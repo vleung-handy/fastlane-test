@@ -12,6 +12,8 @@ import android.text.Html;
 import android.text.Spanned;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -37,10 +39,19 @@ import com.handy.portal.bookings.ui.element.BookingMapView;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.SwapBookingClaimDialogFragment;
+import com.handy.portal.chat.AuthenticationProvider;
+import com.handy.portal.chat.ChatEvent;
+import com.handy.portal.chat.LayerAuthenticationProvider;
+import com.handy.portal.chat.LayerHelper;
+import com.handy.portal.chat.LayerResponseWrapper;
+import com.handy.portal.chat.PushNotificationReceiver;
+import com.handy.portal.chat.SimpleRecyclerCallback;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.RequestCode;
+import com.handy.portal.constant.TransitionStyle;
+import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.ui.view.MapPlaceholderView;
@@ -55,12 +66,22 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.LocationData;
+import com.handy.portal.model.Provider;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.fragment.TimerActionBarFragment;
 import com.handy.portal.ui.view.FlowLayout;
+import com.layer.sdk.LayerClient;
+import com.layer.sdk.exceptions.LayerException;
+import com.layer.sdk.listeners.LayerConnectionListener;
+import com.layer.sdk.messaging.Conversation;
+import com.layer.sdk.query.Predicate;
+import com.layer.sdk.query.Query;
+import com.layer.sdk.query.RecyclerViewController;
+import com.layer.sdk.query.SortDescriptor;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -69,6 +90,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -78,10 +100,23 @@ import butterknife.OnClick;
  * fragment for handling bookings that are
  * not in progress i.e. ready for claim, check-in, on my way, etc
  */
-public class BookingFragment extends TimerActionBarFragment
+public class BookingFragment extends TimerActionBarFragment implements LayerConnectionListener
 {
     @Inject
     PrefsManager mPrefsManager;
+    @Inject
+    @Named("layerAppId")
+    String mLayerAppId;
+    @Inject
+    ProviderManager mProviderManager;
+    @Inject
+    DataManager mDataManager;
+
+    @Inject
+    LayerClient mLayerClient;
+
+    @Inject
+    LayerHelper mLayerHelper;
 
     @BindView(R.id.booking_details_display_message_layout)
     BookingDetailsProRequestInfoView mBookingDetailsProRequestInfoView;
@@ -133,8 +168,12 @@ public class BookingFragment extends TimerActionBarFragment
     TextView mJobNumberText;
     @BindView(R.id.booking_action_button)
     Button mActionButton;
+    @BindView(R.id.booking_layer_message_customer_view)
+    ImageView mImageChat;
 
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
+    //    private static final String CONVERSATION_ID = "layer:///conversations/636a2014-dbd2-4e4e-a430-4131b18d56a9";
+    private static final String TAG = BookingFragment.class.getSimpleName();
 
     private Booking mBooking;
     private String mSource;
@@ -142,6 +181,7 @@ public class BookingFragment extends TimerActionBarFragment
     private Intent mGetDirectionsIntent;
     private View.OnClickListener mOnSupportClickListener;
     private boolean mHideActionButtons;
+    private RecyclerViewController<Conversation> mQueryController;
 
     public static BookingFragment newInstance(@NonNull final Booking booking, final String source,
                                               boolean hideActionButtons)
@@ -188,6 +228,7 @@ public class BookingFragment extends TimerActionBarFragment
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+        setHasOptionsMenu(true);
         mBookingMapView.onCreate(savedInstanceState);
         mBookingMapView.disableParentScrolling(mScrollView);
         setOptionsMenuEnabled(true);
@@ -229,6 +270,7 @@ public class BookingFragment extends TimerActionBarFragment
     {
         super.onResume();
         bus.register(this);
+        initLayer();
 
         mBookingMapView.onResume();
 
@@ -263,6 +305,12 @@ public class BookingFragment extends TimerActionBarFragment
     {
         super.onLowMemory();
         mBookingMapView.onLowMemory();
+    }
+
+    @Override
+    public void onPrepareOptionsMenu(final Menu menu)
+    {
+        super.onPrepareOptionsMenu(menu);
     }
 
     @Override
@@ -577,6 +625,20 @@ public class BookingFragment extends TimerActionBarFragment
         }
     }
 
+    @OnClick(R.id.booking_layer_message_customer_view)
+    public void layerMessageCustomer()
+    {
+        if (!Strings.isNullOrEmpty(mBooking.getConversationId()))
+        {
+            Bundle bundle = new Bundle();
+            bundle.putParcelable(PushNotificationReceiver.LAYER_CONVERSATION_KEY,
+                    Uri.parse(mBooking.getConversationId()));
+            bundle.putString(BundleKeys.BOOKING_USER, mBooking.getUser().getFirstName());
+            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.MESSAGES_LIST,
+                    bundle, TransitionStyle.SEND_VERIFICAITON_SUCCESS, true));
+        }
+    }
+
     private void setActionButtonVisibility()
     {
         if (mHideActionButtons)
@@ -850,6 +912,12 @@ public class BookingFragment extends TimerActionBarFragment
         }
     }
 
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
+    {
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
     private void initHelperText(Booking.Action action)
     {
         if (!TextUtils.isNullOrEmpty(action.getHelperText()) && !mHideActionButtons)
@@ -935,5 +1003,221 @@ public class BookingFragment extends TimerActionBarFragment
     {
         Toast.makeText(getContext(),
                 getString(R.string.invalid_phone_number), Toast.LENGTH_LONG).show();
+    }
+
+    private void initLayer()
+    {
+        if ((mLayerClient != null) && mLayerClient.isAuthenticated())
+        {
+            Log.d(TAG, "initLayer: Already logged in");
+            syncConversation();
+        }
+        else
+        {
+            mLayerHelper.authenticate(
+                    new LayerAuthenticationProvider.Credentials(mLayerAppId, mProviderManager.getCachedActiveProvider().getId()),
+                    new AuthenticationProvider.Callback()
+                    {
+                        @Override
+                        public void onSuccess(AuthenticationProvider provider, String userId)
+                        {
+                            Log.d(TAG, "AUTH onSuccess: ");
+                            syncConversation();
+                        }
+
+                        @Override
+                        public void onError(AuthenticationProvider provider, final String error)
+                        {
+                            Log.e(TAG, "Failed to authenticate as `" +
+                                    mProviderManager.getCachedActiveProvider().getFullName() + "`: " + error);
+                            //TODO: JIA: this should never happen, so if it does, then log something
+                        }
+                    }
+            );
+
+        }
+    }
+
+    private void syncConversation()
+    {
+        Log.d(TAG, "syncConversation() called");
+        Conversation conversation = mLayerClient.getConversation(Uri.parse(mBooking.getConversationId()));
+
+        if (conversation != null)
+        {
+            Log.d(TAG, "syncConversation: conversation is not null");
+            Conversation.HistoricSyncStatus status = conversation.getHistoricSyncStatus();
+
+            if (status == Conversation.HistoricSyncStatus.MORE_AVAILABLE)
+            {
+                Log.d(TAG, "syncConversation: There is more messages available for synching");
+                conversation.syncMoreHistoricMessages(20);
+            }
+
+            if (getActivity() != null)
+            {
+                Log.d(TAG, "syncConversation: making chat icon visible on UI thread");
+                getActivity().runOnUiThread(new Runnable()
+                {
+                    @Override
+                    public void run()
+                    {
+                        mImageChat.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        }
+        else
+        {
+            //the conversations haven't been initialized yet. Initialize them.
+            Log.d(TAG, "syncConversation: conversation is NULL");
+            initConversations();
+        }
+    }
+
+    private void initConversations()
+    {
+        Log.d(TAG, "initConversations: ");
+        if (mQueryController != null)
+        {
+            //only do this once, so we don't get ourselves into an infinite loop type scenario
+            Log.d(
+                    TAG,
+                    "initConversations: query controller has already been created, not doing it again"
+            );
+            return;
+        }
+        Query<Conversation> query = Query.builder(Conversation.class)
+                /* Only show conversations we're still a member of */
+                .predicate(new Predicate(
+                        Conversation.Property.PARTICIPANT_COUNT,
+                        Predicate.Operator.GREATER_THAN,
+                        1
+                ))
+
+                /* Sort by the last Message's receivedAt time */
+                .sortDescriptor(new SortDescriptor(
+                        Conversation.Property.LAST_MESSAGE_RECEIVED_AT,
+                        SortDescriptor.Order.DESCENDING
+                ))
+                .build();
+
+        mQueryController = mLayerClient.newRecyclerViewController(
+                query,
+                null,
+                new SimpleRecyclerCallback()
+                {
+                    @Override
+                    public void onQueryItemInserted(
+                            final RecyclerViewController recyclerViewController,
+                            final int i
+                    )
+                    {
+                        Log.d(
+                                TAG,
+                                "onQueryItemInserted() called with: recyclerViewController = [" + recyclerViewController + "], i = [" + i + "]"
+                        );
+                        syncConversation();
+                    }
+                }
+        );
+
+        Log.d(TAG, "initConversations: executing query, look out for events coming back");
+        mQueryController.execute();
+    }
+
+    @Override
+    public void onConnectionConnected(final LayerClient layerClient)
+    {
+        if (!Strings.isNullOrEmpty(mBooking.getConversationId()))
+        {
+            if ((mLayerClient != null) && mLayerClient.isAuthenticated())
+            {
+                Log.d(TAG, "initLayer: Already logged in");
+                syncConversation();
+            }
+            else
+            {
+                Log.d(TAG, "initLayer: Not logged in");
+                final Provider loggedInProvider = mProviderManager.getCachedActiveProvider();
+                if (loggedInProvider != null)
+                {
+                    mLayerHelper.authenticate(
+                            new LayerAuthenticationProvider.Credentials(mLayerAppId,
+                                    loggedInProvider.getId()),
+                            new AuthenticationProvider.Callback()
+                            {
+                                @Override
+                                public void onSuccess(AuthenticationProvider provider, String userId)
+                                {
+                                    Log.d(TAG, "AUTH onSuccess: ");
+                                    syncConversation();
+                                }
+
+                                @Override
+                                public void onError(AuthenticationProvider provider, final String error)
+                                {
+                                    Log.e(TAG, "Failed to authenticate as `" +
+                                            loggedInProvider.getFullName() + "`: " + error);
+                                    //TODO: JIA: this should never happen, so if it does, then log something
+                                }
+                            }
+                    );
+                }
+
+            }
+        }
+        else
+        {
+            mImageChat.setVisibility(View.GONE);
+        }
+    }
+
+    @Override
+    public void onConnectionDisconnected(final LayerClient layerClient)
+    {
+
+    }
+
+    @Override
+    public void onConnectionError(final LayerClient layerClient, final LayerException e)
+    {
+
+    }
+
+    @Subscribe
+    public void onReceiveLayerAuthTokenSuccess(ChatEvent.ReceiveLayerAuthTokenSuccessEvent event)
+    {
+        Log.d(TAG, "respondToChallengeSuccess: ");
+        mLayerClient.answerAuthenticationChallenge(event.identityToken);
+    }
+
+    @Subscribe
+    public void onReceiveLayerAuthTokenError(ChatEvent.ReceiveLayerAuthTokenErrorEvent event)
+    {
+        Log.d(TAG, "respondToChallengeError: ");
+    }
+
+    @Subscribe
+    public void onRequestLayerAuthToken(ChatEvent.RequestLayerAuthTokenEvent event)
+    {
+        mDataManager.getLayerAuthToken(
+                event.userId,
+                event.nonce,
+                new DataManager.Callback<LayerResponseWrapper>()
+                {
+                    @Override
+                    public void onSuccess(final LayerResponseWrapper response)
+                    {
+                        bus.post(new ChatEvent.ReceiveLayerAuthTokenSuccessEvent(response));
+                    }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        bus.post(new ChatEvent.ReceiveLayerAuthTokenErrorEvent(error));
+                    }
+                }
+        );
     }
 }
