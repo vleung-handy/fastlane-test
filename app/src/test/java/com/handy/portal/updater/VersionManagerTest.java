@@ -66,10 +66,8 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
     private DataManager.Callback<UpdateDetails> updateDetailsCallBack;
 
     @Before
-    @Override
     public void setUp() throws Exception
     {
-        super.setUp();
         initMocks(this);
 
         Context applicationSpy = spy(RuntimeEnvironment.application);

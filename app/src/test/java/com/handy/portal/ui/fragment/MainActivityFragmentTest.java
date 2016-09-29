@@ -29,10 +29,8 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
     private MainActivityFragment mFragment;
 
     @Before
-    @Override
     public void setUp() throws Exception
     {
-        super.setUp();
         mFragment = new MainActivityFragment();
         SupportFragmentTestUtil.startFragment(mFragment, MainActivity.class);
     }
