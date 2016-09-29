@@ -31,10 +31,8 @@ public class DashboardFeedbackFragmentTest extends RobolectricGradleTestWrapper
     private DashboardFeedbackFragment mFragment;
 
     @Before
-    @Override
     public void setUp() throws Exception
     {
-        super.setUp();
         mFragment = new DashboardFeedbackFragment();
     }
 

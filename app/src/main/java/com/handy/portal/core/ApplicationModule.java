@@ -23,7 +23,6 @@ import com.handy.portal.dashboard.view.FiveStarRatingPercentageView;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.HelpModule;
-import com.handy.portal.library.ui.view.PermissionsBlockerDialogView;
 import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.LocationModule;
@@ -47,7 +46,6 @@ import com.handy.portal.onboarding.OnboardingModule;
 import com.handy.portal.onboarding.ui.activity.ActivationWelcomeActivity;
 import com.handy.portal.onboarding.ui.fragment.CameraPermissionsBlockerDialogFragment;
 import com.handy.portal.onboarding.ui.fragment.IDVerificationFragment;
-import com.handy.portal.onboarding.ui.fragment.PermissionsBlockerDialogFragment;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsModule;
 import com.handy.portal.receiver.HandyPushReceiver;
@@ -139,8 +137,6 @@ import retrofit.converter.GsonConverter;
         SoftwareLicensesFragment.class,
         CameraPermissionsBlockerDialogFragment.class,
         IDVerificationFragment.class,
-        PermissionsBlockerDialogFragment.class,
-        PermissionsBlockerDialogView.class,
 },
         includes = {
                 HelpModule.class,
