@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -90,14 +91,16 @@ public class MainActivityFragment extends InjectedFragment
     RelativeLayout mNavigationDrawer;
     @BindView(R.id.nav_tray_links)
     RadioGroup mNavTrayLinks;
-    @BindView(R.id.navigation_header)
-    TextView mNavigationHeader;
+    @BindView(R.id.navigation_header_pro_name)
+    TextView mNavigationHeaderProName;
     @BindView(R.id.content_frame)
     TabbedLayout mContentFrame;
     @BindView(R.id.build_version_text)
     TextView mBuildVersionText;
     @BindView(R.id.software_licenses_text)
     TextView mSoftwareLicensesText;
+    @BindView(R.id.navigation_header_edit_profile_button)
+    Button mEditProfileButton;
 
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private MainViewPage currentPage = null;
@@ -152,7 +155,8 @@ public class MainActivityFragment extends InjectedFragment
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.bind(this, view);
         registerButtonListeners();
-        mBuildVersionText.setText(BuildConfig.VERSION_NAME);
+        mBuildVersionText.setText(getString(R.string.build_version_formatted,
+                BuildConfig.VERSION_NAME));
         return view;
     }
 
@@ -311,7 +315,7 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onReceiveProviderInfoSuccess(HandyEvent.ReceiveProviderInfoSuccess event)
     {
-        mNavigationHeader.setText(event.provider.getFullName());
+        mNavigationHeaderProName.setText(event.provider.getFullName());
     }
 
     @Subscribe
@@ -415,6 +419,14 @@ public class MainActivityFragment extends InjectedFragment
             public void onClick(final View v)
             {
                 bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SOFTWARE_LICENSES, true));
+            }
+        });
+        mEditProfileButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(final View view)
+            {
+                bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_UPDATE, true));
             }
         });
     }

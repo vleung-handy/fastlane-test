@@ -80,6 +80,7 @@
     <dimen name="negative_complete_button_height_half">-32dp</dimen>
     <dimen name="complete_button_height">64dp</dimen>
     <dimen name="navigation_drawer_width">264dp</dimen>
+    <dimen name="navigation_header_button_height">30dp</dimen>
     <dimen name="default_image_size">80dp</dimen>
 
     <!--notifications-->
