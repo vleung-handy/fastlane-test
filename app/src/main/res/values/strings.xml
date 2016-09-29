@@ -42,10 +42,6 @@
     <string name="q_environment_number_hint">e.g. q123</string>
     <string name="local_hint">e.g. localhost or 127.0.0.1</string>
 
-    <!-- Login -->
-    <string name="permissions_needed">Permissions needed</string>
-    <string name="permissions_needed_description">Handy Pro needs access to your location and your phone number to work properly. Please open Settings, go to Permissions, and grant access.</string>
-
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Navigation drawer opened</string>
     <string name="navigation_drawer_close">Navigation drawer closed</string>
@@ -608,8 +604,5 @@
         <item quantity="one">Awesome! We added the job to your schedule.</item>
         <item quantity="other">Awesome! We added the jobs to your schedule.</item>
     </plurals>
-
-    <!-- Content Descriptions -->
-    <string name="cd.alert">Alert</string>
 
 </resources>

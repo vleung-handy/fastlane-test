@@ -22,10 +22,8 @@ public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
     private PaymentsFragment mFragment;
 
     @Before
-    @Override
     public void setUp() throws Exception
     {
-        super.setUp();
         ((TestBaseApplication) ShadowApplication.getInstance().getApplicationContext()).inject(this);
         mFragment = new PaymentsFragment();
         SupportFragmentTestUtil.startFragment(mFragment, MainActivity.class);

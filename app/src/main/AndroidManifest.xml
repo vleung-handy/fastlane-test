@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest package="com.handy.portal"
           xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools"
     >
 
     <!-- Google Maps Permissions -->
@@ -19,9 +20,6 @@
     -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-
-    <!-- Used to get phone number -->
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
 
     <uses-feature
         android:glEsVersion="0x00020000"

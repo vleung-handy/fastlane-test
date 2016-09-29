@@ -1,7 +1,5 @@
 package com.handy.portal.logger.handylogger.model;
 
-import com.google.gson.annotations.SerializedName;
-
 public class LoginLog extends EventLog
 {
     private static final String EVENT_CONTEXT = "login";
@@ -21,61 +19,43 @@ public class LoginLog extends EventLog
         }
     }
 
-
-    // Login Logs that extend this are required to have a phone number string with them
-    public static class LoginPhoneNumberLog extends LoginLog
-    {
-        @SerializedName("phone_number")
-        private String mPhoneNumberString;
-
-        public LoginPhoneNumberLog(final String eventType, final String phoneNumberString)
-        {
-            super(eventType);
-            mPhoneNumberString = phoneNumberString;
-        }
-    }
-
-
-    public static class PhoneNumberSubmitted extends LoginPhoneNumberLog
+    public static class PhoneNumberSubmitted extends LoginLog
     {
         private static final String EVENT_TYPE = "phone_number_submitted";
 
-        public PhoneNumberSubmitted(String phoneNumberString)
+        public PhoneNumberSubmitted()
         {
-            super(EVENT_TYPE, phoneNumberString);
+            super(EVENT_TYPE);
         }
     }
 
-
-    public static class PinCodeSubmitted extends LoginPhoneNumberLog
+    public static class PinCodeSubmitted extends LoginLog
     {
         private static final String EVENT_TYPE = "pin_code_submitted";
 
-        public PinCodeSubmitted(String phoneNumberString)
+        public PinCodeSubmitted()
         {
-            super(EVENT_TYPE, phoneNumberString);
+            super(EVENT_TYPE);
         }
     }
 
-
-    public static class Success extends LoginPhoneNumberLog
+    public static class Success extends LoginLog
     {
         private static final String EVENT_TYPE = "success";
 
-        public Success(String phoneNumberString)
+        public Success()
         {
-            super(EVENT_TYPE, phoneNumberString);
+            super(EVENT_TYPE);
         }
     }
 
-
-    public static class Error extends LoginPhoneNumberLog
+    public static class Error extends LoginLog
     {
         private static final String EVENT_TYPE = "error";
 
-        public Error(String phoneNumberString)
+        public Error()
         {
-            super(EVENT_TYPE, phoneNumberString);
+            super(EVENT_TYPE);
         }
     }
 }
