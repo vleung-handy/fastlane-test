@@ -17,10 +17,8 @@ public class SupportActionContainerViewTest extends RobolectricGradleTestWrapper
     private SupportActionContainerView mView;
 
     @Before
-    @Override
     public void setUp() throws Exception
     {
-        super.setUp();
         mView = new SupportActionContainerView(RuntimeEnvironment.application,
                 SupportActionUtils.ETA_ACTION_NAMES, new Booking());
     }
