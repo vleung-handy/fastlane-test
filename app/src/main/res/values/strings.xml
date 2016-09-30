@@ -601,10 +601,19 @@
     <string name="post_checkout_claim_prompt_formatted">%1$s requested you!</string>
     <string name="post_checkout_claim_prompt_subtitle_formatted">Want to claim their available jobs?</string>
     <string name="post_checkout_claim_subtitle_formatted">If %1$s cancels or reschedules the job, we\'ll do our best to replace it with a similar job.</string>
-    <string name="edit_photo">Edit Photo</string>
     <plurals name="claim_jobs_success_formatted">
         <item quantity="one">Awesome! We added the job to your schedule.</item>
         <item quantity="other">Awesome! We added the jobs to your schedule.</item>
     </plurals>
 
+    <!-- Pro Pics -->
+    <string name="edit_photo">Edit Photo</string>
+    <string name="upload_photo_title">Upload a profile photo</string>
+    <string name="upload_photo_subtitle">Help us introduce you to customers with a photo!</string>
+    <string name="upload_photo_list_title">What makes a good photo?</string>
+    <string name="upload_photo_list_item_1">\u2022\u0020\u0020 Make sure there\'s bright lightining</string>
+    <string name="upload_photo_list_item_2">\u2022\u0020\u0020 Use a plain background</string>
+    <string name="upload_photo_list_item_3">\u2022\u0020\u0020 Dress professionally</string>
+    <string name="upload_photo_camera_option">Take a photo</string>
+    <string name="upload_photo_gallery_option">Choose from library</string>
 </resources>

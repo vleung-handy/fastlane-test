@@ -66,6 +66,7 @@ import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.fragment.AccountSettingsFragment;
+import com.handy.portal.ui.fragment.EditPhotoFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.ProfileUpdateFragment;
@@ -118,6 +119,7 @@ import retrofit.converter.GsonConverter;
         BlockScheduleFragment.class,
         RequestSuppliesFragment.class,
         ProfileUpdateFragment.class,
+        EditPhotoFragment.class,
         SupportActionView.class,
         DashboardTiersFragment.class,
         DashboardFeedbackFragment.class,

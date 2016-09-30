@@ -450,6 +450,14 @@ public class MainActivityFragment extends InjectedFragment
     {
         registerBottomNavListeners();
         registerNavDrawerListeners();
+        mProImage.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(final View view)
+            {
+                bus.post(new NavigationEvent.NavigateToPage(MainViewPage.EDIT_PHOTO, true));
+            }
+        });
         mEditProfileButton.setOnClickListener(new View.OnClickListener()
         {
             @Override

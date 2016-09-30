@@ -30,6 +30,7 @@ import com.handy.portal.payments.ui.fragment.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.payments.ui.fragment.SelectPaymentMethodFragment;
 import com.handy.portal.ui.fragment.AccountSettingsFragment;
+import com.handy.portal.ui.fragment.EditPhotoFragment;
 import com.handy.portal.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
@@ -78,6 +79,7 @@ public enum MainViewPage implements Serializable
     REQUEST_SUPPLIES(RequestSuppliesFragment.class),
     REQUEST_SUPPLIES_WEB_VIEW(RequestSuppliesWebViewFragment.class),
     PROFILE_UPDATE(ProfileUpdateFragment.class),
+    EDIT_PHOTO(EditPhotoFragment.class),
 
     REFER_A_FRIEND(ReferAFriendFragment.class),
 

@@ -17,7 +17,9 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.FormDefinitionKey;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.library.util.TextUtils;
@@ -147,6 +149,12 @@ public class ProfileUpdateFragment extends ActionBarFragment
             bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileValidationFailure(errorMessage)));
             showToast(errorMessage, Toast.LENGTH_LONG);
         }
+    }
+
+    @OnClick({R.id.provider_image, R.id.provider_image_edit_button})
+    public void onEditImageClicked()
+    {
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.EDIT_PHOTO, true));
     }
 
     @Subscribe
