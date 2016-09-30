@@ -44,7 +44,7 @@ public class PleaseUpdateFragmentTest extends RobolectricGradleTestWrapper
     public void whenDownloadButtonClicked_thenSendInstallIntent() throws Exception
     {
         Uri mockUri = mock(Uri.class);
-        when(versionManager.getNewApkUri()).thenReturn(mockUri);
+        when(versionManager.getNewApkUri(fragment.getContext())).thenReturn(mockUri);
 
         if (fragment.getView() != null)
         {

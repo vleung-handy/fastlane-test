@@ -142,7 +142,7 @@ public class PleaseUpdateFragment extends InjectedFragment
                 installApk();
             }
         });
-        mApkUri = mVersionManager.getNewApkUri();
+        mApkUri = mVersionManager.getNewApkUri(getContext());
     }
 
     @Subscribe
@@ -161,8 +161,15 @@ public class PleaseUpdateFragment extends InjectedFragment
         final Intent installIntent = new Intent(Intent.ACTION_VIEW);
         setPackageInstallerComponent(installIntent);
 
-        installIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-        installIntent.setDataAndType(mVersionManager.getNewApkUri(), VersionManager.APK_MIME_TYPE);
+        installIntent.addFlags(
+                Intent.FLAG_ACTIVITY_CLEAR_TOP
+                | Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_GRANT_READ_URI_PERMISSION
+                //grant the package installer the permissions to read the given uri
+        );
+        Uri newApkUri = mVersionManager.getNewApkUri(getContext());
+
+        installIntent.setDataAndType(newApkUri, VersionManager.APK_MIME_TYPE);
         boolean successfullyLaunchedInstallIntent = Utils.safeLaunchIntent(installIntent, getActivity());
         if (!successfullyLaunchedInstallIntent)
         {
