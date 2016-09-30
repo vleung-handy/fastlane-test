@@ -107,6 +107,7 @@
             >
 
             <Button
+                android:id="@+id/choose_photo_camera"
                 style="@style/Button.Green.Round"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -115,6 +116,7 @@
                 />
 
             <Button
+                android:id="@+id/choose_photo_gallery"
                 style="@style/Button.Green.Round"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
