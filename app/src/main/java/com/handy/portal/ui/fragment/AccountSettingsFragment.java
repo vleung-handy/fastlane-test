@@ -16,6 +16,7 @@ import android.webkit.CookieSyncManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.constant.BundleKeys;
@@ -66,6 +67,8 @@ public class AccountSettingsFragment extends ActionBarFragment
     ViewGroup mOrderResupplyLayout;
     @BindView(R.id.account_settings_layout)
     ViewGroup mAccountSettingsLayout;
+    @BindView(R.id.build_version_text)
+    TextView mBuildVersionText;
     @BindView(R.id.fetch_error_view)
     ViewGroup mFetchErrorView;
     @BindView(R.id.fetch_error_text)
@@ -93,6 +96,14 @@ public class AccountSettingsFragment extends ActionBarFragment
         ButterKnife.bind(this, fragmentView);
 
         return fragmentView;
+    }
+
+    @Override
+    public void onViewCreated(final View view, final Bundle savedInstanceState)
+    {
+        super.onViewCreated(view, savedInstanceState);
+        mBuildVersionText.setText(getString(R.string.build_version_formatted,
+                BuildConfig.VERSION_NAME));
     }
 
     @Override
@@ -202,6 +213,12 @@ public class AccountSettingsFragment extends ActionBarFragment
 
         AlertDialog alertDialog = alertDialogBuilder.create();
         alertDialog.show();
+    }
+
+    @OnClick(R.id.software_licenses_text)
+    public void showSoftwareLicenses()
+    {
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SOFTWARE_LICENSES, true));
     }
 
     @Subscribe

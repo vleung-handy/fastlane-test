@@ -23,7 +23,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.constant.BundleKeys;
@@ -102,10 +101,6 @@ public class MainActivityFragment extends InjectedFragment
     TextView mNavigationHeaderProName;
     @BindView(R.id.content_frame)
     TabbedLayout mContentFrame;
-    @BindView(R.id.build_version_text)
-    TextView mBuildVersionText;
-    @BindView(R.id.software_licenses_text)
-    TextView mSoftwareLicensesText;
     @BindView(R.id.navigation_header_edit_profile_button)
     Button mEditProfileButton;
     @BindView(R.id.provider_image)
@@ -164,8 +159,6 @@ public class MainActivityFragment extends InjectedFragment
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.bind(this, view);
         registerButtonListeners();
-        mBuildVersionText.setText(getString(R.string.build_version_formatted,
-                BuildConfig.VERSION_NAME));
         return view;
     }
 
@@ -457,14 +450,6 @@ public class MainActivityFragment extends InjectedFragment
     {
         registerBottomNavListeners();
         registerNavDrawerListeners();
-        mSoftwareLicensesText.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(final View v)
-            {
-                bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SOFTWARE_LICENSES, true));
-            }
-        });
         mEditProfileButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
