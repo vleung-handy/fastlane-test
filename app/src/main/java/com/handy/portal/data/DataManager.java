@@ -8,6 +8,7 @@ import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
+import com.handy.portal.bookings.model.ScheduledBookingFindJob;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.dashboard.model.ProviderEvaluation;
@@ -105,8 +106,17 @@ public class DataManager
 
     public void getAvailableBookings(Date[] dates, Map<String, Object> additionalOptions, final Callback<BookingsListWrapper> cb)
     {
-
         mService.getAvailableBookings(dates, additionalOptions, new BookingsListWrapperHandyRetroFitCallback(cb));
+    }
+
+    public void getAvailableBookingsFiltered(ScheduledBookingFindJob bookingFindJob, final Callback<BookingsListWrapper> cb)
+    {
+        mService.getAvailableBookingsFiltered(bookingFindJob.getAvailableStartTime(),
+                bookingFindJob.getAvailableEndTime(),
+                bookingFindJob.getAvailableStartJobId(),
+                bookingFindJob.getAvailableStartJobType(),
+                bookingFindJob.getAvailableEndJobId(),
+                bookingFindJob.getAvailableEndJobType(), new BookingsListWrapperHandyRetroFitCallback(cb));
     }
 
     public void getOnboardingJobs(final Date startDate,

@@ -25,8 +25,7 @@ import retrofit.http.Query;
 import retrofit.http.QueryMap;
 import retrofit.mime.TypedInput;
 
-public interface HandyRetrofitService
-{
+public interface HandyRetrofitService {
     String SESSIONS_PATH = "/sessions/";
     String BOOKINGS_PATH = "/bookings/";
     String JOBS_PATH = "/jobs/";
@@ -71,6 +70,15 @@ public interface HandyRetrofitService
     void getAvailableBookings(@Query("dates[]") Date[] dates,
                               @QueryMap Map<String, Object> options,
                               HandyRetrofitCallback cb);
+
+    @GET(JOBS_PATH + "available_jobs")
+    void getAvailableBookingsFiltered(@Query("availability_start") Date availableStart,
+                                      @Query("availability_end") Date availableEnd,
+                                      @Query("availability_start_job_id") String availableStartJobId,
+                                      @Query("availability_start_job_type") String availableStartJobType,
+                                      @Query("availability_end_job_id") String availableEndJobId,
+                                      @Query("availability_end_job_type") String availableEndJobType,
+                                      HandyRetrofitCallback cb);
 
     @GET(JOBS_PATH + "onboarding_jobs")
     void getOnboardingJobs(@Query("start_date") Date startDate,

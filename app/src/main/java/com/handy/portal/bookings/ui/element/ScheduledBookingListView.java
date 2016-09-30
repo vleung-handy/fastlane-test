@@ -71,16 +71,27 @@ public class ScheduledBookingListView extends BookingListView {
 
         //This is always 3 because we already add an hour to latestEndDateTime in the code
         int hoursThreshold = 3;
+        Booking previousBooking = null;
         for (Booking booking : bookings) {
             Date startDateTime = booking.getStartDate();
 
             int hoursBetween = DateTimeUtils.hoursBetween(latestEndDateTime, startDateTime);
             if (hoursBetween >= hoursThreshold) {
                 //Subtract an hour from the end time to give time between bookings
-                newBookingListWithFindJob.add(new ScheduledBookingFindJob(latestEndDateTime, DateTimeUtils.updateDateByAddingHour(booking.getStartDate(), -1)));
+                ScheduledBookingFindJob job = new ScheduledBookingFindJob(latestEndDateTime, DateTimeUtils.updateDateByAddingHour(booking.getStartDate(), -1));
+                //If there was a previous booking before this, add the job id/type
+                if(previousBooking != null) {
+                    job.setAvailableStartJobId(previousBooking.getId());
+                    job.setAvailableStartJobType(previousBooking.getTypeName());
+                }
+
+                job.setAvailableEndJobId(booking.getId());
+                job.setAvailableEndJobType(booking.getTypeName());
+                newBookingListWithFindJob.add(job);
             }
 
             newBookingListWithFindJob.add(booking);
+            previousBooking = booking;
             //Add 1 hour to latest so pro can get to next booking
             latestEndDateTime = DateTimeUtils.updateDateByAddingHour(booking.getEndDate(), 1);
         }
@@ -89,7 +100,13 @@ public class ScheduledBookingListView extends BookingListView {
         int hoursBetween = DateTimeUtils.hoursBetween(latestEndDateTime, lastEndDateTime);
         //Use 2 hours because being last job of the day, we already added a buffer to the last job
         if (hoursBetween >= 2) {
-            newBookingListWithFindJob.add(new ScheduledBookingFindJob(latestEndDateTime, lastEndDateTime));
+            ScheduledBookingFindJob job =new ScheduledBookingFindJob(latestEndDateTime, lastEndDateTime);
+            //If there was a previous booking before this, add the job id/type
+            if(previousBooking != null) {
+                job.setAvailableStartJobId(previousBooking.getId());
+                job.setAvailableStartJobType(previousBooking.getTypeName());
+            }
+            newBookingListWithFindJob.add(job);
         }
 
         ScheduledBookingElementAdapter itemsAdapter =

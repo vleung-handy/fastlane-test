@@ -223,11 +223,35 @@ public abstract class HandyEvent
     public static class RequestAvailableBookings extends RequestBookingsEvent
     {
         public final List<Date> dates;
+        private List<Date> dates;
 
         public RequestAvailableBookings(List<Date> dates, boolean useCachedIfPresent)
         {
             this.dates = dates;
             this.useCachedIfPresent = useCachedIfPresent;
+        }
+
+        public List<Date> getDates() {
+            return dates;
+        }
+    }
+
+    public static class RequestAvailableBookingsFiltered extends RequestBookingsEvent {
+        private ScheduledBookingFindJob bookingFindJob;
+
+        /**
+         * This is used for requesting available bookings between a certain start/end datetime range.
+         * This will always request from server and not use cache
+         *
+         * @param bookingFindJob pass the SchdeduledBookingFindJob object with the parameters set
+         */
+        public RequestAvailableBookingsFiltered(ScheduledBookingFindJob bookingFindJob) {
+            this.bookingFindJob = bookingFindJob;
+            this.useCachedIfPresent = false;
+        }
+
+        public ScheduledBookingFindJob getBookingFindJob() {
+            return bookingFindJob;
         }
     }
 

@@ -394,6 +394,10 @@ public class Booking implements Comparable<Booking>, Serializable
         return BookingType.valueOf(mType.toUpperCase());
     }
 
+    public String getTypeName() {
+        return mType;
+    }
+
     public String getLocationName()
     {
         return mLocationName;

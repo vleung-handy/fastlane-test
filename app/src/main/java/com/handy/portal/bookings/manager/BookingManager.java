@@ -12,6 +12,7 @@ import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
+import com.handy.portal.bookings.model.ScheduledBookingFindJob;
 import com.handy.portal.constant.LocationKey;
 import com.handy.portal.constant.ProviderKey;
 import com.handy.portal.data.DataManager;
@@ -125,10 +126,45 @@ public class BookingManager
     }
 
     @Subscribe
+    public void onRequestAvailableBookingsFiltered(final HandyEvent.RequestAvailableBookingsFiltered event) {
+        mDataManager.getAvailableBookingsFiltered(event.getBookingFindJob(),
+                new DataManager.Callback<BookingsListWrapper>()
+                {
+                    @Override
+                    public void onSuccess(final BookingsListWrapper bookingsListWrapper)
+                    {
+                        if (bookingsListWrapper != null && bookingsListWrapper.getBookingsWrappers() != null)
+                        {
+                            for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers())
+                            {
+                                Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
+                                Crashlytics.log("Received available bookings for " + day);
+                                availableBookingsCache.put(day, bookingsWrapper);
+                                mBus.post(new HandyEvent.ReceiveAvailableBookingsSuccess(bookingsWrapper, day));
+                            }
+                        }
+                        else
+                        {
+                            onError(null);
+                        }
+                    }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        List<Date> dateList = new ArrayList<>();
+                        dateList.add(DateTimeUtils.getDateWithoutTime(event.getBookingFindJob().getAvailableStartTime()));
+                        mBus.post(new HandyEvent.ReceiveAvailableBookingsError(error, dateList));
+                    }
+                }
+        );
+    }
+
+    @Subscribe
     public void onRequestAvailableBookings(final HandyEvent.RequestAvailableBookings event)
     {
         final List<Date> datesToRequest = new ArrayList<>();
-        for (Date date : event.dates)
+        for (Date date : event.getDates())
         {
             final Date day = DateTimeUtils.getDateWithoutTime(date);
             if (event.useCachedIfPresent)

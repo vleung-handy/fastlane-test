@@ -2,6 +2,7 @@ package com.handy.portal.constant;
 
 import android.support.annotation.Nullable;
 
+import com.handy.portal.bookings.ui.fragment.AvailableBookingsFilteredFragment;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.BookingDetailsWrapperFragment;
 import com.handy.portal.bookings.ui.fragment.BookingFragment;
@@ -48,6 +49,7 @@ import java.io.Serializable;
 public enum MainViewPage implements Serializable
 {
     AVAILABLE_JOBS(AvailableBookingsFragment.class),
+    AVAILABLE_JOBS_FILTERED(AvailableBookingsFilteredFragment.class),
     SCHEDULED_JOBS(ScheduledBookingsFragment.class),
     COMPLEMENTARY_JOBS(ComplementaryBookingsFragment.class),
     NEARBY_JOBS(NearbyBookingsFragment.class),

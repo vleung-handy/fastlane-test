@@ -10,6 +10,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.CompoundButton;
+import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 import com.crashlytics.android.Crashlytics;
@@ -18,6 +19,7 @@ import com.handy.portal.bookings.manager.BookingModalsManager;
 import com.handy.portal.bookings.manager.BookingModalsManager.BookingsForDaysAheadModalsManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
+import com.handy.portal.bookings.model.ScheduledBookingFindJob;
 import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
@@ -57,6 +59,8 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     @BindView(R.id.available_jobs_list_view)
     BookingListView mAvailableJobsListView;
+    @BindView(R.id.available_bookings_dates_scroll_view)
+    HorizontalScrollView mAvailableJobsDatesScrollView;
     @BindView(R.id.available_bookings_dates_scroll_view_layout)
     LinearLayout mAvailableJobsDatesScrollViewLayout;
     @BindView(R.id.available_bookings_empty)
@@ -67,6 +71,8 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     SwitchCompat mToggleAvailableJobNotification;
 
     BookingsBannerView mJobAccessUnlockedBannerLayout;
+
+    private ScheduledBookingFindJob mFindJobs;
 
     @Inject
     BookingModalsManager mBookingModalsManager;
@@ -82,6 +88,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        setActionBar(R.string.available_jobs, false);
     }
 
     @Override
@@ -107,7 +114,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         bus.register(this);
         super.onResume();
-        setActionBar(R.string.available_jobs, false);
 
         if (!MainActivityFragment.clearingBackStack)
         {

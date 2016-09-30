@@ -13,6 +13,8 @@ public class BundleKeys
     public static final String BOOKING_PRIORITY_ACCESS = "BUNDLE_KEY_PRIORITIY_ACCESS";
     public static final String BOOKING_TRANSACTIONS = "booking_transactions";
 
+    public static final String FIND_JOB = "find_job";
+
     public static final String DATE_EPOCH_TIME = "date_epoch_time";
     public static final String HELP_REDIRECT_PATH = "help_redirect_path";
     public static final String PAGE = "page";

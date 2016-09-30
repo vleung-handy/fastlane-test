@@ -8,14 +8,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.ScheduledBookingFindJob;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
-import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
 import com.handy.portal.bookings.ui.element.ScheduledBookingListView;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
@@ -180,10 +178,13 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
             @Override
             public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
                 Booking booking = (Booking) adapter.getItemAtPosition(position);
-                if (booking != null)
-                {
-                    if(booking instanceof ScheduledBookingFindJob) {
-                        Toast.makeText(getContext(), "TODO: SAMMY Created overlay for results", Toast.LENGTH_LONG).show();
+                if (booking != null) {
+                    if (booking instanceof ScheduledBookingFindJob) {
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable(BundleKeys.FIND_JOB, booking);
+                        bundle.putLong(BundleKeys.DATE_EPOCH_TIME, ((ScheduledBookingFindJob) booking).getAvailableStartTime().getTime());
+                        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.AVAILABLE_JOBS_FILTERED, bundle,
+                                TransitionStyle.SLIDE_UP, true));
                     } else {
                         //Do it the normal way
                         onItemClickListener.onItemClick(adapter, view, position, id);
