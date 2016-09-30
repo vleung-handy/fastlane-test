@@ -38,6 +38,8 @@ import com.handy.portal.payments.model.PaymentFlow;
 import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
 import com.handy.portal.payments.model.StripeTokenResponse;
+import com.handy.portal.retrofit.DynamicEndpoint;
+import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -56,6 +58,8 @@ import java.util.Map;
 
 import javax.inject.Inject;
 
+import retrofit.mime.TypedFile;
+
 public class DataManager
 {
     private final HandyRetrofitService mService;
@@ -63,17 +67,23 @@ public class DataManager
 
     private final StripeRetrofitService mStripeService; // should refactor and move somewhere else?
     private EventLogService mEventLogService;
+    private final DynamicEndpoint mDynamicEndpoint;
+    private final DynamicEndpointService mDynamicEndpointService;
 
     @Inject
     public DataManager(final HandyRetrofitService service,
                        final HandyRetrofitEndpoint endpoint,
                        final StripeRetrofitService stripeService,
-                       final EventLogService eventLogService)
+                       final EventLogService eventLogService,
+                       final DynamicEndpoint dynamicEndpoint,
+                       final DynamicEndpointService dynamicEndpointService)
     {
         mService = service;
         mEndpoint = endpoint;
         mStripeService = stripeService;
         mEventLogService = eventLogService;
+        mDynamicEndpoint = dynamicEndpoint;
+        mDynamicEndpointService = dynamicEndpointService;
     }
 
     public void getSetupData(final Callback<SetupData> cb)
@@ -385,6 +395,22 @@ public class DataManager
     {
         mService.finishIdVerification(afterIdVerificationFinish, scanReference,
                 status, new FinishIDVerificationCallback(cb));
+    }
+
+    public void requestPhotoUploadUrl(final String providerId,
+                                      final String imageMimeType,
+                                      final Callback<HashMap<String, String>> cb)
+    {
+        mService.requestPhotoUploadUrl(providerId, imageMimeType,
+                new RequestPhotoUploadUrlCallback(cb));
+    }
+
+    public void uploadPhoto(final String url,
+                            final TypedFile file,
+                            final Callback<HashMap<String, String>> cb)
+    {
+        mDynamicEndpoint.setUrl(url);
+        mDynamicEndpointService.uploadImage(file, new UploadImageCallback(cb));
     }
 
     public interface Callback<T>

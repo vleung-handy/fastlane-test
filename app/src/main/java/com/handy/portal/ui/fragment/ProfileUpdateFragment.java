@@ -154,7 +154,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
     @OnClick({R.id.provider_image, R.id.provider_image_edit_button})
     public void onEditImageClicked()
     {
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.EDIT_PHOTO, true));
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_PICTURE, true));
     }
 
     @Subscribe

@@ -12,11 +12,19 @@ import android.view.ViewGroup;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.RequestCode;
+import com.handy.portal.data.DataManager;
+import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.ProfileEvent;
+import com.handy.portal.library.util.TextUtils;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
+import java.util.HashMap;
 
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import retrofit.mime.TypedFile;
 
 public class EditPhotoFragment extends ActionBarFragment
 {
@@ -51,7 +59,7 @@ public class EditPhotoFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
-//        bus.register(this);
+        bus.register(this);
         setBackButtonEnabled(true);
     }
 
@@ -96,22 +104,74 @@ public class EditPhotoFragment extends ActionBarFragment
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK)
         {
-            if (requestCode == RequestCode.CAMERA)
-            {
-                showToast("Camera success!");
-            }
             if (requestCode == RequestCode.GALLERY)
             {
-                showToast("Gallery success!");
+                mImageUri = data.getData();
             }
+            bus.post(new ProfileEvent.RequestPhotoUploadUrl(IMAGE_MIME_TYPE));
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         }
+    }
+
+    @Subscribe
+    public void onReceivePhotoUploadUrlError(
+            final ProfileEvent.ReceivePhotoUploadUrlError event)
+    {
+        showError(event.error);
+    }
+
+    @Subscribe
+    public void onReceivePhotoUploadUrlSuccess(
+            final ProfileEvent.ReceivePhotoUploadUrlSuccess event)
+    {
+        final TypedFile file = new TypedFile(IMAGE_MIME_TYPE, new File(mImageUri.getPath()));
+        dataManager.uploadPhoto(event.getUploadUrl(), file,
+                new DataManager.Callback<HashMap<String, String>>()
+                {
+                    @Override
+                    public void onSuccess(final HashMap<String, String> response)
+                    {
+                        bus.post(new ProfileEvent.RequestProviderProfile(false));
+                    }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        showError(error);
+                    }
+                });
+
+    }
+
+    @Subscribe
+    public void onReceiveProviderProfileSuccess(
+            final ProfileEvent.ReceiveProviderProfileSuccess event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+    }
+
+    @Subscribe
+    public void onReceiveProviderProfileError(
+            final ProfileEvent.ReceiveProviderProfileError event)
+    {
+        showError(event.error);
     }
 
     @Override
     public void onPause()
     {
-//        bus.unregister(this);
+        bus.unregister(this);
         super.onPause();
     }
 
+    private void showError(final DataManager.DataManagerError error)
+    {
+        String message = error.getMessage();
+        if (TextUtils.isNullOrEmpty(message))
+        {
+            message = getString(R.string.an_error_has_occurred);
+        }
+        showToast(message);
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+    }
 }

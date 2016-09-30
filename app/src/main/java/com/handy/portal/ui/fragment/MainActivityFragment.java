@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -56,6 +55,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivityFragment extends InjectedFragment
 {
@@ -101,8 +101,6 @@ public class MainActivityFragment extends InjectedFragment
     TextView mNavigationHeaderProName;
     @BindView(R.id.content_frame)
     TabbedLayout mContentFrame;
-    @BindView(R.id.navigation_header_edit_profile_button)
-    Button mEditProfileButton;
     @BindView(R.id.provider_image)
     ImageView mProImage;
 
@@ -297,6 +295,12 @@ public class MainActivityFragment extends InjectedFragment
         super.onPause();
     }
 
+    @OnClick({R.id.provider_image, R.id.navigation_header_edit_profile_button})
+    public void onEditProfileClicked()
+    {
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_UPDATE, true));
+    }
+
 //Event Listeners
 
     @Subscribe
@@ -450,22 +454,6 @@ public class MainActivityFragment extends InjectedFragment
     {
         registerBottomNavListeners();
         registerNavDrawerListeners();
-        mProImage.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(final View view)
-            {
-                bus.post(new NavigationEvent.NavigateToPage(MainViewPage.EDIT_PHOTO, true));
-            }
-        });
-        mEditProfileButton.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(final View view)
-            {
-                bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_UPDATE, true));
-            }
-        });
     }
 
     private void registerBottomNavListeners()

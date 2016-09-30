@@ -16,6 +16,7 @@ public abstract class ProfileEvent extends HandyEvent
         }
     }
 
+
     public static class ReceiveProviderProfileSuccess extends ReceiveSuccessEvent
     {
         public ProviderProfile providerProfile;
@@ -26,6 +27,7 @@ public abstract class ProfileEvent extends HandyEvent
         }
     }
 
+
     public static class ReceiveProviderProfileError extends ReceiveErrorEvent
     {
         public ReceiveProviderProfileError(DataManager.DataManagerError error)
@@ -34,7 +36,9 @@ public abstract class ProfileEvent extends HandyEvent
         }
     }
 
+
     public static class RequestSendResupplyKit extends RequestEvent {}
+
 
     public static class ReceiveSendResupplyKitSuccess extends ReceiveSuccessEvent
     {
@@ -46,6 +50,7 @@ public abstract class ProfileEvent extends HandyEvent
         }
     }
 
+
     public static class ReceiveSendResupplyKitError extends ReceiveErrorEvent
     {
         public ReceiveSendResupplyKitError(DataManager.DataManagerError error)
@@ -53,6 +58,7 @@ public abstract class ProfileEvent extends HandyEvent
             this.error = error;
         }
     }
+
 
     public static class RequestProfileUpdate extends RequestEvent
     {
@@ -76,6 +82,7 @@ public abstract class ProfileEvent extends HandyEvent
         }
     }
 
+
     public static class ReceiveProfileUpdateSuccess extends ReceiveSuccessEvent
     {
         public ProviderPersonalInfo providerPersonalInfo;
@@ -86,6 +93,7 @@ public abstract class ProfileEvent extends HandyEvent
         }
     }
 
+
     public static class ReceiveProfileUpdateError extends ReceiveErrorEvent
     {
         public ReceiveProfileUpdateError(DataManager.DataManagerError error)
@@ -94,5 +102,48 @@ public abstract class ProfileEvent extends HandyEvent
         }
     }
 
+
     public static class SubmittedProfileUpdate extends HandyEvent {}
+
+
+    public static class RequestPhotoUploadUrl extends RequestEvent
+    {
+        private String mImageMimeType;
+
+        public RequestPhotoUploadUrl(final String imageMimeType)
+        {
+            mImageMimeType = imageMimeType;
+        }
+
+        public String getImageMimeType()
+        {
+            return mImageMimeType;
+        }
+    }
+
+
+    public static class ReceivePhotoUploadUrlSuccess extends ReceiveSuccessEvent
+    {
+        private String mUploadUrl;
+
+        public ReceivePhotoUploadUrlSuccess(final String uploadUrl)
+        {
+
+            mUploadUrl = uploadUrl;
+        }
+
+        public String getUploadUrl()
+        {
+            return mUploadUrl;
+        }
+    }
+
+
+    public static class ReceivePhotoUploadUrlError extends ReceiveErrorEvent
+    {
+        public ReceivePhotoUploadUrlError(final DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
 }

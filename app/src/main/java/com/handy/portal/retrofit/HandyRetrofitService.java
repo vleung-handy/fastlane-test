@@ -321,4 +321,10 @@ public interface HandyRetrofitService
                               @Field("scan_reference") String scanReference,
                               @Field("status") String status,
                               HandyRetrofitCallback cb);
+
+    @FormUrlEncoded
+    @POST(PROVIDERS_PATH + "{id}/profile_photo")
+    void requestPhotoUploadUrl(@Path("id") String providerId,
+                               @Field("mime_type") String imageMimeType,
+                               HandyRetrofitCallback cb);
 }

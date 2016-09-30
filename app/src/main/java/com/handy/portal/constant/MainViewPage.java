@@ -79,7 +79,7 @@ public enum MainViewPage implements Serializable
     REQUEST_SUPPLIES(RequestSuppliesFragment.class),
     REQUEST_SUPPLIES_WEB_VIEW(RequestSuppliesWebViewFragment.class),
     PROFILE_UPDATE(ProfileUpdateFragment.class),
-    EDIT_PHOTO(EditPhotoFragment.class),
+    PROFILE_PICTURE(EditPhotoFragment.class),
 
     REFER_A_FRIEND(ReferAFriendFragment.class),
 
