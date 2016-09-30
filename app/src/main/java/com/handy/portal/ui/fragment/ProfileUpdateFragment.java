@@ -24,12 +24,15 @@ import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
+import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -68,9 +71,15 @@ public class ProfileUpdateFragment extends ActionBarFragment
     EditText mPhoneText;
     @BindView(R.id.provider_phone_error_indicator)
     ImageView mPhoneError;
+    @BindView(R.id.provider_image)
+    ImageView mImage;
+    @BindView(R.id.provider_image_holder)
+    ViewGroup mImageHolder;
 
     @Inject
     ProviderManager mProviderManager;
+    @Inject
+    ConfigManager mConfigManager;
 
     private FormDefinitionWrapper mFormDefinitionWrapper;
 
@@ -201,6 +210,29 @@ public class ProfileUpdateFragment extends ActionBarFragment
         else
         {
             mPhoneText.setText(info.getLocalPhone());
+        }
+
+        final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
+        if (configuration != null && configuration.isProfilePictureEnabled())
+        {
+            mImageHolder.setVisibility(View.VISIBLE);
+            final String imageUrl = info.getProfilePhotoUrl();
+            if (imageUrl != null)
+            {
+                Picasso.with(getActivity())
+                        .load(imageUrl)
+                        .placeholder(R.drawable.img_pro_placeholder)
+                        .noFade()
+                        .into(mImage);
+            }
+            else
+            {
+                mImage.setImageResource(R.drawable.img_pro_placeholder);
+            }
+        }
+        else
+        {
+            mImageHolder.setVisibility(View.GONE);
         }
     }
 

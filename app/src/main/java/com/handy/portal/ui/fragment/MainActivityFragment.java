@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -42,9 +43,13 @@ import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.model.ConfigurationResponse;
+import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.util.DeeplinkMapper;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -61,6 +66,8 @@ public class MainActivityFragment extends InjectedFragment
     ConfigManager mConfigManager;
     @Inject
     EnvironmentModifier mEnvironmentModifier;
+    @Inject
+    ProviderManager mProviderManager;
     /////////////Bad useless injection that breaks if not in?
 
     @BindView(R.id.tabs)
@@ -101,6 +108,8 @@ public class MainActivityFragment extends InjectedFragment
     TextView mSoftwareLicensesText;
     @BindView(R.id.navigation_header_edit_profile_button)
     Button mEditProfileButton;
+    @BindView(R.id.provider_image)
+    ImageView mProImage;
 
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private MainViewPage currentPage = null;
@@ -158,6 +167,41 @@ public class MainActivityFragment extends InjectedFragment
         mBuildVersionText.setText(getString(R.string.build_version_formatted,
                 BuildConfig.VERSION_NAME));
         return view;
+    }
+
+    @Override
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
+    {
+        initProImage();
+    }
+
+    private void initProImage()
+    {
+        final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
+        if (configuration != null && configuration.isProfilePictureEnabled())
+        {
+            final ProviderProfile profile = mProviderManager.getCachedProviderProfile();
+            mProImage.setVisibility(View.VISIBLE);
+            if (profile != null
+                    && profile.getProviderPersonalInfo() != null
+                    && profile.getProviderPersonalInfo().getProfilePhotoUrl() != null)
+            {
+                final String imageUrl = profile.getProviderPersonalInfo().getProfilePhotoUrl();
+                Picasso.with(getActivity())
+                        .load(imageUrl)
+                        .placeholder(R.drawable.img_pro_placeholder)
+                        .noFade()
+                        .into(mProImage);
+            }
+            else
+            {
+                mProImage.setImageResource(R.drawable.img_pro_placeholder);
+            }
+        }
+        else
+        {
+            mProImage.setVisibility(View.GONE);
+        }
     }
 
     @Override

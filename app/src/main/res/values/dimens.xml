@@ -186,4 +186,7 @@
 
     <dimen name="list_item_bullet_size">8dp</dimen>
 
+    <!-- Pro Images -->
+    <dimen name="pro_image_default_size">80dp</dimen>
+
 </resources>
