@@ -55,6 +55,14 @@ public class ConfigurationResponse
     @SerializedName("number_of_days_for_requested_jobs")
     private int mNumberOfDaysForRequestedJobs;
 
+    //Used for the Schedule screens Find Job feature
+    @SerializedName("availability_schedule_filter")
+    private boolean mAvailabilityScheduleFilter;
+
+    public boolean isAvailabilityScheduleFilterEnabled() {
+        return mAvailabilityScheduleFilter;
+    }
+
     public boolean isCustomerNoShowModalEnabled()
     {
         return mCustomerNoShowModalEnabled;

@@ -14,6 +14,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.ScheduledBookingFindJob;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
+import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
 import com.handy.portal.bookings.ui.element.ScheduledBookingListView;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
@@ -36,7 +37,10 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
 {
     private static final String SOURCE_SCHEDULED_JOBS_LIST = "scheduled_jobs_list";
     @BindView(R.id.scheduled_jobs_list_view)
-    ScheduledBookingListView mScheduledJobsListView;
+    BookingListView mScheduledJobsListView;
+    //This one is with the Find Jobs design
+    @BindView(R.id.scheduled_jobs_list_view_with_filter)
+    ScheduledBookingListView mScheduledJobsListViewFilter;
     @BindView(R.id.scheduled_bookings_dates_scroll_view_layout)
     LinearLayout mScheduledJobsDatesScrollViewLayout;
     @BindView(R.id.scheduled_bookings_empty)
@@ -78,16 +82,32 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if(configManager.getConfigurationResponse().isAvailabilityScheduleFilterEnabled()) {
+            mScheduledJobsListView.setVisibility(View.GONE);
+            mScheduledJobsListViewFilter.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Override
     protected BookingListView getBookingListView()
     {
-        mScheduledJobsListView.setSelectedDate(mSelectedDay);
+        if(configManager.getConfigurationResponse().isAvailabilityScheduleFilterEnabled()) {
+            mScheduledJobsListViewFilter.setSelectedDate(mSelectedDay);
+            return mScheduledJobsListViewFilter;
+        }
+
         return mScheduledJobsListView;
     }
 
     @Override
     protected void selectDay(Date day) {
         super.selectDay(day);
-        mScheduledJobsListView.setSelectedDate(day);
+        if(configManager.getConfigurationResponse().isAvailabilityScheduleFilterEnabled()) {
+            mScheduledJobsListViewFilter.setSelectedDate(day);
+        }
     }
 
     @Override
@@ -129,9 +149,13 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected Class<? extends BookingElementView> getBookingElementViewClass()
     {
-        //NOTE: This isn't used any more in the ScheduledBookingListView. It's only here because
-        // the BookingsFragment requires it. Refactoring parent fragment will take too much time
-        return null;
+        if(configManager.getConfigurationResponse().isAvailabilityScheduleFilterEnabled()) {
+            //NOTE: This isn't used any more in the ScheduledBookingListView. It's only here because
+            // the BookingsFragment requires it. Refactoring parent fragment will take too much time
+            return null;
+        }
+
+        return ScheduledBookingElementView.class;
     }
 
     @Override

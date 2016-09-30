@@ -13,6 +13,7 @@ import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.CheckoutRequest;
+import com.handy.portal.bookings.model.ScheduledBookingFindJob;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LocationData;
@@ -222,7 +223,6 @@ public abstract class HandyEvent
 
     public static class RequestAvailableBookings extends RequestBookingsEvent
     {
-        public final List<Date> dates;
         private List<Date> dates;
 
         public RequestAvailableBookings(List<Date> dates, boolean useCachedIfPresent)
