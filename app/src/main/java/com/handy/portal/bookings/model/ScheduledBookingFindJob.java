@@ -1,7 +1,11 @@
 package com.handy.portal.bookings.model;
 
+import android.text.TextUtils;
+
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 /**
@@ -17,10 +21,28 @@ public class ScheduledBookingFindJob extends Booking implements Serializable {
     private String availableStartJobType;
     private String availableEndJobId;
     private String availableEndJobType;
+    //Used to prevent dupe
+    private List<String> jobLocationNames;
 
     public ScheduledBookingFindJob(Date availableStartDateTime, Date availableEndDateTime){
         this.mStartDate = availableStartDateTime;
         this.mEndDate = availableEndDateTime;
+    }
+
+    public void addJobLocationName(String jobLocationName) {
+        if(TextUtils.isEmpty(jobLocationName))
+            return;
+
+        if(jobLocationNames == null) {
+            jobLocationNames = new ArrayList<>();
+        }
+
+        if(!jobLocationNames.contains(jobLocationName))
+            jobLocationNames.add(jobLocationName);
+    }
+
+    public List<String> getJobLocationNames() {
+        return jobLocationNames;
     }
 
     public Date getAvailableStartTime() {

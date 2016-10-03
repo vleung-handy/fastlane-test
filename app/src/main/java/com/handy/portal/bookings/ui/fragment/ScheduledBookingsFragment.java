@@ -25,6 +25,7 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
+import com.handy.portal.model.ConfigurationResponse;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -86,7 +87,8 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
 
-        if(configManager.getConfigurationResponse().isAvailabilityScheduleFilterEnabled()) {
+        ConfigurationResponse config = configManager.getConfigurationResponse();
+        if(config != null && config.isAvailabilityScheduleFilterEnabled()) {
             mScheduledJobsListView.setVisibility(View.GONE);
             mScheduledJobsListViewFilter.setVisibility(View.VISIBLE);
         }
@@ -97,7 +99,8 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected BookingListView getBookingListView()
     {
-        if(configManager.getConfigurationResponse().isAvailabilityScheduleFilterEnabled()) {
+        ConfigurationResponse config = configManager.getConfigurationResponse();
+        if(config != null && config.isAvailabilityScheduleFilterEnabled()) {
             mScheduledJobsListViewFilter.setSelectedDate(mSelectedDay);
             return mScheduledJobsListViewFilter;
         }

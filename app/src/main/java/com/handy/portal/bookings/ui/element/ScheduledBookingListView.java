@@ -66,7 +66,7 @@ public class ScheduledBookingListView extends BookingListView {
         calendar.setTime(selectedDate);
         Calendar now = Calendar.getInstance();
 
-        //Only show Find jobs for only up to a certain point
+        //Only show Find jobs for only up to a certain points
         if ((calendar.get(Calendar.DAY_OF_YEAR) - now.get(Calendar.DAY_OF_YEAR)) < mConfigManager.getConfigurationResponse().getNumberOfDaysForAvailableJobs()) {
             newBookingListWithFindJob  = new ArrayList<>();
             //If the calendar is not today, then start at 7am, otherwise if it's today, start with the time now
@@ -99,10 +99,12 @@ public class ScheduledBookingListView extends BookingListView {
                     if (previousBooking != null) {
                         job.setAvailableStartJobId(previousBooking.getId());
                         job.setAvailableStartJobType(previousBooking.getTypeName());
+                        job.addJobLocationName(previousBooking.getLocationName());
                     }
 
                     job.setAvailableEndJobId(booking.getId());
                     job.setAvailableEndJobType(booking.getTypeName());
+                    job.addJobLocationName(booking.getLocationName());
                     newBookingListWithFindJob.add(job);
                 }
 
@@ -121,6 +123,7 @@ public class ScheduledBookingListView extends BookingListView {
                 if (previousBooking != null) {
                     job.setAvailableStartJobId(previousBooking.getId());
                     job.setAvailableStartJobType(previousBooking.getTypeName());
+                    job.addJobLocationName(previousBooking.getLocationName());
                 }
                 newBookingListWithFindJob.add(job);
             }

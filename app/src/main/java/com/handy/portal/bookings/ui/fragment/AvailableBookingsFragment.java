@@ -2,6 +2,8 @@ package com.handy.portal.bookings.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -10,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.widget.CompoundButton;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 
 import com.crashlytics.android.Crashlytics;
@@ -59,8 +60,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     @BindView(R.id.available_jobs_list_view)
     BookingListView mAvailableJobsListView;
-    @BindView(R.id.available_bookings_dates_scroll_view)
-    HorizontalScrollView mAvailableJobsDatesScrollView;
+    @Nullable //This is nullable because filtered fragment doesn't show dates
     @BindView(R.id.available_bookings_dates_scroll_view_layout)
     LinearLayout mAvailableJobsDatesScrollViewLayout;
     @BindView(R.id.available_bookings_empty)
@@ -359,7 +359,11 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Subscribe
     public void onRequestBookingsError(HandyEvent.ReceiveAvailableBookingsError event)
     {
-        handleBookingsRetrievalError(event, R.string.error_fetching_available_jobs);
+        handleBookingsRetrievalError(event, getRequestBookingsErrorString());
+    }
+
+    protected @StringRes int getRequestBookingsErrorString() {
+        return R.string.error_fetching_available_jobs;
     }
 
     @Subscribe

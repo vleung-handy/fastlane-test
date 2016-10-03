@@ -201,6 +201,12 @@ public final class DateTimeUtils
     }
 
     @Nullable
+    public static String formatShortDateDayOfWeekMonthDay(Date date) {
+        if(date == null) { return null;}
+        return SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER.format(date);
+    }
+
+    @Nullable
     public static String formatDateMonthDay(Date date)
     {
         if (date == null) { return null; }

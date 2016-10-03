@@ -5,30 +5,24 @@
     android:layout_height="wrap_content"
     android:padding="6dp">
 
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/border_gray_bg_white">
-
         <LinearLayout
             android:id="@+id/booking_entry_find_job_row"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_list_entry"
+            android:background="@drawable/border_gray_bg_white"
             android:orientation="horizontal"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
-            android:paddingTop="5dp"
-            android:paddingBottom="5dp">
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/booking_entry_find_job"
                 style="@style/TextView.Medium.Bold"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="6dp"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="6dp"
+                android:layout_marginRight="6dp"
                 android:drawableLeft="@drawable/ic_search_blue"
-                android:drawablePadding="9dp"
+                android:drawablePadding="8dp"
                 android:gravity="center_vertical"
                 android:text="@string/find_matching_jobs"
                 android:textColor="@color/handy_blue_text"
@@ -44,5 +38,4 @@
                 android:textColor="@color/tertiary_gray" />
 
         </LinearLayout>
-    </FrameLayout>
 </FrameLayout>

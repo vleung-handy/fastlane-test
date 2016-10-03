@@ -22,6 +22,7 @@
             />
 
         <TextView
+            android:id="@+id/available_bookings_empty_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_margin_xlarge"
@@ -33,5 +34,17 @@
             android:textColor="@color/tertiary_gray"
             android:textSize="@dimen/large_text_size"
             />
+
+        <Button
+            android:id="@+id/available_bookings_see_all_jobs_button"
+            android:layout_width="130dp"
+            android:layout_height="40dp"
+            android:background="@drawable/button_blue_borders"
+            android:text="@string/job_all"
+            android:textColor="@color/handy_blue_text"
+            android:gravity="center"
+            android:textAllCaps="false"
+            style="@style/TextView.Medium"
+            android:visibility="gone"/>
     </LinearLayout>
 </com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout>

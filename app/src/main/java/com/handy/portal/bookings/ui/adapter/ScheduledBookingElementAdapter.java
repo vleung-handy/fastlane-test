@@ -79,8 +79,8 @@ public class ScheduledBookingElementAdapter extends ArrayAdapter<Booking> {
 
     private void updateFindJobRow(FindJobViewHolder holder, Booking booking) {
         //Date and Time
-        final String formattedStartDate = DateTimeUtils.formatDateTo12HourClock(booking.getStartDate());
-        final String formattedEndDate = DateTimeUtils.formatDateTo12HourClock(booking.getEndDate());
+        final String formattedStartDate = DateTimeUtils.formatDateTo12HourClock(booking.getStartDate()).toLowerCase();
+        final String formattedEndDate = DateTimeUtils.formatDateTo12HourClock(booking.getEndDate()).toLowerCase();
 
         holder.findJobTime.setText(getContext().getString(R.string.find_jobs_between, formattedStartDate, formattedEndDate));
     }
