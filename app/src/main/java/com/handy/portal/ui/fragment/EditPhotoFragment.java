@@ -40,6 +40,7 @@ public class EditPhotoFragment extends ActionBarFragment
     private static final int REQUEST_CODE_PERMISSION_CAMERA = 4001;
     private static final int REQUEST_CODE_PERMISSION_EXTERNAL_STORAGE = 4002;
     private Uri mImageUri;
+    private boolean mIsPhotoUploadUrlRequested;
 
     @Override
     protected MainViewPage getAppPage()
@@ -73,7 +74,11 @@ public class EditPhotoFragment extends ActionBarFragment
     {
         super.onResume();
         bus.register(this);
-        setBackButtonEnabled(true);
+        if (mIsPhotoUploadUrlRequested)
+        {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+            mIsPhotoUploadUrlRequested = false;
+        }
     }
 
     @OnClick(R.id.choose_photo_camera)
@@ -162,8 +167,8 @@ public class EditPhotoFragment extends ActionBarFragment
             {
                 mImageUri = data.getData();
             }
+            mIsPhotoUploadUrlRequested = true;
             bus.post(new ProfileEvent.RequestPhotoUploadUrl(IMAGE_MIME_TYPE));
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         }
     }
 
@@ -178,6 +183,11 @@ public class EditPhotoFragment extends ActionBarFragment
     public void onReceivePhotoUploadUrlSuccess(
             final ProfileEvent.ReceivePhotoUploadUrlSuccess event)
     {
+        if (mImageUri == null)
+        {
+            showToast(R.string.an_error_has_occurred);
+            return;
+        }
         final TypedFile file = new TypedFile(IMAGE_MIME_TYPE, new File(mImageUri.getPath()));
         dataManager.uploadPhoto(event.getUploadUrl(), file,
                 new DataManager.Callback<HashMap<String, String>>()
