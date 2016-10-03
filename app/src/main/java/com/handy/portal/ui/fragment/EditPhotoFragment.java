@@ -1,11 +1,15 @@
 package com.handy.portal.ui.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,6 +37,8 @@ public class EditPhotoFragment extends ActionBarFragment
     private static final String IMAGE_DIRECTORY = "handy_images/";
     private static final String IMAGE_MIME_TYPE = "image/jpeg";
     private static final String IMAGE_SUFFIX = ".jpg";
+    private static final int REQUEST_CODE_PERMISSION_CAMERA = 4001;
+    private static final int REQUEST_CODE_PERMISSION_EXTERNAL_STORAGE = 4002;
     private Uri mImageUri;
 
     @Override
@@ -73,6 +79,14 @@ public class EditPhotoFragment extends ActionBarFragment
     @OnClick(R.id.choose_photo_camera)
     public void onChooseCameraClicked()
     {
+        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+            requestPermissions(new String[]{Manifest.permission.CAMERA},
+                    REQUEST_CODE_PERMISSION_CAMERA);
+            return;
+        }
+
         final Intent cameraImageIntent = new Intent(ACTION_IMAGE_CAPTURE);
         final File cameraFolder;
         if (Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED))
@@ -98,11 +112,44 @@ public class EditPhotoFragment extends ActionBarFragment
     @OnClick(R.id.choose_photo_gallery)
     public void onChooseGalleryClicked()
     {
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED)
+        {
+            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_CODE_PERMISSION_EXTERNAL_STORAGE);
+            return;
+        }
+
         final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType(IMAGE_MIME_TYPE);
         final Intent chooser = Intent.createChooser(intent,
                 getString(R.string.photo_chooser_title));
         startActivityForResult(chooser, RequestCode.GALLERY);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(final int requestCode,
+                                           @NonNull final String[] permissions,
+                                           @NonNull final int[] grantResults)
+    {
+        switch (requestCode)
+        {
+            case REQUEST_CODE_PERMISSION_CAMERA:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    onChooseCameraClicked();
+                }
+                break;
+            case REQUEST_CODE_PERMISSION_EXTERNAL_STORAGE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                {
+                    onChooseGalleryClicked();
+                }
+                break;
+        }
     }
 
     @Override
