@@ -20,7 +20,6 @@ public class EnvironmentModifier
     {
         Q(R.string.q),
         L(R.string.local),
-        MS(R.string.mobile_staging),
         S(R.string.staging),;
         // TODO: Support pointing to production
         // P(R.string.production),;
@@ -39,7 +38,7 @@ public class EnvironmentModifier
     }
 
 
-    private static final String DEFAULT_ENVIRONMENT = Environment.MS.name();
+    private static final String DEFAULT_ENVIRONMENT = Environment.S.name();
     private final PrefsManager mPrefsManager;
     private boolean mIsPinRequestEnabled = true;
 

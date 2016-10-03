@@ -150,7 +150,7 @@ public class TestApplicationModule
     {
         EnvironmentModifier environmentModifier = mock(EnvironmentModifier.class);
         when(environmentModifier.getEnvironmentPrefix()).thenReturn("ms");
-        when(environmentModifier.getEnvironment()).thenReturn(EnvironmentModifier.Environment.MS);
+        when(environmentModifier.getEnvironment()).thenReturn(EnvironmentModifier.Environment.S);
         return environmentModifier;
     }
 
