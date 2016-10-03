@@ -117,7 +117,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
         super.onViewCreated(view, savedInstanceState);
         setFormFieldErrorStateRemovers();
         setActionBar(R.string.edit_your_profile, false);
-        initialize();
+        initialize(null);
     }
 
     @Override
@@ -199,10 +199,15 @@ public class ProfileUpdateFragment extends ActionBarFragment
         showToast(errorMessage, Toast.LENGTH_LONG);
     }
 
-    private void initialize()
+    @Subscribe
+    public void initialize(final ProfileEvent.ReceiveProviderProfileSuccess event)
     {
         Provider provider = mProviderManager.getCachedActiveProvider();
         ProviderProfile profile = mProviderManager.getCachedProviderProfile();
+        if (event != null && event.providerProfile != null)
+        {
+            profile = event.providerProfile;
+        }
         if (provider == null || profile == null || profile.getProviderPersonalInfo() == null)
         {
             Crashlytics.logException(new NullPointerException("Provider or ProviderProfile is null."));

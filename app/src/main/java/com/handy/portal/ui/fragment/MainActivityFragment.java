@@ -31,6 +31,7 @@ import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.NotificationEvent;
+import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.handy.portal.library.ui.layout.TabbedLayout;
@@ -163,15 +164,20 @@ public class MainActivityFragment extends InjectedFragment
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
     {
-        initProImage();
+        initProImage(null);
     }
 
-    private void initProImage()
+    @Subscribe
+    public void initProImage(final ProfileEvent.ReceiveProviderProfileSuccess event)
     {
         final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
         if (configuration != null && configuration.isProfilePictureEnabled())
         {
-            final ProviderProfile profile = mProviderManager.getCachedProviderProfile();
+            ProviderProfile profile = mProviderManager.getCachedProviderProfile();
+            if (event != null && event.providerProfile != null)
+            {
+                profile = event.providerProfile;
+            }
             mProImage.setVisibility(View.VISIBLE);
             if (profile != null
                     && profile.getProviderPersonalInfo() != null
