@@ -295,10 +295,25 @@ public class MainActivityFragment extends InjectedFragment
         super.onPause();
     }
 
-    @OnClick({R.id.provider_image, R.id.navigation_header_edit_profile_button})
+    @OnClick(R.id.navigation_header_edit_profile_button)
     public void onEditProfileClicked()
     {
         bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_UPDATE, true));
+    }
+
+    @OnClick(R.id.provider_image)
+    public void onImageClicked()
+    {
+        final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
+        if (configuration != null && configuration.isProfilePictureUploadEnabled())
+        {
+            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_PICTURE, true));
+        }
+        else
+        {
+            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_UPDATE, true));
+        }
+
     }
 
 //Event Listeners
