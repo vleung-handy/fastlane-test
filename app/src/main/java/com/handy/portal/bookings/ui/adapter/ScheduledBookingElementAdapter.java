@@ -13,8 +13,6 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.ScheduledBookingFindJob;
-import com.handy.portal.bookings.ui.element.BookingElementMediator;
-import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.UIUtils;
 
@@ -84,7 +82,7 @@ public class ScheduledBookingElementAdapter extends ArrayAdapter<Booking> {
         final String formattedStartDate = DateTimeUtils.formatDateTo12HourClock(booking.getStartDate());
         final String formattedEndDate = DateTimeUtils.formatDateTo12HourClock(booking.getEndDate());
 
-        holder.findJob.setText(getContext().getString(R.string.find_jobs_between, formattedStartDate, formattedEndDate));
+        holder.findJobTime.setText(getContext().getString(R.string.find_jobs_between, formattedStartDate, formattedEndDate));
     }
 
     private void updateScheduleRow(ScheduleRowViewHolder holder, Booking booking) {
@@ -126,8 +124,8 @@ public class ScheduledBookingElementAdapter extends ArrayAdapter<Booking> {
     }
 
     class FindJobViewHolder {
-        @BindView(R.id.booking_entry_find_job)
-        TextView findJob;
+        @BindView(R.id.booking_entry_find_job_time)
+        TextView findJobTime;
 
         public FindJobViewHolder(View view) {
             ButterKnife.bind(this, view);

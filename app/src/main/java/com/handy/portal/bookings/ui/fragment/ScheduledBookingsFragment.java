@@ -3,6 +3,7 @@ package com.handy.portal.bookings.ui.fragment;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -82,13 +83,15 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
 
         if(configManager.getConfigurationResponse().isAvailabilityScheduleFilterEnabled()) {
             mScheduledJobsListView.setVisibility(View.GONE);
             mScheduledJobsListViewFilter.setVisibility(View.VISIBLE);
         }
+
+        return view;
     }
 
     @Override

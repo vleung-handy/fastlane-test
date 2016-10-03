@@ -3,16 +3,46 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/background_list_entry"
-    android:padding="@dimen/default_padding">
+    android:padding="6dp">
 
-    <TextView
-        android:id="@+id/booking_entry_find_job"
-        style="@style/TextView.Medium"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
-        android:textColor="@color/tertiary_gray"
-        tools:text="Find Jobs \n beween 10:00AM-2:00PM" />
+        android:background="@drawable/border_gray_bg_white">
 
+        <LinearLayout
+            android:id="@+id/booking_entry_find_job_row"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_list_entry"
+            android:orientation="horizontal"
+            android:paddingLeft="10dp"
+            android:paddingRight="10dp"
+            android:paddingTop="5dp"
+            android:paddingBottom="5dp">
+
+            <TextView
+                android:id="@+id/booking_entry_find_job"
+                style="@style/TextView.Medium.Bold"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="6dp"
+                android:drawableLeft="@drawable/ic_search_blue"
+                android:drawablePadding="9dp"
+                android:gravity="center_vertical"
+                android:text="@string/find_matching_jobs"
+                android:textColor="@color/handy_blue_text"
+                tools:text="Find Matching Jobs" />
+
+            <TextView
+                android:id="@+id/booking_entry_find_job_time"
+                style="@style/TextView.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                android:textColor="@color/tertiary_gray" />
+
+        </LinearLayout>
+    </FrameLayout>
 </FrameLayout>

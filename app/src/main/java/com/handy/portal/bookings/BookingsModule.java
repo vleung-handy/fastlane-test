@@ -1,6 +1,7 @@
 package com.handy.portal.bookings;
 
 import com.handy.portal.bookings.manager.BookingManager;
+import com.handy.portal.bookings.ui.element.ScheduledBookingListView;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFilteredFragment;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.BookingDetailsWrapperFragment;
@@ -37,6 +38,7 @@ import dagger.Provides;
                 BookingDetailsWrapperFragment.class,
                 ScheduledBookingsFragment.class,
                 AvailableBookingsFragment.class,
+                ScheduledBookingListView.class,
                 AvailableBookingsFilteredFragment.class,
                 ComplementaryBookingsFragment.class,
                 RateBookingDialogFragment.class,
