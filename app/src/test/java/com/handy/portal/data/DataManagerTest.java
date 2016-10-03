@@ -5,6 +5,8 @@ import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.PinRequestDetails;
+import com.handy.portal.retrofit.DynamicEndpoint;
+import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -46,6 +48,10 @@ public class DataManagerTest extends RobolectricGradleTestWrapper
     LoginManager loginManager;
     @Mock
     EventLogService eventLogService;
+    @Mock
+    DynamicEndpoint dynamicEndpoint;
+    @Mock
+    DynamicEndpointService dynamicEndpointService;
 
     private DataManager dataManager;
 
@@ -57,7 +63,7 @@ public class DataManagerTest extends RobolectricGradleTestWrapper
     {
         initMocks(this);
 
-        dataManager = new DataManager(service, endpoint, stripeService, eventLogService);
+        dataManager = new DataManager(service, endpoint, stripeService, eventLogService, dynamicEndpoint, dynamicEndpointService);
     }
 
     @Test

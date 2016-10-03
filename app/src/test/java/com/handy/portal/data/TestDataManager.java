@@ -8,6 +8,8 @@ import com.handy.portal.dashboard.model.ProviderEvaluation;
 import com.handy.portal.dashboard.model.ProviderFeedback;
 import com.handy.portal.dashboard.model.ProviderRating;
 import com.handy.portal.model.ConfigurationResponse;
+import com.handy.portal.retrofit.DynamicEndpoint;
+import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.retrofit.logevents.EventLogService;
@@ -27,9 +29,14 @@ public class TestDataManager extends DataManager
     public static final String BOOKING_UNCLAIMED_ID = "222";
     public static final String BOOKING_IN_PROGRESS_ID = "333";
 
-    public TestDataManager(final HandyRetrofitService service, final HandyRetrofitEndpoint endpoint, final StripeRetrofitService stripeService, final EventLogService eventLogService)
+    public TestDataManager(final HandyRetrofitService service,
+                           final HandyRetrofitEndpoint endpoint,
+                           final StripeRetrofitService stripeService,
+                           final EventLogService eventLogService,
+                           final DynamicEndpoint dynamicEndpoint,
+                           final DynamicEndpointService dynamicEndpointService)
     {
-        super(service, endpoint, stripeService, eventLogService);
+        super(service, endpoint, stripeService, eventLogService, dynamicEndpoint, dynamicEndpointService);
     }
 
     @Override
