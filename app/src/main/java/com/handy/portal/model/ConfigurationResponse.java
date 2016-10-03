@@ -58,6 +58,9 @@ public class ConfigurationResponse
     @SerializedName("profile_picture_enabled")
     private boolean mProfilePictureEnabled;
 
+    @SerializedName("profile_picture_upload_enabled")
+    private boolean mProfilePictureUploadEnabled;
+
     public boolean isCustomerNoShowModalEnabled()
     {
         return mCustomerNoShowModalEnabled;
@@ -156,6 +159,11 @@ public class ConfigurationResponse
     public boolean isProfilePictureEnabled()
     {
         return mProfilePictureEnabled;
+    }
+
+    public boolean isProfilePictureUploadEnabled()
+    {
+        return mProfilePictureUploadEnabled;
     }
 
     public static class HelpCenterInfo
