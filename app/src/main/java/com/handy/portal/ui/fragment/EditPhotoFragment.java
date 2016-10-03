@@ -21,6 +21,9 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.ImageUploadLog;
+import com.handy.portal.logger.handylogger.model.ProfilePhotoLog;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -91,6 +94,7 @@ public class EditPhotoFragment extends ActionBarFragment
                     REQUEST_CODE_PERMISSION_CAMERA);
             return;
         }
+        bus.post(new LogEvent.AddLogEvent(new ProfilePhotoLog.CameraTapped()));
 
         final Intent cameraImageIntent = new Intent(ACTION_IMAGE_CAPTURE);
         final File cameraFolder;
@@ -125,6 +129,7 @@ public class EditPhotoFragment extends ActionBarFragment
                     REQUEST_CODE_PERMISSION_EXTERNAL_STORAGE);
             return;
         }
+        bus.post(new LogEvent.AddLogEvent(new ProfilePhotoLog.PhotoLibraryTapped()));
 
         final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType(IMAGE_MIME_TYPE);
@@ -163,12 +168,18 @@ public class EditPhotoFragment extends ActionBarFragment
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK)
         {
+            bus.post(new LogEvent.AddLogEvent(new ProfilePhotoLog.ImageChosen()));
             if (requestCode == RequestCode.GALLERY)
             {
                 mImageUri = data.getData();
             }
             mIsPhotoUploadUrlRequested = true;
             bus.post(new ProfileEvent.RequestPhotoUploadUrl(IMAGE_MIME_TYPE));
+            bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.MetadataRequestSubmitted()));
+        }
+        else
+        {
+            bus.post(new LogEvent.AddLogEvent(new ProfilePhotoLog.ImagePickerDismissed()));
         }
     }
 
@@ -176,6 +187,7 @@ public class EditPhotoFragment extends ActionBarFragment
     public void onReceivePhotoUploadUrlError(
             final ProfileEvent.ReceivePhotoUploadUrlError event)
     {
+        bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.MetadataRequestError()));
         showError(event.error);
     }
 
@@ -183,6 +195,7 @@ public class EditPhotoFragment extends ActionBarFragment
     public void onReceivePhotoUploadUrlSuccess(
             final ProfileEvent.ReceivePhotoUploadUrlSuccess event)
     {
+        bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.MetadataRequestSuccess()));
         if (mImageUri == null)
         {
             showToast(R.string.an_error_has_occurred);
@@ -195,16 +208,18 @@ public class EditPhotoFragment extends ActionBarFragment
                     @Override
                     public void onSuccess(final HashMap<String, String> response)
                     {
+                        bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.ImageRequestSuccess()));
                         bus.post(new ProfileEvent.RequestProviderProfile(false));
                     }
 
                     @Override
                     public void onError(final DataManager.DataManagerError error)
                     {
+                        bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.ImageRequestError()));
                         showError(error);
                     }
                 });
-
+        bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.ImageRequestSubmitted()));
     }
 
     @Subscribe
