@@ -443,6 +443,17 @@ public class MainActivityFragment extends InjectedFragment
                 mButtonMore.toggle();
                 mNavLinkVideoLibrary.toggle();
             }
+            case PROFILE_UPDATE:
+            {
+                mButtonMore.toggle();
+                mNavAccountSettings.toggle();
+            }
+            break;
+            case PROFILE_PICTURE:
+            {
+                mButtonMore.toggle();
+                mNavAccountSettings.toggle();
+            }
             break;
             case HELP_WEBVIEW:
             {

@@ -89,6 +89,12 @@ public class ProfileUpdateFragment extends ActionBarFragment
     private FormDefinitionWrapper mFormDefinitionWrapper;
 
     @Override
+    protected MainViewPage getAppPage()
+    {
+        return MainViewPage.PROFILE_UPDATE;
+    }
+
+    @Override
     public void onCreate(Bundle savedInstance)
     {
         super.onCreate(savedInstance);

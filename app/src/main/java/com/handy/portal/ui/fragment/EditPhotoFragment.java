@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
@@ -33,6 +34,12 @@ public class EditPhotoFragment extends ActionBarFragment
     private static final String IMAGE_MIME_TYPE = "image/jpeg";
     private static final String IMAGE_SUFFIX = ".jpg";
     private Uri mImageUri;
+
+    @Override
+    protected MainViewPage getAppPage()
+    {
+        return MainViewPage.PROFILE_PICTURE;
+    }
 
     @Override
     public View onCreateView(final LayoutInflater inflater,
