@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.data.DataManager;
@@ -29,6 +30,7 @@ import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ImageUploadLog;
 import com.handy.portal.logger.handylogger.model.ProfilePhotoLog;
+import com.handy.portal.logger.handylogger.model.ProfilePhotoUploadLog;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -45,6 +47,11 @@ import retrofit.mime.TypedFile;
 
 public class EditPhotoFragment extends ActionBarFragment
 {
+    public enum Source
+    {
+        ONBOARDING, PROFILE
+    }
+
     private static final String ACTION_IMAGE_CAPTURE = "android.media.action.IMAGE_CAPTURE";
     private static final String IMAGE_DIRECTORY = "handy_images/";
     private static final String IMAGE_MIME_TYPE = "image/jpeg";
@@ -53,11 +60,19 @@ public class EditPhotoFragment extends ActionBarFragment
     private static final int REQUEST_CODE_PERMISSION_EXTERNAL_STORAGE = 4002;
     private static final int MAX_IMAGE_SIZE_MB = 1024 * 1024 * 3; // 3 MB
     private boolean mIsPhotoUploadUrlRequested;
+    private Source mSource;
 
     @Override
     protected MainViewPage getAppPage()
     {
         return MainViewPage.PROFILE_PICTURE;
+    }
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        mSource = (Source) getArguments().getSerializable(BundleKeys.NAVIGATION_SOURCE);
     }
 
     @Override
@@ -169,6 +184,8 @@ public class EditPhotoFragment extends ActionBarFragment
             mIsPhotoUploadUrlRequested = true;
             bus.post(new ProfileEvent.RequestPhotoUploadUrl(IMAGE_MIME_TYPE));
             bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.MetadataRequestSubmitted()));
+            bus.post(new LogEvent.AddLogEvent(
+                    new ProfilePhotoUploadLog.ProfilePhotoUploadSubmitted(mSource)));
         }
         else
         {
@@ -209,6 +226,8 @@ public class EditPhotoFragment extends ActionBarFragment
             final ProfileEvent.ReceivePhotoUploadUrlError event)
     {
         bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.MetadataRequestError()));
+        bus.post(new LogEvent.AddLogEvent(
+                new ProfilePhotoUploadLog.ProfilePhotoUploadError(mSource)));
         showError(event.error);
     }
 
@@ -252,6 +271,8 @@ public class EditPhotoFragment extends ActionBarFragment
             public void onSuccess(final HashMap<String, String> response)
             {
                 bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.ImageRequestSuccess()));
+                bus.post(new LogEvent.AddLogEvent(
+                        new ProfilePhotoUploadLog.ProfilePhotoUploadSuccess(mSource)));
                 bus.post(new ProfileEvent.RequestProviderProfile(false));
             }
 
@@ -259,6 +280,8 @@ public class EditPhotoFragment extends ActionBarFragment
             public void onError(final DataManager.DataManagerError error)
             {
                 bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.ImageRequestError()));
+                bus.post(new LogEvent.AddLogEvent(
+                        new ProfilePhotoUploadLog.ProfilePhotoUploadError(mSource)));
                 showError(error);
             }
         });
@@ -270,6 +293,7 @@ public class EditPhotoFragment extends ActionBarFragment
             final ProfileEvent.ReceiveProviderProfileSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        getActivity().onBackPressed();
     }
 
     @Subscribe
@@ -277,6 +301,7 @@ public class EditPhotoFragment extends ActionBarFragment
             final ProfileEvent.ReceiveProviderProfileError event)
     {
         showError(event.error);
+        getActivity().onBackPressed();
     }
 
     @Override

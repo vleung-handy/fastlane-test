@@ -22,6 +22,7 @@ public class BundleKeys
     public static final String MESSAGE = "message";
     public static final String MESSAGE_ICON = "message_icon";
     public static final String EXTRAS = "extras";
+    public static final String NAVIGATION_SOURCE = "navigation_source";
 
     // Terms
     public static final String TERMS_GROUP = "terms_group";

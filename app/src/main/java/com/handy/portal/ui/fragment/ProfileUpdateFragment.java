@@ -17,6 +17,7 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
@@ -166,7 +167,9 @@ public class ProfileUpdateFragment extends ActionBarFragment
         final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
         if (configuration != null && configuration.isProfilePictureEnabled())
         {
-            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_PICTURE, true));
+            final Bundle bundle = new Bundle();
+            bundle.putSerializable(BundleKeys.NAVIGATION_SOURCE, EditPhotoFragment.Source.PROFILE);
+            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_PICTURE, bundle, true));
         }
     }
 
