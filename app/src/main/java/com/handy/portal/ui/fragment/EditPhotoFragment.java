@@ -25,6 +25,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.library.util.IOUtils;
 import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ImageUploadLog;
 import com.handy.portal.logger.handylogger.model.ProfilePhotoLog;
@@ -95,10 +96,11 @@ public class EditPhotoFragment extends ActionBarFragment
     @OnClick(R.id.choose_photo_camera)
     public void onChooseCameraClicked()
     {
-        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.CAMERA)
-                != PackageManager.PERMISSION_GRANTED)
+        if (!Utils.areAllPermissionsGranted(getActivity(), new String[]{Manifest.permission.CAMERA,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE}))
         {
-            requestPermissions(new String[]{Manifest.permission.CAMERA},
+            requestPermissions(new String[]{Manifest.permission.CAMERA,
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     REQUEST_CODE_PERMISSION_CAMERA);
             return;
         }
