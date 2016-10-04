@@ -70,20 +70,6 @@
 
             <!--<include tools:visibility="visible" layout="@layout/layout_available_bookings_empty"/>-->
             <!--TODO the empty bookings layout should ideally show below the job access banner which is the header of the booking list view-->
-            <Button
-                android:id="@+id/available_jobs_find_all_button"
-                style="@style/TextView.Medium.Bold"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="6dp"
-                android:background="@drawable/border_gray_bg_white"
-                android:stateListAnimator="@null"
-                android:gravity="center"
-                android:text="@string/available_job_all"
-                android:textAllCaps="false"
-                android:textColor="@color/handy_blue_text"
-                android:visibility="gone"
-                tools:text="See All Available Jobs" />
         </LinearLayout>
 
     </android.support.design.widget.CoordinatorLayout>

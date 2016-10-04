@@ -49,9 +49,14 @@ public class AvailableBookingsFilteredFragment extends AvailableBookingsFragment
 
     private ScheduledBookingFindJob mScheduledBookingFindJob;
 
+    private LayoutInflater mLayoutInflater;
+    private boolean mIsFooterAdded;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
+        mLayoutInflater = inflater;
+
         //Optional param, needs to be validated
         if (getArguments() != null) {
             mScheduledBookingFindJob = (ScheduledBookingFindJob) getArguments().getSerializable(BundleKeys.FIND_JOB);
@@ -59,6 +64,7 @@ public class AvailableBookingsFilteredFragment extends AvailableBookingsFragment
 
         //Need to update the error message displayed on screen
         mEmptyResultsTextView.setText(R.string.no_available_filtered_jobs);
+
         return view;
     }
 
@@ -102,12 +108,19 @@ public class AvailableBookingsFilteredFragment extends AvailableBookingsFragment
     //Override here just to get the count
     @Override
     protected void displayBookings(@NonNull BookingsWrapper bookingsWrapper, @NonNull Date dateOfBookings) {
-        super.displayBookings(bookingsWrapper, dateOfBookings);
         setHeaderNumber(String.valueOf(bookingsWrapper.getBookings().size()));
         if (bookingsWrapper.getBookings().size() > 0) {
             mFindAllJobsLayout.setVisibility(View.VISIBLE);
             mSeeAllJobsButton.setVisibility(View.GONE);
+
+            //TODO sammy need to test if we need to add the footer in the oncreate or if we need to bind here for the onclick
+            if(!mIsFooterAdded) {
+                mIsFooterAdded = true;
+                mAvailableJobsListView.addFooterView(mLayoutInflater.inflate(R.layout.element_find_all_jobs_footer, null));
+            }
+            super.displayBookings(bookingsWrapper, dateOfBookings);
         } else {
+            mFindAllJobsLayout.setVisibility(View.GONE);
             mSeeAllJobsButton.setVisibility(View.VISIBLE);
         }
     }
