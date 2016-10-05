@@ -57,25 +57,36 @@ public final class Utils //TODO: we should reorganize these methods into more sp
         return System.identityHashCode(object);
     }
 
-    //returns true if the intent was successfully launched
-    public static boolean safeLaunchIntent(Intent intent, Context context)
+    /**
+     * @param intent
+     * @param context
+     * @return true if the given intent was successfully launched
+     */
+    public static boolean safeLaunchIntent(@NonNull Intent intent, @NonNull Context context)
     {
-        if (context == null)
+        try
         {
-            Crashlytics.logException(new Exception("Trying to launch an intent with a null context!"));
+            //check if there's an activity to handle this intent
+            if (intent.resolveActivity(context.getPackageManager()) != null)
+            {
+                context.startActivity(intent);
+                return true;
+            }
+            else //no activity found to handle the intent
+            {
+                //note: this must be called from the UI thread
+                Toast toast = Toast.makeText(context, R.string.error_no_intent_handler_found, Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+                Crashlytics.logException(new Exception("No activity found to handle the intent " + intent.toString()));
+            }
         }
-        else if (intent.resolveActivity(context.getPackageManager()) != null)
+        catch (Exception e)
         {
-            context.startActivity(intent);
-            return true;
-        }
-        else //no activity found to handle the intent
-        {
-            //note: this must be called from the UI thread
-            Toast toast = Toast.makeText(context, R.string.error_no_intent_handler_found, Toast.LENGTH_SHORT);
+            Toast toast = Toast.makeText(context, R.string.an_error_has_occurred, Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
-            Crashlytics.logException(new Exception("No activity found to handle the intent " + intent.toString()));
+            Crashlytics.logException(e);
         }
         return false;
     }
