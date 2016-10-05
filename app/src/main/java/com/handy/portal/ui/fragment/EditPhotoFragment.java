@@ -6,6 +6,8 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -242,7 +244,13 @@ public class EditPhotoFragment extends ActionBarFragment
             showToast(R.string.an_error_has_occurred);
             return;
         }
+        fixImageRotation(imageFile);
+        compressImage(imageFile);
+        uploadImage(event.getUploadUrl(), imageFile);
+    }
 
+    private void compressImage(final File imageFile)
+    {
         try
         {
             Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getPath());
@@ -258,8 +266,48 @@ public class EditPhotoFragment extends ActionBarFragment
         {
             Crashlytics.logException(e);
         }
+    }
 
-        uploadImage(event.getUploadUrl(), imageFile);
+    private void fixImageRotation(final File imageFile)
+    {
+        try
+        {
+            Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getPath());
+            final ExifInterface ei = new ExifInterface(imageFile.getPath());
+            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                    ExifInterface.ORIENTATION_UNDEFINED);
+
+            switch (orientation)
+            {
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    bitmap = rotateImage(bitmap, 90);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    bitmap = rotateImage(bitmap, 180);
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    bitmap = rotateImage(bitmap, 270);
+                    break;
+                case ExifInterface.ORIENTATION_NORMAL:
+                default:
+                    break;
+            }
+            final FileOutputStream outputStream = new FileOutputStream(imageFile);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
+            outputStream.close();
+        }
+        catch (IOException e)
+        {
+            Crashlytics.logException(e);
+        }
+    }
+
+    private Bitmap rotateImage(Bitmap source, float angle)
+    {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix,
+                true);
     }
 
     private void uploadImage(final String uploadUrl, final File imageFile)
