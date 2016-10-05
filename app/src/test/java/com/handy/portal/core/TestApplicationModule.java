@@ -50,6 +50,8 @@ import com.handy.portal.payments.ui.element.PaymentsBatchListView;
 import com.handy.portal.payments.ui.fragment.PaymentsDetailFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsFragmentTest;
+import com.handy.portal.retrofit.DynamicEndpoint;
+import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.retrofit.logevents.EventLogService;
@@ -175,7 +177,9 @@ public class TestApplicationModule
                 mock(HandyRetrofitService.class),
                 endpoint,
                 mock(StripeRetrofitService.class),
-                mock(EventLogService.class));
+                mock(EventLogService.class),
+                mock(DynamicEndpoint.class),
+                mock(DynamicEndpointService.class));
     }
 
     @Provides

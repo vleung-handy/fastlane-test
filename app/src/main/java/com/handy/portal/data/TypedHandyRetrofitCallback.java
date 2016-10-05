@@ -425,3 +425,21 @@ class FinishIDVerificationCallback extends TypedHandyRetrofitCallback<HashMap<St
         super(callback);
     }
 }
+
+
+class RequestPhotoUploadUrlCallback extends TypedHandyRetrofitCallback<HashMap<String, String>>
+{
+    RequestPhotoUploadUrlCallback(final DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
+
+
+class UploadImageCallback extends TypedHandyRetrofitCallback<HashMap<String, String>>
+{
+    UploadImageCallback(final DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}

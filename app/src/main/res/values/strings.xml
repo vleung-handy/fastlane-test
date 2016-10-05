@@ -44,6 +44,7 @@
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Navigation drawer opened</string>
     <string name="navigation_drawer_close">Navigation drawer closed</string>
+    <string name="build_version_formatted">v%1$s</string>
     <string name="software_licenses">Software Licenses</string>
 
     <string name="phone_number_hint">Cell Phone Number</string>
@@ -295,6 +296,7 @@
     <string name="resupply_kit_on_its_way">Your resupply kit is on its way!</string>
     <string name="your_contact_information">Contact information</string>
     <string name="edit_your_profile">Edit Your Profile</string>
+    <string name="edit_profile">Edit Profile</string>
     <string name="update_profile_success">Successfully updated profile information</string>
     <string name="update_profile_failed">Failed to update profile information</string>
     <string name="failed_to_open_help">Failed to open help center!</string>
@@ -604,4 +606,15 @@
         <item quantity="other">Awesome! We added the jobs to your schedule.</item>
     </plurals>
 
+    <!-- Pro Pics -->
+    <string name="edit_photo">Edit Photo</string>
+    <string name="upload_photo_title">Upload a profile photo</string>
+    <string name="upload_photo_subtitle">Help us introduce you to customers with a\u00a0photo!</string>
+    <string name="upload_photo_list_title">What makes a good photo?</string>
+    <string name="upload_photo_list_item_1">⋅\u0020 Make sure there\'s bright lighting</string>
+    <string name="upload_photo_list_item_2">⋅\u0020 Use a plain background</string>
+    <string name="upload_photo_list_item_3">⋅\u0020 Dress professionally</string>
+    <string name="upload_photo_camera_option">Take a photo</string>
+    <string name="upload_photo_gallery_option">Choose from library</string>
+    <string name="photo_chooser_title">Choose a Photo</string>
 </resources>

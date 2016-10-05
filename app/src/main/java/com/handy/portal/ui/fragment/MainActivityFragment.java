@@ -15,13 +15,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
-import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.constant.BundleKeys;
@@ -31,6 +31,7 @@ import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.NotificationEvent;
+import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.handy.portal.library.ui.layout.TabbedLayout;
@@ -41,9 +42,13 @@ import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.model.ConfigurationResponse;
+import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.util.DeeplinkMapper;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -51,6 +56,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MainActivityFragment extends InjectedFragment
 {
@@ -60,6 +66,8 @@ public class MainActivityFragment extends InjectedFragment
     ConfigManager mConfigManager;
     @Inject
     EnvironmentModifier mEnvironmentModifier;
+    @Inject
+    ProviderManager mProviderManager;
     /////////////Bad useless injection that breaks if not in?
 
     @BindView(R.id.tabs)
@@ -90,14 +98,12 @@ public class MainActivityFragment extends InjectedFragment
     RelativeLayout mNavigationDrawer;
     @BindView(R.id.nav_tray_links)
     RadioGroup mNavTrayLinks;
-    @BindView(R.id.navigation_header)
-    TextView mNavigationHeader;
+    @BindView(R.id.navigation_header_pro_name)
+    TextView mNavigationHeaderProName;
     @BindView(R.id.content_frame)
     TabbedLayout mContentFrame;
-    @BindView(R.id.build_version_text)
-    TextView mBuildVersionText;
-    @BindView(R.id.software_licenses_text)
-    TextView mSoftwareLicensesText;
+    @BindView(R.id.provider_image)
+    ImageView mProImage;
 
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private MainViewPage currentPage = null;
@@ -152,8 +158,47 @@ public class MainActivityFragment extends InjectedFragment
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.bind(this, view);
         registerButtonListeners();
-        mBuildVersionText.setText(BuildConfig.VERSION_NAME);
         return view;
+    }
+
+    @Override
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
+    {
+        initProImage(null);
+    }
+
+    @Subscribe
+    public void initProImage(final ProfileEvent.ReceiveProviderProfileSuccess event)
+    {
+        final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
+        if (configuration != null && configuration.isProfilePictureEnabled())
+        {
+            ProviderProfile profile = mProviderManager.getCachedProviderProfile();
+            if (event != null && event.providerProfile != null)
+            {
+                profile = event.providerProfile;
+            }
+            mProImage.setVisibility(View.VISIBLE);
+            if (profile != null
+                    && profile.getProviderPersonalInfo() != null
+                    && profile.getProviderPersonalInfo().getProfilePhotoUrl() != null)
+            {
+                final String imageUrl = profile.getProviderPersonalInfo().getProfilePhotoUrl();
+                Picasso.with(getActivity())
+                        .load(imageUrl)
+                        .placeholder(R.drawable.img_pro_placeholder)
+                        .noFade()
+                        .into(mProImage);
+            }
+            else
+            {
+                mProImage.setImageResource(R.drawable.img_pro_placeholder);
+            }
+        }
+        else
+        {
+            mProImage.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -256,6 +301,12 @@ public class MainActivityFragment extends InjectedFragment
         super.onPause();
     }
 
+    @OnClick({R.id.provider_image, R.id.navigation_header_edit_profile_button})
+    public void onEditProfileClicked()
+    {
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_UPDATE, true));
+    }
+
 //Event Listeners
 
     @Subscribe
@@ -311,7 +362,7 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onReceiveProviderInfoSuccess(HandyEvent.ReceiveProviderInfoSuccess event)
     {
-        mNavigationHeader.setText(event.provider.getFullName());
+        mNavigationHeaderProName.setText(event.provider.getFullName());
     }
 
     @Subscribe
@@ -383,6 +434,17 @@ public class MainActivityFragment extends InjectedFragment
                 mButtonMore.toggle();
                 mNavLinkVideoLibrary.toggle();
             }
+            case PROFILE_UPDATE:
+            {
+                mButtonMore.toggle();
+                mNavAccountSettings.toggle();
+            }
+            break;
+            case PROFILE_PICTURE:
+            {
+                mButtonMore.toggle();
+                mNavAccountSettings.toggle();
+            }
             break;
             case HELP_WEBVIEW:
             {
@@ -409,14 +471,6 @@ public class MainActivityFragment extends InjectedFragment
     {
         registerBottomNavListeners();
         registerNavDrawerListeners();
-        mSoftwareLicensesText.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(final View v)
-            {
-                bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SOFTWARE_LICENSES, true));
-            }
-        });
     }
 
     private void registerBottomNavListeners()

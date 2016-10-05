@@ -49,6 +49,8 @@ import com.handy.portal.onboarding.ui.fragment.IDVerificationFragment;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsModule;
 import com.handy.portal.receiver.HandyPushReceiver;
+import com.handy.portal.retrofit.DynamicEndpoint;
+import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -66,6 +68,7 @@ import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TermsActivity;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.fragment.AccountSettingsFragment;
+import com.handy.portal.ui.fragment.EditPhotoFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.ProfileUpdateFragment;
@@ -118,6 +121,7 @@ import retrofit.converter.GsonConverter;
         BlockScheduleFragment.class,
         RequestSuppliesFragment.class,
         ProfileUpdateFragment.class,
+        EditPhotoFragment.class,
         SupportActionView.class,
         DashboardTiersFragment.class,
         DashboardFeedbackFragment.class,
@@ -317,6 +321,29 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
+    final DynamicEndpoint provideDynamicEndpoint()
+    {
+        return new DynamicEndpoint();
+    }
+
+    @Provides
+    @Singleton
+    final DynamicEndpointService provideDynamicEndpointService(final DynamicEndpoint endpoint)
+    {
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
+
+        final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
+                .setRequestInterceptor(new RequestInterceptor()
+                {
+                    @Override
+                    public void intercept(RequestFacade request) { }
+                }).setClient(new OkClient(okHttpClient)).build();
+        return restAdapter.create(DynamicEndpointService.class);
+    }
+
+    @Provides
+    @Singleton
     final EventBus provideBus()
     {
         return new MainBus();
@@ -334,10 +361,12 @@ public final class ApplicationModule
     final DataManager provideDataManager(final HandyRetrofitService service,
                                          final HandyRetrofitEndpoint endpoint,
                                          final StripeRetrofitService stripeService, //TODO: refactor and move somewhere else?
-                                         final EventLogService eventLogService
+                                         final EventLogService eventLogService,
+                                         final DynamicEndpoint dynamicEndpoint,
+                                         final DynamicEndpointService dynamicEndpointService
     )
     {
-        return new DataManager(service, endpoint, stripeService, eventLogService);
+        return new DataManager(service, endpoint, stripeService, eventLogService, dynamicEndpoint, dynamicEndpointService);
     }
 
     @Provides

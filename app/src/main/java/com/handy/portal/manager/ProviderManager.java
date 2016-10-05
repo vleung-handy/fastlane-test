@@ -384,6 +384,27 @@ public class ProviderManager
                 });
     }
 
+    @Subscribe
+    public void onRequestPhotoUploadUrl(final ProfileEvent.RequestPhotoUploadUrl event)
+    {
+        mDataManager.requestPhotoUploadUrl(getLastProviderId(), event.getImageMimeType(),
+                new DataManager.Callback<HashMap<String, String>>()
+                {
+                    @Override
+                    public void onSuccess(final HashMap<String, String> response)
+                    {
+                        final String uploadUrl = response.get("upload_url");
+                        mBus.post(new ProfileEvent.ReceivePhotoUploadUrlSuccess(uploadUrl));
+                    }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        mBus.post(new ProfileEvent.ReceivePhotoUploadUrlError(error));
+                    }
+                });
+    }
+
     private void requestProviderInfo()
     {
         mDataManager.getProviderInfo(new DataManager.Callback<Provider>()

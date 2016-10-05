@@ -2,10 +2,12 @@
 <RelativeLayout
     android:id="@+id/navigation_drawer"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="@dimen/navigation_drawer_width"
     android:layout_height="match_parent"
     android:layout_gravity="end"
+    android:fitsSystemWindows="true"
     >
 
     <LinearLayout
@@ -15,25 +17,54 @@
         android:orientation="vertical"
         >
 
-        <TextView
-            android:id="@+id/navigation_header"
-            style="@style/TextView.XLarge"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/tertiary_gray"
-            android:paddingBottom="@dimen/default_padding_medium"
-            android:paddingLeft="@dimen/default_padding"
-            android:paddingRight="@dimen/default_padding"
-            android:paddingTop="@dimen/default_padding_xlarge"
-            android:textColor="@color/white"
-            />
+            android:background="@color/handy_blue"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="@dimen/default_padding"
+            >
 
-        <FrameLayout
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/provider_image"
+                android:layout_width="@dimen/pro_image_default_size"
+                android:layout_height="@dimen/pro_image_default_size"
+                android:layout_marginTop="@dimen/extra_margin"
+                android:visibility="gone"
+                app:civ_border_color="@color/border_gray"
+                app:civ_border_width="1dp"
+                tools:src="@drawable/img_pro_placeholder"
+                tools:visibility="visible"
+                />
+
+            <TextView
+                android:id="@+id/navigation_header_pro_name"
+                style="@style/TextView.XLarge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin_half"
+                android:textColor="@color/white"
+                tools:text="John Doe"
+                />
+
+            <Button
+                android:id="@+id/navigation_header_edit_profile_button"
+                style="@style/Button.White.Round.Empty"
+                android:layout_width="wrap_content"
+                android:layout_height="@dimen/navigation_header_button_height"
+                android:layout_marginBottom="@dimen/extra_margin"
+                android:padding="0dp"
+                android:text="@string/edit_profile"
+                android:textSize="@dimen/xsmall_text_size"
+                />
+        </LinearLayout>
+
+        <ScrollView
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/white"
-            android:paddingBottom="@dimen/default_padding_medium"
-            android:paddingTop="@dimen/default_padding_medium"
             >
 
             <include
@@ -42,43 +73,8 @@
                 android:layout_height="wrap_content"
                 />
 
-        </FrameLayout>
+        </ScrollView>
 
     </LinearLayout>
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:paddingBottom="@dimen/default_padding_medium"
-        android:paddingLeft="@dimen/default_padding_medium"
-        android:paddingRight="@dimen/default_padding_medium"
-        android:paddingTop="@dimen/default_padding_medium"
-        >
-
-        <TextView
-            android:id="@+id/build_version_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:textColor="@color/tertiary_gray"
-            android:textSize="@dimen/xsmall_text_size"
-            tools:text="v0.11.4"
-            />
-
-        <TextView
-            android:id="@+id/software_licenses_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:text="@string/software_licenses"
-            android:textColor="@color/tertiary_gray"
-            android:textSize="@dimen/xsmall_text_size"
-            />
-
-    </RelativeLayout>
 
 </RelativeLayout>

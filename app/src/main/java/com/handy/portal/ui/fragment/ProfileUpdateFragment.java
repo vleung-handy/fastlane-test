@@ -12,24 +12,31 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.FormDefinitionKey;
+import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
+import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.definitions.FieldDefinition;
 import com.handy.portal.model.definitions.FormDefinitionWrapper;
+import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -68,11 +75,25 @@ public class ProfileUpdateFragment extends ActionBarFragment
     EditText mPhoneText;
     @BindView(R.id.provider_phone_error_indicator)
     ImageView mPhoneError;
+    @BindView(R.id.provider_image)
+    ImageView mImage;
+    @BindView(R.id.provider_image_holder)
+    ViewGroup mImageHolder;
+    @BindView(R.id.provider_image_edit_button)
+    TextView mEditImageButton;
 
     @Inject
     ProviderManager mProviderManager;
+    @Inject
+    ConfigManager mConfigManager;
 
     private FormDefinitionWrapper mFormDefinitionWrapper;
+
+    @Override
+    protected MainViewPage getAppPage()
+    {
+        return MainViewPage.PROFILE_UPDATE;
+    }
 
     @Override
     public void onCreate(Bundle savedInstance)
@@ -97,7 +118,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
         super.onViewCreated(view, savedInstanceState);
         setFormFieldErrorStateRemovers();
         setActionBar(R.string.edit_your_profile, false);
-        initialize();
+        initialize(null);
     }
 
     @Override
@@ -140,6 +161,18 @@ public class ProfileUpdateFragment extends ActionBarFragment
         }
     }
 
+    @OnClick({R.id.provider_image, R.id.provider_image_edit_button})
+    public void onEditImageClicked()
+    {
+        final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
+        if (configuration != null && configuration.isProfilePictureEnabled())
+        {
+            final Bundle bundle = new Bundle();
+            bundle.putSerializable(BundleKeys.NAVIGATION_SOURCE, EditPhotoFragment.Source.PROFILE);
+            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_PICTURE, bundle, true));
+        }
+    }
+
     @Subscribe
     public void onReceiveFormDefinitionsSuccess(RegionDefinitionEvent.ReceiveFormDefinitionsSuccess event)
     {
@@ -169,10 +202,15 @@ public class ProfileUpdateFragment extends ActionBarFragment
         showToast(errorMessage, Toast.LENGTH_LONG);
     }
 
-    private void initialize()
+    @Subscribe
+    public void initialize(final ProfileEvent.ReceiveProviderProfileSuccess event)
     {
         Provider provider = mProviderManager.getCachedActiveProvider();
         ProviderProfile profile = mProviderManager.getCachedProviderProfile();
+        if (event != null && event.providerProfile != null)
+        {
+            profile = event.providerProfile;
+        }
         if (provider == null || profile == null || profile.getProviderPersonalInfo() == null)
         {
             Crashlytics.logException(new NullPointerException("Provider or ProviderProfile is null."));
@@ -201,6 +239,34 @@ public class ProfileUpdateFragment extends ActionBarFragment
         else
         {
             mPhoneText.setText(info.getLocalPhone());
+        }
+
+        final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
+        if (configuration != null && configuration.isProfilePictureEnabled())
+        {
+            mImageHolder.setVisibility(View.VISIBLE);
+            final String imageUrl = info.getProfilePhotoUrl();
+            if (imageUrl != null)
+            {
+                Picasso.with(getActivity())
+                        .load(imageUrl)
+                        .placeholder(R.drawable.img_pro_placeholder)
+                        .noFade()
+                        .into(mImage);
+            }
+            else
+            {
+                mImage.setImageResource(R.drawable.img_pro_placeholder);
+            }
+
+            if (!configuration.isProfilePictureUploadEnabled())
+            {
+                mEditImageButton.setVisibility(View.GONE);
+            }
+        }
+        else
+        {
+            mImageHolder.setVisibility(View.GONE);
         }
     }
 

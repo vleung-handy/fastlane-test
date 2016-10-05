@@ -181,6 +181,9 @@ dependencies {
     // Signature for checkout
     compile 'com.github.gcacace:signature-pad:1.1.0'
 
+    // For circle image views
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+
     // For better visualizing circular graphs
     compile 'com.github.bmarrdev:android-DecoView-charting:v0.9.5'
 

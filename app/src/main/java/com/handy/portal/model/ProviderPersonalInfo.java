@@ -25,6 +25,8 @@ public class ProviderPersonalInfo implements Serializable
     private String mCardLast4;
     @SerializedName("operating_region")
     private String mOperatingRegion;
+    @SerializedName("profile_photo_url")
+    private String mProfilePhotoUrl;
 
     public String getLastName()
     {
@@ -74,5 +76,10 @@ public class ProviderPersonalInfo implements Serializable
     public String getOperatingRegion()
     {
         return mOperatingRegion;
+    }
+
+    public String getProfilePhotoUrl()
+    {
+        return mProfilePhotoUrl;
     }
 }

@@ -13,7 +13,10 @@
         android:orientation="vertical"
         >
 
-        <include layout="@layout/layout_fetch_error"/>
+        <include
+            layout="@layout/layout_fetch_error"
+            tools:visibility="gone"
+            />
 
         <LinearLayout
             android:id="@+id/account_settings_layout"
@@ -221,6 +224,37 @@
             </RelativeLayout>
 
             <include layout="@layout/divider"/>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:padding="@dimen/default_padding"
+                >
+
+                <TextView
+                    android:id="@+id/build_version_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:textColor="@color/tertiary_gray"
+                    android:textSize="@dimen/xsmall_text_size"
+                    tools:text="v0.11.4"
+                    />
+
+                <TextView
+                    android:id="@+id/software_licenses_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:text="@string/software_licenses"
+                    android:textColor="@color/tertiary_gray"
+                    android:textSize="@dimen/xsmall_text_size"
+                    />
+
+            </RelativeLayout>
 
         </LinearLayout>
 
