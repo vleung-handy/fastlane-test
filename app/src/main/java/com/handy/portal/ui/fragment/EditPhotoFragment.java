@@ -22,6 +22,7 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
@@ -33,6 +34,7 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ImageUploadLog;
 import com.handy.portal.logger.handylogger.model.ProfilePhotoLog;
 import com.handy.portal.logger.handylogger.model.ProfilePhotoUploadLog;
+import com.handy.portal.manager.PrefsManager;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -43,12 +45,17 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import retrofit.mime.TypedFile;
 
 public class EditPhotoFragment extends ActionBarFragment
 {
+    @Inject
+    PrefsManager mPrefsManager;
+
     public enum Source
     {
         ONBOARDING, PROFILE
@@ -321,7 +328,11 @@ public class EditPhotoFragment extends ActionBarFragment
                 bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.ImageRequestSuccess()));
                 bus.post(new LogEvent.AddLogEvent(
                         new ProfilePhotoUploadLog.ProfilePhotoUploadSuccess(mSource)));
-                bus.post(new ProfileEvent.RequestProviderProfile(false));
+                final String profilePhotoUrl = response.get("download_url");
+                mPrefsManager.setString(PrefsKey.PROFILE_PHOTO_URL, profilePhotoUrl);
+                bus.post(new ProfileEvent.ProfilePhotoUpdated());
+                bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                getActivity().onBackPressed();
             }
 
             @Override
@@ -334,22 +345,6 @@ public class EditPhotoFragment extends ActionBarFragment
             }
         });
         bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.ImageRequestSubmitted()));
-    }
-
-    @Subscribe
-    public void onReceiveProviderProfileSuccess(
-            final ProfileEvent.ReceiveProviderProfileSuccess event)
-    {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        getActivity().onBackPressed();
-    }
-
-    @Subscribe
-    public void onReceiveProviderProfileError(
-            final ProfileEvent.ReceiveProviderProfileError event)
-    {
-        showError(event.error);
-        getActivity().onBackPressed();
     }
 
     @Override
