@@ -1,5 +1,6 @@
 package com.handy.portal.bookings.ui.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.Html;
@@ -48,6 +49,7 @@ public class SoftwareLicensesFragment extends ActionBarFragment
         return view;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
@@ -59,7 +61,15 @@ public class SoftwareLicensesFragment extends ActionBarFragment
             InputStream stream = getContext().getAssets().open(HTML_FILE);
             String template = CharStreams.toString(new InputStreamReader(stream, UTF_8));
 
-            mSoftwareLicensesTextLayout.setText(Html.fromHtml(template));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            {
+                mSoftwareLicensesTextLayout.setText(Html.fromHtml(template,
+                        Html.FROM_HTML_MODE_LEGACY));
+            }
+            else
+            {
+                mSoftwareLicensesTextLayout.setText(Html.fromHtml(template));
+            }
             mSoftwareLicensesTextLayout.setMovementMethod(LinkMovementMethod.getInstance());
         }
         catch (IOException e)

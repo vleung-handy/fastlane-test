@@ -35,7 +35,6 @@
     <dimen name="default_padding_medium">24dp</dimen>
     <dimen name="default_padding_large">32dp</dimen>
     <dimen name="dashboard_header_padding">20dp</dimen>
-    <dimen name="default_padding_xlarge">48dp</dimen>
     <dimen name="options_wheel_padding">10dp</dimen>
     <dimen name="inner_field_padding">12dp</dimen>
     <dimen name="tab_padding">8dp</dimen>
@@ -166,8 +165,6 @@
     <!-- Badge text size -->
 
     <!-- Notifications -->
-    <dimen name="notification_image_margin_left">3dp</dimen>
-    <dimen name="notification_image_margin_top">10dp</dimen>
     <dimen name="notification_unread_count_min_width">20dp</dimen>
 
     <!-- Pro Onboarding-->

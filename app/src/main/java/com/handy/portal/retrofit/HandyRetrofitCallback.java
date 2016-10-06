@@ -124,7 +124,7 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
         if (callback != null && error != null)
         {
             DataManagerError err = new DataManagerError(DataManagerError.Type.CLIENT);
-            if (error.isNetworkError())
+            if (error.getKind().equals(RetrofitError.Kind.NETWORK))
             {
                 err = new DataManagerError(DataManagerError.Type.NETWORK);
             }

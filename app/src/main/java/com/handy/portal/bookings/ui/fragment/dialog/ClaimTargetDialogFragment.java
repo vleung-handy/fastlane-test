@@ -105,8 +105,11 @@ public class ClaimTargetDialogFragment extends DialogFragment //TODO: consolidat
     public Dialog onCreateDialog(Bundle savedInstanceState)
     {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_animation_slide_down_up_from_top; //TODO: see if we can use an Animation instead so we can listen for when it ends
+        if (dialog.getWindow() != null)
+        {
+            dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+            dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_animation_slide_down_up_from_top; //TODO: see if we can use an Animation instead so we can listen for when it ends
+        }
         return dialog;
     }
 

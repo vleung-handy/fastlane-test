@@ -103,7 +103,6 @@ public class OnboardingSubflowActivity extends BaseActivity
         super.onResume();
         final int onboardingTtlMillis =
                 getResources().getInteger(R.integer.onboarding_ttl_mins) * 60 * 1000;
-        final long x = System.currentTimeMillis() - mLaunchedTimeMillis;
         if (System.currentTimeMillis() - mLaunchedTimeMillis >= onboardingTtlMillis)
         {
             cancel(new Intent());

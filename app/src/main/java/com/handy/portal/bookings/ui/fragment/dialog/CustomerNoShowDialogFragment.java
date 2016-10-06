@@ -59,7 +59,7 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme);
         mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING); //should not be null
-        if(mBooking == null)
+        if (mBooking == null)
         {
             Crashlytics.logException(new Exception("Booking is null in customer no show dialog fragment"));
             Toast.makeText(getContext(), R.string.error_fetching_booking_details, Toast.LENGTH_LONG).show();
@@ -83,7 +83,10 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment
     public Dialog onCreateDialog(final Bundle savedInstanceState)
     {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        dialog.getWindow().setWindowAnimations(R.style.dialog_animation_slide_up_down_from_bottom);
+        if (dialog.getWindow() != null)
+        {
+            dialog.getWindow().setWindowAnimations(R.style.dialog_animation_slide_up_down_from_bottom);
+        }
         return dialog;
     }
 
@@ -99,7 +102,7 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        if(mBooking == null) return;
+        if (mBooking == null) { return; }
         updateHeaderWithBookingPaymentInfo();
         populateInstructionsList(INSTRUCTION_LIST_STRING_RESOURCE_IDS);
     }
@@ -147,7 +150,7 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment
     @OnClick(R.id.fragment_dialog_customer_no_show_complete_report_button)
     public void onCompleteReportButtonClicked()
     {
-        if(isRemoving() || isDetached()) return;
+        if (isRemoving() || isDetached()) { return; }
         OnReportCustomerNoShowButtonClickedListener onReportCustomerNoShowButtonClickedListener;
         try
         {

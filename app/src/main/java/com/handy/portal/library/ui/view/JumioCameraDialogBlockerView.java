@@ -1,6 +1,7 @@
 package com.handy.portal.library.ui.view;
 
 import android.content.Context;
+import android.os.Build;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.widget.Button;
@@ -38,6 +39,7 @@ public class JumioCameraDialogBlockerView extends RelativeLayout
         initView(context, bus);
     }
 
+    @SuppressWarnings("deprecation")
     private void initView(final Context context, final EventBus bus)
     {
         LayoutInflater.from(context).inflate(R.layout.fragment_jumio_camera_dialog_blocker, this);
@@ -46,7 +48,18 @@ public class JumioCameraDialogBlockerView extends RelativeLayout
         mBus = bus;
         mTitle.setText(R.string.allow_camera_title);
         mMessage.setText(R.string.camera_required_id_verification);
-        mCameraBrokenText.setText(Html.fromHtml(getResources().getString(R.string.camera_broken_html)));
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+        {
+            mCameraBrokenText.setText(
+                    Html.fromHtml(getResources().getString(R.string.camera_broken_html),
+                            Html.FROM_HTML_MODE_LEGACY));
+        }
+        else
+        {
+            mCameraBrokenText.setText(
+                    Html.fromHtml(getResources().getString(R.string.camera_broken_html)));
+        }
     }
 
     public JumioCameraDialogBlockerView setUrl(String url)

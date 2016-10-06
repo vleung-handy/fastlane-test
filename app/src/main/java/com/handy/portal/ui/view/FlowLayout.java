@@ -125,7 +125,7 @@ public class FlowLayout extends ViewGroup
     private Collection<View> getLayoutChildren()
     {
         int count = getChildCount();
-        Collection<View> children = new ArrayList<View>(count);
+        Collection<View> children = new ArrayList<>(count);
         for (int index = 0; index < count; index++)
         {
             View child = getChildAt(index);

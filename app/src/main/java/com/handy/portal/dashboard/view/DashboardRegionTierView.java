@@ -74,6 +74,7 @@ public class DashboardRegionTierView extends FrameLayout
         ButterKnife.bind(this);
     }
 
+    @SuppressWarnings("deprecation")
     public void setDisplay(@Nullable List<ProviderEvaluation.Tier> currentTiers, int jobsToComplete,
                            String regionName, String serviceName, String incentiveType)
     {
@@ -120,12 +121,23 @@ public class DashboardRegionTierView extends FrameLayout
 
             if (incentiveType.equals(ProviderEvaluation.Incentive.TIERED_TYPE))
             {
-                mCompleteJobsUnlockText.setText(jobsToComplete == 0 ?
-                        getResources().getString(R.string.highest_rate_this_week_formatted, regionName) :
-                        Html.fromHtml(getContext().getResources()
-                                .getQuantityString(R.plurals.complete_jobs_unlock_higher_rate_formatted,
-                                        jobsToComplete, jobsToComplete, regionName)));
-
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+                {
+                    mCompleteJobsUnlockText.setText(jobsToComplete == 0 ?
+                            getResources().getString(R.string.highest_rate_this_week_formatted, regionName) :
+                            Html.fromHtml(getContext().getResources()
+                                            .getQuantityString(R.plurals.complete_jobs_unlock_higher_rate_formatted,
+                                                    jobsToComplete, jobsToComplete, regionName),
+                                    Html.FROM_HTML_MODE_LEGACY));
+                }
+                else
+                {
+                    mCompleteJobsUnlockText.setText(jobsToComplete == 0 ?
+                            getResources().getString(R.string.highest_rate_this_week_formatted, regionName) :
+                            Html.fromHtml(getContext().getResources()
+                                    .getQuantityString(R.plurals.complete_jobs_unlock_higher_rate_formatted,
+                                            jobsToComplete, jobsToComplete, regionName)));
+                }
             }
             else if (currentTiers != null)
             {

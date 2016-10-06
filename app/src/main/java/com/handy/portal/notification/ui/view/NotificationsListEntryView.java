@@ -1,6 +1,7 @@
 package com.handy.portal.notification.ui.view;
 
 import android.content.Context;
+import android.os.Build;
 import android.text.Html;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -54,15 +55,32 @@ public class NotificationsListEntryView extends FrameLayout
         }
     }
 
+    @SuppressWarnings("deprecation")
     private void setNotificationText(final NotificationMessage notificationMessage)
     {
         if (notificationMessage.isInteracted())
         {
-            mNotificationBody.setText(Html.fromHtml(notificationMessage.getBody()));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            {
+                mNotificationBody.setText(Html.fromHtml(notificationMessage.getBody(),
+                        Html.FROM_HTML_MODE_LEGACY));
+            }
+            else
+            {
+                mNotificationBody.setText(Html.fromHtml(notificationMessage.getBody()));
+            }
         }
         else
         {
-            mNotificationBody.setText(Html.fromHtml(notificationMessage.getHtmlBody()));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            {
+                mNotificationBody.setText(Html.fromHtml(notificationMessage.getHtmlBody(),
+                        Html.FROM_HTML_MODE_LEGACY));
+            }
+            else
+            {
+                mNotificationBody.setText(Html.fromHtml(notificationMessage.getHtmlBody()));
+            }
         }
         mNotificationTime.setText(notificationMessage.getFormattedTime());
     }
