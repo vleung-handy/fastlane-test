@@ -20,6 +20,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.constant.MainViewPage;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProfileEvent;
@@ -29,6 +30,7 @@ import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.Provider;
@@ -86,8 +88,11 @@ public class ProfileUpdateFragment extends ActionBarFragment
     ProviderManager mProviderManager;
     @Inject
     ConfigManager mConfigManager;
+    @Inject
+    PrefsManager mPrefsManager;
 
     private FormDefinitionWrapper mFormDefinitionWrapper;
+    private boolean mEditingProImage;
 
     @Override
     protected MainViewPage getAppPage()
@@ -118,7 +123,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
         super.onViewCreated(view, savedInstanceState);
         setFormFieldErrorStateRemovers();
         setActionBar(R.string.edit_your_profile, false);
-        initialize(null);
+        initialize();
     }
 
     @Override
@@ -132,6 +137,12 @@ public class ProfileUpdateFragment extends ActionBarFragment
         {
             bus.post(new RegionDefinitionEvent.RequestFormDefinitions(
                     mProviderManager.getCachedActiveProvider().getCountry(), this.getContext()));
+        }
+
+        if (mEditingProImage)
+        {
+            initProImage();
+            mEditingProImage = false;
         }
     }
 
@@ -167,6 +178,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
         final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
         if (configuration != null && configuration.isProfilePictureEnabled())
         {
+            mEditingProImage = true;
             final Bundle bundle = new Bundle();
             bundle.putSerializable(BundleKeys.NAVIGATION_SOURCE, EditPhotoFragment.Source.PROFILE);
             bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_PICTURE, bundle, true));
@@ -202,15 +214,10 @@ public class ProfileUpdateFragment extends ActionBarFragment
         showToast(errorMessage, Toast.LENGTH_LONG);
     }
 
-    @Subscribe
-    public void initialize(final ProfileEvent.ReceiveProviderProfileSuccess event)
+    public void initialize()
     {
         Provider provider = mProviderManager.getCachedActiveProvider();
         ProviderProfile profile = mProviderManager.getCachedProviderProfile();
-        if (event != null && event.providerProfile != null)
-        {
-            profile = event.providerProfile;
-        }
         if (provider == null || profile == null || profile.getProviderPersonalInfo() == null)
         {
             Crashlytics.logException(new NullPointerException("Provider or ProviderProfile is null."));
@@ -241,11 +248,16 @@ public class ProfileUpdateFragment extends ActionBarFragment
             mPhoneText.setText(info.getLocalPhone());
         }
 
+        initProImage();
+    }
+
+    private void initProImage()
+    {
         final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
         if (configuration != null && configuration.isProfilePictureEnabled())
         {
             mImageHolder.setVisibility(View.VISIBLE);
-            final String imageUrl = info.getProfilePhotoUrl();
+            final String imageUrl = getProfilePhotoUrl();
             if (imageUrl != null)
             {
                 Picasso.with(getActivity())
@@ -268,6 +280,22 @@ public class ProfileUpdateFragment extends ActionBarFragment
         {
             mImageHolder.setVisibility(View.GONE);
         }
+    }
+
+    private String getProfilePhotoUrl()
+    {
+        final ProviderProfile profile = mProviderManager.getCachedProviderProfile();
+        if (mPrefsManager.getString(PrefsKey.PROFILE_PHOTO_URL, null) != null)
+        {
+            return mPrefsManager.getString(PrefsKey.PROFILE_PHOTO_URL);
+        }
+        else if (profile != null
+                && profile.getProviderPersonalInfo() != null
+                && profile.getProviderPersonalInfo().getProfilePhotoUrl() != null)
+        {
+            return profile.getProviderPersonalInfo().getProfilePhotoUrl();
+        }
+        return null;
     }
 
     private boolean validate()

@@ -146,4 +146,7 @@ public abstract class ProfileEvent extends HandyEvent
             this.error = error;
         }
     }
+
+
+    public static class ProfilePhotoUpdated extends HandyEvent {}
 }

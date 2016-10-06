@@ -26,6 +26,7 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
+import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.event.HandyEvent;
@@ -168,24 +169,17 @@ public class MainActivityFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void initProImage(final ProfileEvent.ReceiveProviderProfileSuccess event)
+    public void initProImage(final ProfileEvent.ProfilePhotoUpdated event)
     {
         final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
         if (configuration != null && configuration.isProfilePictureEnabled())
         {
-            ProviderProfile profile = mProviderManager.getCachedProviderProfile();
-            if (event != null && event.providerProfile != null)
-            {
-                profile = event.providerProfile;
-            }
             mProImage.setVisibility(View.VISIBLE);
-            if (profile != null
-                    && profile.getProviderPersonalInfo() != null
-                    && profile.getProviderPersonalInfo().getProfilePhotoUrl() != null)
+            final String profilePhotoUrl = getProfilePhotoUrl();
+            if (profilePhotoUrl != null)
             {
-                final String imageUrl = profile.getProviderPersonalInfo().getProfilePhotoUrl();
                 Picasso.with(getActivity())
-                        .load(imageUrl)
+                        .load(profilePhotoUrl)
                         .placeholder(R.drawable.img_pro_placeholder)
                         .noFade()
                         .into(mProImage);
@@ -199,6 +193,22 @@ public class MainActivityFragment extends InjectedFragment
         {
             mProImage.setVisibility(View.GONE);
         }
+    }
+
+    private String getProfilePhotoUrl()
+    {
+        final ProviderProfile profile = mProviderManager.getCachedProviderProfile();
+        if (mPrefsManager.getString(PrefsKey.PROFILE_PHOTO_URL, null) != null)
+        {
+            return mPrefsManager.getString(PrefsKey.PROFILE_PHOTO_URL);
+        }
+        else if (profile != null
+                && profile.getProviderPersonalInfo() != null
+                && profile.getProviderPersonalInfo().getProfilePhotoUrl() != null)
+        {
+            return profile.getProviderPersonalInfo().getProfilePhotoUrl();
+        }
+        return null;
     }
 
     @Override

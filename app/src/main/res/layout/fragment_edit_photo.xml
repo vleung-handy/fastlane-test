@@ -1,31 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     >
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="center_horizontal"
-        android:orientation="vertical"
+        android:layout_above="@+id/choose_photo_buttons"
         >
-
-        <FrameLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/handy_bg_blue"
-            >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="160dp"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/default_margin"
-                android:src="@drawable/img_selfie"
-                />
-        </FrameLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -38,7 +22,6 @@
                 style="@style/TextView.XLarge.Bold"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/default_margin_half"
                 android:gravity="center"
                 android:text="@string/upload_photo_title"
                 />
@@ -49,79 +32,181 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/default_margin"
                 android:gravity="center"
+                android:padding="@dimen/default_padding_half"
                 android:text="@string/upload_photo_subtitle"
                 />
 
-            <TextView
-                style="@style/TextView.Medium.Bold"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/default_margin_half"
-                android:gravity="center"
-                android:text="@string/upload_photo_list_title"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                >
+
+                <ImageView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:src="@drawable/img_good_selfie"
+                    />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/default_padding"
+                    android:paddingStart="@dimen/default_padding"
+                    >
+
+                    <TextView
+                        style="@style/TextView.Medium.Bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/extra_margin"
+                        android:text="@string/upload_photo_dos_title"
+                        android:textColor="@color/handy_green"
+                        />
+
+                    <TextView
+                        style="@style/TextView.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/extra_margin"
+                        android:text="@string/upload_photo_dos_1"
+                        />
+
+                    <TextView
+                        style="@style/TextView.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/extra_margin"
+                        android:text="@string/upload_photo_dos_2"
+                        />
+
+                    <TextView
+                        style="@style/TextView.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/extra_margin"
+                        android:text="@string/upload_photo_dos_3"
+                        />
+
+                    <TextView
+                        style="@style/TextView.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/extra_margin"
+                        android:text="@string/upload_photo_dos_4"
+                        />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_margin="@dimen/default_margin"
+                android:background="@color/border_gray"
                 />
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:orientation="vertical"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
                 >
 
-                <TextView
-                    style="@style/TextView.Medium"
-                    android:layout_width="match_parent"
+                <ImageView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/default_margin_half"
-                    android:text="@string/upload_photo_list_item_1"
+                    android:layout_weight="1"
+                    android:src="@drawable/img_bad_selfie"
                     />
 
-                <TextView
-                    style="@style/TextView.Medium"
-                    android:layout_width="match_parent"
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/default_margin_half"
-                    android:text="@string/upload_photo_list_item_2"
-                    />
+                    android:layout_weight="1"
+                    android:orientation="vertical"
+                    android:paddingLeft="@dimen/default_padding"
+                    android:paddingStart="@dimen/default_padding"
+                    >
 
-                <TextView
-                    style="@style/TextView.Medium"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/default_margin_half"
-                    android:text="@string/upload_photo_list_item_3"
-                    />
+                    <TextView
+                        style="@style/TextView.Medium.Bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/extra_margin"
+                        android:text="@string/upload_photo_donts_title"
+                        android:textColor="@color/error_red"
+                        />
 
+                    <TextView
+                        style="@style/TextView.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/extra_margin"
+                        android:text="@string/upload_photo_donts_1"
+                        />
+
+                    <TextView
+                        style="@style/TextView.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/extra_margin"
+                        android:text="@string/upload_photo_donts_2"
+                        />
+
+                    <TextView
+                        style="@style/TextView.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/extra_margin"
+                        android:text="@string/upload_photo_donts_3"
+                        />
+
+                    <TextView
+                        style="@style/TextView.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/extra_margin"
+                        android:text="@string/upload_photo_donts_4"
+                        />
+                </LinearLayout>
             </LinearLayout>
         </LinearLayout>
+    </ScrollView>
 
-        <LinearLayout
-            android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/choose_photo_buttons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/choose_photo_gallery"
+            style="@style/Button.Green"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="@dimen/default_padding"
-            android:paddingEnd="@dimen/default_padding"
-            android:paddingLeft="@dimen/default_padding"
-            android:paddingRight="@dimen/default_padding"
-            android:paddingStart="@dimen/default_padding"
-            >
+            android:layout_marginEnd="1dp"
+            android:layout_marginRight="1dp"
+            android:layout_weight="1"
+            android:text="@string/upload_photo_gallery_option"
+            />
 
-            <Button
-                android:id="@+id/choose_photo_camera"
-                style="@style/Button.Green.Round"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/default_margin_half"
-                android:text="@string/upload_photo_camera_option"
-                />
-
-            <Button
-                android:id="@+id/choose_photo_gallery"
-                style="@style/Button.Green.Round"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/upload_photo_gallery_option"
-                />
-        </LinearLayout>
+        <Button
+            android:id="@+id/choose_photo_camera"
+            style="@style/Button.Green"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/upload_photo_camera_option"
+            />
     </LinearLayout>
-</ScrollView>
+</RelativeLayout>
