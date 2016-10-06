@@ -26,6 +26,7 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
+import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.library.util.IOUtils;
 import com.handy.portal.library.util.TextUtils;
@@ -103,6 +104,7 @@ public class EditPhotoFragment extends ActionBarFragment
         setActionBar(R.string.edit_photo, false);
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
+        bus.post(new NavigationEvent.SetNavigationTabVisibility(false));
     }
 
     @Override
@@ -352,6 +354,13 @@ public class EditPhotoFragment extends ActionBarFragment
     {
         bus.unregister(this);
         super.onPause();
+    }
+
+    @Override
+    public void onDestroyView()
+    {
+        bus.post(new NavigationEvent.SetNavigationTabVisibility(true));
+        super.onDestroyView();
     }
 
     private void showError(final DataManager.DataManagerError error)
