@@ -59,14 +59,24 @@ public class SelectableJobsViewGroup extends LinearLayout
         setPadding(0, 0, 0, mMargin);
     }
 
+    @SuppressWarnings("deprecation")
     public void bind(final BookingsWrapperViewModel model,
                      final Class<? extends BookingElementView> viewClass)
     {
         final String sanitizedDate = model.getSanitizedDate();
         if (sanitizedDate != null)
         {
-            mTitle.setText(Html.fromHtml(
-                    DateTimeUtils.getHtmlFormattedDateString(sanitizedDate)));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            {
+                mTitle.setText(Html.fromHtml(
+                        DateTimeUtils.getHtmlFormattedDateString(sanitizedDate),
+                        Html.FROM_HTML_MODE_LEGACY));
+            }
+            else
+            {
+                mTitle.setText(Html.fromHtml(
+                        DateTimeUtils.getHtmlFormattedDateString(sanitizedDate)));
+            }
         }
         else
         {

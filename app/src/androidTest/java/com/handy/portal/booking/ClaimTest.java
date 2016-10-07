@@ -3,7 +3,6 @@ package com.handy.portal.booking;
 import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
-import android.test.suitebuilder.annotation.LargeTest;
 import android.view.View;
 
 import com.handy.portal.R;
@@ -36,7 +35,6 @@ import static org.hamcrest.Matchers.is;
 
 //note that animations should be disabled on the device running these tests
 @RunWith(AndroidJUnit4.class)
-@LargeTest
 public class ClaimTest
 {
     private static final TestUser TEST_USER = TestUsers.BOOKINGS_NY_PROVIDER;

@@ -1,5 +1,6 @@
 package com.handy.portal.dashboard.fragment;
 
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
@@ -66,6 +67,7 @@ public class DashboardTiersFragment extends ActionBarFragment implements Dashboa
         return view;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
     {
@@ -96,7 +98,15 @@ public class DashboardTiersFragment extends ActionBarFragment implements Dashboa
         }
 
         // Doesn't work when setting to textview, works programmatically
-        mTiersLegalText.setText(Html.fromHtml(getString(R.string.tiers_legal_text_html)));
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+        {
+            mTiersLegalText.setText(Html.fromHtml(getString(R.string.tiers_legal_text_html),
+                    Html.FROM_HTML_MODE_LEGACY));
+        }
+        else
+        {
+            mTiersLegalText.setText(Html.fromHtml(getString(R.string.tiers_legal_text_html)));
+        }
     }
 
     @Override

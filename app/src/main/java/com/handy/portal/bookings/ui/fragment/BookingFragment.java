@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -866,6 +867,7 @@ public class BookingFragment extends TimerActionBarFragment
         return bookingStatus == Booking.BookingStatus.CLAIMED;
     }
 
+    @SuppressWarnings("deprecation")
     private void setRevealNoticeText(
             final float minimumHours, final float maximumHours,
             final String minimumPaymentFormatted, final String maximumPaymentFormatted)
@@ -878,20 +880,42 @@ public class BookingFragment extends TimerActionBarFragment
             final String startDateFormatted = DateTimeUtils.formatDetailedDate(mBooking.getStartDate());
             final String endDateFormatted = DateTimeUtils.formatDetailedDate(mBooking.getEndDate());
 
-            noticeText = Html.fromHtml(getResources()
-                    .getString(R.string.full_details_and_more_available_on_date_flex,
-                            minimumHoursFormatted, maximumHoursFormatted,
-                            startDateFormatted, endDateFormatted,
-                            minimumPaymentFormatted, minimumHoursFormatted,
-                            maximumPaymentFormatted, maximumHoursFormatted
-                    ));
-
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            {
+                noticeText = Html.fromHtml(getResources()
+                        .getString(R.string.full_details_and_more_available_on_date_flex,
+                                minimumHoursFormatted, maximumHoursFormatted,
+                                startDateFormatted, endDateFormatted,
+                                minimumPaymentFormatted, minimumHoursFormatted,
+                                maximumPaymentFormatted, maximumHoursFormatted
+                        ), Html.FROM_HTML_MODE_LEGACY);
+            }
+            else
+            {
+                noticeText = Html.fromHtml(getResources()
+                        .getString(R.string.full_details_and_more_available_on_date_flex,
+                                minimumHoursFormatted, maximumHoursFormatted,
+                                startDateFormatted, endDateFormatted,
+                                minimumPaymentFormatted, minimumHoursFormatted,
+                                maximumPaymentFormatted, maximumHoursFormatted
+                        ));
+            }
         }
         else
         {
-            noticeText = Html.fromHtml(getResources().getString(
-                    R.string.full_details_and_more_available_on_date,
-                    DateTimeUtils.formatDetailedDate(mBooking.getRevealDate())));
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            {
+                noticeText = Html.fromHtml(getResources().getString(
+                        R.string.full_details_and_more_available_on_date,
+                        DateTimeUtils.formatDetailedDate(mBooking.getRevealDate())),
+                        Html.FROM_HTML_MODE_LEGACY);
+            }
+            else
+            {
+                noticeText = Html.fromHtml(getResources().getString(
+                        R.string.full_details_and_more_available_on_date,
+                        DateTimeUtils.formatDetailedDate(mBooking.getRevealDate())));
+            }
         }
         mRevealNoticeText.setText(noticeText);
         mRevealNoticeText.setVisibility(View.VISIBLE);

@@ -1,7 +1,3 @@
-import org.gradle.logging.StyledTextOutputFactory
-
-import static org.gradle.logging.StyledTextOutput.Style
-
 buildscript {
     repositories {
         flatDir {
@@ -48,8 +44,8 @@ def computeVersionCode(versionName) {
         def (major, minor, patch) = identifiers.collect { it.toInteger() }
         def versionCode = (major * 10000) + (minor * 100) + (patch * 1)
 
-        def out = services.get(StyledTextOutputFactory).create("debug")
-        out.withStyle(Style.Info).println("\nBuilding version ${versionName} (${versionCode})\n")
+        def out = services.create("debug")
+        out.println("\nBuilding version ${versionName} (${versionCode})\n")
         return versionCode
     } else {
         throw new InvalidUserDataException("Illegal version name ${versionName}")

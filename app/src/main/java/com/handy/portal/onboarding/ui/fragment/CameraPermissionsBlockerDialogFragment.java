@@ -73,6 +73,9 @@ public class CameraPermissionsBlockerDialogFragment extends InjectedDialogFragme
     public void onStart()
     {
         super.onStart();
-        getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        if (getDialog().getWindow() != null)
+        {
+            getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
     }
 }

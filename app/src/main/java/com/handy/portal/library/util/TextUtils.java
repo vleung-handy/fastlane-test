@@ -2,6 +2,7 @@ package com.handy.portal.library.util;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.Spannable;
@@ -178,10 +179,19 @@ public final class TextUtils
         return pattern == null || pattern.matcher(text).matches();
     }
 
+    @SuppressWarnings("deprecation")
     public static void setTextViewHTML(final TextView text, final String html,
                                        @Nullable final LaunchWebViewCallback launchWebViewCallback)
     {
-        CharSequence sequence = Html.fromHtml(html);
+        CharSequence sequence;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+        {
+            sequence = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY);
+        }
+        else
+        {
+            sequence = Html.fromHtml(html);
+        }
 
         SpannableStringBuilder strBuilder = new SpannableStringBuilder(sequence);
         URLSpan[] urls = strBuilder.getSpans(0, sequence.length(), URLSpan.class);

@@ -65,7 +65,18 @@ public class InstructionCheckItemView extends FrameLayout
 
         if (instruction.getTitle() != null && !instruction.getTitle().isEmpty())
         {
-            mTitleDescriptionTextView.setText(Html.fromHtml("<b>" + instruction.getTitle() + "</b> " + instruction.getDescription()), TextView.BufferType.SPANNABLE);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
+            {
+                mTitleDescriptionTextView.setText(
+                        Html.fromHtml("<b>" + instruction.getTitle() + "</b> "
+                                + instruction.getDescription(), Html.FROM_HTML_MODE_LEGACY),
+                        TextView.BufferType.SPANNABLE);
+            }
+            else
+            {
+                mTitleDescriptionTextView.setText(Html.fromHtml("<b>" + instruction.getTitle() +
+                        "</b> " + instruction.getDescription()), TextView.BufferType.SPANNABLE);
+            }
         }
         else
         {

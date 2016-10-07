@@ -1,10 +1,13 @@
 package com.handy.portal.library.ui.view;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.support.annotation.Nullable;
 import android.util.AttributeSet;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
@@ -77,32 +80,65 @@ public class HandyWebView extends WebView //TODO: refactor class name
         }
     }
 
+    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
+    @SuppressWarnings("deprecation")
     private void init()
     {
-        setWebViewClient(new WebViewClient()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
         {
-            @Override
-            public boolean shouldOverrideUrlLoading(WebView view, String url)
+            setWebViewClient(new WebViewClient()
             {
-                if (url != null)
+                @Override
+                public boolean shouldOverrideUrlLoading(final WebView view, final WebResourceRequest request)
                 {
-                    try
+                    String url = request.getUrl().toString();
+                    if (url != null)
                     {
-                        Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.parse(url)), view.getContext());
+                        try
+                        {
+                            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.parse(url)), view.getContext());
+                        }
+                        catch (Exception e)
+                        {
+                            Crashlytics.log("Attempted to open " + url);
+                            Crashlytics.logException(e);
+                        }
+                        return true;
                     }
-                    catch (Exception e)
+                    else
                     {
-                        Crashlytics.log("Attempted to open " + url);
-                        Crashlytics.logException(e);
+                        return false;
                     }
-                    return true;
                 }
-                else
+            });
+        }
+        else
+        {
+            setWebViewClient(new WebViewClient()
+            {
+                @Override
+                public boolean shouldOverrideUrlLoading(WebView view, String url)
                 {
-                    return false;
+                    if (url != null)
+                    {
+                        try
+                        {
+                            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.parse(url)), view.getContext());
+                        }
+                        catch (Exception e)
+                        {
+                            Crashlytics.log("Attempted to open " + url);
+                            Crashlytics.logException(e);
+                        }
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
                 }
-            }
-        });
+            });
+        }
     }
 
     @Override
