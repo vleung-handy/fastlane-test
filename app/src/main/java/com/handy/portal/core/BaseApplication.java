@@ -56,7 +56,7 @@ public class BaseApplication extends MultiDexApplication
     private int mStarted;
     private boolean mSavedInstance;
     //This is used for the application context
-    private static BaseApplication sInstance;
+    private static Context sContext;
 
     //We are injecting all of our event bus listening managers in BaseApplication to start them up for event listening
     @Inject
@@ -117,7 +117,7 @@ public class BaseApplication extends MultiDexApplication
     public void onCreate()
     {
         super.onCreate();
-        sInstance = this;
+        sContext = getApplicationContext();
         createObjectGraph();
         inject(this);
 
@@ -187,7 +187,7 @@ public class BaseApplication extends MultiDexApplication
 
     public static Context getContext()
     {
-        return sInstance;
+        return sContext;
     }
 
     public static String getDeviceId() { return sDeviceId; }
