@@ -9,6 +9,7 @@ public interface PrefsKey
     String ENVIRONMENT = "environment";
     String ENVIRONMENT_PREFIX = "environment_prefix";
     String EVENT_LOG_BUNDLES = "event_log_bundles";
+    String EVENT_LOG_BUNDLES_TO_SEND = "event_log_bundles_to_send";
     String LOG_SESSION = "log_session";
     String SAME_DAY_LATE_DISPATCH_AVAILABLE_JOB_NOTIFICATION_EXPLAINED = "same_day_late_dispatch_available_job_notification_explained";
     String APP_FIRST_LAUNCH = "app_first_launch";

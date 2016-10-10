@@ -96,6 +96,10 @@ public class PrefsManager
         mSecureDefaultPrefs.edit().putBoolean(prefsKey, value).apply();
     }
 
+    public void removeValue(String prefsKey) {
+        mDefaultPrefs.edit().remove(prefsKey).apply();
+    }
+
     public void clear()
     {
         mDefaultPrefs.edit().clear().apply();
