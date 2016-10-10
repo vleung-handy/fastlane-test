@@ -5,6 +5,7 @@ import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.View;
 import android.webkit.CookieManager;
@@ -21,6 +22,7 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowStatus;
 import com.handy.portal.onboarding.ui.activity.OnboardingFlowActivity;
@@ -98,7 +100,7 @@ public class SplashActivity extends BaseActivity
         super.onResume();
         if (!hasUser())
         {
-            final Intent loginActivityIntent = getActivityIntent(LoginActivity.class);
+            final Intent loginActivityIntent = getActivityIntent(LoginActivity.class, null);
             loginActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(loginActivityIntent);
@@ -154,13 +156,20 @@ public class SplashActivity extends BaseActivity
         final Intent activityIntent;
         if (setupData != null && shouldShowOnboarding(setupData.getOnboardingDetails()))
         {
-            activityIntent = getActivityIntent(OnboardingFlowActivity.class);
+            activityIntent = getActivityIntent(OnboardingFlowActivity.class, null);
             activityIntent.putExtra(BundleKeys.ONBOARDING_DETAILS,
                     setupData.getOnboardingDetails());
         }
         else
         {
-            activityIntent = getActivityIntent(MainActivity.class);
+            final ConfigurationResponse configuration = setupData != null ?
+                    setupData.getConfigurationResponse() : null;
+            Uri defaultDeeplinkUri = null;
+            if (configuration != null && configuration.getStartupDeeplink() != null)
+            {
+                defaultDeeplinkUri = Uri.parse(configuration.getStartupDeeplink());
+            }
+            activityIntent = getActivityIntent(MainActivity.class, defaultDeeplinkUri);
         }
         return activityIntent;
     }
@@ -179,17 +188,36 @@ public class SplashActivity extends BaseActivity
         return !onboardingDetails.getSubflowsByStatus(SubflowStatus.INCOMPLETE).isEmpty();
     }
 
-    private Intent getActivityIntent(final Class<? extends BaseActivity> activityClass)
+    private Intent getActivityIntent(final Class<? extends BaseActivity> activityClass,
+                                     @Nullable final Uri defaultDeeplinkUri)
     {
         final Intent intent = new Intent(this, activityClass);
-        final Uri data = getIntent().getData();
+        final boolean isLinkDeeplinkAttached = attachDeeplinkDataIfAvailable(intent,
+                getIntent().getData(), DeeplinkLog.Source.LINK);
+        if (!isLinkDeeplinkAttached)
+        {
+            attachDeeplinkDataIfAvailable(intent, defaultDeeplinkUri, DeeplinkLog.Source.STARTUP);
+        }
+        return intent;
+    }
+
+    private boolean attachDeeplinkDataIfAvailable(
+            @NonNull final Intent intent,
+            @Nullable final Uri data,
+            @NonNull @DeeplinkLog.Source.DeeplinkSource final String source)
+    {
         final Bundle deeplinkBundle = DeeplinkUtils.createDeeplinkBundleFromUri(data);
         if (deeplinkBundle != null)
         {
             intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkBundle);
-            intent.putExtra(BundleKeys.DEEPLINK_SOURCE, DeeplinkLog.Source.LINK);
+            intent.putExtra(BundleKeys.DEEPLINK_SOURCE, source);
+            return true;
         }
-        return intent;
+        else
+        {
+            return false;
+        }
+
     }
 
     @Override
