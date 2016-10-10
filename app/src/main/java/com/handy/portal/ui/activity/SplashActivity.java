@@ -7,6 +7,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -17,7 +18,6 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
-import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
@@ -165,7 +165,7 @@ public class SplashActivity extends BaseActivity
             final ConfigurationResponse configuration = setupData != null ?
                     setupData.getConfigurationResponse() : null;
             Uri defaultDeeplinkUri = null;
-            if (configuration != null && configuration.getStartupDeeplink() != null)
+            if (configuration != null && !TextUtils.isEmpty(configuration.getStartupDeeplink()))
             {
                 defaultDeeplinkUri = Uri.parse(configuration.getStartupDeeplink());
             }
@@ -262,6 +262,6 @@ public class SplashActivity extends BaseActivity
 
     private boolean hasUser()
     {
-        return !TextUtils.isNullOrEmpty(mAuthToken);
+        return !TextUtils.isEmpty(mAuthToken);
     }
 }

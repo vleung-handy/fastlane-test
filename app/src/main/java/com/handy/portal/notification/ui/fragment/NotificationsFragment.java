@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -157,7 +158,7 @@ public final class NotificationsFragment extends ActionBarFragment
                         uri
                 )));
                 final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
-                if (deeplink != null)
+                if (!TextUtils.isEmpty(deeplink))
                 {
                     final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
                     if (page != null)
