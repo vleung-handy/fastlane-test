@@ -20,4 +20,14 @@ public class Event
         mEventContext = eventLog.getEventContext();
         mEventLog = eventLog;
     }
+
+    public String getEventType()
+    {
+        return mEventType;
+    }
+
+    public String getEventContext()
+    {
+        return mEventContext;
+    }
 }

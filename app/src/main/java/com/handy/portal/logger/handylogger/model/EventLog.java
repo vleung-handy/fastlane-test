@@ -2,6 +2,7 @@ package com.handy.portal.logger.handylogger.model;
 
 public abstract class EventLog
 {
+    //These are handled in the LogEvent object
     private transient String mEventType;
     private transient String mEventContext;
 

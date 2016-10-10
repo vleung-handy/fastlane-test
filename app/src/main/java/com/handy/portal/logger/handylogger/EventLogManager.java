@@ -7,16 +7,19 @@ import android.support.annotation.Nullable;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.handy.portal.BuildConfig;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.core.BaseApplication;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.logger.handylogger.model.Event;
 import com.handy.portal.logger.handylogger.model.EventLogBundle;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.manager.PrefsManager;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,6 +37,7 @@ public class EventLogManager
     private final EventBus mBus;
     private final DataManager mDataManager;
     private final PrefsManager mPrefsManager;
+    private final MixpanelAPI mMixpanel;
 
     @Inject
     public EventLogManager(final EventBus bus, final DataManager dataManager,
@@ -43,34 +47,38 @@ public class EventLogManager
         mBus.register(this);
         mDataManager = dataManager;
         mPrefsManager = prefsManager;
+
+        String mixpanelApiKey = PropertiesReader.getConfigProperties(BaseApplication.getContext()).getProperty("mixpanel_api_key");
+        mMixpanel = MixpanelAPI.getInstance(BaseApplication.getContext(), mixpanelApiKey);
     }
 
     @Subscribe
     public void addLog(@NonNull LogEvent.AddLogEvent event)
     {
-        if (!BuildConfig.DEBUG)
+        Event eventLog = new Event(event.getLog());
+        //log the payload to Crashlytics too
+        try
         {
-            //log the payload to Crashlytics too
-            try
-            {
-                //putting in try/catch block just in case GSON.toJson throws an exception
-                String eventLogJson = GSON.toJson(event.getLog());
-                String crashlyticsLogString =
-                        event.getLog().getEventName()
-                                + ": " + eventLogJson;
-                Crashlytics.log(crashlyticsLogString);
-            }
-            catch (Exception e)
-            {
-                Crashlytics.logException(e);
-            }
+            //putting in try/catch block just in case GSON.toJson throws an exception
+            //Get the log only to log
+            JSONObject eventLogJson = new JSONObject(GSON.toJson(event.getLog()));
+            String logString = event.getLog().getEventName() + ": " + eventLogJson.toString();
+            Crashlytics.log(logString);
 
-            sLogs.add(new Event(event.getLog()));
-            if (sLogs.size() >= MAX_NUM_PER_BUNDLE)
-            {
-                mBus.post(new LogEvent.SaveLogsEvent());
-                mBus.post(new LogEvent.SendLogsEvent());
-            }
+            //Mixpanel tracking info in NOR-1016
+            eventLogJson.put("context", eventLog.getEventContext());
+            mMixpanel.track(eventLog.getEventType(), eventLogJson);
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e);
+        }
+
+        sLogs.add(eventLog);
+        if (sLogs.size() >= MAX_NUM_PER_BUNDLE)
+        {
+            mBus.post(new LogEvent.SaveLogsEvent());
+            mBus.post(new LogEvent.SendLogsEvent());
         }
     }
 

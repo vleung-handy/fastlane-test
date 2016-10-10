@@ -219,6 +219,9 @@ dependencies {
     //Stripe payment processing
     compile 'com.stripe:stripe-android:1.0.4'
 
+    //Mix Panel
+    compile "com.mixpanel.android:mixpanel-android:4.+"
+
     //Testing
     testCompile 'org.robolectric:robolectric:3.2-SNAPSHOT'
     testCompile 'org.robolectric:shadows-support-v4:3.1'
