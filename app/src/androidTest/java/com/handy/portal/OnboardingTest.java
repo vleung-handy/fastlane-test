@@ -32,7 +32,6 @@ import static android.support.test.espresso.matcher.ViewMatchers.withParent;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
-@Ignore
 @RunWith(AndroidJUnit4.class)
 public class OnboardingTest
 {
@@ -69,6 +68,7 @@ public class OnboardingTest
      */
     // Seed data for onboarding is broken. We'll need to fix that first
     @Test
+    @Ignore
     public void onboardingClaimTest()
     {
         //wait for the main container

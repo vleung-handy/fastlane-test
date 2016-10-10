@@ -18,8 +18,6 @@ import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
-@Ignore
-//TODO ignoring for now because we need to set up seed automation file for this to pass, but we need to set up tests to pass with AWS now
 @RunWith(AndroidJUnit4.class)
 public class DashboardTest
 {
@@ -31,7 +29,9 @@ public class DashboardTest
     if the prefix is "test"
     TODO: investigate
      */
+    //TODO ignoring for now because we need to set up seed automation file for this to pass, but we need to set up tests to pass with AWS now
     @Test
+    @Ignore
     public void dashboardIsWorkingTest() throws InterruptedException
     {
         // Go to dashboard.
