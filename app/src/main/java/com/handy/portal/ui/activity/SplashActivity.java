@@ -100,7 +100,7 @@ public class SplashActivity extends BaseActivity
         super.onResume();
         if (!hasUser())
         {
-            final Intent loginActivityIntent = getActivityIntent(LoginActivity.class, null);
+            final Intent loginActivityIntent = getActivityIntent(LoginActivity.class);
             loginActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(loginActivityIntent);
@@ -156,7 +156,7 @@ public class SplashActivity extends BaseActivity
         final Intent activityIntent;
         if (setupData != null && shouldShowOnboarding(setupData.getOnboardingDetails()))
         {
-            activityIntent = getActivityIntent(OnboardingFlowActivity.class, null);
+            activityIntent = getActivityIntent(OnboardingFlowActivity.class);
             activityIntent.putExtra(BundleKeys.ONBOARDING_DETAILS,
                     setupData.getOnboardingDetails());
         }
@@ -186,6 +186,11 @@ public class SplashActivity extends BaseActivity
     private boolean anyOnboardingSubflowsIncomplete(final OnboardingDetails onboardingDetails)
     {
         return !onboardingDetails.getSubflowsByStatus(SubflowStatus.INCOMPLETE).isEmpty();
+    }
+
+    private Intent getActivityIntent(final Class<? extends BaseActivity> activityClass)
+    {
+        return getActivityIntent(activityClass, null);
     }
 
     private Intent getActivityIntent(final Class<? extends BaseActivity> activityClass,
