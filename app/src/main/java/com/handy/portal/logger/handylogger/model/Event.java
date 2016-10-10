@@ -30,4 +30,8 @@ public class Event
     {
         return mEventContext;
     }
+
+    public void setEventType(String eventType) {
+        mEventType = eventType;
+    }
 }

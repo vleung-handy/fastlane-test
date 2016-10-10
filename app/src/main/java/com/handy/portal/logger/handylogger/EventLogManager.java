@@ -74,6 +74,8 @@ public class EventLogManager
             Crashlytics.logException(e);
         }
 
+        //Prefix event_type with app_lib_
+        eventLog.setEventType("app_lib_" + eventLog.getEventType());
         sLogs.add(eventLog);
         if (sLogs.size() >= MAX_NUM_PER_BUNDLE)
         {
