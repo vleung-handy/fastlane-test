@@ -120,6 +120,10 @@ public class EditPhotoFragment extends ActionBarFragment
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             mIsPhotoUploadUrlRequested = false;
         }
+        else
+        {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        }
     }
 
     @OnClick(R.id.choose_photo_camera)
@@ -211,6 +215,7 @@ public class EditPhotoFragment extends ActionBarFragment
         else
         {
             bus.post(new LogEvent.AddLogEvent(new ProfilePhotoLog.ImagePickerDismissed()));
+            mIsPhotoUploadUrlRequested = false;
         }
     }
 
