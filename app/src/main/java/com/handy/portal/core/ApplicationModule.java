@@ -339,6 +339,7 @@ public final class ApplicationModule
                     @Override
                     public void intercept(RequestFacade request) { }
                 }).setClient(new OkClient(okHttpClient)).build();
+        restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
         return restAdapter.create(DynamicEndpointService.class);
     }
 

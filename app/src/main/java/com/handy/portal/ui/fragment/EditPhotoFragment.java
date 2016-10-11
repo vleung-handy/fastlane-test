@@ -36,6 +36,7 @@ import com.handy.portal.logger.handylogger.model.ImageUploadLog;
 import com.handy.portal.logger.handylogger.model.ProfilePhotoLog;
 import com.handy.portal.logger.handylogger.model.ProfilePhotoUploadLog;
 import com.handy.portal.manager.PrefsManager;
+import com.yalantis.ucrop.UCrop;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -57,10 +58,12 @@ public class EditPhotoFragment extends ActionBarFragment
     @Inject
     PrefsManager mPrefsManager;
 
+
     public enum Source
     {
         ONBOARDING, PROFILE
     }
+
 
     private static final String ACTION_IMAGE_CAPTURE = "android.media.action.IMAGE_CAPTURE";
     private static final String IMAGE_DIRECTORY = "handy_images/";
@@ -116,6 +119,10 @@ public class EditPhotoFragment extends ActionBarFragment
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             mIsPhotoUploadUrlRequested = false;
+        }
+        else
+        {
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         }
     }
 
@@ -187,21 +194,46 @@ public class EditPhotoFragment extends ActionBarFragment
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK)
         {
-            bus.post(new LogEvent.AddLogEvent(new ProfilePhotoLog.ImageChosen()));
-            if (requestCode == RequestCode.GALLERY)
+            if (requestCode == UCrop.REQUEST_CROP)
             {
-                copyToExternalStorage(data.getData());
+                bus.post(new ProfileEvent.RequestPhotoUploadUrl(IMAGE_MIME_TYPE));
+                bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.MetadataRequestSubmitted()));
+                bus.post(new LogEvent.AddLogEvent(
+                        new ProfilePhotoUploadLog.ProfilePhotoUploadSubmitted(mSource)));
             }
-            mIsPhotoUploadUrlRequested = true;
-            bus.post(new ProfileEvent.RequestPhotoUploadUrl(IMAGE_MIME_TYPE));
-            bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.MetadataRequestSubmitted()));
-            bus.post(new LogEvent.AddLogEvent(
-                    new ProfilePhotoUploadLog.ProfilePhotoUploadSubmitted(mSource)));
+            else
+            {
+                bus.post(new LogEvent.AddLogEvent(new ProfilePhotoLog.ImageChosen()));
+                if (requestCode == RequestCode.GALLERY)
+                {
+                    copyToExternalStorage(data.getData());
+                }
+                mIsPhotoUploadUrlRequested = true;
+                cropImage();
+            }
         }
         else
         {
             bus.post(new LogEvent.AddLogEvent(new ProfilePhotoLog.ImagePickerDismissed()));
+            mIsPhotoUploadUrlRequested = false;
         }
+    }
+
+    private void cropImage()
+    {
+        final Uri imageUri = Uri.fromFile(getImageFile());
+        final UCrop.Options options = new UCrop.Options();
+        final int blue = ContextCompat.getColor(getActivity(), R.color.handy_blue);
+        final int darkBlue = ContextCompat.getColor(getActivity(), R.color.handy_blue_pressed);
+        options.setActiveWidgetColor(blue);
+        options.setToolbarColor(blue);
+        options.setStatusBarColor(darkBlue);
+        options.setCircleDimmedLayer(true);
+        options.setCompressionFormat(Bitmap.CompressFormat.JPEG);
+        UCrop.of(imageUri, imageUri)
+                .withOptions(options)
+                .withAspectRatio(1, 1)
+                .start(getActivity(), this);
     }
 
     private void copyToExternalStorage(final Uri data)

@@ -107,3 +107,7 @@
 -dontwarn org.codehaus.**
 -dontwarn org.ejbca.**
 -dontwarn org.spongycastle.**
+
+-dontwarn com.yalantis.ucrop**
+-keep class com.yalantis.ucrop** { *; }
+-keep interface com.yalantis.ucrop** { *; }
