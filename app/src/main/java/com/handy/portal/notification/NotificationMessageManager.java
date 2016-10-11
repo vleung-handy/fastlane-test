@@ -33,7 +33,7 @@ public class NotificationMessageManager
     @Subscribe
     public void onRequestNotificationMessages(final NotificationEvent.RequestNotificationMessages event)
     {
-        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
         mDataManager.getNotifications(providerId, event.getSinceId(), event.getUntilId(), event.getCount(), new DataManager.Callback<NotificationMessages>()
         {
             @Override
@@ -53,7 +53,7 @@ public class NotificationMessageManager
     @Subscribe
     public void onRequestMarkNotificationsAsRead(final NotificationEvent.RequestMarkNotificationsAsRead event)
     {
-        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
         mDataManager.postMarkNotificationsAsRead(providerId, event.getNotificationIds(), new DataManager.Callback<NotificationMessages>()
         {
             @Override
@@ -74,7 +74,7 @@ public class NotificationMessageManager
     public void onRequestMarkNotificationsAsInteracted(
             final NotificationEvent.RequestMarkNotificationsAsInteracted event)
     {
-        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
         mDataManager.postMarkNotificationsAsInteracted(providerId, event.getNotificationIds(), new DataManager.Callback<NotificationMessages>()
         {
             @Override
@@ -94,7 +94,7 @@ public class NotificationMessageManager
     @Subscribe
     public void onRequestUnreadCount(final NotificationEvent.RequestUnreadCount event)
     {
-        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
         if (providerId != null)
         {
             mDataManager.getNotificationsUnreadCount(providerId, new DataManager.Callback<HashMap<String, Object>>()

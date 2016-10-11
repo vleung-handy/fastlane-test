@@ -51,19 +51,19 @@ public class EnvironmentModifier
             boolean disablePinRequest = Boolean.parseBoolean(properties.getProperty("disable_pin_request", "false"));
             mIsPinRequestEnabled = !disablePinRequest;
             String environmentPrefix = properties.getProperty("environment", null);
-            environmentPrefix = prefsManager.getString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix); // whatever is stored in prefs is higher priority
+            environmentPrefix = prefsManager.getSecureString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix); // whatever is stored in prefs is higher priority
 
             if (!TextUtils.isNullOrEmpty(environmentPrefix)) // this means it's an override to point to a Q/L environment
             {
                 if (environmentPrefix.matches(IP_ADDRESS_REGEX))
                 {
-                    prefsManager.setString(PrefsKey.ENVIRONMENT, Environment.L.name());
-                    prefsManager.setString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix);
+                    prefsManager.setSecureString(PrefsKey.ENVIRONMENT, Environment.L.name());
+                    prefsManager.setSecureString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix);
                 }
                 else
                 {
-                    prefsManager.setString(PrefsKey.ENVIRONMENT, Environment.Q.name());
-                    prefsManager.setString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix);
+                    prefsManager.setSecureString(PrefsKey.ENVIRONMENT, Environment.Q.name());
+                    prefsManager.setSecureString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix);
                 }
             }
         }
@@ -75,13 +75,13 @@ public class EnvironmentModifier
 
     public String getEnvironmentPrefix()
     {
-        return mPrefsManager.getString(PrefsKey.ENVIRONMENT_PREFIX, null);
+        return mPrefsManager.getSecureString(PrefsKey.ENVIRONMENT_PREFIX, null);
     }
 
     public Environment getEnvironment()
     {
         final String environmentName =
-                mPrefsManager.getString(PrefsKey.ENVIRONMENT, DEFAULT_ENVIRONMENT);
+                mPrefsManager.getSecureString(PrefsKey.ENVIRONMENT, DEFAULT_ENVIRONMENT);
         return Environment.valueOf(environmentName);
     }
 
@@ -94,8 +94,8 @@ public class EnvironmentModifier
                                @Nullable final String environmentPrefix,
                                @Nullable final OnEnvironmentChangedListener callback)
     {
-        mPrefsManager.setString(PrefsKey.ENVIRONMENT, environment.name());
-        mPrefsManager.setString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix);
+        mPrefsManager.setSecureString(PrefsKey.ENVIRONMENT, environment.name());
+        mPrefsManager.setSecureString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix);
         if (callback != null)
         {
             callback.onEnvironmentChanged(environmentPrefix);

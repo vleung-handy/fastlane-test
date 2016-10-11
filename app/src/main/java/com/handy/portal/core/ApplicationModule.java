@@ -230,7 +230,7 @@ public final class ApplicationModule
                     @Override
                     public void intercept(RequestFacade request)
                     {
-                        String authToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
+                        String authToken = prefsManager.getSecureString(PrefsKey.AUTH_TOKEN, null);
                         if (authToken != null)
                         {
                             request.addHeader("X-Auth-Token", authToken);

@@ -75,7 +75,7 @@ public class UrbanAirshipManager
 
                     //Setup a named user linking this user's id to a UA named user
                     //We may not have a cached provider id when a user first logs in, possible race condition, but the UrbanAirshipManager will hear the ProviderIdUpdated event and update accordingly
-                    String providerId = prefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+                    String providerId = prefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
                     if (providerId != null)
                     {
                         setUniqueIdentifiers(providerId);

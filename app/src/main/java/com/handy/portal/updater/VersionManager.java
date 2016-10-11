@@ -277,7 +277,7 @@ public class VersionManager
     {
         PackageInfo pInfo = getPackageInfoFromActivity(context);
         HashMap<String, String> info = new HashMap<>();
-        info.put("user_id", prefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
+        info.put("user_id", prefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID));
         info.put("platform", "android");
         info.put("app_identifier", context.getPackageName());
         info.put("app_version", pInfo.versionName);

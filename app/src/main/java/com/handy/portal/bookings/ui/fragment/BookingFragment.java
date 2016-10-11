@@ -305,7 +305,7 @@ public class BookingFragment extends TimerActionBarFragment
 
         int bookingProgress = mBooking.getBookingProgress();
         Booking.BookingStatus bookingStatus =
-                mBooking.inferBookingStatus(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
+                mBooking.inferBookingStatus(mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID));
         if (bookingStatus == Booking.BookingStatus.UNAVAILABLE ||
                 bookingProgress == BookingProgress.READY_FOR_CLAIM ||
                 mBooking.getUser() == null)
@@ -637,7 +637,7 @@ public class BookingFragment extends TimerActionBarFragment
 
     private String getLoggedInUserId()
     {
-        return mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        return mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
     }
 
     private void requestClaimJob()
@@ -863,7 +863,7 @@ public class BookingFragment extends TimerActionBarFragment
     private boolean shouldShowSupportButton()
     {
         Booking.BookingStatus bookingStatus =
-                mBooking.inferBookingStatus(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
+                mBooking.inferBookingStatus(mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID));
         return bookingStatus == Booking.BookingStatus.CLAIMED;
     }
 

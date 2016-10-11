@@ -331,7 +331,7 @@ public class EditPhotoFragment extends ActionBarFragment
                 bus.post(new LogEvent.AddLogEvent(
                         new ProfilePhotoUploadLog.ProfilePhotoUploadSuccess(mSource)));
                 final String profilePhotoUrl = response.get("download_url");
-                mPrefsManager.setString(PrefsKey.PROFILE_PHOTO_URL, profilePhotoUrl);
+                mPrefsManager.setSecureString(PrefsKey.PROFILE_PHOTO_URL, profilePhotoUrl);
                 bus.post(new ProfileEvent.ProfilePhotoUpdated());
                 bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                 getActivity().onBackPressed();

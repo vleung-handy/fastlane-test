@@ -363,6 +363,6 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowUIFragment
 
     public String getProviderId()
     {
-        return mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        return mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
     }
 }

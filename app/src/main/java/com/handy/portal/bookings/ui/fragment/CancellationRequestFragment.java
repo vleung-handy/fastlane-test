@@ -188,7 +188,7 @@ public class CancellationRequestFragment extends ActionBarFragment
 
     private void init()
     {
-        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
         Booking.BookingStatus bookingStatus = mBooking.inferBookingStatus(providerId);
         String address = mBooking.getFormattedLocation(bookingStatus);
         mAddressTextView.setText(address);

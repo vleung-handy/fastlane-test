@@ -2,6 +2,7 @@ package com.handy.portal.manager;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.library.util.PropertiesReader;
@@ -18,16 +19,19 @@ public class PrefsManager
     public static final String BOOKING_INSTRUCTIONS_PREFS = "booking_instructions_preferences";
 
     private final SharedPreferences mDefaultPrefs;
+    private final SharedPreferences mSecureDefaultPrefs;
     private final SharedPreferences mBookingInstructionsPrefs;
 
     @Inject
     public PrefsManager(final Context context)
     {
         Properties configs = PropertiesReader.getConfigProperties(context);
-        mDefaultPrefs = new SecurePreferences(
+        mDefaultPrefs = PreferenceManager.getDefaultSharedPreferences(context);
+        mSecureDefaultPrefs = new SecurePreferences(
                 context, configs.getProperty(SECURE_PREFS_KEY), DEFAULT_PREFS);
         mBookingInstructionsPrefs = new SecurePreferences(
                 context, configs.getProperty(SECURE_PREFS_KEY), BOOKING_INSTRUCTIONS_PREFS);
+
     }
 
     public String getString(@PrefsKey.Key String prefsKey)
@@ -42,7 +46,11 @@ public class PrefsManager
 
     public void setString(@PrefsKey.Key String prefsKey, String value)
     {
-        mDefaultPrefs.edit().putString(prefsKey, value).apply();
+        mDefaultPrefs.edit().putString(prefsKey, value).commit();
+    }
+
+    public boolean contains(String prefsKey) {
+        return mDefaultPrefs.contains(prefsKey);
     }
 
     public boolean getBoolean(String prefsKey, boolean defaultValue)
@@ -52,27 +60,57 @@ public class PrefsManager
 
     public void setBoolean(String prefsKey, boolean value)
     {
-        mDefaultPrefs.edit().putBoolean(prefsKey, value).apply();
+        mSecureDefaultPrefs.edit().putBoolean(prefsKey, value).commit();
+    }
+
+    public String getSecureString(@PrefsKey.Key String prefsKey)
+    {
+        return getSecureString(prefsKey, "");
+    }
+
+    public String getSecureString(@PrefsKey.Key String prefsKey, String defaultValue)
+    {
+        return mSecureDefaultPrefs.getString(prefsKey, defaultValue);
+    }
+
+    public void setSecureString(@PrefsKey.Key String prefsKey, String value)
+    {
+        mSecureDefaultPrefs.edit().putString(prefsKey, value).commit();
+    }
+
+    public boolean containsSecure(String prefsKey) {
+        return mSecureDefaultPrefs.contains(prefsKey);
+    }
+
+    public boolean getSecureBoolean(String prefsKey, boolean defaultValue)
+    {
+        return mSecureDefaultPrefs.getBoolean(prefsKey, defaultValue);
+    }
+
+    public void setSecureBoolean(String prefsKey, boolean value)
+    {
+        mSecureDefaultPrefs.edit().putBoolean(prefsKey, value).commit();
     }
 
     public void clear()
     {
-        mDefaultPrefs.edit().clear().apply();
-        mBookingInstructionsPrefs.edit().clear().apply();
+        mDefaultPrefs.edit().clear().commit();
+        mSecureDefaultPrefs.edit().clear().commit();
+        mBookingInstructionsPrefs.edit().clear().commit();
     }
 
     public void clearButSaveEventLogs()
     {
         String eventLogs = mDefaultPrefs.getString(PrefsKey.EVENT_LOG_BUNDLES, "");
         mDefaultPrefs.edit().clear().commit();
-        mDefaultPrefs.edit().putString(PrefsKey.EVENT_LOG_BUNDLES, eventLogs).apply();
-        mBookingInstructionsPrefs.edit().clear().apply();
-
+        mSecureDefaultPrefs.edit().clear().commit();
+        mBookingInstructionsPrefs.edit().clear().commit();
+        setString(PrefsKey.EVENT_LOG_BUNDLES, eventLogs);
     }
 
     public void setBookingInstructions(String bookingId, String value)
     {
-        mBookingInstructionsPrefs.edit().putString(bookingId, value).apply();
+        mBookingInstructionsPrefs.edit().putString(bookingId, value).commit();
     }
 
     public String getBookingInstructions(String bookingId)
