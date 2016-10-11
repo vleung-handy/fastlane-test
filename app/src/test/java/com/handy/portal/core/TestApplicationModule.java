@@ -24,7 +24,9 @@ import com.handy.portal.data.TestDataManager;
 import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.logger.handylogger.EventLogManager;
+import com.handy.portal.logger.handylogger.EventLogManagerTest;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.FileManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
@@ -131,6 +133,7 @@ import static org.mockito.Mockito.when;
         PurchaseSuppliesConfirmationFragment.class,
         NewPurchaseSuppliesFragment.class,
         ScheduleConfirmationFragment.class,
+        EventLogManagerTest.class,
 }, library = true)
 public class TestApplicationModule
 {
@@ -254,13 +257,26 @@ public class TestApplicationModule
     @Singleton
     final PrefsManager providePrefsManager()
     {
-        return mock(PrefsManager.class);
+        return new PrefsManager(mApplication.getApplicationContext());
     }
 
     @Provides
-    final EventLogManager eventLogManager()
+    @Singleton
+    final EventLogManager provideLogEventsManager(
+            final EventBus bus,
+            final DataManager dataManager,
+            final FileManager fileManager,
+            final PrefsManager defaultPreferencesManager
+    )
     {
-        return mock(EventLogManager.class);
+        return spy(new EventLogManager(bus, dataManager, fileManager, defaultPreferencesManager));
+    }
+
+    @Provides
+    @Singleton
+    final FileManager provideFileManager()
+    {
+        return new FileManager();
     }
 
     @Provides

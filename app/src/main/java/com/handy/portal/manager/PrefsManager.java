@@ -100,6 +100,10 @@ public class PrefsManager
         mDefaultPrefs.edit().remove(prefsKey).apply();
     }
 
+    public boolean contains(String prefsKey) {
+        return mDefaultPrefs.contains(prefsKey);
+    }
+
     public void clear()
     {
         mDefaultPrefs.edit().clear().apply();

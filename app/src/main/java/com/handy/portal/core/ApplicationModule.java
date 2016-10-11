@@ -28,6 +28,7 @@ import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.LocationModule;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.FileManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.PageNavigationManager;
@@ -281,6 +282,13 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
+    final FileManager provideFileManager()
+    {
+        return new FileManager();
+    }
+
+    @Provides
+    @Singleton
     final StripeRetrofitService provideStripeService(final StripeRetrofitEndpoint endpoint) //TODO: clean up
     {
         final OkHttpClient okHttpClient = new OkHttpClient();
@@ -466,10 +474,11 @@ public final class ApplicationModule
     @Singleton
     final EventLogManager provideLogEventsManager(final EventBus bus,
                                                   final DataManager dataManager,
+                                                  final FileManager fileManager,
                                                   final PrefsManager prefsManager,
                                                   final ProviderManager providerManager)
     {
-        return new EventLogManager(bus, dataManager, prefsManager, providerManager);
+        return new EventLogManager(bus, dataManager, fileManager, prefsManager, providerManager);
     }
 
     @Provides
