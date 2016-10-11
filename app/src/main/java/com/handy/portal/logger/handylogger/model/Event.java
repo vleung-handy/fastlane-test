@@ -13,12 +13,14 @@ public class Event
     @SerializedName("properties")
     private EventLog mEventLog;
 
-    public Event(final EventLog eventLog)
+    public Event(final EventLog eventLog, long sessionId, int sessionEventCount)
     {
         mTimestampSecs = System.currentTimeMillis() / 1000;
         mEventType = eventLog.getEventType();
         mEventContext = eventLog.getEventContext();
         mEventLog = eventLog;
+        mEventLog.setSessionId(sessionId);
+        mEventLog.setSessionEventCount(sessionEventCount);
     }
 
     public String getEventType()
@@ -31,7 +33,27 @@ public class Event
         return mEventContext;
     }
 
+    public int getSessionEventCount()
+    {
+        return mEventLog.getSessionEventCount();
+    }
+
+    public long getSessionId()
+    {
+        return mEventLog.getSessionId();
+    }
+
     public void setEventType(String eventType) {
         mEventType = eventType;
+    }
+
+    public void setSessionEventCount(final int sessionEventCount)
+    {
+        mEventLog.setSessionEventCount(sessionEventCount);
+    }
+
+    public void setSessionId(final long sessionId)
+    {
+        mEventLog.setSessionId(sessionId);
     }
 }

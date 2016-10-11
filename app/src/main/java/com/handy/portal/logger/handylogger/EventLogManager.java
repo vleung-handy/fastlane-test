@@ -14,6 +14,7 @@ import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.logger.handylogger.model.Event;
 import com.handy.portal.logger.handylogger.model.EventLogBundle;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
+import com.handy.portal.logger.handylogger.model.Session;
 import com.handy.portal.manager.PrefsManager;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
@@ -38,6 +39,7 @@ public class EventLogManager
     private final DataManager mDataManager;
     private final PrefsManager mPrefsManager;
     private final MixpanelAPI mMixpanel;
+    private Session mSession;
 
     @Inject
     public EventLogManager(final EventBus bus, final DataManager dataManager,
@@ -50,12 +52,17 @@ public class EventLogManager
 
         String mixpanelApiKey = PropertiesReader.getConfigProperties(BaseApplication.getContext()).getProperty("mixpanel_api_key");
         mMixpanel = MixpanelAPI.getInstance(BaseApplication.getContext(), mixpanelApiKey);
+
+        //Session
+        mSession = Session.getInstance(prefsManager);
     }
 
     @Subscribe
     public void addLog(@NonNull LogEvent.AddLogEvent event)
     {
-        Event eventLog = new Event(event.getLog());
+        mSession.incrementEventCount(mPrefsManager);
+        Event eventLog = new Event(event.getLog(), mSession.getId(), mSession.getEventCount());
+
         //log the payload to Crashlytics too
         try
         {
@@ -67,6 +74,8 @@ public class EventLogManager
 
             //Mixpanel tracking info in NOR-1016
             eventLogJson.put("context", eventLog.getEventContext());
+            eventLogJson.put("session_event_count", eventLog.getSessionEventCount());
+            eventLogJson.put("session_id", eventLog.getSessionId());
             mMixpanel.track(eventLog.getEventType(), eventLogJson);
         }
         catch (Exception e)
@@ -122,7 +131,7 @@ public class EventLogManager
 
     private List<String> loadSavedEventBundles()
     {
-        String json = mPrefsManager.getString(PrefsKey.EVENT_LOG_BUNDLES, "");
+        String json = mPrefsManager.getSecureString(PrefsKey.EVENT_LOG_BUNDLES, "");
         String[] bundles = GSON.fromJson(json, String[].class);
         if (bundles != null)
         {
@@ -137,14 +146,14 @@ public class EventLogManager
     private void saveToPreference(List<String> eventLogBundles)
     {
         String json = GSON.toJson(eventLogBundles);
-        mPrefsManager.setString(PrefsKey.EVENT_LOG_BUNDLES, json);
+        mPrefsManager.setSecureString(PrefsKey.EVENT_LOG_BUNDLES, json);
     }
 
     private int getProviderId()
     {
         try
         {
-            return Integer.parseInt(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID, "0"));
+            return Integer.parseInt(mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID, "0"));
         }
         catch (Exception e)
         {
