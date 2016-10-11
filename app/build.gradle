@@ -70,12 +70,6 @@ android {
     }
 
     signingConfigs {
-        debug {
-            keyAlias 'HandyProdKey'
-            keyPassword 'S0H@ndy!'
-            storeFile file('keys/handy-prod-key.keystore')
-            storePassword 'S0H@ndy!'
-        }
         prod {
             keyAlias 'HandyProdKey'
             keyPassword 'S0H@ndy!'
@@ -155,11 +149,9 @@ dependencies {
     //Recommended for in-app messaging
 
     //Google services
-    compile 'com.google.android.gms:play-services-location:9.0.2'
-    //Recommended for location services
-    compile 'com.google.android.gms:play-services-gcm:9.0.2'
-    //Required for Android (GCM) push notifications
-
+    compile "com.google.android.gms:play-services-gcm:$googlePlayServicesVersion"
+    compile "com.google.android.gms:play-services-location:$googlePlayServicesVersion"
+    compile "com.google.android.gms:play-services-maps:$googlePlayServicesVersion"
     compile 'com.google.guava:guava:19.0'
 
     //Square libraries, butterknife, dagger, retrofit, picasso
