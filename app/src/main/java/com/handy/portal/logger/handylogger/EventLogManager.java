@@ -45,7 +45,7 @@ public class EventLogManager
 {
 
     private static final String SENT_TIMESTAMP_SECS_KEY = "event_bundle_sent_timestamp";
-    private static final int UPLOAD_TIMER_DELAY = 10000; //1 min
+    private static final int UPLOAD_TIMER_DELAY = 60000; //1 min
     private static final int UPLOAD_TIMER_DELAY_NO_INTERNET = 15 * UPLOAD_TIMER_DELAY; //15 min
     private static final String TAG = EventManager.class.getSimpleName();
     static final int MAX_NUM_PER_BUNDLE = 50;
