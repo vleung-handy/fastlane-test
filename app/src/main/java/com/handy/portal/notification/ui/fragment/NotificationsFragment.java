@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +21,8 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.NotificationEvent;
 import com.handy.portal.library.ui.widget.InfiniteScrollListView;
-import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.notification.model.NotificationAction;
 import com.handy.portal.notification.model.NotificationMessage;
 import com.handy.portal.notification.ui.view.NotificationsListView;
@@ -147,17 +149,44 @@ public final class NotificationsFragment extends ActionBarFragment
         final String deeplinkUriString = notificationAction.getDeeplink();
         if (deeplinkUriString != null)
         {
-            final Bundle deeplinkData =
-                    DeeplinkUtils.createDeeplinkBundleFromUri(Uri.parse(deeplinkUriString));
-            final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
-            if (!TextUtils.isNullOrEmpty(deeplink))
+            final Uri uri = Uri.parse(deeplinkUriString);
+            final Bundle deeplinkData = DeeplinkUtils.createDeeplinkBundleFromUri(uri);
+            if (deeplinkData != null)
             {
-                final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
-                if (page != null)
+                bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Opened(
+                        DeeplinkLog.Source.NOTIFICATION_FEED,
+                        uri
+                )));
+                final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
+                if (!TextUtils.isEmpty(deeplink))
                 {
-                    bus.post(new NavigationEvent.NavigateToPage(page, deeplinkData,
-                            !page.isTopLevel()));
+                    final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
+                    if (page != null)
+                    {
+                        bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
+                                DeeplinkLog.Source.NOTIFICATION_FEED,
+                                uri
+                        )));
+                        bus.post(new NavigationEvent.NavigateToPage(page, deeplinkData,
+                                !page.isTopLevel()));
+                    }
+                    else
+                    {
+                        bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
+                                DeeplinkLog.Source.NOTIFICATION_FEED,
+                                DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
+                                uri
+                        )));
+                    }
                 }
+            }
+            else
+            {
+                bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
+                        DeeplinkLog.Source.NOTIFICATION_FEED,
+                        DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
+                        uri
+                )));
             }
         }
     }

@@ -5,7 +5,9 @@ import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
@@ -16,11 +18,11 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
-import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowStatus;
 import com.handy.portal.onboarding.ui.activity.OnboardingFlowActivity;
@@ -160,7 +162,14 @@ public class SplashActivity extends BaseActivity
         }
         else
         {
-            activityIntent = getActivityIntent(MainActivity.class);
+            final ConfigurationResponse configuration = setupData != null ?
+                    setupData.getConfigurationResponse() : null;
+            Uri defaultDeeplinkUri = null;
+            if (configuration != null && !TextUtils.isEmpty(configuration.getStartupDeeplink()))
+            {
+                defaultDeeplinkUri = Uri.parse(configuration.getStartupDeeplink());
+            }
+            activityIntent = getActivityIntent(MainActivity.class, defaultDeeplinkUri);
         }
         return activityIntent;
     }
@@ -181,15 +190,39 @@ public class SplashActivity extends BaseActivity
 
     private Intent getActivityIntent(final Class<? extends BaseActivity> activityClass)
     {
+        return getActivityIntent(activityClass, null);
+    }
+
+    private Intent getActivityIntent(final Class<? extends BaseActivity> activityClass,
+                                     @Nullable final Uri defaultDeeplinkUri)
+    {
         final Intent intent = new Intent(this, activityClass);
-        final Uri data = getIntent().getData();
+        final boolean isLinkDeeplinkAttached = attachDeeplinkDataIfAvailable(intent,
+                getIntent().getData(), DeeplinkLog.Source.LINK);
+        if (!isLinkDeeplinkAttached)
+        {
+            attachDeeplinkDataIfAvailable(intent, defaultDeeplinkUri, DeeplinkLog.Source.STARTUP);
+        }
+        return intent;
+    }
+
+    private boolean attachDeeplinkDataIfAvailable(
+            @NonNull final Intent intent,
+            @Nullable final Uri data,
+            @NonNull @DeeplinkLog.Source.DeeplinkSource final String source)
+    {
         final Bundle deeplinkBundle = DeeplinkUtils.createDeeplinkBundleFromUri(data);
         if (deeplinkBundle != null)
         {
             intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkBundle);
-            intent.putExtra(BundleKeys.DEEPLINK_SOURCE, DeeplinkLog.Source.LINK);
+            intent.putExtra(BundleKeys.DEEPLINK_SOURCE, source);
+            return true;
         }
-        return intent;
+        else
+        {
+            return false;
+        }
+
     }
 
     @Override
@@ -234,6 +267,6 @@ public class SplashActivity extends BaseActivity
 
     private boolean hasUser()
     {
-        return !TextUtils.isNullOrEmpty(mAuthToken);
+        return !TextUtils.isEmpty(mAuthToken);
     }
 }
