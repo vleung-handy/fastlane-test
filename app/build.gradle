@@ -122,6 +122,9 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
+    dexOptions {
+        javaMaxHeapSize "4g"
+    }
 }
 
 tasks.withType(Test) {
