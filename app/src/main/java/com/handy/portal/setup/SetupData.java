@@ -19,6 +19,8 @@ public class SetupData
     private ProviderProfile mProviderProfile;
     @SerializedName("onboarding")
     private OnboardingDetails mOnboardingDetails;
+    @SerializedName("startup_deeplink")
+    private String mStartupDeeplink;
 
     public UpdateDetails getUpdateDetails()
     {
@@ -43,5 +45,10 @@ public class SetupData
     public OnboardingDetails getOnboardingDetails()
     {
         return mOnboardingDetails;
+    }
+
+    public String getStartupDeeplink()
+    {
+        return mStartupDeeplink;
     }
 }

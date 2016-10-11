@@ -22,7 +22,6 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowStatus;
 import com.handy.portal.onboarding.ui.activity.OnboardingFlowActivity;
@@ -162,12 +161,12 @@ public class SplashActivity extends BaseActivity
         }
         else
         {
-            final ConfigurationResponse configuration = setupData != null ?
-                    setupData.getConfigurationResponse() : null;
+            final String startupDeeplink = setupData != null ?
+                    setupData.getStartupDeeplink() : null;
             Uri defaultDeeplinkUri = null;
-            if (configuration != null && !TextUtils.isEmpty(configuration.getStartupDeeplink()))
+            if (!TextUtils.isEmpty(startupDeeplink))
             {
-                defaultDeeplinkUri = Uri.parse(configuration.getStartupDeeplink());
+                defaultDeeplinkUri = Uri.parse(startupDeeplink);
             }
             activityIntent = getActivityIntent(MainActivity.class, defaultDeeplinkUri);
         }

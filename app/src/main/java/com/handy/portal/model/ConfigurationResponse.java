@@ -4,9 +4,6 @@ import com.google.gson.annotations.SerializedName;
 
 public class ConfigurationResponse
 {
-    @SerializedName("startup_deeplink")
-    private String mStartupDeeplink;
-
     @SerializedName("hours_to_start_sending_messages")
     private int mHoursSpanningAvailableBookings; //we use this value for amount of time forward to display available bookings
 
@@ -167,11 +164,6 @@ public class ConfigurationResponse
     public boolean isProfilePictureUploadEnabled()
     {
         return mProfilePictureUploadEnabled;
-    }
-
-    public String getStartupDeeplink()
-    {
-        return mStartupDeeplink;
     }
 
     public static class HelpCenterInfo
