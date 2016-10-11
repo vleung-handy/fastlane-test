@@ -152,6 +152,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         mEmptyJobsSwipeRefreshLayout.setOnRefreshListener(onProRequestedJobsListRefreshListener);
         mJobListSwipeRefreshLayout.setColorSchemeResources(R.color.handy_blue);
         mEmptyJobsSwipeRefreshLayout.setColorSchemeResources(R.color.handy_blue);
+        mProRequestedJobsExpandableListView.setDivider(null);
     }
 
     @Override
