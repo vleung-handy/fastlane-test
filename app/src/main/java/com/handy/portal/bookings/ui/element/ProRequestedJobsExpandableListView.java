@@ -36,8 +36,8 @@ public class ProRequestedJobsExpandableListView extends ExpandableListView
      */
     public void setData(@NonNull List<BookingsWrapper> jobList)
     {
-        ProRequestedJobsExpandableListAdapter itemsAdapter = new ProRequestedJobsExpandableListAdapter(
-                jobList);
+        ProRequestedJobsExpandableListAdapter itemsAdapter =
+                new ProRequestedJobsExpandableListAdapter(getContext(), jobList);
         setAdapter(itemsAdapter);
 
         int numGroups = itemsAdapter.getGroupCount();
