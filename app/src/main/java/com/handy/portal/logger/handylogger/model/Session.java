@@ -1,5 +1,7 @@
 package com.handy.portal.logger.handylogger.model;
 
+import com.crashlytics.android.Crashlytics;
+import com.google.gson.JsonParseException;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.manager.PrefsManager;
 
@@ -20,21 +22,31 @@ public class Session implements Serializable
 
     private static Session mInstance;
 
-    public static Session getInstance(PrefsManager prefsManager) {
+    public static Session getInstance(PrefsManager prefsManager)
+    {
         if (prefsManager.contains(PrefsKey.LOG_SESSION))
         {
             String sessionStr = prefsManager.getString(PrefsKey.LOG_SESSION);
-            mInstance = GSON.fromJson(sessionStr, Session.class);
-        } else {
-            mInstance = new Session(prefsManager);
+            try
+            {
+                mInstance = GSON.fromJson(sessionStr, Session.class);
+                return mInstance;
+            }
+            catch (JsonParseException e)
+            {
+                //If there's a parse exception, delete the string
+                prefsManager.removeValue(PrefsKey.LOG_SESSION);
+                Crashlytics.log("Invalid Json: " + sessionStr);
+            }
         }
 
+        mInstance = new Session(prefsManager);
         return mInstance;
     }
 
     private Session(PrefsManager prefsManager)
     {
-        id = 1;
+        id = 0;
         eventCount = 0;
         saveSession(prefsManager);
     }
@@ -47,8 +59,7 @@ public class Session implements Serializable
     public int getEventCount()
     {
         //Always start with count 1
-        if (eventCount == 0)
-        { eventCount = 1; }
+        if (eventCount < 1) { eventCount = 1; }
 
         return eventCount;
     }
@@ -72,10 +83,11 @@ public class Session implements Serializable
         saveSession(prefsManager);
     }
 
-    private void saveSession(PrefsManager prefsManager) {
+    private void saveSession(PrefsManager prefsManager)
+    {
         //update last modified time
         lastModified = System.currentTimeMillis();
         //Save the session on ever change
-        prefsManager.setString(PrefsKey.LOG_SESSION, GSON.toJson(mInstance));
+        prefsManager.setString(PrefsKey.LOG_SESSION, GSON.toJson(this));
     }
 }

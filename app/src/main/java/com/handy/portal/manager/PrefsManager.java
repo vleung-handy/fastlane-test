@@ -82,6 +82,10 @@ public class PrefsManager
         return mSecureDefaultPrefs.contains(prefsKey);
     }
 
+    public void removeValue(String prefsKey) {
+        mSecureDefaultPrefs.edit().remove(prefsKey).commit();
+    }
+
     public boolean getSecureBoolean(String prefsKey, boolean defaultValue)
     {
         return mSecureDefaultPrefs.getBoolean(prefsKey, defaultValue);
