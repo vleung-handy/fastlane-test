@@ -55,7 +55,6 @@ import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
-import com.handy.portal.retrofit.logevents.EventLogService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitEndpoint;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.service.DeepLinkService;

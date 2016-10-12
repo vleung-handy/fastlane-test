@@ -56,7 +56,6 @@ import com.handy.portal.retrofit.DynamicEndpoint;
 import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
-import com.handy.portal.retrofit.logevents.EventLogService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
@@ -180,7 +179,6 @@ public class TestApplicationModule
                 mock(HandyRetrofitService.class),
                 endpoint,
                 mock(StripeRetrofitService.class),
-                mock(EventLogService.class),
                 mock(DynamicEndpoint.class),
                 mock(DynamicEndpointService.class));
     }
@@ -266,10 +264,11 @@ public class TestApplicationModule
             final EventBus bus,
             final DataManager dataManager,
             final FileManager fileManager,
-            final PrefsManager defaultPreferencesManager
+            final PrefsManager prefsManager,
+            final ProviderManager providerManager
     )
     {
-        return spy(new EventLogManager(bus, dataManager, fileManager, defaultPreferencesManager));
+        return spy(new EventLogManager(bus, dataManager, fileManager, prefsManager, providerManager));
     }
 
     @Provides
