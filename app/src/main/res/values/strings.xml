@@ -69,7 +69,6 @@
 
     <string name="your_job">Your Job</string>
     <string name="claim">Claim</string>
-    <string name="dismiss">Dismiss</string>
     <string name="claimed">Claimed</string>
     <string name="claim_job">Claim Job</string>
     <string name="upgrade_job">Upgrade Job</string>
@@ -624,4 +623,9 @@
     <string name="upload_photo_donts_2">Make faces</string>
     <string name="upload_photo_donts_3">Wear hats</string>
     <string name="upload_photo_donts_4">Work angles</string>
+
+    <!-- Request Dismissal -->
+    <string name="dismiss">Dismiss</string>
+    <string name="dismiss_job">Dismiss Job</string>
+    <string name="request_dismissal_dialog_title">Help us understand why this request doesn\'t work for you</string>
 </resources>

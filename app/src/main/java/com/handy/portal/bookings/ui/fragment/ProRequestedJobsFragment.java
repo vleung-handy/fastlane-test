@@ -27,6 +27,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout;
 import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
 import com.handy.portal.model.ConfigurationResponse;
@@ -266,7 +267,25 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     @Subscribe
     public void onRequestedJobDismissClicked(final Event.RequestedJobDismissClicked event)
     {
-        // FIXME: Dismiss job
+        final ConfigurationResponse configuration = configManager.getConfigurationResponse();
+        if (configuration == null)
+        {
+            // FIXME: Dismiss job immediately
+        }
+        else
+        {
+            final ArrayList<ConfigurationResponse.RequestDismissal.Reason> reasons =
+                    configuration.getRequestDismissal().getReasons();
+            if (reasons != null && !reasons.isEmpty())
+            {
+                FragmentUtils.safeLaunchDialogFragment(
+                        RequestDismissalReasonsDialogFragment.newInstance(reasons), this, null);
+            }
+            else
+            {
+                // FIXME: Dismiss job immediately
+            }
+        }
     }
 
     /**
