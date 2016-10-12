@@ -465,9 +465,10 @@ public final class ApplicationModule
     @Singleton
     final EventLogManager provideLogEventsManager(final EventBus bus,
                                                   final DataManager dataManager,
-                                                  final PrefsManager prefsManager)
+                                                  final PrefsManager prefsManager,
+                                                  final ProviderManager providerManager)
     {
-        return new EventLogManager(bus, dataManager, prefsManager);
+        return new EventLogManager(bus, dataManager, prefsManager, providerManager);
     }
 
     @Provides

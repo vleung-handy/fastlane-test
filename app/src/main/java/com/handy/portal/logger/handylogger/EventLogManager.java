@@ -16,10 +16,13 @@ import com.handy.portal.logger.handylogger.model.EventLogBundle;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.logger.handylogger.model.Session;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.model.Provider;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -40,15 +43,18 @@ public class EventLogManager
     private final PrefsManager mPrefsManager;
     private final MixpanelAPI mMixpanel;
     private Session mSession;
+    //Used just for mixed panel
+    private ProviderManager mProviderManager;
 
     @Inject
     public EventLogManager(final EventBus bus, final DataManager dataManager,
-                           final PrefsManager prefsManager)
+                           final PrefsManager prefsManager, ProviderManager providerManager)
     {
         mBus = bus;
         mBus.register(this);
         mDataManager = dataManager;
         mPrefsManager = prefsManager;
+        mProviderManager = providerManager;
 
         String mixpanelApiKey = PropertiesReader.getConfigProperties(BaseApplication.getContext()).getProperty("mixpanel_api_key");
         mMixpanel = MixpanelAPI.getInstance(BaseApplication.getContext(), mixpanelApiKey);
@@ -73,10 +79,7 @@ public class EventLogManager
             Crashlytics.log(logString);
 
             //Mixpanel tracking info in NOR-1016
-            eventLogJson.put("context", eventLog.getEventContext());
-            eventLogJson.put("session_event_count", eventLog.getSessionEventCount());
-            eventLogJson.put("session_id", eventLog.getSessionId());
-            eventLogJson.put("platform", "android");
+            addMixPanelProperties(eventLogJson, eventLog);
             mMixpanel.track(eventLog.getEventType(), eventLogJson);
         }
         catch (Exception e)
@@ -159,6 +162,27 @@ public class EventLogManager
         catch (Exception e)
         {
             return 0;
+        }
+    }
+
+    private void addMixPanelProperties(JSONObject eventLogJson, Event event) throws JSONException {
+
+        //Mixpanel tracking info in NOR-1016
+        eventLogJson.put("context", event.getEventContext());
+        eventLogJson.put("session_event_count", event.getSessionEventCount());
+        eventLogJson.put("session_id", event.getSessionId());
+        eventLogJson.put("platform", "android");
+        eventLogJson.put("client", "android");
+        eventLogJson.put("mobile", 1);
+
+        Provider provider = mProviderManager.getCachedActiveProvider();
+        if(provider != null) {
+            eventLogJson.put("email", provider.getEmail());
+            eventLogJson.put("name", provider.getFirstName() + " " + provider.getLastName());
+            eventLogJson.put("user_id", provider.getId());
+            eventLogJson.put("user_logged_in", 1);
+        } else {
+            eventLogJson.put("user_logged_in", 0);
         }
     }
 }
