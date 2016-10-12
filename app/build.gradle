@@ -202,13 +202,13 @@ dependencies {
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
 
     // Jumio ID Verification
-    compile 'com.jumio.android:core:2.1.1@aar'
-    compile 'com.jumio.android:nv:2.1.1@aar'
-    compile 'com.jumio.android:nv-barcode:2.1.1@aar'
-    compile 'com.jumio.android:javadoc:2.1.1'
-    compile 'com.jumio.android:nv-barcode:2.1.1@aar'
-    compile 'com.jumio.android:nv-mrz:2.1.1@aar'
-    compile 'com.jumio.android:nv-nfc:2.1.1@aar'
+    compile 'com.jumio.android:core:2.3.0@aar'
+    compile 'com.jumio.android:nv:2.3.0@aar'
+    compile 'com.jumio.android:nv-barcode:2.3.0@aar'
+    compile 'com.jumio.android:javadoc:2.3.0'
+    compile 'com.jumio.android:nv-barcode:2.3.0@aar'
+    compile 'com.jumio.android:nv-mrz:2.3.0@aar'
+    compile 'com.jumio.android:nv-nfc:2.3.0@aar'
     compile 'net.sf.scuba:scuba-sc-android:0.0.9'
 
     //Stripe payment processing
