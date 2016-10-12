@@ -12,6 +12,7 @@ import android.util.Log;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BaseApplication;
@@ -45,9 +46,11 @@ public class EventLogManager
 {
 
     private static final String SENT_TIMESTAMP_SECS_KEY = "event_bundle_sent_timestamp";
-    private static final int UPLOAD_TIMER_DELAY = 60000; //1 min
-    private static final int UPLOAD_TIMER_DELAY_NO_INTERNET = 15 * UPLOAD_TIMER_DELAY; //15 min
+    private static final int UPLOAD_TIMER_DELAY_MS = 60000; //1 min
+    private static final int UPLOAD_TIMER_DELAY_NO_INTERNET_MS = 15 * UPLOAD_TIMER_DELAY_MS; //15 min
     private static final String TAG = EventManager.class.getSimpleName();
+    private static final int DEFAULT_USER_ID = -1;
+    private static final int MAX_RETRY_COUNT = 5;
     static final int MAX_NUM_PER_BUNDLE = 50;
     private static final Gson GSON = new Gson();
 
@@ -66,10 +69,7 @@ public class EventLogManager
     private Timer mTimer;
 
     @Inject
-    public EventLogManager(
-            final EventBus bus, final DataManager dataManager, final FileManager fileManager,
-            final PrefsManager prefsManager, ProviderManager providerManager
-    )
+    public EventLogManager(final EventBus bus, final DataManager dataManager, final FileManager fileManager, final PrefsManager prefsManager, ProviderManager providerManager)
     {
         mBus = bus;
         mBus.register(this);
@@ -98,11 +98,10 @@ public class EventLogManager
         Event eventLog = new Event(event.getLog(), mSession.getId(), mSession.getEventCount());
 
         //log the payload to Crashlytics too
-        //Note: Shoudl always log regardless of flavor/variant
+        //Note: Should always log regardless of flavor/variant
 
         //Create upload timer when we get a new log and there isn't a timer currently
-        if (mTimer == null)
-        { setUploadTimer(); }
+        if (mTimer == null) { setUploadTimer(); }
 
         //log the payload to Crashlytics too, useful for follow steps for debugging when crash
         try
@@ -117,7 +116,11 @@ public class EventLogManager
             addMixPanelProperties(eventLogJson, eventLog);
             mMixpanel.track(eventLog.getEventType(), eventLogJson);
         }
-        catch (Exception e)
+        catch (JsonParseException e)
+        {
+            Crashlytics.logException(e);
+        }
+        catch (JSONException e)
         {
             Crashlytics.logException(e);
         }
@@ -162,9 +165,13 @@ public class EventLogManager
      */
     private void saveToPreference(String prefsKey, List<EventLogBundle> eventLogBundles)
     {
-        synchronized (mPrefsManager)
+        try
         {
             mPrefsManager.setString(prefsKey, GSON.toJson(eventLogBundles));
+        }
+        catch (JsonParseException e) {
+            //If there's an JsonParseException then clear the eventLogBundles because invalid json
+            sEventLogBundles.clear();
         }
     }
 
@@ -178,14 +185,7 @@ public class EventLogManager
 
     private int getProviderId()
     {
-        try
-        {
-            return Integer.parseInt(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID, "0"));
-        }
-        catch (Exception e)
-        {
-            return 0;
-        }
+        return mPrefsManager.getInt(PrefsKey.LAST_PROVIDER_ID, DEFAULT_USER_ID);
     }
 
     //************************************* handle all saving/sending of logs **********************
@@ -206,7 +206,7 @@ public class EventLogManager
                 sendLogsFromPreference();
             }
             //Check network connection and set timer delay appropriately
-        }, hasNetworkConnection() ? UPLOAD_TIMER_DELAY : UPLOAD_TIMER_DELAY_NO_INTERNET);
+        }, hasNetworkConnection() ? UPLOAD_TIMER_DELAY_MS : UPLOAD_TIMER_DELAY_NO_INTERNET_MS);
     }
 
     private void sendLogsOnInitialization()
@@ -253,7 +253,7 @@ public class EventLogManager
         final String prefBundleString = loadSavedEventLogBundles(PrefsKey.EVENT_LOG_BUNDLES_TO_SEND);
 
         //This means nothing was stored previously in prefs
-        if (!android.text.TextUtils.isEmpty(prefBundleString))
+        if (!TextUtils.isEmpty(prefBundleString))
         {
             String eventLogBundles = loadSavedEventLogBundles(PrefsKey.EVENT_LOG_BUNDLES_TO_SEND);
             //Save this to the file system and remove from original preference
@@ -277,7 +277,7 @@ public class EventLogManager
         List<String> eventBundleIds = new ArrayList<>();
         for (JsonObject eventLogBundleJson : eventLogBundles)
         {
-            String eventBundleId = eventLogBundleJson.get(EventLogBundle.EVENT_BUNDLE_ID_KEY)
+            String eventBundleId = eventLogBundleJson.get(EventLogBundle.KEY_EVENT_BUNDLE_ID)
                     .getAsString();
             eventBundleIds.add(eventBundleId);
             mFileManager.saveLogFile(
@@ -297,11 +297,11 @@ public class EventLogManager
         // it may contain files that weren't uploaded previously
         // or, if we tried to save the logs 5 times and it fails, then we remove the preference.
         // must means somethings wrong
-        if (eventBundleIds.size() == 0 || retryCount > 5)
+        if (eventBundleIds.isEmpty() || retryCount > MAX_RETRY_COUNT)
         {
             removePreference(PrefsKey.EVENT_LOG_BUNDLES_TO_SEND);
 
-            if (retryCount > 5 && eventBundleIds.size() > 0)
+            if (retryCount > MAX_RETRY_COUNT && !eventBundleIds.isEmpty())
             {
                 Crashlytics.log("Failed to save logs to file system: " + prefBundleString);
             }
@@ -345,10 +345,6 @@ public class EventLogManager
                             @Override
                             public void onSuccess(EventLogResponse response)
                             {
-//                                Log.d(
-//                                        TAG,
-//                                        "Succesfully uploaded: " + file.getName() + " " + response.getBundleId()
-//                                );
                                 mFileManager.deleteLogFile(response.getBundleId());
                                 finishUpload();
                             }
@@ -356,7 +352,6 @@ public class EventLogManager
                             @Override
                             public void onError(DataManager.DataManagerError error)
                             {
-                                //           Log.d(TAG, "failed: " + error.getType() + file.getName());
                                 finishUpload();
                             }
 
@@ -366,7 +361,7 @@ public class EventLogManager
                                 if (--mSendingLogsCount == 0)
                                 {
                                     //If there are currently logs, set timer, else clear old timer
-                                    if (sEventLogBundles.size() > 0 || mFileManager.getLogFileList().length > 0)
+                                    if (!sEventLogBundles.isEmpty() || mFileManager.getLogFileList().length > 0)
                                     {
                                         setUploadTimer();
                                     }

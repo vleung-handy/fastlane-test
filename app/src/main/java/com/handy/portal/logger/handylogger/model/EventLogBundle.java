@@ -7,9 +7,9 @@ import java.util.List;
 
 public class EventLogBundle
 {
-    public static final String EVENT_BUNDLE_ID_KEY = "event_bundle_id";
+    public static final String KEY_EVENT_BUNDLE_ID = "event_bundle_id";
 
-    @SerializedName(EVENT_BUNDLE_ID_KEY)
+    @SerializedName(KEY_EVENT_BUNDLE_ID)
     private String mEventBundleId;
     @SerializedName("events")
     private List<Event> mEvents;

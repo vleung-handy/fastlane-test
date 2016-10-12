@@ -1,8 +1,8 @@
 package com.handy.portal.manager;
 
-import android.content.Context;
 import android.util.Log;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.core.BaseApplication;
 
 import java.io.BufferedReader;
@@ -26,18 +26,12 @@ public class FileManager
     public FileManager()
     {
         mLogDirectory = new File(FILES_DIRECTORY, LOG_PATH);
-        if (!mLogDirectory.exists())
-        { mLogDirectory.mkdirs(); }
+        if (!mLogDirectory.exists()) { mLogDirectory.mkdirs(); }
     }
 
     public File[] getLogFileList()
     {
         return mLogDirectory.listFiles();
-    }
-
-    public String readLogFile(String fileName)
-    {
-        return readFile(LOG_PATH + fileName);
     }
 
     public boolean saveLogFile(String fileName, String fileContent)
@@ -75,14 +69,6 @@ public class FileManager
         return buffer == null ? "" : buffer.toString();
     }
 
-    public String readFile(String fileName)
-    {
-        return readFile(new File(
-                FILES_DIRECTORY,
-                fileName
-        )); // Pass getFilesDir() and "MyFile" to read file
-    }
-
     public boolean saveFile(File file, String fileContent)
     {
         FileOutputStream outputStream = null;
@@ -98,9 +84,10 @@ public class FileManager
             outputStream.write(fileContent.getBytes());
             return true;
         }
-        catch (Exception e)
+        catch (IOException e)
         {
             Log.e(TAG, e.getLocalizedMessage());
+            Crashlytics.log(e.getLocalizedMessage());
         }
         finally
         {
@@ -113,31 +100,6 @@ public class FileManager
             {
                 //ignore
             }
-        }
-
-        return false;
-    }
-
-    /**
-     * @param fileName
-     * @param fileContent
-     * @return
-     */
-    public boolean saveFile(String fileName, String fileContent)
-    {
-        FileOutputStream outputStream;
-
-        try
-        {
-            outputStream = BaseApplication.getContext()
-                                          .openFileOutput(fileName, Context.MODE_PRIVATE);
-            outputStream.write(fileContent.getBytes());
-            outputStream.close();
-            return true;
-        }
-        catch (Exception e)
-        {
-            Log.e(TAG, e.getLocalizedMessage());
         }
 
         return false;
