@@ -76,6 +76,7 @@ public class EventLogManager
             eventLogJson.put("context", eventLog.getEventContext());
             eventLogJson.put("session_event_count", eventLog.getSessionEventCount());
             eventLogJson.put("session_id", eventLog.getSessionId());
+            eventLogJson.put("platform", "android");
             mMixpanel.track(eventLog.getEventType(), eventLogJson);
         }
         catch (Exception e)
