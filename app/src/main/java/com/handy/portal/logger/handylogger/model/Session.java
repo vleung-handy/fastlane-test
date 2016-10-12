@@ -15,7 +15,7 @@ import java.io.Serializable;
 public class Session implements Serializable
 {
     private static int SESSION_TIMEOUT_MS = 30 * 60 * 1000; //30 minutes
-    private static Gson GSON;
+    private static Gson GSON = new Gson();
     private int id;
     private int eventCount;
     private long lastModifiedTimeMs;
@@ -29,7 +29,6 @@ public class Session implements Serializable
             String sessionStr = prefsManager.getString(PrefsKey.LOG_SESSION);
             try
             {
-                GSON = new Gson();
                 mInstance = GSON.fromJson(sessionStr, Session.class);
                 return mInstance;
             }
