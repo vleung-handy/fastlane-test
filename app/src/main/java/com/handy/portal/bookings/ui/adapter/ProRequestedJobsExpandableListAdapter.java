@@ -18,20 +18,23 @@ import com.handy.portal.library.util.Utils;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.model.ConfigurationResponse;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.List;
 
 import javax.inject.Inject;
 
 /**
  * expandable list view adapter for pro requested jobs view
- *
+ * <p>
  * group headers are not clickable
- *
  */
 public class ProRequestedJobsExpandableListAdapter extends BaseExpandableListAdapter
 {
     @Inject
     ConfigManager mConfigManager;
+    @Inject
+    EventBus mBus;
 
     private List<BookingsWrapper> mJobsList;
 
@@ -114,9 +117,10 @@ public class ProRequestedJobsExpandableListAdapter extends BaseExpandableListAda
     {
         final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
         Class<? extends BookingElementView> bookingElementViewClass;
-        if (configuration != null
+        final boolean isRequestDismissalEnabled = configuration != null
                 && configuration.getRequestDismissal() != null
-                && configuration.getRequestDismissal().isEnabled())
+                && configuration.getRequestDismissal().isEnabled();
+        if (isRequestDismissalEnabled)
         {
             bookingElementViewClass = DismissableBookingElementView.class;
         }
@@ -133,6 +137,10 @@ public class ProRequestedJobsExpandableListAdapter extends BaseExpandableListAda
                 parent,
                 bookingElementViewClass);
         final View associatedView = bem.getAssociatedView();
+        if (isRequestDismissalEnabled)
+        {
+            initActionListeners(associatedView, booking);
+        }
         // Hide requested pro indicator because this is a list view that displays only pro requests.
         final View requestedIndicator =
                 associatedView.findViewById(R.id.booking_list_entry_left_strip_indicator);
@@ -144,9 +152,66 @@ public class ProRequestedJobsExpandableListAdapter extends BaseExpandableListAda
         return associatedView;
     }
 
+    private void initActionListeners(final View associatedView, final Booking booking)
+    {
+        final View claimButton = associatedView.findViewById(R.id.claim_button);
+        if (claimButton != null)
+        {
+            claimButton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(final View view)
+                {
+                    mBus.post(new Event.RequestedJobClaimClicked(booking));
+                }
+            });
+        }
+
+        final View dismissButton = associatedView.findViewById(R.id.dismiss_button);
+        if (dismissButton != null)
+        {
+            dismissButton.setOnClickListener(new View.OnClickListener()
+            {
+                @Override
+                public void onClick(final View view)
+                {
+                    mBus.post(new Event.RequestedJobDismissClicked(booking));
+                }
+            });
+        }
+    }
+
     @Override
     public boolean isChildSelectable(int groupPosition, int childPosition)
     {
         return true;
+    }
+
+    public static abstract class Event
+    {
+        public static class RequestedJobClaimClicked
+        {
+            private Booking mBooking;
+
+            public RequestedJobClaimClicked(final Booking booking) {mBooking = booking;}
+
+            public Booking getBooking()
+            {
+                return mBooking;
+            }
+        }
+
+
+        public static class RequestedJobDismissClicked
+        {
+            private Booking mBooking;
+
+            public RequestedJobDismissClicked(final Booking booking) {mBooking = booking;}
+
+            public Booking getBooking()
+            {
+                return mBooking;
+            }
+        }
     }
 }

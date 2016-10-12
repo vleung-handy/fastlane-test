@@ -42,6 +42,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.handy.portal.bookings.ui.adapter.ProRequestedJobsExpandableListAdapter.Event;
+
 public class ProRequestedJobsFragment extends ActionBarFragment
 {
     @BindView(R.id.fragment_pro_requested_jobs_list_view)
@@ -253,6 +255,18 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     public void onReceiveProRequestedJobsError(BookingEvent.ReceiveProRequestedJobsError event)
     {
         onError(event.error);
+    }
+
+    @Subscribe
+    public void onRequestedJobClaimClicked(final Event.RequestedJobClaimClicked event)
+    {
+        // FIXME: Claim job
+    }
+
+    @Subscribe
+    public void onRequestedJobDismissClicked(final Event.RequestedJobDismissClicked event)
+    {
+        // FIXME: Dismiss job
     }
 
     /**
