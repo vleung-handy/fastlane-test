@@ -203,7 +203,7 @@ public class ConfigurationResponse
         }
     }
 
-
+    // Configuration info concerning pro request dismissals
     public static class RequestDismissal
     {
         @SerializedName("enabled")

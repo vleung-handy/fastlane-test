@@ -19,7 +19,7 @@ public class DismissableBookingElementView extends BookingElementView
     @Override
     public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent)
     {
-        View availableBookingView = null;
+        View availableBookingView;
         if (convertView != null)
         {
             ButterKnife.bind(this, convertView);
@@ -30,6 +30,7 @@ public class DismissableBookingElementView extends BookingElementView
             convertView = LayoutInflater.from(parentContext)
                     .inflate(R.layout.element_dismissable_booking_list_entry, parent, false);
             ButterKnife.bind(this, convertView);
+            availableBookingView = null;
         }
         final BookingElementMediator availableBookingElementMediator = new BookingElementMediator(
                 parent.getContext(),
