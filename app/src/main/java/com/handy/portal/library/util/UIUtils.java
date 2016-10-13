@@ -144,6 +144,13 @@ public final class UIUtils
         }
     }
 
+    public static void showKeyboard(final Context context)
+    {
+        final InputMethodManager inputMethodManager =
+                (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, 0);
+    }
+
     public static ViewGroup getParent(View view)
     {
         return (ViewGroup) view.getParent();

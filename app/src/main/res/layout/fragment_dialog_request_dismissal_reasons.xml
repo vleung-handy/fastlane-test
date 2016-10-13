@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:paddingTop="@dimen/default_padding"
+    android:padding="@dimen/default_padding"
     >
 
     <TextView
@@ -22,10 +22,22 @@
         android:id="@+id/request_dismissal_reasons_radio_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/default_margin"
-        android:layout_marginLeft="@dimen/default_margin"
-        android:layout_marginRight="@dimen/default_margin"
-        android:layout_marginStart="@dimen/default_margin"
+        />
+
+    <EditText
+        android:id="@+id/request_dismissal_other_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/request_dismissal_other_edit_text_offset"
+        android:layout_marginStart="@dimen/request_dismissal_other_edit_text_offset"
+        android:background="@android:color/transparent"
+        android:hint="@string/request_dismissal_other_edit_text_hint"
+        android:lineSpacingMultiplier="1.2"
+        android:textAppearance="@style/TextView.Medium"
+        android:textColor="@color/tertiary_gray"
+        android:textColorHint="@color/tertiary_gray_disabled"
+        android:textCursorDrawable="@null"
+        android:visibility="gone"
         />
 
 </LinearLayout>

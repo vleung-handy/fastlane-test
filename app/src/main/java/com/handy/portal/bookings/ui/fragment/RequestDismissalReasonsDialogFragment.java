@@ -5,11 +5,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
+import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.model.ConfigurationResponse.RequestDismissal;
 
 import java.util.ArrayList;
@@ -22,6 +24,8 @@ public class RequestDismissalReasonsDialogFragment extends ConfirmBookingActionD
 
     @BindView(R.id.request_dismissal_reasons_radio_group)
     RadioGroup mReasonsRadioGroup;
+    @BindView(R.id.request_dismissal_other_edit_text)
+    EditText mOtherEditText;
 
     private ArrayList<RequestDismissal.Reason> mReasons;
     private String mSelectedReasonMachineName;
@@ -68,7 +72,19 @@ public class RequestDismissalReasonsDialogFragment extends ConfirmBookingActionD
                 {
                     if (isChecked)
                     {
-                        mSelectedReasonMachineName = reason.getMachineName();
+                        final String reasonMachineName = reason.getMachineName();
+                        mSelectedReasonMachineName = reasonMachineName;
+                        if (RequestDismissal.Reason.MACHINE_NAME_OTHER.equals(reasonMachineName))
+                        {
+                            mOtherEditText.setVisibility(View.VISIBLE);
+                            mOtherEditText.requestFocus();
+                            UIUtils.showKeyboard(getActivity());
+                        }
+                        else
+                        {
+                            mOtherEditText.setVisibility(View.GONE);
+                            UIUtils.dismissKeyboard(getActivity());
+                        }
                     }
                 }
             });

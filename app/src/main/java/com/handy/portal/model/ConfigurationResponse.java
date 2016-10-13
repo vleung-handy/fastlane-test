@@ -225,6 +225,8 @@ public class ConfigurationResponse
 
         public static class Reason implements Serializable
         {
+            public static final String MACHINE_NAME_OTHER = "other";
+
             @SerializedName("machine_name")
             private String mMachineName;
             @SerializedName("display_name")
