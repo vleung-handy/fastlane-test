@@ -28,7 +28,7 @@ public class EventLogManagerTest extends RobolectricGradleTestWrapper
     FileManager mFileManager;
 
     @Inject
-    PrefsManager mDefaultPreferencesManager;
+    PrefsManager mPrefsManager;
 
     @Before
     public void setUp()
@@ -68,16 +68,16 @@ public class EventLogManagerTest extends RobolectricGradleTestWrapper
     @Test
     public void preferenceShouldBeEmptyAfterSend() {
         addLogEvent("event");
-        assertEquals(true, mDefaultPreferencesManager.contains(PrefsKey.EVENT_LOG_BUNDLES));
+        assertEquals(true, mPrefsManager.contains(PrefsKey.EVENT_LOG_BUNDLES));
         mEventLogManager.sendLogsFromPreference();
-        assertEquals(false, mDefaultPreferencesManager.contains(PrefsKey.EVENT_LOG_BUNDLES));
+        assertEquals(false, mPrefsManager.contains(PrefsKey.EVENT_LOG_BUNDLES));
     }
 
     @Test
     public void savedFilesShouldHaveCorrectLogs() {
         addLogEvent("event1");
         addLogEvent("event2");
-        String jsonString = mDefaultPreferencesManager.getString(PrefsKey.EVENT_LOG_BUNDLES);
+        String jsonString = mPrefsManager.getString(PrefsKey.EVENT_LOG_BUNDLES);
         mEventLogManager.sendLogsFromPreference();
 
         String fileJsonString = mFileManager.readFile(mFileManager.getLogFileList()[0]);
@@ -91,6 +91,17 @@ public class EventLogManagerTest extends RobolectricGradleTestWrapper
     }
 
     private LogEvent.AddLogEvent getLogEvent(String eventName) {
-        return new LogEvent.AddLogEvent(new EventLog(eventName, "context") {});
+        return new LogEvent.AddLogEvent(new TestEventLog(eventName, "context"));
+    }
+
+    /**
+     * This is needed for the gson to serialize correctly because anonymous class doesn't require constructor
+     */
+    private class TestEventLog extends EventLog {
+
+        public TestEventLog(final String eventType, final String eventContext)
+        {
+            super(eventType, eventContext);
+        }
     }
 }

@@ -19,6 +19,7 @@ import com.handy.portal.core.BaseApplication;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.logger.handylogger.model.Event;
+import com.handy.portal.logger.handylogger.model.EventLog;
 import com.handy.portal.logger.handylogger.model.EventLogBundle;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.logger.handylogger.model.Session;
@@ -255,11 +256,10 @@ public class EventLogManager
         //This means nothing was stored previously in prefs
         if (!TextUtils.isEmpty(prefBundleString))
         {
-            String eventLogBundles = loadSavedEventLogBundles(PrefsKey.EVENT_LOG_BUNDLES_TO_SEND);
             //Save this to the file system and remove from original preference
-            if (!TextUtils.isEmpty(eventLogBundles))
+            if (!TextUtils.isEmpty(prefBundleString))
             {
-                saveLogsToFileSystem(eventLogBundles, 0);
+                saveLogsToFileSystem(prefBundleString, 0);
             }
         }
 

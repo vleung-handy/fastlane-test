@@ -87,6 +87,10 @@ public class PrefsManager
     }
 
     public void removeValue(String prefsKey) {
+        mDefaultPrefs.edit().remove(prefsKey).apply();
+    }
+
+    public void removeSecureValue(String prefsKey) {
         mSecureDefaultPrefs.edit().remove(prefsKey).apply();
     }
 
