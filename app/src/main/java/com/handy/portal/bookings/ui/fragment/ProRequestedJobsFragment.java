@@ -29,6 +29,7 @@ import com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -152,6 +153,14 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         mEmptyJobsSwipeRefreshLayout.setOnRefreshListener(onProRequestedJobsListRefreshListener);
         mJobListSwipeRefreshLayout.setColorSchemeResources(R.color.handy_blue);
         mEmptyJobsSwipeRefreshLayout.setColorSchemeResources(R.color.handy_blue);
+
+        final ConfigurationResponse configuration = configManager.getConfigurationResponse();
+        if (configuration != null
+                && configuration.getRequestDismissal() != null
+                && configuration.getRequestDismissal().isEnabled())
+        {
+            mProRequestedJobsExpandableListView.setDivider(null);
+        }
     }
 
     @Override

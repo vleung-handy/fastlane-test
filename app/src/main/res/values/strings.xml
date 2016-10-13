@@ -69,6 +69,7 @@
 
     <string name="your_job">Your Job</string>
     <string name="claim">Claim</string>
+    <string name="dismiss">Dismiss</string>
     <string name="claimed">Claimed</string>
     <string name="claim_job">Claim Job</string>
     <string name="upgrade_job">Upgrade Job</string>

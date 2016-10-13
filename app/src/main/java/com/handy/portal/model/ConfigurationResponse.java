@@ -2,8 +2,13 @@ package com.handy.portal.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.ArrayList;
+
 public class ConfigurationResponse
 {
+    @SerializedName("startup_deeplink")
+    private String mStartupDeeplink;
+
     @SerializedName("hours_to_start_sending_messages")
     private int mHoursSpanningAvailableBookings; //we use this value for amount of time forward to display available bookings
 
@@ -60,6 +65,9 @@ public class ConfigurationResponse
 
     @SerializedName("profile_picture_upload_enabled")
     private boolean mProfilePictureUploadEnabled;
+
+    @SerializedName("request_dismissal")
+    private RequestDismissal mRequestDismissal;
 
     public boolean isCustomerNoShowModalEnabled()
     {
@@ -166,6 +174,16 @@ public class ConfigurationResponse
         return mProfilePictureUploadEnabled;
     }
 
+    public String getStartupDeeplink()
+    {
+        return mStartupDeeplink;
+    }
+
+    public RequestDismissal getRequestDismissal()
+    {
+        return mRequestDismissal;
+    }
+
     public static class HelpCenterInfo
     {
         @SerializedName("should_use_help_center_web_view")
@@ -182,6 +200,44 @@ public class ConfigurationResponse
         public String getHelpCenterUrl()
         {
             return mHelpCenterUrl;
+        }
+    }
+
+    // Configuration info concerning pro request dismissals
+    public static class RequestDismissal
+    {
+        @SerializedName("enabled")
+        private boolean mIsEnabled;
+
+        @SerializedName("reasons")
+        private ArrayList<Reason> mReasons;
+
+        public boolean isEnabled()
+        {
+            return mIsEnabled;
+        }
+
+        public ArrayList<Reason> getReasons()
+        {
+            return mReasons;
+        }
+
+        public static class Reason
+        {
+            @SerializedName("machine_name")
+            private String mMachineName;
+            @SerializedName("display_name")
+            private String mDisplayName;
+
+            public String getMachineName()
+            {
+                return mMachineName;
+            }
+
+            public String getDisplayName()
+            {
+                return mDisplayName;
+            }
         }
     }
 }
