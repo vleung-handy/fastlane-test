@@ -71,17 +71,17 @@ public abstract class RequestedJobsLog extends EventLog
     }
 
 
-    public static class DismissSubmitted extends JobsLog
+    public static class DismissJobSubmitted extends JobsLog
     {
-        private static final String EVENT_TYPE = "dismiss_submitted";
+        private static final String EVENT_TYPE = "dismiss_job_submitted";
         @SerializedName("reason_machine_name")
         private final String mReasonMachineName;
         @SerializedName("reason_description")
         private final String mReasonDescription;
 
-        public DismissSubmitted(final Booking booking,
-                                final String reasonMachineName,
-                                final String reasonDescription)
+        public DismissJobSubmitted(final Booking booking,
+                                   final String reasonMachineName,
+                                   final String reasonDescription)
         {
             super(EVENT_TYPE, EVENT_CONTEXT, booking);
             mReasonMachineName = reasonMachineName;
@@ -90,25 +90,25 @@ public abstract class RequestedJobsLog extends EventLog
     }
 
 
-    public static class DismissSuccess extends JobsLog
+    public static class DismissJobSuccess extends JobsLog
     {
-        private static final String EVENT_TYPE = "dismiss_success";
+        private static final String EVENT_TYPE = "dismiss_job_success";
 
-        public DismissSuccess(final Booking booking)
+        public DismissJobSuccess(final Booking booking)
         {
             super(EVENT_TYPE, EVENT_CONTEXT, booking);
         }
     }
 
 
-    public static class DismissError extends JobsLog
+    public static class DismissJobError extends JobsLog
     {
-        private static final String EVENT_TYPE = "dismiss_error";
+        private static final String EVENT_TYPE = "dismiss_job_error";
 
         @SerializedName("error_message")
         private String mErrorMessage;
 
-        public DismissError(final Booking booking, final String errorMessage)
+        public DismissJobError(final Booking booking, final String errorMessage)
         {
             super(EVENT_TYPE, EVENT_CONTEXT, booking);
             mErrorMessage = errorMessage;

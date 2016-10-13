@@ -325,7 +325,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
                             @Nullable final String reasonMachineName,
                             @Nullable final String reasonDescription)
     {
-        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissSubmitted(booking,
+        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobSubmitted(booking,
                 reasonMachineName, reasonDescription)));
         bus.post(new BookingEvent.RequestDismissJob(booking, reasonMachineName));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
