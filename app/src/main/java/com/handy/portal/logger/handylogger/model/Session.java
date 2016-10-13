@@ -15,7 +15,7 @@ import static com.stripe.net.APIResource.GSON;
 
 public class Session implements Serializable
 {
-    private static int SESSION_TIMEOUT = 1 * 60 * 1000; //30 minutes
+    private static int SESSION_TIMEOUT_MS = 30 * 60 * 1000; //30 minutes
     private int id;
     private int eventCount;
     private long lastModified;
@@ -67,7 +67,7 @@ public class Session implements Serializable
     public void incrementEventCount(PrefsManager prefsManager)
     {
         //If greater then threshold then init a new session
-        if (System.currentTimeMillis() - lastModified > SESSION_TIMEOUT)
+        if (System.currentTimeMillis() - lastModified > SESSION_TIMEOUT_MS)
         {
             //New session must increment the session id
             id++;
