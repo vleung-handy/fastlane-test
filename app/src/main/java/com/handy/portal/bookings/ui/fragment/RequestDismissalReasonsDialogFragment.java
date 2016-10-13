@@ -1,5 +1,7 @@
 package com.handy.portal.bookings.ui.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,18 +10,28 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.handy.portal.R;
+import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.model.ConfigurationResponse.RequestDismissal;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 
 public class RequestDismissalReasonsDialogFragment extends ConfirmBookingActionDialogFragment
 {
+    @Inject
+    EventBus mBus;
+
     private static final String KEY_REASONS = "reasons";
 
     @BindView(R.id.request_dismissal_reasons_radio_group)
@@ -31,11 +43,13 @@ public class RequestDismissalReasonsDialogFragment extends ConfirmBookingActionD
     private String mSelectedReasonMachineName;
 
     public static RequestDismissalReasonsDialogFragment newInstance(
+            final Booking booking,
             final ArrayList<RequestDismissal.Reason> reasons)
     {
         final RequestDismissalReasonsDialogFragment dialogFragment =
                 new RequestDismissalReasonsDialogFragment();
         final Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.BOOKING, booking);
         arguments.putSerializable(KEY_REASONS, reasons);
         dialogFragment.setArguments(arguments);
         return dialogFragment;
@@ -95,7 +109,25 @@ public class RequestDismissalReasonsDialogFragment extends ConfirmBookingActionD
     @Override
     protected void onConfirmBookingActionButtonClicked()
     {
-        // FIXME: Set result here
+        if (mSelectedReasonMachineName == null)
+        {
+            UIUtils.showToast(getActivity(),
+                    getString(R.string.request_dismissal_reason_not_selected), Toast.LENGTH_SHORT);
+            return;
+        }
+        String reasonDescription = null;
+        if (RequestDismissal.Reason.MACHINE_NAME_OTHER.equals(mSelectedReasonMachineName))
+        {
+            reasonDescription = mOtherEditText.getText().toString();
+        }
+        final Intent intent = new Intent();
+        intent.putExtra(BundleKeys.BOOKING, mBooking);
+        intent.putExtra(BundleKeys.REASON_MACHINE_NAME, mSelectedReasonMachineName);
+        intent.putExtra(BundleKeys.REASON_DESCRIPTION, reasonDescription);
+        if (getTargetFragment() != null)
+        {
+            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
+        }
         dismiss();
     }
 

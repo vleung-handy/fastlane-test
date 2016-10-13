@@ -9,4 +9,5 @@ public abstract class RequestCode
     public static final int CONFIRM_SWAP = 115;
     public static final int CAMERA = 116;
     public static final int GALLERY = 117;
+    public static final int CONFIRM_DISMISS = 118;
 }

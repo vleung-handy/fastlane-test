@@ -70,4 +70,8 @@ public class BundleKeys
 
     // Jumio URL
     public static final String JUMIO_URL = "jumio_url";
+
+    // Request Dismissal
+    public static final String REASON_MACHINE_NAME = "reason_machine_name";
+    public static final String REASON_DESCRIPTION = "reason_description";
 }

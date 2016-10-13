@@ -1,5 +1,7 @@
 package com.handy.portal.bookings.ui.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -21,6 +23,7 @@ import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.element.ProRequestedJobsExpandableListView;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
+import com.handy.portal.constant.RequestCode;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
@@ -268,9 +271,10 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     public void onRequestedJobDismissClicked(final Event.RequestedJobDismissClicked event)
     {
         final ConfigurationResponse configuration = configManager.getConfigurationResponse();
+        final Booking booking = event.getBooking();
         if (configuration == null)
         {
-            // FIXME: Dismiss job immediately
+            dismissJob(booking);
         }
         else
         {
@@ -278,14 +282,49 @@ public class ProRequestedJobsFragment extends ActionBarFragment
                     configuration.getRequestDismissal().getReasons();
             if (reasons != null && !reasons.isEmpty())
             {
-                FragmentUtils.safeLaunchDialogFragment(
-                        RequestDismissalReasonsDialogFragment.newInstance(reasons), this, null);
+                final RequestDismissalReasonsDialogFragment dialogFragment =
+                        RequestDismissalReasonsDialogFragment.newInstance(booking, reasons);
+                dialogFragment.setTargetFragment(this, RequestCode.CONFIRM_DISMISS);
+                FragmentUtils.safeLaunchDialogFragment(dialogFragment, this, null);
             }
             else
             {
-                // FIXME: Dismiss job immediately
+                dismissJob(booking);
             }
         }
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
+    {
+        if (resultCode == Activity.RESULT_OK)
+        {
+            switch (requestCode)
+            {
+                case RequestCode.CONFIRM_DISMISS:
+                    final Booking booking = (Booking) data.getSerializableExtra(BundleKeys.BOOKING);
+                    final String reasonMachineName =
+                            data.getStringExtra(BundleKeys.REASON_MACHINE_NAME);
+                    final String reasonDescription =
+                            data.getStringExtra(BundleKeys.REASON_DESCRIPTION);
+                    dismissJob(booking, reasonMachineName, reasonDescription);
+                    break;
+            }
+        }
+    }
+
+    private void dismissJob(final Booking booking)
+    {
+        dismissJob(booking, null, null);
+    }
+
+    private void dismissJob(final Booking booking,
+                            final String dismissalReasonMachineName,
+                            final String dismissalReasonDescription)
+    {
+        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissSubmitted(booking,
+                dismissalReasonMachineName, dismissalReasonDescription)));
+        // FIXME: Dismiss job here
     }
 
     /**

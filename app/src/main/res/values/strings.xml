@@ -628,5 +628,6 @@
     <string name="dismiss">Dismiss</string>
     <string name="dismiss_job">Dismiss Job</string>
     <string name="request_dismissal_dialog_title">Help us understand why this request doesn\'t work for you</string>
-    <string name="request_dismissal_other_edit_text_hint">Please give us more details</string>
+    <string name="request_dismissal_other_edit_text_hint">Please specify</string>
+    <string name="request_dismissal_reason_not_selected">Please select an option from the list</string>
 </resources>
