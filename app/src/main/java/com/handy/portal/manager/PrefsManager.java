@@ -46,7 +46,7 @@ public class PrefsManager
 
     public void setString(@PrefsKey.Key String prefsKey, String value)
     {
-        mDefaultPrefs.edit().putString(prefsKey, value).commit();
+        mDefaultPrefs.edit().putString(prefsKey, value).apply();
     }
 
     public boolean contains(String prefsKey) {
@@ -60,7 +60,7 @@ public class PrefsManager
 
     public void setBoolean(String prefsKey, boolean value)
     {
-        mSecureDefaultPrefs.edit().putBoolean(prefsKey, value).commit();
+        mSecureDefaultPrefs.edit().putBoolean(prefsKey, value).apply();
     }
 
     public String getSecureString(@PrefsKey.Key String prefsKey)
@@ -75,7 +75,7 @@ public class PrefsManager
 
     public void setSecureString(@PrefsKey.Key String prefsKey, String value)
     {
-        mSecureDefaultPrefs.edit().putString(prefsKey, value).commit();
+        mSecureDefaultPrefs.edit().putString(prefsKey, value).apply();
     }
 
     public boolean containsSecure(String prefsKey) {
@@ -83,7 +83,7 @@ public class PrefsManager
     }
 
     public void removeValue(String prefsKey) {
-        mSecureDefaultPrefs.edit().remove(prefsKey).commit();
+        mSecureDefaultPrefs.edit().remove(prefsKey).apply();
     }
 
     public boolean getSecureBoolean(String prefsKey, boolean defaultValue)
@@ -93,28 +93,28 @@ public class PrefsManager
 
     public void setSecureBoolean(String prefsKey, boolean value)
     {
-        mSecureDefaultPrefs.edit().putBoolean(prefsKey, value).commit();
+        mSecureDefaultPrefs.edit().putBoolean(prefsKey, value).apply();
     }
 
     public void clear()
     {
-        mDefaultPrefs.edit().clear().commit();
-        mSecureDefaultPrefs.edit().clear().commit();
-        mBookingInstructionsPrefs.edit().clear().commit();
+        mDefaultPrefs.edit().clear().apply();
+        mSecureDefaultPrefs.edit().clear().apply();
+        mBookingInstructionsPrefs.edit().clear().apply();
     }
 
     public void clearButSaveEventLogs()
     {
-        String eventLogs = mDefaultPrefs.getString(PrefsKey.EVENT_LOG_BUNDLES, "");
-        mDefaultPrefs.edit().clear().commit();
-        mSecureDefaultPrefs.edit().clear().commit();
-        mBookingInstructionsPrefs.edit().clear().commit();
+        String eventLogs = getString(PrefsKey.EVENT_LOG_BUNDLES);
+        mDefaultPrefs.edit().clear().apply();
+        mSecureDefaultPrefs.edit().clear().apply();
+        mBookingInstructionsPrefs.edit().clear().apply();
         setString(PrefsKey.EVENT_LOG_BUNDLES, eventLogs);
     }
 
     public void setBookingInstructions(String bookingId, String value)
     {
-        mBookingInstructionsPrefs.edit().putString(bookingId, value).commit();
+        mBookingInstructionsPrefs.edit().putString(bookingId, value).apply();
     }
 
     public String getBookingInstructions(String bookingId)
