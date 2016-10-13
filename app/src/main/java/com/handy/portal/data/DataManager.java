@@ -164,6 +164,15 @@ public class DataManager
         mService.removeBooking(bookingId, type.toString().toLowerCase(), new BookingHandyRetroFitCallback(cb));
     }
 
+    public void dismissJob(final String bookingId,
+                           final BookingType bookingType,
+                           final String reasonMachineName,
+                           final Callback<Void> cb)
+    {
+        mService.dismissJob(bookingId, bookingType.toString().toLowerCase(), reasonMachineName,
+                new EmptyHandyRetroFitCallback(cb));
+    }
+
     public void sendIncomeVerification(String providerId, Callback<SuccessWrapper> cb)
     {
         mService.sendIncomeVerification(providerId, new SuccessWrapperRetroFitCallback(cb));

@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -318,13 +321,35 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         dismissJob(booking, null, null);
     }
 
-    private void dismissJob(final Booking booking,
-                            final String dismissalReasonMachineName,
-                            final String dismissalReasonDescription)
+    private void dismissJob(@NonNull final Booking booking,
+                            @Nullable final String reasonMachineName,
+                            @Nullable final String reasonDescription)
     {
         bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissSubmitted(booking,
-                dismissalReasonMachineName, dismissalReasonDescription)));
-        // FIXME: Dismiss job here
+                reasonMachineName, reasonDescription)));
+        bus.post(new BookingEvent.RequestDismissJob(booking, reasonMachineName));
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+    }
+
+    @Subscribe
+    public void onReceiveDismissJobSuccess(final HandyEvent.ReceiveDismissJobSuccess event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        // FIXME: Remove job from list
+        Snackbar.make(mJobListSwipeRefreshLayout, R.string.request_dismissal_success_message,
+                Snackbar.LENGTH_LONG).show();
+    }
+
+    @Subscribe
+    public void onReceiveDismissJobError(final HandyEvent.ReceiveDismissJobError event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        String errorMessage = event.error.getMessage();
+        if (TextUtils.isEmpty(errorMessage))
+        {
+            errorMessage = getString(R.string.request_dismissal_error);
+        }
+        Snackbar.make(mJobListSwipeRefreshLayout, errorMessage, Snackbar.LENGTH_LONG).show();
     }
 
     /**

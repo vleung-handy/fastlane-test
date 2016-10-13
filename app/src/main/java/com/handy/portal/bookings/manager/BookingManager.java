@@ -510,6 +510,27 @@ public class BookingManager
     }
 
     @Subscribe
+    public void onRequestDismissJob(final HandyEvent.RequestDismissJob event)
+    {
+        final Booking booking = event.getBooking();
+        mDataManager.dismissJob(booking.getId(), booking.getType(), event.getReasonMachineName(),
+                new DataManager.Callback<Void>()
+                {
+                    @Override
+                    public void onSuccess(final Void response)
+                    {
+                        mBus.post(new HandyEvent.ReceiveDismissJobSuccess(booking));
+                    }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        mBus.post(new HandyEvent.ReceiveDismissJobError(booking, error));
+                    }
+                });
+    }
+
+    @Subscribe
     public void onRequestNotifyOnMyWay(HandyEvent.RequestNotifyJobOnMyWay event)
     {
         LocationData locationData = event.locationData;

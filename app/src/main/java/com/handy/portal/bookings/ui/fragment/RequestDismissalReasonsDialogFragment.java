@@ -3,6 +3,7 @@ package com.handy.portal.bookings.ui.fragment;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -119,6 +120,13 @@ public class RequestDismissalReasonsDialogFragment extends ConfirmBookingActionD
         if (RequestDismissal.Reason.MACHINE_NAME_OTHER.equals(mSelectedReasonMachineName))
         {
             reasonDescription = mOtherEditText.getText().toString();
+            if (TextUtils.isEmpty(reasonDescription))
+            {
+                UIUtils.showToast(getActivity(),
+                        getString(R.string.request_dismissal_reason_description_missing),
+                        Toast.LENGTH_SHORT);
+                return;
+            }
         }
         final Intent intent = new Intent();
         intent.putExtra(BundleKeys.BOOKING, mBooking);

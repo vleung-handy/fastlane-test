@@ -9,27 +9,34 @@
     android:background="@color/white_pressed"
     >
 
-    <com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout
-        android:id="@+id/fragment_pro_requested_jobs_list_swipe_refresh_layout"
+    <android.support.design.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         >
 
-        <com.handy.portal.bookings.ui.element.ProRequestedJobsExpandableListView
-            android:id="@+id/fragment_pro_requested_jobs_list_view"
+        <com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout
+            android:id="@+id/fragment_pro_requested_jobs_list_swipe_refresh_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:childDivider="@color/list_divider"
-            android:divider="@color/list_divider"
-            android:dividerHeight="1px"
-            android:footerDividersEnabled="true"
-            android:groupIndicator="@color/transparent"
-            android:headerDividersEnabled="true"
-            android:paddingTop="1dp"
-            android:transcriptMode="disabled"
-            />
-    </com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout>
+            >
+
+            <com.handy.portal.bookings.ui.element.ProRequestedJobsExpandableListView
+                android:id="@+id/fragment_pro_requested_jobs_list_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:animateLayoutChanges="true"
+                android:childDivider="@color/list_divider"
+                android:divider="@color/list_divider"
+                android:dividerHeight="1px"
+                android:footerDividersEnabled="true"
+                android:groupIndicator="@color/transparent"
+                android:headerDividersEnabled="true"
+                android:paddingTop="1dp"
+                android:transcriptMode="disabled"
+                />
+        </com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout>
+    </android.support.design.widget.CoordinatorLayout>
 
     <include
         layout="@layout/layout_fetch_error"
