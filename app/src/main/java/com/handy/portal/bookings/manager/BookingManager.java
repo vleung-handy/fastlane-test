@@ -274,6 +274,7 @@ public class BookingManager
         if (!matchingCache)
         {
             Map<String, Object> options = new HashMap<>();
+            onRequestProRequestedJobsCount(null); // also pull requested jobs count
             options.put(BookingRequestKeys.IS_PROVIDER_REQUESTED, true);
             mDataManager.getAvailableBookings(datesForBookings.toArray(new Date[datesForBookings.size()]),
                     options,

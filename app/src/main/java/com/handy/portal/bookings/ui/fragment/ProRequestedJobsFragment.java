@@ -69,6 +69,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     private View mFragmentView; //this saves the exact view state including the scroll position
     private RequestedJobsRecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private int mUnreadJobsCount = 0;
 
     @Override
     protected MainViewPage getAppPage()
@@ -96,8 +97,10 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         List<BookingsWrapper> filteredJobList = new ArrayList<>(jobList.size());
         for (BookingsWrapper bookingsWrapper : jobList)
         {
-            if (bookingsWrapper.getBookings().size() > 0)
+            final int unreadJobsCountForDate = bookingsWrapper.getUndismissedBookings().size();
+            if (unreadJobsCountForDate > 0)
             {
+                mUnreadJobsCount += unreadJobsCountForDate;
                 filteredJobList.add(bookingsWrapper);
             }
         }
@@ -332,6 +335,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     public void onReceiveDismissJobSuccess(final HandyEvent.ReceiveDismissJobSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        bus.post(new BookingEvent.ReceiveProRequestedJobsCountSuccess(--mUnreadJobsCount));
         mAdapter.remove(event.getBooking());
         Snackbar.make(mJobListSwipeRefreshLayout, R.string.request_dismissal_success_message,
                 Snackbar.LENGTH_LONG).show();
