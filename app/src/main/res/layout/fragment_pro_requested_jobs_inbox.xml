@@ -20,12 +20,11 @@
             android:layout_height="wrap_content"
             >
 
-            <com.handy.portal.bookings.ui.element.ProRequestedJobsExpandableListView
+            <android.support.v7.widget.RecyclerView
                 android:id="@+id/fragment_pro_requested_jobs_list_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
-                android:animateLayoutChanges="true"
                 android:childDivider="@color/list_divider"
                 android:divider="@color/list_divider"
                 android:dividerHeight="1px"

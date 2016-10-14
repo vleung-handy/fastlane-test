@@ -20,6 +20,7 @@ import android.text.InputType;
 import android.text.Spanned;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -336,6 +337,12 @@ public final class UIUtils
     {
         final float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dp * scale + .5f); // round up if the decimal is greater than .5
+    }
+
+    public static int calculatePxToDp(Context context, int px)
+    {
+        return Math.round(TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, px,
+                context.getResources().getDisplayMetrics()));
     }
 
     @NonNull

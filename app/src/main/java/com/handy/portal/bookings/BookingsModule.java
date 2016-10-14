@@ -1,7 +1,7 @@
 package com.handy.portal.bookings;
 
 import com.handy.portal.bookings.manager.BookingManager;
-import com.handy.portal.bookings.ui.adapter.ProRequestedJobsExpandableListAdapter;
+import com.handy.portal.bookings.ui.adapter.RequestedJobsRecyclerViewAdapter;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.BookingDetailsWrapperFragment;
 import com.handy.portal.bookings.ui.fragment.BookingFragment;
@@ -51,8 +51,8 @@ import dagger.Provides;
                 EarlyAccessTrialDialogFragment.class,
                 JobAccessUnlockedDialogFragment.class,
                 ProRequestedJobsFragment.class,
-                ProRequestedJobsExpandableListAdapter.class,
                 RequestDismissalReasonsDialogFragment.class,
+                RequestedJobsRecyclerViewAdapter.class,
                 CustomerNoShowDialogFragment.class,
                 SwapBookingClaimDialogFragment.class,
                 PostCheckoutDialogFragment.class,

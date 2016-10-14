@@ -7,12 +7,12 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ExpandableListAdapter;
-import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,7 +23,7 @@ import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
-import com.handy.portal.bookings.ui.element.ProRequestedJobsExpandableListView;
+import com.handy.portal.bookings.ui.adapter.RequestedJobsRecyclerViewAdapter;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.RequestCode;
@@ -49,12 +49,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.handy.portal.bookings.ui.adapter.ProRequestedJobsExpandableListAdapter.Event;
+import static com.handy.portal.bookings.ui.adapter.RequestedJobsRecyclerViewAdapter.Event;
 
 public class ProRequestedJobsFragment extends ActionBarFragment
 {
     @BindView(R.id.fragment_pro_requested_jobs_list_view)
-    ProRequestedJobsExpandableListView mProRequestedJobsExpandableListView;
+    RecyclerView mRequestedJobsRecyclerView;
     @BindView(R.id.pro_requested_bookings_empty)
     SafeSwipeRefreshLayout mEmptyJobsSwipeRefreshLayout;
     @BindView(R.id.fragment_pro_requested_jobs_list_swipe_refresh_layout)
@@ -67,27 +67,14 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     TextView mFetchErrorText;
 
     private View mFragmentView; //this saves the exact view state including the scroll position
+    private RequestedJobsRecyclerViewAdapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     @Override
     protected MainViewPage getAppPage()
     {
         return MainViewPage.REQUESTED_JOBS;
     }
-
-    private ExpandableListView.OnChildClickListener onProRequestedJobsListChildClickListener = new ExpandableListView.OnChildClickListener()
-    {
-        @Override
-        public boolean onChildClick(final ExpandableListView parent, final View v, final int groupPosition, final int childPosition, final long id)
-        {
-            ExpandableListAdapter expandableListAdapter = parent.getExpandableListAdapter();
-            Booking booking = (Booking) expandableListAdapter.getChild(groupPosition, childPosition);
-            if (booking != null)
-            {
-                navigateToJobDetails(booking);
-            }
-            return true;
-        }
-    };
 
     private SwipeRefreshLayout.OnRefreshListener onProRequestedJobsListRefreshListener = new SwipeRefreshLayout.OnRefreshListener()
     {
@@ -115,7 +102,8 @@ public class ProRequestedJobsFragment extends ActionBarFragment
             }
         }
 
-        mProRequestedJobsExpandableListView.setData(filteredJobList);
+        mAdapter = new RequestedJobsRecyclerViewAdapter(getActivity(), filteredJobList);
+        mRequestedJobsRecyclerView.setAdapter(mAdapter);
         if (filteredJobList.isEmpty())
         {
             showContentViewAndHideOthers(mEmptyJobsSwipeRefreshLayout);
@@ -123,7 +111,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         else
         {
             showContentViewAndHideOthers(mJobListSwipeRefreshLayout);
-            mProRequestedJobsExpandableListView.setOnChildClickListener(onProRequestedJobsListChildClickListener);
+//            mRequestedJobsRecyclerView.setOnChildClickListener(onProRequestedJobsListChildClickListener);
         }
     }
 
@@ -163,12 +151,15 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         mJobListSwipeRefreshLayout.setColorSchemeResources(R.color.handy_blue);
         mEmptyJobsSwipeRefreshLayout.setColorSchemeResources(R.color.handy_blue);
 
+        mLayoutManager = new LinearLayoutManager(getActivity());
+        mRequestedJobsRecyclerView.setLayoutManager(mLayoutManager);
+
         final ConfigurationResponse configuration = configManager.getConfigurationResponse();
         if (configuration != null
                 && configuration.getRequestDismissal() != null
                 && configuration.getRequestDismissal().isEnabled())
         {
-            mProRequestedJobsExpandableListView.setDivider(null);
+//            mRequestedJobsRecyclerView.setDivider(null);
         }
     }
 
@@ -183,7 +174,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
 
         setActionBar(R.string.your_requests, false);
         mJobListSwipeRefreshLayout.setRefreshing(false);
-        if (!mProRequestedJobsExpandableListView.hasValidData())
+        if (mAdapter == null)
         {
             showContentViewAndHideOthers(mLoadingOverlay);
             requestProRequestedJobs(true);
@@ -265,6 +256,12 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     }
 
     @Subscribe
+    public void onRequestedJobClicked(final Event.RequestedJobClicked event)
+    {
+        navigateToJobDetails(event.getBooking());
+    }
+
+    @Subscribe
     public void onRequestedJobClaimClicked(final Event.RequestedJobClaimClicked event)
     {
         // FIXME: Claim job
@@ -335,7 +332,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     public void onReceiveDismissJobSuccess(final HandyEvent.ReceiveDismissJobSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        // FIXME: Remove job from list
+        mAdapter.remove(event.getBooking());
         Snackbar.make(mJobListSwipeRefreshLayout, R.string.request_dismissal_success_message,
                 Snackbar.LENGTH_LONG).show();
     }
