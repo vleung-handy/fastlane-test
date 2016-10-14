@@ -109,7 +109,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
     {
         for (int i = 0; i < mItems.size(); i++)
         {
-            if (mItems.get(i) == booking)
+            if (booking.equals(mItems.get(i)))
             {
                 removeAt(i);
                 break;

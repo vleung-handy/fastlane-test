@@ -567,11 +567,13 @@ public abstract class HandyEvent
 
     public static class ReceiveClaimJobSuccess extends ReceiveSuccessEvent
     {
+        public Booking originalBooking;
         public String source;
         public BookingClaimDetails bookingClaimDetails;
 
-        public ReceiveClaimJobSuccess(BookingClaimDetails bookingClaimDetails, String source)
+        public ReceiveClaimJobSuccess(Booking originalBooking, BookingClaimDetails bookingClaimDetails, String source)
         {
+            this.originalBooking = originalBooking;
             this.bookingClaimDetails = bookingClaimDetails;
             this.source = source;
         }

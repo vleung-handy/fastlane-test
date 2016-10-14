@@ -166,7 +166,7 @@ public class Booking implements Comparable<Booking>, Serializable
             return false;
         }
         Booking b = (Booking) o;
-        return b.mId.equals(mId);
+        return b.mId.equals(mId) && b.mType == mType;
     }
 
     @Nullable
