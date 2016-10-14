@@ -61,7 +61,7 @@ public class WebUrlManager
     {
         Provider provider = mProviderManager.getCachedActiveProvider();
         //Try to use the cached provider, and if not available fall back to last logged in provider id
-        String providerId = (provider != null ? provider.getId() : mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID));
+        String providerId = (provider != null ? provider.getId() : mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID));
         url = url.replace(WEB_URL_PROVIDER_ID_TOKEN, providerId);
         return url;
     }

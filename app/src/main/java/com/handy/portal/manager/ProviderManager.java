@@ -83,7 +83,7 @@ public class ProviderManager
 
     public void setProviderId(final String providerId)
     {
-        mPrefsManager.setString(PrefsKey.LAST_PROVIDER_ID, providerId);
+        mPrefsManager.setSecureString(PrefsKey.LAST_PROVIDER_ID, providerId);
         Crashlytics.setUserIdentifier(providerId);
         //need to update the user identifier whenever provider id is updated
     }
@@ -105,7 +105,7 @@ public class ProviderManager
     @Subscribe
     public void onUpdateProviderProfile(ProfileEvent.RequestProfileUpdate event)
     {
-        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
         mDataManager.updateProviderProfile(providerId, getProfileParams(event), new DataManager.Callback<ProviderProfileResponse>()
         {
             @Override
@@ -143,7 +143,7 @@ public class ProviderManager
     @Subscribe
     public void onUpdateProviderSettings(ProviderSettingsEvent.RequestProviderSettingsUpdate event)
     {
-        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
         mDataManager.putUpdateProviderSettings(providerId, event.getProviderSettings(), new DataManager.Callback<ProviderSettings>()
         {
             @Override
@@ -164,7 +164,7 @@ public class ProviderManager
     @Subscribe
     public void onRequestPaymentFlow(PaymentEvent.RequestPaymentFlow event)
     {
-        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
         mDataManager.getPaymentFlow(providerId, new DataManager.Callback<PaymentFlow>()
         {
             @Override
@@ -185,7 +185,7 @@ public class ProviderManager
     @Subscribe
     public void onSendIncomeVerification(HandyEvent.RequestSendIncomeVerification event)
     {
-        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
 
         mDataManager.sendIncomeVerification(providerId, new DataManager.Callback<SuccessWrapper>()
         {
@@ -233,7 +233,7 @@ public class ProviderManager
     @Subscribe
     public void onRequestResupplyKit(ProfileEvent.RequestSendResupplyKit event)
     {
-        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
 
         mDataManager.getResupplyKit(providerId, new DataManager.Callback<ProviderProfile>()
         {
@@ -255,7 +255,7 @@ public class ProviderManager
     @Subscribe
     public void onRequestProviderEvaluation(ProviderDashboardEvent.RequestProviderEvaluation event)
     {
-        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
 
         mDataManager.getProviderEvaluation(providerId, new DataManager.Callback<ProviderEvaluation>()
         {
@@ -277,7 +277,7 @@ public class ProviderManager
     @Subscribe
     public void onRequestProviderFiveStarRatings(ProviderDashboardEvent.RequestProviderFiveStarRatings event)
     {
-        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
 
         mDataManager.getProviderFiveStarRatings(providerId, event.getMinStar(), event.getUntilBookingDate(), event.getSinceBookingDate(), new DataManager.Callback<HashMap<String, List<ProviderRating>>>()
         {
@@ -428,7 +428,7 @@ public class ProviderManager
 
     public void requestProviderProfile()
     {
-        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
 
         mDataManager.getProviderProfile(providerId, new DataManager.Callback<ProviderProfile>()
         {
@@ -449,7 +449,7 @@ public class ProviderManager
 
     private void requestProviderSettings()
     {
-        String providerId = mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
         mDataManager.getProviderSettings(providerId, new DataManager.Callback<ProviderSettings>()
         {
             @Override
@@ -470,7 +470,7 @@ public class ProviderManager
     @Nullable
     public String getLastProviderId()
     {
-        return mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID);
+        return mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
     }
 
     @Nullable

@@ -198,9 +198,9 @@ public class MainActivityFragment extends InjectedFragment
     private String getProfilePhotoUrl()
     {
         final ProviderProfile profile = mProviderManager.getCachedProviderProfile();
-        if (mPrefsManager.getString(PrefsKey.PROFILE_PHOTO_URL, null) != null)
+        if (mPrefsManager.getSecureString(PrefsKey.PROFILE_PHOTO_URL, null) != null)
         {
-            return mPrefsManager.getString(PrefsKey.PROFILE_PHOTO_URL);
+            return mPrefsManager.getSecureString(PrefsKey.PROFILE_PHOTO_URL);
         }
         else if (profile != null
                 && profile.getProviderPersonalInfo() != null

@@ -1,6 +1,7 @@
 package com.handy.portal.core;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.multidex.MultiDexApplication;
@@ -54,6 +55,8 @@ public class BaseApplication extends MultiDexApplication
     protected ObjectGraph mGraph;
     private int mStarted;
     private boolean mSavedInstance;
+    //This is used for the application context
+    private static Context sContext;
 
     //We are injecting all of our event bus listening managers in BaseApplication to start them up for event listening
     @Inject
@@ -114,6 +117,7 @@ public class BaseApplication extends MultiDexApplication
     public void onCreate()
     {
         super.onCreate();
+        sContext = getApplicationContext();
         createObjectGraph();
         inject(this);
 
@@ -179,6 +183,11 @@ public class BaseApplication extends MultiDexApplication
     public final void inject(final Object object)
     {
         mGraph.inject(object);
+    }
+
+    public static Context getContext()
+    {
+        return sContext;
     }
 
     public static String getDeviceId() { return sDeviceId; }

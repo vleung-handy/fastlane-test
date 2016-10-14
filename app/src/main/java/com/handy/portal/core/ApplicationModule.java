@@ -230,7 +230,7 @@ public final class ApplicationModule
                     @Override
                     public void intercept(RequestFacade request)
                     {
-                        String authToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
+                        String authToken = prefsManager.getSecureString(PrefsKey.AUTH_TOKEN, null);
                         if (authToken != null)
                         {
                             request.addHeader("X-Auth-Token", authToken);
@@ -466,9 +466,10 @@ public final class ApplicationModule
     @Singleton
     final EventLogManager provideLogEventsManager(final EventBus bus,
                                                   final DataManager dataManager,
-                                                  final PrefsManager prefsManager)
+                                                  final PrefsManager prefsManager,
+                                                  final ProviderManager providerManager)
     {
-        return new EventLogManager(bus, dataManager, prefsManager);
+        return new EventLogManager(bus, dataManager, prefsManager, providerManager);
     }
 
     @Provides

@@ -69,8 +69,8 @@ public class LoginManager
 
     private void saveLoginDetails(final LoginDetails loginDetails)
     {
-        prefsManager.setString(PrefsKey.LAST_PROVIDER_ID, loginDetails.getProviderId());
-        prefsManager.setString(PrefsKey.AUTH_TOKEN, loginDetails.getAuthToken());
+        prefsManager.setSecureString(PrefsKey.LAST_PROVIDER_ID, loginDetails.getProviderId());
+        prefsManager.setSecureString(PrefsKey.AUTH_TOKEN, loginDetails.getAuthToken());
     }
 
 }

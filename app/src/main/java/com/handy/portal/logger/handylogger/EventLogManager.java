@@ -7,16 +7,23 @@ import android.support.annotation.Nullable;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
-import com.handy.portal.BuildConfig;
 import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.core.BaseApplication;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.logger.handylogger.model.Event;
 import com.handy.portal.logger.handylogger.model.EventLogBundle;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
+import com.handy.portal.logger.handylogger.model.Session;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.model.Provider;
+import com.mixpanel.android.mpmetrics.MixpanelAPI;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,43 +41,59 @@ public class EventLogManager
     private final EventBus mBus;
     private final DataManager mDataManager;
     private final PrefsManager mPrefsManager;
+    private final MixpanelAPI mMixpanel;
+    private Session mSession;
+    //Used just for mixed panel
+    private ProviderManager mProviderManager;
 
     @Inject
     public EventLogManager(final EventBus bus, final DataManager dataManager,
-                           final PrefsManager prefsManager)
+                           final PrefsManager prefsManager, ProviderManager providerManager)
     {
         mBus = bus;
         mBus.register(this);
         mDataManager = dataManager;
         mPrefsManager = prefsManager;
+        mProviderManager = providerManager;
+
+        String mixpanelApiKey = PropertiesReader.getConfigProperties(BaseApplication.getContext()).getProperty("mixpanel_api_key");
+        mMixpanel = MixpanelAPI.getInstance(BaseApplication.getContext(), mixpanelApiKey);
+
+        //Session
+        mSession = Session.getInstance(prefsManager);
     }
 
     @Subscribe
     public void addLog(@NonNull LogEvent.AddLogEvent event)
     {
-        if (!BuildConfig.DEBUG)
-        {
-            //log the payload to Crashlytics too
-            try
-            {
-                //putting in try/catch block just in case GSON.toJson throws an exception
-                String eventLogJson = GSON.toJson(event.getLog());
-                String crashlyticsLogString =
-                        event.getLog().getEventName()
-                                + ": " + eventLogJson;
-                Crashlytics.log(crashlyticsLogString);
-            }
-            catch (Exception e)
-            {
-                Crashlytics.logException(e);
-            }
+        mSession.incrementEventCount(mPrefsManager);
+        Event eventLog = new Event(event.getLog(), mSession.getId(), mSession.getEventCount());
 
-            sLogs.add(new Event(event.getLog()));
-            if (sLogs.size() >= MAX_NUM_PER_BUNDLE)
-            {
-                mBus.post(new LogEvent.SaveLogsEvent());
-                mBus.post(new LogEvent.SendLogsEvent());
-            }
+        //log the payload to Crashlytics too
+        try
+        {
+            //putting in try/catch block just in case GSON.toJson throws an exception
+            //Get the log only to log
+            JSONObject eventLogJson = new JSONObject(GSON.toJson(event.getLog()));
+            String logString = event.getLog().getEventName() + ": " + eventLogJson.toString();
+            Crashlytics.log(logString);
+
+            //Mixpanel tracking info in NOR-1016
+            addMixPanelProperties(eventLogJson, eventLog);
+            mMixpanel.track(eventLog.getEventType(), eventLogJson);
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e);
+        }
+
+        //Prefix event_type with app_lib_
+        eventLog.setEventType("app_lib_" + eventLog.getEventType());
+        sLogs.add(eventLog);
+        if (sLogs.size() >= MAX_NUM_PER_BUNDLE)
+        {
+            mBus.post(new LogEvent.SaveLogsEvent());
+            mBus.post(new LogEvent.SendLogsEvent());
         }
     }
 
@@ -112,7 +135,7 @@ public class EventLogManager
 
     private List<String> loadSavedEventBundles()
     {
-        String json = mPrefsManager.getString(PrefsKey.EVENT_LOG_BUNDLES, "");
+        String json = mPrefsManager.getSecureString(PrefsKey.EVENT_LOG_BUNDLES, "");
         String[] bundles = GSON.fromJson(json, String[].class);
         if (bundles != null)
         {
@@ -127,18 +150,39 @@ public class EventLogManager
     private void saveToPreference(List<String> eventLogBundles)
     {
         String json = GSON.toJson(eventLogBundles);
-        mPrefsManager.setString(PrefsKey.EVENT_LOG_BUNDLES, json);
+        mPrefsManager.setSecureString(PrefsKey.EVENT_LOG_BUNDLES, json);
     }
 
     private int getProviderId()
     {
         try
         {
-            return Integer.parseInt(mPrefsManager.getString(PrefsKey.LAST_PROVIDER_ID, "0"));
+            return Integer.parseInt(mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID, "0"));
         }
         catch (Exception e)
         {
             return 0;
+        }
+    }
+
+    private void addMixPanelProperties(JSONObject eventLogJson, Event event) throws JSONException {
+
+        //Mixpanel tracking info in NOR-1016
+        eventLogJson.put("context", event.getEventContext());
+        eventLogJson.put("session_event_count", event.getSessionEventCount());
+        eventLogJson.put("session_id", event.getSessionId());
+        eventLogJson.put("platform", "android");
+        eventLogJson.put("client", "android");
+        eventLogJson.put("mobile", 1);
+
+        Provider provider = mProviderManager.getCachedActiveProvider();
+        if(provider != null) {
+            eventLogJson.put("email", provider.getEmail());
+            eventLogJson.put("name", provider.getFirstName() + " " + provider.getLastName());
+            eventLogJson.put("user_id", provider.getId());
+            eventLogJson.put("user_logged_in", 1);
+        } else {
+            eventLogJson.put("user_logged_in", 0);
         }
     }
 }

@@ -80,12 +80,12 @@ public class SplashActivity extends BaseActivity
             processInjectedCredentials();
         }
 
-        mAuthToken = prefsManager.getString(PrefsKey.AUTH_TOKEN, null);
+        mAuthToken = prefsManager.getSecureString(PrefsKey.AUTH_TOKEN, null);
 
-        if (mPrefsManager.getBoolean(PrefsKey.APP_FIRST_LAUNCH, true))
+        if (mPrefsManager.getSecureBoolean(PrefsKey.APP_FIRST_LAUNCH, true))
         {
             bus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(true, true)));
-            mPrefsManager.setBoolean(PrefsKey.APP_FIRST_LAUNCH, false);
+            mPrefsManager.setSecureBoolean(PrefsKey.APP_FIRST_LAUNCH, false);
         }
         else
         {
@@ -246,7 +246,7 @@ public class SplashActivity extends BaseActivity
         if (authToken != null)
         {
             //want to set even if empty string, in the case of testing
-            prefsManager.setString(PrefsKey.AUTH_TOKEN, authToken);
+            prefsManager.setSecureString(PrefsKey.AUTH_TOKEN, authToken);
             //For use with WebView
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             {

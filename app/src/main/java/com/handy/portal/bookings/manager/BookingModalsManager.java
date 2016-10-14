@@ -74,19 +74,19 @@ public class BookingModalsManager
         public boolean bookingsForDayModalPreviouslyShown()
         {
             String prefsKey = getModalShownPrefsKey();
-            return mPrefsManager.getBoolean(prefsKey, false);
+            return mPrefsManager.getSecureBoolean(prefsKey, false);
         }
 
         public void onBookingsForDayModalShown()
         {
             String prefsKey = getModalShownPrefsKey();
-            mPrefsManager.setBoolean(prefsKey, true);
+            mPrefsManager.setSecureBoolean(prefsKey, true);
         }
 
         public void resetModalShownStatus()
         {
             String prefsKey = getModalShownPrefsKey();
-            mPrefsManager.setBoolean(prefsKey, false);
+            mPrefsManager.setSecureBoolean(prefsKey, false);
         }
     }
 }
