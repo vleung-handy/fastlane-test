@@ -53,7 +53,7 @@ import static com.handy.portal.bookings.ui.adapter.RequestedJobsRecyclerViewAdap
 
 public class ProRequestedJobsFragment extends ActionBarFragment
 {
-    @BindView(R.id.fragment_pro_requested_jobs_list_view)
+    @BindView(R.id.fragment_pro_requested_jobs_recycler_view)
     RecyclerView mRequestedJobsRecyclerView;
     @BindView(R.id.pro_requested_bookings_empty)
     SafeSwipeRefreshLayout mEmptyJobsSwipeRefreshLayout;
