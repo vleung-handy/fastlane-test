@@ -335,8 +335,10 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     public void onReceiveDismissJobSuccess(final HandyEvent.ReceiveDismissJobSuccess event)
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        final Booking booking = event.getBooking();
+        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobSuccess(booking)));
         bus.post(new BookingEvent.ReceiveProRequestedJobsCountSuccess(--mUnreadJobsCount));
-        mAdapter.remove(event.getBooking());
+        mAdapter.remove(booking);
         Snackbar.make(mJobListSwipeRefreshLayout, R.string.request_dismissal_success_message,
                 Snackbar.LENGTH_LONG).show();
     }
@@ -350,6 +352,8 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         {
             errorMessage = getString(R.string.request_dismissal_error);
         }
+        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobError(event.getBooking(),
+                errorMessage)));
         Snackbar.make(mJobListSwipeRefreshLayout, errorMessage, Snackbar.LENGTH_LONG).show();
     }
 
