@@ -521,6 +521,7 @@ public class BookingManager
                     public void onSuccess(final Void response)
                     {
                         mBus.post(new HandyEvent.ReceiveDismissJobSuccess(booking));
+                        requestedBookingsCache.invalidateAll();
                     }
 
                     @Override
