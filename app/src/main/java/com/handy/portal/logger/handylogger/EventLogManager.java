@@ -19,7 +19,6 @@ import com.handy.portal.core.BaseApplication;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.logger.handylogger.model.Event;
-import com.handy.portal.logger.handylogger.model.EventLog;
 import com.handy.portal.logger.handylogger.model.EventLogBundle;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.logger.handylogger.model.Session;
@@ -66,6 +65,8 @@ public class EventLogManager
     //Used just for mixed panel
     private ProviderManager mProviderManager;
 
+    //Counter for the number of logs being sent, so when we get a response we can subtract from this number
+    // until all the logs are finished
     private int mSendingLogsCount;
     private Timer mTimer;
 
@@ -80,7 +81,7 @@ public class EventLogManager
         mProviderManager = providerManager;
         sEventLogBundles = new ArrayList<>();
         //Send logs on initialization
-        sendLogsOnInitialization();
+        savePrefsToLogsOnInitialization();
 
         String mixpanelApiKey = PropertiesReader.getConfigProperties(BaseApplication.getContext()).getProperty("mixpanel_api_key");
         mMixpanel = MixpanelAPI.getInstance(BaseApplication.getContext(), mixpanelApiKey);
@@ -170,7 +171,8 @@ public class EventLogManager
         {
             mPrefsManager.setString(prefsKey, GSON.toJson(eventLogBundles));
         }
-        catch (JsonParseException e) {
+        catch (JsonParseException e)
+        {
             //If there's an JsonParseException then clear the eventLogBundles because invalid json
             sEventLogBundles.clear();
         }
@@ -210,25 +212,26 @@ public class EventLogManager
         }, hasNetworkConnection() ? UPLOAD_TIMER_DELAY_MS : UPLOAD_TIMER_DELAY_NO_INTERNET_MS);
     }
 
-    private void sendLogsOnInitialization()
+    private void savePrefsToLogsOnInitialization()
     {
-        new Thread(new Runnable()
-        {
-            @Override
-            public void run()
-            {
-                //Check if there was logs that were to be sent but were never saved to file system
-                String logBundles = loadSavedEventLogBundles(PrefsKey.EVENT_LOG_BUNDLES_TO_SEND);
+        String[] logPrefsKey = {PrefsKey.EVENT_LOG_BUNDLES_TO_SEND, PrefsKey.EVENT_LOG_BUNDLES};
+        boolean hasNewLog = false;
 
-                if (!TextUtils.isEmpty(logBundles))
-                {
-                    //Save the previous ones to file system
-                    saveLogsToFileSystem(logBundles, 0);
-                }
-                //Check regular log bundles from previous run.
-                sendLogsFromPreference();
+        for(String prefKey : logPrefsKey)
+        {
+            //Check if there was logs that were to be sent but were never saved to file system
+            String logBundles = loadSavedEventLogBundles(prefKey);
+
+            if (!TextUtils.isEmpty(logBundles))
+            {
+                hasNewLog = true;
+                //Save the previous ones to file system
+                saveLogsToFileSystem(logBundles, 0);
             }
-        }).run();
+        }
+
+        if(hasNewLog)
+            setUploadTimer();
     }
 
     /**
@@ -241,7 +244,7 @@ public class EventLogManager
 
         if (!TextUtils.isEmpty(logBundles))
         {
-            //Save the EventLogBundle to preferences always
+            //Save the current EventLogBundle to preferences always
             saveToPreference(PrefsKey.EVENT_LOG_BUNDLES_TO_SEND, sEventLogBundles);
             sEventLogBundles.clear();
             sCurrentEventLogBundle = null;
@@ -259,6 +262,7 @@ public class EventLogManager
             //Save this to the file system and remove from original preference
             if (!TextUtils.isEmpty(prefBundleString))
             {
+                //Saving the current logs to file system
                 saveLogsToFileSystem(prefBundleString, 0);
             }
         }
@@ -280,37 +284,29 @@ public class EventLogManager
             String eventBundleId = eventLogBundleJson.get(EventLogBundle.KEY_EVENT_BUNDLE_ID)
                     .getAsString();
             eventBundleIds.add(eventBundleId);
-            mFileManager.saveLogFile(
+            boolean fileSaved = mFileManager.saveLogFile(
                     eventBundleId,
                     eventLogBundleJson.toString()
             );
-        }
 
-        //Make sure all the files were saved
-        File[] fileList = mFileManager.getLogFileList();
-        for (File file : fileList)
-        {
-            eventBundleIds.remove(file.getName());
-        }
-
-        //This means they were all saved and we can remove the preference from the system. Can't just compare number of files because
-        // it may contain files that weren't uploaded previously
-        // or, if we tried to save the logs 5 times and it fails, then we remove the preference.
-        // must means somethings wrong
-        if (eventBundleIds.isEmpty() || retryCount > MAX_RETRY_COUNT)
-        {
-            removePreference(PrefsKey.EVENT_LOG_BUNDLES_TO_SEND);
-
-            if (retryCount > MAX_RETRY_COUNT && !eventBundleIds.isEmpty())
+            // If we tried to save the logs 5 times and it fails, then we remove the preference.
+            // must means somethings wrong
+            if(!fileSaved)
             {
-                Crashlytics.log("Failed to save logs to file system: " + prefBundleString);
+                if (retryCount < MAX_RETRY_COUNT)
+                {
+                    //It means not all of it was saved to file system, retry until we hit a limit
+                    saveLogsToFileSystem(prefBundleString, retryCount++);
+                }
+                else
+                {
+                    Crashlytics.log("Failed to save logs to file system: " + prefBundleString);
+                }
             }
         }
-        else
-        {
-            //It means not all of it was saved to file system, retry until we hit a limit
-            saveLogsToFileSystem(prefBundleString, retryCount++);
-        }
+
+        //Remove preference the preference since it either saved or failed
+        removePreference(PrefsKey.EVENT_LOG_BUNDLES_TO_SEND);
     }
 
     /**
