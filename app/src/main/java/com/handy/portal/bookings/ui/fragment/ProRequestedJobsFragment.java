@@ -69,7 +69,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     private View mFragmentView; //this saves the exact view state including the scroll position
     private RequestedJobsRecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    private int mUnreadJobsCount = 0;
+    private int mUnreadJobsCount;
 
     @Override
     protected MainViewPage getAppPage()
@@ -94,6 +94,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
      */
     private void updateJobListView(@NonNull List<BookingsWrapper> jobList)
     {
+        mUnreadJobsCount = 0;
         List<BookingsWrapper> filteredJobList = new ArrayList<>(jobList.size());
         for (BookingsWrapper bookingsWrapper : jobList)
         {
@@ -104,7 +105,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
                 filteredJobList.add(bookingsWrapper);
             }
         }
-
+        bus.post(new BookingEvent.ReceiveProRequestedJobsCountSuccess(mUnreadJobsCount));
         mAdapter = new RequestedJobsRecyclerViewAdapter(getActivity(), filteredJobList);
         mRequestedJobsRecyclerView.setAdapter(mAdapter);
         if (filteredJobList.isEmpty())
@@ -114,7 +115,6 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         else
         {
             showContentViewAndHideOthers(mJobListSwipeRefreshLayout);
-//            mRequestedJobsRecyclerView.setOnChildClickListener(onProRequestedJobsListChildClickListener);
         }
     }
 
@@ -156,14 +156,6 @@ public class ProRequestedJobsFragment extends ActionBarFragment
 
         mLayoutManager = new LinearLayoutManager(getActivity());
         mRequestedJobsRecyclerView.setLayoutManager(mLayoutManager);
-
-        final ConfigurationResponse configuration = configManager.getConfigurationResponse();
-        if (configuration != null
-                && configuration.getRequestDismissal() != null
-                && configuration.getRequestDismissal().isEnabled())
-        {
-//            mRequestedJobsRecyclerView.setDivider(null);
-        }
     }
 
     @Override
@@ -341,6 +333,10 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         mAdapter.remove(booking);
         Snackbar.make(mJobListSwipeRefreshLayout, R.string.request_dismissal_success_message,
                 Snackbar.LENGTH_LONG).show();
+        if (mAdapter.getItemCount() == 0)
+        {
+            showContentViewAndHideOthers(mEmptyJobsSwipeRefreshLayout);
+        }
     }
 
     @Subscribe

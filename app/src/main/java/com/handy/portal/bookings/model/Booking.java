@@ -123,10 +123,6 @@ public class Booking implements Comparable<Booking>, Serializable
     @SerializedName("schedule_conflict")
     private Booking mSwappableBooking;
 
-    // Request Dismissal
-    @SerializedName("is_dismissed")
-    private boolean mIsDismissed;
-
     private List<BookingInstructionUpdateRequest> mCustomerPreferences;
 
     public DisplayAttributes getProviderRequestDisplayAttributes()
@@ -488,7 +484,8 @@ public class Booking implements Comparable<Booking>, Serializable
 
     public boolean isDismissed()
     {
-        return mIsDismissed;
+        return getProviderRequestDisplayAttributes() != null
+                && getProviderRequestDisplayAttributes().isDismissed();
     }
 
     //Basic booking statuses inferrable from mProviderId
@@ -508,6 +505,8 @@ public class Booking implements Comparable<Booking>, Serializable
         private String mDetailsTitle;
         @SerializedName("details_body")
         private String mDetailsBody;
+        @SerializedName("is_dismissed")
+        private boolean mIsDismissed;
 
 
         public String getListingTitle()
@@ -523,6 +522,11 @@ public class Booking implements Comparable<Booking>, Serializable
         public String getDetailsBody()
         {
             return mDetailsBody;
+        }
+
+        public boolean isDismissed()
+        {
+            return mIsDismissed;
         }
     }
 
