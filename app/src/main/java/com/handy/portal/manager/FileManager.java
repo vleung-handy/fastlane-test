@@ -69,6 +69,12 @@ public class FileManager
         return buffer == null ? "" : buffer.toString();
     }
 
+    /**
+     * This currently works for internal file saving only. For external directory saving will need more permissions
+     * @param file
+     * @param fileContent
+     * @return
+     */
     public boolean saveFile(File file, String fileContent)
     {
         FileOutputStream outputStream = null;
