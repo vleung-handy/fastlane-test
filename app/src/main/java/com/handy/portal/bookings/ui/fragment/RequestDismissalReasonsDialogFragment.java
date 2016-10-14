@@ -93,12 +93,12 @@ public class RequestDismissalReasonsDialogFragment extends ConfirmBookingActionD
                         {
                             mOtherEditText.setVisibility(View.VISIBLE);
                             mOtherEditText.requestFocus();
-                            UIUtils.showKeyboard(getActivity());
+                            UIUtils.showKeyboard(mOtherEditText);
                         }
                         else
                         {
                             mOtherEditText.setVisibility(View.GONE);
-                            UIUtils.dismissKeyboard(getActivity());
+                            UIUtils.dismissKeyboard(mOtherEditText);
                         }
                     }
                 }
