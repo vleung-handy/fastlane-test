@@ -8,15 +8,17 @@
     android:orientation="vertical"
     >
 
-    <!--TODO: JIA: make the ripples work-->
-    <android.support.v7.widget.Toolbar
+    <com.handy.portal.library.ui.widget.HandyToolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="?attr/colorPrimary"
-        app:title="Your First Day"
+        app:popupTheme="@style/AppTheme.PopupOverlay"
+        app:theme="@style/AppTheme.AppBarOverlay"
         android:elevation="@dimen/medium_elevation"
-    />
+        app:title="Your First Day"
+        />
+
 
     <ScrollView
         android:id="@+id/activity_first_day"
@@ -30,6 +32,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingBottom="@dimen/default_padding_large"
+            android:clipToPadding="false"
             >
 
             <LinearLayout
@@ -41,8 +45,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/img_vacuum"
+                    android:src="@drawable/img_basket_supplies"
                     android:clickable="false"
+                    android:layout_marginTop="@dimen/default_margin"
                     />
                 <TextView
                     android:layout_width="match_parent"
@@ -52,7 +57,7 @@
                     android:textAllCaps="false"
                     android:text="@string/first_job_title"
                     android:clickable="false"
-                    android:layout_marginTop="@dimen/default_margin_half"
+                    android:layout_marginTop="@dimen/default_margin"
                     />
                 <TextView
                     android:id="@+id/first_day_first_job_message"
@@ -69,7 +74,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_margin_half"
                 style="@style/FirstDayCardStyle"
-                tools:visibility="gone"
                 >
                 <TextView
                     android:layout_width="match_parent"
@@ -87,8 +91,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="@dimen/default_margin_half"
-                    android:src="@drawable/img_supplies"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:src="@drawable/img_phone_1"
                     />
 
             </LinearLayout>
@@ -98,7 +102,6 @@
                 android:layout_height="wrap_content"
                 style="@style/FirstDayCardStyle"
                 android:layout_marginTop="@dimen/default_margin_half"
-                tools:visibility="gone"
                 >
                 <ImageView
                     android:id="@+id/image_vacuum"
@@ -112,6 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@id/image_vacuum"
                     android:text="@string/be_prepared_title"
+                    android:layout_marginLeft="@dimen/default_margin"
                     style="@style/FirstDayTitleStyle"
                     />
                 <!--Don't worry, the preview shows this text overlapping the image, but will be
@@ -148,8 +152,9 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/img_supplies"
-                    android:layout_marginTop="@dimen/default_margin_half"
+                    android:src="@drawable/img_phone_2"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:layout_gravity="center"
                     />
             </LinearLayout>
 
@@ -163,7 +168,7 @@
                     android:id="@+id/image_done"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@drawable/img_vacuum"
+                    android:src="@drawable/img_success"
                     android:layout_alignParentRight="true"
                     />
                 <TextView
@@ -176,10 +181,11 @@
                     />
                 <TextView
                     android:id="@+id/done_message"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@id/done_title"
-
+                    style="@style/FirstDayMessageStyle"
+                    android:text="@string/done_message"
                     />
             </RelativeLayout>
 
