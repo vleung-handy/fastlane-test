@@ -10,6 +10,7 @@ import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -57,6 +58,8 @@ public class OnboardingStatusFragment extends OnboardingSubflowUIFragment
     TextView mLinksTitle;
     @BindView(R.id.links_container)
     ViewGroup mLinksContainer;
+    @BindView(R.id.tips_card)
+    RelativeLayout mTipsCard;
 
     private SubflowData mStatusData;
     private ProviderPersonalInfo mProviderPersonalInfo;
@@ -123,6 +126,7 @@ public class OnboardingStatusFragment extends OnboardingSubflowUIFragment
         mProviderPersonalInfo = event.providerProfile.getProviderPersonalInfo();
         initJobsView();
         initSuppliesView();
+        initTipsView();
         initLearningLinksView();
         mMainContentContainer.setVisibility(View.VISIBLE);
     }
@@ -173,6 +177,22 @@ public class OnboardingStatusFragment extends OnboardingSubflowUIFragment
         else
         {
             mJobsCollapsible.setVisibility(View.GONE);
+        }
+    }
+
+    /**
+     * This view is a link to a "tips" page. Only show this if the "status" is completed.
+     */
+    private void initTipsView()
+    {
+        //TODO: JIA: put real logic here.
+        if (1 == 1)
+        {
+            mTipsCard.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mTipsCard.setVisibility(View.GONE);
         }
     }
 

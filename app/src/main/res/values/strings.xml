@@ -646,4 +646,5 @@
     <string name="first_impression_message">For your first job, the customer will probably be home. We recommend asking them for a tour of the home, and double-checking any specific instructions.</string>
     <string name="done_title">Day one is done</string>
     <string name="done_message">Before you leave their home, you might want to do one last sweep before you pack up and leave. After you check out, your customer will get a notification on their phone to rate your service. We’ll take care of payment, including a tip, and you’ll also get the chance to rate your customer. Well done! Your first job is in the books.</string>
+    <string name="tips_for_preparing_for_your_first_job">Tips for preparing for your first job</string>
 </resources>

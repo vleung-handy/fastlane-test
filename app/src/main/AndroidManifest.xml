@@ -93,7 +93,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Translucent"
             >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
 
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -334,12 +338,10 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Translucent"
             />
-        <activity android:name=".onboarding.ui.activity.FirstDayActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+        <activity
+            android:name=".onboarding.ui.activity.FirstDayActivity"
+            android:screenOrientation="portrait"
+            />
     </application>
 
 </manifest>
