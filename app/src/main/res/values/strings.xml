@@ -634,4 +634,16 @@
     <string name="request_dismissal_error">Error dismissing request</string>
     <string name="request_dismissal_success_message">Request dismissed</string>
     <string name="request_dismissal_reason_description_missing">Please tell us why you\'re dismissing this request</string>
+
+    <!--Your first job -->
+    <string name="first_job_title">Your very first job</string>
+    <string name="first_job_message_styled"><![CDATA[<b>We get it:</b> You might have some first-day jitters. Let’s see if we can get rid of those butterflies and help you learn what to expect before, during, and after your first job.]]></string>
+    <string name="communication_counts">Communication counts</string>
+    <string name="communication_message">A few hours before the job, we’ll share the customer’s address and you’ll be able to call or text your customer through the Handy Pro app. It’s always a good idea to get in touch with them, even if you’re just saying hello! It’s also a chance to ask any questions, in case their Job Details were unclear. Finally, try to leave early to make sure you aren’t late!</string>
+    <string name="be_prepared_title">Be Prepared</string>
+    <string name="be_prepared_message">Customers expect you to come equipped with all of the supplies you’ll need to get the job done. If you don’t have any, take a trip to the store the night before your job to stock up. Hint: Talk to your customer to find out if they want you to bring a vacuum!</string>
+    <string name="first_impression_title">First impressions matter</string>
+    <string name="first_impression_message">For your first job, the customer will probably be home. We recommend asking them for a tour of the home, and double-checking any specific instructions.</string>
+    <string name="done_title">Day one is done</string>
+    <string name="done_message">Before you leave their home, you might want to do one last sweep before you pack up and leave. After you check out, your customer will get a notification on their phone to rate your service. We’ll take care of payment, including a tip, and you’ll also get the chance to rate your customer. Well done! Your first job is in the books.</string>
 </resources>

@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <!--TODO: JIA: make the ripples work-->
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:title="Your First Day"
+        android:elevation="@dimen/medium_elevation"
+    />
+
+    <ScrollView
+        android:id="@+id/activity_first_day"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/handy_bg"
+        tools:context="com.handy.portal.onboarding.ui.activity.FirstDayActivity"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            >
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/FirstDayCardStyle"
+                >
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:src="@drawable/img_vacuum"
+                    android:clickable="false"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    style="@style/TextView.XLarge.Bold"
+                    android:textAllCaps="false"
+                    android:text="@string/first_job_title"
+                    android:clickable="false"
+                    android:layout_marginTop="@dimen/default_margin_half"
+                    />
+                <TextView
+                    android:id="@+id/first_day_first_job_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    style="@style/FirstDayMessageStyle"
+                    tools:text="Some very very long text here"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin_half"
+                style="@style/FirstDayCardStyle"
+                tools:visibility="gone"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/FirstDayTitleStyle"
+                    android:text="@string/communication_counts"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/communication_message"
+                    style="@style/FirstDayMessageStyle"
+                    />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/default_margin_half"
+                    android:src="@drawable/img_supplies"
+                    />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/FirstDayCardStyle"
+                android:layout_marginTop="@dimen/default_margin_half"
+                tools:visibility="gone"
+                >
+                <ImageView
+                    android:id="@+id/image_vacuum"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/img_vacuum"
+                    />
+                <TextView
+                    android:id="@+id/prepare_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toRightOf="@id/image_vacuum"
+                    android:text="@string/be_prepared_title"
+                    style="@style/FirstDayTitleStyle"
+                    />
+                <!--Don't worry, the preview shows this text overlapping the image, but will be
+                    fixed in code with LeadingMarginSpan2-->
+                <TextView
+                    android:id="@+id/prepare_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    tools:text="@string/be_prepared_message"
+                    android:layout_below="@id/prepare_title"
+                    style="@style/FirstDayMessageStyle"
+                    />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/FirstDayCardStyle"
+                android:layout_marginTop="@dimen/default_margin_half"
+                tools:visibility="gone"
+                >
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/first_impression_title"
+                    style="@style/FirstDayTitleStyle"
+                    />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    style="@style/FirstDayMessageStyle"
+                    android:text="@string/first_impression_message"
+                    />
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/img_supplies"
+                    android:layout_marginTop="@dimen/default_margin_half"
+                    />
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/FirstDayCardStyle"
+                android:layout_marginTop="@dimen/default_margin_half"
+                >
+                <ImageView
+                    android:id="@+id/image_done"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/img_vacuum"
+                    android:layout_alignParentRight="true"
+                    />
+                <TextView
+                    android:id="@+id/done_title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@style/FirstDayTitleStyle"
+                    android:text="@string/done_title"
+                    android:layout_alignParentLeft="true"
+                    />
+                <TextView
+                    android:id="@+id/done_message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/done_title"
+
+                    />
+            </RelativeLayout>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>
