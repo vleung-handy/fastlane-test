@@ -1,13 +1,12 @@
 package com.handy.portal.logger.handylogger.model;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.manager.PrefsManager;
 
 import java.io.Serializable;
-
-import static com.stripe.net.APIResource.GSON;
 
 /**
  * Created by sng on 10/11/16.
@@ -16,6 +15,7 @@ import static com.stripe.net.APIResource.GSON;
 public class Session implements Serializable
 {
     private static int SESSION_TIMEOUT_MS = 30 * 60 * 1000; //30 minutes
+    private static Gson GSON = new Gson();
     private int id;
     private int eventCount;
     private long lastModifiedTimeMs;

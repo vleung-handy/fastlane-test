@@ -28,6 +28,7 @@ import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.LocationModule;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.FileManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.PageNavigationManager;
@@ -54,8 +55,6 @@ import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
-import com.handy.portal.retrofit.logevents.EventLogEndpoint;
-import com.handy.portal.retrofit.logevents.EventLogService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitEndpoint;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.service.DeepLinkService;
@@ -281,6 +280,13 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
+    final FileManager provideFileManager()
+    {
+        return new FileManager();
+    }
+
+    @Provides
+    @Singleton
     final StripeRetrofitService provideStripeService(final StripeRetrofitEndpoint endpoint) //TODO: clean up
     {
         final OkHttpClient okHttpClient = new OkHttpClient();
@@ -293,30 +299,6 @@ public final class ApplicationModule
                     public void intercept(RequestFacade request) { }
                 }).setClient(new OkClient(okHttpClient)).build();
         return restAdapter.create(StripeRetrofitService.class);
-    }
-
-    //log events
-    @Provides
-    @Singleton
-    final EventLogEndpoint provideLogEventsEndpoint()
-    {
-        return new EventLogEndpoint(context);
-    }
-
-    @Provides
-    @Singleton
-    final EventLogService provideLogEventsService(final EventLogEndpoint endpoint)
-    {
-        final OkHttpClient okHttpClient = new OkHttpClient();
-        okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
-
-        final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
-                .setRequestInterceptor(new RequestInterceptor()
-                {
-                    @Override
-                    public void intercept(RequestFacade request) { }
-                }).setClient(new OkClient(okHttpClient)).build();
-        return restAdapter.create(EventLogService.class);
     }
 
     @Provides
@@ -362,12 +344,11 @@ public final class ApplicationModule
     final DataManager provideDataManager(final HandyRetrofitService service,
                                          final HandyRetrofitEndpoint endpoint,
                                          final StripeRetrofitService stripeService, //TODO: refactor and move somewhere else?
-                                         final EventLogService eventLogService,
                                          final DynamicEndpoint dynamicEndpoint,
                                          final DynamicEndpointService dynamicEndpointService
     )
     {
-        return new DataManager(service, endpoint, stripeService, eventLogService, dynamicEndpoint, dynamicEndpointService);
+        return new DataManager(service, endpoint, stripeService, dynamicEndpoint, dynamicEndpointService);
     }
 
     @Provides
@@ -466,10 +447,11 @@ public final class ApplicationModule
     @Singleton
     final EventLogManager provideLogEventsManager(final EventBus bus,
                                                   final DataManager dataManager,
+                                                  final FileManager fileManager,
                                                   final PrefsManager prefsManager,
                                                   final ProviderManager providerManager)
     {
-        return new EventLogManager(bus, dataManager, prefsManager, providerManager);
+        return new EventLogManager(bus, dataManager, fileManager, prefsManager, providerManager);
     }
 
     @Provides

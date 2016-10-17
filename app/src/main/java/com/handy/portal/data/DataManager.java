@@ -43,7 +43,6 @@ import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
-import com.handy.portal.retrofit.logevents.EventLogService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.setup.SetupData;
 import com.handy.portal.updater.model.UpdateDetails;
@@ -66,7 +65,6 @@ public class DataManager
     private final HandyRetrofitEndpoint mEndpoint;
 
     private final StripeRetrofitService mStripeService; // should refactor and move somewhere else?
-    private EventLogService mEventLogService;
     private final DynamicEndpoint mDynamicEndpoint;
     private final DynamicEndpointService mDynamicEndpointService;
 
@@ -74,14 +72,12 @@ public class DataManager
     public DataManager(final HandyRetrofitService service,
                        final HandyRetrofitEndpoint endpoint,
                        final StripeRetrofitService stripeService,
-                       final EventLogService eventLogService,
                        final DynamicEndpoint dynamicEndpoint,
                        final DynamicEndpointService dynamicEndpointService)
     {
         mService = service;
         mEndpoint = endpoint;
         mStripeService = stripeService;
-        mEventLogService = eventLogService;
         mDynamicEndpoint = dynamicEndpoint;
         mDynamicEndpointService = dynamicEndpointService;
     }
@@ -344,7 +340,7 @@ public class DataManager
     //Log Events
     public void postLogs(final JsonObject eventLogBundle, final Callback<EventLogResponse> cb)
     {
-        mEventLogService.postLogs(eventLogBundle, new LogEventsRetroFitCallback(cb));
+        mService.postLogs(eventLogBundle, new LogEventsRetroFitCallback(cb));
     }
 
     // Notifications

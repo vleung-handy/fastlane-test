@@ -7,7 +7,9 @@ import java.util.List;
 
 public class EventLogBundle
 {
-    @SerializedName("event_bundle_id")
+    public static final String KEY_EVENT_BUNDLE_ID = "event_bundle_id";
+
+    @SerializedName(KEY_EVENT_BUNDLE_ID)
     private String mEventBundleId;
     @SerializedName("events")
     private List<Event> mEvents;
@@ -19,6 +21,21 @@ public class EventLogBundle
         mEventBundleId = createBundleId();
         mEvents = events;
         mEventSuperProperties = new EventSuperProperties(providerId);
+    }
+
+    public String getEventBundleId()
+    {
+        return mEventBundleId;
+    }
+
+    public void addEvent(Event event)
+    {
+        mEvents.add(event);
+    }
+
+    public int size()
+    {
+        return mEvents.size();
     }
 
     private String createBundleId()

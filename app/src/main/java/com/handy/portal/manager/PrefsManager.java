@@ -49,6 +49,10 @@ public class PrefsManager
         mDefaultPrefs.edit().putString(prefsKey, value).apply();
     }
 
+    public int getInt(@PrefsKey.Key String prefsKey, int defaultValue) {
+        return mDefaultPrefs.getInt(prefsKey, defaultValue);
+    }
+
     public boolean contains(String prefsKey) {
         return mDefaultPrefs.contains(prefsKey);
     }
@@ -83,6 +87,10 @@ public class PrefsManager
     }
 
     public void removeValue(String prefsKey) {
+        mDefaultPrefs.edit().remove(prefsKey).apply();
+    }
+
+    public void removeSecureValue(String prefsKey) {
         mSecureDefaultPrefs.edit().remove(prefsKey).apply();
     }
 
@@ -95,7 +103,6 @@ public class PrefsManager
     {
         mSecureDefaultPrefs.edit().putBoolean(prefsKey, value).apply();
     }
-
     public void clear()
     {
         mDefaultPrefs.edit().clear().apply();

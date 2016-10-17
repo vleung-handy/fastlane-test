@@ -61,6 +61,7 @@ public class SendReceiptCheckoutFragmentTest extends RobolectricGradleTestWrappe
         List<Booking.BookingInstructionUpdateRequest> list = new ArrayList<>();
         list.add(mock(Booking.BookingInstructionUpdateRequest.class));
 
+        when(booking.getId()).thenReturn("1");
         when(booking.getCustomerPreferences()).thenReturn(list);
         when(booking.getUser()).thenReturn(user);
 

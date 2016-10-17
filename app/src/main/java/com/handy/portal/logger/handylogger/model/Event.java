@@ -43,7 +43,8 @@ public class Event
         return mEventLog.getSessionId();
     }
 
-    public void setEventType(String eventType) {
+    public void setEventType(String eventType)
+    {
         mEventType = eventType;
     }
 

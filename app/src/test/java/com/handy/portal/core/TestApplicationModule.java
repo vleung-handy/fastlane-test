@@ -24,7 +24,9 @@ import com.handy.portal.data.TestDataManager;
 import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.logger.handylogger.EventLogManager;
+import com.handy.portal.logger.handylogger.EventLogManagerTest;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.FileManager;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
@@ -54,7 +56,6 @@ import com.handy.portal.retrofit.DynamicEndpoint;
 import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
-import com.handy.portal.retrofit.logevents.EventLogService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
@@ -131,6 +132,7 @@ import static org.mockito.Mockito.when;
         PurchaseSuppliesConfirmationFragment.class,
         NewPurchaseSuppliesFragment.class,
         ScheduleConfirmationFragment.class,
+        EventLogManagerTest.class,
 }, library = true)
 public class TestApplicationModule
 {
@@ -177,7 +179,6 @@ public class TestApplicationModule
                 mock(HandyRetrofitService.class),
                 endpoint,
                 mock(StripeRetrofitService.class),
-                mock(EventLogService.class),
                 mock(DynamicEndpoint.class),
                 mock(DynamicEndpointService.class));
     }
@@ -254,13 +255,27 @@ public class TestApplicationModule
     @Singleton
     final PrefsManager providePrefsManager()
     {
-        return mock(PrefsManager.class);
+        return new PrefsManager(mApplication.getApplicationContext());
     }
 
     @Provides
-    final EventLogManager eventLogManager()
+    @Singleton
+    final EventLogManager provideLogEventsManager(
+            final EventBus bus,
+            final DataManager dataManager,
+            final FileManager fileManager,
+            final PrefsManager prefsManager,
+            final ProviderManager providerManager
+    )
     {
-        return mock(EventLogManager.class);
+        return spy(new EventLogManager(bus, dataManager, fileManager, prefsManager, providerManager));
+    }
+
+    @Provides
+    @Singleton
+    final FileManager provideFileManager()
+    {
+        return new FileManager();
     }
 
     @Provides
