@@ -45,6 +45,17 @@ public abstract class RequestedJobsLog extends EventLog
     }
 
 
+    public static class ClaimSubmitted extends JobsLog
+    {
+        private static final String EVENT_TYPE = "claim_submitted";
+
+        public ClaimSubmitted(final Booking booking)
+        {
+            super(EVENT_TYPE, EVENT_CONTEXT, booking);
+        }
+    }
+
+
     public static class ClaimSuccess extends JobsLog
     {
         private static final String EVENT_TYPE = "claim_success";

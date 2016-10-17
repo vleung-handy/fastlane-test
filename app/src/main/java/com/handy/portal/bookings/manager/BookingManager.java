@@ -446,8 +446,8 @@ public class BookingManager
                 //have to invalidate cache for all days because we need updated priority access info
                 //TODO investigate something better
                 invalidateCachesForAllDays();
-
-                mBus.post(new HandyEvent.ReceiveClaimJobSuccess(bookingClaimDetails, event.source));
+                mBus.post(new HandyEvent.ReceiveClaimJobSuccess(event.booking, bookingClaimDetails,
+                        event.source));
             }
 
             @Override

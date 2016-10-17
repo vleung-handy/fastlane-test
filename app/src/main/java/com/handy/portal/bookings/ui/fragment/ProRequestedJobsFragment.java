@@ -24,6 +24,7 @@ import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.adapter.RequestedJobsRecyclerViewAdapter;
+import com.handy.portal.bookings.util.ClaimUtils;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.RequestCode;
@@ -259,7 +260,50 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     @Subscribe
     public void onRequestedJobClaimClicked(final Event.RequestedJobClaimClicked event)
     {
-        // FIXME: Claim job
+        boolean confirmClaimDialogShown =
+                ClaimUtils.showConfirmBookingClaimDialogIfNecessary(event.getBooking(), this,
+                        getFragmentManager());
+        if (!confirmClaimDialogShown)
+        {
+            requestClaimJob(event.getBooking());
+        }
+    }
+
+    private void requestClaimJob(final Booking booking)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimSubmitted(booking)));
+        bus.post(new HandyEvent.RequestClaimJob(booking, null, null));
+    }
+
+    @Subscribe
+    public void onReceiveClaimJobSuccess(final HandyEvent.ReceiveClaimJobSuccess event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        final Booking booking = event.originalBooking;
+        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimSuccess(booking)));
+        bus.post(new BookingEvent.ReceiveProRequestedJobsCountSuccess(--mUnreadJobsCount));
+        mAdapter.remove(booking);
+        Snackbar.make(mJobListSwipeRefreshLayout, R.string.job_claim_success,
+                Snackbar.LENGTH_LONG).show();
+        if (mAdapter.getItemCount() == 0)
+        {
+            showContentViewAndHideOthers(mEmptyJobsSwipeRefreshLayout);
+        }
+    }
+
+    @Subscribe
+    public void onReceiveClaimJobError(final HandyEvent.ReceiveClaimJobError event)
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        String errorMessage = event.error.getMessage();
+        if (TextUtils.isEmpty(errorMessage))
+        {
+            errorMessage = getString(R.string.job_claim_error);
+        }
+        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimError(event.getBooking(),
+                errorMessage)));
+        Snackbar.make(mJobListSwipeRefreshLayout, errorMessage, Snackbar.LENGTH_LONG).show();
     }
 
     @Subscribe
@@ -295,15 +339,19 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     {
         if (resultCode == Activity.RESULT_OK)
         {
+            final Booking booking = (Booking) data.getSerializableExtra(BundleKeys.BOOKING);
             switch (requestCode)
             {
                 case RequestCode.CONFIRM_DISMISS:
-                    final Booking booking = (Booking) data.getSerializableExtra(BundleKeys.BOOKING);
                     final String reasonMachineName =
                             data.getStringExtra(BundleKeys.REASON_MACHINE_NAME);
                     final String reasonDescription =
                             data.getStringExtra(BundleKeys.REASON_DESCRIPTION);
                     dismissJob(booking, reasonMachineName, reasonDescription);
+                    break;
+                case RequestCode.CONFIRM_SWAP:
+                case RequestCode.CONFIRM_REQUEST:
+                    requestClaimJob(booking);
                     break;
             }
         }

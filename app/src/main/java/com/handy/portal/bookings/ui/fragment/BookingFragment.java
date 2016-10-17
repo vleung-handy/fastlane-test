@@ -35,9 +35,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.element.BookingDetailsJobInstructionsSectionView;
 import com.handy.portal.bookings.ui.element.BookingDetailsProRequestInfoView;
 import com.handy.portal.bookings.ui.element.BookingMapView;
-import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
-import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
-import com.handy.portal.bookings.ui.fragment.dialog.SwapBookingClaimDialogFragment;
+import com.handy.portal.bookings.util.ClaimUtils;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.PrefsKey;
@@ -48,13 +46,13 @@ import com.handy.portal.library.ui.view.MapPlaceholderView;
 import com.handy.portal.library.ui.view.RoundedTextView;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
+import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.LocationData;
@@ -643,8 +641,15 @@ public class BookingFragment extends TimerActionBarFragment
     private void requestClaimJob()
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimSubmitted(
-                mBooking, mSource, mSourceExtras, 0.0f)));
+        if (mBooking.isRequested())
+        {
+            bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimSubmitted(mBooking)));
+        }
+        else
+        {
+            bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimSubmitted(
+                    mBooking, mSource, mSourceExtras, 0.0f)));
+        }
         bus.post(new HandyEvent.RequestClaimJob(mBooking, mSource, mSourceExtras));
     }
 
@@ -668,7 +673,9 @@ public class BookingFragment extends TimerActionBarFragment
                     @Override
                     public void onClick(final View v)
                     {
-                        boolean confirmClaimDialogShown = showConfirmBookingClaimDialogIfNecessary();
+                        boolean confirmClaimDialogShown =
+                                ClaimUtils.showConfirmBookingClaimDialogIfNecessary(mBooking,
+                                        BookingFragment.this, getChildFragmentManager());
                         if (!confirmClaimDialogShown)
                         {
                             requestClaimJob();
@@ -796,44 +803,6 @@ public class BookingFragment extends TimerActionBarFragment
         float userDistanceInMeters = userLocation.distanceTo(bookingLocation);
 
         return userDistanceInMeters <= maxDistanceInMeters && userAccuracyInMeters <= toleranceInMeters;
-    }
-
-    /**
-     * shows the confirm booking claim dialog if the cancellation policy data is there, based on the given booking
-     *
-     * @return true if the confirm dialog is shown/is showing, false otherwise
-     */
-    private boolean showConfirmBookingClaimDialogIfNecessary()
-    {
-        final Booking.Action claimAction = mBooking.getAction(Booking.Action.ACTION_CLAIM);
-        if (mBooking.canSwap())
-        {
-            if (getChildFragmentManager()
-                    .findFragmentByTag(SwapBookingClaimDialogFragment.FRAGMENT_TAG) == null)
-            {
-                final SwapBookingClaimDialogFragment dialogFragment =
-                        SwapBookingClaimDialogFragment.newInstance(mBooking);
-                dialogFragment.setTargetFragment(BookingFragment.this, RequestCode.CONFIRM_SWAP);
-                FragmentUtils.safeLaunchDialogFragment(dialogFragment, this,
-                        SwapBookingClaimDialogFragment.FRAGMENT_TAG);
-            }
-            return true;
-        }
-        else if (claimAction != null && claimAction.getExtras() != null)
-        {
-            Booking.Action.Extras.CancellationPolicy cancellationPolicy = claimAction.getExtras().getCancellationPolicy();
-            if (cancellationPolicy != null)
-            {
-                if (getChildFragmentManager().findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null)
-                {
-                    ConfirmBookingActionDialogFragment confirmBookingDialogFragment = ConfirmBookingClaimDialogFragment.newInstance(mBooking);
-                    confirmBookingDialogFragment.setTargetFragment(BookingFragment.this, RequestCode.CONFIRM_REQUEST);
-                    FragmentUtils.safeLaunchDialogFragment(confirmBookingDialogFragment, this, ConfirmBookingClaimDialogFragment.FRAGMENT_TAG);
-                }
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override
