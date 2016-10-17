@@ -274,6 +274,7 @@ public class BookingManager
         if (!matchingCache)
         {
             Map<String, Object> options = new HashMap<>();
+            onRequestProRequestedJobsCount(null); // also pull requested jobs count
             options.put(BookingRequestKeys.IS_PROVIDER_REQUESTED, true);
             mDataManager.getAvailableBookings(datesForBookings.toArray(new Date[datesForBookings.size()]),
                     options,
@@ -507,6 +508,28 @@ public class BookingManager
                 mBus.post(new HandyEvent.ReceiveRemoveJobError(error));
             }
         });
+    }
+
+    @Subscribe
+    public void onRequestDismissJob(final HandyEvent.RequestDismissJob event)
+    {
+        final Booking booking = event.getBooking();
+        mDataManager.dismissJob(booking.getId(), booking.getType(), event.getReasonMachineName(),
+                new DataManager.Callback<Void>()
+                {
+                    @Override
+                    public void onSuccess(final Void response)
+                    {
+                        mBus.post(new HandyEvent.ReceiveDismissJobSuccess(booking));
+                        requestedBookingsCache.invalidateAll();
+                    }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        mBus.post(new HandyEvent.ReceiveDismissJobError(booking, error));
+                    }
+                });
     }
 
     @Subscribe

@@ -20,6 +20,8 @@ public class BookingsWrapper implements Serializable
     private PriorityAccessInfo mPriorityAccessInfo;
     @SerializedName("jobs")
     private ArrayList<Booking> bookings;
+    private List<Booking> mUndismissedBookings;
+
 
     public static class PriorityAccessInfo implements Serializable
     {
@@ -108,5 +110,21 @@ public class BookingsWrapper implements Serializable
     public List<Booking> getBookings()
     {
         return bookings;
+    }
+
+    public List<Booking> getUndismissedBookings()
+    {
+        if (mUndismissedBookings == null)
+        {
+            mUndismissedBookings = new ArrayList<>();
+            for (Booking booking : bookings)
+            {
+                if (!booking.isDismissed())
+                {
+                    mUndismissedBookings.add(booking);
+                }
+            }
+        }
+        return mUndismissedBookings;
     }
 }

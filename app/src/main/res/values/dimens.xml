@@ -186,4 +186,7 @@
     <!-- Pro Images -->
     <dimen name="pro_image_default_size">80dp</dimen>
 
+    <!-- Request Dismissal -->
+    <dimen name="request_dismissal_other_edit_text_offset">42dp</dimen>
+
 </resources>

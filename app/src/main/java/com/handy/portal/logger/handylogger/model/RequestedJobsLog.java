@@ -69,4 +69,49 @@ public abstract class RequestedJobsLog extends EventLog
             mErrorMessage = errorMessage;
         }
     }
+
+
+    public static class DismissJobSubmitted extends JobsLog
+    {
+        private static final String EVENT_TYPE = "dismiss_job_submitted";
+        @SerializedName("reason_machine_name")
+        private final String mReasonMachineName;
+        @SerializedName("reason_description")
+        private final String mReasonDescription;
+
+        public DismissJobSubmitted(final Booking booking,
+                                   final String reasonMachineName,
+                                   final String reasonDescription)
+        {
+            super(EVENT_TYPE, EVENT_CONTEXT, booking);
+            mReasonMachineName = reasonMachineName;
+            mReasonDescription = reasonDescription;
+        }
+    }
+
+
+    public static class DismissJobSuccess extends JobsLog
+    {
+        private static final String EVENT_TYPE = "dismiss_job_success";
+
+        public DismissJobSuccess(final Booking booking)
+        {
+            super(EVENT_TYPE, EVENT_CONTEXT, booking);
+        }
+    }
+
+
+    public static class DismissJobError extends JobsLog
+    {
+        private static final String EVENT_TYPE = "dismiss_job_error";
+
+        @SerializedName("error_message")
+        private String mErrorMessage;
+
+        public DismissJobError(final Booking booking, final String errorMessage)
+        {
+            super(EVENT_TYPE, EVENT_CONTEXT, booking);
+            mErrorMessage = errorMessage;
+        }
+    }
 }

@@ -2,6 +2,7 @@ package com.handy.portal.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 public class ConfigurationResponse
@@ -222,8 +223,10 @@ public class ConfigurationResponse
             return mReasons;
         }
 
-        public static class Reason
+        public static class Reason implements Serializable
         {
+            public static final String MACHINE_NAME_OTHER = "other";
+
             @SerializedName("machine_name")
             private String mMachineName;
             @SerializedName("display_name")

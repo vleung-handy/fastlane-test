@@ -115,6 +115,13 @@ public interface HandyRetrofitService
                                   @Query("type") String type,
                                   HandyRetrofitCallback cb);
 
+    @FormUrlEncoded
+    @POST(JOBS_PATH + "{id}/dismiss")
+    void dismissJob(@Path("id") String bookingId,
+                    @Field("type") String bookingType,
+                    @Field("dismissal_reason_machine_name") String reasonMachineName,
+                    HandyRetrofitCallback cb);
+
     @GET(PAYMENTS_PATH)
     void getPaymentBatches(@Query("date_range_start") Date startDate,
                            @Query("date_range_end") Date endDate,

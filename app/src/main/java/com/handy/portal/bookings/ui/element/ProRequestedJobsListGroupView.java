@@ -9,8 +9,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.library.util.DateTimeUtils;
+
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,14 +43,10 @@ public class ProRequestedJobsListGroupView extends FrameLayout
         ButterKnife.bind(this);
     }
 
-    public void updateDisplay(@NonNull BookingsWrapper bookingsWrapper,
-                              @NonNull Context context)
+    public void updateDisplay(@NonNull Date date, @NonNull Context context)
     {
-        String formattedDate =
-                DateTimeUtils.getTodayTomorrowStringByStartDate(
-                        bookingsWrapper.getDate(),
-                        context)
-                + DateTimeUtils.formatDayOfWeekMonthDate(bookingsWrapper.getDate());
+        String formattedDate = DateTimeUtils.getTodayTomorrowStringByStartDate(date, context)
+                + DateTimeUtils.formatDayOfWeekMonthDate(date);
         titleText.setText(formattedDate);
     }
 

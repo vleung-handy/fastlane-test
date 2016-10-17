@@ -449,6 +449,63 @@ public abstract class HandyEvent
     }
 
 
+    public static class RequestDismissJob extends RequestEvent
+    {
+        private final Booking mBooking;
+        private final String mReasonMachineName;
+
+        public RequestDismissJob(final Booking booking, final String reasonMachineName)
+        {
+            mBooking = booking;
+            mReasonMachineName = reasonMachineName;
+        }
+
+        public Booking getBooking()
+        {
+            return mBooking;
+        }
+
+        public String getReasonMachineName()
+        {
+            return mReasonMachineName;
+        }
+    }
+
+
+    public static class ReceiveDismissJobSuccess extends ReceiveSuccessEvent
+    {
+        private Booking mBooking;
+
+        public ReceiveDismissJobSuccess(final Booking booking)
+        {
+            mBooking = booking;
+        }
+
+        public Booking getBooking()
+        {
+            return mBooking;
+        }
+    }
+
+
+    public static class ReceiveDismissJobError extends ReceiveErrorEvent
+    {
+        private Booking mBooking;
+
+        public ReceiveDismissJobError(final Booking booking,
+                                      final DataManager.DataManagerError error)
+        {
+            mBooking = booking;
+            this.error = error;
+        }
+
+        public Booking getBooking()
+        {
+            return mBooking;
+        }
+    }
+
+
     public static class RequestNotifyJobOnMyWay extends RequestBookingActionEvent
     {
         public LocationData locationData;
