@@ -20,7 +20,6 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProfileEvent;
@@ -287,12 +286,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
     private String getProfilePhotoUrl()
     {
         final ProviderProfile profile = mProviderManager.getCachedProviderProfile();
-        if (mPrefsManager.getSecureString(PrefsKey.PROFILE_PHOTO_URL, null) != null)
-        {
-            return mPrefsManager.getSecureString(PrefsKey.PROFILE_PHOTO_URL);
-        }
-        else if (profile != null
-                && profile.getProviderPersonalInfo() != null
+        if (profile != null && profile.getProviderPersonalInfo() != null
                 && profile.getProviderPersonalInfo().getProfileImage(THUMBNAIL) != null)
         {
             return profile.getProviderPersonalInfo().getProfileImage(THUMBNAIL).getUrl();

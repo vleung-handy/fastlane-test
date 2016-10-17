@@ -22,7 +22,6 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
@@ -362,11 +361,7 @@ public class EditPhotoFragment extends ActionBarFragment
                 bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.ImageRequestSuccess()));
                 bus.post(new LogEvent.AddLogEvent(
                         new ProfilePhotoUploadLog.ProfilePhotoUploadSuccess(mSource)));
-                final String profilePhotoUrl = response.get("download_url");
-                mPrefsManager.setSecureString(PrefsKey.PROFILE_PHOTO_URL, profilePhotoUrl);
-                bus.post(new ProfileEvent.ProfilePhotoUpdated());
-                bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                getActivity().onBackPressed();
+                bus.post(new ProfileEvent.RequestProviderProfile(false));
             }
 
             @Override
@@ -379,6 +374,23 @@ public class EditPhotoFragment extends ActionBarFragment
             }
         });
         bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.ImageRequestSubmitted()));
+    }
+
+    @Subscribe
+    public void onReceiveProfileProfileSuccess(
+            final ProfileEvent.ReceiveProviderProfileSuccess event)
+    {
+        bus.post(new ProfileEvent.ProfilePhotoUpdated());
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        showToast(R.string.upload_photo_success);
+        getActivity().onBackPressed();
+    }
+
+    @Subscribe
+    public void onReceiveProfileProfileError(final ProfileEvent.ReceiveProviderProfileError event)
+    {
+        showError(event.error);
+        getActivity().onBackPressed();
     }
 
     @Override

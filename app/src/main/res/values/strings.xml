@@ -613,6 +613,7 @@
     <string name="upload_photo_subtitle">Upload a profile photo to help us introduce you to your future\u00a0customers.</string>
     <string name="upload_photo_camera_option">Take photo</string>
     <string name="upload_photo_gallery_option">Use library</string>
+    <string name="upload_photo_success">Success! Profile photo updated.</string>
     <string name="photo_chooser_title">Choose a Photo</string>
     <string name="upload_photo_dos_title">Do</string>
     <string name="upload_photo_dos_1">Bright lighting</string>

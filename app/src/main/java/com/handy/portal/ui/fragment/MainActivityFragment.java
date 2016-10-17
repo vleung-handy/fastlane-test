@@ -26,7 +26,6 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.event.HandyEvent;
@@ -200,12 +199,7 @@ public class MainActivityFragment extends InjectedFragment
     private String getProfilePhotoUrl()
     {
         final ProviderProfile profile = mProviderManager.getCachedProviderProfile();
-        if (mPrefsManager.getSecureString(PrefsKey.PROFILE_PHOTO_URL, null) != null)
-        {
-            return mPrefsManager.getSecureString(PrefsKey.PROFILE_PHOTO_URL);
-        }
-        else if (profile != null
-                && profile.getProviderPersonalInfo() != null
+        if (profile != null && profile.getProviderPersonalInfo() != null
                 && profile.getProviderPersonalInfo().getProfileImage(THUMBNAIL) != null)
         {
             return profile.getProviderPersonalInfo().getProfileImage(THUMBNAIL).getUrl();
