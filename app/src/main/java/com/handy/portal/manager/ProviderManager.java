@@ -18,6 +18,7 @@ import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.ProviderPersonalInfo.ProfileImage.Type;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ProviderProfileResponse;
 import com.handy.portal.model.ProviderSettings;
@@ -483,6 +484,18 @@ public class ProviderManager
     public ProviderProfile getCachedProviderProfile()
     {
         return mProviderProfileCache.getIfPresent(PROVIDER_PROFILE_CACHE_KEY);
+    }
+
+    @Nullable
+    public String getCachedProfileImageUrl(final Type imageType)
+    {
+        final ProviderProfile profile = getCachedProviderProfile();
+        if (profile != null && profile.getProviderPersonalInfo() != null
+                && profile.getProviderPersonalInfo().getProfileImage(imageType) != null)
+        {
+            return profile.getProviderPersonalInfo().getProfileImage(imageType).getUrl();
+        }
+        return null;
     }
 
     @Nullable

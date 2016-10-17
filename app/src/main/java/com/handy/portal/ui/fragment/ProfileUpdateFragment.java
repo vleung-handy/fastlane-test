@@ -258,7 +258,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
         if (configuration != null && configuration.isProfilePictureEnabled())
         {
             mImageHolder.setVisibility(View.VISIBLE);
-            final String imageUrl = getProfilePhotoUrl();
+            final String imageUrl = mProviderManager.getCachedProfileImageUrl(THUMBNAIL);
             if (imageUrl != null)
             {
                 Picasso.with(getActivity())
@@ -281,17 +281,6 @@ public class ProfileUpdateFragment extends ActionBarFragment
         {
             mImageHolder.setVisibility(View.GONE);
         }
-    }
-
-    private String getProfilePhotoUrl()
-    {
-        final ProviderProfile profile = mProviderManager.getCachedProviderProfile();
-        if (profile != null && profile.getProviderPersonalInfo() != null
-                && profile.getProviderPersonalInfo().getProfileImage(THUMBNAIL) != null)
-        {
-            return profile.getProviderPersonalInfo().getProfileImage(THUMBNAIL).getUrl();
-        }
-        return null;
     }
 
     private boolean validate()

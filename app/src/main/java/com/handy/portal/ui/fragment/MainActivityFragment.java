@@ -44,7 +44,6 @@ import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.util.DeeplinkMapper;
@@ -176,7 +175,7 @@ public class MainActivityFragment extends InjectedFragment
         if (configuration != null && configuration.isProfilePictureEnabled())
         {
             mProImage.setVisibility(View.VISIBLE);
-            final String profilePhotoUrl = getProfilePhotoUrl();
+            final String profilePhotoUrl = mProviderManager.getCachedProfileImageUrl(THUMBNAIL);
             if (profilePhotoUrl != null)
             {
                 Picasso.with(getActivity())
@@ -194,17 +193,6 @@ public class MainActivityFragment extends InjectedFragment
         {
             mProImage.setVisibility(View.GONE);
         }
-    }
-
-    private String getProfilePhotoUrl()
-    {
-        final ProviderProfile profile = mProviderManager.getCachedProviderProfile();
-        if (profile != null && profile.getProviderPersonalInfo() != null
-                && profile.getProviderPersonalInfo().getProfileImage(THUMBNAIL) != null)
-        {
-            return profile.getProviderPersonalInfo().getProfileImage(THUMBNAIL).getUrl();
-        }
-        return null;
     }
 
     @Override
