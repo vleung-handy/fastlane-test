@@ -377,7 +377,7 @@ public class EditPhotoFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveProfileProfileSuccess(
+    public void onReceiveProviderProfileSuccess(
             final ProfileEvent.ReceiveProviderProfileSuccess event)
     {
         bus.post(new ProfileEvent.ProfilePhotoUpdated());
@@ -387,7 +387,7 @@ public class EditPhotoFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveProfileProfileError(final ProfileEvent.ReceiveProviderProfileError event)
+    public void onReceiveProviderProfileError(final ProfileEvent.ReceiveProviderProfileError event)
     {
         showError(event.error);
         getActivity().onBackPressed();
