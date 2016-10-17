@@ -1,5 +1,6 @@
 package com.handy.portal.manager;
 
+import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -40,18 +41,18 @@ public class FileManager
      * @param fileContent
      * @return true if file saved, otherwise false, which means there was some ioexception
      */
-    public boolean saveLogFile(String fileName, String fileContent)
+    public boolean saveLogFile(@NonNull String fileName, @NonNull String fileContent)
     {
         //This was simplest way to save in sub directory
         return saveFile(new File(mLogDirectory, fileName), fileContent);
     }
 
-    public void deleteLogFile(String fileName)
+    public void deleteLogFile(@NonNull String fileName)
     {
         new File(mLogDirectory, fileName).delete();
     }
 
-    public String readFile(File file)
+    public String readFile(@NonNull File file)
     {
         StringBuffer buffer = null;
         BufferedReader input = null;
@@ -81,7 +82,7 @@ public class FileManager
      * @param fileContent
      * @return
      */
-    public boolean saveFile(File file, String fileContent)
+    public boolean saveFile(@NonNull File file, @NonNull String fileContent)
     {
         FileOutputStream outputStream = null;
 

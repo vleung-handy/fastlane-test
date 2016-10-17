@@ -10,8 +10,6 @@ import android.os.BatteryManager;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 
-import com.handy.portal.core.BaseApplication;
-
 /**
  * utilities to access information about the system
  */
@@ -68,11 +66,9 @@ public final class SystemUtils
                 Settings.Secure.ANDROID_ID);
     }
 
-    public static boolean hasNetworkConnection()
+    public static boolean hasNetworkConnection(@NonNull Context context)
     {
-        ConnectivityManager cm =
-                (ConnectivityManager) BaseApplication.getContext()
-                        .getSystemService(Context.CONNECTIVITY_SERVICE);
+        ConnectivityManager cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();

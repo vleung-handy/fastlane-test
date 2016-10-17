@@ -207,7 +207,7 @@ public class EventLogManager
                 sendLogsFromPreference();
             }
             //Check network connection and set timer delay appropriately
-        }, SystemUtils.hasNetworkConnection() ? UPLOAD_TIMER_DELAY_MS : UPLOAD_TIMER_DELAY_NO_INTERNET_MS);
+        }, SystemUtils.hasNetworkConnection(BaseApplication.getContext()) ? UPLOAD_TIMER_DELAY_MS : UPLOAD_TIMER_DELAY_NO_INTERNET_MS);
     }
 
     private void savePrefsToLogsOnInitialization()
