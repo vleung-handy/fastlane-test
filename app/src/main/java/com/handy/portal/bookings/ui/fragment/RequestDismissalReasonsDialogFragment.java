@@ -89,6 +89,7 @@ public class RequestDismissalReasonsDialogFragment extends ConfirmBookingActionD
                     {
                         final String reasonMachineName = reason.getMachineName();
                         mSelectedReasonMachineName = reasonMachineName;
+                        // Show keyboard if "other" option is selected, otherwise dismiss it
                         if (RequestDismissal.Reason.MACHINE_NAME_OTHER.equals(reasonMachineName))
                         {
                             mOtherEditText.setVisibility(View.VISIBLE);

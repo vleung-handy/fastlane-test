@@ -275,6 +275,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         {
             final ArrayList<ConfigurationResponse.RequestDismissal.Reason> reasons =
                     configuration.getRequestDismissal().getReasons();
+            // Display dialog for selecting a request dismissal reason
             if (reasons != null && !reasons.isEmpty())
             {
                 final RequestDismissalReasonsDialogFragment dialogFragment =
