@@ -34,6 +34,12 @@ public class FileManager
         return mLogDirectory.listFiles();
     }
 
+    /**
+     *
+     * @param fileName
+     * @param fileContent
+     * @return true if file saved, otherwise false, which means there was some ioexception
+     */
     public boolean saveLogFile(String fileName, String fileContent)
     {
         //This was simplest way to save in sub directory
