@@ -309,6 +309,13 @@ public class EventLogManager
         try
         {
             File[] files = mFileManager.getLogFileList();
+            if(files == null) {
+                //Log exception
+                Crashlytics.logException(new Exception("Log Files list returns null. Should not happen"));
+                //Just return. next log event will trigger timer
+                return;
+            }
+
             mSendingLogsCount = files.length;
             for (final File file : files)
             {
