@@ -51,6 +51,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.handy.portal.model.ProviderPersonalInfo.ProfileImage.Type.THUMBNAIL;
+
 public class ProfileUpdateFragment extends ActionBarFragment
 {
     @BindView(R.id.provider_name_edit_text)
@@ -291,9 +293,9 @@ public class ProfileUpdateFragment extends ActionBarFragment
         }
         else if (profile != null
                 && profile.getProviderPersonalInfo() != null
-                && profile.getProviderPersonalInfo().getProfilePhotoUrl() != null)
+                && profile.getProviderPersonalInfo().getProfileImage(THUMBNAIL) != null)
         {
-            return profile.getProviderPersonalInfo().getProfilePhotoUrl();
+            return profile.getProviderPersonalInfo().getProfileImage(THUMBNAIL).getUrl();
         }
         return null;
     }
