@@ -159,14 +159,14 @@ public class Booking implements Comparable<Booking>, Serializable
         return mStartDate.compareTo(other.mStartDate);
     }
 
-    public boolean equals(Object o)
+    public boolean equals(Object object)
     {
-        if (!(o instanceof Booking))
+        if (!(object instanceof Booking))
         {
             return false;
         }
-        Booking b = (Booking) o;
-        return b.mId.equals(mId) && b.mType == mType;
+        Booking booking = (Booking) object;
+        return booking.mId.equals(mId) && booking.mType.equals(mType);
     }
 
     @Nullable
