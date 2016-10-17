@@ -288,11 +288,10 @@ public class EventLogManager
                     eventLogBundleJson.toString()
             );
 
-            // If we tried to save the logs 5 times and it fails, then we remove the preference.
-            // must means somethings wrong
+            // If the file didn't save then we log an exception
             if(!fileSaved)
             {
-                Crashlytics.log("Failed to save log to file system: " + eventLogBundleJson.toString());
+                Crashlytics.logException(new Exception("Failed to save log to file system: " + eventLogBundleJson.toString()));
             }
         }
 
