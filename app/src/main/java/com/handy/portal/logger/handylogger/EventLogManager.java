@@ -50,7 +50,6 @@ public class EventLogManager
     private static final int UPLOAD_TIMER_DELAY_NO_INTERNET_MS = 15 * UPLOAD_TIMER_DELAY_MS; //15 min
     private static final String TAG = EventManager.class.getSimpleName();
     private static final int DEFAULT_USER_ID = -1;
-    private static final int MAX_RETRY_COUNT = 5;
     static final int MAX_NUM_PER_BUNDLE = 50;
     private static final Gson GSON = new Gson();
 
