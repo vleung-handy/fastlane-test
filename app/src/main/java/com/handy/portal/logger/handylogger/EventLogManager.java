@@ -226,7 +226,7 @@ public class EventLogManager
             {
                 hasNewLog = true;
                 //Save the previous ones to file system
-                saveLogsToFileSystem(logBundles, 0);
+                saveLogsToFileSystem(logBundles);
             }
         }
 
@@ -263,14 +263,14 @@ public class EventLogManager
             if (!TextUtils.isEmpty(prefBundleString))
             {
                 //Saving the current logs to file system
-                saveLogsToFileSystem(prefBundleString, 0);
+                saveLogsToFileSystem(prefBundleString);
             }
         }
 
         sendLogs();
     }
 
-    private void saveLogsToFileSystem(final String prefBundleString, int retryCount)
+    private void saveLogsToFileSystem(final String prefBundleString)
     {
         JsonObject[] eventLogBundles = GSON.fromJson(
                 prefBundleString,
@@ -293,15 +293,7 @@ public class EventLogManager
             // must means somethings wrong
             if(!fileSaved)
             {
-                if (retryCount < MAX_RETRY_COUNT)
-                {
-                    //It means not all of it was saved to file system, retry until we hit a limit
-                    saveLogsToFileSystem(prefBundleString, retryCount++);
-                }
-                else
-                {
-                    Crashlytics.log("Failed to save logs to file system: " + prefBundleString);
-                }
+                Crashlytics.log("Failed to save log to file system: " + eventLogBundleJson.toString());
             }
         }
 
