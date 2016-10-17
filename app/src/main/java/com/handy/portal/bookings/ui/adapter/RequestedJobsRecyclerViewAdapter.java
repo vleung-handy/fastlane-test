@@ -10,7 +10,6 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
-import com.handy.portal.bookings.ui.element.BookingElementMediator;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.DismissableBookingElementView;
 import com.handy.portal.bookings.ui.element.ProRequestedJobsListGroupView;
@@ -196,24 +195,19 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
 
             final Booking booking = (Booking) item;
 
-            Class<? extends BookingElementView> bookingElementViewClass;
+            BookingElementView bookingElementView;
             final boolean isRequestDismissalEnabled = isRequestDismissalEnabled();
             if (isRequestDismissalEnabled)
             {
-                bookingElementViewClass = DismissableBookingElementView.class;
+                bookingElementView = new DismissableBookingElementView();
             }
             else
             {
-                bookingElementViewClass = AvailableBookingElementView.class;
+                bookingElementView = new AvailableBookingElementView();
             }
 
-            BookingElementMediator mediator = new BookingElementMediator(
-                    parentView.getContext(),
-                    booking,
-                    convertView,
-                    parentView,
-                    bookingElementViewClass);
-            final View associatedView = mediator.getAssociatedView();
+            bookingElementView.initView(parentView.getContext(), booking, convertView, parentView);
+            final View associatedView = bookingElementView.getAssociatedView();
             initActionListeners(associatedView, booking);
             // Hide requested pro indicator because this is a list view that displays only pro requests.
             final View requestedIndicator =
