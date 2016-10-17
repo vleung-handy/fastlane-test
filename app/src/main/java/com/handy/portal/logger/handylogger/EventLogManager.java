@@ -1,9 +1,6 @@
 package com.handy.portal.logger.handylogger;
 
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
@@ -18,6 +15,7 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.library.util.PropertiesReader;
+import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.logger.handylogger.model.Event;
 import com.handy.portal.logger.handylogger.model.EventLogBundle;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
@@ -67,7 +65,8 @@ public class EventLogManager
     //Counter for the number of logs being sent, so when we get a response we can subtract from this number
     // until all the logs are finished
     private int mSendingLogsCount;
-    private Timer mTimer;
+    //Timer to be used for sending logs
+    private Timer mUploadLogTimer;
 
     @Inject
     public EventLogManager(final EventBus bus, final DataManager dataManager, final FileManager fileManager, final PrefsManager prefsManager, ProviderManager providerManager)
@@ -102,7 +101,7 @@ public class EventLogManager
         //Note: Should always log regardless of flavor/variant
 
         //Create upload timer when we get a new log and there isn't a timer currently
-        if (mTimer == null) { setUploadTimer(); }
+        if (mUploadLogTimer == null) { setUploadTimer(); }
 
         //log the payload to Crashlytics too, useful for follow steps for debugging when crash
         try
@@ -193,14 +192,14 @@ public class EventLogManager
     //************************************* handle all saving/sending of logs **********************
     private void setUploadTimer()
     {
-        if (mTimer != null)
+        if (mUploadLogTimer != null)
         {
-            mTimer.cancel();
-            mTimer = null;
+            mUploadLogTimer.cancel();
+            mUploadLogTimer = null;
         }
 
-        mTimer = new Timer();
-        mTimer.schedule(new TimerTask()
+        mUploadLogTimer = new Timer();
+        mUploadLogTimer.schedule(new TimerTask()
         {
             @Override
             public void run()
@@ -208,7 +207,7 @@ public class EventLogManager
                 sendLogsFromPreference();
             }
             //Check network connection and set timer delay appropriately
-        }, hasNetworkConnection() ? UPLOAD_TIMER_DELAY_MS : UPLOAD_TIMER_DELAY_NO_INTERNET_MS);
+        }, SystemUtils.hasNetworkConnection() ? UPLOAD_TIMER_DELAY_MS : UPLOAD_TIMER_DELAY_NO_INTERNET_MS);
     }
 
     private void savePrefsToLogsOnInitialization()
@@ -353,8 +352,8 @@ public class EventLogManager
                                     }
                                     else
                                     {
-                                        mTimer.cancel();
-                                        mTimer = null;
+                                        mUploadLogTimer.cancel();
+                                        mUploadLogTimer = null;
                                     }
                                 }
                             }
@@ -398,13 +397,4 @@ public class EventLogManager
         }
     }
 
-    private boolean hasNetworkConnection()
-    {
-        ConnectivityManager cm =
-                (ConnectivityManager) BaseApplication.getContext()
-                        .getSystemService(Context.CONNECTIVITY_SERVICE);
-
-        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
-        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
-    }
 }
