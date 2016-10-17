@@ -42,6 +42,7 @@ public class ClaimUtils
                     claimAction.getExtras().getCancellationPolicy();
             if (cancellationPolicy != null)
             {
+                // Cancellation policy is accessed within ConfirmBookingCancellationPolicyDialogFragment
                 if (fragmentManager
                         .findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null)
                 {
