@@ -44,7 +44,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 
 import javax.inject.Inject;
 
@@ -352,10 +351,10 @@ public class EditPhotoFragment extends ActionBarFragment
     private void uploadImage(final String uploadUrl, final File imageFile)
     {
         final TypedFile file = new TypedFile(IMAGE_MIME_TYPE, imageFile);
-        dataManager.uploadPhoto(uploadUrl, file, new DataManager.Callback<HashMap<String, String>>()
+        dataManager.uploadPhoto(uploadUrl, file, new DataManager.Callback<Void>()
         {
             @Override
-            public void onSuccess(final HashMap<String, String> response)
+            public void onSuccess(final Void response)
             {
                 bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.ImageRequestSuccess()));
                 bus.post(new LogEvent.AddLogEvent(
