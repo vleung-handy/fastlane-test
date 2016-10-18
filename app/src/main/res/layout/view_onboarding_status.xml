@@ -75,7 +75,6 @@
             android:text="@string/tips_for_preparing_for_your_first_job"
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginRight="@dimen/tips_text_right_margin"
-            android:lineSpacingMultiplier="1.3"
             style="@style/TextView"
             />
     </RelativeLayout>
