@@ -328,7 +328,9 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final DynamicEndpointService provideDynamicEndpointService(final DynamicEndpoint endpoint)
+    final DynamicEndpointService provideDynamicEndpointService(
+            final DynamicEndpoint endpoint,
+            final PrefsManager prefsManager)
     {
         final OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
@@ -337,7 +339,14 @@ public final class ApplicationModule
                 .setRequestInterceptor(new RequestInterceptor()
                 {
                     @Override
-                    public void intercept(RequestFacade request) { }
+                    public void intercept(RequestFacade request)
+                    {
+                        String authToken = prefsManager.getSecureString(PrefsKey.AUTH_TOKEN, null);
+                        if (authToken != null)
+                        {
+                            request.addHeader("X-Auth-Token", authToken);
+                        }
+                    }
                 }).setClient(new OkClient(okHttpClient)).build();
         if (BuildConfig.DEBUG)
         {
