@@ -18,6 +18,7 @@ import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderPersonalInfo.ProfileImage.Type;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ProviderProfileResponse;
@@ -487,13 +488,28 @@ public class ProviderManager
     }
 
     @Nullable
-    public String getCachedProfileImageUrl(final Type imageType)
+    public String getCachedProfileImageUrl(@NonNull final Type imageType)
     {
         final ProviderProfile profile = getCachedProviderProfile();
-        if (profile != null && profile.getProviderPersonalInfo() != null
-                && profile.getProviderPersonalInfo().getProfileImage(imageType) != null)
+        if (profile != null && profile.getProviderPersonalInfo() != null)
         {
-            return profile.getProviderPersonalInfo().getProfileImage(imageType).getUrl();
+            final ProviderPersonalInfo providerPersonalInfo = profile.getProviderPersonalInfo();
+            final ProviderPersonalInfo.ProfileImage profileImage =
+                    providerPersonalInfo.getProfileImage(imageType);
+            if (profileImage != null)
+            {
+                return profileImage.getUrl();
+            }
+            else
+            {
+                // Fall back to original size
+                final ProviderPersonalInfo.ProfileImage originalProfileImage =
+                        providerPersonalInfo.getProfileImage(Type.ORIGINAL);
+                if (originalProfileImage != null)
+                {
+                    return originalProfileImage.getUrl();
+                }
+            }
         }
         return null;
     }
