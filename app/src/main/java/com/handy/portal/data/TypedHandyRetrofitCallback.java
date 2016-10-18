@@ -434,12 +434,3 @@ class RequestPhotoUploadUrlCallback extends TypedHandyRetrofitCallback<HashMap<S
         super(callback);
     }
 }
-
-
-class UploadImageCallback extends TypedHandyRetrofitCallback<HashMap<String, String>>
-{
-    UploadImageCallback(final DataManager.Callback callback)
-    {
-        super(callback);
-    }
-}

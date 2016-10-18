@@ -1,8 +1,12 @@
 package com.handy.portal.model;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
 
 public class ProviderPersonalInfo implements Serializable
@@ -25,8 +29,8 @@ public class ProviderPersonalInfo implements Serializable
     private String mCardLast4;
     @SerializedName("operating_region")
     private String mOperatingRegion;
-    @SerializedName("profile_photo_url")
-    private String mProfilePhotoUrl;
+    @SerializedName("profile_images")
+    private ArrayList<ProfileImage> mProfileImages;
 
     public String getLastName()
     {
@@ -40,7 +44,7 @@ public class ProviderPersonalInfo implements Serializable
 
     public String getFullName()
     {
-        return mFirstName + " " +mLastName;
+        return mFirstName + " " + mLastName;
     }
 
     public String getEmail()
@@ -78,8 +82,52 @@ public class ProviderPersonalInfo implements Serializable
         return mOperatingRegion;
     }
 
-    public String getProfilePhotoUrl()
+    @Nullable
+    public ProfileImage getProfileImage(@NonNull final ProfileImage.Type type)
     {
-        return mProfilePhotoUrl;
+        if (mProfileImages != null)
+        {
+            for (ProfileImage profileImage : mProfileImages)
+            {
+                if (profileImage.getType() == type)
+                {
+                    return profileImage;
+                }
+            }
+        }
+        return null;
+    }
+
+    public static class ProfileImage implements Serializable
+    {
+        public enum Type
+        {
+            @SerializedName("original")
+            ORIGINAL,
+            @SerializedName("thumbnail")
+            THUMBNAIL,
+            @SerializedName("small")
+            SMALL,
+            @SerializedName("medium")
+            MEDIUM,
+            @SerializedName("large")
+            LARGE,
+        }
+
+
+        @SerializedName("url")
+        private String mUrl;
+        @SerializedName("type")
+        private Type mType;
+
+        public Type getType()
+        {
+            return mType;
+        }
+
+        public String getUrl()
+        {
+            return mUrl;
+        }
     }
 }

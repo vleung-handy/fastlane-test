@@ -412,10 +412,10 @@ public class DataManager
 
     public void uploadPhoto(final String url,
                             final TypedFile file,
-                            final Callback<HashMap<String, String>> cb)
+                            final Callback<Void> cb)
     {
         mDynamicEndpoint.setUrl(url);
-        mDynamicEndpointService.uploadImage(file, new UploadImageCallback(cb));
+        mDynamicEndpointService.uploadImage(file, new EmptyHandyRetroFitCallback(cb));
     }
 
     public interface Callback<T>

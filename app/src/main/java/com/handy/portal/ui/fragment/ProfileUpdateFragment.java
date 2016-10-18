@@ -20,7 +20,6 @@ import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProfileEvent;
@@ -50,6 +49,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.handy.portal.model.ProviderPersonalInfo.ProfileImage.Type.THUMBNAIL;
 
 public class ProfileUpdateFragment extends ActionBarFragment
 {
@@ -257,7 +258,7 @@ public class ProfileUpdateFragment extends ActionBarFragment
         if (configuration != null && configuration.isProfilePictureEnabled())
         {
             mImageHolder.setVisibility(View.VISIBLE);
-            final String imageUrl = getProfilePhotoUrl();
+            final String imageUrl = mProviderManager.getCachedProfileImageUrl(THUMBNAIL);
             if (imageUrl != null)
             {
                 Picasso.with(getActivity())
@@ -280,22 +281,6 @@ public class ProfileUpdateFragment extends ActionBarFragment
         {
             mImageHolder.setVisibility(View.GONE);
         }
-    }
-
-    private String getProfilePhotoUrl()
-    {
-        final ProviderProfile profile = mProviderManager.getCachedProviderProfile();
-        if (mPrefsManager.getSecureString(PrefsKey.PROFILE_PHOTO_URL, null) != null)
-        {
-            return mPrefsManager.getSecureString(PrefsKey.PROFILE_PHOTO_URL);
-        }
-        else if (profile != null
-                && profile.getProviderPersonalInfo() != null
-                && profile.getProviderPersonalInfo().getProfilePhotoUrl() != null)
-        {
-            return profile.getProviderPersonalInfo().getProfilePhotoUrl();
-        }
-        return null;
     }
 
     private boolean validate()

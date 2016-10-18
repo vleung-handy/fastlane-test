@@ -26,7 +26,6 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.event.HandyEvent;
@@ -45,7 +44,6 @@ import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.util.DeeplinkMapper;
@@ -58,6 +56,8 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.handy.portal.model.ProviderPersonalInfo.ProfileImage.Type.THUMBNAIL;
 
 public class MainActivityFragment extends InjectedFragment
 {
@@ -175,7 +175,7 @@ public class MainActivityFragment extends InjectedFragment
         if (configuration != null && configuration.isProfilePictureEnabled())
         {
             mProImage.setVisibility(View.VISIBLE);
-            final String profilePhotoUrl = getProfilePhotoUrl();
+            final String profilePhotoUrl = mProviderManager.getCachedProfileImageUrl(THUMBNAIL);
             if (profilePhotoUrl != null)
             {
                 Picasso.with(getActivity())
@@ -193,22 +193,6 @@ public class MainActivityFragment extends InjectedFragment
         {
             mProImage.setVisibility(View.GONE);
         }
-    }
-
-    private String getProfilePhotoUrl()
-    {
-        final ProviderProfile profile = mProviderManager.getCachedProviderProfile();
-        if (mPrefsManager.getSecureString(PrefsKey.PROFILE_PHOTO_URL, null) != null)
-        {
-            return mPrefsManager.getSecureString(PrefsKey.PROFILE_PHOTO_URL);
-        }
-        else if (profile != null
-                && profile.getProviderPersonalInfo() != null
-                && profile.getProviderPersonalInfo().getProfilePhotoUrl() != null)
-        {
-            return profile.getProviderPersonalInfo().getProfilePhotoUrl();
-        }
-        return null;
     }
 
     @Override

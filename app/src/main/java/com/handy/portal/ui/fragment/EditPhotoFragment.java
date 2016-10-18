@@ -22,7 +22,6 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
@@ -45,7 +44,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 
 import javax.inject.Inject;
 
@@ -72,7 +70,7 @@ public class EditPhotoFragment extends ActionBarFragment
     private static final int REQUEST_CODE_PERMISSION_CAMERA = 4001;
     private static final int REQUEST_CODE_PERMISSION_EXTERNAL_STORAGE = 4002;
     private static final int MAX_IMAGE_SIZE_MB = 1024 * 1024 * 3; // 3 MB
-    private boolean mIsPhotoUploadUrlRequested;
+    private boolean mShowLoadingOverlayOnResume;
     private Source mSource;
 
     @Override
@@ -115,10 +113,9 @@ public class EditPhotoFragment extends ActionBarFragment
     {
         super.onResume();
         bus.register(this);
-        if (mIsPhotoUploadUrlRequested)
+        if (mShowLoadingOverlayOnResume)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            mIsPhotoUploadUrlRequested = false;
         }
         else
         {
@@ -208,14 +205,14 @@ public class EditPhotoFragment extends ActionBarFragment
                 {
                     copyToExternalStorage(data.getData());
                 }
-                mIsPhotoUploadUrlRequested = true;
+                mShowLoadingOverlayOnResume = true;
                 cropImage();
             }
         }
         else
         {
             bus.post(new LogEvent.AddLogEvent(new ProfilePhotoLog.ImagePickerDismissed()));
-            mIsPhotoUploadUrlRequested = false;
+            mShowLoadingOverlayOnResume = false;
         }
     }
 
@@ -354,19 +351,15 @@ public class EditPhotoFragment extends ActionBarFragment
     private void uploadImage(final String uploadUrl, final File imageFile)
     {
         final TypedFile file = new TypedFile(IMAGE_MIME_TYPE, imageFile);
-        dataManager.uploadPhoto(uploadUrl, file, new DataManager.Callback<HashMap<String, String>>()
+        dataManager.uploadPhoto(uploadUrl, file, new DataManager.Callback<Void>()
         {
             @Override
-            public void onSuccess(final HashMap<String, String> response)
+            public void onSuccess(final Void response)
             {
                 bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.ImageRequestSuccess()));
                 bus.post(new LogEvent.AddLogEvent(
                         new ProfilePhotoUploadLog.ProfilePhotoUploadSuccess(mSource)));
-                final String profilePhotoUrl = response.get("download_url");
-                mPrefsManager.setSecureString(PrefsKey.PROFILE_PHOTO_URL, profilePhotoUrl);
-                bus.post(new ProfileEvent.ProfilePhotoUpdated());
-                bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                getActivity().onBackPressed();
+                bus.post(new ProfileEvent.RequestProviderProfile(false));
             }
 
             @Override
@@ -379,6 +372,23 @@ public class EditPhotoFragment extends ActionBarFragment
             }
         });
         bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.ImageRequestSubmitted()));
+    }
+
+    @Subscribe
+    public void onReceiveProviderProfileSuccess(
+            final ProfileEvent.ReceiveProviderProfileSuccess event)
+    {
+        bus.post(new ProfileEvent.ProfilePhotoUpdated());
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        showToast(R.string.upload_photo_success);
+        getActivity().onBackPressed();
+    }
+
+    @Subscribe
+    public void onReceiveProviderProfileError(final ProfileEvent.ReceiveProviderProfileError event)
+    {
+        showError(event.error);
+        getActivity().onBackPressed();
     }
 
     @Override
@@ -404,5 +414,6 @@ public class EditPhotoFragment extends ActionBarFragment
         }
         showToast(message);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        mShowLoadingOverlayOnResume = false;
     }
 }
