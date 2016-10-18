@@ -152,6 +152,6 @@ public class RequestDismissalReasonsDialogFragment extends ConfirmBookingActionD
     @Override
     protected String getConfirmButtonText()
     {
-        return getString(R.string.dismiss_job);
+        return getString(R.string.dismiss_request);
     }
 }
