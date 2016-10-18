@@ -627,11 +627,11 @@
 
     <!-- Request Dismissal -->
     <string name="dismiss">Dismiss</string>
-    <string name="dismiss_job">Dismiss Job</string>
+    <string name="dismiss_request">Dismiss Request</string>
     <string name="request_dismissal_dialog_title">Help us understand why this request doesn\'t work for you</string>
     <string name="request_dismissal_other_edit_text_hint">Please specify</string>
     <string name="request_dismissal_reason_not_selected">Please select an option from the list</string>
-    <string name="request_dismissal_error">Error dismissing job</string>
-    <string name="request_dismissal_success_message">Job dismissed</string>
-    <string name="request_dismissal_reason_description_missing">Please tell us why you\'re dismissing this job</string>
+    <string name="request_dismissal_error">Error dismissing request</string>
+    <string name="request_dismissal_success_message">Request dismissed</string>
+    <string name="request_dismissal_reason_description_missing">Please tell us why you\'re dismissing this request</string>
 </resources>
