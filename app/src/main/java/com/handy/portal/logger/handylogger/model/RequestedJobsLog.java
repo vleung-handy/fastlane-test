@@ -82,6 +82,17 @@ public abstract class RequestedJobsLog extends EventLog
     }
 
 
+    public static class DismissJobShown extends JobsLog
+    {
+        private static final String EVENT_TYPE = "dismiss_job_shown";
+
+        public DismissJobShown(final Booking booking)
+        {
+            super(EVENT_TYPE, EVENT_CONTEXT, booking);
+        }
+    }
+
+
     public static class DismissJobSubmitted extends JobsLog
     {
         private static final String EVENT_TYPE = "dismiss_job_submitted";
