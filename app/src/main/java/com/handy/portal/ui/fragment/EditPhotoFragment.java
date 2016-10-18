@@ -117,7 +117,6 @@ public class EditPhotoFragment extends ActionBarFragment
         if (mIsPhotoUploadUrlRequested)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            mIsPhotoUploadUrlRequested = false;
         }
         else
         {
