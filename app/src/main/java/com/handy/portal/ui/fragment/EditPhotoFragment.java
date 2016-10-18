@@ -414,5 +414,6 @@ public class EditPhotoFragment extends ActionBarFragment
         }
         showToast(message);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        mShowLoadingOverlayOnResume = false;
     }
 }
