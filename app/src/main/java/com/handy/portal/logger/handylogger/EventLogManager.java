@@ -138,8 +138,7 @@ public class EventLogManager
         }
 
         //Prefix event_type with app_lib_
-        //TODO until ios release this: eventLog.setEventType("app_lib_" + eventLog.getEventType());
-        eventLog.setEventType(eventLog.getEventType());
+        eventLog.setEventType("app_lib_" + eventLog.getEventType());
         sCurrentEventLogBundle.addEvent(eventLog);
 
         //Save the EventLogBundle to preferences always
