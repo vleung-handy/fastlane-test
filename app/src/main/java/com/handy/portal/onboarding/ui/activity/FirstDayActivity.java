@@ -11,6 +11,7 @@ import android.text.SpannableString;
 import android.text.Spanned;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -168,6 +169,19 @@ public class FirstDayActivity extends AppCompatActivity
         else
         {
             return null;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) //default support for back button
+    {
+        switch (item.getItemId())
+        {
+            case android.R.id.home:
+                onBackPressed();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
     }
 

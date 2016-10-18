@@ -93,6 +93,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="@dimen/default_margin"
                     android:src="@drawable/img_phone_1"
+                    android:adjustViewBounds="true"
                     />
 
             </LinearLayout>
@@ -155,6 +156,7 @@
                     android:src="@drawable/img_phone_2"
                     android:layout_marginTop="@dimen/default_margin"
                     android:layout_gravity="center"
+                    android:adjustViewBounds="true"
                     />
             </LinearLayout>
 

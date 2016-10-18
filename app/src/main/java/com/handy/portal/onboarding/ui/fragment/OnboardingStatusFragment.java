@@ -35,12 +35,14 @@ import com.handy.portal.onboarding.model.status.StatusButton;
 import com.handy.portal.onboarding.model.subflow.StatusHeader;
 import com.handy.portal.onboarding.model.subflow.SubflowData;
 import com.handy.portal.onboarding.model.supplies.SuppliesInfo;
+import com.handy.portal.onboarding.ui.activity.FirstDayActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class OnboardingStatusFragment extends OnboardingSubflowUIFragment
 {
@@ -185,8 +187,7 @@ public class OnboardingStatusFragment extends OnboardingSubflowUIFragment
      */
     private void initTipsView()
     {
-        //TODO: JIA: put real logic here.
-        if (1 == 1)
+        if (SubflowData.STATUS_PENDING.equalsIgnoreCase(mStatusData.getApplicationStatus()))
         {
             mTipsCard.setVisibility(View.VISIBLE);
         }
@@ -194,6 +195,12 @@ public class OnboardingStatusFragment extends OnboardingSubflowUIFragment
         {
             mTipsCard.setVisibility(View.GONE);
         }
+    }
+
+    @OnClick(R.id.tips_card)
+    public void launchTips()
+    {
+        startActivity(new Intent(getActivity(), FirstDayActivity.class));
     }
 
     private void initSuppliesView()
