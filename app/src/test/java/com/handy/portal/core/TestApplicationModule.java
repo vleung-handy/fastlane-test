@@ -35,7 +35,6 @@ import com.handy.portal.manager.SystemManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.UserInterfaceUpdateManager;
-import com.handy.portal.model.Provider;
 import com.handy.portal.notification.ui.fragment.NotificationsFragment;
 import com.handy.portal.onboarding.ui.activity.OnboardingFlowActivity;
 import com.handy.portal.onboarding.ui.activity.OnboardingSubflowActivity;
@@ -219,10 +218,8 @@ public class TestApplicationModule
     @Provides
     final ProviderManager provideProviderManager()
     {
-        Provider provider = mock(Provider.class);
-        when(provider.getId()).thenReturn("444");
         ProviderManager providerManager = mock(ProviderManager.class);
-        when(providerManager.getCachedActiveProvider()).thenReturn(provider);
+        when(providerManager.getLastProviderId()).thenReturn("444");
         return providerManager;
     }
 

@@ -23,7 +23,8 @@ import com.handy.portal.logger.handylogger.model.Session;
 import com.handy.portal.manager.FileManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
-import com.handy.portal.model.Provider;
+import com.handy.portal.model.ProviderPersonalInfo;
+import com.handy.portal.model.ProviderProfile;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
 import com.newrelic.agent.android.analytics.EventManager;
 
@@ -186,7 +187,8 @@ public class EventLogManager
 
     private int getProviderId()
     {
-        return mPrefsManager.getInt(PrefsKey.LAST_PROVIDER_ID, DEFAULT_USER_ID);
+        String providerId = mProviderManager.getLastProviderId();
+        return TextUtils.isDigitsOnly(providerId) ? Integer.parseInt(providerId) : DEFAULT_USER_ID;
     }
 
     //************************************* handle all saving/sending of logs **********************
@@ -381,7 +383,6 @@ public class EventLogManager
 
     private void addMixPanelProperties(JSONObject eventLogJson, Event event) throws JSONException
     {
-
         //Mixpanel tracking info in NOR-1016
         eventLogJson.put("context", event.getEventContext());
         eventLogJson.put("session_event_count", event.getSessionEventCount());
@@ -390,12 +391,16 @@ public class EventLogManager
         eventLogJson.put("client", "android");
         eventLogJson.put("mobile", 1);
 
-        Provider provider = mProviderManager.getCachedActiveProvider();
+        ProviderProfile provider = mProviderManager.getCachedProviderProfile();
         if (provider != null)
         {
-            eventLogJson.put("email", provider.getEmail());
-            eventLogJson.put("name", provider.getFirstName() + " " + provider.getLastName());
-            eventLogJson.put("user_id", provider.getId());
+            ProviderPersonalInfo info = provider.getProviderPersonalInfo();
+            if(info != null)
+            {
+                eventLogJson.put("email", info.getEmail());
+                eventLogJson.put("name", info.getFirstName() + " " + info.getLastName());
+            }
+            eventLogJson.put("user_id", provider.getProviderId());
             eventLogJson.put("user_logged_in", 1);
         }
         else
@@ -403,5 +408,4 @@ public class EventLogManager
             eventLogJson.put("user_logged_in", 0);
         }
     }
-
 }
