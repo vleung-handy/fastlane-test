@@ -71,7 +71,7 @@ public class EditPhotoFragment extends ActionBarFragment
     private static final int REQUEST_CODE_PERMISSION_CAMERA = 4001;
     private static final int REQUEST_CODE_PERMISSION_EXTERNAL_STORAGE = 4002;
     private static final int MAX_IMAGE_SIZE_MB = 1024 * 1024 * 3; // 3 MB
-    private boolean mIsPhotoUploadUrlRequested;
+    private boolean mShowLoadingOverlayOnResume;
     private Source mSource;
 
     @Override
@@ -114,7 +114,7 @@ public class EditPhotoFragment extends ActionBarFragment
     {
         super.onResume();
         bus.register(this);
-        if (mIsPhotoUploadUrlRequested)
+        if (mShowLoadingOverlayOnResume)
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         }
@@ -206,14 +206,14 @@ public class EditPhotoFragment extends ActionBarFragment
                 {
                     copyToExternalStorage(data.getData());
                 }
-                mIsPhotoUploadUrlRequested = true;
+                mShowLoadingOverlayOnResume = true;
                 cropImage();
             }
         }
         else
         {
             bus.post(new LogEvent.AddLogEvent(new ProfilePhotoLog.ImagePickerDismissed()));
-            mIsPhotoUploadUrlRequested = false;
+            mShowLoadingOverlayOnResume = false;
         }
     }
 
