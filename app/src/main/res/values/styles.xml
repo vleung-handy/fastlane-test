@@ -539,7 +539,6 @@
         <item name="android:clickable">true</item>
         <item name="android:padding">@dimen/default_padding</item>
         <item name="android:orientation">vertical</item>
-        <item name="android:elevation">@dimen/default_elevation</item>
     </style>
 
     <style name="FirstDayTitleStyle" parent="TextView.Large.Bold">
