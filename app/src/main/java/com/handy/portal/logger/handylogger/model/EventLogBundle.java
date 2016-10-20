@@ -14,13 +14,24 @@ public class EventLogBundle
     @SerializedName("events")
     private List<Event> mEvents;
     @SerializedName("super_properties")
-    private EventSuperProperties mEventSuperProperties;
+    private EventSuperPropertiesBase mEventSuperProperties;
 
+    /**
+     * If providerId greater then 0, then providerId will be part of super properties
+     * @param providerId
+     * @param events
+     */
     public EventLogBundle(final int providerId, final List<Event> events)
     {
         mEventBundleId = createBundleId();
         mEvents = events;
-        mEventSuperProperties = new EventSuperProperties(providerId);
+
+        if(providerId > 0)
+        {
+            mEventSuperProperties = new EventSuperProperties(providerId);
+        }else {
+            mEventSuperProperties = new EventSuperPropertiesBase();
+        }
     }
 
     public String getEventBundleId()
