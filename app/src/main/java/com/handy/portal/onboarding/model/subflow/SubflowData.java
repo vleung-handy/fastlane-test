@@ -1,7 +1,6 @@
 package com.handy.portal.onboarding.model.subflow;
 
 import android.support.annotation.Nullable;
-import android.support.annotation.StringDef;
 
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.Booking;
@@ -12,8 +11,6 @@ import com.handy.portal.onboarding.model.status.StatusButton;
 import com.handy.portal.onboarding.model.supplies.SuppliesInfo;
 
 import java.io.Serializable;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;
 
 public class SubflowData implements Serializable
@@ -54,19 +51,9 @@ public class SubflowData implements Serializable
     private String mBeforeIdVerificationStartUrl;
     @SerializedName("after_finish")
     private String mAfterIdVerificationFinishUrl;
+    @SerializedName("first_job_content_enabled")
+    private boolean mFirstJobContentEnabled;
 
-
-    public static final String STATUS_PENDING = "pending";
-    public static final String STATUS_REJECTED = "rejected";
-    public static final String STATUS_UNVERIFIED = "unverified";
-    public static final String STATUS_ACCEPTED = "accepted";
-
-
-    @StringDef({STATUS_PENDING, STATUS_REJECTED, STATUS_UNVERIFIED, STATUS_ACCEPTED})
-    @Retention(RetentionPolicy.SOURCE)
-    public @interface ApplicationStatus {}
-
-    @ApplicationStatus
     public String getApplicationStatus()
     {
         return mApplicationStatus;
@@ -142,5 +129,10 @@ public class SubflowData implements Serializable
     public String getAfterIdVerificationFinishUrl()
     {
         return mAfterIdVerificationFinishUrl;
+    }
+
+    public boolean isFirstJobContentEnabled()
+    {
+        return mFirstJobContentEnabled;
     }
 }

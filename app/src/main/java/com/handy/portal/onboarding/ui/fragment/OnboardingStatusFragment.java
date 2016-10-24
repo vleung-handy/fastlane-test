@@ -187,7 +187,7 @@ public class OnboardingStatusFragment extends OnboardingSubflowUIFragment
      */
     private void initTipsView()
     {
-        if (SubflowData.STATUS_PENDING.equalsIgnoreCase(mStatusData.getApplicationStatus()))
+        if (mStatusData.isFirstJobContentEnabled())
         {
             mTipsCard.setVisibility(View.VISIBLE);
         }
