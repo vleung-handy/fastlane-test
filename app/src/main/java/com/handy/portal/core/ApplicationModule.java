@@ -27,6 +27,7 @@ import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.LocationModule;
 import com.handy.portal.logger.handylogger.EventLogManager;
+import com.handy.portal.manager.AppseeManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.FileManager;
 import com.handy.portal.manager.LoginManager;
@@ -164,6 +165,17 @@ public final class ApplicationModule
         this.application = application;
         this.context = this.application.getApplicationContext();
         configs = PropertiesReader.getConfigProperties(context);
+    }
+
+    @Provides
+    @Singleton
+    final AppseeManager provideAppseeManager(final ConfigManager configManager,
+                                             final ProviderManager providerManager,
+                                             final FileManager fileManager,
+                                             final EventBus eventBus)
+    {
+        String appseeApiKey = configs.getProperty("appsee_api_key");
+        return new AppseeManager(appseeApiKey, configManager, providerManager, fileManager, eventBus);
     }
 
     @Provides

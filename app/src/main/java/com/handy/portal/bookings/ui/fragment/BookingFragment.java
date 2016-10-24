@@ -53,6 +53,7 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
+import com.handy.portal.manager.AppseeManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.LocationData;
@@ -193,6 +194,9 @@ public class BookingFragment extends TimerActionBarFragment
         setBackButtonEnabled(true);
 
         updateDisplayWithBookingProRequestDisplayAttributes();
+
+        //hide customer name and address from Appsee screen recording
+        AppseeManager.markViewsAsSensitive(mCustomerNameText, mBookingAddressTitleText, mBookingAddressText);
     }
 
     /**

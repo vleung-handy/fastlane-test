@@ -23,6 +23,7 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.GoogleApiLog;
+import com.handy.portal.manager.AppseeManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ConfigurationResponse;
@@ -95,6 +96,8 @@ public abstract class BaseActivity extends AppCompatActivity
     public EventBus bus;
     @Inject
     ConfigManager configManager;
+    @Inject
+    AppseeManager mAppseeManager;
 
     @Override
     public void startActivity(final Intent intent)
@@ -148,6 +151,21 @@ public abstract class BaseActivity extends AppCompatActivity
         {
             bus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(false, false)));
         }
+
+        /**
+         * start/stop appsee recording as necessary (ex. based on device space and configs)
+         * when user resumes the activity. nothing happens if we start Appsee recording if it's already started
+         *
+         * NOTE: according to docs Appsee.start() can only be called in
+         * Activity.onCreate() or Activity.onResume()
+         *
+         * putting in this method rather than Activity.onCreate()
+         * because most of the app is in one activity and Activity.onCreate() isn't triggered often enough
+         *
+         * although it is only necessary to start Appsee in activities that are entry points to the app
+         * putting this here because we may want to start/stop recording when configs change
+         */
+        mAppseeManager.startOrStopRecordingAsNecessary();
     }
 
     @Override

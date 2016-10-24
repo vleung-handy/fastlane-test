@@ -16,6 +16,13 @@
 #   public *;
 #}
 
+#Appsee
+-keep class com.appsee.** { *; }
+-dontwarn com.appsee.**
+-keep class android.support.** { *; }
+-keep interface android.support.** { *; }
+-keepattributes SourceFile,LineNumberTable
+
 #Remove Logcat calls
 -assumenosideeffects class android.util.Log {
     public static boolean isLoggable(java.lang.String, int);

@@ -220,6 +220,9 @@ dependencies {
     //Mix Panel
     compile "com.mixpanel.android:mixpanel-android:4.9.2"
 
+    //Appsee - user-tracking sdk that allows us to record the screen
+    compile 'com.appsee:appsee-android:2.3'
+
     //Testing
     testCompile 'org.robolectric:robolectric:3.1.1'
     testCompile 'org.robolectric:shadows-support-v4:3.1'
