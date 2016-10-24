@@ -49,7 +49,7 @@ public class EventLogManagerTest extends RobolectricGradleTestWrapper
 
     @Test
     public void shouldSaveLogsToOneFile() {
-        for(int i=0; i < EventLogManager.MAX_NUM_PER_BUNDLE ; i++) {
+        for(int i = 0; i < EventLogManager.MAX_EVENTS_PER_BUNDLE; i++) {
             addLogEvent("event" + i);
         }
         mEventLogManager.sendLogsFromPreference();
@@ -58,7 +58,7 @@ public class EventLogManagerTest extends RobolectricGradleTestWrapper
 
     @Test
     public void shouldSaveLogsToMultipleFiles() {
-        for(int i=0; i < (EventLogManager.MAX_NUM_PER_BUNDLE + 1) ; i++) {
+        for(int i = 0; i < (EventLogManager.MAX_EVENTS_PER_BUNDLE + 1) ; i++) {
             addLogEvent("event" + i);
         }
         mEventLogManager.sendLogsFromPreference();

@@ -44,15 +44,14 @@ import javax.inject.Inject;
 public class EventLogManager
 {
 
-    private static final String SENT_TIMESTAMP_SECS_KEY = "event_bundle_sent_timestamp";
+    private static final String KEY_SENT_TIMESTAMP_SECS = "event_bundle_sent_timestamp";
     private static final int UPLOAD_TIMER_DELAY_MS = 60000; //1 min
     private static final int UPLOAD_TIMER_DELAY_NO_INTERNET_MS = 15 * UPLOAD_TIMER_DELAY_MS; //15 min
     private static final String TAG = EventManager.class.getSimpleName();
     private static final int DEFAULT_USER_ID = -1;
-    static final int MAX_NUM_PER_BUNDLE = 50;
+    static final int MAX_EVENTS_PER_BUNDLE = 50;
     private static final Gson GSON = new Gson();
 
-    private static List<EventLogBundle> sEventLogBundles;
     private static EventLogBundle sCurrentEventLogBundle;
     private final EventBus mBus;
     private final DataManager mDataManager;
@@ -78,7 +77,6 @@ public class EventLogManager
         mFileManager = fileManager;
         mPrefsManager = prefsManager;
         mProviderManager = providerManager;
-        sEventLogBundles = new ArrayList<>();
         //Send logs on initialization
         savePrefsToLogsOnInitialization();
 
@@ -117,32 +115,34 @@ public class EventLogManager
             addMixPanelProperties(eventLogJson, eventLog);
             mMixpanel.track(eventLog.getEventType(), eventLogJson);
         }
-        catch (JsonParseException e)
-        {
-            Crashlytics.logException(e);
-        }
-        catch (JSONException e)
+        catch (JsonParseException | JSONException e)
         {
             Crashlytics.logException(e);
         }
 
         //If event log bundle is null or we've hit the max num per bundle then we create a new bundle
-        if (sCurrentEventLogBundle == null || sCurrentEventLogBundle.size() >= MAX_NUM_PER_BUNDLE)
+        if (sCurrentEventLogBundle == null || sCurrentEventLogBundle.size() >= MAX_EVENTS_PER_BUNDLE)
         {
             //Create new event log bundle and add it to the List
             sCurrentEventLogBundle = new EventLogBundle(
                     getProviderId(),
                     new ArrayList<Event>()
             );
-            sEventLogBundles.add(sCurrentEventLogBundle);
+            synchronized (BundlesWrapper.class)
+            {
+                BundlesWrapper.BUNDLES.add(sCurrentEventLogBundle);
+            }
         }
-
         //Prefix event_type with app_lib_
         eventLog.setEventType("app_lib_" + eventLog.getEventType());
         sCurrentEventLogBundle.addEvent(eventLog);
 
         //Save the EventLogBundle to preferences always
-        saveToPreference(PrefsKey.EVENT_LOG_BUNDLES, sEventLogBundles);
+        synchronized (BundlesWrapper.class)
+        {
+            saveToPreference(PrefsKey.EVENT_LOG_BUNDLES, BundlesWrapper.BUNDLES);
+        }
+
     }
 
     /**
@@ -150,6 +150,7 @@ public class EventLogManager
      * @return The list of Strings if returned, otherwise, null if nothing was saved in that pref
      * previously
      */
+
     private String loadSavedEventLogBundles(String prefsKey)
     {
         synchronized (mPrefsManager)
@@ -173,7 +174,10 @@ public class EventLogManager
         catch (JsonParseException e)
         {
             //If there's an JsonParseException then clear the eventLogBundles because invalid json
-            sEventLogBundles.clear();
+            synchronized (BundlesWrapper.class)
+            {
+                BundlesWrapper.BUNDLES.clear();
+            }
         }
     }
 
@@ -217,7 +221,7 @@ public class EventLogManager
         String[] logPrefsKey = {PrefsKey.EVENT_LOG_BUNDLES_TO_SEND, PrefsKey.EVENT_LOG_BUNDLES};
         boolean hasNewLog = false;
 
-        for(String prefKey : logPrefsKey)
+        for (String prefKey : logPrefsKey)
         {
             //Check if there was logs that were to be sent but were never saved to file system
             String logBundles = loadSavedEventLogBundles(prefKey);
@@ -230,8 +234,8 @@ public class EventLogManager
             }
         }
 
-        if(hasNewLog)
-            setUploadTimer();
+        if (hasNewLog)
+        { setUploadTimer(); }
     }
 
     /**
@@ -245,8 +249,15 @@ public class EventLogManager
         if (!TextUtils.isEmpty(logBundles))
         {
             //Save the current EventLogBundle to preferences always
-            saveToPreference(PrefsKey.EVENT_LOG_BUNDLES_TO_SEND, sEventLogBundles);
-            sEventLogBundles.clear();
+            synchronized (BundlesWrapper.class)
+            {
+                //Save the EventLogBundle to preferences always
+                saveToPreference(
+                        PrefsKey.EVENT_LOG_BUNDLES_TO_SEND,
+                        BundlesWrapper.BUNDLES
+                );
+                BundlesWrapper.BUNDLES.clear();
+            }
             sCurrentEventLogBundle = null;
             //delete the old one immediately
             removePreference(PrefsKey.EVENT_LOG_BUNDLES);
@@ -270,7 +281,7 @@ public class EventLogManager
         sendLogs();
     }
 
-    private void saveLogsToFileSystem(final String prefBundleString)
+    private synchronized void saveLogsToFileSystem(final String prefBundleString)
     {
         JsonObject[] eventLogBundles = GSON.fromJson(
                 prefBundleString,
@@ -279,20 +290,17 @@ public class EventLogManager
 
         //Keep a list of the event bundle ids to verify they were all saved
         List<String> eventBundleIds = new ArrayList<>();
-        for (JsonObject eventLogBundleJson : eventLogBundles)
+        for (JsonObject logBundleJson : eventLogBundles)
         {
-            String eventBundleId = eventLogBundleJson.get(EventLogBundle.KEY_EVENT_BUNDLE_ID)
+            String eventBundleId = logBundleJson.get(EventLogBundle.KEY_EVENT_BUNDLE_ID)
                     .getAsString();
-            eventBundleIds.add(eventBundleId);
-            boolean fileSaved = mFileManager.saveLogFile(
-                    eventBundleId,
-                    eventLogBundleJson.toString()
-            );
+            boolean fileSaved = mFileManager.saveLogFile(eventBundleId, logBundleJson.toString());
 
             // If the file didn't save then we log an exception
-            if(!fileSaved)
+            if (!fileSaved)
             {
-                Crashlytics.logException(new Exception("Failed to save log to file system: " + eventLogBundleJson.toString()));
+                Crashlytics.logException(new Exception("Failed to save log to file system: "
+                        + logBundleJson.toString()));
             }
         }
 
@@ -311,7 +319,8 @@ public class EventLogManager
         try
         {
             File[] files = mFileManager.getLogFileList();
-            if(files == null) {
+            if (files == null)
+            {
                 //Log exception
                 Crashlytics.logException(new Exception("Log Files list returns null. Should not happen"));
                 //Just return. next log event will trigger timer
@@ -329,7 +338,7 @@ public class EventLogManager
                 );
 
                 //Add the sent timestamp value
-                eventLogBundle.addProperty(SENT_TIMESTAMP_SECS_KEY, System.currentTimeMillis() / 1000);
+                eventLogBundle.addProperty(KEY_SENT_TIMESTAMP_SECS, System.currentTimeMillis() / 1000);
 
                 //Upload logs
                 mDataManager.postLogs(
@@ -355,7 +364,8 @@ public class EventLogManager
                                 if (--mSendingLogsCount == 0)
                                 {
                                     //If there are currently logs, set timer, else clear old timer
-                                    if (!sEventLogBundles.isEmpty() || mFileManager.getLogFileList().length > 0)
+                                    if (!BundlesWrapper.BUNDLES.isEmpty()
+                                            || mFileManager.getLogFileList().length > 0)
                                     {
                                         setUploadTimer();
                                     }
@@ -395,7 +405,7 @@ public class EventLogManager
         if (provider != null)
         {
             ProviderPersonalInfo info = provider.getProviderPersonalInfo();
-            if(info != null)
+            if (info != null)
             {
                 eventLogJson.put("email", info.getEmail());
                 eventLogJson.put("name", info.getFirstName() + " " + info.getLastName());
@@ -407,5 +417,11 @@ public class EventLogManager
         {
             eventLogJson.put("user_logged_in", 0);
         }
+    }
+
+    private static class BundlesWrapper
+    {
+        static final List<EventLogBundle> BUNDLES = new ArrayList<>();
+
     }
 }
