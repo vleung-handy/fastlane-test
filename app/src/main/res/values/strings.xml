@@ -647,4 +647,6 @@
     <string name="done_title">Day one is done</string>
     <string name="done_message">Before you check out, you might want to do one last sweep before you pack up and leave. Your customer will get a notification to rate your service and leave a tip. Lastly, you’ll get the chance to rate your customer.</string>
     <string name="tips_for_preparing_for_your_first_job">Tips for preparing for your first job</string>
+
+    <string name="error_missing_server_data">Uh oh. There was an error. Please try again, or go to the Help Center for support.</string>
 </resources>
