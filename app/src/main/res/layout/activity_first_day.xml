@@ -191,6 +191,16 @@
                     />
             </RelativeLayout>
 
+            <com.handy.portal.onboarding.ui.view.LearningLinksView
+                android:id="@+id/links_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:divider="@drawable/divider_gray"
+                android:orientation="vertical"
+                android:showDividers="middle|end"
+                android:layout_marginTop="@dimen/default_margin_half"
+                android:visibility="gone"
+                />
 
         </LinearLayout>
     </ScrollView>

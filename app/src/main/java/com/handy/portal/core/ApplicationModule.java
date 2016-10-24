@@ -45,6 +45,7 @@ import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.notification.NotificationModule;
 import com.handy.portal.onboarding.OnboardingModule;
 import com.handy.portal.onboarding.ui.activity.ActivationWelcomeActivity;
+import com.handy.portal.onboarding.ui.activity.FirstDayActivity;
 import com.handy.portal.onboarding.ui.fragment.CameraPermissionsBlockerDialogFragment;
 import com.handy.portal.onboarding.ui.fragment.IDVerificationFragment;
 import com.handy.portal.payments.PaymentsManager;
@@ -140,6 +141,7 @@ import retrofit.converter.GsonConverter;
         SoftwareLicensesFragment.class,
         CameraPermissionsBlockerDialogFragment.class,
         IDVerificationFragment.class,
+        FirstDayActivity.class,
 },
         includes = {
                 HelpModule.class,

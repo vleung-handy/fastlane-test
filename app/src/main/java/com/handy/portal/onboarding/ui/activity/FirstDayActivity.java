@@ -1,8 +1,10 @@
 package com.handy.portal.onboarding.ui.activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -12,10 +14,23 @@ import android.text.Spanned;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.core.BaseApplication;
+import com.handy.portal.library.util.Utils;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
+import com.handy.portal.onboarding.model.status.LearningLinkDetails;
+import com.handy.portal.onboarding.model.subflow.SubflowData;
+import com.handy.portal.onboarding.ui.view.LearningLinksView;
 import com.handy.portal.util.MyLeadingMarginSpan2;
+
+import org.greenrobot.eventbus.EventBus;
+
+import javax.inject.Inject;
 
 import butterknife.BindDimen;
 import butterknife.BindDrawable;
@@ -53,6 +68,14 @@ public class FirstDayActivity extends AppCompatActivity
     @BindView(R.id.toolbar)
     Toolbar mToolbar;
 
+    @BindView(R.id.links_container)
+    LearningLinksView mLinksContainer;
+
+    @Inject
+    protected EventBus mBus;
+
+    private SubflowData mStatusData;
+
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -60,14 +83,48 @@ public class FirstDayActivity extends AppCompatActivity
         setContentView(R.layout.activity_first_day);
         ButterKnife.bind(this);
 
+        mStatusData = (SubflowData) getIntent().getSerializableExtra(BundleKeys.SUBFLOW_DATA);
+
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
-
+        ((BaseApplication) getApplication()).inject(this);
         mFirstJobMessage.setText(Html.fromHtml(getString(R.string.first_job_message_styled)));
 
         setupPreparedMessage();
         setupDoneMessage();
+        initLearningLinksView();
+    }
+
+    private void initLearningLinksView()
+    {
+        if (mStatusData == null)
+        {
+            return;
+        }
+
+        final LearningLinkDetails learningLinkDetails = mStatusData.getLearningLinkDetails();
+        if (learningLinkDetails != null
+                && learningLinkDetails.getLearningLinks() != null
+                && !learningLinkDetails.getLearningLinks().isEmpty())
+        {
+            mLinksContainer.setVisibility(View.VISIBLE);
+            mLinksContainer.bindLearningLinks(learningLinkDetails.getLearningLinks(), new View.OnClickListener()
+            {
+                @Override
+                public void onClick(final View v)
+                {
+                    String url = (String) v.getTag();
+                    mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.HelpLinkSelected(url)));
+                    final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    Utils.safeLaunchIntent(intent, FirstDayActivity.this);
+                }
+            });
+        }
+        else
+        {
+            mLinksContainer.setVisibility(View.GONE);
+        }
     }
 
     /**
