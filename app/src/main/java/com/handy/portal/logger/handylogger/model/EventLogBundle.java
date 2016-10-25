@@ -18,6 +18,7 @@ public class EventLogBundle
 
     /**
      * If providerId greater then 0, then providerId will be part of super properties
+     *
      * @param providerId
      * @param events
      */
@@ -26,10 +27,12 @@ public class EventLogBundle
         mEventBundleId = createBundleId();
         mEvents = events;
 
-        if(providerId > 0)
+        if (providerId > 0)
         {
             mEventSuperProperties = new EventSuperProperties(providerId);
-        }else {
+        }
+        else
+        {
             mEventSuperProperties = new EventSuperPropertiesBase();
         }
     }

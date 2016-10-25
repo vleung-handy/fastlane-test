@@ -30,7 +30,6 @@ import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
-import com.newrelic.agent.android.analytics.EventManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -51,7 +50,7 @@ public class EventLogManager
     private static final String KEY_SENT_TIMESTAMP_SECS = "event_bundle_sent_timestamp";
     private static final int UPLOAD_TIMER_DELAY_MS = 60000; //1 min
     private static final int UPLOAD_TIMER_DELAY_NO_INTERNET_MS = 15 * UPLOAD_TIMER_DELAY_MS; //15 min
-    private static final String TAG = EventManager.class.getSimpleName();
+    private static final String TAG = EventLogManager.class.getSimpleName();
     private static final int DEFAULT_USER_ID = -1;
     static final int MAX_EVENTS_PER_BUNDLE = 50;
     private static final Gson GSON = new Gson();
@@ -452,7 +451,8 @@ public class EventLogManager
         if (superProperties != null) { mMixpanel.registerSuperProperties(superProperties); }
     }
 
-    private void addMixPanelUserSuperProperty() {
+    private void addMixPanelUserSuperProperty()
+    {
 
         //If user is not logged in, check if he's logged in
         if (!mIsProviderLoggedIn)
