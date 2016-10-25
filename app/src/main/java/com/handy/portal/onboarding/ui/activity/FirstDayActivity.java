@@ -46,6 +46,7 @@ public class FirstDayActivity extends AppCompatActivity
 {
 
     private static final String TAG = FirstDayActivity.class.getName();
+    private static final String LOG_ARTICLE_NAME = "Your First Day";
 
     @BindView(R.id.first_day_first_job_message)
     TextView mFirstJobMessage;
@@ -246,5 +247,19 @@ public class FirstDayActivity extends AppCompatActivity
     protected void attachBaseContext(Context newBase)
     {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.HelpArticleOpened(LOG_ARTICLE_NAME)));
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.HelpArticleClosed(LOG_ARTICLE_NAME)));
     }
 }

@@ -430,4 +430,38 @@ public class NativeOnboardingLog extends EventLog
             super(EVENT_TYPE);
         }
     }
+
+
+    /**
+     * When FirstDayActivity opens
+     */
+    public static class HelpArticleOpened extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "help_article_opened";
+        @SerializedName("article_name")
+        private String mArticleName;
+
+        public HelpArticleOpened(final String articleName)
+        {
+            super(EVENT_TYPE);
+            mArticleName = articleName;
+        }
+    }
+
+
+    /**
+     * When FirstDayActivity closes
+     */
+    public static class HelpArticleClosed extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "help_article_closed";
+        @SerializedName("article_name")
+        private String mArticleName;
+
+        public HelpArticleClosed(final String articleName)
+        {
+            super(EVENT_TYPE);
+            mArticleName = articleName;
+        }
+    }
 }
