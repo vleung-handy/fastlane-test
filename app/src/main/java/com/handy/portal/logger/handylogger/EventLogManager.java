@@ -1,6 +1,9 @@
 package com.handy.portal.logger.handylogger;
 
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
@@ -15,10 +18,11 @@ import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BaseApplication;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.library.util.PropertiesReader;
-import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.logger.handylogger.model.Event;
 import com.handy.portal.logger.handylogger.model.EventLogBundle;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
+import com.handy.portal.logger.handylogger.model.EventSuperProperties;
+import com.handy.portal.logger.handylogger.model.EventSuperPropertiesBase;
 import com.handy.portal.logger.handylogger.model.Session;
 import com.handy.portal.manager.FileManager;
 import com.handy.portal.manager.PrefsManager;
@@ -26,7 +30,6 @@ import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.mixpanel.android.mpmetrics.MixpanelAPI;
-import com.newrelic.agent.android.analytics.EventManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -47,7 +50,7 @@ public class EventLogManager
     private static final String KEY_SENT_TIMESTAMP_SECS = "event_bundle_sent_timestamp";
     private static final int UPLOAD_TIMER_DELAY_MS = 60000; //1 min
     private static final int UPLOAD_TIMER_DELAY_NO_INTERNET_MS = 15 * UPLOAD_TIMER_DELAY_MS; //15 min
-    private static final String TAG = EventManager.class.getSimpleName();
+    private static final String TAG = EventLogManager.class.getSimpleName();
     private static final int DEFAULT_USER_ID = -1;
     static final int MAX_EVENTS_PER_BUNDLE = 50;
     private static final Gson GSON = new Gson();
@@ -57,10 +60,11 @@ public class EventLogManager
     private final DataManager mDataManager;
     private final FileManager mFileManager;
     private final PrefsManager mPrefsManager;
-    private final MixpanelAPI mMixpanel;
+    private MixpanelAPI mMixpanel;
     private Session mSession;
     //Used just for mixed panel
     private ProviderManager mProviderManager;
+    private boolean mIsProviderLoggedIn; // This is used for updating mixpanel super property
 
     //Counter for the number of logs being sent, so when we get a response we can subtract from this number
     // until all the logs are finished
@@ -80,8 +84,7 @@ public class EventLogManager
         //Send logs on initialization
         savePrefsToLogsOnInitialization();
 
-        String mixpanelApiKey = PropertiesReader.getConfigProperties(BaseApplication.getContext()).getProperty("mixpanel_api_key");
-        mMixpanel = MixpanelAPI.getInstance(BaseApplication.getContext(), mixpanelApiKey);
+        initMixPanel();
 
         //Session
         mSession = Session.getInstance(prefsManager);
@@ -213,7 +216,7 @@ public class EventLogManager
                 sendLogsFromPreference();
             }
             //Check network connection and set timer delay appropriately
-        }, SystemUtils.hasNetworkConnection(BaseApplication.getContext()) ? UPLOAD_TIMER_DELAY_MS : UPLOAD_TIMER_DELAY_NO_INTERNET_MS);
+        }, hasNetworkConnection() ? UPLOAD_TIMER_DELAY_MS : UPLOAD_TIMER_DELAY_NO_INTERNET_MS);
     }
 
     private void savePrefsToLogsOnInitialization()
@@ -337,6 +340,12 @@ public class EventLogManager
                         JsonObject.class
                 );
 
+                if (eventLogBundle == null)
+                {
+                    mFileManager.deleteLogFile(invalidFile.getName());
+                    continue;
+                }
+
                 //Add the sent timestamp value
                 eventLogBundle.addProperty(KEY_SENT_TIMESTAMP_SECS, System.currentTimeMillis() / 1000);
 
@@ -385,7 +394,10 @@ public class EventLogManager
             Crashlytics.logException(e);
             Log.e(TAG, e.getMessage());
             //If there's json exception it means logs aren't valid and clear it out
-            mFileManager.deleteLogFile(invalidFile.getName());
+            if (invalidFile != null)
+            {
+                mFileManager.deleteLogFile(invalidFile.getName());
+            }
             //reset log count
             mSendingLogsCount = 0;
         }
@@ -393,6 +405,8 @@ public class EventLogManager
 
     private void addMixPanelProperties(JSONObject eventLogJson, Event event) throws JSONException
     {
+        addMixPanelUserSuperProperty();
+
         //Mixpanel tracking info in NOR-1016
         eventLogJson.put("context", event.getEventContext());
         eventLogJson.put("session_event_count", event.getSessionEventCount());
@@ -410,13 +424,74 @@ public class EventLogManager
                 eventLogJson.put("email", info.getEmail());
                 eventLogJson.put("name", info.getFirstName() + " " + info.getLastName());
             }
-            eventLogJson.put("user_id", provider.getProviderId());
-            eventLogJson.put("user_logged_in", 1);
+            eventLogJson.put("provider_id", provider.getProviderId());
+            eventLogJson.put("provider_logged_in", 1);
         }
         else
         {
-            eventLogJson.put("user_logged_in", 0);
+            eventLogJson.put("provider_logged_in", 0);
         }
+    }
+
+    private void initMixPanel()
+    {
+        //Set up mix panel
+        String mixpanelApiKey = PropertiesReader.getConfigProperties(BaseApplication.getContext()).getProperty("mixpanel_api_key");
+        mMixpanel = MixpanelAPI.getInstance(BaseApplication.getContext(), mixpanelApiKey);
+
+        //Set up super properties for mix panel
+        JSONObject superProperties = null;
+        try
+        {
+            superProperties = new JSONObject(GSON.toJson(new EventSuperPropertiesBase()));
+        }
+        catch (JSONException e)
+        {
+            Crashlytics.logException(e);
+        }
+
+        if (mProviderManager.getCachedProviderProfile() != null)
+        {
+            mIsProviderLoggedIn = true;
+            //Only set this on initialization. Setting it after initialization will break mixpanel
+            mMixpanel.identify(String.valueOf(getProviderId()));
+        }
+
+        if (superProperties != null) { mMixpanel.registerSuperProperties(superProperties); }
+    }
+
+    private void addMixPanelUserSuperProperty()
+    {
+
+        //If user is not logged in, check if he's logged in
+        if (!mIsProviderLoggedIn)
+        {
+            //If logged in add user id to super properties
+            if (mProviderManager.getCachedProviderProfile() != null)
+            {
+                try
+                {
+                    JSONObject userIdJson = new JSONObject();
+                    userIdJson.put(EventSuperProperties.PROVIDER_ID, getProviderId());
+                    mMixpanel.registerSuperProperties(userIdJson);
+                    mIsProviderLoggedIn = true;
+                }
+                catch (JSONException e)
+                {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private boolean hasNetworkConnection()
+    {
+        ConnectivityManager cm =
+                (ConnectivityManager) BaseApplication.getContext()
+                        .getSystemService(Context.CONNECTIVITY_SERVICE);
+
+        NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
+        return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
     }
 
     private static class BundlesWrapper
