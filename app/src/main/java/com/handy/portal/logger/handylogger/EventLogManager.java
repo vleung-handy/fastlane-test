@@ -340,6 +340,12 @@ public class EventLogManager
                         JsonObject.class
                 );
 
+                if (eventLogBundle == null)
+                {
+                    mFileManager.deleteLogFile(invalidFile.getName());
+                    continue;
+                }
+
                 //Add the sent timestamp value
                 eventLogBundle.addProperty(KEY_SENT_TIMESTAMP_SECS, System.currentTimeMillis() / 1000);
 
@@ -388,7 +394,10 @@ public class EventLogManager
             Crashlytics.logException(e);
             Log.e(TAG, e.getMessage());
             //If there's json exception it means logs aren't valid and clear it out
-            mFileManager.deleteLogFile(invalidFile.getName());
+            if (invalidFile != null)
+            {
+                mFileManager.deleteLogFile(invalidFile.getName());
+            }
             //reset log count
             mSendingLogsCount = 0;
         }
