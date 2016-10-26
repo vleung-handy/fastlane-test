@@ -34,9 +34,9 @@ public class LearningLinksView extends LinearLayout
         }
 
         //remove everything it has, except for the title
-        while (this.getChildCount() > 1)
+        while (getChildCount() > 1)
         {
-            this.removeViewAt(this.getChildCount() - 1);
+            removeViewAt(getChildCount() - 1);
         }
 
         //add the links
@@ -58,6 +58,6 @@ public class LearningLinksView extends LinearLayout
         view.setTag(url);
         view.setClickable(true);
         view.setOnClickListener(onClickListener);
-        this.addView(view);
+        addView(view);
     }
 }
