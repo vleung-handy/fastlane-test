@@ -51,6 +51,8 @@ public class SubflowData implements Serializable
     private String mBeforeIdVerificationStartUrl;
     @SerializedName("after_finish")
     private String mAfterIdVerificationFinishUrl;
+    @SerializedName("first_job_content_enabled")
+    private boolean mFirstJobContentEnabled;
 
     public String getApplicationStatus()
     {
@@ -127,5 +129,10 @@ public class SubflowData implements Serializable
     public String getAfterIdVerificationFinishUrl()
     {
         return mAfterIdVerificationFinishUrl;
+    }
+
+    public boolean isFirstJobContentEnabled()
+    {
+        return mFirstJobContentEnabled;
     }
 }

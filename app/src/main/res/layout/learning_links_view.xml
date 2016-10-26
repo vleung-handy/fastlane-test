@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/learning_links_title"
+        style="@style/TextView.Large.Bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin_half"
+        android:background="@drawable/border_gray_no_side"
+        android:padding="@dimen/default_padding"
+        android:text="@string/learn_about_handy"
+        />
+
+</merge>

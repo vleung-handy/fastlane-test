@@ -17,6 +17,7 @@
         android:background="?attr/colorPrimary"
         app:popupTheme="@style/AppTheme.PopupOverlay"
         app:theme="@style/AppTheme.AppBarOverlay"
+        android:elevation="@dimen/medium_elevation"
         />
 
     <FrameLayout

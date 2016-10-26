@@ -7,10 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
@@ -28,18 +27,20 @@ import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Designation;
 import com.handy.portal.model.ProviderPersonalInfo;
-import com.handy.portal.onboarding.model.status.LearningLink;
 import com.handy.portal.onboarding.model.status.LearningLinkDetails;
 import com.handy.portal.onboarding.model.status.StatusButton;
 import com.handy.portal.onboarding.model.subflow.StatusHeader;
 import com.handy.portal.onboarding.model.subflow.SubflowData;
 import com.handy.portal.onboarding.model.supplies.SuppliesInfo;
+import com.handy.portal.onboarding.ui.activity.FirstDayActivity;
+import com.handy.portal.onboarding.ui.view.LearningLinksView;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 
 import butterknife.BindView;
+import butterknife.OnClick;
 
 public class OnboardingStatusFragment extends OnboardingSubflowUIFragment
 {
@@ -53,10 +54,10 @@ public class OnboardingStatusFragment extends OnboardingSubflowUIFragment
     LabelAndValueView mPaymentView;
     @BindView(R.id.order_total_view)
     LabelAndValueView mOrderTotalView;
-    @BindView(R.id.links_title)
-    TextView mLinksTitle;
     @BindView(R.id.links_container)
-    ViewGroup mLinksContainer;
+    LearningLinksView mLinksContainer;
+    @BindView(R.id.tips_card)
+    RelativeLayout mTipsCard;
 
     private SubflowData mStatusData;
     private ProviderPersonalInfo mProviderPersonalInfo;
@@ -123,6 +124,7 @@ public class OnboardingStatusFragment extends OnboardingSubflowUIFragment
         mProviderPersonalInfo = event.providerProfile.getProviderPersonalInfo();
         initJobsView();
         initSuppliesView();
+        initTipsView();
         initLearningLinksView();
         mMainContentContainer.setVisibility(View.VISIBLE);
     }
@@ -174,6 +176,29 @@ public class OnboardingStatusFragment extends OnboardingSubflowUIFragment
         {
             mJobsCollapsible.setVisibility(View.GONE);
         }
+    }
+
+    /**
+     * This view is a link to a "tips" page. Only show this if the "status" is completed.
+     */
+    private void initTipsView()
+    {
+        if (mStatusData.isFirstJobContentEnabled())
+        {
+            mTipsCard.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mTipsCard.setVisibility(View.GONE);
+        }
+    }
+
+    @OnClick(R.id.tips_card)
+    public void launchTips()
+    {
+        Intent intent = new Intent(getActivity(), FirstDayActivity.class);
+        intent.putExtra(BundleKeys.SUBFLOW_DATA, mStatusData);
+        startActivity(intent);
     }
 
     private void initSuppliesView()
@@ -234,14 +259,21 @@ public class OnboardingStatusFragment extends OnboardingSubflowUIFragment
                 && learningLinkDetails.getLearningLinks() != null
                 && !learningLinkDetails.getLearningLinks().isEmpty())
         {
-            for (final LearningLink learningLink : learningLinkDetails.getLearningLinks())
+            mLinksContainer.setVisibility(View.VISIBLE);
+            mLinksContainer.bindLearningLinks(learningLinkDetails.getLearningLinks(), new View.OnClickListener()
             {
-                addLinkTextView(learningLink.getTitle(), learningLink.getUrl());
-            }
+                @Override
+                public void onClick(final View v)
+                {
+                    String url = (String) v.getTag();
+                    bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.HelpLinkSelected(url)));
+                    final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+                    Utils.safeLaunchIntent(intent, getActivity());
+                }
+            });
         }
         else
         {
-            mLinksTitle.setVisibility(View.GONE);
             mLinksContainer.setVisibility(View.GONE);
         }
     }
@@ -250,24 +282,6 @@ public class OnboardingStatusFragment extends OnboardingSubflowUIFragment
     {
         final String cardLast4 = mProviderPersonalInfo.getCardLast4();
         return !TextUtils.isNullOrEmpty(cardLast4);
-    }
-
-    private void addLinkTextView(final String text, @NonNull final String url)
-    {
-        final TextView view = (TextView) LayoutInflater.from(getActivity())
-                .inflate(R.layout.view_link_text, mLinksContainer, false);
-        view.setText(text);
-        view.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(final View v)
-            {
-                bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.HelpLinkSelected(url)));
-                final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-                Utils.safeLaunchIntent(intent, getActivity());
-            }
-        });
-        mLinksContainer.addView(view);
     }
 
     @Override

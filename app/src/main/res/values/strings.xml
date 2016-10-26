@@ -634,4 +634,17 @@
     <string name="request_dismissal_error">Error dismissing request</string>
     <string name="request_dismissal_success_message">Request dismissed</string>
     <string name="request_dismissal_reason_description_missing">Please tell us why you\'re dismissing this request</string>
+
+    <!--Your first job -->
+    <string name="first_job_title">Your very first job</string>
+    <string name="first_job_message_styled"><![CDATA[<b>We get it:</b> You might have some first-day jitters. We want to help you get rid of those butterflies and get an idea of what to expect.]]></string>
+    <string name="communication_counts">Communication counts</string>
+    <string name="communication_message">A few hours before the job, we’ll share the customer’s address and you’ll be able to contact them through the Handy Pro app. This is your chance to ask questions, in case the Job Details were unclear. Finally, give yourself plenty of time to commute!</string>
+    <string name="be_prepared_title">Be Prepared</string>
+    <string name="be_prepared_message">Customers expect you to come equipped with all of the supplies you’ll need to get the job done, so make sure you stock up. Hint: Talk to your customer to find out if they want you to bring a vacuum!</string>
+    <string name="first_impression_title">First impressions matter</string>
+    <string name="first_impression_message">For your first job, the customer will probably be home, and they may want to start with a tour of the home. This is a good chance to double-check any specific instructions.</string>
+    <string name="done_title">Day one is done</string>
+    <string name="done_message">Before you check out, you might want to do one last sweep before you pack up and leave. Your customer will get a notification to rate your service and leave a tip. Lastly, you’ll get the chance to rate your customer.</string>
+    <string name="tips_for_preparing_for_your_first_job">Tips for preparing for your first job</string>
 </resources>

@@ -220,10 +220,11 @@ public class OnboardingStatusFragmentTest extends RobolectricGradleTestWrapper
         mFragment.onReceiveProviderProfileSuccess(
                 new ProfileEvent.ReceiveProviderProfileSuccess(mProviderProfile));
 
-        assertThat(mFragment.mLinksContainer.getChildCount(), equalTo(2));
-        assertThat(((TextView) mFragment.mLinksContainer.getChildAt(0)).getText().toString(),
-                equalTo("Learning Link 1"));
+        //3 because the title is also part of the links container.
+        assertThat(mFragment.mLinksContainer.getChildCount(), equalTo(3));
         assertThat(((TextView) mFragment.mLinksContainer.getChildAt(1)).getText().toString(),
+                equalTo("Learning Link 1"));
+        assertThat(((TextView) mFragment.mLinksContainer.getChildAt(2)).getText().toString(),
                 equalTo("Learning Link 2"));
     }
 }
