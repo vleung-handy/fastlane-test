@@ -549,5 +549,6 @@
     <style name="FirstDayMessageStyle" parent="TextView">
         <item name="android:layout_marginTop">@dimen/default_margin_half</item>
         <item name="android:clickable">false</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
     </style>
 </resources>

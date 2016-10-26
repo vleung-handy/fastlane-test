@@ -152,7 +152,7 @@ public class FirstDayActivity extends AppCompatActivity
      */
     private int getTextLines(TextView textView, Drawable drawable)
     {
-        float textLineHeight = textView.getPaint().getTextSize() * 1.3f;
+        float textLineHeight = textView.getPaint().getTextSize() * textView.getLineSpacingMultiplier();
         //minus 1 at the end to account for the title line
         return (int) Math.floor(drawable.getIntrinsicHeight() / textLineHeight) - 1;
     }
