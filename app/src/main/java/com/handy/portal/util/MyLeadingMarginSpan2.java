@@ -13,27 +13,37 @@ public class MyLeadingMarginSpan2 implements LeadingMarginSpan.LeadingMarginSpan
     private int margin;
     private int lines;
 
-    public MyLeadingMarginSpan2(int lines, int margin) {
+    public MyLeadingMarginSpan2(int lines, int margin)
+    {
         this.margin = margin;
         this.lines = lines;
     }
+
     /*Returns the value to which must be added indentation*/
     @Override
-    public int getLeadingMargin(boolean first) {
-        if (first) {
-            return margin;
-        }
-        else
-        {
-            return 0;
-        }
+    public int getLeadingMargin(boolean first)
+    {
+        return first ? margin : 0;
     }
+
     @Override
-    public void drawLeadingMargin(Canvas c, Paint p, int x, int dir,
-                                  int top, int baseline, int bottom, CharSequence text,
-                                  int start, int end, boolean first, Layout layout) {}
+    public void drawLeadingMargin(Canvas c,
+                                  Paint p,
+                                  int x,
+                                  int dir,
+                                  int top,
+                                  int baseline,
+                                  int bottom,
+                                  CharSequence text,
+                                  int start,
+                                  int end,
+                                  boolean first,
+                                  Layout layout)
+    {}
+
     @Override
-    public int getLeadingMarginLineCount() {
+    public int getLeadingMarginLineCount()
+    {
         return lines;
     }
 };

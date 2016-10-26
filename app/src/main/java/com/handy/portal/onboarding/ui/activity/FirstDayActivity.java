@@ -12,7 +12,6 @@ import android.text.Html;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
@@ -44,8 +43,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  */
 public class FirstDayActivity extends AppCompatActivity
 {
-
-    private static final String TAG = FirstDayActivity.class.getName();
     private static final String LOG_ARTICLE_NAME = "Your First Day";
 
     @BindView(R.id.first_day_first_job_message)
@@ -138,8 +135,6 @@ public class FirstDayActivity extends AppCompatActivity
         SpannableString ss = new SpannableString(getString(R.string.be_prepared_message));
         int lines = getTextLines(mPreparedMessage, mVacuumDrawable) + 1;
 
-        Log.d(TAG, "setupPreparedMessage: lines:" + lines);
-
         ss.setSpan(new MyLeadingMarginSpan2(lines, leftMargin), 0, ss.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
         mPreparedMessage.setText(ss);
     }
@@ -167,7 +162,6 @@ public class FirstDayActivity extends AppCompatActivity
         String text = getString(R.string.done_message);
 
         int lines = getTextLines(mDoneMessage, mSuccessDrawable);
-        Log.d(TAG, "setupDoneMessage: should have " + lines + "lines");
 
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         int width = displayMetrics.widthPixels;
@@ -185,14 +179,12 @@ public class FirstDayActivity extends AppCompatActivity
      */
     private String insertLineBreaks(String text, int maxTextWidth, int lines)
     {
-
         int spaceIndex = 0;
         int breaksInserted = 0;
 
         //Loop this until the number of new lines have been reached.
         while (text.indexOf(" ", spaceIndex) > 0 && breaksInserted < lines)
         {
-
             String currentLine = "";
             String nextWord = getNextWord(text, spaceIndex);
             while (nextWord != null && getWordLength(currentLine + nextWord) < maxTextWidth)
