@@ -408,7 +408,7 @@ public class EventLogManager
         addMixPanelUserSuperProperty();
 
         //Mixpanel tracking info in NOR-1016
-        eventLogJson.put("context", event.getEventContext());
+        eventLogJson.put("event_context", event.getEventContext());
         eventLogJson.put("session_event_count", event.getSessionEventCount());
         eventLogJson.put("session_id", event.getSessionId());
         eventLogJson.put("platform", "android");
