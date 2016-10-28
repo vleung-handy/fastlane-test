@@ -69,12 +69,11 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
             else
             {
                 bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.CameraPermissionDeniedLog()));
-                initJumioBlocker();
+                initJumioPermissionsBlocker();
             }
         }
         else
         {
-            //TODO error log and message
             //has camera permissions
             if (mOnboardingDetails != null)
             {
@@ -91,7 +90,6 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
                         bus.post(new ProviderSettingsEvent.RequestIdVerificationStart(
                                 subflowData.getBeforeIdVerificationStartUrl()
                         ));
-                        //todo find out what this does
                     }
 
                     if (isNativeJumioFlowSupported(subflowData))
@@ -124,10 +122,22 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
     {
         if (!Strings.isNullOrEmpty(subflowData.getAfterIdVerificationFinishUrl())) //check if fallback flow available
         {
-            // Platform not supported or subflow data not valid
+            /*
+            note: leaving this outside of the if statement check below to maintain previous logic
+            because i don't know exactly how this is used
+             */
             mAfterIdVerificationFinishUrl = subflowData.getAfterIdVerificationFinishUrl();
             jumioAfterFinishCallback("", IDVerificationUtils.ID_VERIFICATION_INIT_ERROR);
-            initJumioWebFlow(subflowData);
+            if (!Strings.isNullOrEmpty(subflowData.getJumioURL()))
+            {
+                bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.WebIDVerificationFlowStarted()));
+                IDVerificationUtils.initJumioWebFlow(getContext(), subflowData.getJumioURL());
+            }
+            else
+            {
+                showToast(R.string.error_missing_server_data);
+                Crashlytics.logException(new Exception("unable to start jumio web fallback flow because jumio url is null or empty"));
+            }
         }
         else
         {
@@ -167,7 +177,7 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
         }
         catch (MissingPermissionException e)
         {
-            initJumioBlocker();
+            initJumioPermissionsBlocker();
         }
     }
 
@@ -207,7 +217,7 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
         }
         if (showCameraBlocker)
         {
-            initJumioBlocker();
+            initJumioPermissionsBlocker();
         }
     }
 
@@ -292,8 +302,9 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
         }
     }
 
-    private void initJumioBlocker()
+    private void initJumioPermissionsBlocker()
     {
+        Crashlytics.log("init jumio permissions blocker");
         Fragment fragmentByTag = getChildFragmentManager().
                 findFragmentByTag(CameraPermissionsBlockerDialogFragment.FRAGMENT_TAG);
         if (fragmentByTag == null)
@@ -313,15 +324,11 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
                 FragmentUtils.safeLaunchDialogFragment(fragment, this,
                         CameraPermissionsBlockerDialogFragment.FRAGMENT_TAG);
             }
-        }
-    }
-
-    private void initJumioWebFlow(SubflowData subflowData)
-    {
-        if (subflowData != null && !Strings.isNullOrEmpty(subflowData.getJumioURL()))
-        {
-            bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.WebIDVerificationFlowStarted()));
-            IDVerificationUtils.initJumioWebFlow(getContext(), subflowData.getJumioURL());
+            else
+            {
+                showToast(R.string.error_missing_server_data);
+                Crashlytics.logException(new Exception("unable to start jumio permissions blocker because onboarding details null"));
+            }
         }
     }
 }
