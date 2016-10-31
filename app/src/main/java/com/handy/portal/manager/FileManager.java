@@ -30,6 +30,24 @@ public class FileManager
         makeLogsDirectoryIfNotExist();
     }
 
+    /**
+     * exception handled, won't cause a crash
+     *
+     * @return number of free bytes in internal storage directory. -1 if unable to get
+     */
+    public long getInternalStorageDirectoryFreeSpaceBytes()
+    {
+        try
+        {
+            return FILES_DIRECTORY.getFreeSpace();
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e);
+        }
+        return -1L;
+    }
+
     public File[] getLogFileList()
     {
         makeLogsDirectoryIfNotExist();

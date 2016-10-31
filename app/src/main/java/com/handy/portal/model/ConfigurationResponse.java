@@ -70,6 +70,14 @@ public class ConfigurationResponse
     @SerializedName("request_dismissal")
     private RequestDismissal mRequestDismissal;
 
+    @SerializedName("appsee_analytics_enabled")
+    private boolean mAppseeAnalyticsEnabled;
+
+    public boolean isAppseeAnalyticsEnabled()
+    {
+        return mAppseeAnalyticsEnabled;
+    }
+
     public boolean isCustomerNoShowModalEnabled()
     {
         return mCustomerNoShowModalEnabled;

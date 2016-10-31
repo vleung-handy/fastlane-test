@@ -25,6 +25,7 @@ import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.handylogger.EventLogManagerTest;
+import com.handy.portal.manager.AppseeManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.FileManager;
 import com.handy.portal.manager.LoginManager;
@@ -140,6 +141,13 @@ public class TestApplicationModule
     public TestApplicationModule(final Application application)
     {
         mApplication = application;
+    }
+
+    @Provides
+    @Singleton
+    final AppseeManager provideAppseeManager()
+    {
+        return mock(AppseeManager.class);
     }
 
     @Provides

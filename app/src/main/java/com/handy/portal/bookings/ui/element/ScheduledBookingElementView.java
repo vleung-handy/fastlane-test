@@ -12,6 +12,7 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.library.util.UIUtils;
+import com.handy.portal.manager.AppseeManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -61,6 +62,8 @@ public class ScheduledBookingElementView extends BookingElementView
 
         mAssociatedView = convertView;
 
+        //hide customer address from Appsee screen recording
+        AppseeManager.markViewsAsSensitive(mAddressTextView);
         return convertView;
     }
 
