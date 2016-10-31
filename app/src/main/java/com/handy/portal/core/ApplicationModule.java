@@ -318,6 +318,7 @@ public final class ApplicationModule
     {
         final OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
+        okHttpClient.setWriteTimeout(90, TimeUnit.SECONDS);
 
         final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
                 .setRequestInterceptor(new RequestInterceptor()
