@@ -195,7 +195,8 @@ public class EventLogManager
     private int getProviderId()
     {
         String providerId = mProviderManager.getLastProviderId();
-        return TextUtils.isDigitsOnly(providerId) ? Integer.parseInt(providerId) : DEFAULT_USER_ID;
+        return !TextUtils.isEmpty(providerId) && TextUtils.isDigitsOnly(providerId)
+                ? Integer.parseInt(providerId) : DEFAULT_USER_ID;
     }
 
     //************************************* handle all saving/sending of logs **********************
@@ -290,15 +291,11 @@ public class EventLogManager
                 prefBundleString,
                 JsonObject[].class
         );
-
-        //Keep a list of the event bundle ids to verify they were all saved
-        List<String> eventBundleIds = new ArrayList<>();
         for (JsonObject logBundleJson : eventLogBundles)
         {
             String eventBundleId = logBundleJson.get(EventLogBundle.KEY_EVENT_BUNDLE_ID)
                     .getAsString();
             boolean fileSaved = mFileManager.saveLogFile(eventBundleId, logBundleJson.toString());
-
             // If the file didn't save then we log an exception
             if (!fileSaved)
             {
@@ -497,6 +494,5 @@ public class EventLogManager
     private static class BundlesWrapper
     {
         static final List<EventLogBundle> BUNDLES = new ArrayList<>();
-
     }
 }
