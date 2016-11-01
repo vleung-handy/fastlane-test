@@ -28,6 +28,7 @@ import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
+import com.handy.portal.manager.AppseeManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
@@ -95,6 +96,7 @@ public class AccountSettingsFragment extends ActionBarFragment
 
         ButterKnife.bind(this, fragmentView);
 
+        AppseeManager.markViewsAsSensitive(mProviderNameText);
         return fragmentView;
     }
 

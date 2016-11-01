@@ -28,6 +28,7 @@ import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
+import com.handy.portal.manager.AppseeManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
@@ -115,6 +116,8 @@ public class ProfileUpdateFragment extends ActionBarFragment
 
         View view = inflater.inflate(R.layout.fragment_profile_update_provider_info, container, false);
         ButterKnife.bind(this, view);
+
+        AppseeManager.markViewsAsSensitive(mImage);
         return view;
     }
 

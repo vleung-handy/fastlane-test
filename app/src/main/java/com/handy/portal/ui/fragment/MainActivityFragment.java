@@ -40,6 +40,7 @@ import com.handy.portal.library.ui.widget.TabButtonGroup;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
+import com.handy.portal.manager.AppseeManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
@@ -158,6 +159,8 @@ public class MainActivityFragment extends InjectedFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.bind(this, view);
+
+        AppseeManager.markViewsAsSensitive(mNavigationHeaderProName, mProImage);
         registerButtonListeners();
         return view;
     }
