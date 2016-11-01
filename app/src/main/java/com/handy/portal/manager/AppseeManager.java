@@ -54,10 +54,23 @@ public class AppseeManager
         long freeSpaceBytes = mFileManager.getInternalStorageDirectoryFreeSpaceBytes();
         if(freeSpaceBytes < 0)
         {
-            Appsee.addEvent("unable to get files directory free space");
+            addAppseeEvent("unable to get files directory free space");
         }
         long freeSpaceMegabytes = freeSpaceBytes/1000000;
         return freeSpaceMegabytes >= LOW_STORAGE_SPACE_THRESHOLD_MEGABYTES;
+    }
+
+    private void addAppseeEvent(String eventText)
+    {
+        try
+        {
+            //although Appsee.addEvent() already has a try/catch, there can be an exception in the catch
+            Appsee.addEvent(eventText);
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e);
+        }
     }
 
     /**
@@ -71,7 +84,7 @@ public class AppseeManager
         {
             String logErrorMessage = "not enabling Appsee - low disk space (<" + LOW_STORAGE_SPACE_THRESHOLD_MEGABYTES + "mb)";
             Crashlytics.logException(new Exception(logErrorMessage));
-            Appsee.addEvent(logErrorMessage); //log in Appsee so we don't get confused when no recording
+            addAppseeEvent(logErrorMessage); //log in Appsee so we don't get confused when no recording
         }
         /*
         need to enable if user not logged in because we can't get config response then
@@ -106,7 +119,7 @@ public class AppseeManager
         if (isAppseeEnabled())
         {
             //start appsee recording
-            Appsee.start(mAppSeeApiKey);
+            startRecording();
             updateUserId();
             return;
         }
@@ -131,12 +144,37 @@ public class AppseeManager
     }
 
     /**
+     * start recording the screen
+     * does nothing if recording was already started
+     */
+    private void startRecording()
+    {
+        try
+        {
+            //although Appsee.start() already has a try/catch, there can be an exception in the catch
+            Appsee.start(mAppSeeApiKey);
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e);
+        }
+    }
+
+    /**
      * stops recording the screen
      * does nothing if recording was not started
      */
-    public void stopRecording()
+    private void stopRecording()
     {
-        Appsee.stop();
+        try
+        {
+            //although Appsee.stop() already has a try/catch, there can be an exception in the catch
+            Appsee.stop();
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e);
+        }
     }
 
     /**
@@ -151,7 +189,14 @@ public class AppseeManager
     {
         for (View view : views)
         {
-            Appsee.markViewAsSensitive(view);
+            try
+            {
+                Appsee.markViewAsSensitive(view);
+            }
+            catch (Exception e)
+            {
+                Crashlytics.logException(e);
+            }
         }
     }
 
