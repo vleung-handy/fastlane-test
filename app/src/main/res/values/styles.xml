@@ -10,6 +10,11 @@
 
     <style name="AppTheme.Translucent"/>
 
+    <style name="SplashTheme"
+           parent="AppTheme.Translucent">
+        <item name="android:windowBackground">@drawable/background_splash</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay"
            parent="ThemeOverlay.AppCompat.Dark.ActionBar">
         <item name="actionOverflowButtonStyle">@style/ToolbarOverFlowIcon</item>
