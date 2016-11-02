@@ -477,7 +477,7 @@ public class MainActivityFragment extends InjectedFragment
         mJobsButton.setId(R.id.tab_nav_available);
         mClientsButton = new TabButton(getContext()).init(R.string.tab_clients,
                 R.drawable.ic_menu_clients);
-        mClientsButton.setId(R.id.tab_nav_pro_requested_jobs);
+        mClientsButton.setId(R.id.tab_nav_clients);
         mScheduleButton = new TabButton(getContext())
                 .init(R.string.tab_schedule, R.drawable.ic_menu_schedule);
         mScheduleButton.setId(R.id.tab_nav_schedule);

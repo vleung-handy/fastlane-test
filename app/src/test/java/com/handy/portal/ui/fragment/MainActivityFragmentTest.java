@@ -7,8 +7,8 @@ import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.TestUtils;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
-import com.handy.portal.clients.ui.fragment.ProRequestedJobsFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.clients.ui.fragment.ClientsFragment;
 import com.handy.portal.dashboard.fragment.DashboardVideoLibraryFragment;
 import com.handy.portal.dashboard.fragment.RatingsAndFeedbackFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
@@ -53,9 +53,9 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
     @Test
     public void testRequestTab() throws Exception
     {
-        mFragment.mTabs.findViewById(R.id.tab_nav_pro_requested_jobs).performClick();
+        mFragment.mTabs.findViewById(R.id.tab_nav_clients).performClick();
         Fragment currentFragment = TestUtils.getScreenFragment(mFragment.getFragmentManager());
-        assertThat(currentFragment, instanceOf(ProRequestedJobsFragment.class));
+        assertThat(currentFragment, instanceOf(ClientsFragment.class));
         assertEquals(mFragment.getString(R.string.your_clients),
                 ((AppCompatActivity) mFragment.getActivity()).getSupportActionBar().getTitle());
         // testNavigation doesn't work here because getActivity().findViewById() fails
