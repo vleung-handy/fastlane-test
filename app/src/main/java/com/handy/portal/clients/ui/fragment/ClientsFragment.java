@@ -15,6 +15,7 @@ import com.handy.portal.R;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.view.HandyTabLayout;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import java.util.ArrayList;
@@ -51,10 +52,24 @@ public class ClientsFragment extends ActionBarFragment
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
-        setActionBarVisible(false);
-        mToolbar.setTitle(R.string.your_clients);
+        final ConfigurationResponse configuration = configManager.getConfigurationResponse();
+        final boolean shouldShowMessagesTab = configuration != null
+                && configuration.isClientsChatEnabled();
 
-        final TabAdapter tabAdapter = new TabAdapter(getActivity(), getChildFragmentManager());
+        if (shouldShowMessagesTab)
+        {
+            setActionBarVisible(false);
+            mToolbar.setTitle(R.string.your_clients);
+        }
+        else
+        {
+            setActionBarTitle(R.string.your_clients);
+            mTabLayout.setVisibility(View.GONE);
+            mToolbar.setVisibility(View.GONE);
+        }
+
+        final TabAdapter tabAdapter = new TabAdapter(getActivity(), getChildFragmentManager(),
+                shouldShowMessagesTab);
         mViewPager.setAdapter(tabAdapter);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         mTabLayout.setupWithViewPager(mViewPager);
@@ -66,13 +81,18 @@ public class ClientsFragment extends ActionBarFragment
         private List<InjectedFragment> mFragments = new ArrayList<>();
         private List<String> mTitles = new ArrayList<>();
 
-        public TabAdapter(final Context context, final FragmentManager fragmentManager)
+        public TabAdapter(final Context context,
+                          final FragmentManager fragmentManager,
+                          final boolean shouldShowMessagesTab)
         {
             super(fragmentManager);
             mTitles.add(context.getResources().getString(R.string.job_requests));
             mFragments.add(ProRequestedJobsFragment.newInstance());
-            mTitles.add(context.getResources().getString(R.string.messages));
-            mFragments.add(ClientMessagesFragment.newInstance());
+            if (shouldShowMessagesTab)
+            {
+                mTitles.add(context.getResources().getString(R.string.messages));
+                mFragments.add(ClientMessagesFragment.newInstance());
+            }
         }
 
         @Override
