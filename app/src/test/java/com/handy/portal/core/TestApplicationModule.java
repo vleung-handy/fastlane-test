@@ -273,14 +273,14 @@ public class TestApplicationModule
             final ProviderManager providerManager
     )
     {
-        return spy(new EventLogManager(bus, dataManager, fileManager, prefsManager, providerManager));
+        return spy(new EventLogManager(mApplication, bus, dataManager, fileManager, prefsManager, providerManager));
     }
 
     @Provides
     @Singleton
     final FileManager provideFileManager()
     {
-        return new FileManager();
+        return new FileManager(mApplication);
     }
 
     @Provides

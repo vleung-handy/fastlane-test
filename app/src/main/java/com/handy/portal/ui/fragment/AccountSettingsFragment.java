@@ -183,7 +183,7 @@ public class AccountSettingsFragment extends ActionBarFragment
                     public void onClick(DialogInterface dialogInterface, int i)
                     {
                         //TODO this logout code should be moved somewhere else
-                        mPrefsManager.clearButSaveEventLogs();
+                        mPrefsManager.clear();
                         mBookingManager.clearCache();
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)

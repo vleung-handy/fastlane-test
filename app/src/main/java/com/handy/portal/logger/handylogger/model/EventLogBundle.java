@@ -1,7 +1,6 @@
 package com.handy.portal.logger.handylogger.model;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.core.BaseApplication;
 
 import java.util.List;
 
@@ -22,18 +21,21 @@ public class EventLogBundle
      * @param providerId
      * @param events
      */
-    public EventLogBundle(final int providerId, final List<Event> events)
+    public EventLogBundle(int providerId, List<Event> events, String osVersion, String appVersion,
+                          String deviceId, String deviceModel, String installationId)
     {
-        mEventBundleId = createBundleId();
+        mEventBundleId = System.currentTimeMillis() + "+" + deviceId;
         mEvents = events;
 
         if (providerId > 0)
         {
-            mEventSuperProperties = new EventSuperProperties(providerId);
+            mEventSuperProperties = new EventSuperProperties(providerId, osVersion, appVersion,
+                    deviceId, deviceModel, installationId);
         }
         else
         {
-            mEventSuperProperties = new EventSuperPropertiesBase();
+            mEventSuperProperties = new EventSuperPropertiesBase(osVersion, appVersion, deviceId,
+                    deviceModel, installationId);
         }
     }
 
@@ -50,10 +52,5 @@ public class EventLogBundle
     public int size()
     {
         return mEvents.size();
-    }
-
-    private String createBundleId()
-    {
-        return System.currentTimeMillis() + "+" + BaseApplication.getDeviceId();
     }
 }
