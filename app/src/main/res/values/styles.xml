@@ -105,6 +105,14 @@
 
     <!--TODO: clean up these text appearance styles -->
 
+    <style name="TextAppearance"/>
+
+    <style name="TextAppearance.TabText">
+        <item name="android:gravity">center</item>
+        <item name="android:textSize">@dimen/xsmall_text_size</item>
+        <item name="android:textAllCaps">true</item>
+    </style>
+
     <style name="HandyTextAppearanceListHeader">
         <item name="android:textColor">@color/black</item>
         <item name="android:textSize">@dimen/xsmall_text_size</item>

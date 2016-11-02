@@ -649,4 +649,8 @@
     <string name="tips_for_preparing_for_your_first_job">Tips for preparing for your first job</string>
 
     <string name="error_missing_server_data">Uh oh. There was an error. Please try again, or go to the Help Center for support.</string>
+
+    <!-- Clients -->
+    <string name="job_requests">Job Requests</string>
+    <string name="messages">Messages</string>
 </resources>

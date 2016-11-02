@@ -8,10 +8,10 @@ import com.handy.portal.bookings.ui.fragment.BookingFragment;
 import com.handy.portal.bookings.ui.fragment.CancellationRequestFragment;
 import com.handy.portal.bookings.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.NearbyBookingsFragment;
-import com.handy.portal.clients.ui.fragment.ProRequestedJobsFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.bookings.ui.fragment.SoftwareLicensesFragment;
+import com.handy.portal.clients.ui.fragment.ClientsFragment;
 import com.handy.portal.dashboard.fragment.DashboardFeedbackFragment;
 import com.handy.portal.dashboard.fragment.DashboardReviewsFragment;
 import com.handy.portal.dashboard.fragment.DashboardTiersFragment;
@@ -90,7 +90,7 @@ public enum MainViewPage implements Serializable
     BLOCK_PRO_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
     PAYMENT_BLOCKING(PaymentBlockingFragment.class),
 
-    CLIENTS(ProRequestedJobsFragment.class);
+    CLIENTS(ClientsFragment.class);
 
     private static final MainViewPage[] TOP_LEVEL_PAGES = {
             AVAILABLE_JOBS, SCHEDULED_JOBS, CLIENTS, NOTIFICATIONS, DASHBOARD, PAYMENTS,

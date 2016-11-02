@@ -23,9 +23,9 @@ import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
+import com.handy.portal.bookings.util.ClaimUtils;
 import com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapter;
 import com.handy.portal.clients.ui.fragment.dialog.RequestDismissalReasonsDialogFragment;
-import com.handy.portal.bookings.util.ClaimUtils;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.RequestCode;
@@ -33,13 +33,13 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -53,7 +53,7 @@ import butterknife.OnClick;
 
 import static com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapter.Event;
 
-public class ProRequestedJobsFragment extends ActionBarFragment
+public class ProRequestedJobsFragment extends InjectedFragment
 {
     @BindView(R.id.fragment_pro_requested_jobs_recycler_view)
     RecyclerView mRequestedJobsRecyclerView;
@@ -73,12 +73,6 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     private RecyclerView.LayoutManager mLayoutManager;
     private int mUnreadJobsCount;
 
-    @Override
-    protected MainViewPage getAppPage()
-    {
-        return MainViewPage.CLIENTS;
-    }
-
     private SwipeRefreshLayout.OnRefreshListener onProRequestedJobsListRefreshListener = new SwipeRefreshLayout.OnRefreshListener()
     {
         @Override
@@ -88,6 +82,11 @@ public class ProRequestedJobsFragment extends ActionBarFragment
             requestProRequestedJobs(false);
         }
     };
+
+    public static ProRequestedJobsFragment newInstance()
+    {
+        return new ProRequestedJobsFragment();
+    }
 
     /**
      * updates and shows the job list view based on the given jobs list
@@ -169,7 +168,6 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         //this fragment doesn't use the universal overlay, so make sure it's hidden
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
-        setActionBar(R.string.your_clients, false);
         mJobListSwipeRefreshLayout.setRefreshing(false);
         if (mAdapter == null)
         {
