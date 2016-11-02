@@ -121,7 +121,7 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="tab_claim">Claim</string>
-    <string name="tab_requests">Requests</string>
+    <string name="tab_clients">Clients</string>
     <string name="tab_schedule">Schedule</string>
     <string name="tab_notifications">Notifications</string>
     <string name="tab_alerts">Alerts</string>
@@ -568,7 +568,7 @@
     <string name="we_found_some_jobs">We found some jobs we think you’ll like; most pros start with 5 to 10 in their first week.</string>
     <string name="supply_kit">Supply Kit</string>
     <string name="order_details">Order Details</string>
-    <string name="your_requests">Your Requests</string>
+    <string name="your_clients">Your Clients</string>
     <string name="confirm_shipping_details">Confirm shipping details</string>
     <string name="percent_complete_formatted">%1$d%% Complete</string>
     <plurals name="locations_selected_count_formatted">

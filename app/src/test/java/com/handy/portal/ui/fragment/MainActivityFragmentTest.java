@@ -56,7 +56,7 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
         mFragment.mTabs.findViewById(R.id.tab_nav_pro_requested_jobs).performClick();
         Fragment currentFragment = TestUtils.getScreenFragment(mFragment.getFragmentManager());
         assertThat(currentFragment, instanceOf(ProRequestedJobsFragment.class));
-        assertEquals(mFragment.getString(R.string.your_requests),
+        assertEquals(mFragment.getString(R.string.your_clients),
                 ((AppCompatActivity) mFragment.getActivity()).getSupportActionBar().getTitle());
         // testNavigation doesn't work here because getActivity().findViewById() fails
     }

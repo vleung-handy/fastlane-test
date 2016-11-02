@@ -75,7 +75,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
     @Override
     protected MainViewPage getAppPage()
     {
-        return MainViewPage.REQUESTED_JOBS;
+        return MainViewPage.CLIENTS;
     }
 
     private SwipeRefreshLayout.OnRefreshListener onProRequestedJobsListRefreshListener = new SwipeRefreshLayout.OnRefreshListener()
@@ -168,7 +168,7 @@ public class ProRequestedJobsFragment extends ActionBarFragment
         //this fragment doesn't use the universal overlay, so make sure it's hidden
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
-        setActionBar(R.string.your_requests, false);
+        setActionBar(R.string.your_clients, false);
         mJobListSwipeRefreshLayout.setRefreshing(false);
         if (mAdapter == null)
         {

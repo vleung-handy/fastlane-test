@@ -90,10 +90,10 @@ public enum MainViewPage implements Serializable
     BLOCK_PRO_WEBVIEW(BlockScheduleFragment.class, WebUrlManager.BLOCK_JOBS_PAGE),
     PAYMENT_BLOCKING(PaymentBlockingFragment.class),
 
-    REQUESTED_JOBS(ProRequestedJobsFragment.class);
+    CLIENTS(ProRequestedJobsFragment.class);
 
     private static final MainViewPage[] TOP_LEVEL_PAGES = {
-            AVAILABLE_JOBS, SCHEDULED_JOBS, REQUESTED_JOBS, NOTIFICATIONS, DASHBOARD, PAYMENTS,
+            AVAILABLE_JOBS, SCHEDULED_JOBS, CLIENTS, NOTIFICATIONS, DASHBOARD, PAYMENTS,
             REFER_A_FRIEND, ACCOUNT_SETTINGS, DASHBOARD_VIDEO_LIBRARY, HELP_WEBVIEW
     };
     private Class mClassType;
