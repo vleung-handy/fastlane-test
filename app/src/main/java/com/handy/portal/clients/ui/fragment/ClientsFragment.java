@@ -27,11 +27,11 @@ import butterknife.ButterKnife;
 
 public class ClientsFragment extends ActionBarFragment
 {
-    @BindView(R.id.toolbar)
+    @BindView(R.id.clients_toolbar)
     Toolbar mToolbar;
-    @BindView(R.id.pager)
+    @BindView(R.id.clients_pager)
     ViewPager mViewPager;
-    @BindView(R.id.tab_layout)
+    @BindView(R.id.clients_tab_layout)
     HandyTabLayout mTabLayout;
 
     @Override

@@ -12,7 +12,7 @@
         >
 
         <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/clients_toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:paddingLeft="@dimen/extra_margin_medium"
@@ -24,7 +24,7 @@
             />
 
         <com.handy.portal.library.ui.view.HandyTabLayout
-            android:id="@+id/tab_layout"
+            android:id="@+id/clients_tab_layout"
             style="@style/TextView.Large"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,7 +38,7 @@
     </android.support.design.widget.AppBarLayout>
 
     <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
+        android:id="@+id/clients_pager"
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
