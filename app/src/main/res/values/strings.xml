@@ -653,4 +653,5 @@
     <!-- Clients -->
     <string name="job_requests">Job Requests</string>
     <string name="messages">Messages</string>
+    <string name="no_messages">You have no messages.</string>
 </resources>

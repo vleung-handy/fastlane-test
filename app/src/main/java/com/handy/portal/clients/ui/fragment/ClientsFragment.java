@@ -72,7 +72,7 @@ public class ClientsFragment extends ActionBarFragment
             mTitles.add(context.getResources().getString(R.string.job_requests));
             mFragments.add(ProRequestedJobsFragment.newInstance());
             mTitles.add(context.getResources().getString(R.string.messages));
-            mFragments.add(ProRequestedJobsFragment.newInstance()); // FIXME: Use the right fragment
+            mFragments.add(ClientMessagesFragment.newInstance());
         }
 
         @Override
