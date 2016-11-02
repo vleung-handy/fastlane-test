@@ -1,4 +1,4 @@
-package com.handy.portal.bookings.ui.fragment;
+package com.handy.portal.clients.ui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -23,7 +23,8 @@ import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
-import com.handy.portal.bookings.ui.adapter.RequestedJobsRecyclerViewAdapter;
+import com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapter;
+import com.handy.portal.clients.ui.fragment.dialog.RequestDismissalReasonsDialogFragment;
 import com.handy.portal.bookings.util.ClaimUtils;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
@@ -50,7 +51,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.handy.portal.bookings.ui.adapter.RequestedJobsRecyclerViewAdapter.Event;
+import static com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapter.Event;
 
 public class ProRequestedJobsFragment extends ActionBarFragment
 {

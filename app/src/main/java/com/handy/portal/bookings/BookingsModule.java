@@ -1,7 +1,6 @@
 package com.handy.portal.bookings;
 
 import com.handy.portal.bookings.manager.BookingManager;
-import com.handy.portal.bookings.ui.adapter.RequestedJobsRecyclerViewAdapter;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.BookingDetailsWrapperFragment;
 import com.handy.portal.bookings.ui.fragment.BookingFragment;
@@ -9,8 +8,6 @@ import com.handy.portal.bookings.ui.fragment.CancellationRequestFragment;
 import com.handy.portal.bookings.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.InProgressBookingFragment;
 import com.handy.portal.bookings.ui.fragment.NearbyBookingsFragment;
-import com.handy.portal.bookings.ui.fragment.ProRequestedJobsFragment;
-import com.handy.portal.bookings.ui.fragment.RequestDismissalReasonsDialogFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingCancelCancellationPolicyDialogFragment;
@@ -21,7 +18,6 @@ import com.handy.portal.bookings.ui.fragment.dialog.EarlyAccessTrialDialogFragme
 import com.handy.portal.bookings.ui.fragment.dialog.JobAccessUnlockedDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.PostCheckoutDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.RateBookingDialogFragment;
-import com.handy.portal.bookings.ui.fragment.dialog.SwapBookingClaimDialogFragment;
 import com.handy.portal.data.DataManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -50,11 +46,7 @@ import dagger.Provides;
                 SendReceiptCheckoutFragment.class,
                 EarlyAccessTrialDialogFragment.class,
                 JobAccessUnlockedDialogFragment.class,
-                ProRequestedJobsFragment.class,
-                RequestDismissalReasonsDialogFragment.class,
-                RequestedJobsRecyclerViewAdapter.class,
                 CustomerNoShowDialogFragment.class,
-                SwapBookingClaimDialogFragment.class,
                 PostCheckoutDialogFragment.class,
         })
 public final class BookingsModule

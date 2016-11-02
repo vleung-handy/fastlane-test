@@ -7,7 +7,7 @@ import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.TestUtils;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
-import com.handy.portal.bookings.ui.fragment.ProRequestedJobsFragment;
+import com.handy.portal.clients.ui.fragment.ProRequestedJobsFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.dashboard.fragment.DashboardVideoLibraryFragment;
 import com.handy.portal.dashboard.fragment.RatingsAndFeedbackFragment;

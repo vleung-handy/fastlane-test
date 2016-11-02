@@ -5,6 +5,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.clients.ui.fragment.dialog.SwapBookingClaimDialogFragment;
 
 import org.junit.Before;
 import org.junit.Test;

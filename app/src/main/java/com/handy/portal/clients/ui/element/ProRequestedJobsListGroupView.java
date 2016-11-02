@@ -1,4 +1,4 @@
-package com.handy.portal.bookings.ui.element;
+package com.handy.portal.clients.ui.element;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

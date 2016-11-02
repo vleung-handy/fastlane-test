@@ -1,4 +1,4 @@
-package com.handy.portal.bookings.ui.fragment;
+package com.handy.portal.clients.ui.fragment.dialog;
 
 import android.app.Activity;
 import android.content.Intent;
