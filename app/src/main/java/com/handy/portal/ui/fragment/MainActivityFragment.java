@@ -75,7 +75,7 @@ public class MainActivityFragment extends InjectedFragment
     @BindView(R.id.tabs)
     TabButtonGroup mTabs;
     private TabButton mJobsButton;
-    private TabButton mRequestsButton;
+    private TabButton mClientsButton;
     private TabButton mScheduleButton;
     private TabButton mAlertsButton;
     private TabButton mButtonMore;
@@ -204,7 +204,7 @@ public class MainActivityFragment extends InjectedFragment
         super.onResume();
         bus.register(this);
 
-        if (mRequestsButton != null && mRequestsButton.getVisibility() == View.VISIBLE)
+        if (mClientsButton != null && mClientsButton.getVisibility() == View.VISIBLE)
         {
             bus.post(new BookingEvent.RequestProRequestedJobsCount());
         }
@@ -382,9 +382,9 @@ public class MainActivityFragment extends InjectedFragment
                 mNavTrayLinks.clearCheck();
             }
             break;
-            case REQUESTED_JOBS:
+            case CLIENTS:
             {
-                mRequestsButton.toggle();
+                mClientsButton.toggle();
                 mNavTrayLinks.clearCheck();
             }
             break;
@@ -456,9 +456,9 @@ public class MainActivityFragment extends InjectedFragment
     public void onReceiveProRequestedJobsCountSuccess(
             final BookingEvent.ReceiveProRequestedJobsCountSuccess event)
     {
-        if (mRequestsButton != null)
+        if (mClientsButton != null)
         {
-            mRequestsButton.setUnreadCount(event.getCount());
+            mClientsButton.setUnreadCount(event.getCount());
         }
     }
 
@@ -475,9 +475,9 @@ public class MainActivityFragment extends InjectedFragment
         mJobsButton = new TabButton(getContext())
                 .init(R.string.tab_claim, R.drawable.ic_menu_search);
         mJobsButton.setId(R.id.tab_nav_available);
-        mRequestsButton = new TabButton(getContext()).init(R.string.tab_requests,
-                R.drawable.ic_menu_requests);
-        mRequestsButton.setId(R.id.tab_nav_pro_requested_jobs);
+        mClientsButton = new TabButton(getContext()).init(R.string.tab_clients,
+                R.drawable.ic_menu_clients);
+        mClientsButton.setId(R.id.tab_nav_clients);
         mScheduleButton = new TabButton(getContext())
                 .init(R.string.tab_schedule, R.drawable.ic_menu_schedule);
         mScheduleButton.setId(R.id.tab_nav_schedule);
@@ -487,7 +487,7 @@ public class MainActivityFragment extends InjectedFragment
         mButtonMore = new TabButton(getContext())
                 .init(R.string.tab_more, R.drawable.ic_menu_more);
         mButtonMore.setId(R.id.tab_nav_item_more);
-        mTabs.setTabs(mJobsButton, mScheduleButton, mRequestsButton, mAlertsButton, mButtonMore);
+        mTabs.setTabs(mJobsButton, mClientsButton, mScheduleButton, mAlertsButton, mButtonMore);
 
         mJobsButton.setOnClickListener(
                 new TabOnClickListener(mJobsButton, MainViewPage.AVAILABLE_JOBS));
@@ -707,7 +707,7 @@ public class MainActivityFragment extends InjectedFragment
         if (mConfigManager == null || mConfigManager.getConfigurationResponse() == null)
         {
             mAlertsButton.setVisibility(View.GONE);
-            mRequestsButton.setVisibility(View.GONE);
+            mClientsButton.setVisibility(View.GONE);
             return;
         }
 
@@ -724,13 +724,13 @@ public class MainActivityFragment extends InjectedFragment
 
         if (mConfigManager.getConfigurationResponse().isPendingRequestsInboxEnabled())
         {
-            mRequestsButton.setOnClickListener(
-                    new TabOnClickListener(mRequestsButton, MainViewPage.REQUESTED_JOBS));
-            mRequestsButton.setVisibility(View.VISIBLE);
+            mClientsButton.setOnClickListener(
+                    new TabOnClickListener(mClientsButton, MainViewPage.CLIENTS));
+            mClientsButton.setVisibility(View.VISIBLE);
         }
         else
         {
-            mRequestsButton.setVisibility(View.GONE);
+            mClientsButton.setVisibility(View.GONE);
         }
     }
 

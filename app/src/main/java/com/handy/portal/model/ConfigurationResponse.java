@@ -73,6 +73,9 @@ public class ConfigurationResponse
     @SerializedName("appsee_analytics_enabled")
     private boolean mAppseeAnalyticsEnabled;
 
+    @SerializedName("clients_chat_enabled")
+    private boolean mClientsChatEnabled;
+
     public boolean isAppseeAnalyticsEnabled()
     {
         return mAppseeAnalyticsEnabled;
@@ -191,6 +194,13 @@ public class ConfigurationResponse
     public RequestDismissal getRequestDismissal()
     {
         return mRequestDismissal;
+    }
+
+    public boolean isClientsChatEnabled()
+    {
+        return false;
+        // FIXME: Uncomment next line once clients chat is ready
+        // return mClientsChatEnabled;
     }
 
     public static class HelpCenterInfo

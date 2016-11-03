@@ -1,4 +1,4 @@
-package com.handy.portal.bookings.ui.fragment.dialog;
+package com.handy.portal.clients.ui.fragment.dialog;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
+import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.library.util.FontUtils;
 import com.handy.portal.logger.handylogger.LogEvent;

@@ -1,4 +1,4 @@
-package com.handy.portal.bookings.ui.fragment.dialog;
+package com.handy.portal.clients.ui.fragment.dialog;
 
 import android.widget.TextView;
 

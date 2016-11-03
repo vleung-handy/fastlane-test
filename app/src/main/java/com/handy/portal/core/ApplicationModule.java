@@ -11,6 +11,7 @@ import com.handy.portal.BuildConfig;
 import com.handy.portal.action.CustomDeepLinkAction;
 import com.handy.portal.bookings.BookingsModule;
 import com.handy.portal.bookings.ui.fragment.SoftwareLicensesFragment;
+import com.handy.portal.clients.ClientsModule;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.dashboard.fragment.DashboardFeedbackFragment;
 import com.handy.portal.dashboard.fragment.DashboardReviewsFragment;
@@ -152,6 +153,7 @@ import retrofit.converter.GsonConverter;
                 BookingsModule.class,
                 OnboardingModule.class,
                 SetupModule.class,
+                ClientsModule.class,
         }
 )
 public final class ApplicationModule
