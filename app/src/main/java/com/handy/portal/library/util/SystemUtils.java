@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.BatteryManager;
+import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 
@@ -64,6 +65,21 @@ public final class SystemUtils
     {
         return Settings.Secure.getString(context.getContentResolver(),
                 Settings.Secure.ANDROID_ID);
+    }
+
+    public static String getDeviceModel()
+    {
+        final String manufacturer = Build.MANUFACTURER;
+        final String model = Build.MODEL;
+
+        if (model != null && model.startsWith(manufacturer))
+        {
+            return model;
+        }
+        else
+        {
+            return manufacturer + " " + model;
+        }
     }
 
     public static boolean hasNetworkConnection(@NonNull Context context)

@@ -4,6 +4,7 @@ package com.handy.portal.logger.handylogger;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
@@ -14,10 +15,11 @@ import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonSyntaxException;
+import com.handy.portal.BuildConfig;
 import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.core.BaseApplication;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.library.util.PropertiesReader;
+import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.logger.handylogger.model.Event;
 import com.handy.portal.logger.handylogger.model.EventLogBundle;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
@@ -56,6 +58,7 @@ public class EventLogManager
     private static final Gson GSON = new Gson();
 
     private static EventLogBundle sCurrentEventLogBundle;
+    private final Context mContext;
     private final EventBus mBus;
     private final DataManager mDataManager;
     private final FileManager mFileManager;
@@ -73,8 +76,11 @@ public class EventLogManager
     private Timer mUploadLogTimer;
 
     @Inject
-    public EventLogManager(final EventBus bus, final DataManager dataManager, final FileManager fileManager, final PrefsManager prefsManager, ProviderManager providerManager)
+    public EventLogManager(final Context context, final EventBus bus, final DataManager dataManager,
+                           final FileManager fileManager, final PrefsManager prefsManager,
+                           final ProviderManager providerManager)
     {
+        mContext = context;
         mBus = bus;
         mBus.register(this);
         mDataManager = dataManager;
@@ -129,7 +135,12 @@ public class EventLogManager
             //Create new event log bundle and add it to the List
             sCurrentEventLogBundle = new EventLogBundle(
                     getProviderId(),
-                    new ArrayList<Event>()
+                    new ArrayList<Event>(),
+                    Build.VERSION.RELEASE,
+                    BuildConfig.VERSION_NAME,
+                    SystemUtils.getDeviceId(mContext),
+                    SystemUtils.getDeviceModel(),
+                    mPrefsManager.getInstallationId()
             );
             synchronized (BundlesWrapper.class)
             {
@@ -433,14 +444,20 @@ public class EventLogManager
     private void initMixPanel()
     {
         //Set up mix panel
-        String mixpanelApiKey = PropertiesReader.getConfigProperties(BaseApplication.getContext()).getProperty("mixpanel_api_key");
-        mMixpanel = MixpanelAPI.getInstance(BaseApplication.getContext(), mixpanelApiKey);
+        String mixpanelApiKey = PropertiesReader.getConfigProperties(mContext).getProperty("mixpanel_api_key");
+        mMixpanel = MixpanelAPI.getInstance(mContext, mixpanelApiKey);
 
         //Set up super properties for mix panel
         JSONObject superProperties = null;
         try
         {
-            superProperties = new JSONObject(GSON.toJson(new EventSuperPropertiesBase()));
+            superProperties = new JSONObject(GSON.toJson(new EventSuperPropertiesBase(
+                    Build.VERSION.RELEASE,
+                    BuildConfig.VERSION_NAME,
+                    SystemUtils.getDeviceId(mContext),
+                    SystemUtils.getDeviceModel(),
+                    mPrefsManager.getInstallationId()
+            )));
         }
         catch (JSONException e)
         {
@@ -484,8 +501,7 @@ public class EventLogManager
     private boolean hasNetworkConnection()
     {
         ConnectivityManager cm =
-                (ConnectivityManager) BaseApplication.getContext()
-                        .getSystemService(Context.CONNECTIVITY_SERVICE);
+                (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();

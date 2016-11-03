@@ -13,6 +13,7 @@ public interface PrefsKey
     String LOG_SESSION = "log_session";
     String SAME_DAY_LATE_DISPATCH_AVAILABLE_JOB_NOTIFICATION_EXPLAINED = "same_day_late_dispatch_available_job_notification_explained";
     String APP_FIRST_LAUNCH = "app_first_launch";
+    String INSTALLATION_ID = "installation_id";
 
 
     @StringDef({
@@ -23,6 +24,7 @@ public interface PrefsKey
             EVENT_LOG_BUNDLES,
             SAME_DAY_LATE_DISPATCH_AVAILABLE_JOB_NOTIFICATION_EXPLAINED,
             LOG_SESSION,
+            INSTALLATION_ID,
     })
     @interface Key {}
 }

@@ -254,7 +254,7 @@ public final class ApplicationModule
                         request.addQueryParam("client", "android");
                         request.addQueryParam("app_version", BuildConfig.VERSION_NAME);
                         request.addQueryParam("device_id", SystemUtils.getDeviceId(context));
-                        request.addQueryParam("device_model", BaseApplication.getDeviceModel());
+                        request.addQueryParam("device_model", SystemUtils.getDeviceModel());
                         request.addQueryParam("os_version", Build.VERSION.RELEASE);
                         request.addQueryParam("device_carrier", getDeviceCarrier());
                         request.addQueryParam("timezone", TimeZone.getDefault().getID());
@@ -296,7 +296,7 @@ public final class ApplicationModule
     @Singleton
     final FileManager provideFileManager()
     {
-        return new FileManager();
+        return new FileManager(context);
     }
 
     @Provides
@@ -478,7 +478,8 @@ public final class ApplicationModule
                                                   final PrefsManager prefsManager,
                                                   final ProviderManager providerManager)
     {
-        return new EventLogManager(bus, dataManager, fileManager, prefsManager, providerManager);
+        return new EventLogManager(
+                context, bus, dataManager, fileManager, prefsManager, providerManager);
     }
 
     @Provides
