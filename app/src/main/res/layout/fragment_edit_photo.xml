@@ -8,7 +8,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/choose_photo_buttons"
+        android:layout_above="@+id/take_photo_button"
         >
 
         <LinearLayout
@@ -181,32 +181,12 @@
         </LinearLayout>
     </ScrollView>
 
-    <LinearLayout
-        android:id="@+id/choose_photo_buttons"
+    <Button
+        android:id="@+id/take_photo_button"
+        style="@style/Button.Green"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        >
-
-        <Button
-            android:id="@+id/choose_photo_gallery"
-            style="@style/Button.Green"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="1dp"
-            android:layout_marginRight="1dp"
-            android:layout_weight="1"
-            android:text="@string/upload_photo_gallery_option"
-            />
-
-        <Button
-            android:id="@+id/choose_photo_camera"
-            style="@style/Button.Green"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/upload_photo_camera_option"
-            />
-    </LinearLayout>
+        android:text="@string/upload_photo_camera_option"
+        />
 </RelativeLayout>
