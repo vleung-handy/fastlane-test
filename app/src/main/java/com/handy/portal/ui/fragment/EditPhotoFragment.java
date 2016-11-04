@@ -2,13 +2,19 @@ package com.handy.portal.ui.fragment;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.hardware.Camera;
+import android.hardware.camera2.CameraCharacteristics;
+import android.hardware.camera2.CameraManager;
+import android.hardware.camera2.CameraMetadata;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -27,7 +33,6 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProfileEvent;
-import com.handy.portal.library.util.IOUtils;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
@@ -40,10 +45,8 @@ import com.yalantis.ucrop.UCrop;
 import org.greenrobot.eventbus.Subscribe;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 
 import javax.inject.Inject;
 
@@ -64,11 +67,11 @@ public class EditPhotoFragment extends ActionBarFragment
 
 
     private static final String ACTION_IMAGE_CAPTURE = "android.media.action.IMAGE_CAPTURE";
+    private static final String EXTRA_CAMERA_FACING = "android.intent.extras.CAMERA_FACING";
     private static final String IMAGE_DIRECTORY = "handy_images/";
     private static final String IMAGE_MIME_TYPE = "image/jpeg";
     private static final String IMAGE_FILE_NAME = "temp.jpg";
     private static final int REQUEST_CODE_PERMISSION_CAMERA = 4001;
-    private static final int REQUEST_CODE_PERMISSION_EXTERNAL_STORAGE = 4002;
     private static final int MAX_IMAGE_SIZE_MB = 1024 * 1024 * 3; // 3 MB
     private boolean mShowLoadingOverlayOnResume;
     private Source mSource;
@@ -123,8 +126,8 @@ public class EditPhotoFragment extends ActionBarFragment
         }
     }
 
-    @OnClick(R.id.choose_photo_camera)
-    public void onChooseCameraClicked()
+    @OnClick(R.id.take_photo_button)
+    public void onTakePhotoButtonClicked()
     {
         if (!Utils.areAllPermissionsGranted(getActivity(), new String[]{Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE}))
@@ -138,27 +141,12 @@ public class EditPhotoFragment extends ActionBarFragment
 
         final Intent cameraImageIntent = new Intent(ACTION_IMAGE_CAPTURE);
         cameraImageIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getImageFile()));
-        startActivityForResult(cameraImageIntent, RequestCode.CAMERA);
-    }
-
-    @OnClick(R.id.choose_photo_gallery)
-    public void onChooseGalleryClicked()
-    {
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED)
+        final int frontFacingCameraId = getFrontFacingCameraId();
+        if (frontFacingCameraId != -1)
         {
-            requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                    REQUEST_CODE_PERMISSION_EXTERNAL_STORAGE);
-            return;
+            cameraImageIntent.putExtra(EXTRA_CAMERA_FACING, frontFacingCameraId);
         }
-        bus.post(new LogEvent.AddLogEvent(new ProfilePhotoLog.PhotoLibraryTapped()));
-
-        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType(IMAGE_MIME_TYPE);
-        final Intent chooser = Intent.createChooser(intent,
-                getString(R.string.photo_chooser_title));
-        startActivityForResult(chooser, RequestCode.GALLERY);
+        startActivityForResult(cameraImageIntent, RequestCode.CAMERA);
     }
 
     @Override
@@ -166,23 +154,52 @@ public class EditPhotoFragment extends ActionBarFragment
                                            @NonNull final String[] permissions,
                                            @NonNull final int[] grantResults)
     {
-        switch (requestCode)
+        if (requestCode == REQUEST_CODE_PERMISSION_CAMERA
+                && grantResults.length > 0
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED)
         {
-            case REQUEST_CODE_PERMISSION_CAMERA:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
-                    onChooseCameraClicked();
-                }
-                break;
-            case REQUEST_CODE_PERMISSION_EXTERNAL_STORAGE:
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                {
-                    onChooseGalleryClicked();
-                }
-                break;
+            onTakePhotoButtonClicked();
         }
+    }
+
+    private int getFrontFacingCameraId()
+    {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
+        {
+            final CameraManager cameraManager = (CameraManager) getActivity()
+                    .getSystemService(Context.CAMERA_SERVICE);
+            try
+            {
+                for (final String cameraId : cameraManager.getCameraIdList())
+                {
+                    final CameraCharacteristics cameraCharacteristics =
+                            cameraManager.getCameraCharacteristics(cameraId);
+                    final Integer lensFacing =
+                            cameraCharacteristics.get(CameraCharacteristics.LENS_FACING);
+                    if (lensFacing != null && lensFacing == CameraMetadata.LENS_FACING_FRONT)
+                    {
+                        return Integer.parseInt(cameraId);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Crashlytics.logException(e);
+            }
+        }
+        else
+        {
+            for (int cameraId = 0; cameraId < Camera.getNumberOfCameras(); cameraId++)
+            {
+                Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
+                Camera.getCameraInfo(cameraId, cameraInfo);
+                if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT)
+                {
+                    return cameraId;
+                }
+            }
+        }
+        return -1;
     }
 
     @Override
@@ -201,10 +218,6 @@ public class EditPhotoFragment extends ActionBarFragment
             else
             {
                 bus.post(new LogEvent.AddLogEvent(new ProfilePhotoLog.ImageChosen()));
-                if (requestCode == RequestCode.GALLERY)
-                {
-                    copyToExternalStorage(data.getData());
-                }
                 mShowLoadingOverlayOnResume = true;
                 cropImage();
             }
@@ -231,23 +244,6 @@ public class EditPhotoFragment extends ActionBarFragment
                 .withOptions(options)
                 .withAspectRatio(1, 1)
                 .start(getActivity(), this);
-    }
-
-    private void copyToExternalStorage(final Uri data)
-    {
-        InputStream input = null;
-        try
-        {
-            input = getActivity().getContentResolver().openInputStream(data);
-        }
-        catch (FileNotFoundException e)
-        {
-            Crashlytics.logException(e);
-        }
-        if (input != null)
-        {
-            IOUtils.copyFile(input, getImageFile());
-        }
     }
 
     private File getImageFile()
