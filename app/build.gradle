@@ -70,6 +70,13 @@ android {
     }
 
     signingConfigs {
+        // This dubug is need for google map to work in debug build
+        debug {
+            keyAlias 'HandyProdKey'
+            keyPassword 'S0H@ndy!'
+            storeFile file('keys/handy-prod-key.keystore')
+            storePassword 'S0H@ndy!'
+        }
         prod {
             keyAlias 'HandyProdKey'
             keyPassword 'S0H@ndy!'
