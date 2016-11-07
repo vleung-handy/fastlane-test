@@ -14,14 +14,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class ClientMessagesFragment extends InjectedFragment
+public class ClientConversationsFragment extends InjectedFragment
 {
     @BindView(R.id.client_messages_empty_swipe_refresh_layout)
     SafeSwipeRefreshLayout mEmptyMessagesSwipeRefreshLayout;
 
-    public static ClientMessagesFragment newInstance()
+    public static ClientConversationsFragment newInstance()
     {
-        return new ClientMessagesFragment();
+        return new ClientConversationsFragment();
     }
 
     @Override

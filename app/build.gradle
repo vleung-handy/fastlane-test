@@ -21,6 +21,8 @@ repositories {
     maven { url "http://dl.bintray.com/urbanairship/android" }
     maven { url "https://jitpack.io" }
     maven { url 'http://mobile-sdk.jumio.com' }
+    maven { url "https://raw.githubusercontent.com/layerhq/releases-android/master/releases/" }
+    maven { url "https://raw.githubusercontent.com/layerhq/Atlas-Android/master/releases/" }
     flatDir {
         dirs 'libs'
     }
@@ -223,6 +225,10 @@ dependencies {
 
     //Appsee - user-tracking sdk that allows us to record the screen
     compile 'com.appsee:appsee-android:2.3'
+
+    //Layer
+    compile 'com.layer.atlas:layer-atlas:0.3.2'
+    compile 'com.layer.sdk:layer-sdk:0.23.1'
 
     //Testing
     testCompile 'org.robolectric:robolectric:3.1.1'
