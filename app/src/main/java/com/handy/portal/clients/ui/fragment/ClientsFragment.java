@@ -91,7 +91,7 @@ public class ClientsFragment extends ActionBarFragment
             if (shouldShowMessagesTab)
             {
                 mTitles.add(context.getResources().getString(R.string.messages));
-                mFragments.add(ClientMessagesFragment.newInstance());
+                mFragments.add(ClientConversationsFragment.newInstance());
             }
         }
 

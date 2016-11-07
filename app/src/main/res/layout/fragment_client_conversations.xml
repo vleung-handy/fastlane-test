@@ -8,7 +8,7 @@
     >
 
     <include
-        android:id="@+id/client_messages_empty_swipe_refresh_layout"
+        android:id="@+id/client_conversations_empty_swipe_refresh_layout"
         layout="@layout/layout_client_messages_empty"
         />
 
