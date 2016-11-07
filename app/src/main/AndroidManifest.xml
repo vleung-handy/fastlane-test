@@ -58,6 +58,13 @@
 
     <uses-permission android:name="${applicationId}.permission.C2D_MESSAGE"/>
 
+    <permission
+        android:name="${PACKAGE_NAME}.permission.LAYER_PUSH"
+        android:protectionLevel="signature"
+        />
+
+    <uses-permission android:name="${PACKAGE_NAME}.permission.LAYER_PUSH"/>
+
     <!-- <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/> -->
     <application
         android:name=".core.BaseApplication"
@@ -344,6 +351,45 @@
             android:name=".onboarding.ui.activity.FirstDayActivity"
             android:screenOrientation="portrait"
             />
+
+        <!-- Services: Layer SDK FCM handling -->
+        <service
+            android:name="com.layer.sdk.services.LayerFcmService"
+            android:exported="false"
+            >
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+        <service
+            android:name="com.layer.sdk.services.LayerFcmInstanceIdService"
+            android:exported="false"
+            >
+            <intent-filter>
+                <action android:name="com.google.firebase.INSTANCE_ID_EVENT"/>
+            </intent-filter>
+        </service>
+
+        <!-- Receiver: Our app notification handling -->
+        <!--<receiver-->
+            <!--android:name=""-->
+            <!--android:permission="${PACKAGE_NAME}.permission.LAYER_PUSH"-->
+            <!--&gt;-->
+
+            <!--&lt;!&ndash; Layer SDK broadcasts this, which we use to generate notifications &ndash;&gt;-->
+            <!--<intent-filter>-->
+                <!--<action android:name="com.layer.sdk.PUSH"/>-->
+
+                <!--<category android:name="${PACKAGE_NAME}"/>-->
+            <!--</intent-filter>-->
+
+            <!--&lt;!&ndash; Our app sets this as a PendingIntent to handle user notification swipe-outs &ndash;&gt;-->
+            <!--<intent-filter>-->
+                <!--<action android:name="${PACKAGE_NAME}.CANCEL_PUSH"/>-->
+
+                <!--<category android:name="${PACKAGE_NAME}"/>-->
+            <!--</intent-filter>-->
+        <!--</receiver>-->
     </application>
 
 </manifest>
