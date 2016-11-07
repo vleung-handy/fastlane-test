@@ -2,6 +2,7 @@ package com.handy.portal.onboarding;
 
 import com.handy.portal.onboarding.ui.activity.OnboardingFlowActivity;
 import com.handy.portal.onboarding.ui.activity.OnboardingSubflowActivity;
+import com.handy.portal.onboarding.ui.fragment.BackgroundCheckFeePaymentFragment;
 import com.handy.portal.onboarding.ui.fragment.DeclineSuppliesDialogFragment;
 import com.handy.portal.onboarding.ui.fragment.NewPurchaseSuppliesFragment;
 import com.handy.portal.onboarding.ui.fragment.OnboardingStatusFragment;
@@ -27,6 +28,7 @@ import dagger.Module;
                 ScheduleConfirmationFragment.class,
                 OnboardingStatusFragment.class,
                 NewPurchaseSuppliesFragment.class,
+                BackgroundCheckFeePaymentFragment.class
         })
 public class OnboardingModule
 {

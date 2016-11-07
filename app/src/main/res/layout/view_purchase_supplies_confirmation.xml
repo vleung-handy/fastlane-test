@@ -113,8 +113,12 @@
                 android:textColor="@color/handy_blue"
                 />
         </RelativeLayout>
-
-        <include layout="@layout/view_edit_payment"/>
+        <com.handy.portal.library.ui.view.CreditCardInputView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/fragment_purchase_supplies_confirmation_credit_card_input"
+            />
+        <!--<include layout="@layout/view_edit_payment"/>-->
     </LinearLayout>
 
 

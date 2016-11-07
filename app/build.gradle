@@ -67,6 +67,7 @@ android {
         versionCode computeVersionCode(versionName)
         proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
     }
 
     signingConfigs {

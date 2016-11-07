@@ -15,7 +15,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.RegionDefinitionEvent;
 import com.handy.portal.event.StripeEvent;
-import com.handy.portal.library.ui.view.DateFormFieldTableRow;
+import com.handy.portal.library.ui.view.CreditCardInputView;
 import com.handy.portal.library.ui.view.FormFieldTableRow;
 import com.handy.portal.library.ui.view.SimpleContentLayout;
 import com.handy.portal.library.util.TextUtils;
@@ -57,12 +57,8 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
     FormFieldTableRow mZipField;
     @BindView(R.id.cancel_edit_address)
     View mCancelEditAddress;
-    @BindView(R.id.credit_card_number_field)
-    FormFieldTableRow mCreditCardNumberField;
-    @BindView(R.id.expiration_date_field)
-    DateFormFieldTableRow mExpirationDateField;
-    @BindView(R.id.security_code_field)
-    FormFieldTableRow mSecurityCodeField;
+    @BindView(R.id.fragment_purchase_supplies_confirmation_credit_card_input)
+    CreditCardInputView mCreditCardInputView;
     @BindView(R.id.order_summary)
     SimpleContentLayout mOrderSummary;
     @BindView(R.id.payment_summary)
@@ -271,7 +267,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
     {
         mEditPaymentForm.setVisibility(View.VISIBLE);
         mPaymentSummary.setVisibility(View.GONE);
-        mCreditCardNumberField.requestFocus();
+        mCreditCardInputView.getCreditCardNumberField().requestFocus();
     }
 
 
@@ -330,14 +326,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
 
         mPaymentFieldDefinitions = event.formDefinitionWrapper
                 .getFieldDefinitionsForForm(FormDefinitionKey.UPDATE_CREDIT_CARD_INFO);
-        UIUtils.setFieldsFromDefinition(mCreditCardNumberField,
-                mPaymentFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.CREDIT_CARD_NUMBER));
-        UIUtils.setFieldsFromDefinition(mExpirationDateField,
-                mPaymentFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_DATE),
-                mPaymentFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_MONTH),
-                mPaymentFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_YEAR));
-        UIUtils.setFieldsFromDefinition(mSecurityCodeField,
-                mPaymentFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.SECURITY_CODE_NUMBER));
+        mCreditCardInputView.updateWithFormFieldDefinitions(mPaymentFieldDefinitions);
     }
 
     @Override
@@ -414,12 +403,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
         {
             mPaymentReady = false;
 
-            mCard = new Card(
-                    mCreditCardNumberField.getValue().getText().toString(),
-                    Integer.parseInt(mExpirationDateField.getMonthValue().getText().toString()),
-                    Integer.parseInt(mExpirationDateField.getYearValue().getText().toString()),
-                    mSecurityCodeField.getValue().getText().toString()
-            );
+            mCreditCardInputView.getCardFromFields();
             showLoadingOverlay();
             mPaymentLoading = true;
             bus.post(new StripeEvent.RequestStripeChargeToken(mCard, Country.US));
@@ -612,14 +596,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
 
     private boolean validatePayment()
     {
-        boolean allFieldsValid = UIUtils.validateField(mCreditCardNumberField,
-                mPaymentFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.CREDIT_CARD_NUMBER));
-        allFieldsValid &= UIUtils.validateField(mExpirationDateField,
-                mPaymentFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_MONTH),
-                mPaymentFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_YEAR));
-        allFieldsValid &= UIUtils.validateField(mSecurityCodeField,
-                mPaymentFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.SECURITY_CODE_NUMBER));
-        return allFieldsValid;
+        return mCreditCardInputView.validateFields();
     }
 
 }

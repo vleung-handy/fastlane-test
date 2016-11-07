@@ -10,22 +10,13 @@ import android.support.v7.widget.Toolbar;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
-import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowData;
 import com.handy.portal.onboarding.model.subflow.SubflowType;
-import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
-import com.handy.portal.onboarding.ui.fragment.IDVerificationFragment;
-import com.handy.portal.onboarding.ui.fragment.NewPurchaseSuppliesFragment;
-import com.handy.portal.onboarding.ui.fragment.OnboardingStatusFragment;
+import com.handy.portal.onboarding.ui.fragment.BackgroundCheckFeePaymentFragment;
 import com.handy.portal.onboarding.ui.fragment.OnboardingSubflowFragment;
-import com.handy.portal.onboarding.ui.fragment.PurchaseSuppliesFragment;
-import com.handy.portal.onboarding.ui.fragment.ScheduleConfirmationFragment;
-import com.handy.portal.onboarding.ui.fragment.SchedulePreferencesFragment;
 import com.handy.portal.ui.activity.BaseActivity;
-
-import java.util.ArrayList;
 
 public class OnboardingSubflowActivity extends BaseActivity
 {
@@ -113,37 +104,40 @@ public class OnboardingSubflowActivity extends BaseActivity
     private void startSubflow()
     {
         OnboardingSubflowFragment fragment = null;
-        switch (mSubflowType)
-        {
-            case STATUS:
-                fragment = OnboardingStatusFragment.newInstance();
-                Bundle arguments = getFragmentArguments(fragment);
-                arguments.putBoolean(BundleKeys.DISALLOW_EXIT, true);
-                fragment.setArguments(arguments);
-                break;
-            case ID_VERIFICATION:
-                fragment = IDVerificationFragment.newInstance();
-                break;
-            case CLAIM:
-                fragment = SchedulePreferencesFragment.newInstance();
-                break;
-            case SUPPLIES:
-                fragment = PurchaseSuppliesFragment.newInstance();
-                break;
-            case NEW_SUPPLIES:
-                fragment = NewPurchaseSuppliesFragment.newInstance();
-                break;
-            case CONFIRMATION:
-                final ArrayList<Booking> pendingBookings =
-                        (ArrayList<Booking>) getIntent().getSerializableExtra(BundleKeys.BOOKINGS);
-                final SuppliesOrderInfo suppliesOrderInfo = (SuppliesOrderInfo) getIntent()
-                        .getSerializableExtra(BundleKeys.SUPPLIES_ORDER_INFO);
-                fragment = ScheduleConfirmationFragment.newInstance(pendingBookings,
-                        suppliesOrderInfo);
-                break;
-            default:
-                break;
-        }
+//        switch (mSubflowType)
+//        {
+//            case STATUS:
+//                fragment = OnboardingStatusFragment.newInstance();
+//                Bundle arguments = getFragmentArguments(fragment);
+//                arguments.putBoolean(BundleKeys.DISALLOW_EXIT, true);
+//                fragment.setArguments(arguments);
+//                break;
+//            case ID_VERIFICATION:
+//                fragment = IDVerificationFragment.newInstance();
+//                break;
+//            case BACKGROUND_CHECK:
+                fragment = BackgroundCheckFeePaymentFragment.newInstance();
+//                break;
+//            case CLAIM:
+//                fragment = SchedulePreferencesFragment.newInstance();
+//                break;
+//            case SUPPLIES:
+//                fragment = PurchaseSuppliesFragment.newInstance();
+//                break;
+//            case NEW_SUPPLIES:
+//                fragment = NewPurchaseSuppliesFragment.newInstance();
+//                break;
+//            case CONFIRMATION:
+//                final ArrayList<Booking> pendingBookings =
+//                        (ArrayList<Booking>) getIntent().getSerializableExtra(BundleKeys.BOOKINGS);
+//                final SuppliesOrderInfo suppliesOrderInfo = (SuppliesOrderInfo) getIntent()
+//                        .getSerializableExtra(BundleKeys.SUPPLIES_ORDER_INFO);
+//                fragment = ScheduleConfirmationFragment.newInstance(pendingBookings,
+//                        suppliesOrderInfo);
+//                break;
+//            default:
+//                break;
+//        }
         if (fragment != null)
         {
             next(fragment, false);

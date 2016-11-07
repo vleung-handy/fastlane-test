@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/default_margin"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:id="@+id/edit_payment_form"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <!--&lt;!&ndash;Edit Payment header&ndash;&gt;-->
+        <!--<RelativeLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:background="@drawable/border_gray_no_side"-->
+            <!--android:paddingRight="@dimen/default_padding"-->
+            <!--android:paddingLeft="@dimen/default_padding"-->
+            <!--android:paddingBottom="@dimen/default_padding"-->
+            <!--&gt;-->
+            <!--&lt;!&ndash;<TextView&ndash;&gt;-->
+                <!--&lt;!&ndash;style="@style/TextView.Bold"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_width="wrap_content"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:layout_height="wrap_content"&ndash;&gt;-->
+                <!--&lt;!&ndash;android:text="@string/payment_method"&ndash;&gt;-->
+                <!--&lt;!&ndash;/>&ndash;&gt;-->
+            <!--<TextView-->
+                <!--android:id="@+id/cancel_edit_payment"-->
+                <!--style="@style/TextView.Medium"-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:layout_alignParentEnd="true"-->
+                <!--android:layout_alignParentRight="true"-->
+                <!--android:text="@string/cancel"-->
+                <!--android:textColor="@color/handy_blue"-->
+                <!--/>-->
+        <!--</RelativeLayout>-->
+
+        <com.handy.portal.library.ui.view.CreditCardInputView
+            android:id="@+id/fragment_background_check_credit_card_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <!--<include layout="@layout/view_edit_payment"/>-->
+    </LinearLayout>
+
+
+    <com.handy.portal.library.ui.view.SimpleContentLayout
+        android:id="@+id/order_summary"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin_half"
+        android:background="@drawable/border_gray_no_side"
+        />
+</LinearLayout>

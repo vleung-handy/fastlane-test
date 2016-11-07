@@ -4,6 +4,7 @@ import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.onboarding.model.BackgroundCheckFeeInfo;
 import com.handy.portal.onboarding.model.claim.StartDateRange;
 import com.handy.portal.onboarding.model.claim.Zipcluster;
 import com.handy.portal.onboarding.model.status.LearningLinkDetails;
@@ -22,6 +23,14 @@ public class SubflowData implements Serializable
     public SuppliesInfo getSuppliesInfo()
     {
         return mSuppliesInfo;
+    }
+
+    @SerializedName("background_check_fee_info")
+    private BackgroundCheckFeeInfo mBackgroundCheckFeeInfo;
+
+    public BackgroundCheckFeeInfo getBackgroundCheckFeeInfo()
+    {
+        return new BackgroundCheckFeeInfo();
     }
 
     // Status Subflow Data
