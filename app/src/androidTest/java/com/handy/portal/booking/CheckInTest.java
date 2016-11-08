@@ -74,7 +74,7 @@ public class CheckInTest
                 ViewUtil.LONG_MAX_WAIT_TIME_MS);
 
         // make sure map is visible
-        ViewUtil.waitForViewVisible(R.id.booking_map_view, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
+        ViewUtil.waitForViewVisible(R.id.booking_map_layout, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
 
         // click on my way
         onView(withId(R.id.booking_action_button)).perform(click());

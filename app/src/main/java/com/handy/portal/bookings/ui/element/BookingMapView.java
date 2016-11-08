@@ -29,8 +29,8 @@ import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.location.LocationUtils;
+import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.model.ZipClusterPolygons;
-import com.handy.portal.ui.activity.BaseActivity;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -51,6 +51,7 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
     private Booking.BookingStatus mStatus;
     private ZipClusterPolygons mPolygons;
     private TouchableWrapper mTouchableWrapper;
+    private GoogleMap mMap;
 
     public BookingMapView(final Context context)
     {
@@ -76,6 +77,7 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
     @SuppressWarnings({"ResourceType", "MissingPermission"})
     public void onMapReady(GoogleMap map)
     {
+        mMap = map;
         if (mBooking == null)
         {
             Crashlytics.log("mBooking is null in onMapReady()");
@@ -109,7 +111,7 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
 
         if (shouldIncludeCurrentLocation())
         {
-            final Location lastLocation = ((BaseActivity) getContext()).getLastLocation();
+            final Location lastLocation = LocationManager.getLastLocation();
             if (lastLocation != null)
             {
                 points.add(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()));
@@ -136,6 +138,16 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
             mTouchableWrapper.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
             addView(mTouchableWrapper, UIUtils.MATCH_PARENT_PARAMS);
         }
+    }
+
+    public void clear()
+    {
+        if (mMap != null)
+        {
+            mMap.clear();
+        }
+        removeView(mTouchableWrapper);
+        mTouchableWrapper = null;
     }
 
     private boolean shouldShowMarker()
@@ -277,7 +289,7 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
 
 
     // This is used to disable the scrolling of the scroll view so we can scroll our map
-    public class TouchableWrapper extends FrameLayout
+    public static class TouchableWrapper extends FrameLayout
     {
         private ScrollView mScrollView;
 

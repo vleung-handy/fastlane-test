@@ -11,7 +11,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.Spanned;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,7 +24,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.common.base.Strings;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
@@ -77,6 +75,8 @@ import butterknife.OnClick;
 /**
  * fragment for handling bookings that are
  * not in progress i.e. ready for claim, check-in, on my way, etc
+ * <p>
+ * This fragment should only be used one at a time because the map view is static and shared.
  */
 public class BookingFragment extends TimerActionBarFragment
 {
@@ -89,8 +89,8 @@ public class BookingFragment extends TimerActionBarFragment
     ScrollView mScrollView;
     @BindView(R.id.booking_no_show_banner_text)
     View mNoShowBanner;
-    @BindView(R.id.booking_map_view)
-    BookingMapView mBookingMapView;
+    @BindView(R.id.booking_map_layout)
+    ViewGroup mBookingMapLayout;
     @BindView(R.id.booking_customer_contact_layout)
     ViewGroup mBookingCustomerContactLayout;
     @BindView(R.id.booking_customer_name_text)
@@ -134,6 +134,9 @@ public class BookingFragment extends TimerActionBarFragment
     @BindView(R.id.booking_action_button)
     Button mActionButton;
 
+
+    private static BookingMapView sBookingMapView;
+
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
 
     private Booking mBooking;
@@ -173,7 +176,11 @@ public class BookingFragment extends TimerActionBarFragment
 
         mHideActionButtons = getArguments().getBoolean(BundleKeys.BOOKING_SHOULD_HIDE_ACTION_BUTTONS);
 
-        MapsInitializer.initialize(getContext());
+        if (sBookingMapView == null)
+        {
+            sBookingMapView = new BookingMapView(getContext().getApplicationContext());
+            sBookingMapView.onCreate(null);
+        }
     }
 
     @Override
@@ -188,8 +195,6 @@ public class BookingFragment extends TimerActionBarFragment
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
-        mBookingMapView.onCreate(savedInstanceState);
-        mBookingMapView.disableParentScrolling(mScrollView);
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
 
@@ -233,7 +238,16 @@ public class BookingFragment extends TimerActionBarFragment
         super.onResume();
         bus.register(this);
 
-        mBookingMapView.onResume();
+        if (sBookingMapView.getParent() != null)
+        {
+            ((ViewGroup) sBookingMapView.getParent()).removeView(sBookingMapView);
+            sBookingMapView.clear();
+        }
+        initMapLayout();
+        mBookingMapLayout.addView(sBookingMapView);
+        sBookingMapView.onStart();
+        sBookingMapView.onResume();
+        sBookingMapView.disableParentScrolling(mScrollView);
 
         setDisplay();
     }
@@ -241,57 +255,18 @@ public class BookingFragment extends TimerActionBarFragment
     @Override
     public void onPause()
     {
-        mBookingMapView.onPause();
         bus.unregister(this);
+        sBookingMapView.onPause();
+        sBookingMapView.onStop();
+        sBookingMapView.clear();
+        mBookingMapLayout.removeAllViews();
         super.onPause();
-    }
-
-    @Override
-    public void onDestroy()
-    {
-        try
-        {
-            mBookingMapView.onDestroy();
-        }
-        catch (NullPointerException e)
-        {
-            Log.e(getClass().getSimpleName(),
-                    "Error while attempting MapView.onDestroy(), ignoring exception", e);
-        }
-        super.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory()
-    {
-        super.onLowMemory();
-        mBookingMapView.onLowMemory();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
-        super.onSaveInstanceState(outState);
-        try
-        {
-            /*
-                similar to the exception thrown by mBookingMapView.onDestroy()
-                not caused by mBookingMapView = null
-             */
-            mBookingMapView.onSaveInstanceState(outState);
-        }
-        catch (Exception e)
-        {
-            Crashlytics.log("Error while attempting MapView.onSaveInstanceState(). Ignoring exception: " + e.getMessage());
-        }
     }
 
     public void setDisplay()
     {
         setActionButtonVisibility();
         mSupportButton.setOnClickListener(mOnSupportClickListener);
-
-        initMapLayout();
 
         mCallCustomerView.setEnabled(false);
         mCallCustomerView.setAlpha(0.5f);
@@ -518,7 +493,7 @@ public class BookingFragment extends TimerActionBarFragment
     public void onReceiveZipClusterPolygonsSuccess(final BookingEvent.ReceiveZipClusterPolygonsSuccess event)
     {
         Booking.BookingStatus bookingStatus = mBooking.inferBookingStatus(getLoggedInUserId());
-        mBookingMapView.setDisplay(mBooking, bookingStatus, event.zipClusterPolygons);
+        sBookingMapView.setDisplay(mBooking, bookingStatus, event.zipClusterPolygons);
     }
 
     @OnClick(R.id.booking_get_directions_layout)
@@ -604,12 +579,12 @@ public class BookingFragment extends TimerActionBarFragment
             }
             else
             {
-                mBookingMapView.setDisplay(mBooking, bookingStatus, null);
+                sBookingMapView.setDisplay(mBooking, bookingStatus, null);
             }
         }
         else
         {
-            UIUtils.replaceView(mBookingMapView, new MapPlaceholderView(getContext()));
+            UIUtils.replaceView(mBookingMapLayout, new MapPlaceholderView(getContext()));
         }
     }
 
@@ -710,9 +685,9 @@ public class BookingFragment extends TimerActionBarFragment
             }
             case CHECK_IN:
             {
-                if (mBookingMapView.getVisibility() == View.VISIBLE)
+                if (mBookingMapLayout.getVisibility() == View.VISIBLE)
                 {
-                    mBookingMapView.setLayoutParams(new LinearLayout.LayoutParams(
+                    mBookingMapLayout.setLayoutParams(new LinearLayout.LayoutParams(
                             ViewGroup.LayoutParams.MATCH_PARENT,
                             (int) getResources().getDimension(
                                     R.dimen.check_in_booking_details_map_height)));
