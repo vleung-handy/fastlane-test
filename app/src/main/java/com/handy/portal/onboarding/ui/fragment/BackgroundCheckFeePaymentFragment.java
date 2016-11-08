@@ -1,6 +1,7 @@
 package com.handy.portal.onboarding.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
@@ -9,21 +10,26 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.Country;
 import com.handy.portal.constant.FormDefinitionKey;
-import com.handy.portal.event.RegionDefinitionEvent;
-import com.handy.portal.event.StripeEvent;
+import com.handy.portal.data.DataManager;
 import com.handy.portal.library.ui.view.CreditCardInputView;
 import com.handy.portal.library.ui.view.SimpleContentLayout;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
+import com.handy.portal.manager.RegionDefinitionsManager;
+import com.handy.portal.manager.StripeManager;
+import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.definitions.FieldDefinition;
+import com.handy.portal.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.onboarding.model.BackgroundCheckFeeInfo;
-import com.handy.portal.payments.PaymentEvent;
+import com.handy.portal.payments.PaymentsManager;
+import com.stripe.android.TokenCallback;
 import com.stripe.android.model.Card;
-
-import org.greenrobot.eventbus.Subscribe;
+import com.stripe.android.model.Token;
 
 import java.util.Map;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 
@@ -38,6 +44,14 @@ public class BackgroundCheckFeePaymentFragment extends OnboardingSubflowUIFragme
     SimpleContentLayout mOrderSummary;
     @BindView(R.id.edit_payment_form)
     View mEditPaymentForm;
+
+    @Inject
+    RegionDefinitionsManager mRegionDefinitionsManager;
+
+    @Inject
+    StripeManager mStripeManager;
+    @Inject
+    PaymentsManager mPaymentsManager;
 
     private BackgroundCheckFeeInfo mBackgroundCheckFeeInfo;
     public static BackgroundCheckFeePaymentFragment newInstance()
@@ -65,29 +79,60 @@ public class BackgroundCheckFeePaymentFragment extends OnboardingSubflowUIFragme
                 .setImage(ContextCompat.getDrawable(getContext(), R.drawable.ic_background_check));//todo replace image
 
         mCreditCardInputView.getCreditCardNumberField().requestFocus();
+        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.BackgroundCheckFeePageLog.Shown()));
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
-        bus.register(this);
+        /*
+        putting this in onResume() in case this request fails due to no network connection
+         */
         if (mCreditCardInputView.getPaymentFieldDefinitions() == null)
         {
-            //todo show ui blockers n stuff
-            //todo need the actual region
-            showLoadingOverlay();
-            bus.post(new RegionDefinitionEvent.RequestFormDefinitions(Country.US, getActivity()));
+            requestPaymentFieldDefinitions();
         }
     }
 
+    @Nullable
+    @Override
+    protected String getHelpCenterArticleUrl()
+    {
+        if(mBackgroundCheckFeeInfo != null)
+        {
+            return mBackgroundCheckFeeInfo.getHelpUrl();
+        }
+        return null;
+    }
 
-    @Subscribe
-    public void onReceiveFormDefinitions(
-            final RegionDefinitionEvent.ReceiveFormDefinitionsSuccess event)
+    private void requestPaymentFieldDefinitions()
+    {
+        //todo need the actual region
+        showLoadingOverlay();
+
+        mRegionDefinitionsManager.requestFormDefinitions(getContext(), Country.US,
+                new DataManager.Callback<FormDefinitionWrapper>() {
+                    @Override
+                    public void onSuccess(final FormDefinitionWrapper response)
+                    {
+                        onReceiveFormDefinitions(response);
+                    }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error)
+                    {
+                        Crashlytics.logException(new Exception(
+                                "unable to get form definition for credit card: " + error.getMessage()));
+                        showToast(R.string.error_missing_server_data);
+                    }
+                });
+    }
+
+    private void onReceiveFormDefinitions(@NonNull FormDefinitionWrapper formDefinitionWrapper)
     {
         hideLoadingOverlay();
-        Map<String, FieldDefinition> paymentFieldDefinitions = event.formDefinitionWrapper
+        Map<String, FieldDefinition> paymentFieldDefinitions = formDefinitionWrapper
                 .getFieldDefinitionsForForm(FormDefinitionKey.UPDATE_CREDIT_CARD_INFO);
         if(paymentFieldDefinitions == null)
         {
@@ -140,6 +185,8 @@ public class BackgroundCheckFeePaymentFragment extends OnboardingSubflowUIFragme
     @Override
     protected void onPrimaryButtonClicked()
     {
+        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.BackgroundCheckFeePageLog.ContinueButtonClicked()));
+
         UIUtils.dismissKeyboard(getActivity());
 
         if (!validateForms())
@@ -149,40 +196,53 @@ public class BackgroundCheckFeePaymentFragment extends OnboardingSubflowUIFragme
             return;
         }
 
-        Card card = mCreditCardInputView.getCardFromFields();
         showLoadingOverlay();
-        bus.post(new StripeEvent.RequestStripeChargeToken(card, Country.US));
+
+        Card card = mCreditCardInputView.getCardFromFields();
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                 NativeOnboardingLog.ServerTypes.GET_STRIPE_TOKEN.submitted())));
+        requestStripeChargeToken(Country.US, card);
     }
 
-    /**
-     * This signifies step 1 of 2 of saving the credit card is successful.
-     *
-     * @param event
-     */
-    @Subscribe
-    public void onReceiveStripeChargeTokenSuccess(
-            final StripeEvent.ReceiveStripeChargeTokenSuccess event)
+    private void requestStripeChargeToken(@NonNull String region, @NonNull Card card)
     {
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.ServerTypes.GET_STRIPE_TOKEN.success())));
-        bus.post(new PaymentEvent.RequestUpdateCreditCard(event.getToken()));
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.ServerTypes.UPDATE_CREDIT_CARD.submitted())));
+        mStripeManager.requestStripeChargeToken(region, card, new TokenCallback() {
+            @Override
+            public void onError(final Exception error)
+            {
+                //todo logging
+                showToast(R.string.error);
+            }
+
+            @Override
+            public void onSuccess(final Token token)
+            {
+                bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
+                        NativeOnboardingLog.ServerTypes.GET_STRIPE_TOKEN.success())));
+                requestUpdateCreditCard(token);
+                bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
+                        NativeOnboardingLog.ServerTypes.UPDATE_CREDIT_CARD.submitted())));
+            }
+        });
     }
 
-    /**
-     * This signifies step 2 of 2 of saving the credit card is successful.
-     *
-     * @param event
-     */
-    @Subscribe
-    public void onReceiveUpdateCreditCardSuccess(
-            final PaymentEvent.ReceiveUpdateCreditCardSuccess event)
+    private void requestUpdateCreditCard(@NonNull Token token)
     {
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.ServerTypes.UPDATE_CREDIT_CARD.success())));
-        //todo
+        mPaymentsManager.requestUpdateCreditCard(token, new DataManager.Callback<SuccessWrapper>() {
+            @Override
+            public void onSuccess(final SuccessWrapper response)
+            {
+                bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
+                        NativeOnboardingLog.ServerTypes.UPDATE_CREDIT_CARD.success())));
+                //todo
+            }
+
+            @Override
+            public void onError(final DataManager.DataManagerError error)
+            {
+                //todo logging
+                showToast(R.string.error);
+            }
+        });
     }
 }

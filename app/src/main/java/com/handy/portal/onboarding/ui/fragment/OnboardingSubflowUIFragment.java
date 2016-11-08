@@ -1,6 +1,7 @@
 package com.handy.portal.onboarding.ui.fragment;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
@@ -20,6 +21,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.library.util.Utils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -43,6 +45,8 @@ public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragm
     protected TextView mHeader;
     @BindView(R.id.sub_header)
     protected TextView mSubHeader;
+    @BindView(R.id.help_center_link)
+    protected TextView mHelpCenterLinkText;
     @BindView(R.id.scroll_view)
     protected ScrollView mScrollView;
     @BindView(R.id.progress_bar)
@@ -93,6 +97,20 @@ public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragm
         onSecondaryButtonClicked();
     }
 
+    @OnClick(R.id.help_center_link)
+    void onHelpCenterLinkClicked()
+    {
+        String helpCenterUrl = getHelpCenterArticleUrl();
+        if(!TextUtils.isNullOrEmpty(helpCenterUrl))
+        {
+            final Intent intent = new Intent(Intent.ACTION_VIEW,
+                    Uri.parse(helpCenterUrl));
+            Utils.safeLaunchIntent(intent, getActivity());
+            //TODO do we want to link to native help center
+        }
+
+    }
+
     abstract protected int getLayoutResId();
 
     abstract protected String getTitle();
@@ -102,6 +120,12 @@ public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragm
 
     @Nullable
     abstract protected String getSubHeaderText();
+
+    @Nullable
+    protected String getHelpCenterArticleUrl()
+    {
+        return null; //no help center link by default
+    }
 
     protected String getPrimaryButtonText()
     {
@@ -150,6 +174,15 @@ public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragm
 
         initOrHideText(mHeader, getHeaderText());
         initOrHideText(mSubHeader, getSubHeaderText());
+        if(!TextUtils.isNullOrEmpty(getHelpCenterArticleUrl()))
+        {
+            mHelpCenterLinkText.setVisibility(View.VISIBLE);
+        }
+        else
+
+        {
+            mHelpCenterLinkText.setVisibility(View.GONE);
+        }
         initOrHideImageHeader();
         initActionButtons();
         initPercentCompleteView();

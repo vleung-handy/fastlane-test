@@ -25,7 +25,7 @@ public class SubflowData implements Serializable
         return mSuppliesInfo;
     }
 
-    @SerializedName("background_check_fee_info")
+    @SerializedName("bgc_charge")
     private BackgroundCheckFeeInfo mBackgroundCheckFeeInfo;
 
     public BackgroundCheckFeeInfo getBackgroundCheckFeeInfo()

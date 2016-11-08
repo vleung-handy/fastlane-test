@@ -8,7 +8,7 @@ public enum SubflowType
     STATUS(1),
     @SerializedName("id_verification")
     ID_VERIFICATION(1),
-    @SerializedName("background_check")
+    @SerializedName("bgc_charge")
     BACKGROUND_CHECK(1),
     @SerializedName("claim")
     CLAIM(2),

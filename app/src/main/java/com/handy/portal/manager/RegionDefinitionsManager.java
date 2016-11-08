@@ -36,13 +36,10 @@ public class RegionDefinitionsManager
                 .build();
     }
 
-    @Subscribe
-    public void onRequestFormDefinitions(final RegionDefinitionEvent.RequestFormDefinitions event)
+    public void requestFormDefinitions(Context context, String region,
+                                       DataManager.Callback<FormDefinitionWrapper> callback)
     {
-        //TODO: make a network call instead?
         FormDefinitionWrapper formDefinitionWrapper = null;
-        String region = event.region.toLowerCase();
-        Context context = event.context;
         if (formDefinitionCache.getIfPresent(region) == null)
         {
             String path = "region/" + region + "/form_definitions.json"; //TODO: cleanup
@@ -65,7 +62,6 @@ public class RegionDefinitionsManager
             {
                 Crashlytics.logException(e);
             }
-
         }
         else
         {
@@ -74,15 +70,29 @@ public class RegionDefinitionsManager
 
         if (formDefinitionWrapper == null)
         {
-            //TODO: set proper error object
-            bus.post(new RegionDefinitionEvent.ReceiveFormDefinitionsError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.CLIENT)));
-
+            callback.onError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.CLIENT));
         }
         else
         {
-            bus.post(new RegionDefinitionEvent.ReceiveFormDefinitionsSuccess(formDefinitionWrapper));
-
+            callback.onSuccess(formDefinitionWrapper);
         }
+    }
+    @Subscribe
+    public void onRequestFormDefinitions(final RegionDefinitionEvent.RequestFormDefinitions event)
+    {
+        requestFormDefinitions(event.context, event.region, new DataManager.Callback<FormDefinitionWrapper>() {
+            @Override
+            public void onSuccess(final FormDefinitionWrapper response)
+            {
+                bus.post(new RegionDefinitionEvent.ReceiveFormDefinitionsSuccess(response));
+            }
+
+            @Override
+            public void onError(final DataManager.DataManagerError error)
+            {
+                bus.post(new RegionDefinitionEvent.ReceiveFormDefinitionsError(error));
+            }
+        });
 
     }
 

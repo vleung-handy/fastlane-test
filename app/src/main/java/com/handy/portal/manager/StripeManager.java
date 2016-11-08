@@ -2,6 +2,7 @@ package com.handy.portal.manager;
 
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.handy.portal.constant.Country;
 import com.handy.portal.data.DataManager;
@@ -12,6 +13,7 @@ import com.handy.portal.payments.model.DebitCardInfo;
 import com.handy.portal.payments.model.StripeTokenResponse;
 import com.stripe.android.Stripe;
 import com.stripe.android.TokenCallback;
+import com.stripe.android.model.Card;
 import com.stripe.android.model.Token;
 
 import org.greenrobot.eventbus.EventBus;
@@ -109,12 +111,18 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
         });
     }
 
+    public void requestStripeChargeToken(@NonNull String countryCode,
+                                         @NonNull Card card,
+                                         @NonNull final TokenCallback tokenCallback)
+    {
+        final String stripeApiKey = pickStripeApiKey(countryCode.toLowerCase());
+        new Stripe().createToken(card, stripeApiKey, tokenCallback);
+    }
+
     @Subscribe
     public void onRequestStripeChargeToken(final StripeEvent.RequestStripeChargeToken event)
     {
-        final String stripeApiKey = pickStripeApiKey(event.getCountry().toLowerCase());
-        new Stripe().createToken(event.getCard(), stripeApiKey, new TokenCallback()
-        {
+        requestStripeChargeToken(event.getCountry(), event.getCard(), new TokenCallback() {
             @Override
             public void onSuccess(final Token token)
             {

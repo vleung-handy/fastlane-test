@@ -20,6 +20,41 @@ public class NativeOnboardingLog extends EventLog
         super(eventType, EVENT_CONTEXT);
     }
 
+    /*
+    TODO verify the logs
+     */
+    public abstract static class BackgroundCheckFeePageLog extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE_PREFIX = "background_check_fee_page_";
+
+        BackgroundCheckFeePageLog(String eventTypeSuffix)
+        {
+            super(EVENT_TYPE_PREFIX + eventTypeSuffix);
+        }
+
+        public static class Shown extends BackgroundCheckFeePageLog
+        {
+            private static final String EVENT_TYPE_SUFFIX = "shown";
+
+            public Shown()
+            {
+                super(EVENT_TYPE_SUFFIX);
+            }
+        }
+
+        public static class ContinueButtonClicked extends BackgroundCheckFeePageLog
+        {
+            private static final String EVENT_TYPE_SUFFIX = "continue_button_clicked";
+
+            public ContinueButtonClicked()
+            {
+                super(EVENT_TYPE_SUFFIX);
+            }
+        }
+    }
+
+
+
     public static class StatusPageShown extends NativeOnboardingLog
     {
         private static final String EVENT_TYPE = "status_page_shown";

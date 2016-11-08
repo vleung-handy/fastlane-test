@@ -31,29 +31,14 @@ public class BackgroundCheckFeeInfo implements Serializable
         return mHeaderText;
     }
 
-    public boolean isCardRequired()
-    {
-        return mIsCardRequired;
-    }
-
-    public String getCardLast4Digits()
-    {
-        return mCardLast4Digits;
-    }
-
     public BackgroundCheckFeeInfo()
     {
         //tODO revert test only
-        mIsCardRequired = true;
         mFeeFormatted = "$50";
         mSubHeaderText = "In order to process your application, you’re responsible for a $50 background check fee.";
         mHeaderText = "Background Check Fee";
         mHelpUrl = "http://handy.com";
     }
-    @SerializedName("card_last4")
-    String mCardLast4Digits;
-    @SerializedName("is_card_required")
-    boolean mIsCardRequired;
     @SerializedName("fee_formatted")
     String mFeeFormatted; //$10
     @SerializedName("subheader_text")

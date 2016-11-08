@@ -1,5 +1,7 @@
 package com.handy.portal.payments;
 
+import android.support.annotation.NonNull;
+
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.handy.portal.data.DataManager;
@@ -233,11 +235,28 @@ public class PaymentsManager
         });
     }
 
+    public void requestUpdateCreditCard(@NonNull Token token,
+                                        @NonNull final DataManager.Callback<SuccessWrapper> callback)
+    {
+        mDataManager.updateCreditCard(token.getId(), new DataManager.Callback<SuccessWrapper>()
+        {
+            @Override
+            public void onSuccess(final SuccessWrapper response)
+            {
+                callback.onSuccess(response);
+            }
+
+            @Override
+            public void onError(final DataManager.DataManagerError error)
+            {
+                callback.onError(error);
+            }
+        });
+    }
     @Subscribe
     public void onRequestUpdateCreditCard(final PaymentEvent.RequestUpdateCreditCard event)
     {
-        final Token token = event.getToken();
-        mDataManager.updateCreditCard(token.getId(), new DataManager.Callback<SuccessWrapper>()
+        requestUpdateCreditCard(event.getToken(), new DataManager.Callback<SuccessWrapper>()
         {
             @Override
             public void onSuccess(final SuccessWrapper response)
