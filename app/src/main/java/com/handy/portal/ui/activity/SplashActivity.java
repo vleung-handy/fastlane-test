@@ -28,6 +28,8 @@ import com.handy.portal.onboarding.ui.activity.OnboardingFlowActivity;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.setup.SetupData;
 import com.handy.portal.util.DeeplinkUtils;
+import com.handybook.shared.HandyUser;
+import com.handybook.shared.LayerHelper;
 
 import javax.inject.Inject;
 
@@ -43,6 +45,8 @@ public class SplashActivity extends BaseActivity
     HandyRetrofitEndpoint endpoint;
     @Inject
     BuildConfigWrapper buildConfigWrapper;
+    @Inject
+    LayerHelper mLayerHelper;
 
     @BindView(R.id.progress_spinner)
     ImageView mProgressSpinner;
@@ -81,6 +85,7 @@ public class SplashActivity extends BaseActivity
         }
 
         mAuthToken = prefsManager.getSecureString(PrefsKey.AUTH_TOKEN, null);
+        mLayerHelper.initLayer(new HandyUser(mAuthToken, "")); // FIXME: Change shared lib to make this better
 
         if (mPrefsManager.getSecureBoolean(PrefsKey.APP_FIRST_LAUNCH, true))
         {

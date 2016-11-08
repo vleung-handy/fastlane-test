@@ -371,25 +371,20 @@
         </service>
 
         <!-- Receiver: Our app notification handling -->
-        <!--<receiver-->
-            <!--android:name=""-->
-            <!--android:permission="${PACKAGE_NAME}.permission.LAYER_PUSH"-->
-            <!--&gt;-->
+        <receiver
+            android:name=".receiver.LayerPushReceiver"
+            android:permission="${applicationId}.permission.LAYER_PUSH"
+            >
 
-            <!--&lt;!&ndash; Layer SDK broadcasts this, which we use to generate notifications &ndash;&gt;-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.layer.sdk.PUSH"/>-->
+            <intent-filter>
+                <!-- Layer SDK broadcasts this, which we use to generate notifications -->
+                <action android:name="com.layer.sdk.PUSH"/>
+                <!-- Our app sets this as a PendingIntent to handle user notification swipe-outs -->
+                <action android:name="${applicationId}.CANCEL_PUSH"/>
 
-                <!--<category android:name="${PACKAGE_NAME}"/>-->
-            <!--</intent-filter>-->
-
-            <!--&lt;!&ndash; Our app sets this as a PendingIntent to handle user notification swipe-outs &ndash;&gt;-->
-            <!--<intent-filter>-->
-                <!--<action android:name="${PACKAGE_NAME}.CANCEL_PUSH"/>-->
-
-                <!--<category android:name="${PACKAGE_NAME}"/>-->
-            <!--</intent-filter>-->
-        <!--</receiver>-->
+                <category android:name="${applicationId}"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

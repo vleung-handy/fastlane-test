@@ -1,15 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/handy_bg"
     android:orientation="vertical"
     >
 
+    <com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout
+        android:id="@+id/client_conversations_swipe_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/client_conversations_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:listitem="@layout/layout_conversation_list_item"
+            />
+    </com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout>
+
     <include
         android:id="@+id/client_conversations_empty_swipe_refresh_layout"
         layout="@layout/layout_client_messages_empty"
+        android:visibility="gone"
         />
 
 </LinearLayout>
