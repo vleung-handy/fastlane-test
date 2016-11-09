@@ -1,7 +1,5 @@
 package com.handy.portal.core;
 
-import android.app.Activity;
-import android.os.Bundle;
 import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
@@ -49,9 +47,6 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 public class BaseApplication extends MultiDexApplication
 {
     protected ObjectGraph mGraph;
-    private int mStarted;
-    private boolean mSavedInstance;
-    //This is used for the application context
 
     //We are injecting all of our event bus listening managers in BaseApplication to start them up for event listening
     @Inject
@@ -124,36 +119,6 @@ public class BaseApplication extends MultiDexApplication
                 .setDefaultFontPath(FontUtils.CIRCULAR_BOOK)
                 .setFontAttrId(R.attr.fontPath)
                 .build());
-
-        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks()
-        {
-            @Override
-            public void onActivityCreated(final Activity activity,
-                                          final Bundle savedInstanceState)
-            {
-                mSavedInstance = savedInstanceState != null;
-            }
-
-            @Override
-            public void onActivityStarted(final Activity activity)
-            {
-            }
-
-            @Override
-            public void onActivityResumed(final Activity activity) { }
-
-            @Override
-            public void onActivityPaused(final Activity activity) { }
-
-            @Override
-            public void onActivityStopped(final Activity activity) { }
-
-            @Override
-            public void onActivitySaveInstanceState(final Activity activity, final Bundle outState) { }
-
-            @Override
-            public void onActivityDestroyed(final Activity activity) { }
-        });
     }
 
     protected void startNewRelic()
