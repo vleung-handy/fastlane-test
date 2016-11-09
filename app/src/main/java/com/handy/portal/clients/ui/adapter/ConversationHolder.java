@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.FontUtils;
 import com.handybook.shared.LayerUtil;
 import com.handybook.shared.PushNotificationReceiver;
 import com.handybook.shared.builtin.MessagesListActivity;
@@ -33,13 +34,14 @@ public class ConversationHolder extends RecyclerView.ViewHolder
     @BindView(R.id.conversation_list_item_timestamp_container)
     ViewGroup mTimestampContainer;
 
+    private final Context mContext;
+
     @OnClick(R.id.conversation_list_item)
     public void onConversationListItemClicked(final View view)
     {
-        final Context context = view.getContext();
-        final Intent intent = new Intent(context, MessagesListActivity.class);
+        final Intent intent = new Intent(mContext, MessagesListActivity.class);
         intent.putExtra(PushNotificationReceiver.LAYER_CONVERSATION_KEY, mConversation.getId());
-        context.startActivity(intent);
+        mContext.startActivity(intent);
     }
 
     private Conversation mConversation;
@@ -48,6 +50,7 @@ public class ConversationHolder extends RecyclerView.ViewHolder
     public ConversationHolder(final View itemView, final Identity layerIdentity)
     {
         super(itemView);
+        mContext = itemView.getContext();
         ButterKnife.bind(this, itemView);
         mLayerIdentity = layerIdentity;
     }
@@ -55,49 +58,42 @@ public class ConversationHolder extends RecyclerView.ViewHolder
     public void bind(final Conversation conversation)
     {
         mConversation = conversation;
-        initTitle(conversation);
-        initContent(conversation);
-        initTimestamp(conversation);
-    }
 
-    private void initTitle(final Conversation conversation)
-    {
+        final Message lastMessage = conversation.getLastMessage();
+        final boolean isUnread = lastMessage != null
+                && lastMessage.getRecipientStatus(mLayerIdentity) != Message.RecipientStatus.READ;
+
         final HashSet<Identity> participants = new HashSet<>(conversation.getParticipants());
         participants.remove(mLayerIdentity);
         mTitle.setVisibility(View.INVISIBLE);
         for (final Identity participant : participants)
         {
             // There should only be one participant in this case
-            mTitle.setText(participant.getDisplayName());
             mTitle.setVisibility(View.VISIBLE);
+            mTitle.setText(participant.getDisplayName());
+            if (isUnread)
+            {
+                mTitle.setTypeface(FontUtils.getFont(mContext, FontUtils.CIRCULAR_BOLD));
+            }
+            break;
         }
-    }
 
-    private void initContent(final Conversation conversation)
-    {
-        final Message lastMessage = conversation.getLastMessage();
         if (lastMessage != null)
         {
             mContent.setVisibility(View.VISIBLE);
             mContent.setText(LayerUtil.getLastMessageString(mContent.getContext(), lastMessage));
+            if (isUnread)
+            {
+                mContent.setTypeface(FontUtils.getFont(mContext, FontUtils.CIRCULAR_BOLD));
+            }
+            mTimestampContainer.setVisibility(View.VISIBLE);
+            mTimestamp.setText(DateTimeUtils.formatDateToRelativeAccuracy(lastMessage.getSentAt()));
         }
         else
         {
             mContent.setVisibility(View.GONE);
-        }
-    }
-
-    private void initTimestamp(final Conversation conversation)
-    {
-        final Message lastMessage = conversation.getLastMessage();
-        if (lastMessage != null)
-        {
-            mTimestampContainer.setVisibility(View.VISIBLE);
-            mTimestamp.setText(DateTimeUtils.formatDateTo12HourClock(lastMessage.getSentAt()));
-        }
-        else
-        {
             mTimestampContainer.setVisibility(View.GONE);
         }
     }
+
 }

@@ -90,11 +90,10 @@ public final class DateTimeUtils
     }
 
     /**
-     *
      * @param inclusiveStartDate
      * @param numDays
      * @return a list of dates without time, with numDays elements, inclusively starting from the given start date
-     *
+     * <p>
      * currently used for creating request params
      */
     public static List<Date> getDateWithoutTimeList(Date inclusiveStartDate, int numDays)
@@ -484,6 +483,11 @@ public final class DateTimeUtils
         return Math.round((d2.getTime() - d1.getTime()) / (float) (DateUtils.HOUR_IN_MILLIS * HOURS_IN_DAY));
     }
 
+    public static int minutesBetween(final Date date1, final Date date2)
+    {
+        return Math.round((date1.getTime() - date2.getTime()) / (float) (DateUtils.MINUTE_IN_MILLIS));
+    }
+
     private static SimpleDateFormat getClockFormatter12hr()
     {
         CLOCK_FORMATTER_12HR.setTimeZone(TimeZone.getDefault());
@@ -573,7 +577,7 @@ public final class DateTimeUtils
         {
             return minutes + "m";
         }
-        else if ((hours = TimeUnit.MINUTES.toHours(minutes)) <  HOURS_IN_DAY) // hours
+        else if ((hours = TimeUnit.MINUTES.toHours(minutes)) < HOURS_IN_DAY) // hours
         {
             return hours + "h";
         }
@@ -584,6 +588,37 @@ public final class DateTimeUtils
         else // weeks
         {
             return (days / DAYS_IN_A_WEEK) + "w";
+        }
+    }
+
+    public static String formatDateToRelativeAccuracy(final Date date)
+    {
+        final Calendar today = Calendar.getInstance();
+        today.setTime(getBeginningOfDay(new Date()));
+
+        final Calendar dayToCompare = Calendar.getInstance();
+        dayToCompare.setTime(getBeginningOfDay(date));
+
+        final int daysBetween = daysBetween(today.getTime(), dayToCompare.getTime());
+
+        if (daysBetween == 0)
+        {
+            if (minutesBetween(new Date(), date) < 2)
+            {
+                return "Now";
+            }
+            else
+            {
+                return formatDateTo12HourClock(date);
+            }
+        }
+        else if (daysBetween == -1)
+        {
+            return "Yesterday";
+        }
+        else
+        {
+            return formatDateMonthDay(date);
         }
     }
 }
