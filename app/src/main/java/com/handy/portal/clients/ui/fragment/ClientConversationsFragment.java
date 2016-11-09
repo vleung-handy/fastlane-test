@@ -1,12 +1,7 @@
 package com.handy.portal.clients.ui.fragment;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -19,7 +14,6 @@ import com.handy.portal.clients.ui.adapter.ConversationsAdapter;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout;
 import com.handybook.shared.LayerHelper;
-import com.handybook.shared.LayerIntent;
 import com.layer.sdk.LayerClient;
 
 import javax.inject.Inject;
@@ -42,7 +36,6 @@ public class ClientConversationsFragment extends InjectedFragment
 
     private ConversationsAdapter mAdapter;
     private LayerClient mLayerClient;
-    private BroadcastReceiver mUnreadCountChangedReceiver;
 
     public static ClientConversationsFragment newInstance()
     {
@@ -54,18 +47,6 @@ public class ClientConversationsFragment extends InjectedFragment
     {
         super.onCreate(savedInstanceState);
         mLayerClient = mLayerHelper.getLayerClient();
-        mUnreadCountChangedReceiver = new BroadcastReceiver()
-        {
-            @Override
-            public void onReceive(final Context context, final Intent intent)
-            {
-                intent.getIntExtra(LayerIntent.EXTRA_UNREAD_MESSAGES_COUNT, 0);
-                // FIXME: Update badge counter
-            }
-        };
-        LocalBroadcastManager.getInstance(getActivity())
-                .registerReceiver(mUnreadCountChangedReceiver,
-                        new IntentFilter(LayerIntent.ACTION_UNREAD_MESSAGES_COUNT_CHANGED));
     }
 
     @Override
@@ -131,13 +112,5 @@ public class ClientConversationsFragment extends InjectedFragment
     {
         mEmptySwipeRefreshLayout.setRefreshing(isRefreshing);
         mSwipeRefreshLayout.setRefreshing(isRefreshing);
-    }
-
-    @Override
-    public void onDestroy()
-    {
-        LocalBroadcastManager.getInstance(getActivity())
-                .unregisterReceiver(mUnreadCountChangedReceiver);
-        super.onDestroy();
     }
 }
