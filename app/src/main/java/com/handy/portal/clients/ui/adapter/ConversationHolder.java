@@ -1,5 +1,6 @@
 package com.handy.portal.clients.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
@@ -55,13 +56,13 @@ public class ConversationHolder extends RecyclerView.ViewHolder
         mLayerIdentity = layerIdentity;
     }
 
+    @SuppressLint("SetTextI18n")
     public void bind(final Conversation conversation)
     {
         mConversation = conversation;
 
         final Message lastMessage = conversation.getLastMessage();
-        final boolean isUnread = lastMessage != null
-                && lastMessage.getRecipientStatus(mLayerIdentity) != Message.RecipientStatus.READ;
+        final String typeface = isUnread(lastMessage) ? FontUtils.CIRCULAR_BOLD : FontUtils.CIRCULAR_BOOK;
 
         final HashSet<Identity> participants = new HashSet<>(conversation.getParticipants());
         participants.remove(mLayerIdentity);
@@ -71,21 +72,17 @@ public class ConversationHolder extends RecyclerView.ViewHolder
             // There should only be one participant in this case
             mTitle.setVisibility(View.VISIBLE);
             mTitle.setText(participant.getDisplayName());
-            if (isUnread)
-            {
-                mTitle.setTypeface(FontUtils.getFont(mContext, FontUtils.CIRCULAR_BOLD));
-            }
+            mTitle.setTypeface(FontUtils.getFont(mContext, typeface));
             break;
         }
 
         if (lastMessage != null)
         {
+            final String messagePrefix = wasSentByMe(lastMessage) ? "Me: " : "";
+            final String message = LayerUtil.getLastMessageString(mContent.getContext(), lastMessage);
             mContent.setVisibility(View.VISIBLE);
-            mContent.setText(LayerUtil.getLastMessageString(mContent.getContext(), lastMessage));
-            if (isUnread)
-            {
-                mContent.setTypeface(FontUtils.getFont(mContext, FontUtils.CIRCULAR_BOLD));
-            }
+            mContent.setText(messagePrefix + message);
+            mContent.setTypeface(FontUtils.getFont(mContext, typeface));
             mTimestampContainer.setVisibility(View.VISIBLE);
             mTimestamp.setText(DateTimeUtils.formatDateToRelativeAccuracy(lastMessage.getSentAt()));
         }
@@ -93,6 +90,25 @@ public class ConversationHolder extends RecyclerView.ViewHolder
         {
             mContent.setVisibility(View.GONE);
             mTimestampContainer.setVisibility(View.GONE);
+        }
+    }
+
+    private boolean isUnread(final Message message)
+    {
+        return message != null
+                && message.getRecipientStatus(mLayerIdentity) != Message.RecipientStatus.READ;
+    }
+
+    private boolean wasSentByMe(final Message message)
+    {
+        if (message != null)
+        {
+            final Identity sender = message.getSender();
+            return sender != null && mLayerIdentity.getUserId().equals(sender.getUserId());
+        }
+        else
+        {
+            return false;
         }
     }
 
