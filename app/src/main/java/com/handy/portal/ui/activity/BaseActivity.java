@@ -19,6 +19,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.flow.Flow;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.location.LocationUtils;
+import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
@@ -54,7 +55,6 @@ public abstract class BaseActivity extends AppCompatActivity
 {
     @Inject
     PrefsManager mPrefsManager;
-
     @Inject
     ConfigManager mConfigManager;
 
@@ -66,7 +66,6 @@ public abstract class BaseActivity extends AppCompatActivity
     //will also let us do geofencing and reverse address lookup which is nice
     //This is a clear instance where a service would be great but it is too tightly coupled to an activity to break out
     protected static GoogleApiClient googleApiClient;
-    protected static Location lastLocation;
     private SetupHandler mSetupHandler;
     private boolean mWasOpenBefore;
 
@@ -353,13 +352,13 @@ public abstract class BaseActivity extends AppCompatActivity
         //Keeping old value in the event we have a failed location update
         if (newLocation != null)
         {
-            lastLocation = newLocation;
+            LocationManager.setLastLocation(newLocation);
         }
     }
 
     public Location getLastLocation()
     {
-        return lastLocation;
+        return LocationManager.getLastLocation();
     }
 
     //For google apli client

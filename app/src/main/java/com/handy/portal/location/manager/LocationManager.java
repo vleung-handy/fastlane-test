@@ -1,5 +1,6 @@
 package com.handy.portal.location.manager;
 
+import android.location.Location;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -34,6 +35,8 @@ import javax.inject.Inject;
  */
 public class LocationManager
 {
+    private static Location sLastLocation;
+
     private final EventBus mBus;
     private final DataManager mDataManager;
     private final ProviderManager mProviderManager;
@@ -45,6 +48,10 @@ public class LocationManager
     //don't care about order of batch update
     private Set<LocationBatchUpdate> mFailedLocationBatchUpdates = new HashSet<>();
     private final static int MAX_FAILED_LOCATION_BATCH_UPDATES_SIZE = 100;
+
+    public static void setLastLocation(Location lastLocation) { sLastLocation = lastLocation; }
+
+    public static Location getLastLocation() { return sLastLocation; }
 
     @Inject
     public LocationManager(final EventBus bus,
