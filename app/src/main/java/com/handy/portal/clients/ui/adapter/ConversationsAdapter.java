@@ -6,14 +6,18 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.handy.portal.R;
+import com.handybook.shared.LayerHelper;
 import com.handybook.shared.LayerRecyclerAdapter;
-import com.layer.sdk.LayerClient;
+import com.layer.sdk.messaging.Identity;
 
 public class ConversationsAdapter extends LayerRecyclerAdapter<ConversationHolder>
 {
-    public ConversationsAdapter(@NonNull final LayerClient layerClient)
+    private final Identity mLayerIdentity;
+
+    public ConversationsAdapter(@NonNull final LayerHelper layerHelper)
     {
-        super(layerClient);
+        super(layerHelper);
+        mLayerIdentity = mLayerHelper.getLayerClient().getAuthenticatedUser();
     }
 
     @Override
@@ -27,7 +31,7 @@ public class ConversationsAdapter extends LayerRecyclerAdapter<ConversationHolde
     {
         final View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.layout_conversation_list_item, parent, false);
-        return new ConversationHolder(itemView, mLayerClient.getAuthenticatedUser());
+        return new ConversationHolder(itemView, mLayerIdentity);
     }
 
     @Override

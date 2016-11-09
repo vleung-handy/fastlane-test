@@ -14,7 +14,6 @@ import com.handy.portal.clients.ui.adapter.ConversationsAdapter;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout;
 import com.handybook.shared.LayerHelper;
-import com.layer.sdk.LayerClient;
 
 import javax.inject.Inject;
 
@@ -35,18 +34,10 @@ public class ClientConversationsFragment extends InjectedFragment
     SafeSwipeRefreshLayout mEmptySwipeRefreshLayout;
 
     private ConversationsAdapter mAdapter;
-    private LayerClient mLayerClient;
 
     public static ClientConversationsFragment newInstance()
     {
         return new ClientConversationsFragment();
-    }
-
-    @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        mLayerClient = mLayerHelper.getLayerClient();
     }
 
     @Override
@@ -70,7 +61,7 @@ public class ClientConversationsFragment extends InjectedFragment
     private void initRecyclerView()
     {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new ConversationsAdapter(mLayerClient);
+        mAdapter = new ConversationsAdapter(mLayerHelper);
     }
 
     private void initSwipeRefreshLayouts()
