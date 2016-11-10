@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FontUtils;
+import com.handybook.shared.LayerConstants;
 import com.handybook.shared.LayerUtil;
-import com.handybook.shared.PushNotificationReceiver;
 import com.handybook.shared.builtin.MessagesListActivity;
 import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
@@ -41,7 +41,7 @@ public class ConversationHolder extends RecyclerView.ViewHolder
     public void onConversationListItemClicked(final View view)
     {
         final Intent intent = new Intent(mContext, MessagesListActivity.class);
-        intent.putExtra(PushNotificationReceiver.LAYER_CONVERSATION_KEY, mConversation.getId());
+        intent.putExtra(LayerConstants.LAYER_CONVERSATION_KEY, mConversation.getId());
         mContext.startActivity(intent);
     }
 
