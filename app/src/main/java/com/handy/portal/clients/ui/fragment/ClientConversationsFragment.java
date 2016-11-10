@@ -22,6 +22,7 @@ import butterknife.ButterKnife;
 
 
 public class ClientConversationsFragment extends InjectedFragment
+        implements ConversationsAdapter.Listener
 {
     @Inject
     LayerHelper mLayerHelper;
@@ -55,13 +56,13 @@ public class ClientConversationsFragment extends InjectedFragment
         initSwipeRefreshLayouts();
         setRefreshing(true);
         initRecyclerView();
-        resetRecyclerView();
+        mAdapter.refreshConversations();
     }
 
     private void initRecyclerView()
     {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mAdapter = new ConversationsAdapter(mLayerHelper);
+        mAdapter = new ConversationsAdapter(mLayerHelper, this);
     }
 
     private void initSwipeRefreshLayouts()
@@ -72,7 +73,7 @@ public class ClientConversationsFragment extends InjectedFragment
                     @Override
                     public void onRefresh()
                     {
-                        resetRecyclerView();
+                        mAdapter.refreshConversations();
                     }
                 };
         mEmptySwipeRefreshLayout.setOnRefreshListener(onRefreshListener);
@@ -81,9 +82,9 @@ public class ClientConversationsFragment extends InjectedFragment
         mSwipeRefreshLayout.setColorSchemeResources(R.color.handy_blue);
     }
 
-    private void resetRecyclerView()
+    @Override
+    public void onConversationsInitialized()
     {
-        mAdapter.refreshLayer();
         if (mAdapter.getItemCount() > 0)
         {
             mSwipeRefreshLayout.setVisibility(View.VISIBLE);
