@@ -83,7 +83,7 @@ public class ClientConversationsFragment extends InjectedFragment
     }
 
     @Override
-    public void onConversationsInitialized()
+    public void onConversationsChanged()
     {
         if (mAdapter.getItemCount() > 0)
         {
