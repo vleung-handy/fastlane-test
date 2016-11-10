@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
+import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.view.TabWithCountView;
@@ -33,6 +34,8 @@ import butterknife.ButterKnife;
 
 public class ClientsFragment extends ActionBarFragment
 {
+    @Inject
+    BookingManager mBookingManager;
     @Inject
     LayerHelper mLayerHelper;
     @Inject
@@ -113,6 +116,7 @@ public class ClientsFragment extends ActionBarFragment
     {
         mRequestsTab = new TabWithCountView(getActivity());
         mRequestsTab.setTitle(R.string.job_requests);
+        mRequestsTab.setCount((long) mBookingManager.getLastUnreadRequestsCount());
         mTabLayout.getTabAt(0).setCustomView(mRequestsTab);
 
         if (mShouldShowMessagesTab)

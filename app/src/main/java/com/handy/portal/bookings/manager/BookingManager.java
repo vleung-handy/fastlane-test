@@ -45,7 +45,7 @@ public class BookingManager
     private final Cache<Date, BookingsWrapper> scheduledBookingsCache;
     private final Cache<Date, BookingsWrapper> complementaryBookingsCache;
     private final Cache<Date, BookingsWrapper> requestedBookingsCache;
-
+    private int mLastUnreadRequestsCount = 0;
 
     /*
     keys used in QueryMap requests
@@ -219,7 +219,8 @@ public class BookingManager
                     @Override
                     public void onSuccess(final HashMap<String, Object> response)
                     {
-                        int count = (int) ((double) response.get(UNREAD_JOB_REQUESTS_COUNT));
+                        final int count = (int) response.get(UNREAD_JOB_REQUESTS_COUNT);
+                        mLastUnreadRequestsCount = count;
                         mBus.post(new BookingEvent.ReceiveProRequestedJobsCountSuccess(count));
                     }
 
@@ -229,6 +230,11 @@ public class BookingManager
                         // Ignore
                     }
                 });
+    }
+
+    public int getLastUnreadRequestsCount()
+    {
+        return mLastUnreadRequestsCount;
     }
 
     @Subscribe
