@@ -8,7 +8,6 @@ import com.handy.portal.clients.ui.fragment.ClientsFragment;
 import com.handy.portal.clients.ui.fragment.ProRequestedJobsFragment;
 import com.handy.portal.clients.ui.fragment.dialog.RequestDismissalReasonsDialogFragment;
 import com.handy.portal.clients.ui.fragment.dialog.SwapBookingClaimDialogFragment;
-import com.handybook.shared.HandyLayer;
 import com.handybook.shared.LayerHelper;
 
 import javax.inject.Singleton;
@@ -35,6 +34,8 @@ public final class ClientsModule
     final LayerHelper provideLayerHelper(final Application application,
                                          final RestAdapter restAdapter)
     {
-        return HandyLayer.init(restAdapter, application);
+        return null;
+        // FIXME: Uncomment the following line when feature is ready
+        // return HandyLayer.init(restAdapter, application);
     }
 }
