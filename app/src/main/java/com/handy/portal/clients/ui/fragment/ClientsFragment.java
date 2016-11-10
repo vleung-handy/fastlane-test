@@ -33,6 +33,7 @@ import butterknife.ButterKnife;
 
 
 public class ClientsFragment extends ActionBarFragment
+    implements LayerHelper.UnreadConversationsCountChangedListener
 {
     @Inject
     BookingManager mBookingManager;
@@ -51,15 +52,6 @@ public class ClientsFragment extends ActionBarFragment
     private boolean mShouldShowMessagesTab;
     private TabWithCountView mRequestsTab;
     private TabWithCountView mMessagesTab;
-    private LayerHelper.UnreadConversationsCountChangedListener mCountChangedListener
-            = new LayerHelper.UnreadConversationsCountChangedListener()
-    {
-        @Override
-        public void onUnreadConversationsCountChanged(final long count)
-        {
-            mMessagesTab.setCount(count);
-        }
-    };
 
     @Override
     protected MainViewPage getAppPage()
@@ -77,7 +69,7 @@ public class ClientsFragment extends ActionBarFragment
         mBus.register(this);
         if (mShouldShowMessagesTab)
         {
-            mLayerHelper.registerUnreadConversationsCountChangedListener(mCountChangedListener);
+            mLayerHelper.registerUnreadConversationsCountChangedListener(this);
         }
     }
 
@@ -135,6 +127,12 @@ public class ClientsFragment extends ActionBarFragment
         mRequestsTab.setCount((long) event.getCount());
     }
 
+    @Override
+    public void onUnreadConversationsCountChanged(final long count)
+    {
+        mMessagesTab.setCount(count);
+    }
+
     private class TabAdapter extends FragmentPagerAdapter
     {
         private List<InjectedFragment> mFragments = new ArrayList<>();
@@ -167,7 +165,7 @@ public class ClientsFragment extends ActionBarFragment
     {
         if (mShouldShowMessagesTab)
         {
-            mLayerHelper.unregisterUnreadConversationsCountChangedListener(mCountChangedListener);
+            mLayerHelper.unregisterUnreadConversationsCountChangedListener(this);
         }
         mBus.unregister(this);
         super.onDestroy();
