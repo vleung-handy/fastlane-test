@@ -190,4 +190,7 @@
     <!-- Request Dismissal -->
     <dimen name="request_dismissal_other_edit_text_offset">42dp</dimen>
 
+    <!-- Conversations -->
+    <dimen name="conversation_list_item_min_height">72dp</dimen>
+
 </resources>

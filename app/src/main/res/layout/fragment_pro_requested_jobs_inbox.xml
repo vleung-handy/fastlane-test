@@ -44,12 +44,6 @@
         />
 
     <include
-        layout="@layout/overlay_loading"
-        android:visibility="visible"
-        tools:visibility="visible"
-        />
-
-    <include
         android:id="@+id/pro_requested_bookings_empty"
         layout="@layout/layout_pro_requested_jobs_empty"
         tools:visibility="visible"

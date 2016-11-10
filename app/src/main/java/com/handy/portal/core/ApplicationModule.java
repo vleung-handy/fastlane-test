@@ -214,12 +214,11 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final HandyRetrofitService provideHandyService(final BuildConfigWrapper buildConfigWrapper,
-                                                   final HandyRetrofitEndpoint endpoint,
-                                                   final PrefsManager prefsManager,
-                                                   final EventBus bus)
+    final RestAdapter provideRestAdapter(final BuildConfigWrapper buildConfigWrapper,
+                                         final HandyRetrofitEndpoint endpoint,
+                                         final PrefsManager prefsManager,
+                                         final EventBus bus)
     {
-
         final OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
         if (!BuildConfig.DEBUG)
@@ -282,7 +281,13 @@ public final class ApplicationModule
         {
             restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
         }
+        return restAdapter;
+    }
 
+    @Provides
+    @Singleton
+    final HandyRetrofitService provideHandyService(final RestAdapter restAdapter)
+    {
         return restAdapter.create(HandyRetrofitService.class);
     }
 

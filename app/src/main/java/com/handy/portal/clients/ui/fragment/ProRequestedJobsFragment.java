@@ -14,7 +14,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -61,8 +60,6 @@ public class ProRequestedJobsFragment extends InjectedFragment
     SafeSwipeRefreshLayout mEmptyJobsSwipeRefreshLayout;
     @BindView(R.id.fragment_pro_requested_jobs_list_swipe_refresh_layout)
     SafeSwipeRefreshLayout mJobListSwipeRefreshLayout;
-    @BindView(R.id.loading_overlay)
-    RelativeLayout mLoadingOverlay;
     @BindView(R.id.fetch_error_view)
     LinearLayout mFetchErrorView;
     @BindView(R.id.fetch_error_text)
@@ -164,14 +161,12 @@ public class ProRequestedJobsFragment extends InjectedFragment
     {
         super.onResume();
         bus.register(this);
-
-        //this fragment doesn't use the universal overlay, so make sure it's hidden
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-
         mJobListSwipeRefreshLayout.setRefreshing(false);
         if (mAdapter == null)
         {
-            showContentViewAndHideOthers(mLoadingOverlay);
+            showContentViewAndHideOthers(mJobListSwipeRefreshLayout);
+            mJobListSwipeRefreshLayout.setRefreshing(true);
             requestProRequestedJobs(true);
         }
     }
@@ -201,7 +196,6 @@ public class ProRequestedJobsFragment extends InjectedFragment
         mEmptyJobsSwipeRefreshLayout.setVisibility(View.GONE);
         mJobListSwipeRefreshLayout.setVisibility(View.GONE);
         mFetchErrorView.setVisibility(View.GONE);
-        mLoadingOverlay.setVisibility(View.GONE);
     }
 
     /**
@@ -209,6 +203,7 @@ public class ProRequestedJobsFragment extends InjectedFragment
      */
     private void requestProRequestedJobs(boolean useCachedIfPresent)
     {
+        setRefreshingIndicator(true);
         List<Date> datesForBookings = getDatesForBookings();
         bus.post(new BookingEvent.RequestProRequestedJobs(datesForBookings, useCachedIfPresent));
     }
@@ -431,7 +426,7 @@ public class ProRequestedJobsFragment extends InjectedFragment
     @OnClick(R.id.try_again_button)
     public void onFetchErrorViewTryAgainButtonClicked()
     {
-        showContentViewAndHideOthers(mLoadingOverlay);
+        showContentViewAndHideOthers(mJobListSwipeRefreshLayout);
         requestProRequestedJobs(false);
     }
 }

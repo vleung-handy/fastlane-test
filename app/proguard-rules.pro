@@ -118,3 +118,7 @@
 -dontwarn com.yalantis.ucrop**
 -keep class com.yalantis.ucrop** { *; }
 -keep interface com.yalantis.ucrop** { *; }
+
+# Layer SDK
+-keep class com.layer.** {*; }
+-dontwarn com.layer.**
