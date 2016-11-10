@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:gravity="center"
+    android:orientation="horizontal"
+    tools:background="@color/handy_blue"
+    >
+
+    <TextView
+        android:id="@+id/tab_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="true"
+        android:textAppearance="@style/TextView.XXSmall"
+        android:textColor="@color/white"
+        tools:text="Job Requests"
+        />
+
+    <TextView
+        android:id="@+id/tab_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/extra_margin"
+        android:layout_marginStart="@dimen/extra_margin"
+        android:background="@drawable/pill_red"
+        android:gravity="center"
+        android:minWidth="@dimen/notification_unread_count_min_width"
+        android:paddingBottom="@dimen/extra_padding_xsmall"
+        android:paddingEnd="@dimen/extra_padding_small"
+        android:paddingLeft="@dimen/extra_padding_small"
+        android:paddingRight="@dimen/extra_padding_small"
+        android:paddingStart="@dimen/extra_padding_small"
+        android:paddingTop="@dimen/extra_padding_xsmall"
+        android:textColor="@color/white"
+        android:textSize="@dimen/xsmall_text_size"
+        android:visibility="gone"
+        tools:text="13"
+        tools:visibility="visible"
+        />
+
+</LinearLayout>

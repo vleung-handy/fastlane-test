@@ -1,6 +1,5 @@
 package com.handy.portal.clients.ui.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
@@ -14,7 +13,7 @@ import android.view.ViewGroup;
 import com.handy.portal.R;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
-import com.handy.portal.library.ui.view.HandyTabLayout;
+import com.handy.portal.library.ui.view.TabWithCountView;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
@@ -32,7 +31,10 @@ public class ClientsFragment extends ActionBarFragment
     @BindView(R.id.clients_pager)
     ViewPager mViewPager;
     @BindView(R.id.clients_tab_layout)
-    HandyTabLayout mTabLayout;
+    TabLayout mTabLayout;
+
+    private TabWithCountView mRequestsTab;
+    private TabWithCountView mMessagesTab;
 
     @Override
     protected MainViewPage getAppPage()
@@ -68,29 +70,36 @@ public class ClientsFragment extends ActionBarFragment
             mToolbar.setVisibility(View.GONE);
         }
 
-        final TabAdapter tabAdapter = new TabAdapter(getActivity(), getChildFragmentManager(),
+        final TabAdapter tabAdapter = new TabAdapter(getChildFragmentManager(),
                 shouldShowMessagesTab);
         mViewPager.setAdapter(tabAdapter);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
         mTabLayout.setupWithViewPager(mViewPager);
-        mTabLayout.setTabsFromPagerAdapter(tabAdapter);
+        initTabViews();
+    }
+
+    private void initTabViews()
+    {
+        mRequestsTab = new TabWithCountView(getActivity());
+        mRequestsTab.setTitle(R.string.job_requests);
+        mTabLayout.getTabAt(0).setCustomView(mRequestsTab);
+
+        mMessagesTab = new TabWithCountView(getActivity());
+        mMessagesTab.setTitle(R.string.messages);
+        mTabLayout.getTabAt(1).setCustomView(mMessagesTab);
     }
 
     private static class TabAdapter extends FragmentPagerAdapter
     {
         private List<InjectedFragment> mFragments = new ArrayList<>();
-        private List<String> mTitles = new ArrayList<>();
 
-        public TabAdapter(final Context context,
-                          final FragmentManager fragmentManager,
+        public TabAdapter(final FragmentManager fragmentManager,
                           final boolean shouldShowMessagesTab)
         {
             super(fragmentManager);
-            mTitles.add(context.getResources().getString(R.string.job_requests));
             mFragments.add(ProRequestedJobsFragment.newInstance());
             if (shouldShowMessagesTab)
             {
-                mTitles.add(context.getResources().getString(R.string.messages));
                 mFragments.add(ClientConversationsFragment.newInstance());
             }
         }
@@ -99,12 +108,6 @@ public class ClientsFragment extends ActionBarFragment
         public int getCount()
         {
             return mFragments.size();
-        }
-
-        @Override
-        public CharSequence getPageTitle(int position)
-        {
-            return mTitles.get(position);
         }
 
         @Override
