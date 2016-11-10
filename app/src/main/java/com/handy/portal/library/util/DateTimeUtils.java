@@ -616,9 +616,13 @@ public final class DateTimeUtils
         {
             return "Yesterday";
         }
+        else if (daysBetween > -7)
+        {
+            return getDayOfWeek(date);
+        }
         else
         {
-            return formatDateMonthDay(date);
+            return formatMonthDate(date);
         }
     }
 }

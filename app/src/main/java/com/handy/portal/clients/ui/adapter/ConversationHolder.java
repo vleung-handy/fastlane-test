@@ -84,7 +84,7 @@ public class ConversationHolder extends RecyclerView.ViewHolder
             mContent.setText(messagePrefix + message);
             mContent.setTypeface(FontUtils.getFont(mContext, typeface));
             mTimestampContainer.setVisibility(View.VISIBLE);
-            mTimestamp.setText(DateTimeUtils.formatDateToRelativeAccuracy(lastMessage.getSentAt()));
+            mTimestamp.setText(DateTimeUtils.formatDateToRelativeAccuracy(lastMessage.getReceivedAt()));
         }
         else
         {
