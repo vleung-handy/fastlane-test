@@ -62,7 +62,8 @@ public class ConversationHolder extends RecyclerView.ViewHolder
         mConversation = conversation;
 
         final Message lastMessage = conversation.getLastMessage();
-        final String typeface = isUnread(lastMessage) ? FontUtils.CIRCULAR_BOLD : FontUtils.CIRCULAR_BOOK;
+        final String typeface = isUnreadByRecipient(lastMessage) ?
+                FontUtils.CIRCULAR_BOLD : FontUtils.CIRCULAR_BOOK;
 
         final HashSet<Identity> participants = new HashSet<>(conversation.getParticipants());
         participants.remove(mLayerIdentity);
@@ -93,7 +94,7 @@ public class ConversationHolder extends RecyclerView.ViewHolder
         }
     }
 
-    private boolean isUnread(final Message message)
+    private boolean isUnreadByRecipient(final Message message)
     {
         return message != null
                 && message.getRecipientStatus(mLayerIdentity) != Message.RecipientStatus.READ;

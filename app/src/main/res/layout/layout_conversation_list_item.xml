@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@drawable/background_list_entry"
-    android:minHeight="72dp"
+    android:minHeight="@dimen/conversation_list_item_min_height"
     android:orientation="vertical"
     >
 

@@ -86,7 +86,7 @@ public class SplashActivity extends BaseActivity
 
         mAuthToken = prefsManager.getSecureString(PrefsKey.AUTH_TOKEN, null);
 
-        if (mLayerHelper != null)
+        if (mLayerHelper != null && mAuthToken != null)
         {
             // FIXME: Change shared lib to make this better
             mLayerHelper.initLayer(new HandyUser(mAuthToken, ""));
