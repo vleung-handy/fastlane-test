@@ -66,8 +66,8 @@
             />
 
         <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
+            android:layout_width="@dimen/conversation_list_item_chevron_size"
+            android:layout_height="@dimen/conversation_list_item_chevron_size"
             android:src="@drawable/ic_chevron_gray"
             android:tint="@color/tertiary_gray"
             />
