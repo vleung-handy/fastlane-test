@@ -64,8 +64,7 @@ public class ClientsFragment extends ActionBarFragment
     {
         super.onCreate(savedInstanceState);
         final ConfigurationResponse configuration = configManager.getConfigurationResponse();
-        mShouldShowMessagesTab = configuration != null
-                && configuration.isClientsChatEnabled();
+        mShouldShowMessagesTab = configuration != null && configuration.isClientsChatEnabled();
         mBus.register(this);
         if (mShouldShowMessagesTab)
         {

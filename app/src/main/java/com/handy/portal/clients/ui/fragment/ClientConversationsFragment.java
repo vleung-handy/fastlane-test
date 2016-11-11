@@ -52,6 +52,7 @@ public class ClientConversationsFragment extends InjectedFragment
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         mAdapter = new ConversationsAdapter(mLayerHelper, this);
         mAdapter.refreshConversations();
+        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -60,7 +61,6 @@ public class ClientConversationsFragment extends InjectedFragment
         if (mAdapter.getItemCount() > 0)
         {
             mEmptyView.setVisibility(View.GONE);
-            mRecyclerView.setAdapter(mAdapter);
         }
         else
         {
