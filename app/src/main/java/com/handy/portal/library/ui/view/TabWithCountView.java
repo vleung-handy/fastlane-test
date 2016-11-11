@@ -1,12 +1,11 @@
 package com.handy.portal.library.ui.view;
 
+import android.animation.LayoutTransition;
 import android.content.Context;
-import android.os.Build;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.annotation.StringRes;
-import android.util.AttributeSet;
-import android.widget.FrameLayout;
+import android.view.Gravity;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -14,7 +13,7 @@ import com.handy.portal.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TabWithCountView extends FrameLayout
+public class TabWithCountView extends LinearLayout
 {
     @BindView(R.id.tab_title)
     TextView mTitle;
@@ -27,29 +26,14 @@ public class TabWithCountView extends FrameLayout
         init();
     }
 
-    public TabWithCountView(final Context context, final AttributeSet attrs)
-    {
-        super(context, attrs);
-        init();
-    }
-
-    public TabWithCountView(final Context context, final AttributeSet attrs, final int defStyleAttr)
-    {
-        super(context, attrs, defStyleAttr);
-        init();
-    }
-
-    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
-    public TabWithCountView(final Context context, final AttributeSet attrs, final int defStyleAttr,
-                            final int defStyleRes)
-    {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init();
-    }
-
     private void init()
     {
         inflate(getContext(), R.layout.view_tab_with_count, this);
+        setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT));
+        setOrientation(HORIZONTAL);
+        setGravity(Gravity.CENTER);
+        setLayoutTransition(new LayoutTransition());
         ButterKnife.bind(this);
     }
 
