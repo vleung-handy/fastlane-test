@@ -219,7 +219,7 @@ public class BookingManager
                     @Override
                     public void onSuccess(final HashMap<String, Object> response)
                     {
-                        final int count = (int) response.get(UNREAD_JOB_REQUESTS_COUNT);
+                        final int count = (int) (double) response.get(UNREAD_JOB_REQUESTS_COUNT);
                         mLastUnreadRequestsCount = count;
                         mBus.post(new BookingEvent.ReceiveProRequestedJobsCountSuccess(count));
                     }
