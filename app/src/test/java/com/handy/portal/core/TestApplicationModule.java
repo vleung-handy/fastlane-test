@@ -70,6 +70,7 @@ import com.handy.portal.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
+import com.handybook.shared.LayerHelper;
 import com.securepreferences.SecurePreferences;
 
 import org.greenrobot.eventbus.EventBus;
@@ -299,5 +300,11 @@ public class TestApplicationModule
     final UrbanAirshipManager providerUrbanAirshipManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication)
     {
         return mock(UrbanAirshipManager.class);
+    }
+
+    @Provides
+    final LayerHelper provideLayerHelper()
+    {
+        return null;
     }
 }

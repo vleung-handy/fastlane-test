@@ -43,7 +43,7 @@ public class ConversationsAdapter extends LayerRecyclerAdapter<ConversationHolde
     public void onQueryDataSetChanged(final RecyclerViewController controller)
     {
         super.onQueryDataSetChanged(controller);
-        mListener.onConversationsInitialized();
+        mListener.onConversationsChanged();
         notifyDataSetChanged();
     }
 
@@ -51,6 +51,7 @@ public class ConversationsAdapter extends LayerRecyclerAdapter<ConversationHolde
     public void onQueryItemChanged(final RecyclerViewController controller, final int position)
     {
         super.onQueryItemChanged(controller, position);
+        mListener.onConversationsChanged();
         notifyItemChanged(position);
     }
 
@@ -60,6 +61,7 @@ public class ConversationsAdapter extends LayerRecyclerAdapter<ConversationHolde
                                         final int itemCount)
     {
         super.onQueryItemRangeChanged(controller, positionStart, itemCount);
+        mListener.onConversationsChanged();
         notifyItemRangeChanged(positionStart, itemCount);
     }
 
@@ -67,6 +69,7 @@ public class ConversationsAdapter extends LayerRecyclerAdapter<ConversationHolde
     public void onQueryItemInserted(final RecyclerViewController controller, final int position)
     {
         super.onQueryItemInserted(controller, position);
+        mListener.onConversationsChanged();
         notifyItemInserted(position);
     }
 
@@ -76,6 +79,7 @@ public class ConversationsAdapter extends LayerRecyclerAdapter<ConversationHolde
                                          final int itemCount)
     {
         super.onQueryItemRangeInserted(controller, positionStart, itemCount);
+        mListener.onConversationsChanged();
         notifyItemRangeInserted(positionStart, itemCount);
     }
 
@@ -83,6 +87,7 @@ public class ConversationsAdapter extends LayerRecyclerAdapter<ConversationHolde
     public void onQueryItemRemoved(final RecyclerViewController controller, final int position)
     {
         super.onQueryItemRemoved(controller, position);
+        mListener.onConversationsChanged();
         notifyItemRemoved(position);
     }
 
@@ -92,6 +97,7 @@ public class ConversationsAdapter extends LayerRecyclerAdapter<ConversationHolde
                                         final int itemCount)
     {
         super.onQueryItemRangeRemoved(controller, positionStart, itemCount);
+        mListener.onConversationsChanged();
         notifyItemRangeRemoved(positionStart, itemCount);
     }
 
@@ -101,6 +107,7 @@ public class ConversationsAdapter extends LayerRecyclerAdapter<ConversationHolde
                                  final int toPosition)
     {
         super.onQueryItemMoved(controller, fromPosition, toPosition);
+        mListener.onConversationsChanged();
         notifyItemMoved(fromPosition, toPosition);
     }
 
@@ -112,6 +119,6 @@ public class ConversationsAdapter extends LayerRecyclerAdapter<ConversationHolde
 
     public interface Listener
     {
-        void onConversationsInitialized();
+        void onConversationsChanged();
     }
 }

@@ -192,5 +192,6 @@
 
     <!-- Conversations -->
     <dimen name="conversation_list_item_min_height">72dp</dimen>
+    <dimen name="conversation_list_item_chevron_size">16dp</dimen>
 
 </resources>

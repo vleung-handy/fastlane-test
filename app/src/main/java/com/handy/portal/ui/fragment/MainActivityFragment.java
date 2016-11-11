@@ -48,6 +48,7 @@ import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.util.DeeplinkMapper;
+import com.handybook.shared.LayerHelper;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -61,6 +62,7 @@ import butterknife.OnClick;
 import static com.handy.portal.model.ProviderPersonalInfo.ProfileImage.Type.THUMBNAIL;
 
 public class MainActivityFragment extends InjectedFragment
+    implements LayerHelper.UnreadConversationsCountChangedListener
 {
     @Inject
     PrefsManager mPrefsManager;
@@ -70,7 +72,8 @@ public class MainActivityFragment extends InjectedFragment
     EnvironmentModifier mEnvironmentModifier;
     @Inject
     ProviderManager mProviderManager;
-    /////////////Bad useless injection that breaks if not in?
+    @Inject
+    LayerHelper mLayerHelper;
 
     @BindView(R.id.tabs)
     TabButtonGroup mTabs;
@@ -117,6 +120,8 @@ public class MainActivityFragment extends InjectedFragment
     private Bundle mDeeplinkData;
     private boolean mDeeplinkHandled;
     private String mDeeplinkSource;
+    private Integer mJobRequestsCount = null;
+    private boolean mShouldIncludeMessagesCount;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
@@ -143,6 +148,13 @@ public class MainActivityFragment extends InjectedFragment
                 setDrawerActive(false);
             }
         };
+
+        final ConfigurationResponse configuration = configManager.getConfigurationResponse();
+        mShouldIncludeMessagesCount = configuration != null && configuration.isClientsChatEnabled();
+        if (mShouldIncludeMessagesCount && mLayerHelper != null)
+        {
+            mLayerHelper.registerUnreadConversationsCountChangedListener(this);
+        }
     }
 
     @Override
@@ -456,9 +468,26 @@ public class MainActivityFragment extends InjectedFragment
     public void onReceiveProRequestedJobsCountSuccess(
             final BookingEvent.ReceiveProRequestedJobsCountSuccess event)
     {
-        if (mClientsButton != null)
+        mJobRequestsCount = event.getCount();
+        updateClientsButtonUnreadCount();
+    }
+
+    @Override
+    public void onUnreadConversationsCountChanged(final long count)
+    {
+        updateClientsButtonUnreadCount();
+    }
+
+    private void updateClientsButtonUnreadCount()
+    {
+        if (mClientsButton != null && mJobRequestsCount != null)
         {
-            mClientsButton.setUnreadCount(event.getCount());
+            int clientsButtonUnreadCount = mJobRequestsCount;
+            if (mShouldIncludeMessagesCount && mLayerHelper != null)
+            {
+                clientsButtonUnreadCount += mLayerHelper.getUnreadConversationsCount();
+            }
+            mClientsButton.setUnreadCount(clientsButtonUnreadCount);
         }
     }
 
@@ -734,4 +763,13 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
+    @Override
+    public void onDestroy()
+    {
+        if (mShouldIncludeMessagesCount && mLayerHelper != null)
+        {
+            mLayerHelper.registerUnreadConversationsCountChangedListener(this);
+        }
+        super.onDestroy();
+    }
 }

@@ -23,7 +23,7 @@
             app:layout_scrollFlags="scroll|enterAlways|snap"
             />
 
-        <com.handy.portal.library.ui.view.HandyTabLayout
+        <android.support.design.widget.TabLayout
             android:id="@+id/clients_tab_layout"
             style="@style/TextView.Large"
             android:layout_width="match_parent"
