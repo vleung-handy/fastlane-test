@@ -1,16 +1,26 @@
 package com.handy.portal.location.manager;
 
+import android.content.Context;
 import android.location.Location;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationServices;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.SystemEvent;
 import com.handy.portal.location.LocationEvent;
+import com.handy.portal.location.LocationUtils;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.model.LocationData;
 import com.handy.portal.model.SuccessWrapper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -27,19 +37,20 @@ import javax.inject.Inject;
  * - request location schedule event
  * - location updates
  * - network reconnected
- *
+ * <p>
  * and does the following:
  * - posts batch updates to the server
  * - remembers failed posts and retries posting on network reconnection
  * - keeps track of last location (for legacy code)
  */
 public class LocationManager
+        implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
 {
-    private static Location sLastLocation;
-
     private final EventBus mBus;
     private final DataManager mDataManager;
     private final ProviderManager mProviderManager;
+    private final Context mContext;
+    private GoogleApiClient mGoogleApiClient;
 
     //TODO: adjust these params
 //    private final long LAST_UPDATE_TIME_INTERVAL_MILLISEC = 2 * DateTimeUtils.MILLISECONDS_IN_SECOND;
@@ -49,20 +60,68 @@ public class LocationManager
     private Set<LocationBatchUpdate> mFailedLocationBatchUpdates = new HashSet<>();
     private final static int MAX_FAILED_LOCATION_BATCH_UPDATES_SIZE = 100;
 
-    public static void setLastLocation(Location lastLocation) { sLastLocation = lastLocation; }
-
-    public static Location getLastLocation() { return sLastLocation; }
-
     @Inject
-    public LocationManager(final EventBus bus,
-                           final DataManager dataManager,
-                           final ProviderManager providerManager)
+    public LocationManager(
+            final Context context,
+            final EventBus bus,
+            final DataManager dataManager,
+            final ProviderManager providerManager)
     {
+        mContext = context;
         mBus = bus;
         mBus.register(this);
         mDataManager = dataManager;
         mProviderManager = providerManager;
+
+        GoogleApiAvailability gApi = GoogleApiAvailability.getInstance();
+        int resultCode = gApi.isGooglePlayServicesAvailable(context);
+        if (resultCode == ConnectionResult.SUCCESS)
+        {
+            mGoogleApiClient = new GoogleApiClient.Builder(context)
+                    .addConnectionCallbacks(this)
+                    .addOnConnectionFailedListener(this)
+                    .addApi(LocationServices.API)
+                    .build();
+            mGoogleApiClient.connect();
+        }
     }
+
+    @SuppressWarnings({"ResourceType", "MissingPermission"})
+    public Location getLocation()
+    {
+        if (!LocationUtils.hasRequiredLocationPermissions(mContext))
+        {
+            return null;
+        }
+        else
+        {
+            return LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        }
+    }
+
+    public LocationData getLocationData()
+    {
+        LocationData locationData;
+        if (getLocation() != null)
+        {
+            locationData = new LocationData(getLocation());
+        }
+        else
+        {
+            Crashlytics.log("Attempting to access location data outside of a BaseActivity Context, returning empty");
+            locationData = new LocationData();
+        }
+        return locationData;
+    }
+
+    @Override
+    public void onConnected(@Nullable final Bundle bundle) {}
+
+    @Override
+    public void onConnectionSuspended(final int i) {}
+
+    @Override
+    public void onConnectionFailed(@NonNull final ConnectionResult connectionResult) {}
 
     @Subscribe
     public void onRequestLocationSchedule(LocationEvent.RequestLocationSchedule event)
@@ -198,6 +257,7 @@ public class LocationManager
     /**
      * after the user logs out, we don't need the location service,
      * so request to stop it
+     *
      * @param event
      */
     @Subscribe

@@ -47,6 +47,7 @@ import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
+import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
@@ -54,9 +55,7 @@ import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
 import com.handy.portal.manager.AppseeManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Address;
-import com.handy.portal.model.LocationData;
 import com.handy.portal.payments.model.PaymentInfo;
-import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.fragment.TimerActionBarFragment;
 import com.handy.portal.ui.view.FlowLayout;
 
@@ -82,6 +81,8 @@ public class BookingFragment extends TimerActionBarFragment
 {
     @Inject
     PrefsManager mPrefsManager;
+    @Inject
+    LocationManager mLocationManager;
 
     @BindView(R.id.booking_details_display_message_layout)
     BookingDetailsProRequestInfoView mBookingDetailsProRequestInfoView;
@@ -493,7 +494,8 @@ public class BookingFragment extends TimerActionBarFragment
     public void onReceiveZipClusterPolygonsSuccess(final BookingEvent.ReceiveZipClusterPolygonsSuccess event)
     {
         Booking.BookingStatus bookingStatus = mBooking.inferBookingStatus(getLoggedInUserId());
-        sBookingMapView.setDisplay(mBooking, bookingStatus, event.zipClusterPolygons);
+        sBookingMapView.setDisplay(mBooking, bookingStatus, event.zipClusterPolygons,
+                mLocationManager.getLocation());
     }
 
     @OnClick(R.id.booking_get_directions_layout)
@@ -579,7 +581,8 @@ public class BookingFragment extends TimerActionBarFragment
             }
             else
             {
-                sBookingMapView.setDisplay(mBooking, bookingStatus, null);
+                sBookingMapView.setDisplay(
+                        mBooking, bookingStatus, null, mLocationManager.getLocation());
             }
         }
         else
@@ -600,11 +603,6 @@ public class BookingFragment extends TimerActionBarFragment
             mGetDirectionsIntent = getDirectionsIntent;
             mGetDirectionsLayout.setVisibility(View.VISIBLE);
         }
-    }
-
-    private LocationData getLocationData()
-    {
-        return Utils.getCurrentLocation((BaseActivity) getContext());
     }
 
     private void requestZipClusterPolygons(final String zipClusterId)
@@ -674,9 +672,9 @@ public class BookingFragment extends TimerActionBarFragment
                     {
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
                         bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWaySubmitted(
-                                mBooking, getLocationData())));
+                                mBooking, mLocationManager.getLocationData())));
                         bus.post(new HandyEvent.RequestNotifyJobOnMyWay(
-                                mBooking.getId(), getLocationData()));
+                                mBooking.getId(), mLocationManager.getLocationData()));
                     }
                 });
 
@@ -704,15 +702,15 @@ public class BookingFragment extends TimerActionBarFragment
                         {
                             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
                             bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSubmitted(
-                                    mBooking, getLocationData())));
+                                    mBooking, mLocationManager.getLocationData())));
                             bus.post(new HandyEvent.RequestNotifyJobCheckIn(
-                                    mBooking.getId(), getLocationData()));
+                                    mBooking.getId(), mLocationManager.getLocationData()));
                         }
                         else
                         {
                             showToast(R.string.too_far);
                             bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInFailure(
-                                    mBooking, getLocationData()
+                                    mBooking, mLocationManager.getLocationData()
                             )));
                         }
                     }
@@ -762,7 +760,7 @@ public class BookingFragment extends TimerActionBarFragment
     private boolean isUserInRangeOfBooking()
     {
         Booking.Action checkInAction = mBooking.getAction(Booking.Action.ACTION_CHECK_IN);
-        Location userLocation = ((BaseActivity) getActivity()).getLastLocation();
+        Location userLocation = mLocationManager.getLocation();
         Address address = mBooking.getAddress();
 
         if (checkInAction == null || checkInAction.getCheckInConfig() == null ||

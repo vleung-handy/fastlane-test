@@ -43,16 +43,14 @@ import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.UIUtils;
-import com.handy.portal.library.util.Utils;
+import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.model.LocationData;
 import com.handy.portal.payments.model.PaymentInfo;
-import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
@@ -76,6 +74,8 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
 
     @Inject
     PrefsManager mPrefsManager;
+    @Inject
+    LocationManager mLocationManager;
 
     @BindView(R.id.booking_details_slide_up_panel_container)
     SlideUpPanelLayout mSlideUpPanelContainer;
@@ -269,7 +269,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWaySuccess(
-                mBooking, getLocationData())));
+                mBooking, mLocationManager.getLocationData())));
 
         //refresh the page with the new booking
         mBooking = event.booking;
@@ -283,7 +283,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         if (mBooking != null)
         {
             bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWayFailure(
-                    mBooking, getLocationData())));
+                    mBooking, mLocationManager.getLocationData())));
         }
         /*
             else, mBooking hasn't been set yet.
@@ -299,7 +299,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSuccess(
-                mBooking, getLocationData())));
+                mBooking, mLocationManager.getLocationData())));
 
         //refresh the page with the new booking
         mBooking = event.booking;
@@ -311,7 +311,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInFailure(
-                mBooking, getLocationData())));
+                mBooking, mLocationManager.getLocationData())));
 
         handleNotifyCheckInError(event);
     }
@@ -743,19 +743,14 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     {
         mSlideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestReportNoShow(mBooking.getId(), getLocationData()));
+        bus.post(new HandyEvent.RequestReportNoShow(mBooking.getId(), mLocationManager.getLocationData()));
     }
 
     private void requestCancelNoShow()
     {
         mSlideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestCancelNoShow(mBooking.getId(), getLocationData()));
-    }
-
-    private LocationData getLocationData()
-    {
-        return Utils.getCurrentLocation((BaseActivity) getActivity());
+        bus.post(new HandyEvent.RequestCancelNoShow(mBooking.getId(), mLocationManager.getLocationData()));
     }
 
     private void goToHelpCenter(final Booking.Action action)

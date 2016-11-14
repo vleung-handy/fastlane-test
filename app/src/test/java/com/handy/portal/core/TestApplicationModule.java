@@ -1,16 +1,17 @@
 package com.handy.portal.core;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.BookingDetailsWrapperFragment;
 import com.handy.portal.bookings.ui.fragment.BookingFragment;
 import com.handy.portal.bookings.ui.fragment.InProgressBookingFragment;
-import com.handy.portal.clients.ui.fragment.ProRequestedJobsFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragmentTest;
+import com.handy.portal.clients.ui.fragment.ProRequestedJobsFragment;
 import com.handy.portal.clients.ui.fragment.dialog.SwapBookingClaimDialogFragment;
 import com.handy.portal.dashboard.fragment.DashboardFeedbackFragment;
 import com.handy.portal.dashboard.fragment.DashboardReviewsFragment;
@@ -142,6 +143,10 @@ public class TestApplicationModule
     {
         mApplication = application;
     }
+
+    @Provides
+    @Singleton
+    final Context provideContext() { return mApplication.getApplicationContext(); }
 
     @Provides
     @Singleton
