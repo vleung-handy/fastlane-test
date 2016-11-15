@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
+import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
@@ -62,7 +63,7 @@ import butterknife.OnClick;
 import static com.handy.portal.model.ProviderPersonalInfo.ProfileImage.Type.THUMBNAIL;
 
 public class MainActivityFragment extends InjectedFragment
-    implements LayerHelper.UnreadConversationsCountChangedListener
+        implements LayerHelper.UnreadConversationsCountChangedListener
 {
     @Inject
     PrefsManager mPrefsManager;
@@ -74,6 +75,8 @@ public class MainActivityFragment extends InjectedFragment
     ProviderManager mProviderManager;
     @Inject
     LayerHelper mLayerHelper;
+    @Inject
+    BookingManager mBookingManager;
 
     @BindView(R.id.tabs)
     TabButtonGroup mTabs;
@@ -218,6 +221,8 @@ public class MainActivityFragment extends InjectedFragment
 
         if (mClientsButton != null && mClientsButton.getVisibility() == View.VISIBLE)
         {
+            mJobRequestsCount = mBookingManager.getLastUnreadRequestsCount();
+            updateClientsButtonUnreadCount();
             bus.post(new BookingEvent.RequestProRequestedJobsCount());
         }
         if (mAlertsButton != null && mAlertsButton.getVisibility() == View.VISIBLE)
@@ -768,7 +773,7 @@ public class MainActivityFragment extends InjectedFragment
     {
         if (mShouldIncludeMessagesCount && mLayerHelper != null)
         {
-            mLayerHelper.registerUnreadConversationsCountChangedListener(this);
+            mLayerHelper.unregisterUnreadConversationsCountChangedListener(this);
         }
         super.onDestroy();
     }

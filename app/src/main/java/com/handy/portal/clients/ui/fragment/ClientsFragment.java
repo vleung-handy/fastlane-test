@@ -33,7 +33,7 @@ import butterknife.ButterKnife;
 
 
 public class ClientsFragment extends ActionBarFragment
-    implements LayerHelper.UnreadConversationsCountChangedListener
+        implements LayerHelper.UnreadConversationsCountChangedListener
 {
     @Inject
     BookingManager mBookingManager;
@@ -107,15 +107,28 @@ public class ClientsFragment extends ActionBarFragment
     {
         mRequestsTab = new TabWithCountView(getActivity());
         mRequestsTab.setTitle(R.string.job_requests);
-        mRequestsTab.setCount((long) mBookingManager.getLastUnreadRequestsCount());
         mTabLayout.getTabAt(0).setCustomView(mRequestsTab);
 
         if (mShouldShowMessagesTab)
         {
             mMessagesTab = new TabWithCountView(getActivity());
             mMessagesTab.setTitle(R.string.messages);
-            mMessagesTab.setCount(mLayerHelper.getUnreadConversationsCount());
             mTabLayout.getTabAt(1).setCustomView(mMessagesTab);
+        }
+    }
+
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        final Integer lastUnreadRequestsCount = mBookingManager.getLastUnreadRequestsCount();
+        if (lastUnreadRequestsCount != null)
+        {
+            mRequestsTab.setCount((long) lastUnreadRequestsCount);
+        }
+        if (mShouldShowMessagesTab)
+        {
+            mMessagesTab.setCount(mLayerHelper.getUnreadConversationsCount());
         }
     }
 
