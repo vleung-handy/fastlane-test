@@ -1,5 +1,6 @@
 package com.handy.portal.bookings.manager;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -45,7 +46,7 @@ public class BookingManager
     private final Cache<Date, BookingsWrapper> scheduledBookingsCache;
     private final Cache<Date, BookingsWrapper> complementaryBookingsCache;
     private final Cache<Date, BookingsWrapper> requestedBookingsCache;
-    private int mLastUnreadRequestsCount = 0;
+    private Integer mLastUnreadRequestsCount = null;
 
     /*
     keys used in QueryMap requests
@@ -232,7 +233,8 @@ public class BookingManager
                 });
     }
 
-    public int getLastUnreadRequestsCount()
+    @Nullable
+    public Integer getLastUnreadRequestsCount()
     {
         return mLastUnreadRequestsCount;
     }
