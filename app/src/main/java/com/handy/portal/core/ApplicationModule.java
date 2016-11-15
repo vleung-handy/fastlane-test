@@ -171,6 +171,10 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
+    final Context provideContext() { return context; }
+
+    @Provides
+    @Singleton
     final AppseeManager provideAppseeManager(final ConfigManager configManager,
                                              final ProviderManager providerManager,
                                              final FileManager fileManager,

@@ -13,8 +13,6 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.core.BaseApplication;
-import com.handy.portal.model.LocationData;
-import com.handy.portal.ui.activity.BaseActivity;
 
 public final class Utils //TODO: we should reorganize these methods into more specific util classes
 {
@@ -110,20 +108,5 @@ public final class Utils //TODO: we should reorganize these methods into more sp
             Crashlytics.logException(new RuntimeException("Could not get package name", e));
             return -1;
         }
-    }
-
-    public static LocationData getCurrentLocation(BaseActivity baseActivity)
-    {
-        LocationData locationData;
-        if (baseActivity != null)
-        {
-            locationData = new LocationData(baseActivity.getLastLocation());
-        }
-        else
-        {
-            Crashlytics.log("Attempting to access location data outside of a BaseActivity Context, returning empty");
-            locationData = new LocationData();
-        }
-        return locationData;
     }
 }

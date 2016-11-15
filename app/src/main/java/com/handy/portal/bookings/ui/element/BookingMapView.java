@@ -29,7 +29,6 @@ import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.location.LocationUtils;
-import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.model.ZipClusterPolygons;
 
 import java.util.LinkedList;
@@ -52,6 +51,7 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
     private ZipClusterPolygons mPolygons;
     private TouchableWrapper mTouchableWrapper;
     private GoogleMap mMap;
+    private Location mUserLocation;
 
     public BookingMapView(final Context context)
     {
@@ -111,10 +111,9 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
 
         if (shouldIncludeCurrentLocation())
         {
-            final Location lastLocation = LocationManager.getLastLocation();
-            if (lastLocation != null)
+            if (mUserLocation != null)
             {
-                points.add(new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude()));
+                points.add(new LatLng(mUserLocation.getLatitude(), mUserLocation.getLongitude()));
             }
         }
 
@@ -122,11 +121,12 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
     }
 
     public void setDisplay(@NonNull Booking booking, Booking.BookingStatus bookingStatus,
-                           @Nullable ZipClusterPolygons polygons)
+                           @Nullable ZipClusterPolygons polygons, Location userLocation)
     {
         mBooking = booking;
         mStatus = bookingStatus;
         mPolygons = polygons;
+        mUserLocation = userLocation;
         getMapAsync(this);
     }
 

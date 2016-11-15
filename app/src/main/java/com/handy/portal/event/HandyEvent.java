@@ -203,17 +203,6 @@ public abstract class HandyEvent
     }
 
 
-    public static class GooglePlayServicesAvailabilityCheck extends HandyEvent
-    {
-        public final boolean available;
-
-        public GooglePlayServicesAvailabilityCheck(boolean available)
-        {
-            this.available = available;
-        }
-    }
-
-
     public static class RequestBookingsEvent extends RequestEvent
     {
         public boolean useCachedIfPresent;
