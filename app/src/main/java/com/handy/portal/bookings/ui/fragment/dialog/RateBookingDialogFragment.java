@@ -147,7 +147,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         if (bookingRatingScore > 0)
         {
             showLoadingOverlay();
-            final LocationData locationData = mLocationManager.getLocationData();
+            final LocationData locationData = mLocationManager.getLastKnownLocationData();
             mBus.post(new LogEvent.AddLogEvent(
                     new CheckOutFlowLog.CheckOutSubmitted(mBooking, locationData)));
             mBus.post(new BookingEvent.RateCustomer(

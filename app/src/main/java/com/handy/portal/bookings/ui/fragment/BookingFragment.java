@@ -495,7 +495,7 @@ public class BookingFragment extends TimerActionBarFragment
     {
         Booking.BookingStatus bookingStatus = mBooking.inferBookingStatus(getLoggedInUserId());
         sBookingMapView.setDisplay(mBooking, bookingStatus, event.zipClusterPolygons,
-                mLocationManager.getLocation());
+                mLocationManager.getLastLocation());
     }
 
     @OnClick(R.id.booking_get_directions_layout)
@@ -582,7 +582,7 @@ public class BookingFragment extends TimerActionBarFragment
             else
             {
                 sBookingMapView.setDisplay(
-                        mBooking, bookingStatus, null, mLocationManager.getLocation());
+                        mBooking, bookingStatus, null, mLocationManager.getLastLocation());
             }
         }
         else
@@ -672,9 +672,9 @@ public class BookingFragment extends TimerActionBarFragment
                     {
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
                         bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWaySubmitted(
-                                mBooking, mLocationManager.getLocationData())));
+                                mBooking, mLocationManager.getLastKnownLocationData())));
                         bus.post(new HandyEvent.RequestNotifyJobOnMyWay(
-                                mBooking.getId(), mLocationManager.getLocationData()));
+                                mBooking.getId(), mLocationManager.getLastKnownLocationData()));
                     }
                 });
 
@@ -702,15 +702,15 @@ public class BookingFragment extends TimerActionBarFragment
                         {
                             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
                             bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSubmitted(
-                                    mBooking, mLocationManager.getLocationData())));
+                                    mBooking, mLocationManager.getLastKnownLocationData())));
                             bus.post(new HandyEvent.RequestNotifyJobCheckIn(
-                                    mBooking.getId(), mLocationManager.getLocationData()));
+                                    mBooking.getId(), mLocationManager.getLastKnownLocationData()));
                         }
                         else
                         {
                             showToast(R.string.too_far);
                             bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInFailure(
-                                    mBooking, mLocationManager.getLocationData()
+                                    mBooking, mLocationManager.getLastKnownLocationData()
                             )));
                         }
                     }
@@ -760,7 +760,7 @@ public class BookingFragment extends TimerActionBarFragment
     private boolean isUserInRangeOfBooking()
     {
         Booking.Action checkInAction = mBooking.getAction(Booking.Action.ACTION_CHECK_IN);
-        Location userLocation = mLocationManager.getLocation();
+        Location userLocation = mLocationManager.getLastLocation();
         Address address = mBooking.getAddress();
 
         if (checkInAction == null || checkInAction.getCheckInConfig() == null ||

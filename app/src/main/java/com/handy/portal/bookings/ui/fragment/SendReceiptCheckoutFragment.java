@@ -313,7 +313,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
 
     private LocationData getLocationData()
     {
-        return mLocationManager.getLocationData();
+        return mLocationManager.getLastKnownLocationData();
     }
 
     @Override

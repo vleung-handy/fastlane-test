@@ -87,7 +87,8 @@ public class LocationManager
     }
 
     @SuppressWarnings({"ResourceType", "MissingPermission"})
-    public Location getLocation()
+    @Nullable
+    public Location getLastLocation()
     {
         if (!LocationUtils.hasRequiredLocationPermissions(mContext))
         {
@@ -99,16 +100,18 @@ public class LocationManager
         }
     }
 
-    public LocationData getLocationData()
+    @NonNull
+    public LocationData getLastKnownLocationData()
     {
         LocationData locationData;
-        if (getLocation() != null)
+        Location location = getLastLocation();
+        if (location != null)
         {
-            locationData = new LocationData(getLocation());
+            locationData = new LocationData(location);
         }
         else
         {
-            Crashlytics.log("Attempting to access location data outside of a BaseActivity Context, returning empty");
+            Crashlytics.log("Unable to get user location.");
             locationData = new LocationData();
         }
         return locationData;

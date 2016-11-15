@@ -269,7 +269,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWaySuccess(
-                mBooking, mLocationManager.getLocationData())));
+                mBooking, mLocationManager.getLastKnownLocationData())));
 
         //refresh the page with the new booking
         mBooking = event.booking;
@@ -283,7 +283,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         if (mBooking != null)
         {
             bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWayFailure(
-                    mBooking, mLocationManager.getLocationData())));
+                    mBooking, mLocationManager.getLastKnownLocationData())));
         }
         /*
             else, mBooking hasn't been set yet.
@@ -299,7 +299,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSuccess(
-                mBooking, mLocationManager.getLocationData())));
+                mBooking, mLocationManager.getLastKnownLocationData())));
 
         //refresh the page with the new booking
         mBooking = event.booking;
@@ -311,7 +311,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInFailure(
-                mBooking, mLocationManager.getLocationData())));
+                mBooking, mLocationManager.getLastKnownLocationData())));
 
         handleNotifyCheckInError(event);
     }
@@ -743,14 +743,14 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     {
         mSlideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestReportNoShow(mBooking.getId(), mLocationManager.getLocationData()));
+        bus.post(new HandyEvent.RequestReportNoShow(mBooking.getId(), mLocationManager.getLastKnownLocationData()));
     }
 
     private void requestCancelNoShow()
     {
         mSlideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestCancelNoShow(mBooking.getId(), mLocationManager.getLocationData()));
+        bus.post(new HandyEvent.RequestCancelNoShow(mBooking.getId(), mLocationManager.getLastKnownLocationData()));
     }
 
     private void goToHelpCenter(final Booking.Action action)
