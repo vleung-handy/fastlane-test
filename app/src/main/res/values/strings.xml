@@ -50,9 +50,13 @@
     <string name="phone_number_hint">Cell Phone Number</string>
     <string name="pin_code_hint">PIN Code</string>
     <string name="request_pin">Get PIN Code</string>
+    <string name="request_slt">Send Login Link</string>
+    <string name="request_slt_again">Resend Login Link</string>
     <string name="professional_portal">Professional Portal</string>
     <string name="login_instructions_1">Log in to Handy</string>
     <string name="login_instructions_2">We sent a 6-digit PIN code to %1$s and your email.\nEnter it below:</string>
+    <string name="login_instructions_slt">Enter your phone number and we\'ll text you a magic login link.</string>
+    <string name="login_instructions_slt2">We sent a login link to %1$s. Tap below to try again</string>
     <string name="sending_pin">Sending PIN code…</string>
     <string name="logging_in">Logging in…</string>
     <string name="login_need_help"><u>I need help logging in</u></string>

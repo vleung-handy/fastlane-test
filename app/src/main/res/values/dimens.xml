@@ -194,4 +194,7 @@
     <dimen name="conversation_list_item_min_height">72dp</dimen>
     <dimen name="conversation_list_item_chevron_size">16dp</dimen>
 
+    <dimen name="action_button_width">248dp</dimen>
+
+
 </resources>

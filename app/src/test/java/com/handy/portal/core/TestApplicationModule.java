@@ -61,10 +61,12 @@ import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.ui.activity.SplashActivity;
 import com.handy.portal.ui.activity.TestActivity;
 import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
+import com.handy.portal.ui.fragment.LoginSltFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragmentTest;
 import com.handy.portal.ui.fragment.ProfileUpdateFragment;
@@ -135,6 +137,10 @@ import static org.mockito.Mockito.when;
         NewPurchaseSuppliesFragment.class,
         ScheduleConfirmationFragment.class,
         EventLogManagerTest.class,
+        LoginActivity.class,
+        LoginSltFragment.class,
+        SplashActivity.class,
+
 }, library = true)
 public class TestApplicationModule
 {
@@ -224,9 +230,10 @@ public class TestApplicationModule
     }
 
     @Provides
-    final LoginManager provideLoginManager()
+    @Singleton
+    final LoginManager provideLoginManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager)
     {
-        return mock(LoginManager.class);
+        return new LoginManager(bus, dataManager, prefsManager);
     }
 
     @Provides

@@ -12,16 +12,20 @@ import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
+import com.handy.portal.data.DataManager;
+import com.handy.portal.event.HandyEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
-import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.logger.handylogger.model.LoginLog;
+import com.handy.portal.manager.LoginManager;
 import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowStatus;
 import com.handy.portal.onboarding.ui.activity.OnboardingFlowActivity;
@@ -30,6 +34,9 @@ import com.handy.portal.setup.SetupData;
 import com.handy.portal.util.DeeplinkUtils;
 import com.handybook.shared.HandyUser;
 import com.handybook.shared.LayerHelper;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
@@ -40,13 +47,15 @@ import butterknife.ButterKnife;
 public class SplashActivity extends BaseActivity
 {
     @Inject
-    PrefsManager prefsManager;
+    LoginManager mLoginManager;
     @Inject
     HandyRetrofitEndpoint endpoint;
     @Inject
     BuildConfigWrapper buildConfigWrapper;
     @Inject
     LayerHelper mLayerHelper;
+    @Inject
+    EventBus mBus;
 
     @BindView(R.id.progress_spinner)
     ImageView mProgressSpinner;
@@ -54,6 +63,7 @@ public class SplashActivity extends BaseActivity
     int mProgressSpinnerStartOffsetMillis;
 
     private String mAuthToken;
+    private boolean mSltLoggingIn;
 
     private Runnable mLoadingAnimationStarter = new Runnable()
     {
@@ -76,6 +86,7 @@ public class SplashActivity extends BaseActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
+        mBus.register(this);
 
         mProgressSpinner.postDelayed(mLoadingAnimationStarter, mProgressSpinnerStartOffsetMillis);
 
@@ -84,7 +95,10 @@ public class SplashActivity extends BaseActivity
             processInjectedCredentials();
         }
 
-        mAuthToken = prefsManager.getSecureString(PrefsKey.AUTH_TOKEN, null);
+        mAuthToken = mPrefsManager.getSecureString(PrefsKey.AUTH_TOKEN, null);
+
+        // Check for logging in with single login token deep link
+        loginWithSltIfNeeded();
 
         if (mLayerHelper != null && mAuthToken != null)
         {
@@ -94,12 +108,12 @@ public class SplashActivity extends BaseActivity
 
         if (mPrefsManager.getSecureBoolean(PrefsKey.APP_FIRST_LAUNCH, true))
         {
-            bus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(true, true)));
+            mBus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(true, true)));
             mPrefsManager.setSecureBoolean(PrefsKey.APP_FIRST_LAUNCH, false);
         }
         else
         {
-            bus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(false, true)));
+            mBus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(false, true)));
         }
     }
 
@@ -107,14 +121,75 @@ public class SplashActivity extends BaseActivity
     public void onResume()
     {
         super.onResume();
+        // If not logged in and not logging in, prefetch login type before login
+        if (!hasUser() && !mSltLoggingIn)
+        {
+            mConfigManager.prefetch();
+        }
+    }
+
+    @Subscribe
+    public void onLoginSuccess(HandyEvent.ReceiveLoginSuccess event)
+    {
+        mBus.post(new LogEvent.AddLogEvent(new LoginLog.Success(LoginLog.TYPE_TOKEN)));
+        startActivity(new Intent(this, SplashActivity.class));
+        finish();
+    }
+
+    @Subscribe
+    public void onLoginError(HandyEvent.ReceiveLoginError event)
+    {
+        mBus.post(new LogEvent.AddLogEvent(new LoginLog.Error(LoginLog.TYPE_TOKEN)));
+        DataManager.DataManagerError.Type errorType = event.error == null ? null : event.error.getType();
+        if (errorType != null)
+        {
+            if (errorType.equals(DataManager.DataManagerError.Type.NETWORK))
+            {
+                Toast.makeText(this, R.string.error_connectivity, Toast.LENGTH_SHORT).show();
+            }
+            else if (errorType.equals(DataManager.DataManagerError.Type.CLIENT))
+            {
+                Toast.makeText(this, R.string.login_error_bad_login, Toast.LENGTH_SHORT).show();
+            }
+            else //server error
+            {
+                Toast.makeText(this, R.string.login_error_connectivity, Toast.LENGTH_SHORT).show();
+            }
+        }
+        else
+        {
+            //should never happen
+            Toast.makeText(this, R.string.login_error_connectivity, Toast.LENGTH_SHORT).show();
+            Crashlytics.logException(new Exception("Login request error type is null"));
+        }
+        launchLoginActivity();
+    }
+
+    @Subscribe
+    public void onConfigurationReceived(HandyEvent.ReceiveConfigurationSuccess event)
+    {
+        // Start Login Screen if not logged in.
+        // Config is needed to determine pin vs slt login
         if (!hasUser())
         {
-            final Intent loginActivityIntent = getActivityIntent(LoginActivity.class);
-            loginActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                    | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-            startActivity(loginActivityIntent);
-            finish();
+            launchLoginActivity();
         }
+    }
+
+    public void launchLoginActivity()
+    {
+        final Intent loginActivityIntent = getActivityIntent(LoginActivity.class);
+        loginActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(loginActivityIntent);
+        finish();
+    }
+
+    @Override
+    protected void onDestroy()
+    {
+        mBus.unregister(this);
+        super.onDestroy();
     }
 
     @Override
@@ -234,6 +309,23 @@ public class SplashActivity extends BaseActivity
 
     }
 
+    private void loginWithSltIfNeeded()
+    {
+        Intent intent = getIntent();
+        if (!hasUser() && intent != null && getIntent().getData() != null)
+        {
+            mSltLoggingIn = true;
+            String n = getIntent().getData().getQueryParameter("n");
+            String sig = getIntent().getData().getQueryParameter("sig");
+            String slt = getIntent().getData().getQueryParameter("slt");
+
+            if (!TextUtils.isEmpty(n) && !TextUtils.isEmpty(sig) && !TextUtils.isEmpty(slt))
+            {
+                mLoginManager.loginWithSlt(n, sig, slt);
+            }
+        }
+    }
+
     @Override
     public void checkForUpdates()
     {
@@ -256,7 +348,7 @@ public class SplashActivity extends BaseActivity
         if (authToken != null)
         {
             //want to set even if empty string, in the case of testing
-            prefsManager.setSecureString(PrefsKey.AUTH_TOKEN, authToken);
+            mPrefsManager.setSecureString(PrefsKey.AUTH_TOKEN, authToken);
             //For use with WebView
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
             {

@@ -3,6 +3,7 @@ package com.handy.portal.ui.activity;
 import android.os.Bundle;
 
 import com.handy.portal.R;
+import com.handy.portal.model.ConfigurationResponse;
 
 
 public class LoginActivity extends BaseActivity
@@ -11,6 +12,14 @@ public class LoginActivity extends BaseActivity
     protected void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
+        ConfigurationResponse config = mConfigManager.getConfigurationResponse();
+        if (config != null && config.sltEnabled())
+        {
+            setContentView(R.layout.activity_login_slt);
+        }
+        else
+        {
+            setContentView(R.layout.activity_login);
+        }
     }
 }

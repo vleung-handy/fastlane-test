@@ -41,7 +41,7 @@ public class ConfigManager
                 public void onSuccess(ConfigurationResponse configurationResponse)
                 {
                     mRequestIsPending = false;
-                    ConfigManager.this.mConfigurationResponse = configurationResponse;
+                    mConfigurationResponse = configurationResponse;
                     mBus.post(new HandyEvent.ReceiveConfigurationSuccess(configurationResponse));
                 }
 

@@ -8,6 +8,8 @@ import com.handy.portal.dashboard.model.ProviderEvaluation;
 import com.handy.portal.dashboard.model.ProviderFeedback;
 import com.handy.portal.dashboard.model.ProviderRating;
 import com.handy.portal.model.ConfigurationResponse;
+import com.handy.portal.model.LoginDetails;
+import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.retrofit.DynamicEndpoint;
 import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
@@ -74,6 +76,18 @@ public class TestDataManager extends DataManager
                 break;
             }
         }
+    }
+
+    @Override
+    public void requestSlt(final String phoneNumber, final Callback<SuccessWrapper> cb)
+    {
+        cb.onSuccess(new SuccessWrapper(true));
+    }
+
+    @Override
+    public void requestLoginWithSlt(final String n, final String sig, final String slt, final Callback<LoginDetails> cb)
+    {
+        cb.onSuccess(new LoginDetails(true, "x", "x"));
     }
 
     // Factory Methods

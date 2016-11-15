@@ -7,14 +7,22 @@ public class LoginDetails
     @SerializedName("success")
     private boolean success;
     @SerializedName("user_credentials")
-    private String userCredentials;
+    private String mUserCredentials;
     @SerializedName("user_credentials_id")
-    private String userCredentialsId;
+    private String mUserCredentialsId;
+
+    public LoginDetails(final boolean success, final String userCredentials, final String userCredentialsId)
+    {
+        this.success = success;
+        mUserCredentials = userCredentials;
+        mUserCredentialsId = userCredentialsId;
+    }
 
     public boolean getSuccess() { return success; }
-    public String getAuthToken() { return userCredentials; }
 
-    public String getProviderId() { return userCredentialsId; }
+    public String getAuthToken() { return mUserCredentials; }
 
-    public String getUserCredentialsCookie() { return "user_credentials="+ getAuthToken();}
+    public String getProviderId() { return mUserCredentialsId; }
+
+    public String getUserCredentialsCookie() { return "user_credentials=" + getAuthToken();}
 }
