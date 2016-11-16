@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
+import com.google.android.gms.maps.MapsInitializer;
 import com.google.common.base.Strings;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
@@ -179,6 +180,7 @@ public class BookingFragment extends TimerActionBarFragment
 
         if (sBookingMapView == null)
         {
+            MapsInitializer.initialize(getContext().getApplicationContext());
             sBookingMapView = new BookingMapView(getContext().getApplicationContext());
             sBookingMapView.onCreate(null);
         }
