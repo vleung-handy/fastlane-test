@@ -46,6 +46,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -54,6 +56,9 @@ import static com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapt
 
 public class ProRequestedJobsFragment extends InjectedFragment
 {
+    @Inject
+    BookingManager mBookingManager;
+
     @BindView(R.id.fragment_pro_requested_jobs_recycler_view)
     RecyclerView mRequestedJobsRecyclerView;
     @BindView(R.id.pro_requested_bookings_empty)
@@ -205,7 +210,7 @@ public class ProRequestedJobsFragment extends InjectedFragment
     {
         setRefreshingIndicator(true);
         List<Date> datesForBookings = getDatesForBookings();
-        bus.post(new BookingEvent.RequestProRequestedJobs(datesForBookings, useCachedIfPresent));
+        mBookingManager.requestProRequestedJobs(datesForBookings, useCachedIfPresent);
     }
 
     private List<Date> getDatesForBookings()
@@ -267,7 +272,7 @@ public class ProRequestedJobsFragment extends InjectedFragment
     {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimSubmitted(booking)));
-        bus.post(new HandyEvent.RequestClaimJob(booking, null, null));
+        mBookingManager.requestClaimJob(booking, null);
     }
 
     @Subscribe
@@ -362,7 +367,7 @@ public class ProRequestedJobsFragment extends InjectedFragment
     {
         bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobSubmitted(booking,
                 reasonMachineName, reasonDescription)));
-        bus.post(new BookingEvent.RequestDismissJob(booking, reasonMachineName));
+        mBookingManager.requestDismissJob(booking, reasonMachineName);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
     }
 

@@ -19,6 +19,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
+import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.element.BookingElementView;
@@ -63,6 +64,9 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     ConfigManager mConfigManager;
     @Inject
     PrefsManager mPrefsManager;
+    @Inject
+    BookingManager mBookingManager;
+
     @BindView(R.id.fetch_error_view)
     View mFetchErrorView;
     @BindView(R.id.fetch_error_text)
@@ -88,7 +92,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     @NonNull
     protected abstract String getTrackingType();
 
-    protected abstract HandyEvent getRequestEvent(List<Date> dates, boolean useCachedIfPresent);
+    protected abstract void requestBookings(List<Date> dates, boolean useCachedIfPresent);
 
     protected abstract boolean shouldShowRequestedIndicator(List<Booking> bookingsForDay);
 
@@ -269,7 +273,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         }
-        bus.post(getRequestEvent(dates, useCachedIfPresent));
+        requestBookings(dates, useCachedIfPresent);
     }
 
     protected void handleBookingsRetrieved(T event)

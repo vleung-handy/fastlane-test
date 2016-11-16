@@ -8,22 +8,17 @@ import android.support.annotation.Nullable;
 import com.handy.portal.bookings.constant.BookingActionButtonType;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.Booking.Action;
-import com.handy.portal.bookings.model.Booking.BookingType;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
-import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.LocationData;
 import com.handy.portal.model.LoginDetails;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetails;
-import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -214,72 +209,6 @@ public abstract class HandyEvent
     }
 
 
-    public static class RequestBookingsEvent extends RequestEvent
-    {
-        public boolean useCachedIfPresent;
-    }
-
-
-    public static class RequestAvailableBookings extends RequestBookingsEvent
-    {
-        public final List<Date> dates;
-
-        public RequestAvailableBookings(List<Date> dates, boolean useCachedIfPresent)
-        {
-            this.dates = dates;
-            this.useCachedIfPresent = useCachedIfPresent;
-        }
-    }
-
-
-    public static class RequestOnboardingJobs extends RequestEvent
-    {
-        private final Date mStartDate;
-        private final ArrayList<String> mPreferredZipclusterIds;
-
-        public RequestOnboardingJobs(final Date startDate,
-                                     final ArrayList<String> preferredZipclusterIds)
-        {
-            mStartDate = startDate;
-            mPreferredZipclusterIds = preferredZipclusterIds;
-        }
-
-        public Date getStartDate()
-        {
-            return mStartDate;
-        }
-
-        public ArrayList<String> getPreferredZipclusterIds()
-        {
-            return mPreferredZipclusterIds;
-        }
-    }
-
-
-    public static class RequestScheduledBookings extends RequestBookingsEvent
-    {
-        public final List<Date> dates;
-
-        public RequestScheduledBookings(List<Date> dates, boolean useCachedIfPresent)
-        {
-            this.dates = dates;
-            this.useCachedIfPresent = useCachedIfPresent;
-        }
-    }
-
-
-    public static class RequestScheduledBookingsBatch extends RequestBookingsEvent
-    {
-        public final List<Date> dates;
-
-        public RequestScheduledBookingsBatch(List<Date> dates, boolean useCachedIfPresent)
-        {
-            this.dates = dates;
-            this.useCachedIfPresent = useCachedIfPresent;
-        }
-    }
-
-
     public static abstract class ReceiveBookingsSuccess extends ReceiveSuccessEvent
     {
         public BookingsWrapper bookingsWrapper;
@@ -376,21 +305,6 @@ public abstract class HandyEvent
 //Booking Details
 
 
-    public static class RequestBookingDetails extends HandyEvent
-    {
-        public final String bookingId;
-        public final BookingType type;
-        public final Date date;
-
-        public RequestBookingDetails(String bookingId, BookingType type, Date date)
-        {
-            this.bookingId = bookingId;
-            this.type = type;
-            this.date = date;
-        }
-    }
-
-
     public static class ReceiveBookingDetailsSuccess extends ReceiveBookingSuccessEvent
     {
         public ReceiveBookingDetailsSuccess(Booking booking)
@@ -427,52 +341,6 @@ public abstract class HandyEvent
     }
 
 
-    public static class RequestClaimJobs extends RequestEvent
-    {
-        public final JobClaimRequest mJobClaimRequest;
-
-        public RequestClaimJobs(JobClaimRequest jobClaimRequests)
-        {
-            mJobClaimRequest = jobClaimRequests;
-        }
-    }
-
-
-    public static class RequestRemoveJob extends RequestBookingActionEvent
-    {
-        public final Booking booking;
-
-        public RequestRemoveJob(Booking booking)
-        {
-            this.bookingId = booking.getId();
-            this.booking = booking;
-        }
-    }
-
-
-    public static class RequestDismissJob extends RequestEvent
-    {
-        private final Booking mBooking;
-        private final String mReasonMachineName;
-
-        public RequestDismissJob(final Booking booking, final String reasonMachineName)
-        {
-            mBooking = booking;
-            mReasonMachineName = reasonMachineName;
-        }
-
-        public Booking getBooking()
-        {
-            return mBooking;
-        }
-
-        public String getReasonMachineName()
-        {
-            return mReasonMachineName;
-        }
-    }
-
-
     public static class ReceiveDismissJobSuccess extends ReceiveSuccessEvent
     {
         private Booking mBooking;
@@ -503,54 +371,6 @@ public abstract class HandyEvent
         public Booking getBooking()
         {
             return mBooking;
-        }
-    }
-
-
-    public static class RequestNotifyJobOnMyWay extends RequestBookingActionEvent
-    {
-        public LocationData locationData;
-
-        public RequestNotifyJobOnMyWay(String bookingId, LocationData locationData)
-        {
-            this.bookingId = bookingId;
-            this.locationData = locationData;
-        }
-    }
-
-
-    public static class RequestNotifyJobCheckIn extends RequestBookingActionEvent
-    {
-        public LocationData locationData;
-
-        public RequestNotifyJobCheckIn(String bookingId, LocationData locationData)
-        {
-            this.bookingId = bookingId;
-            this.locationData = locationData;
-        }
-    }
-
-
-    public static class RequestNotifyJobCheckOut extends RequestBookingActionEvent
-    {
-        public CheckoutRequest checkoutRequest;
-
-        public RequestNotifyJobCheckOut(String bookingId, CheckoutRequest checkoutRequest)
-        {
-            this.bookingId = bookingId;
-            this.checkoutRequest = checkoutRequest;
-        }
-    }
-
-
-    public static class RequestNotifyJobUpdateArrivalTime extends RequestBookingActionEvent
-    {
-        public Booking.ArrivalTimeOption arrivalTimeOption;
-
-        public RequestNotifyJobUpdateArrivalTime(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption)
-        {
-            this.bookingId = bookingId;
-            this.arrivalTimeOption = arrivalTimeOption;
         }
     }
 
@@ -712,20 +532,6 @@ public abstract class HandyEvent
     }
 
 
-    // Customer No Show Events
-    public static class RequestReportNoShow extends RequestEvent
-    {
-        public final String bookingId;
-        public final LocationData locationData;
-
-        public RequestReportNoShow(String bookingId, LocationData locationData)
-        {
-            this.bookingId = bookingId;
-            this.locationData = locationData;
-        }
-    }
-
-
     public static class ReceiveReportNoShowSuccess extends ReceiveSuccessEvent
     {
         public final Booking booking;
@@ -742,19 +548,6 @@ public abstract class HandyEvent
         public ReceiveReportNoShowError(DataManager.DataManagerError error)
         {
             this.error = error;
-        }
-    }
-
-
-    public static class RequestCancelNoShow extends RequestEvent
-    {
-        public final String bookingId;
-        public final LocationData locationData;
-
-        public RequestCancelNoShow(String bookingId, LocationData locationData)
-        {
-            this.bookingId = bookingId;
-            this.locationData = locationData;
         }
     }
 
@@ -967,20 +760,6 @@ public abstract class HandyEvent
         {
             this.action = action;
             this.actionName = action.getActionName();
-        }
-    }
-
-
-    public static class RequestComplementaryBookings extends RequestBookingActionEvent
-    {
-        public final BookingType type;
-        public final Date date;
-
-        public RequestComplementaryBookings(String bookingId, BookingType type, Date date)
-        {
-            this.bookingId = bookingId;
-            this.type = type;
-            this.date = date;
         }
     }
 

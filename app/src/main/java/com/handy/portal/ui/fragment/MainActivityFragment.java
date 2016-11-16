@@ -223,7 +223,7 @@ public class MainActivityFragment extends InjectedFragment
         {
             mJobRequestsCount = mBookingManager.getLastUnreadRequestsCount();
             updateClientsButtonUnreadCount();
-            bus.post(new BookingEvent.RequestProRequestedJobsCount());
+            mBookingManager.requestProRequestedJobsCount();
         }
         if (mAlertsButton != null && mAlertsButton.getVisibility() == View.VISIBLE)
         {

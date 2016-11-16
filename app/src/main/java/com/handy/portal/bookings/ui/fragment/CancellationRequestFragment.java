@@ -13,6 +13,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
@@ -40,6 +41,8 @@ public class CancellationRequestFragment extends ActionBarFragment
 {
     @Inject
     PrefsManager mPrefsManager;
+    @Inject
+    BookingManager mBookingManager;
 
     @BindView(R.id.cancellation_address)
     TextView mAddressTextView;
@@ -139,7 +142,7 @@ public class CancellationRequestFragment extends ActionBarFragment
                     mAction.getWarningText()
             )));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            bus.post(new HandyEvent.RequestRemoveJob(mBooking));
+            mBookingManager.requestRemoveJob(mBooking);
         }
     }
 

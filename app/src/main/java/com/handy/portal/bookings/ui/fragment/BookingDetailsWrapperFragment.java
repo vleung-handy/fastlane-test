@@ -22,6 +22,7 @@ import com.google.gson.Gson;
 import com.handy.portal.R;
 import com.handy.portal.bookings.constant.BookingActionButtonType;
 import com.handy.portal.bookings.constant.BookingProgress;
+import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.ui.fragment.dialog.ClaimTargetDialogFragment;
@@ -73,6 +74,8 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     PrefsManager mPrefsManager;
     @Inject
     LocationManager mLocationManager;
+    @Inject
+    BookingManager mBookingManager;
 
     @BindView(R.id.booking_details_slide_up_panel_container)
     SlideUpPanelLayout mSlideUpPanelContainer;
@@ -724,21 +727,21 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     {
         mSlideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestNotifyJobUpdateArrivalTime(bookingId, arrivalTimeOption));
+        mBookingManager.requestNotifyUpdateArrivalTime(bookingId, arrivalTimeOption);
     }
 
     private void requestReportNoShow()
     {
         mSlideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestReportNoShow(mBooking.getId(), mLocationManager.getLastKnownLocationData()));
+        mBookingManager.requestReportNoShow(mBooking.getId(), mLocationManager.getLastKnownLocationData());
     }
 
     private void requestCancelNoShow()
     {
         mSlideUpPanelContainer.hidePanel();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestCancelNoShow(mBooking.getId(), mLocationManager.getLastKnownLocationData()));
+        mBookingManager.requestCancelNoShow(mBooking.getId(), mLocationManager.getLastKnownLocationData());
     }
 
     private void goToHelpCenter(final Booking.Action action)
@@ -840,7 +843,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     {
         mFetchErrorView.setVisibility(View.GONE);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestBookingDetails(bookingId, type, bookingDate));
+        mBookingManager.requestBookingDetails(bookingId, type, bookingDate);
     }
 
     private void requestRemoveJob()
@@ -856,7 +859,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 warning
         )));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new HandyEvent.RequestRemoveJob(mBooking));
+        mBookingManager.requestRemoveJob(mBooking);
     }
 
     private void handleBookingRemoveError(String errorMessage)

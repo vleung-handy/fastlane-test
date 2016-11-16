@@ -2,14 +2,12 @@ package com.handy.portal.bookings;
 
 import android.support.annotation.Nullable;
 
-import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.ZipClusterPolygons;
 
-import java.util.Date;
 import java.util.List;
 
 public abstract class BookingEvent extends HandyEvent
@@ -21,29 +19,6 @@ public abstract class BookingEvent extends HandyEvent
         public RequestZipClusterPolygons(String zipClusterId)
         {
             this.zipClusterId = zipClusterId;
-        }
-    }
-
-
-    public static class RequestProRequestedJobs extends RequestEvent
-    {
-        private List<Date> mDatesForBookings;
-        private boolean mUseCachedIfPresent;
-
-        public RequestProRequestedJobs(List<Date> datesForBookings, boolean useCachedIfPresent)
-        {
-            mDatesForBookings = datesForBookings;
-            mUseCachedIfPresent = useCachedIfPresent;
-        }
-
-        public boolean useCachedIfPresent()
-        {
-            return mUseCachedIfPresent;
-        }
-
-        public List<Date> getDatesForBookings()
-        {
-            return mDatesForBookings;
         }
     }
 
@@ -93,61 +68,6 @@ public abstract class BookingEvent extends HandyEvent
     }
 
 
-    public static class RequestNearbyBookings extends RequestEvent
-    {
-        private int mRegionId;
-        private double mLatitude;
-        private double mLongitude;
-
-        public RequestNearbyBookings(final int regionId, final double latitude, final double longitude)
-        {
-            mRegionId = regionId;
-            mLatitude = latitude;
-            mLongitude = longitude;
-        }
-
-        public int getRegionId() { return mRegionId; }
-
-        public double getLatitude() { return mLatitude; }
-
-        public double getLongitude() { return mLongitude; }
-    }
-
-
-    public static class ReceiveNearbyBookingsSuccess extends ReceiveSuccessEvent
-    {
-        private List<Booking> mBookings;
-
-        public ReceiveNearbyBookingsSuccess(final List<Booking> bookings) { mBookings = bookings; }
-
-        public List<Booking> getBookings() { return mBookings; }
-    }
-
-
-    public static class ReceiveNearbyBookingsError extends ReceiveErrorEvent
-    {
-        public ReceiveNearbyBookingsError(DataManager.DataManagerError error)
-        {
-            this.error = error;
-        }
-    }
-
-
-    public static class RateCustomer extends RequestEvent
-    {
-        public final String bookingId;
-        public final int rating;
-        public final String reviewText;
-
-        public RateCustomer(String bookingId, int rating, String reviewText)
-        {
-            this.bookingId = bookingId;
-            this.rating = rating;
-            this.reviewText = reviewText;
-        }
-    }
-
-
     public static class RateCustomerSuccess extends ReceiveSuccessEvent {}
 
 
@@ -155,9 +75,6 @@ public abstract class BookingEvent extends HandyEvent
     {
         public RateCustomerError(DataManager.DataManagerError error) { this.error = error; }
     }
-
-
-    public static class RequestProRequestedJobsCount extends RequestEvent {}
 
 
     public static class ReceiveProRequestedJobsCountSuccess extends ReceiveSuccessEvent
@@ -174,23 +91,6 @@ public abstract class BookingEvent extends HandyEvent
             return mCount;
         }
     }
-
-
-    public static class RequestPostCheckoutInfo extends RequestEvent
-    {
-        private String mBookingId;
-
-        public RequestPostCheckoutInfo(final String bookingId)
-        {
-            mBookingId = bookingId;
-        }
-
-        public String getBookingId()
-        {
-            return mBookingId;
-        }
-    }
-
 
     public static class ReceivePostCheckoutInfoSuccess extends ReceiveSuccessEvent
     {

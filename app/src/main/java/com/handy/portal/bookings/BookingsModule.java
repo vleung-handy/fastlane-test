@@ -7,7 +7,6 @@ import com.handy.portal.bookings.ui.fragment.BookingFragment;
 import com.handy.portal.bookings.ui.fragment.CancellationRequestFragment;
 import com.handy.portal.bookings.ui.fragment.ComplementaryBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.InProgressBookingFragment;
-import com.handy.portal.bookings.ui.fragment.NearbyBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingCancelCancellationPolicyDialogFragment;
@@ -36,7 +35,6 @@ import dagger.Provides;
                 AvailableBookingsFragment.class,
                 ComplementaryBookingsFragment.class,
                 RateBookingDialogFragment.class,
-                NearbyBookingsFragment.class,
                 CancellationRequestFragment.class,
                 ConfirmBookingClaimDialogFragment.class,
                 ConfirmBookingCancelKeepRateDialogFragment.class,
