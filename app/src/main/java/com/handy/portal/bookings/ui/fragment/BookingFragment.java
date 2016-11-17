@@ -360,20 +360,7 @@ public class BookingFragment extends TimerActionBarFragment
         mJobNumberText.setText(getResources().getString(R.string.job_number_formatted, bookingIdPrefix + mBooking.getId()));
 
         mJobPaymentText.setText(mBooking.getFormattedProviderPayout());
-        final PaymentInfo hourlyRate = mBooking.getHourlyRate();
-        if (hourlyRate != null && mBooking.hasFlexibleHours() && mBooking.getRevealDate() != null
-                && mBooking.isClaimedByMe())
-        {
-            final float minimumHours = mBooking.getMinimumHours();
-            final float maximumHours = mBooking.getHours();
-            final String currencySymbol = hourlyRate.getCurrencySymbol();
-            final String minimumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
-                    (int) (hourlyRate.getAmount() * minimumHours), currencySymbol);
-            final String maximumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
-                    (int) (hourlyRate.getAmount() * maximumHours), currencySymbol);
-            setRevealNoticeText(minimumHours, maximumHours, minimumPaymentFormatted,
-                    maximumPaymentFormatted);
-        }
+        setRevealNoticeTextIfNecessary();
 
         PaymentInfo bonusInfo = mBooking.getBonusPaymentToProvider();
         if (bonusInfo != null && bonusInfo.getAdjustedAmount() > 0)
@@ -466,6 +453,24 @@ public class BookingFragment extends TimerActionBarFragment
         }
 
         setActionBarTitle();
+    }
+
+    private void setRevealNoticeTextIfNecessary()
+    {
+        final PaymentInfo hourlyRate = mBooking.getHourlyRate();
+        if (hourlyRate != null && mBooking.hasFlexibleHours() && mBooking.getRevealDate() != null
+                && mBooking.isClaimedByMe())
+        {
+            final float minimumHours = mBooking.getMinimumHours();
+            final float maximumHours = mBooking.getHours();
+            final String currencySymbol = hourlyRate.getCurrencySymbol();
+            final String minimumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
+                    (int) (hourlyRate.getAmount() * minimumHours), currencySymbol);
+            final String maximumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
+                    (int) (hourlyRate.getAmount() * maximumHours), currencySymbol);
+            setRevealNoticeText(minimumHours, maximumHours, minimumPaymentFormatted,
+                    maximumPaymentFormatted);
+        }
     }
 
     @Subscribe

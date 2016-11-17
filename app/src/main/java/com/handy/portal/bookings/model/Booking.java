@@ -231,6 +231,7 @@ public class Booking implements Comparable<Booking>, Serializable
         return mPartner;
     }
 
+    @NonNull
     public String getFormattedProviderPayout()
     {
         return mFormattedProviderPayout;
