@@ -372,7 +372,7 @@
 
         <!-- Receiver: Our app notification handling -->
         <receiver
-            android:name=".receiver.LayerPushReceiver"
+            android:name="com.handybook.shared.PushNotificationReceiver"
             android:permission="${applicationId}.permission.LAYER_PUSH"
             >
 
