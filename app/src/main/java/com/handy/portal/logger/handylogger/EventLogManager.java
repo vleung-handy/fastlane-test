@@ -411,6 +411,9 @@ public class EventLogManager
         eventLogJson.put("context", event.getEventContext());
         eventLogJson.put("session_event_count", event.getSessionEventCount());
         eventLogJson.put("session_id", event.getSessionId());
+        eventLogJson.put("event_timestamp_ms", event.getTimestampMillis());
+        eventLogJson.put("event_timestamp", event.getTimestampSecs());
+        eventLogJson.put("event_id", event.getId());
         eventLogJson.put("platform", "android");
         eventLogJson.put("client", "android");
         eventLogJson.put("mobile", 1);
