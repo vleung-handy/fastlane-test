@@ -359,42 +359,20 @@ public class BookingFragment extends TimerActionBarFragment
         String bookingIdPrefix = mBooking.isProxy() ? BOOKING_PROXY_ID_PREFIX : "";
         mJobNumberText.setText(getResources().getString(R.string.job_number_formatted, bookingIdPrefix + mBooking.getId()));
 
-        final PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
+        mJobPaymentText.setText(mBooking.getFormattedProviderPayout());
         final PaymentInfo hourlyRate = mBooking.getHourlyRate();
-        if (hourlyRate != null)
+        if (hourlyRate != null && mBooking.hasFlexibleHours() && mBooking.getRevealDate() != null
+                && mBooking.isClaimedByMe())
         {
-            if (mBooking.hasFlexibleHours())
-            {
-                final float minimumHours = mBooking.getMinimumHours();
-                final float maximumHours = mBooking.getHours();
-                final String currencySymbol = hourlyRate.getCurrencySymbol();
-                final String minimumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
-                        (int) (hourlyRate.getAmount() * minimumHours), currencySymbol);
-                final String maximumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
-                        (int) (hourlyRate.getAmount() * maximumHours), currencySymbol);
-                String paymentText = getResources().getString(R.string.dash_formatted,
-                        minimumPaymentFormatted, maximumPaymentFormatted);
-                mJobPaymentText.setText(paymentText);
-
-                if (mBooking.getRevealDate() != null && mBooking.isClaimedByMe())
-                {
-                    setRevealNoticeText(minimumHours, maximumHours, minimumPaymentFormatted,
-                            maximumPaymentFormatted);
-                }
-            }
-            else
-            {
-                final String paymentFormatted = CurrencyUtils.formatPriceWithCents(
-                        (int) (hourlyRate.getAmount() * mBooking.getHours()),
-                        hourlyRate.getCurrencySymbol());
-                mJobPaymentText.setText(paymentFormatted);
-            }
-        }
-        else if (paymentInfo != null)
-        {
-            String paymentText = CurrencyUtils.formatPriceWithCents(paymentInfo.getAmount(),
-                    paymentInfo.getCurrencySymbol());
-            mJobPaymentText.setText(paymentText);
+            final float minimumHours = mBooking.getMinimumHours();
+            final float maximumHours = mBooking.getHours();
+            final String currencySymbol = hourlyRate.getCurrencySymbol();
+            final String minimumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
+                    (int) (hourlyRate.getAmount() * minimumHours), currencySymbol);
+            final String maximumPaymentFormatted = CurrencyUtils.formatPriceWithCents(
+                    (int) (hourlyRate.getAmount() * maximumHours), currencySymbol);
+            setRevealNoticeText(minimumHours, maximumHours, minimumPaymentFormatted,
+                    maximumPaymentFormatted);
         }
 
         PaymentInfo bonusInfo = mBooking.getBonusPaymentToProvider();

@@ -19,7 +19,6 @@ import com.handy.portal.library.ui.view.PriceMarker;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.location.LocationUtils;
 import com.handy.portal.model.Address;
-import com.handy.portal.payments.model.PaymentInfo;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -136,9 +135,8 @@ public class NearbyBookingsMapFragment extends SupportMapFragment implements OnM
         Set<Map.Entry<Marker, Booking>> entries = mMarkerBookingMap.entrySet();
         for (Map.Entry<Marker, Booking> entry : entries)
         {
-            PaymentInfo paymentInfo = entry.getValue().getPaymentToProvider();
             setIcon(entry.getKey(), entry.getKey().getPosition().equals(marker.getPosition()),
-                    paymentInfo.getCurrencySymbol() + paymentInfo.getAdjustedAmount());
+                    entry.getValue().getFormattedProviderPayout());
         }
     }
 

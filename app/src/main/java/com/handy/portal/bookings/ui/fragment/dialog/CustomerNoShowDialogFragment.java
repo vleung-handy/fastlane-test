@@ -21,10 +21,8 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.helpcenter.constants.HelpCenterUrl;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.library.ui.widget.BulletListItem;
-import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
-import com.handy.portal.payments.model.PaymentInfo;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -109,9 +107,8 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment
 
     private void updateHeaderWithBookingPaymentInfo()
     {
-        PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
-        String paymentInfoString = CurrencyUtils.formatPriceWithoutCents(paymentInfo.getAmount(), paymentInfo.getCurrencySymbol());
-        mPaymentInfoText.setText(getString(R.string.customer_no_show_payment_info_formatted, paymentInfoString));
+        mPaymentInfoText.setText(getString(R.string.customer_no_show_payment_info_formatted,
+                mBooking.getFormattedProviderPayout()));
     }
 
     private void populateInstructionsList(@NonNull final int[] instructionListStringResourceIds)
