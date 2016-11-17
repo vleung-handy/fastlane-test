@@ -117,10 +117,13 @@
                     tools:visibility="gone"
                     />
 
-                <com.handy.portal.bookings.ui.element.BookingDetailsPaymentView
+                <TextView
                     android:id="@+id/booking_entry_payment"
+                    style="@style/TextView.Large"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/black"
+                    tools:text="$45.00"
                     />
 
                 <TextView
