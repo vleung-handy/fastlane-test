@@ -57,6 +57,8 @@ public class Booking implements Comparable<Booking>, Serializable
 
     @SerializedName("is_requested")
     private boolean mIsRequested; //true if a customer related to this proxy/booking requested the pro
+    @SerializedName("formatted_provider_payout")
+    private String mFormattedProviderPayout;
     @SerializedName("payment_to_provider")
     private PaymentInfo mPaymentToProvider;
     @SerializedName("bonus")
@@ -227,6 +229,12 @@ public class Booking implements Comparable<Booking>, Serializable
     public String getPartner()
     {
         return mPartner;
+    }
+
+    @NonNull
+    public String getFormattedProviderPayout()
+    {
+        return mFormattedProviderPayout;
     }
 
     public PaymentInfo getPaymentToProvider()

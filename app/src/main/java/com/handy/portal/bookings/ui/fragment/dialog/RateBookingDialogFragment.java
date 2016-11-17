@@ -97,13 +97,8 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             mBooking = (Booking) bundle.getSerializable(BundleKeys.BOOKING);
             if (mBooking != null)
             {
-                PaymentInfo paymentInfo = mBooking.getPaymentToProvider();
-                if (paymentInfo != null)
-                {
-                    String amount = CurrencyUtils.formatPrice(
-                            paymentInfo.getAdjustedAmount(), paymentInfo.getCurrencySymbol());
-                    mAmountText.setText(getString(R.string.you_earned_money_formatted, amount));
-                }
+                mAmountText.setText(getString(R.string.you_earned_money_formatted,
+                        mBooking.getFormattedProviderPayout()));
                 PaymentInfo bonusInfo = mBooking.getBonusPaymentToProvider();
                 if (bonusInfo != null && bonusInfo.getAdjustedAmount() > 0)
                 {

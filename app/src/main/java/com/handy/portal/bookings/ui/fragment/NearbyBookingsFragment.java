@@ -34,7 +34,6 @@ import com.handy.portal.logger.handylogger.model.NearbyJobsLog;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.Address;
 import com.handy.portal.model.Provider;
-import com.handy.portal.payments.model.PaymentInfo;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -211,8 +210,6 @@ public class NearbyBookingsFragment extends ActionBarFragment
     private void setBookingInfoDisplay(final Booking booking)
     {
         Address address = booking.getAddress();
-        PaymentInfo paymentInfo = booking.getPaymentToProvider();
-
         setCountDownTimer(booking.getStartDate().getTime() - System.currentTimeMillis());
 
         mBookingAddressText.setText(booking.getAddress().getShortRegion());
@@ -240,7 +237,7 @@ public class NearbyBookingsFragment extends ActionBarFragment
         final ConfirmBookingActionDialogFragment dialogFragment =
                 ConfirmBookingClaimDialogFragment.newInstance(booking);
         mBookingClaimButton.setText(getString(R.string.claim_n_dollar_job_formatted,
-                paymentInfo.getCurrencySymbol() + paymentInfo.getAdjustedAmount()));
+                booking.getFormattedProviderPayout()));
         mBookingClaimButton.setOnClickListener(new View.OnClickListener()
         {
             @Override
