@@ -22,13 +22,12 @@ import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.UIUtils;
-import com.handy.portal.library.util.Utils;
+import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.CheckOutFlowLog;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.payments.model.PaymentInfo;
-import com.handy.portal.ui.activity.BaseActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -43,6 +42,8 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
 {
     @Inject
     PrefsManager mPrefsManager;
+    @Inject
+    LocationManager mLocationManager;
     @Inject
     EventBus mBus;
 
@@ -146,7 +147,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
         if (bookingRatingScore > 0)
         {
             showLoadingOverlay();
-            final LocationData locationData = getLocationData();
+            final LocationData locationData = mLocationManager.getLastKnownLocationData();
             mBus.post(new LogEvent.AddLogEvent(
                     new CheckOutFlowLog.CheckOutSubmitted(mBooking, locationData)));
             mBus.post(new BookingEvent.RateCustomer(
@@ -194,11 +195,6 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             final BookingEvent.ReceivePostCheckoutInfoError event)
     {
         dismiss();
-    }
-
-    private LocationData getLocationData()
-    {
-        return Utils.getCurrentLocation((BaseActivity) getActivity());
     }
 
     private int getBookingRatingScore()

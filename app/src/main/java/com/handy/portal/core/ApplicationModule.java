@@ -11,6 +11,7 @@ import com.handy.portal.BuildConfig;
 import com.handy.portal.action.CustomDeepLinkAction;
 import com.handy.portal.bookings.BookingsModule;
 import com.handy.portal.bookings.ui.fragment.SoftwareLicensesFragment;
+import com.handy.portal.clients.ClientsModule;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.dashboard.fragment.DashboardFeedbackFragment;
 import com.handy.portal.dashboard.fragment.DashboardReviewsFragment;
@@ -27,6 +28,7 @@ import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.LocationModule;
 import com.handy.portal.logger.handylogger.EventLogManager;
+import com.handy.portal.manager.AppseeManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.FileManager;
 import com.handy.portal.manager.LoginManager;
@@ -45,6 +47,7 @@ import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.notification.NotificationModule;
 import com.handy.portal.onboarding.OnboardingModule;
 import com.handy.portal.onboarding.ui.activity.ActivationWelcomeActivity;
+import com.handy.portal.onboarding.ui.activity.FirstDayActivity;
 import com.handy.portal.onboarding.ui.fragment.CameraPermissionsBlockerDialogFragment;
 import com.handy.portal.onboarding.ui.fragment.IDVerificationFragment;
 import com.handy.portal.payments.PaymentsManager;
@@ -140,6 +143,7 @@ import retrofit.converter.GsonConverter;
         SoftwareLicensesFragment.class,
         CameraPermissionsBlockerDialogFragment.class,
         IDVerificationFragment.class,
+        FirstDayActivity.class,
 },
         includes = {
                 HelpModule.class,
@@ -149,6 +153,7 @@ import retrofit.converter.GsonConverter;
                 BookingsModule.class,
                 OnboardingModule.class,
                 SetupModule.class,
+                ClientsModule.class,
         }
 )
 public final class ApplicationModule
@@ -162,6 +167,21 @@ public final class ApplicationModule
         this.application = application;
         this.context = this.application.getApplicationContext();
         configs = PropertiesReader.getConfigProperties(context);
+    }
+
+    @Provides
+    @Singleton
+    final Context provideContext() { return context; }
+
+    @Provides
+    @Singleton
+    final AppseeManager provideAppseeManager(final ConfigManager configManager,
+                                             final ProviderManager providerManager,
+                                             final FileManager fileManager,
+                                             final EventBus eventBus)
+    {
+        String appseeApiKey = configs.getProperty("appsee_api_key");
+        return new AppseeManager(appseeApiKey, configManager, providerManager, fileManager, eventBus);
     }
 
     @Provides
@@ -198,12 +218,11 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final HandyRetrofitService provideHandyService(final BuildConfigWrapper buildConfigWrapper,
-                                                   final HandyRetrofitEndpoint endpoint,
-                                                   final PrefsManager prefsManager,
-                                                   final EventBus bus)
+    final RestAdapter provideRestAdapter(final BuildConfigWrapper buildConfigWrapper,
+                                         final HandyRetrofitEndpoint endpoint,
+                                         final PrefsManager prefsManager,
+                                         final EventBus bus)
     {
-
         final OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
         if (!BuildConfig.DEBUG)
@@ -240,7 +259,7 @@ public final class ApplicationModule
                         request.addQueryParam("client", "android");
                         request.addQueryParam("app_version", BuildConfig.VERSION_NAME);
                         request.addQueryParam("device_id", SystemUtils.getDeviceId(context));
-                        request.addQueryParam("device_model", BaseApplication.getDeviceModel());
+                        request.addQueryParam("device_model", SystemUtils.getDeviceModel());
                         request.addQueryParam("os_version", Build.VERSION.RELEASE);
                         request.addQueryParam("device_carrier", getDeviceCarrier());
                         request.addQueryParam("timezone", TimeZone.getDefault().getID());
@@ -266,7 +285,13 @@ public final class ApplicationModule
         {
             restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
         }
+        return restAdapter;
+    }
 
+    @Provides
+    @Singleton
+    final HandyRetrofitService provideHandyService(final RestAdapter restAdapter)
+    {
         return restAdapter.create(HandyRetrofitService.class);
     }
 
@@ -282,7 +307,7 @@ public final class ApplicationModule
     @Singleton
     final FileManager provideFileManager()
     {
-        return new FileManager();
+        return new FileManager(context);
     }
 
     @Provides
@@ -316,6 +341,7 @@ public final class ApplicationModule
     {
         final OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
+        okHttpClient.setWriteTimeout(90, TimeUnit.SECONDS);
 
         final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
                 .setRequestInterceptor(new RequestInterceptor()
@@ -463,7 +489,8 @@ public final class ApplicationModule
                                                   final PrefsManager prefsManager,
                                                   final ProviderManager providerManager)
     {
-        return new EventLogManager(bus, dataManager, fileManager, prefsManager, providerManager);
+        return new EventLogManager(
+                context, bus, dataManager, fileManager, prefsManager, providerManager);
     }
 
     @Provides

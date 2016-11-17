@@ -333,6 +333,27 @@ public class NativeOnboardingLog extends EventLog
         }
     }
 
+    /**
+     * Jumio ID verification platform support status
+     */
+    public static class NativeIDVerificationPlatformSupportStatusLog extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "native_id_verification_platform_support_status";
+
+        /**
+         * true if the Jumio SDK determines that this platform is supported
+         */
+        @SerializedName("platform_supported")
+        private final boolean mPlatformSupported;
+
+        public NativeIDVerificationPlatformSupportStatusLog(boolean platformSupported)
+        {
+            super(EVENT_TYPE);
+            mPlatformSupported = platformSupported;
+        }
+    }
+
+
 
     /**
      * Jumio ID verification in app flow completed
@@ -428,6 +449,40 @@ public class NativeOnboardingLog extends EventLog
         public CameraSettingsOpenedLog()
         {
             super(EVENT_TYPE);
+        }
+    }
+
+
+    /**
+     * When FirstDayActivity opens
+     */
+    public static class HelpArticleOpened extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "help_article_opened";
+        @SerializedName("article_name")
+        private String mArticleName;
+
+        public HelpArticleOpened(final String articleName)
+        {
+            super(EVENT_TYPE);
+            mArticleName = articleName;
+        }
+    }
+
+
+    /**
+     * When FirstDayActivity closes
+     */
+    public static class HelpArticleClosed extends NativeOnboardingLog
+    {
+        private static final String EVENT_TYPE = "help_article_closed";
+        @SerializedName("article_name")
+        private String mArticleName;
+
+        public HelpArticleClosed(final String articleName)
+        {
+            super(EVENT_TYPE);
+            mArticleName = articleName;
         }
     }
 }

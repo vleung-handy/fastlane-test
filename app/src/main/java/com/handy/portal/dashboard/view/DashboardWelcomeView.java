@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.manager.AppseeManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -57,5 +58,6 @@ public class DashboardWelcomeView extends FrameLayout
     {
         inflate(getContext(), R.layout.element_welcome_pro_performance, this);
         ButterKnife.bind(this);
+        AppseeManager.markViewsAsSensitive(mWelcomeBackText); //sensitive because contains name
     }
 }

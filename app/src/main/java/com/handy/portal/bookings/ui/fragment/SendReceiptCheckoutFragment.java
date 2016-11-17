@@ -27,14 +27,13 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.UIUtils;
-import com.handy.portal.library.util.Utils;
+import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.CheckOutFlowLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.ProBookingFeedback;
-import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.view.CheckoutCompletedTaskView;
 
@@ -57,6 +56,8 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     ConfigManager mConfigManager;
     @Inject
     PrefsManager mPrefsManager;
+    @Inject
+    LocationManager mLocationManager;
 
     @BindView(R.id.started_time_text)
     TextView mStartTimeText;
@@ -312,7 +313,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
 
     private LocationData getLocationData()
     {
-        return Utils.getCurrentLocation((BaseActivity) getActivity());
+        return mLocationManager.getLastKnownLocationData();
     }
 
     @Override

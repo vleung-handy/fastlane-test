@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
+import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
@@ -40,6 +41,7 @@ import com.handy.portal.library.ui.widget.TabButtonGroup;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
+import com.handy.portal.manager.AppseeManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
@@ -47,6 +49,7 @@ import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.util.DeeplinkMapper;
+import com.handybook.shared.LayerHelper;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -60,6 +63,7 @@ import butterknife.OnClick;
 import static com.handy.portal.model.ProviderPersonalInfo.ProfileImage.Type.THUMBNAIL;
 
 public class MainActivityFragment extends InjectedFragment
+        implements LayerHelper.UnreadConversationsCountChangedListener
 {
     @Inject
     PrefsManager mPrefsManager;
@@ -69,12 +73,15 @@ public class MainActivityFragment extends InjectedFragment
     EnvironmentModifier mEnvironmentModifier;
     @Inject
     ProviderManager mProviderManager;
-    /////////////Bad useless injection that breaks if not in?
+    @Inject
+    LayerHelper mLayerHelper;
+    @Inject
+    BookingManager mBookingManager;
 
     @BindView(R.id.tabs)
     TabButtonGroup mTabs;
     private TabButton mJobsButton;
-    private TabButton mRequestsButton;
+    private TabButton mClientsButton;
     private TabButton mScheduleButton;
     private TabButton mAlertsButton;
     private TabButton mButtonMore;
@@ -116,6 +123,8 @@ public class MainActivityFragment extends InjectedFragment
     private Bundle mDeeplinkData;
     private boolean mDeeplinkHandled;
     private String mDeeplinkSource;
+    private Integer mJobRequestsCount = null;
+    private boolean mShouldIncludeMessagesCount;
 
     @Override
     public void onCreate(final Bundle savedInstanceState)
@@ -142,6 +151,13 @@ public class MainActivityFragment extends InjectedFragment
                 setDrawerActive(false);
             }
         };
+
+        final ConfigurationResponse configuration = configManager.getConfigurationResponse();
+        mShouldIncludeMessagesCount = configuration != null && configuration.isClientsChatEnabled();
+        if (mShouldIncludeMessagesCount && mLayerHelper != null)
+        {
+            mLayerHelper.registerUnreadConversationsCountChangedListener(this);
+        }
     }
 
     @Override
@@ -158,6 +174,8 @@ public class MainActivityFragment extends InjectedFragment
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_main, container);
         ButterKnife.bind(this, view);
+
+        AppseeManager.markViewsAsSensitive(mNavigationHeaderProName, mProImage);
         registerButtonListeners();
         return view;
     }
@@ -201,8 +219,10 @@ public class MainActivityFragment extends InjectedFragment
         super.onResume();
         bus.register(this);
 
-        if (mRequestsButton != null && mRequestsButton.getVisibility() == View.VISIBLE)
+        if (mClientsButton != null && mClientsButton.getVisibility() == View.VISIBLE)
         {
+            mJobRequestsCount = mBookingManager.getLastUnreadRequestsCount();
+            updateClientsButtonUnreadCount();
             bus.post(new BookingEvent.RequestProRequestedJobsCount());
         }
         if (mAlertsButton != null && mAlertsButton.getVisibility() == View.VISIBLE)
@@ -379,9 +399,9 @@ public class MainActivityFragment extends InjectedFragment
                 mNavTrayLinks.clearCheck();
             }
             break;
-            case REQUESTED_JOBS:
+            case CLIENTS:
             {
-                mRequestsButton.toggle();
+                mClientsButton.toggle();
                 mNavTrayLinks.clearCheck();
             }
             break;
@@ -453,9 +473,26 @@ public class MainActivityFragment extends InjectedFragment
     public void onReceiveProRequestedJobsCountSuccess(
             final BookingEvent.ReceiveProRequestedJobsCountSuccess event)
     {
-        if (mRequestsButton != null)
+        mJobRequestsCount = event.getCount();
+        updateClientsButtonUnreadCount();
+    }
+
+    @Override
+    public void onUnreadConversationsCountChanged(final long count)
+    {
+        updateClientsButtonUnreadCount();
+    }
+
+    private void updateClientsButtonUnreadCount()
+    {
+        if (mClientsButton != null && mJobRequestsCount != null)
         {
-            mRequestsButton.setUnreadCount(event.getCount());
+            int clientsButtonUnreadCount = mJobRequestsCount;
+            if (mShouldIncludeMessagesCount && mLayerHelper != null)
+            {
+                clientsButtonUnreadCount += mLayerHelper.getUnreadConversationsCount();
+            }
+            mClientsButton.setUnreadCount(clientsButtonUnreadCount);
         }
     }
 
@@ -472,9 +509,9 @@ public class MainActivityFragment extends InjectedFragment
         mJobsButton = new TabButton(getContext())
                 .init(R.string.tab_claim, R.drawable.ic_menu_search);
         mJobsButton.setId(R.id.tab_nav_available);
-        mRequestsButton = new TabButton(getContext()).init(R.string.tab_requests,
-                R.drawable.ic_menu_requests);
-        mRequestsButton.setId(R.id.tab_nav_pro_requested_jobs);
+        mClientsButton = new TabButton(getContext()).init(R.string.tab_clients,
+                R.drawable.ic_menu_clients);
+        mClientsButton.setId(R.id.tab_nav_clients);
         mScheduleButton = new TabButton(getContext())
                 .init(R.string.tab_schedule, R.drawable.ic_menu_schedule);
         mScheduleButton.setId(R.id.tab_nav_schedule);
@@ -484,7 +521,7 @@ public class MainActivityFragment extends InjectedFragment
         mButtonMore = new TabButton(getContext())
                 .init(R.string.tab_more, R.drawable.ic_menu_more);
         mButtonMore.setId(R.id.tab_nav_item_more);
-        mTabs.setTabs(mJobsButton, mScheduleButton, mRequestsButton, mAlertsButton, mButtonMore);
+        mTabs.setTabs(mJobsButton, mClientsButton, mScheduleButton, mAlertsButton, mButtonMore);
 
         mJobsButton.setOnClickListener(
                 new TabOnClickListener(mJobsButton, MainViewPage.AVAILABLE_JOBS));
@@ -704,7 +741,7 @@ public class MainActivityFragment extends InjectedFragment
         if (mConfigManager == null || mConfigManager.getConfigurationResponse() == null)
         {
             mAlertsButton.setVisibility(View.GONE);
-            mRequestsButton.setVisibility(View.GONE);
+            mClientsButton.setVisibility(View.GONE);
             return;
         }
 
@@ -721,14 +758,23 @@ public class MainActivityFragment extends InjectedFragment
 
         if (mConfigManager.getConfigurationResponse().isPendingRequestsInboxEnabled())
         {
-            mRequestsButton.setOnClickListener(
-                    new TabOnClickListener(mRequestsButton, MainViewPage.REQUESTED_JOBS));
-            mRequestsButton.setVisibility(View.VISIBLE);
+            mClientsButton.setOnClickListener(
+                    new TabOnClickListener(mClientsButton, MainViewPage.CLIENTS));
+            mClientsButton.setVisibility(View.VISIBLE);
         }
         else
         {
-            mRequestsButton.setVisibility(View.GONE);
+            mClientsButton.setVisibility(View.GONE);
         }
     }
 
+    @Override
+    public void onDestroy()
+    {
+        if (mShouldIncludeMessagesCount && mLayerHelper != null)
+        {
+            mLayerHelper.unregisterUnreadConversationsCountChangedListener(this);
+        }
+        super.onDestroy();
+    }
 }

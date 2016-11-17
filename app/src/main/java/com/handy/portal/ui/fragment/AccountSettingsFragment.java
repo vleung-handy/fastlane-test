@@ -28,6 +28,7 @@ import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
+import com.handy.portal.manager.AppseeManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
@@ -95,6 +96,7 @@ public class AccountSettingsFragment extends ActionBarFragment
 
         ButterKnife.bind(this, fragmentView);
 
+        AppseeManager.markViewsAsSensitive(mProviderNameText);
         return fragmentView;
     }
 
@@ -181,7 +183,7 @@ public class AccountSettingsFragment extends ActionBarFragment
                     public void onClick(DialogInterface dialogInterface, int i)
                     {
                         //TODO this logout code should be moved somewhere else
-                        mPrefsManager.clearButSaveEventLogs();
+                        mPrefsManager.clear();
                         mBookingManager.clearCache();
 
                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)

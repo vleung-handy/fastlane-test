@@ -21,6 +21,8 @@ repositories {
     maven { url "http://dl.bintray.com/urbanairship/android" }
     maven { url "https://jitpack.io" }
     maven { url 'http://mobile-sdk.jumio.com' }
+    maven { url "https://raw.githubusercontent.com/layerhq/releases-android/master/releases/" }
+    maven { url "https://raw.githubusercontent.com/layerhq/Atlas-Android/master/releases/" }
     flatDir {
         dirs 'libs'
     }
@@ -63,13 +65,20 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 16
         targetSdkVersion 24
-        versionName '1.5.2'
+        versionName '1.8.0'
         versionCode computeVersionCode(versionName)
         proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
 
     signingConfigs {
+        // This dubug is need for google map to work in debug build
+        debug {
+            keyAlias 'HandyProdKey'
+            keyPassword 'S0H@ndy!'
+            storeFile file('keys/handy-prod-key.keystore')
+            storePassword 'S0H@ndy!'
+        }
         prod {
             keyAlias 'HandyProdKey'
             keyPassword 'S0H@ndy!'
@@ -141,6 +150,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
 
     compile files('libs/YouTubeAndroidPlayerApi-1.2.2.jar')
+    compile (name: 'handy-shared', ext: 'aar')
 
     // Support Libraries
     compile 'com.android.support:multidex:1.0.1'     //Multidexing support
@@ -205,13 +215,13 @@ dependencies {
     compile 'se.emilsjolander:stickylistheaders:2.7.0'
 
     // Jumio ID Verification
-    compile 'com.jumio.android:core:2.1.1@aar'
-    compile 'com.jumio.android:nv:2.1.1@aar'
-    compile 'com.jumio.android:nv-barcode:2.1.1@aar'
-    compile 'com.jumio.android:javadoc:2.1.1'
-    compile 'com.jumio.android:nv-barcode:2.1.1@aar'
-    compile 'com.jumio.android:nv-mrz:2.1.1@aar'
-    compile 'com.jumio.android:nv-nfc:2.1.1@aar'
+    compile 'com.jumio.android:core:2.3.0@aar'
+    compile 'com.jumio.android:nv:2.3.0@aar'
+    compile 'com.jumio.android:nv-barcode:2.3.0@aar'
+    compile 'com.jumio.android:javadoc:2.3.0'
+    compile 'com.jumio.android:nv-barcode:2.3.0@aar'
+    compile 'com.jumio.android:nv-mrz:2.3.0@aar'
+    compile 'com.jumio.android:nv-nfc:2.3.0@aar'
     compile 'net.sf.scuba:scuba-sc-android:0.0.9'
 
     //Stripe payment processing
@@ -220,8 +230,15 @@ dependencies {
     //Mix Panel
     compile "com.mixpanel.android:mixpanel-android:4.9.2"
 
+    //Appsee - user-tracking sdk that allows us to record the screen
+    compile 'com.appsee:appsee-android:2.3'
+
+    //Layer
+    compile 'com.layer.atlas:layer-atlas:0.3.2'
+    compile 'com.layer.sdk:layer-sdk:0.23.1'
+
     //Testing
-    testCompile 'org.robolectric:robolectric:3.2-SNAPSHOT'
+    testCompile 'org.robolectric:robolectric:3.1.1'
     testCompile 'org.robolectric:shadows-support-v4:3.1'
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.10.19'

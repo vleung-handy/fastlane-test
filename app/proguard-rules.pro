@@ -16,6 +16,13 @@
 #   public *;
 #}
 
+#Appsee
+-keep class com.appsee.** { *; }
+-dontwarn com.appsee.**
+-keep class android.support.** { *; }
+-keep interface android.support.** { *; }
+-keepattributes SourceFile,LineNumberTable
+
 #Remove Logcat calls
 -assumenosideeffects class android.util.Log {
     public static boolean isLoggable(java.lang.String, int);
@@ -111,3 +118,7 @@
 -dontwarn com.yalantis.ucrop**
 -keep class com.yalantis.ucrop** { *; }
 -keep interface com.yalantis.ucrop** { *; }
+
+# Layer SDK
+-keep class com.layer.** {*; }
+-dontwarn com.layer.**

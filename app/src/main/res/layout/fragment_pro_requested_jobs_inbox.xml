@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:layout_alignParentBottom="true"
     android:layout_gravity="bottom"
-    android:background="@color/white_pressed"
+    android:background="@color/handy_bg"
     >
 
     <android.support.design.widget.CoordinatorLayout
@@ -31,7 +31,7 @@
                 android:footerDividersEnabled="true"
                 android:groupIndicator="@color/transparent"
                 android:headerDividersEnabled="true"
-                android:paddingTop="1dp"
+                android:paddingTop="@dimen/extra_padding_small"
                 android:transcriptMode="disabled"
                 />
         </com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout>
@@ -39,12 +39,6 @@
 
     <include
         layout="@layout/layout_fetch_error"
-        android:visibility="visible"
-        tools:visibility="visible"
-        />
-
-    <include
-        layout="@layout/overlay_loading"
         android:visibility="visible"
         tools:visibility="visible"
         />

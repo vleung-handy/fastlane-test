@@ -68,7 +68,7 @@ public class ProRequestsTest
 
         ViewUtil.waitForViewNotVisible(R.id.loading_overlay, ViewUtil.LONG_MAX_WAIT_TIME_MS);
 
-        ViewUtil.waitForViewVisible(R.id.tab_nav_pro_requested_jobs, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+        ViewUtil.waitForViewVisible(R.id.tab_nav_clients, ViewUtil.LONG_MAX_WAIT_TIME_MS);
 
         //assert that the pro requests inbox unread count is 3
         //TODO unread count is sometimes wrong (2 bookings not grouped into a proxy as expected). disabling this until fixed
@@ -79,7 +79,7 @@ public class ProRequestsTest
 //        onView(tabUnreadCountMatcher).check(matches(withText("3")));
 
         //navigate to the pro requests inbox
-        onView(withId(R.id.tab_nav_pro_requested_jobs)).perform(click());
+        onView(withId(R.id.tab_nav_clients)).perform(click());
 
         //wait for the listview to render
         ViewUtil.waitForViewVisible(R.id.fragment_pro_requested_jobs_recycler_view, ViewUtil.LONG_MAX_WAIT_TIME_MS);

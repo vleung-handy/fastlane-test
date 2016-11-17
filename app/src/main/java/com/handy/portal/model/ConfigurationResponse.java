@@ -7,9 +7,6 @@ import java.util.ArrayList;
 
 public class ConfigurationResponse
 {
-    @SerializedName("startup_deeplink")
-    private String mStartupDeeplink;
-
     @SerializedName("hours_to_start_sending_messages")
     private int mHoursSpanningAvailableBookings; //we use this value for amount of time forward to display available bookings
 
@@ -69,6 +66,17 @@ public class ConfigurationResponse
 
     @SerializedName("request_dismissal")
     private RequestDismissal mRequestDismissal;
+
+    @SerializedName("appsee_analytics_enabled")
+    private boolean mAppseeAnalyticsEnabled;
+
+    @SerializedName("clients_chat_enabled")
+    private boolean mClientsChatEnabled;
+
+    public boolean isAppseeAnalyticsEnabled()
+    {
+        return mAppseeAnalyticsEnabled;
+    }
 
     public boolean isCustomerNoShowModalEnabled()
     {
@@ -175,14 +183,16 @@ public class ConfigurationResponse
         return mProfilePictureUploadEnabled;
     }
 
-    public String getStartupDeeplink()
-    {
-        return mStartupDeeplink;
-    }
-
     public RequestDismissal getRequestDismissal()
     {
         return mRequestDismissal;
+    }
+
+    public boolean isClientsChatEnabled()
+    {
+        return false;
+        // FIXME: Uncomment next line once clients chat is ready
+        // return mClientsChatEnabled;
     }
 
     public static class HelpCenterInfo

@@ -1,10 +1,10 @@
 package com.handy.portal.manager;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
-import com.handy.portal.core.BaseApplication;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,13 +21,32 @@ public class FileManager
 {
     private static final String TAG = FileManager.class.getSimpleName();
     private static final String LOG_PATH = "handylogs";
-    private static final File FILES_DIRECTORY = BaseApplication.getContext().getFilesDir();
+    private final File mFileDirectory;
     private final File mLogDirectory;
 
-    public FileManager()
+    public FileManager(Context context)
     {
-        mLogDirectory = new File(FILES_DIRECTORY, LOG_PATH);
+        mFileDirectory = context.getFilesDir();
+        mLogDirectory = new File(mFileDirectory, LOG_PATH);
         makeLogsDirectoryIfNotExist();
+    }
+
+    /**
+     * exception handled, won't cause a crash
+     *
+     * @return number of free bytes in internal storage directory. -1 if unable to get
+     */
+    public long getInternalStorageDirectoryFreeSpaceBytes()
+    {
+        try
+        {
+            return mFileDirectory.getFreeSpace();
+        }
+        catch (Exception e)
+        {
+            Crashlytics.logException(e);
+        }
+        return -1L;
     }
 
     public File[] getLogFileList()

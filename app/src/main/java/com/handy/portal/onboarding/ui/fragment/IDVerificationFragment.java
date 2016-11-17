@@ -12,6 +12,7 @@ import android.support.v4.content.ContextCompat;
 
 import com.crashlytics.android.Crashlytics;
 import com.google.common.base.Strings;
+import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.library.util.FragmentUtils;
@@ -68,11 +69,12 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
             else
             {
                 bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.CameraPermissionDeniedLog()));
-                initJumioBlocker();
+                initJumioPermissionsBlocker();
             }
         }
         else
         {
+            //has camera permissions
             if (mOnboardingDetails != null)
             {
                 bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.CameraPermissionGrantedLog()));
@@ -81,62 +83,120 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
                 SubflowData subflowData =
                         mOnboardingDetails.getSubflowDataByType(SubflowType.ID_VERIFICATION);
 
-                // ID verification start whether or not jumio sdk init works
-                if (subflowData != null && !Strings.isNullOrEmpty(subflowData.getBeforeIdVerificationStartUrl()))
+                if(subflowData != null)
                 {
-                    bus.post(new ProviderSettingsEvent.RequestIdVerificationStart(
-                            subflowData.getBeforeIdVerificationStartUrl()
-                    ));
-                }
-
-                if (NetverifySDK.isSupportedPlatform() && subflowData != null &&
-                        !Strings.isNullOrEmpty(subflowData.getJumioSecret())
-                        && !Strings.isNullOrEmpty(subflowData.getJumioToken()) &&
-                        !Strings.isNullOrEmpty(subflowData.getFullName()) &&
-                        !Strings.isNullOrEmpty(subflowData.getCandidateId())
-                        && !Strings.isNullOrEmpty(subflowData.getAfterIdVerificationFinishUrl()))
-                {
-                    try
+                    if(!Strings.isNullOrEmpty(subflowData.getBeforeIdVerificationStartUrl()))
                     {
-                        mAfterIdVerificationFinishUrl = subflowData.getAfterIdVerificationFinishUrl();
-
-                        mNetverifySDK = NetverifySDK.create(getActivity(), subflowData.getJumioToken(),
-                                subflowData.getJumioSecret(), JumioDataCenter.US);
-                        mNetverifySDK.setName(subflowData.getFullName());
-                        mNetverifySDK.setCustomerId(subflowData.getCandidateId());
-
-                        mNetverifySDK.setEnableEpassport(true);
-                        ArrayList<NVDocumentType> documentTypes = new ArrayList<>();
-                        documentTypes.add(NVDocumentType.PASSPORT);
-                        documentTypes.add(NVDocumentType.DRIVER_LICENSE);
-                        documentTypes.add(NVDocumentType.IDENTITY_CARD);
-                        mNetverifySDK.setPreselectedDocumentTypes(documentTypes);
-
-                        mNetverifySDK.setRequireFaceMatch(true);
-                        mNetverifySDK.setRequireVerification(true);
-
-                        startActivityForResult(mNetverifySDK.getIntent(), NetverifySDK.REQUEST_CODE);
+                        bus.post(new ProviderSettingsEvent.RequestIdVerificationStart(
+                                subflowData.getBeforeIdVerificationStartUrl()
+                        ));
                     }
-                    catch (PlatformNotSupportedException e)
+
+                    if (isNativeJumioFlowSupported(subflowData))
                     {
-                        Crashlytics.logException(e);
-                        IDVerificationUtils.initJumioWebFlow(getContext(), subflowData.getJumioURL());
+                        startNativeJumioFlow(subflowData);
                     }
-                    catch (MissingPermissionException e)
+                    else
                     {
-                        initJumioBlocker();
+                        //jumio native flow not supported
+                        startJumioWebFallbackFlow(subflowData);
                     }
                 }
-                else if (subflowData != null &&
-                        !Strings.isNullOrEmpty(subflowData.getAfterIdVerificationFinishUrl()))
+                else
                 {
-                    // Platform not supported or subflow data not valid
-                    mAfterIdVerificationFinishUrl = subflowData.getAfterIdVerificationFinishUrl();
-                    jumioAfterFinishCallback("", IDVerificationUtils.ID_VERIFICATION_INIT_ERROR);
-                    initJumioWebFlow(subflowData);
+                    //subflow data null
+                    showToast(R.string.error_missing_server_data);
+                    Crashlytics.logException(new Exception("id verification subflow data is null"));
                 }
             }
+            else
+            {
+                //onboarding details null
+                showToast(R.string.error_missing_server_data);
+                Crashlytics.logException(new Exception("onboarding details is null in id verification fragment"));
+            }
         }
+    }
+
+    private void startJumioWebFallbackFlow(@NonNull SubflowData subflowData)
+    {
+        if (!Strings.isNullOrEmpty(subflowData.getAfterIdVerificationFinishUrl())) //check if fallback flow available
+        {
+            /*
+            note: leaving this outside of the if statement check below to maintain previous logic
+            because i don't know exactly how this is used
+             */
+            mAfterIdVerificationFinishUrl = subflowData.getAfterIdVerificationFinishUrl();
+            jumioAfterFinishCallback("", IDVerificationUtils.ID_VERIFICATION_INIT_ERROR);
+            if (!Strings.isNullOrEmpty(subflowData.getJumioURL()))
+            {
+                bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.WebIDVerificationFlowStarted()));
+                IDVerificationUtils.initJumioWebFlow(getContext(), subflowData.getJumioURL());
+            }
+            else
+            {
+                showToast(R.string.error_missing_server_data);
+                Crashlytics.logException(new Exception("unable to start jumio web fallback flow because jumio url is null or empty"));
+            }
+        }
+        else
+        {
+            showToast(R.string.error_missing_server_data);
+            Crashlytics.logException(new Exception("unable to start jumio web fallback flow because after id verification finish url is null or empty"));
+        }
+    }
+
+    private void startNativeJumioFlow(@NonNull SubflowData subflowData)
+    {
+        try
+        {
+            mAfterIdVerificationFinishUrl = subflowData.getAfterIdVerificationFinishUrl();
+
+            mNetverifySDK = NetverifySDK.create(getActivity(), subflowData.getJumioToken(),
+                    subflowData.getJumioSecret(), JumioDataCenter.US);
+            mNetverifySDK.setName(subflowData.getFullName());
+            mNetverifySDK.setCustomerId(subflowData.getCandidateId());
+
+            mNetverifySDK.setEnableEpassport(true);
+            ArrayList<NVDocumentType> documentTypes = new ArrayList<>();
+            documentTypes.add(NVDocumentType.PASSPORT);
+            documentTypes.add(NVDocumentType.DRIVER_LICENSE);
+            documentTypes.add(NVDocumentType.IDENTITY_CARD);
+            mNetverifySDK.setPreselectedDocumentTypes(documentTypes);
+
+            mNetverifySDK.setRequireFaceMatch(true);
+            mNetverifySDK.setRequireVerification(true);
+
+            startActivityForResult(mNetverifySDK.getIntent(), NetverifySDK.REQUEST_CODE);
+        }
+        catch (PlatformNotSupportedException e)
+        {
+            //this never happens but AS complains if we don't catch it
+            Crashlytics.logException(e);
+            startJumioWebFallbackFlow(subflowData);
+        }
+        catch (MissingPermissionException e)
+        {
+            initJumioPermissionsBlocker();
+        }
+    }
+
+    /**
+     * @param subflowData
+     * @return true if jumio native flow is determined as supported given non-null SubflowData
+     */
+    private boolean isNativeJumioFlowSupported(@NonNull SubflowData subflowData)
+    {
+        boolean isSupportedPlatform = NetverifySDK.isSupportedPlatform();
+
+        bus.post(new LogEvent.AddLogEvent(
+                new NativeOnboardingLog.NativeIDVerificationPlatformSupportStatusLog(isSupportedPlatform)));
+        return isSupportedPlatform &&
+                !Strings.isNullOrEmpty(subflowData.getJumioSecret())
+                && !Strings.isNullOrEmpty(subflowData.getJumioToken()) &&
+                !Strings.isNullOrEmpty(subflowData.getFullName()) &&
+                !Strings.isNullOrEmpty(subflowData.getCandidateId())
+                && !Strings.isNullOrEmpty(subflowData.getAfterIdVerificationFinishUrl());
     }
 
     @Override
@@ -157,7 +217,7 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
         }
         if (showCameraBlocker)
         {
-            initJumioBlocker();
+            initJumioPermissionsBlocker();
         }
     }
 
@@ -242,8 +302,9 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
         }
     }
 
-    private void initJumioBlocker()
+    private void initJumioPermissionsBlocker()
     {
+        Crashlytics.log("init jumio permissions blocker");
         Fragment fragmentByTag = getChildFragmentManager().
                 findFragmentByTag(CameraPermissionsBlockerDialogFragment.FRAGMENT_TAG);
         if (fragmentByTag == null)
@@ -263,15 +324,11 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
                 FragmentUtils.safeLaunchDialogFragment(fragment, this,
                         CameraPermissionsBlockerDialogFragment.FRAGMENT_TAG);
             }
-        }
-    }
-
-    private void initJumioWebFlow(SubflowData subflowData)
-    {
-        if (subflowData != null && !Strings.isNullOrEmpty(subflowData.getJumioURL()))
-        {
-            bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.WebIDVerificationFlowStarted()));
-            IDVerificationUtils.initJumioWebFlow(getContext(), subflowData.getJumioURL());
+            else
+            {
+                showToast(R.string.error_missing_server_data);
+                Crashlytics.logException(new Exception("unable to start jumio permissions blocker because onboarding details null"));
+            }
         }
     }
 }

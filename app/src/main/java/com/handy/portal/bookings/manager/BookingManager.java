@@ -1,5 +1,6 @@
 package com.handy.portal.bookings.manager;
 
+import android.support.annotation.Nullable;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -45,7 +46,7 @@ public class BookingManager
     private final Cache<Date, BookingsWrapper> scheduledBookingsCache;
     private final Cache<Date, BookingsWrapper> complementaryBookingsCache;
     private final Cache<Date, BookingsWrapper> requestedBookingsCache;
-
+    private Integer mLastUnreadRequestsCount = null;
 
     /*
     keys used in QueryMap requests
@@ -219,7 +220,8 @@ public class BookingManager
                     @Override
                     public void onSuccess(final HashMap<String, Object> response)
                     {
-                        int count = (int) ((double) response.get(UNREAD_JOB_REQUESTS_COUNT));
+                        final int count = (int) (double) response.get(UNREAD_JOB_REQUESTS_COUNT);
+                        mLastUnreadRequestsCount = count;
                         mBus.post(new BookingEvent.ReceiveProRequestedJobsCountSuccess(count));
                     }
 
@@ -229,6 +231,12 @@ public class BookingManager
                         // Ignore
                     }
                 });
+    }
+
+    @Nullable
+    public Integer getLastUnreadRequestsCount()
+    {
+        return mLastUnreadRequestsCount;
     }
 
     @Subscribe

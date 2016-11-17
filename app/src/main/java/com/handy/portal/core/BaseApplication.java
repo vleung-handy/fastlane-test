@@ -1,9 +1,5 @@
 package com.handy.portal.core;
 
-import android.app.Activity;
-import android.content.Context;
-import android.os.Build;
-import android.os.Bundle;
 import android.support.multidex.MultiDexApplication;
 
 import com.crashlytics.android.Crashlytics;
@@ -16,7 +12,6 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.util.FontUtils;
 import com.handy.portal.library.util.PropertiesReader;
-import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.location.manager.LocationScheduleUpdateManager;
 import com.handy.portal.logger.handylogger.EventLogManager;
@@ -51,12 +46,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class BaseApplication extends MultiDexApplication
 {
-    private static String sDeviceId = "";
     protected ObjectGraph mGraph;
-    private int mStarted;
-    private boolean mSavedInstance;
-    //This is used for the application context
-    private static Context sContext;
 
     //We are injecting all of our event bus listening managers in BaseApplication to start them up for event listening
     @Inject
@@ -117,13 +107,11 @@ public class BaseApplication extends MultiDexApplication
     public void onCreate()
     {
         super.onCreate();
-        sContext = getApplicationContext();
         createObjectGraph();
         inject(this);
 
         startNewRelic();
         startCrashlytics();
-        sDeviceId = SystemUtils.getDeviceId(getApplicationContext());
         //Start UA
         bus.post(new HandyEvent.StartUrbanAirship());
 
@@ -131,36 +119,6 @@ public class BaseApplication extends MultiDexApplication
                 .setDefaultFontPath(FontUtils.CIRCULAR_BOOK)
                 .setFontAttrId(R.attr.fontPath)
                 .build());
-
-        registerActivityLifecycleCallbacks(new ActivityLifecycleCallbacks()
-        {
-            @Override
-            public void onActivityCreated(final Activity activity,
-                                          final Bundle savedInstanceState)
-            {
-                mSavedInstance = savedInstanceState != null;
-            }
-
-            @Override
-            public void onActivityStarted(final Activity activity)
-            {
-            }
-
-            @Override
-            public void onActivityResumed(final Activity activity) { }
-
-            @Override
-            public void onActivityPaused(final Activity activity) { }
-
-            @Override
-            public void onActivityStopped(final Activity activity) { }
-
-            @Override
-            public void onActivitySaveInstanceState(final Activity activity, final Bundle outState) { }
-
-            @Override
-            public void onActivityDestroyed(final Activity activity) { }
-        });
     }
 
     protected void startNewRelic()
@@ -183,27 +141,5 @@ public class BaseApplication extends MultiDexApplication
     public final void inject(final Object object)
     {
         mGraph.inject(object);
-    }
-
-    public static Context getContext()
-    {
-        return sContext;
-    }
-
-    public static String getDeviceId() { return sDeviceId; }
-
-    public static String getDeviceModel()
-    {
-        final String manufacturer = Build.MANUFACTURER;
-        final String model = Build.MODEL;
-
-        if (model.startsWith(manufacturer))
-        {
-            return model;
-        }
-        else
-        {
-            return manufacturer + " " + model;
-        }
     }
 }

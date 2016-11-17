@@ -1,17 +1,18 @@
 package com.handy.portal.core;
 
 import android.app.Application;
+import android.content.Context;
 
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.BookingDetailsWrapperFragment;
 import com.handy.portal.bookings.ui.fragment.BookingFragment;
 import com.handy.portal.bookings.ui.fragment.InProgressBookingFragment;
-import com.handy.portal.bookings.ui.fragment.ProRequestedJobsFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragmentTest;
-import com.handy.portal.bookings.ui.fragment.dialog.SwapBookingClaimDialogFragment;
+import com.handy.portal.clients.ui.fragment.ProRequestedJobsFragment;
+import com.handy.portal.clients.ui.fragment.dialog.SwapBookingClaimDialogFragment;
 import com.handy.portal.dashboard.fragment.DashboardFeedbackFragment;
 import com.handy.portal.dashboard.fragment.DashboardReviewsFragment;
 import com.handy.portal.dashboard.fragment.DashboardTiersFragment;
@@ -25,6 +26,7 @@ import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.handylogger.EventLogManagerTest;
+import com.handy.portal.manager.AppseeManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.FileManager;
 import com.handy.portal.manager.LoginManager;
@@ -69,6 +71,7 @@ import com.handy.portal.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
+import com.handybook.shared.LayerHelper;
 import com.securepreferences.SecurePreferences;
 
 import org.greenrobot.eventbus.EventBus;
@@ -140,6 +143,17 @@ public class TestApplicationModule
     public TestApplicationModule(final Application application)
     {
         mApplication = application;
+    }
+
+    @Provides
+    @Singleton
+    final Context provideContext() { return mApplication.getApplicationContext(); }
+
+    @Provides
+    @Singleton
+    final AppseeManager provideAppseeManager()
+    {
+        return mock(AppseeManager.class);
     }
 
     @Provides
@@ -265,14 +279,14 @@ public class TestApplicationModule
             final ProviderManager providerManager
     )
     {
-        return spy(new EventLogManager(bus, dataManager, fileManager, prefsManager, providerManager));
+        return spy(new EventLogManager(mApplication, bus, dataManager, fileManager, prefsManager, providerManager));
     }
 
     @Provides
     @Singleton
     final FileManager provideFileManager()
     {
-        return new FileManager();
+        return new FileManager(mApplication);
     }
 
     @Provides
@@ -291,5 +305,11 @@ public class TestApplicationModule
     final UrbanAirshipManager providerUrbanAirshipManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication)
     {
         return mock(UrbanAirshipManager.class);
+    }
+
+    @Provides
+    final LayerHelper provideLayerHelper()
+    {
+        return null;
     }
 }

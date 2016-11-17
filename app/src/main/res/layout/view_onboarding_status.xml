@@ -46,19 +46,40 @@
         </FrameLayout>
     </com.handy.portal.library.ui.view.CollapsibleContentLayout>
 
-
-    <TextView
-        android:id="@+id/links_title"
-        style="@style/TextView.Large.Bold"
+    <RelativeLayout
+        android:id="@+id/tips_card"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_margin_half"
-        android:background="@drawable/border_gray_no_side"
         android:padding="@dimen/default_padding"
-        android:text="@string/learn_about_handy"
-        />
+        android:background="@drawable/border_gray_no_side"
+        android:clickable="true"
+        android:foreground="?attr/selectableItemBackground"
+        >
 
-    <LinearLayout
+        <ImageView
+            android:id="@+id/image_basket"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/img_basket_supplies_small"
+            />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_toRightOf="@id/image_basket"
+            android:layout_centerVertical="true"
+            android:text="@string/tips_for_preparing_for_your_first_job"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/tips_text_right_margin"
+            style="@style/TextView"
+            />
+    </RelativeLayout>
+
+    <com.handy.portal.onboarding.ui.view.LearningLinksView
         android:id="@+id/links_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -1,4 +1,4 @@
-package com.handy.portal.bookings.ui.adapter;
+package com.handy.portal.clients.ui.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
@@ -12,7 +12,7 @@ import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.DismissableBookingElementView;
-import com.handy.portal.bookings.ui.element.ProRequestedJobsListGroupView;
+import com.handy.portal.clients.ui.element.ProRequestedJobsListGroupView;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.manager.ConfigManager;

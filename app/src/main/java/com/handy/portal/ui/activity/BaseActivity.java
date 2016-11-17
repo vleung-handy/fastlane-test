@@ -2,7 +2,6 @@ package com.handy.portal.ui.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,10 +9,6 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.LocationServices;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.flow.Flow;
@@ -22,7 +17,7 @@ import com.handy.portal.location.LocationUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
-import com.handy.portal.logger.handylogger.model.GoogleApiLog;
+import com.handy.portal.manager.AppseeManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ConfigurationResponse;
@@ -46,16 +41,18 @@ import javax.inject.Inject;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public abstract class BaseActivity extends AppCompatActivity
-        implements GoogleApiClient.ConnectionCallbacks,
-        GoogleApiClient.OnConnectionFailedListener,
-        AppUpdateFlowLauncher
+public abstract class BaseActivity extends AppCompatActivity implements AppUpdateFlowLauncher
 {
     @Inject
     PrefsManager mPrefsManager;
-
     @Inject
     ConfigManager mConfigManager;
+    @Inject
+    public EventBus bus;
+    @Inject
+    ConfigManager configManager;
+    @Inject
+    AppseeManager mAppseeManager;
 
     private AppUpdateEventListener mAppUpdateEventListener;
     protected boolean allowCallbacks;
@@ -64,8 +61,6 @@ public abstract class BaseActivity extends AppCompatActivity
     //According to android docs this is the preferred way of accessing location instead of using LocationManager
     //will also let us do geofencing and reverse address lookup which is nice
     //This is a clear instance where a service would be great but it is too tightly coupled to an activity to break out
-    protected static GoogleApiClient googleApiClient;
-    protected static Location lastLocation;
     private SetupHandler mSetupHandler;
     private boolean mWasOpenBefore;
 
@@ -76,25 +71,16 @@ public abstract class BaseActivity extends AppCompatActivity
     }
 
     // this is meant to be optionally overridden
-    protected void onSetupComplete(final SetupData setupData)
-    {
-    }
+    protected void onSetupComplete(final SetupData setupData) {}
 
     // this is meant to be optionally overridden
-    protected void onSetupFailure()
-    {
-    }
+    protected void onSetupFailure() {}
 
     //Public Properties
     public boolean getAllowCallbacks()
     {
         return this.allowCallbacks;
     }
-
-    @Inject
-    public EventBus bus;
-    @Inject
-    ConfigManager configManager;
 
     @Override
     public void startActivity(final Intent intent)
@@ -134,8 +120,6 @@ public abstract class BaseActivity extends AppCompatActivity
 
         mAppUpdateEventListener = new AppUpdateEventListener(this);
         onBackPressedListenerStack = new Stack<>();
-
-        buildGoogleApiClient();
     }
 
     @Override
@@ -148,6 +132,21 @@ public abstract class BaseActivity extends AppCompatActivity
         {
             bus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(false, false)));
         }
+
+        /**
+         * start/stop appsee recording as necessary (ex. based on device space and configs)
+         * when user resumes the activity. nothing happens if we start Appsee recording if it's already started
+         *
+         * NOTE: according to docs Appsee.start() can only be called in
+         * Activity.onCreate() or Activity.onResume()
+         *
+         * putting in this method rather than Activity.onCreate()
+         * because most of the app is in one activity and Activity.onCreate() isn't triggered often enough
+         *
+         * although it is only necessary to start Appsee in activities that are entry points to the app
+         * putting this here because we may want to start/stop recording when configs change
+         */
+        mAppseeManager.startOrStopRecordingAsNecessary();
     }
 
     @Override
@@ -211,11 +210,6 @@ public abstract class BaseActivity extends AppCompatActivity
     {
         super.onStart();
         allowCallbacks = true;
-
-        if (googleApiClient != null)
-        {
-            googleApiClient.connect();
-        }
     }
 
     @Override
@@ -223,11 +217,6 @@ public abstract class BaseActivity extends AppCompatActivity
     {
         super.onStop();
         allowCallbacks = false;
-
-        if (googleApiClient != null)
-        {
-            googleApiClient.disconnect();
-        }
     }
 
     @Override
@@ -295,65 +284,6 @@ public abstract class BaseActivity extends AppCompatActivity
     public void onReceiveUpdateAvailableError(AppUpdateEvent.ReceiveUpdateAvailableError event)
     {
         //TODO: Handle receive update available error, do we need to block?
-    }
-
-    //Setup Google API client to be able to access location through play services
-    protected synchronized void buildGoogleApiClient()
-    {
-        //client is static across activities
-        if (googleApiClient == null)
-        {
-            GoogleApiAvailability gApi = GoogleApiAvailability.getInstance();
-            int resultCode = gApi.isGooglePlayServicesAvailable(this);
-            if (resultCode == ConnectionResult.SUCCESS)
-            {
-                googleApiClient = new GoogleApiClient.Builder(this)
-                        .addConnectionCallbacks(this)
-                        .addOnConnectionFailedListener(this)
-                        .addApi(LocationServices.API)
-                        .build();
-                bus.post(new HandyEvent.GooglePlayServicesAvailabilityCheck(true));
-                bus.post(new LogEvent.AddLogEvent(new GoogleApiLog.GoogleApiAvailability(true)));
-            }
-            else
-            {
-                bus.post(new HandyEvent.GooglePlayServicesAvailabilityCheck(false));
-                bus.post(new LogEvent.AddLogEvent(new GoogleApiLog.GoogleApiAvailability(false)));
-            }
-        }
-    }
-
-    @Override
-    @SuppressWarnings({"ResourceType", "MissingPermission"})
-    public void onConnected(Bundle connectionHint)
-    {
-        if (!LocationUtils.hasRequiredLocationPermissions(this))
-        {
-            return;
-        }
-        Location newLocation = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
-        //Keeping old value in the event we have a failed location update
-        if (newLocation != null)
-        {
-            lastLocation = newLocation;
-        }
-    }
-
-    public Location getLastLocation()
-    {
-        return lastLocation;
-    }
-
-    //For google apli client
-    public void onConnectionSuspended(int i)
-    {
-        //TODO: Handle?
-    }
-
-    //For google apli client
-    public void onConnectionFailed(ConnectionResult var1)
-    {
-        //TODO: Handle?
     }
 
     public static class SetupHandler

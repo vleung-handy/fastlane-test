@@ -20,7 +20,7 @@ public class DeeplinkMapper
         deeplinkMap.put("booking_details", MainViewPage.JOB_DETAILS);
         deeplinkMap.put("available_jobs", MainViewPage.AVAILABLE_JOBS);
         deeplinkMap.put("scheduled_jobs", MainViewPage.SCHEDULED_JOBS);
-        deeplinkMap.put("requested_jobs", MainViewPage.REQUESTED_JOBS);
+        deeplinkMap.put("requested_jobs", MainViewPage.CLIENTS);
 
         deeplinkMap.put("payments", MainViewPage.PAYMENTS);
 

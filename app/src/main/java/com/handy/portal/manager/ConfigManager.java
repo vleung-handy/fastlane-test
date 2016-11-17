@@ -59,6 +59,10 @@ public class ConfigManager
     @Nullable
     public ConfigurationResponse getConfigurationResponse()
     {
+        if (mConfigurationResponse == null)
+        {
+            Crashlytics.logException(new RuntimeException("Configuration is null"));
+        }
         return mConfigurationResponse;
     }
 

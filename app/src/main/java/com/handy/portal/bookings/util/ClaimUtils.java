@@ -6,7 +6,7 @@ import android.support.v4.app.FragmentManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingClaimDialogFragment;
-import com.handy.portal.bookings.ui.fragment.dialog.SwapBookingClaimDialogFragment;
+import com.handy.portal.clients.ui.fragment.dialog.SwapBookingClaimDialogFragment;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.library.util.FragmentUtils;
 
