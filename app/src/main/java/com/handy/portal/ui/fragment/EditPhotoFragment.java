@@ -143,7 +143,7 @@ public class EditPhotoFragment extends ActionBarFragment
 
         final Intent cameraImageIntent = new Intent(ACTION_IMAGE_CAPTURE);
         /*
-        seems like API 24+ devices need the below flag but <API 24 devices do
+        seems like API 24+ devices don't need the below flag but <API 24 devices do
          */
         cameraImageIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
