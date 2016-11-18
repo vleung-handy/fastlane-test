@@ -179,7 +179,7 @@ public class BookingFragment extends TimerActionBarFragment
 
         if (sBookingMapView == null)
         {
-            sBookingMapView = new BookingMapView(getContext().getApplicationContext());
+            sBookingMapView = new BookingMapView(getActivity());
             sBookingMapView.onCreate(null);
         }
     }
