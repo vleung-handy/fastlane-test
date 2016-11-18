@@ -90,7 +90,7 @@ public class LocationManager
     @Nullable
     public Location getLastLocation()
     {
-        if (!LocationUtils.hasRequiredLocationPermissions(mContext))
+        if (!LocationUtils.hasRequiredLocationPermissions(mContext) || mGoogleApiClient == null)
         {
             return null;
         }
