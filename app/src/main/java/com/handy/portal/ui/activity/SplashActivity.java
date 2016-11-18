@@ -85,9 +85,16 @@ public class SplashActivity extends BaseActivity
 
         mAuthToken = prefsManager.getSecureString(PrefsKey.AUTH_TOKEN, null);
 
-        if (mLayerHelper != null && mAuthToken != null)
+        if (mLayerHelper != null)
         {
-            mLayerHelper.initLayer(mAuthToken);
+            if (mAuthToken != null)
+            {
+                mLayerHelper.initLayer(mAuthToken);
+            }
+            else if (mLayerHelper.getLayerClient().isAuthenticated())
+            {
+                mLayerHelper.deauthenticate();
+            }
         }
 
         if (mPrefsManager.getSecureBoolean(PrefsKey.APP_FIRST_LAUNCH, true))
