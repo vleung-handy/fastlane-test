@@ -34,12 +34,14 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.library.util.UriUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ImageUploadLog;
 import com.handy.portal.logger.handylogger.model.ProfilePhotoLog;
 import com.handy.portal.logger.handylogger.model.ProfilePhotoUploadLog;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.util.FileProviderUtils;
 import com.yalantis.ucrop.UCrop;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -140,7 +142,14 @@ public class EditPhotoFragment extends ActionBarFragment
         bus.post(new LogEvent.AddLogEvent(new ProfilePhotoLog.CameraTapped()));
 
         final Intent cameraImageIntent = new Intent(ACTION_IMAGE_CAPTURE);
-        cameraImageIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(getImageFile()));
+        /*
+        seems like API 24+ devices don't need the below flag but <API 24 devices do
+         */
+        cameraImageIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+        Uri imageFileUri = UriUtils.getUriFromFile(getContext(), getImageFile(),
+                FileProviderUtils.getApplicationFileProviderAuthority(getContext()));
+        cameraImageIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageFileUri);
         final int frontFacingCameraId = getFrontFacingCameraId();
         if (frontFacingCameraId != -1)
         {

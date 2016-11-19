@@ -9,10 +9,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
 import android.text.format.DateUtils;
 
 import com.crashlytics.android.Crashlytics;
@@ -23,8 +21,10 @@ import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.util.CheckApplicationCapabilitiesUtils;
+import com.handy.portal.library.util.UriUtils;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.updater.model.UpdateDetails;
+import com.handy.portal.util.FileProviderUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -80,26 +80,7 @@ public class VersionManager
         File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         File file = new File(downloadsDirectory, APK_FILE_NAME);
 
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.N)
-        {
-            //for devices with api <24
-            return Uri.fromFile(file);
-        }
-        else
-        {
-            /*
-            devices with api 24 need to generate the uri this way
-            or a FileUriExposedException will be thrown
-
-            URI generated from the file provider not compatible with devices with api <24
-            nothing happens when we try to launch the install intent
-            and getting the error "Unsupported scheme content" from package installer
-             */
-            String fileProviderAuthority = context.getApplicationContext().getPackageName() + ".provider";
-            //this should match the authority defined in AndroidManifest.xml
-
-            return FileProvider.getUriForFile(context, fileProviderAuthority, file);
-        }
+        return UriUtils.getUriFromFile(context, file, FileProviderUtils.getApplicationFileProviderAuthority(context));
     }
 
     @Subscribe
