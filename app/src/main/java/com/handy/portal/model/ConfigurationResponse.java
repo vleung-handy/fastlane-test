@@ -199,7 +199,7 @@ public class ConfigurationResponse
         // return mClientsChatEnabled;
     }
 
-    public boolean sltEnabled() { return mSltEnabled; }
+    public boolean isSltEnabled() { return mSltEnabled; }
 
     public static class HelpCenterInfo
     {

@@ -46,6 +46,12 @@ public class LoginManager
         );
     }
 
+    /**
+     * request single login token deeplink send via sms to the give phone number.
+     *
+     * @param phoneNumber phone number
+     * @param callback    Callback handler
+     */
     public void requestSlt(String phoneNumber, DataManager.Callback<SuccessWrapper> callback)
     {
         dataManager.requestSlt(phoneNumber, callback);
@@ -72,6 +78,13 @@ public class LoginManager
         );
     }
 
+    /**
+     * Login with single login token
+     *
+     * @param n   String given by the slt deeplink
+     * @param sig String give by the deeplink
+     * @param slt single login token
+     */
     public void loginWithSlt(String n, String sig, String slt)
     {
         dataManager.requestLoginWithSlt(n, sig, slt, new DataManager.Callback<LoginDetails>()

@@ -13,7 +13,7 @@ public class LoginActivity extends BaseActivity
     {
         super.onCreate(savedInstanceState);
         ConfigurationResponse config = mConfigManager.getConfigurationResponse();
-        if (config != null && config.sltEnabled())
+        if (config != null && config.isSltEnabled())
         {
             setContentView(R.layout.activity_login_slt);
         }
