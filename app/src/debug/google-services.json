@@ -8,6 +8,37 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:870308423951:android:404da33fc25e209d",
+        "android_client_info": {
+          "package_name": "com.handybook.handy_portal.debug"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "870308423951-gr6afqet1idej7586lepvor7b275p8ck.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBm1BAHLd_eQr3dCndzAIQFcwbE0qqGWIg"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:870308423951:android:2bbcf79df7ecd146",
         "android_client_info": {
           "package_name": "com.handy.portal.debug"
