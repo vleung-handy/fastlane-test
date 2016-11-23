@@ -75,11 +75,8 @@ public class UrbanAirshipManager
 
                     //Setup a named user linking this user's id to a UA named user
                     //We may not have a cached provider id when a user first logs in, possible race condition, but the UrbanAirshipManager will hear the ProviderIdUpdated event and update accordingly
-                    String providerId = prefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
-                    if (providerId != null)
-                    {
-                        setUniqueIdentifiers(providerId);
-                    }
+                    String providerId = prefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID, null);
+                    setUniqueIdentifiers(providerId);
 
                     //Override the default action otherwise it tries to openurl all of our deep links
                     //Init the deep link listener, must be done after takeoff
@@ -100,9 +97,15 @@ public class UrbanAirshipManager
         setUniqueIdentifiers(event.providerId);
     }
 
+    @Subscribe
+    public void onUserLoggedOut(final HandyEvent.UserLoggedOut event)
+    {
+        setUniqueIdentifiers(null);
+    }
+
     private void setUniqueIdentifiers(String id)
     {
-        if (UAirship.isFlying() && id != null && !id.isEmpty())
+        if (UAirship.isFlying())
         {
             //Keep alias around for backwards compatibility until
             //named user is backfilled by UrbanAirship

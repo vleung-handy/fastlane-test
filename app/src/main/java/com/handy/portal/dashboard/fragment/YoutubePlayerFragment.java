@@ -42,7 +42,7 @@ public class YoutubePlayerFragment extends YouTubePlayerSupportFragment implemen
         if (actionBar != null)
         { getActionBar().hide(); }
 
-        initialize(getString(R.string.google_app_id), this);
+        initialize(getString(R.string.google_app_key), this);
     }
 
     @Override

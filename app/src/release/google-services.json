@@ -1,0 +1,73 @@
+{
+  "project_info": {
+    "project_number": "41294143308",
+    "firebase_url": "https://android-provider-71cc1.firebaseio.com",
+    "project_id": "android-provider-71cc1",
+    "storage_bucket": "android-provider-71cc1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:41294143308:android:030e912766b5a260",
+        "android_client_info": {
+          "package_name": "com.handy.portal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "41294143308-59js9o2282i17lul92oe0crd8751uha7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjPCXFwNYNfq0O2jJifGRLIpJjecZDBdI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:41294143308:android:0342005f154ccfb3",
+        "android_client_info": {
+          "package_name": "com.handybook.handy_portal"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "41294143308-59js9o2282i17lul92oe0crd8751uha7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjPCXFwNYNfq0O2jJifGRLIpJjecZDBdI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

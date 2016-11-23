@@ -1,5 +1,10 @@
 package com.handy.portal.clients.ui.fragment;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -11,12 +16,16 @@ import android.view.ViewGroup;
 import com.handy.portal.R;
 import com.handy.portal.clients.ui.adapter.ConversationsAdapter;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
+import com.handybook.shared.LayerConstants;
 import com.handybook.shared.LayerHelper;
+import com.handybook.shared.PushNotificationReceiver;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.handybook.shared.LayerConstants.LAYER_CONVERSATION_KEY;
 
 
 public class ClientConversationsFragment extends InjectedFragment
@@ -29,6 +38,23 @@ public class ClientConversationsFragment extends InjectedFragment
     RecyclerView mRecyclerView;
     @BindView(R.id.client_conversations_empty_view)
     View mEmptyView;
+
+    private BroadcastReceiver mPushNotificationReceiver = new BroadcastReceiver()
+    {
+        @Override
+        public void onReceive(final Context context, final Intent intent)
+        {
+            final Bundle extras = intent.getExtras();
+            if (extras == null) { return; }
+            final Uri conversationId = extras.getParcelable(LAYER_CONVERSATION_KEY);
+            if (conversationId != null && ClientConversationsFragment.this.getUserVisibleHint())
+            {
+                // Assuming this receiver has a high system priority, this will prevent push
+                // notifications regarding any conversation from being displayed.
+                abortBroadcast();
+            }
+        }
+    };
 
     private ConversationsAdapter mAdapter;
 
@@ -56,6 +82,19 @@ public class ClientConversationsFragment extends InjectedFragment
     }
 
     @Override
+    public void onResume()
+    {
+        final IntentFilter filter = new IntentFilter(LayerConstants.ACTION_SHOW_NOTIFICATION);
+        filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+        getActivity().registerReceiver(mPushNotificationReceiver, filter);
+        if (getUserVisibleHint())
+        {
+            clearNotifications();
+        }
+        super.onResume();
+    }
+
+    @Override
     public void onConversationsChanged()
     {
         if (mAdapter.getItemCount() > 0)
@@ -66,5 +105,35 @@ public class ClientConversationsFragment extends InjectedFragment
         {
             mEmptyView.setVisibility(View.VISIBLE);
         }
+    }
+
+    @Override
+    public void setUserVisibleHint(final boolean isVisibleToUser)
+    {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (isVisibleToUser)
+        {
+            clearNotifications();
+        }
+    }
+
+    private void clearNotifications()
+    {
+        if (mAdapter == null)
+        {
+            return;
+        }
+        for (int i = 0; i < mAdapter.getItemCount(); i++)
+        {
+            PushNotificationReceiver.getNotifications(getActivity())
+                    .clear(mAdapter.getConversationItem(i));
+        }
+    }
+
+    @Override
+    public void onPause()
+    {
+        getActivity().unregisterReceiver(mPushNotificationReceiver);
+        super.onPause();
     }
 }

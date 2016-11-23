@@ -370,7 +370,6 @@
             </intent-filter>
         </service>
 
-        <!-- Receiver: Our app notification handling -->
         <receiver
             android:name=".receiver.LayerPushReceiver"
             android:permission="${applicationId}.permission.LAYER_PUSH"
@@ -379,8 +378,15 @@
             <intent-filter>
                 <!-- Layer SDK broadcasts this, which we use to generate notifications -->
                 <action android:name="com.layer.sdk.PUSH"/>
+                <category android:name="${applicationId}"/>
+            </intent-filter>
+        </receiver>
+        <receiver android:name="com.handybook.shared.PushNotificationReceiver">
+
+            <intent-filter>
+                <action android:name="com.handybook.shared.layer.SHOW_NOTIFICATION"/>
                 <!-- Our app sets this as a PendingIntent to handle user notification swipe-outs -->
-                <action android:name="${applicationId}.CANCEL_PUSH"/>
+                <action android:name="com.handybook.shared.layer.DISMISS_NOTIFICATION"/>
 
                 <category android:name="${applicationId}"/>
             </intent-filter>

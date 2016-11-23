@@ -37,6 +37,7 @@ import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.util.DeeplinkUtils;
+import com.handybook.shared.LayerHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -59,6 +60,8 @@ public class AccountSettingsFragment extends ActionBarFragment
     PrefsManager mPrefsManager;
     @Inject
     BookingManager mBookingManager;
+    @Inject
+    LayerHelper mLayerHelper;
 
     @BindView(R.id.provider_name_text)
     TextView mProviderNameText;
@@ -198,6 +201,11 @@ public class AccountSettingsFragment extends ActionBarFragment
                             CookieSyncManager.getInstance().sync();
                         }
 
+                        if (mLayerHelper != null && mLayerHelper.getLayerClient().isAuthenticated())
+                        {
+                            mLayerHelper.deauthenticate();
+                        }
+
                         final Intent intent = new Intent(getActivity(), LoginActivity.class);
                         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         final Uri data = getActivity().getIntent().getData();
@@ -207,9 +215,9 @@ public class AccountSettingsFragment extends ActionBarFragment
                             intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkBundle);
                             intent.putExtra(BundleKeys.DEEPLINK_SOURCE, DeeplinkLog.Source.LINK);
                         }
+                        bus.post(new HandyEvent.UserLoggedOut());
                         startActivity(intent);
                         getActivity().finish();
-                        bus.post(new HandyEvent.UserLoggedOut());
                     }
                 });
 

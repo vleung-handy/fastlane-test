@@ -730,8 +730,14 @@ public class MainActivityFragment extends InjectedFragment
             CookieSyncManager.getInstance().sync();
         }
 
+        if (mLayerHelper != null && mLayerHelper.getLayerClient().isAuthenticated())
+        {
+            mLayerHelper.deauthenticate();
+        }
+
         mEnvironmentModifier.setEnvironment(currentEnvironment, currentEnvironmentPrefix, null);
 
+        bus.post(new HandyEvent.UserLoggedOut());
         startActivity(new Intent(getActivity(), LoginActivity.class));
         getActivity().finish();
     }

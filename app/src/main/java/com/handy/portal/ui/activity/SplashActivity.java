@@ -28,7 +28,6 @@ import com.handy.portal.onboarding.ui.activity.OnboardingFlowActivity;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.setup.SetupData;
 import com.handy.portal.util.DeeplinkUtils;
-import com.handybook.shared.HandyUser;
 import com.handybook.shared.LayerHelper;
 
 import javax.inject.Inject;
@@ -86,10 +85,16 @@ public class SplashActivity extends BaseActivity
 
         mAuthToken = prefsManager.getSecureString(PrefsKey.AUTH_TOKEN, null);
 
-        if (mLayerHelper != null && mAuthToken != null)
+        if (mLayerHelper != null)
         {
-            // FIXME: Change shared lib to make this better
-            mLayerHelper.initLayer(new HandyUser(mAuthToken, ""));
+            if (mAuthToken != null)
+            {
+                mLayerHelper.initLayer(mAuthToken);
+            }
+            else if (mLayerHelper.getLayerClient().isAuthenticated())
+            {
+                mLayerHelper.deauthenticate();
+            }
         }
 
         if (mPrefsManager.getSecureBoolean(PrefsKey.APP_FIRST_LAUNCH, true))
