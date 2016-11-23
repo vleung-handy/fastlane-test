@@ -15,7 +15,7 @@ import com.handy.portal.event.HandyEvent;
 import com.handy.portal.helpcenter.constants.HelpCenterUrl;
 import com.handy.portal.library.ui.widget.InputTextField;
 import com.handy.portal.model.LoginDetails;
-import com.handy.portal.model.PinRequestDetails;
+import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.SplashActivity;
 
@@ -196,7 +196,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     private void receivePinCodeRequest(boolean isValid)
     {
         HandyEvent.ReceivePinCodeSuccess event = mock(HandyEvent.ReceivePinCodeSuccess.class);
-        event.pinRequestDetails = mock(PinRequestDetails.class);
+        event.pinRequestDetails = mock(SuccessWrapper.class);
         when(event.pinRequestDetails.getSuccess()).thenReturn(isValid);
         fragment.onPinCodeRequestReceived(event);
     }

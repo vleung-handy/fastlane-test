@@ -240,8 +240,19 @@ public interface HandyRetrofitService
 
     @Multipart
     @POST(SESSIONS_PATH + "request_user_pin")
-    void requestPinCode(@Part("phone") String phoneNumber,
-                        HandyRetrofitCallback cb);
+    void requestPinCode(@Part("phone") String phoneNumber, HandyRetrofitCallback cb);
+
+    @Multipart
+    @POST(SESSIONS_PATH + "request_slt")
+    void requestSlt(@Part("phone") String phoneNumber, HandyRetrofitCallback cb);
+
+    @Multipart
+    @POST(SESSIONS_PATH + "log_in_with_slt")
+    void requestLoginWithSlt(
+            @Part("n") String n,
+            @Part("sig") String sig,
+            @Part("slt") String slt,
+            HandyRetrofitCallback cb);
 
     @Multipart
     @POST(SESSIONS_PATH + "log_in")

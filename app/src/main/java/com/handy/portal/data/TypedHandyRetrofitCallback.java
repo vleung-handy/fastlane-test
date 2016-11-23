@@ -17,7 +17,6 @@ import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LoginDetails;
-import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ProviderProfileResponse;
@@ -177,15 +176,6 @@ class BookingsWrapperRetroFitCallback extends TypedHandyRetrofitCallback<Booking
 class JobsCountHandyRetroFitCallback extends TypedHandyRetrofitCallback<HashMap<String, Object>>
 {
     JobsCountHandyRetroFitCallback(DataManager.Callback callback)
-    {
-        super(callback);
-    }
-}
-
-
-class PinRequestDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<PinRequestDetails>
-{
-    PinRequestDetailsResponseHandyRetroFitCallback(DataManager.Callback callback)
     {
         super(callback);
     }

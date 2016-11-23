@@ -73,6 +73,10 @@ public class ConfigurationResponse
     @SerializedName("clients_chat_enabled")
     private boolean mClientsChatEnabled;
 
+    @SerializedName("login_slt_enabled")
+    private boolean mSltEnabled;
+
+
     public boolean isAppseeAnalyticsEnabled()
     {
         return mAppseeAnalyticsEnabled;
@@ -195,6 +199,8 @@ public class ConfigurationResponse
         // return mClientsChatEnabled;
     }
 
+    public boolean isSltEnabled() { return mSltEnabled; }
+
     public static class HelpCenterInfo
     {
         @SerializedName("should_use_help_center_web_view")
@@ -213,6 +219,7 @@ public class ConfigurationResponse
             return mHelpCenterUrl;
         }
     }
+
 
     // Configuration info concerning pro request dismissals
     public static class RequestDismissal

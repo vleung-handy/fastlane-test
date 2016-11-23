@@ -45,6 +45,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.handy.portal.logger.handylogger.model.LoginLog.TYPE_PIN;
+
 public class LoginActivityFragment extends InjectedFragment
 {
     @BindView(R.id.phone_input_layout)
@@ -101,7 +103,7 @@ public class LoginActivityFragment extends InjectedFragment
 
         registerControlListeners();
 
-        bus.post(new LogEvent.AddLogEvent(new LoginLog.Shown()));
+        bus.post(new LogEvent.AddLogEvent(new LoginLog.Shown(LoginLog.TYPE_PHONE)));
 
         return view;
     }
@@ -131,7 +133,7 @@ public class LoginActivityFragment extends InjectedFragment
                 {
                     case INPUTTING_PHONE_NUMBER:
                     {
-                        bus.post(new LogEvent.AddLogEvent(new LoginLog.PhoneNumberSubmitted()));
+                        bus.post(new LogEvent.AddLogEvent(new LoginLog.login_submitted(LoginLog.TYPE_PHONE)));
                         if (phoneNumberEditText.validate())
                         {
                             sendPhoneNumber(phoneNumberEditText.getPhoneNumber());
@@ -142,7 +144,7 @@ public class LoginActivityFragment extends InjectedFragment
                     break;
                     case INPUTTING_PIN:
                     {
-                        bus.post(new LogEvent.AddLogEvent(new LoginLog.PinCodeSubmitted()));
+                        bus.post(new LogEvent.AddLogEvent(new LoginLog.login_submitted(TYPE_PIN)));
                         if (pinCodeEditText.validate())
                         {
                             sendLoginRequest(storedPhoneNumber, pinCodeEditText.getString());
@@ -262,7 +264,7 @@ public class LoginActivityFragment extends InjectedFragment
     @Subscribe
     public void onPinCodeRequestError(HandyEvent.ReceivePinCodeError event)
     {
-        bus.post(new LogEvent.AddLogEvent(new LoginLog.Error()));
+        bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(LoginLog.TYPE_PIN)));
         if (currentLoginState == LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE)
         {
             postLoginErrorEvent("server");
@@ -296,14 +298,14 @@ public class LoginActivityFragment extends InjectedFragment
         {
             if (event.loginDetails.getSuccess())
             {
-                bus.post(new LogEvent.AddLogEvent(new LoginLog.Success()));
+                bus.post(new LogEvent.AddLogEvent(new LoginLog.Success(LoginLog.TYPE_PIN)));
                 beginLogin(event.loginDetails);
             }
             else
             {
                 //this should never happen anymore since we changed the HTTP response code for login failure. logging for now just in case
                 Crashlytics.logException(new Exception("Login request success event fired but login details success parameter is false"));
-                bus.post(new LogEvent.AddLogEvent(new LoginLog.Error()));
+                bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(LoginLog.TYPE_PIN)));
                 showToast(R.string.login_error_bad_login);
                 changeState(LoginState.INPUTTING_PIN);
                 pinCodeEditText.highlight();
@@ -314,7 +316,7 @@ public class LoginActivityFragment extends InjectedFragment
     @Subscribe
     public void onLoginRequestError(HandyEvent.ReceiveLoginError event)
     {
-        bus.post(new LogEvent.AddLogEvent(new LoginLog.Error()));
+        bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(LoginLog.TYPE_PIN)));
         if (currentLoginState == LoginState.WAITING_FOR_LOGIN_RESPONSE)
         {
             DataManager.DataManagerError.Type errorType = event.error == null ? null : event.error.getType();
@@ -339,7 +341,6 @@ public class LoginActivityFragment extends InjectedFragment
                 showToast(R.string.login_error_connectivity);
                 Crashlytics.logException(new Exception("Login request error type is null"));
             }
-            bus.post(new LogEvent.AddLogEvent(new LoginLog.Error()));
             pinCodeEditText.highlight();
             changeState(LoginState.INPUTTING_PIN);
         }

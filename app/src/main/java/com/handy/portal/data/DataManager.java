@@ -19,7 +19,6 @@ import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LoginDetails;
-import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ProviderProfileResponse;
@@ -264,9 +263,19 @@ public class DataManager
         mService.rateCustomer(bookingId, rating, reviewText, new EmptyHandyRetroFitCallback(cb));
     }
 
-    public void requestPinCode(String phoneNumber, final Callback<PinRequestDetails> cb)
+    public void requestPinCode(String phoneNumber, final Callback<SuccessWrapper> cb)
     {
-        mService.requestPinCode(phoneNumber, new PinRequestDetailsResponseHandyRetroFitCallback(cb));
+        mService.requestPinCode(phoneNumber, new SuccessWrapperRetroFitCallback(cb));
+    }
+
+    public void requestSlt(String phoneNumber, final Callback<SuccessWrapper> cb)
+    {
+        mService.requestSlt(phoneNumber, new SuccessWrapperRetroFitCallback(cb));
+    }
+
+    public void requestLoginWithSlt(String n, String sig, String slt, final Callback<LoginDetails> cb)
+    {
+        mService.requestLoginWithSlt(n, sig, slt, new LoginDetailsResponseHandyRetroFitCallback(cb));
     }
 
     public void requestLogin(String phoneNumber, String pinCode, final Callback<LoginDetails> cb)

@@ -17,8 +17,8 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LocationData;
 import com.handy.portal.model.LoginDetails;
-import com.handy.portal.model.PinRequestDetails;
 import com.handy.portal.model.Provider;
+import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
@@ -91,9 +91,9 @@ public abstract class HandyEvent
 
     public static class ReceivePinCodeSuccess extends ReceiveSuccessEvent
     {
-        public PinRequestDetails pinRequestDetails;
+        public SuccessWrapper pinRequestDetails;
 
-        public ReceivePinCodeSuccess(PinRequestDetails pinRequestDetails)
+        public ReceivePinCodeSuccess(SuccessWrapper pinRequestDetails)
         {
             this.pinRequestDetails = pinRequestDetails;
         }

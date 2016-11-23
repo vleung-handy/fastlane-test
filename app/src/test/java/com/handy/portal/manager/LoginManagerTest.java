@@ -4,7 +4,7 @@ import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.LoginDetails;
-import com.handy.portal.model.PinRequestDetails;
+import com.handy.portal.model.SuccessWrapper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.junit.Before;
@@ -33,7 +33,7 @@ public class LoginManagerTest extends RobolectricGradleTestWrapper
     private PrefsManager prefsManager;
 
     @Captor
-    private ArgumentCaptor<DataManager.Callback<PinRequestDetails>> pinCodeRequestCallbackCaptor;
+    private ArgumentCaptor<DataManager.Callback<SuccessWrapper>> pinCodeRequestCallbackCaptor;
     @Captor
     private ArgumentCaptor<DataManager.Callback<LoginDetails>> loginRequestCallbackCaptor;
     @Captor
@@ -59,7 +59,7 @@ public class LoginManagerTest extends RobolectricGradleTestWrapper
     public void onSuccessfulRequestPinCode_shouldPostPinCodeRequestReceivedEventWithDetails() throws Exception
     {
         requestPinCodeAndCaptureCallback();
-        PinRequestDetails pinRequestDetails = mock(PinRequestDetails.class);
+        SuccessWrapper pinRequestDetails = mock(SuccessWrapper.class);
         when(pinRequestDetails.getSuccess()).thenReturn(true);
         pinCodeRequestCallbackCaptor.getValue().onSuccess(pinRequestDetails);
         verify(bus).post(pinCodeSuccessEventArgumentCaptor.capture());

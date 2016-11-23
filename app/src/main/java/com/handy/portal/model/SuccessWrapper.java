@@ -9,6 +9,7 @@ public class SuccessWrapper implements Serializable
     @SerializedName("success")
     private Boolean success;
 
+    public SuccessWrapper(final Boolean success) { this.success = success; }
 
     public Boolean getSuccess()
     {

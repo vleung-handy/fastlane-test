@@ -4,7 +4,7 @@ import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.manager.LoginManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.LoginDetails;
-import com.handy.portal.model.PinRequestDetails;
+import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.retrofit.DynamicEndpoint;
 import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
@@ -12,8 +12,8 @@ import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.updater.model.UpdateDetails;
-import org.greenrobot.eventbus.EventBus;
 
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.Test;
@@ -96,10 +96,10 @@ public class DataManagerTest extends RobolectricGradleTestWrapper
     public void testSuccessfulPinCodeRequest() throws Exception
     {
         final Object[] responseCatcher = new Object[1];
-        dataManager.requestPinCode("1231231234", new DataManager.Callback<PinRequestDetails>()
+        dataManager.requestPinCode("1231231234", new DataManager.Callback<SuccessWrapper>()
         {
             @Override
-            public void onSuccess(PinRequestDetails response)
+            public void onSuccess(SuccessWrapper response)
             {
                 responseCatcher[0] = response;
             }
@@ -115,7 +115,7 @@ public class DataManagerTest extends RobolectricGradleTestWrapper
         // TODO: Move test JSON data to files
         callback.success(new JSONObject("{\"success\":\"true\"}"));
 
-        PinRequestDetails pinRequestDetails = (PinRequestDetails) responseCatcher[0];
+        SuccessWrapper pinRequestDetails = (SuccessWrapper) responseCatcher[0];
         assertTrue(pinRequestDetails.getSuccess());
     }
 
