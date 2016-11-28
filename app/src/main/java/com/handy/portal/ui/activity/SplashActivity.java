@@ -171,7 +171,18 @@ public class SplashActivity extends BaseActivity
     }
 
     @Subscribe
-    public void onConfigurationReceived(HandyEvent.ReceiveConfigurationSuccess event)
+    public void onReceiveConfigurationSuccess(HandyEvent.ReceiveConfigurationSuccess event)
+    {
+        // Start Login Screen if not logged in.
+        // Config is needed to determine pin vs slt login
+        if (!hasUser())
+        {
+            launchLoginActivity();
+        }
+    }
+
+    @Subscribe
+    public void onReceiveConfigurationError(HandyEvent.ReceiveConfigurationError event)
     {
         // Start Login Screen if not logged in.
         // Config is needed to determine pin vs slt login

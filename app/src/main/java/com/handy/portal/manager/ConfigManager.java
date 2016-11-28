@@ -50,6 +50,7 @@ public class ConfigManager
                 {
                     mRequestIsPending = false;
                     Crashlytics.log("Unable to get configuration response");
+                    mBus.post(new HandyEvent.ReceiveConfigurationError(error));
                 }
             });
         }

@@ -75,6 +75,15 @@ public abstract class HandyEvent
         }
     }
 
+
+    public static class ReceiveConfigurationError extends ReceiveErrorEvent
+    {
+        public ReceiveConfigurationError(DataManager.DataManagerError error)
+        {
+            this.error = error;
+        }
+    }
+
 //Login
 
 
@@ -121,11 +130,13 @@ public abstract class HandyEvent
         }
     }
 
+
     //fired when the user has been logged out
     public static class UserLoggedOut extends HandyEvent
     {
 
     }
+
 
     public static class ReceiveLoginSuccess extends ReceiveSuccessEvent
     {
@@ -310,6 +321,7 @@ public abstract class HandyEvent
             this.day = day;
         }
     }
+
 
     /*
         TODO: the above ReceiveScheduledBookingsSuccess event should be renamed
@@ -584,6 +596,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveRemoveJobSuccess extends ReceiveBookingSuccessEvent
     {
         public ReceiveRemoveJobSuccess(Booking booking)
@@ -591,6 +604,7 @@ public abstract class HandyEvent
             this.booking = booking;
         }
     }
+
 
     public static class ReceiveNotifyJobOnMyWaySuccess extends ReceiveBookingSuccessEvent
     {
@@ -600,6 +614,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveNotifyJobCheckInSuccess extends ReceiveBookingSuccessEvent
     {
         public ReceiveNotifyJobCheckInSuccess(Booking booking)
@@ -608,6 +623,7 @@ public abstract class HandyEvent
         }
     }
 
+
     public static class ReceiveNotifyJobCheckOutSuccess extends ReceiveBookingSuccessEvent
     {
         public ReceiveNotifyJobCheckOutSuccess(Booking booking)
@@ -615,6 +631,7 @@ public abstract class HandyEvent
             this.booking = booking;
         }
     }
+
 
     //Job Action Receive Errors
     public static class ReceiveClaimJobError extends ReceiveErrorEvent
