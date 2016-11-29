@@ -99,16 +99,13 @@ public class SplashActivity extends BaseActivity
         // Check for logging in with single login token deep link
         loginWithSltIfNeeded();
 
-        if (mLayerHelper != null)
+        if (mAuthToken != null)
         {
-            if (mAuthToken != null)
-            {
-                mLayerHelper.initLayer(mAuthToken);
-            }
-            else if (mLayerHelper.getLayerClient().isAuthenticated())
-            {
-                mLayerHelper.deauthenticate();
-            }
+            mLayerHelper.initLayer(mAuthToken);
+        }
+        else if (mLayerHelper.getLayerClient().isAuthenticated())
+        {
+            mLayerHelper.deauthenticate();
         }
 
         if (mPrefsManager.getSecureBoolean(PrefsKey.APP_FIRST_LAUNCH, true))
