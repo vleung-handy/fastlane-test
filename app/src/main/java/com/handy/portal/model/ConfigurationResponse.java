@@ -194,9 +194,7 @@ public class ConfigurationResponse
 
     public boolean isClientsChatEnabled()
     {
-        return false;
-        // FIXME: Uncomment next line once clients chat is ready
-        // return mClientsChatEnabled;
+        return mClientsChatEnabled;
     }
 
     public boolean isSltEnabled() { return mSltEnabled; }

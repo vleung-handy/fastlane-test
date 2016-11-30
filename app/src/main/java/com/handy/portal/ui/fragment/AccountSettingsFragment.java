@@ -201,7 +201,7 @@ public class AccountSettingsFragment extends ActionBarFragment
                             CookieSyncManager.getInstance().sync();
                         }
 
-                        if (mLayerHelper != null && mLayerHelper.getLayerClient().isAuthenticated())
+                        if (mLayerHelper.getLayerClient().isAuthenticated())
                         {
                             mLayerHelper.deauthenticate();
                         }

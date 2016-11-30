@@ -154,7 +154,7 @@ public class MainActivityFragment extends InjectedFragment
 
         final ConfigurationResponse configuration = configManager.getConfigurationResponse();
         mShouldIncludeMessagesCount = configuration != null && configuration.isClientsChatEnabled();
-        if (mShouldIncludeMessagesCount && mLayerHelper != null)
+        if (mShouldIncludeMessagesCount)
         {
             mLayerHelper.registerUnreadConversationsCountChangedListener(this);
         }
@@ -488,7 +488,7 @@ public class MainActivityFragment extends InjectedFragment
         if (mClientsButton != null && mJobRequestsCount != null)
         {
             int clientsButtonUnreadCount = mJobRequestsCount;
-            if (mShouldIncludeMessagesCount && mLayerHelper != null)
+            if (mShouldIncludeMessagesCount)
             {
                 clientsButtonUnreadCount += mLayerHelper.getUnreadConversationsCount();
             }
@@ -730,7 +730,7 @@ public class MainActivityFragment extends InjectedFragment
             CookieSyncManager.getInstance().sync();
         }
 
-        if (mLayerHelper != null && mLayerHelper.getLayerClient().isAuthenticated())
+        if (mLayerHelper.getLayerClient().isAuthenticated())
         {
             mLayerHelper.deauthenticate();
         }
@@ -777,7 +777,7 @@ public class MainActivityFragment extends InjectedFragment
     @Override
     public void onDestroy()
     {
-        if (mShouldIncludeMessagesCount && mLayerHelper != null)
+        if (mShouldIncludeMessagesCount)
         {
             mLayerHelper.unregisterUnreadConversationsCountChangedListener(this);
         }
