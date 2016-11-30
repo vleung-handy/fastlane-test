@@ -77,6 +77,7 @@ import com.handybook.shared.LayerHelper;
 import com.securepreferences.SecurePreferences;
 
 import org.greenrobot.eventbus.EventBus;
+import org.mockito.Answers;
 
 import javax.inject.Singleton;
 
@@ -317,6 +318,6 @@ public class TestApplicationModule
     @Provides
     final LayerHelper provideLayerHelper()
     {
-        return null;
+        return mock(LayerHelper.class, Answers.RETURNS_DEEP_STUBS.get());
     }
 }
