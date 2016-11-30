@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
+import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.constant.BundleKeys;
@@ -44,6 +45,8 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     PrefsManager mPrefsManager;
     @Inject
     LocationManager mLocationManager;
+    @Inject
+    BookingManager mBookingManager;
     @Inject
     EventBus mBus;
 
@@ -145,8 +148,8 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             final LocationData locationData = mLocationManager.getLastKnownLocationData();
             mBus.post(new LogEvent.AddLogEvent(
                     new CheckOutFlowLog.CheckOutSubmitted(mBooking, locationData)));
-            mBus.post(new BookingEvent.RateCustomer(
-                    mBooking.getId(), bookingRatingScore, getBookingRatingComment()));
+            mBookingManager.rateCustomer(
+                    mBooking.getId(), bookingRatingScore, getBookingRatingComment());
         }
         else
         {
@@ -157,7 +160,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     @Subscribe
     public void onReceiveRateCustomerSuccess(final BookingEvent.RateCustomerSuccess event)
     {
-        mBus.post(new BookingEvent.RequestPostCheckoutInfo(mBooking.getId()));
+        mBookingManager.requestPostCheckoutInfo(mBooking.getId());
     }
 
     @Subscribe

@@ -47,7 +47,9 @@ import com.handy.portal.onboarding.ui.fragment.PurchaseSuppliesConfirmationFragm
 import com.handy.portal.onboarding.ui.fragment.PurchaseSuppliesFragment;
 import com.handy.portal.onboarding.ui.fragment.ScheduleBuilderFragment;
 import com.handy.portal.onboarding.ui.fragment.ScheduleConfirmationFragment;
+import com.handy.portal.onboarding.ui.fragment.ScheduleConfirmationFragmentTest;
 import com.handy.portal.onboarding.ui.fragment.SchedulePreferencesFragment;
+import com.handy.portal.onboarding.ui.fragment.SchedulePreferencesFragmentTest;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.payments.ui.element.PaymentsBatchListView;
 import com.handy.portal.payments.ui.fragment.PaymentsDetailFragment;
@@ -140,6 +142,8 @@ import static org.mockito.Mockito.when;
         LoginActivity.class,
         LoginSltFragment.class,
         SplashActivity.class,
+        SchedulePreferencesFragmentTest.class,
+        ScheduleConfirmationFragmentTest.class,
 
 }, library = true)
 public class TestApplicationModule
@@ -226,7 +230,7 @@ public class TestApplicationModule
     final BookingManager provideBookingManager(final EventBus bus,
                                                final DataManager dataManager)
     {
-        return new BookingManager(bus, dataManager);
+        return spy(new BookingManager(bus, dataManager));
     }
 
     @Provides

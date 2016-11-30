@@ -10,6 +10,7 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 
 import com.handy.portal.R;
+import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.ui.view.StaticFieldTableRow;
@@ -28,11 +29,16 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class SchedulePreferencesFragment extends OnboardingSubflowUIFragment
 {
+    @Inject
+    BookingManager mBookingManager;
+
     @BindView(R.id.date_field)
     StaticFieldTableRow mDateField;
     @BindView(R.id.location_field)
@@ -203,7 +209,7 @@ public class SchedulePreferencesFragment extends OnboardingSubflowUIFragment
             return;
         }
         showLoadingOverlay();
-        bus.post(new HandyEvent.RequestOnboardingJobs(mSelectedStartDate, mSelectedZipclusterIds));
+        mBookingManager.requestOnboardingJobs(mSelectedStartDate, mSelectedZipclusterIds);
     }
 
     @Subscribe

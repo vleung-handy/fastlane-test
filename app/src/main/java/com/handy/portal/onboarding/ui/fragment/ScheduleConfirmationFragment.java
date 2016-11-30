@@ -13,6 +13,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
+import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.ui.element.PendingBookingElementView;
@@ -46,6 +47,8 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowUIFragment
 {
     @Inject
     PrefsManager mPrefsManager;
+    @Inject
+    BookingManager mBookingManager;
 
     @BindView(R.id.jobs_container)
     ViewGroup mJobsContainer;
@@ -272,7 +275,7 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowUIFragment
                         return new JobClaim(bookingId, bookingType);
                     }
                 }));
-        bus.post(new HandyEvent.RequestClaimJobs(new JobClaimRequest(jobClaims)));
+        mBookingManager.requestClaimJobs(new JobClaimRequest(jobClaims));
         logConfirmationPageSubmitted();
         bus.post(new NativeOnboardingLog.ClaimBatchSubmitted(mPendingBookings));
     }

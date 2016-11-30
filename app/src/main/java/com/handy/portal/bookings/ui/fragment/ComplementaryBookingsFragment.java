@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
+import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.Booking.BookingType;
 import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
@@ -32,12 +33,17 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ComplementaryBookingsFragment extends ActionBarFragment
 {
+    @Inject
+    BookingManager mBookingManager;
+
     @BindView(R.id.loading_overlay)
     View loadingOverlay;
     @BindView(R.id.complementary_bookings_empty)
@@ -163,8 +169,8 @@ public class ComplementaryBookingsFragment extends ActionBarFragment
     {
         errorView.setVisibility(View.GONE);
         loadingOverlay.setVisibility(View.VISIBLE);
-        bus.post(new HandyEvent.RequestBookingDetails(bookingId, bookingType, bookingDate));
-        bus.post(new HandyEvent.RequestComplementaryBookings(bookingId, bookingType, bookingDate));
+        mBookingManager.requestBookingDetails(bookingId, bookingType, bookingDate);
+        mBookingManager.requestComplementaryBookings(bookingId, bookingType, bookingDate);
     }
 
 

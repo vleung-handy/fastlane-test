@@ -29,6 +29,7 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.constant.BookingActionButtonType;
 import com.handy.portal.bookings.constant.BookingProgress;
+import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.element.BookingDetailsJobInstructionsSectionView;
 import com.handy.portal.bookings.ui.element.BookingDetailsProRequestInfoView;
@@ -83,6 +84,8 @@ public class BookingFragment extends TimerActionBarFragment
     PrefsManager mPrefsManager;
     @Inject
     LocationManager mLocationManager;
+    @Inject
+    BookingManager mBookingManager;
 
     @BindView(R.id.booking_details_display_message_layout)
     BookingDetailsProRequestInfoView mBookingDetailsProRequestInfoView;
@@ -610,7 +613,7 @@ public class BookingFragment extends TimerActionBarFragment
             bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimSubmitted(
                     mBooking, mSource, mSourceExtras, 0.0f)));
         }
-        bus.post(new HandyEvent.RequestClaimJob(mBooking, mSource, mSourceExtras));
+        mBookingManager.requestClaimJob(mBooking, mSource);
     }
 
     private void enableActionsIfNeeded(Booking.Action action)
@@ -656,8 +659,8 @@ public class BookingFragment extends TimerActionBarFragment
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
                         bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWaySubmitted(
                                 mBooking, mLocationManager.getLastKnownLocationData())));
-                        bus.post(new HandyEvent.RequestNotifyJobOnMyWay(
-                                mBooking.getId(), mLocationManager.getLastKnownLocationData()));
+                        mBookingManager.requestNotifyOnMyWay(
+                                mBooking.getId(), mLocationManager.getLastKnownLocationData());
                     }
                 });
 
@@ -686,8 +689,8 @@ public class BookingFragment extends TimerActionBarFragment
                             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
                             bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSubmitted(
                                     mBooking, mLocationManager.getLastKnownLocationData())));
-                            bus.post(new HandyEvent.RequestNotifyJobCheckIn(
-                                    mBooking.getId(), mLocationManager.getLastKnownLocationData()));
+                            mBookingManager.requestNotifyCheckIn(
+                                    mBooking.getId(), mLocationManager.getLastKnownLocationData());
                         }
                         else
                         {

@@ -8,14 +8,16 @@ import android.widget.TextView;
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
-import com.handy.portal.TestUtils;
+import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.RequestCode;
+import com.handy.portal.core.TestBaseApplication;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.model.Designation;
 import com.handy.portal.onboarding.model.OnboardingDetails;
+import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 import com.handy.portal.onboarding.model.subflow.SubflowData;
 import com.handy.portal.onboarding.model.subflow.SubflowType;
@@ -29,9 +31,12 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.robolectric.Robolectric;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.util.ActivityController;
 
 import java.util.ArrayList;
+
+import javax.inject.Inject;
 
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
@@ -39,12 +44,17 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.robolectric.Shadows.shadowOf;
 
 public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapper
 {
+    @Inject
+    BookingManager mBookingManager;
+
     private ScheduleConfirmationFragment mFragment;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private OnboardingDetails mOnboardingDetails;
@@ -62,7 +72,9 @@ public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapp
     @Before
     public void setUp() throws Exception
     {
+        ((TestBaseApplication) RuntimeEnvironment.application).inject(this);
         initMocks(this);
+
         when(mOnboardingDetails.getSubflowDataByType(SubflowType.CONFIRMATION))
                 .thenReturn(mSubflowData);
         when(mIntent.getSerializableExtra(BundleKeys.ONBOARDING_DETAILS))
@@ -248,12 +260,14 @@ public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapp
 
         mFragment.onPrimaryButtonClicked();
 
-        final HandyEvent.RequestClaimJobs event = TestUtils.getFirstMatchingBusEvent(
-                mFragment.getBus(), HandyEvent.RequestClaimJobs.class);
-        assertNotNull(event);
-        assertThat(event.mJobClaimRequest.getJobs().size(), equalTo(1));
-        assertThat(event.mJobClaimRequest.getJobs().get(0).getBookingId(), equalTo("555"));
-        assertThat(event.mJobClaimRequest.getJobs().get(0).getJobType(), equalTo("booking_proxy"));
+        ArgumentCaptor<JobClaimRequest> captor = ArgumentCaptor.forClass(JobClaimRequest.class);
+        verify(mBookingManager, times(1)).requestClaimJobs(captor.capture());
+
+        final JobClaimRequest jobClaimRequest = captor.getValue();
+        assertNotNull(jobClaimRequest);
+        assertThat(jobClaimRequest.getJobs().size(), equalTo(1));
+        assertThat(jobClaimRequest.getJobs().get(0).getBookingId(), equalTo("555"));
+        assertThat(jobClaimRequest.getJobs().get(0).getJobType(), equalTo("booking_proxy"));
     }
 
     @Test

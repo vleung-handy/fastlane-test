@@ -7,7 +7,6 @@ import com.handy.portal.bookings.ui.fragment.BookingDetailsWrapperFragment;
 import com.handy.portal.bookings.ui.fragment.BookingFragment;
 import com.handy.portal.bookings.ui.fragment.CancellationRequestFragment;
 import com.handy.portal.bookings.ui.fragment.ComplementaryBookingsFragment;
-import com.handy.portal.bookings.ui.fragment.NearbyBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.bookings.ui.fragment.SoftwareLicensesFragment;
@@ -51,7 +50,6 @@ public enum MainViewPage implements Serializable
     AVAILABLE_JOBS(AvailableBookingsFragment.class),
     SCHEDULED_JOBS(ScheduledBookingsFragment.class),
     COMPLEMENTARY_JOBS(ComplementaryBookingsFragment.class),
-    NEARBY_JOBS(NearbyBookingsFragment.class),
     JOB_DETAILS(BookingDetailsWrapperFragment.class),
     JOB_PAYMENT_DETAILS(BookingTransactionsWrapperFragment.class),
     CANCELLATION_REQUEST(CancellationRequestFragment.class),

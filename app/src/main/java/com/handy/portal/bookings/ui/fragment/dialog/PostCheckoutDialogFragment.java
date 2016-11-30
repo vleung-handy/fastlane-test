@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
@@ -50,6 +51,8 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
 
     @Inject
     EventBus mBus;
+    @Inject
+    BookingManager mBookingManager;
 
     @BindView(R.id.claim_prompt_text)
     TextView mClaimPromptText;
@@ -131,7 +134,7 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
                 jobClaims.add(new JobClaim(booking.getId(), jobType));
             }
             final JobClaimRequest jobClaimRequest = new JobClaimRequest(jobClaims);
-            mBus.post(new HandyEvent.RequestClaimJobs(jobClaimRequest));
+            mBookingManager.requestClaimJobs(jobClaimRequest);
             mBus.post(new LogEvent.AddLogEvent(
                     new CheckOutFlowLog.ClaimBatchSubmitted(selectedBookings)));
             showLoadingOverlay();
@@ -175,7 +178,7 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
                 dates.add(booking.getStartDate());
             }
             // Trigger Schedule Refresh
-            mBus.post(new HandyEvent.RequestScheduledBookings(dates, false));
+            mBookingManager.requestScheduledBookings(dates, false);
         }
 
         dismiss();

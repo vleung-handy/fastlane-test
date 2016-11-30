@@ -11,9 +11,10 @@ import android.widget.ListView;
 
 import com.google.common.collect.Lists;
 import com.handy.portal.RobolectricGradleTestWrapper;
-import com.handy.portal.TestUtils;
+import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.core.TestBaseApplication;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.onboarding.model.OnboardingDetails;
@@ -28,16 +29,21 @@ import com.handy.portal.ui.widget.HandyCheckBox;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Answers;
+import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.robolectric.Robolectric;
+import org.robolectric.RuntimeEnvironment;
 import org.robolectric.shadows.ShadowAlertDialog;
 import org.robolectric.shadows.ShadowDatePickerDialog;
 import org.robolectric.shadows.ShadowListView;
 import org.robolectric.util.ActivityController;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import static junit.framework.Assert.assertTrue;
 import static org.hamcrest.CoreMatchers.instanceOf;
@@ -46,12 +52,17 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.robolectric.Shadows.shadowOf;
 
 public class SchedulePreferencesFragmentTest extends RobolectricGradleTestWrapper
 {
+    @Inject
+    BookingManager mBookingManager;
+
     private SchedulePreferencesFragment mFragment;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private OnboardingDetails mOnboardingDetails;
@@ -65,6 +76,7 @@ public class SchedulePreferencesFragmentTest extends RobolectricGradleTestWrappe
     public void setUp() throws Exception
     {
         initMocks(this);
+        ((TestBaseApplication) RuntimeEnvironment.application).inject(this);
         when(mOnboardingDetails.getSubflowDataByType(SubflowType.CLAIM)).thenReturn(mSubflowData);
         when(mIntent.getSerializableExtra(BundleKeys.ONBOARDING_DETAILS))
                 .thenReturn(mOnboardingDetails);
@@ -187,15 +199,15 @@ public class SchedulePreferencesFragmentTest extends RobolectricGradleTestWrappe
 
         mFragment.mSingleActionButton.performClick();
 
-        final HandyEvent.RequestOnboardingJobs event =
-                TestUtils.getFirstMatchingBusEvent(mFragment.getBus(),
-                        HandyEvent.RequestOnboardingJobs.class);
-        assertNotNull(event);
+        ArgumentCaptor<Date> dateCaptor = ArgumentCaptor.forClass(Date.class);
+        ArgumentCaptor<ArrayList> listCaptor = ArgumentCaptor.forClass(ArrayList.class);
+        verify(mBookingManager, times(1)).requestOnboardingJobs(dateCaptor.capture(), listCaptor.capture());
+
         final Calendar tomorrow = Calendar.getInstance();
         tomorrow.add(Calendar.DATE, 1);
-        assertNotNull(event.getStartDate());
-        assertThat(event.getPreferredZipclusterIds().size(), equalTo(1));
-        assertThat(event.getPreferredZipclusterIds().get(0), equalTo("1"));
+        assertNotNull(dateCaptor.getValue());
+        assertThat(listCaptor.getValue().size(), equalTo(1));
+        assertThat(listCaptor.getValue().get(0).toString(), equalTo("1"));
     }
 
     @Test
