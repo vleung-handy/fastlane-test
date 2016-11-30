@@ -70,8 +70,8 @@ public class ConfigurationResponse
     @SerializedName("appsee_analytics_enabled")
     private boolean mAppseeAnalyticsEnabled;
 
-    @SerializedName("clients_chat_enabled")
-    private boolean mClientsChatEnabled;
+    @SerializedName("chat_enabled")
+    private boolean mChatEnabled;
 
     @SerializedName("login_slt_enabled")
     private boolean mSltEnabled;
@@ -192,9 +192,9 @@ public class ConfigurationResponse
         return mRequestDismissal;
     }
 
-    public boolean isClientsChatEnabled()
+    public boolean isChatEnabled()
     {
-        return mClientsChatEnabled;
+        return mChatEnabled;
     }
 
     public boolean isSltEnabled() { return mSltEnabled; }

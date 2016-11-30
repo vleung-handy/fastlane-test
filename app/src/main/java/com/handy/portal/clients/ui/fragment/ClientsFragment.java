@@ -5,7 +5,7 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
+import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.view.TabWithCountView;
@@ -35,6 +36,7 @@ import butterknife.ButterKnife;
 public class ClientsFragment extends ActionBarFragment
         implements LayerHelper.UnreadConversationsCountChangedListener
 {
+    public static final String CONVERSATIONS_DEEPLINK_SUFFIX = "conversations";
     @Inject
     BookingManager mBookingManager;
     @Inject
@@ -42,8 +44,6 @@ public class ClientsFragment extends ActionBarFragment
     @Inject
     EventBus mBus;
 
-    @BindView(R.id.clients_toolbar)
-    Toolbar mToolbar;
     @BindView(R.id.clients_pager)
     ViewPager mViewPager;
     @BindView(R.id.clients_tab_layout)
@@ -64,7 +64,7 @@ public class ClientsFragment extends ActionBarFragment
     {
         super.onCreate(savedInstanceState);
         final ConfigurationResponse configuration = configManager.getConfigurationResponse();
-        mShouldShowMessagesTab = configuration != null && configuration.isClientsChatEnabled();
+        mShouldShowMessagesTab = configuration != null && configuration.isChatEnabled();
         mBus.register(this);
         if (mShouldShowMessagesTab)
         {
@@ -84,18 +84,7 @@ public class ClientsFragment extends ActionBarFragment
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
-        if (mShouldShowMessagesTab)
-        {
-            setActionBarVisible(false);
-            mToolbar.setTitle(R.string.your_clients);
-        }
-        else
-        {
-            setActionBarTitle(R.string.your_clients);
-            mTabLayout.setVisibility(View.GONE);
-            mToolbar.setVisibility(View.GONE);
-        }
-
+        setActionBarTitle(R.string.your_clients);
         final TabAdapter tabAdapter = new TabAdapter(getChildFragmentManager());
         mViewPager.setAdapter(tabAdapter);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
@@ -114,6 +103,18 @@ public class ClientsFragment extends ActionBarFragment
             mMessagesTab = new TabWithCountView(getActivity());
             mMessagesTab.setTitle(R.string.messages);
             mTabLayout.getTabAt(1).setCustomView(mMessagesTab);
+
+            final Bundle deeplinkData =
+                    getActivity().getIntent().getBundleExtra(BundleKeys.DEEPLINK_DATA);
+            if (deeplinkData != null)
+            {
+                final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
+                if (!TextUtils.isEmpty(deeplink)
+                        && deeplink.endsWith(CONVERSATIONS_DEEPLINK_SUFFIX))
+                {
+                    mViewPager.setCurrentItem(1);
+                }
+            }
         }
     }
 

@@ -153,7 +153,7 @@ public class MainActivityFragment extends InjectedFragment
         };
 
         final ConfigurationResponse configuration = configManager.getConfigurationResponse();
-        mShouldIncludeMessagesCount = configuration != null && configuration.isClientsChatEnabled();
+        mShouldIncludeMessagesCount = configuration != null && configuration.isChatEnabled();
         if (mShouldIncludeMessagesCount)
         {
             mLayerHelper.registerUnreadConversationsCountChangedListener(this);
