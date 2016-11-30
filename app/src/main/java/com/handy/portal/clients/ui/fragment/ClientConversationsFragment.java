@@ -16,16 +16,16 @@ import android.view.ViewGroup;
 import com.handy.portal.R;
 import com.handy.portal.clients.ui.adapter.ConversationsAdapter;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
-import com.handybook.shared.LayerConstants;
-import com.handybook.shared.LayerHelper;
-import com.handybook.shared.PushNotificationReceiver;
+import com.handybook.shared.layer.LayerConstants;
+import com.handybook.shared.layer.LayerHelper;
+import com.handybook.shared.layer.receiver.PushNotificationReceiver;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.handybook.shared.LayerConstants.LAYER_CONVERSATION_KEY;
+import static com.handybook.shared.layer.LayerConstants.LAYER_CONVERSATION_KEY;
 
 
 public class ClientConversationsFragment extends InjectedFragment

@@ -1,22 +1,16 @@
 package com.handy.portal.clients;
 
-import android.app.Application;
-
-import com.handy.portal.BuildConfig;
 import com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapter;
 import com.handy.portal.clients.ui.fragment.ClientConversationsFragment;
 import com.handy.portal.clients.ui.fragment.ClientsFragment;
 import com.handy.portal.clients.ui.fragment.ProRequestedJobsFragment;
 import com.handy.portal.clients.ui.fragment.dialog.RequestDismissalReasonsDialogFragment;
 import com.handy.portal.clients.ui.fragment.dialog.SwapBookingClaimDialogFragment;
-import com.handybook.shared.HandyLayer;
-import com.handybook.shared.LayerHelper;
-
-import javax.inject.Singleton;
+import com.handybook.shared.core.HandyLibrary;
+import com.handybook.shared.layer.LayerHelper;
 
 import dagger.Module;
 import dagger.Provides;
-import retrofit.RestAdapter;
 
 @Module(
         library = true,
@@ -31,11 +25,9 @@ import retrofit.RestAdapter;
         })
 public final class ClientsModule
 {
-    @Singleton
     @Provides
-    final LayerHelper provideLayerHelper(final Application application,
-                                         final RestAdapter restAdapter)
+    final LayerHelper provideLayerHelper()
     {
-        return HandyLayer.init(restAdapter, application, !BuildConfig.DEBUG);
+        return HandyLibrary.getInstance().getLayerHelper();
     }
 }

@@ -32,7 +32,7 @@ import com.handy.portal.onboarding.ui.activity.OnboardingFlowActivity;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.setup.SetupData;
 import com.handy.portal.util.DeeplinkUtils;
-import com.handybook.shared.LayerHelper;
+import com.handybook.shared.layer.LayerHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

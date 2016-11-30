@@ -49,7 +49,7 @@ import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.util.DeeplinkMapper;
-import com.handybook.shared.LayerHelper;
+import com.handybook.shared.layer.LayerHelper;
 import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
