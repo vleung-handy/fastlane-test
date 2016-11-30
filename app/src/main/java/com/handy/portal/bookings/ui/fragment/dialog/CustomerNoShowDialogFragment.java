@@ -107,8 +107,7 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment
 
     private void updateHeaderWithBookingPaymentInfo()
     {
-        mPaymentInfoText.setText(getString(R.string.customer_no_show_payment_info_formatted,
-                mBooking.getFormattedProviderPayout()));
+        mPaymentInfoText.setText(R.string.customer_no_show_payment_info);
     }
 
     private void populateInstructionsList(@NonNull final int[] instructionListStringResourceIds)
