@@ -50,8 +50,6 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
     @Inject
     public EventBus bus;
     @Inject
-    ConfigManager configManager;
-    @Inject
     AppseeManager mAppseeManager;
 
     private AppUpdateEventListener mAppUpdateEventListener;
@@ -328,11 +326,11 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
                         @Override
                         public void onFlowComplete()
                         {
-                            bus.unregister(SetupHandler.this);
                             mBaseActivity.onSetupComplete(setupData);
                         }
                     })
                     .start();
+            bus.unregister(SetupHandler.this);
         }
 
         @Subscribe

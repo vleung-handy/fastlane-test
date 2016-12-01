@@ -15,7 +15,6 @@ import static org.robolectric.Shadows.shadowOf;
 
 public class SplashActivityTest extends RobolectricGradleTestWrapper
 {
-
     @Test
     public void shouldLaunchLoginActivityIfNotLoggedIn()
     {
@@ -28,7 +27,7 @@ public class SplashActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldRelaunchSplashActivityIfLoggingInWithSlt()
+    public void shouldLaunchMainActivityIfLoggingInWithSlt()
     {
         Intent intent = new Intent();
         Uri.Builder builder = new Uri.Builder();
@@ -47,6 +46,6 @@ public class SplashActivityTest extends RobolectricGradleTestWrapper
         Intent nextStartedActivity =
                 shadowOf(activityController.get()).getNextStartedActivity();
         assertThat(nextStartedActivity.getComponent().getClassName(),
-                equalTo(SplashActivity.class.getName()));
+                equalTo(MainActivity.class.getName()));
     }
 }

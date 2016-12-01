@@ -25,12 +25,15 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.LoginLog;
+import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.LoginManager;
+import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowStatus;
 import com.handy.portal.onboarding.ui.activity.OnboardingFlowActivity;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.setup.SetupData;
+import com.handy.portal.setup.SetupManager;
 import com.handy.portal.util.DeeplinkUtils;
 import com.handybook.shared.layer.LayerHelper;
 
@@ -46,7 +49,13 @@ import butterknife.ButterKnife;
 public class SplashActivity extends BaseActivity
 {
     @Inject
+    PrefsManager mPrefsManager;
+    @Inject
+    ConfigManager mConfigManager;
+    @Inject
     LoginManager mLoginManager;
+    @Inject
+    SetupManager mSetupManager;
     @Inject
     HandyRetrofitEndpoint endpoint;
     @Inject
@@ -62,7 +71,6 @@ public class SplashActivity extends BaseActivity
     int mProgressSpinnerStartOffsetMillis;
 
     private String mAuthToken;
-    private boolean mSltLoggingIn;
 
     private Runnable mLoadingAnimationStarter = new Runnable()
     {
@@ -96,46 +104,102 @@ public class SplashActivity extends BaseActivity
 
         mAuthToken = mPrefsManager.getSecureString(PrefsKey.AUTH_TOKEN, null);
 
-        // Check for logging in with single login token deep link
-        loginWithSltIfNeeded();
+        initLayerHelper();
 
-        if (mAuthToken != null)
-        {
-            mLayerHelper.initLayer(mAuthToken);
-        }
-        else if (mLayerHelper.getLayerClient().isAuthenticated())
-        {
-            mLayerHelper.deauthenticate();
-        }
+        logFirstLaunch();
+    }
 
-        if (mPrefsManager.getSecureBoolean(PrefsKey.APP_FIRST_LAUNCH, true))
-        {
-            mBus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(true, true)));
-            mPrefsManager.setSecureBoolean(PrefsKey.APP_FIRST_LAUNCH, false);
-        }
-        else
-        {
-            mBus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(false, true)));
-        }
+    @Override
+    protected void onDestroy()
+    {
+        mBus.unregister(this);
+        super.onDestroy();
     }
 
     @Override
     public void onResume()
     {
         super.onResume();
-        // If not logged in and not logging in, prefetch login type before login
-        if (!hasUser() && !mSltLoggingIn)
+
+        if (!hasUser())
         {
-            mConfigManager.prefetch();
+            if (hasSltLoginRequest())
+            {
+                sltLogin();
+            }
+            else
+            {
+                // get configuration to figure out witch login display to use
+                mConfigManager.prefetch();
+            }
         }
+        else
+        {
+            triggerSetup();
+        }
+    }
+
+    @Override
+    public void onPause()
+    {
+        mProgressSpinner.removeCallbacks(mLoadingAnimationStarter);
+        super.onPause();
+    }
+
+    @Override
+    public final void onSaveInstanceState(final Bundle outState)
+    {
+        try
+        {
+            super.onSaveInstanceState(outState);
+        }
+        catch (IllegalArgumentException e)
+        {
+            // Non fatal
+            Crashlytics.logException(e);
+        }
+    }
+
+    @Override
+    protected void onSetupComplete(final SetupData setupData)
+    {
+        final Intent activityIntent = getTerminalActivityIntent(setupData);
+        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(activityIntent);
+        finish();
+    }
+
+    @Override
+    protected void onSetupFailure()
+    {
+        onSetupComplete(null);
+    }
+
+    @Override
+    protected boolean shouldTriggerSetup()
+    {
+        return hasUser();
+    }
+
+    @Override
+    public void checkForUpdates()
+    {
+        //Do nothing
+    }
+
+    @Override
+    public void launchAppUpdater()
+    {
+        //do nothing
     }
 
     @Subscribe
     public void onLoginSuccess(HandyEvent.ReceiveLoginSuccess event)
     {
         mBus.post(new LogEvent.AddLogEvent(new LoginLog.Success(LoginLog.TYPE_TOKEN)));
-        startActivity(new Intent(this, SplashActivity.class));
-        finish();
+        mAuthToken = mPrefsManager.getSecureString(PrefsKey.AUTH_TOKEN, null);
+        triggerSetup();
     }
 
     @Subscribe
@@ -164,7 +228,7 @@ public class SplashActivity extends BaseActivity
             Toast.makeText(this, R.string.login_error_connectivity, Toast.LENGTH_SHORT).show();
             Crashlytics.logException(new Exception("Login request error type is null"));
         }
-        launchLoginActivity();
+        mConfigManager.prefetch();
     }
 
     @Subscribe
@@ -189,7 +253,7 @@ public class SplashActivity extends BaseActivity
         }
     }
 
-    public void launchLoginActivity()
+    private void launchLoginActivity()
     {
         final Intent loginActivityIntent = getActivityIntent(LoginActivity.class);
         loginActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
@@ -198,57 +262,7 @@ public class SplashActivity extends BaseActivity
         finish();
     }
 
-    @Override
-    protected void onDestroy()
-    {
-        mBus.unregister(this);
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onSetupComplete(final SetupData setupData)
-    {
-        final Intent activityIntent = getTerminalActivityIntent(setupData);
-        activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(activityIntent);
-        finish();
-    }
-
-    @Override
-    protected void onSetupFailure()
-    {
-        onSetupComplete(null);
-    }
-
-    @Override
-    protected boolean shouldTriggerSetup()
-    {
-        return hasUser();
-    }
-
-    @Override
-    public void onPause()
-    {
-        mProgressSpinner.removeCallbacks(mLoadingAnimationStarter);
-        super.onPause();
-    }
-
-    @Override
-    public final void onSaveInstanceState(final Bundle outState)
-    {
-        try
-        {
-            super.onSaveInstanceState(outState);
-        }
-        catch (IllegalArgumentException e)
-        {
-            // Non fatal
-            Crashlytics.logException(e);
-        }
-    }
-
-    public Intent getTerminalActivityIntent(@Nullable final SetupData setupData)
+    private Intent getTerminalActivityIntent(@Nullable final SetupData setupData)
     {
         final Intent activityIntent;
         if (setupData != null && shouldShowOnboarding(setupData.getOnboardingDetails()))
@@ -319,36 +333,51 @@ public class SplashActivity extends BaseActivity
         {
             return false;
         }
-
     }
 
-    private void loginWithSltIfNeeded()
+    private boolean hasSltLoginRequest()
     {
         Intent intent = getIntent();
-        if (!hasUser() && intent != null && getIntent().getData() != null)
+        return intent != null && intent.getData() != null &&
+                !TextUtils.isEmpty(intent.getData().getQueryParameter("n")) &&
+                !TextUtils.isEmpty(intent.getData().getQueryParameter("sig")) &&
+                !TextUtils.isEmpty(intent.getData().getQueryParameter("slt"));
+    }
+
+    private void sltLogin()
+    {
+        if (hasSltLoginRequest())
         {
-            mSltLoggingIn = true;
             String n = getIntent().getData().getQueryParameter("n");
             String sig = getIntent().getData().getQueryParameter("sig");
             String slt = getIntent().getData().getQueryParameter("slt");
-
-            if (!TextUtils.isEmpty(n) && !TextUtils.isEmpty(sig) && !TextUtils.isEmpty(slt))
-            {
-                mLoginManager.loginWithSlt(n, sig, slt);
-            }
+            mLoginManager.loginWithSlt(n, sig, slt);
         }
     }
 
-    @Override
-    public void checkForUpdates()
+    private void initLayerHelper()
     {
-        //Do nothing
+        if (mAuthToken != null)
+        {
+            mLayerHelper.initLayer(mAuthToken);
+        }
+        else if (mLayerHelper.getLayerClient().isAuthenticated())
+        {
+            mLayerHelper.deauthenticate();
+        }
     }
 
-    @Override
-    public void launchAppUpdater()
+    private void logFirstLaunch()
     {
-        //do nothing
+        if (mPrefsManager.getSecureBoolean(PrefsKey.APP_FIRST_LAUNCH, true))
+        {
+            mBus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(true, true)));
+            mPrefsManager.setSecureBoolean(PrefsKey.APP_FIRST_LAUNCH, false);
+        }
+        else
+        {
+            mBus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(false, true)));
+        }
     }
 
     /**

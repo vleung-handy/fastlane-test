@@ -15,6 +15,7 @@ import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
+import com.handy.portal.setup.SetupData;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -37,6 +38,11 @@ public class TestDataManager extends DataManager
                            final DynamicEndpointService dynamicEndpointService)
     {
         super(service, endpoint, stripeService, dynamicEndpoint, dynamicEndpointService);
+    }
+
+    public void getSetupData(final Callback<SetupData> cb)
+    {
+        cb.onSuccess(new SetupData());
     }
 
     @Override

@@ -13,8 +13,7 @@ public class SetupManager
     private final DataManager mDataManager;
 
     @Inject
-    public SetupManager(final EventBus bus,
-                        final DataManager dataManager)
+    public SetupManager(final EventBus bus, final DataManager dataManager)
     {
         mBus = bus;
         mDataManager = dataManager;
