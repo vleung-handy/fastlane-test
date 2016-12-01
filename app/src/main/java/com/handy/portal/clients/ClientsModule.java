@@ -1,5 +1,6 @@
 package com.handy.portal.clients;
 
+import com.handy.portal.clients.ui.adapter.ConversationHolder;
 import com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapter;
 import com.handy.portal.clients.ui.fragment.ClientConversationsFragment;
 import com.handy.portal.clients.ui.fragment.ClientsFragment;
@@ -22,6 +23,7 @@ import dagger.Provides;
                 RequestedJobsRecyclerViewAdapter.class,
                 SwapBookingClaimDialogFragment.class,
                 ClientConversationsFragment.class,
+                ConversationHolder.class,
         })
 public final class ClientsModule
 {

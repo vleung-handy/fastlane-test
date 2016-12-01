@@ -11,6 +11,9 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FontUtils;
+import com.handy.portal.library.util.Utils;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.ConversationsLog;
 import com.handybook.shared.layer.LayerConstants;
 import com.handybook.shared.layer.LayerUtil;
 import com.handybook.shared.layer.ui.MessagesListActivity;
@@ -18,7 +21,9 @@ import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.messaging.Message;
 
-import java.util.HashSet;
+import org.greenrobot.eventbus.EventBus;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,6 +31,9 @@ import butterknife.OnClick;
 
 public class ConversationHolder extends RecyclerView.ViewHolder
 {
+    @Inject
+    EventBus mBus;
+
     @BindView(R.id.conversation_list_item_title)
     TextView mTitle;
     @BindView(R.id.conversation_list_item_content)
@@ -44,6 +52,12 @@ public class ConversationHolder extends RecyclerView.ViewHolder
         intent.putExtra(LayerConstants.LAYER_CONVERSATION_KEY, mConversation.getId());
         intent.putExtra(LayerConstants.KEY_HIDE_ATTACHMENT_BUTTON, true);
         mContext.startActivity(intent);
+
+        final Identity opposingParticipant = LayerUtil.getOpposingParticipant(mConversation);
+        mBus.post(new LogEvent.AddLogEvent(
+                new ConversationsLog.ConversationSelected(
+                        opposingParticipant != null ? opposingParticipant.getUserId() : null,
+                        mConversation.getId().toString())));
     }
 
     private Conversation mConversation;
@@ -53,6 +67,7 @@ public class ConversationHolder extends RecyclerView.ViewHolder
     {
         super(itemView);
         mContext = itemView.getContext();
+        Utils.inject(mContext, this);
         ButterKnife.bind(this, itemView);
         mLayerIdentity = layerIdentity;
     }
@@ -66,16 +81,13 @@ public class ConversationHolder extends RecyclerView.ViewHolder
         final String typeface = isUnreadByRecipient(lastMessage) ?
                 FontUtils.CIRCULAR_BOLD : FontUtils.CIRCULAR_BOOK;
 
-        final HashSet<Identity> participants = new HashSet<>(conversation.getParticipants());
-        participants.remove(mLayerIdentity);
+        final Identity opposingParticipant = LayerUtil.getOpposingParticipant(conversation);
         mTitle.setVisibility(View.INVISIBLE);
-        for (final Identity participant : participants)
+        if (opposingParticipant != null)
         {
-            // There should only be one participant in this case
             mTitle.setVisibility(View.VISIBLE);
-            mTitle.setText(participant.getDisplayName());
+            mTitle.setText(opposingParticipant.getDisplayName());
             mTitle.setTypeface(FontUtils.getFont(mContext, typeface));
-            break;
         }
 
         if (lastMessage != null)

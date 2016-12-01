@@ -18,6 +18,7 @@ import com.handy.portal.clients.ui.adapter.ConversationsAdapter;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
+import com.handy.portal.logger.handylogger.model.ConversationsLog;
 import com.handybook.shared.layer.LayerConstants;
 import com.handybook.shared.layer.LayerHelper;
 import com.handybook.shared.layer.receiver.PushNotificationReceiver;
@@ -118,6 +119,13 @@ public class ClientConversationsFragment extends InjectedFragment
         if (isVisibleToUser)
         {
             bus.post(new LogEvent.AddLogEvent(new AppLog.Navigation(NAVIGATION_PAGE_NAME)));
+            if (mAdapter != null)
+            {
+                bus.post(new LogEvent.AddLogEvent(
+                        new ConversationsLog.ConversationsShown(
+                                (int) mLayerHelper.getUnreadConversationsCount(),
+                                mAdapter.getConversationsCount())));
+            }
             clearNotifications();
         }
     }
