@@ -34,6 +34,7 @@ import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.setup.SetupManager;
 import com.handy.portal.updater.VersionManager;
+import com.handybook.shared.core.HandyLibrary;
 import com.newrelic.agent.android.NewRelic;
 
 import org.greenrobot.eventbus.EventBus;
@@ -42,6 +43,7 @@ import javax.inject.Inject;
 
 import dagger.ObjectGraph;
 import io.fabric.sdk.android.Fabric;
+import retrofit.RestAdapter;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class BaseApplication extends MultiDexApplication
@@ -99,6 +101,8 @@ public class BaseApplication extends MultiDexApplication
     SetupManager setupManager;
     @Inject
     LocationScheduleUpdateManager mLocationScheduleUpdateManager;
+    @Inject
+    RestAdapter mRestAdapter;
 
     @Inject
     EventBus bus;
@@ -109,6 +113,7 @@ public class BaseApplication extends MultiDexApplication
         super.onCreate();
         createObjectGraph();
         inject(this);
+        HandyLibrary.init(mRestAdapter, this, !BuildConfig.DEBUG);
 
         startNewRelic();
         startCrashlytics();

@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.handy.portal.R;
-import com.handybook.shared.LayerHelper;
-import com.handybook.shared.LayerRecyclerAdapter;
+import com.handybook.shared.layer.LayerHelper;
+import com.handybook.shared.layer.ui.LayerRecyclerAdapter;
 import com.layer.sdk.messaging.Identity;
 import com.layer.sdk.query.RecyclerViewController;
 

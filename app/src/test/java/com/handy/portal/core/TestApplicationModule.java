@@ -75,7 +75,7 @@ import com.handy.portal.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
-import com.handybook.shared.LayerHelper;
+import com.handybook.shared.layer.LayerHelper;
 import com.securepreferences.SecurePreferences;
 
 import org.greenrobot.eventbus.EventBus;
@@ -85,6 +85,7 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import retrofit.RestAdapter;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -317,6 +318,12 @@ public class TestApplicationModule
     final UrbanAirshipManager providerUrbanAirshipManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication)
     {
         return mock(UrbanAirshipManager.class);
+    }
+
+    @Provides
+    final RestAdapter provideRestAdapter()
+    {
+        return mock(RestAdapter.class);
     }
 
     @Provides

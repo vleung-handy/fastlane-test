@@ -19,7 +19,7 @@ import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.view.TabWithCountView;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handybook.shared.LayerHelper;
+import com.handybook.shared.layer.LayerHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
