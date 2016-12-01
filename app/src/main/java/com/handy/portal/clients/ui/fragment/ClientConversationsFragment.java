@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 import com.handy.portal.R;
 import com.handy.portal.clients.ui.adapter.ConversationsAdapter;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handybook.shared.layer.LayerConstants;
 import com.handybook.shared.layer.LayerHelper;
 import com.handybook.shared.layer.receiver.PushNotificationReceiver;
@@ -31,6 +33,8 @@ import static com.handybook.shared.layer.LayerConstants.LAYER_CONVERSATION_KEY;
 public class ClientConversationsFragment extends InjectedFragment
         implements ConversationsAdapter.Listener
 {
+    private static final String NAVIGATION_PAGE_NAME = "conversations";
+
     @Inject
     LayerHelper mLayerHelper;
 
@@ -113,6 +117,7 @@ public class ClientConversationsFragment extends InjectedFragment
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser)
         {
+            bus.post(new LogEvent.AddLogEvent(new AppLog.Navigation(NAVIGATION_PAGE_NAME)));
             clearNotifications();
         }
     }
