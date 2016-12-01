@@ -7,9 +7,23 @@ public abstract class RequestedJobsLog extends EventLog
 {
     private static final String EVENT_CONTEXT = "requested_jobs";
 
-    protected RequestedJobsLog(final String eventType)
+    private RequestedJobsLog(final String eventType)
     {
         super(eventType, EVENT_CONTEXT);
+    }
+
+    public static class RequestsShown extends RequestedJobsLog
+    {
+        private static final String EVENT_TYPE = "requests_shown";
+
+        @SerializedName("pending_requests_count")
+        private int mPendingRequestsCount;
+
+        public RequestsShown(final int pendingRequestsCount)
+        {
+            super(EVENT_TYPE);
+            mPendingRequestsCount = pendingRequestsCount;
+        }
     }
 
     public static class Clicked extends JobsLog

@@ -122,6 +122,7 @@ public class ProRequestedJobsFragment extends InjectedFragment
         {
             showContentViewAndHideOthers(mJobListSwipeRefreshLayout);
         }
+        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.RequestsShown(mUnreadJobsCount)));
     }
 
     private void navigateToJobDetails(@NonNull Booking booking)
