@@ -77,6 +77,7 @@ public class ProRequestedJobsFragment extends InjectedFragment
     private RequestedJobsRecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private int mUnreadJobsCount;
+    private boolean mIsNavigationLogged = false;
 
     private SwipeRefreshLayout.OnRefreshListener onProRequestedJobsListRefreshListener = new SwipeRefreshLayout.OnRefreshListener()
     {
@@ -177,6 +178,10 @@ public class ProRequestedJobsFragment extends InjectedFragment
             showContentViewAndHideOthers(mJobListSwipeRefreshLayout);
             mJobListSwipeRefreshLayout.setRefreshing(true);
             requestProRequestedJobs(true);
+        }
+        if (getUserVisibleHint())
+        {
+            logNavigation();
         }
     }
 
@@ -366,7 +371,16 @@ public class ProRequestedJobsFragment extends InjectedFragment
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser)
         {
+            logNavigation();
+        }
+    }
+
+    private void logNavigation()
+    {
+        if (bus != null && !mIsNavigationLogged)
+        {
             bus.post(new LogEvent.AddLogEvent(new AppLog.Navigation(NAVIGATION_PAGE_NAME)));
+            mIsNavigationLogged = true;
         }
     }
 

@@ -62,6 +62,7 @@ public class ClientConversationsFragment extends InjectedFragment
     };
 
     private ConversationsAdapter mAdapter;
+    private boolean mIsNavigationLogged = false;
 
     public static ClientConversationsFragment newInstance()
     {
@@ -95,6 +96,7 @@ public class ClientConversationsFragment extends InjectedFragment
         if (getUserVisibleHint())
         {
             clearNotifications();
+            logNavigation();
         }
         super.onResume();
     }
@@ -118,7 +120,6 @@ public class ClientConversationsFragment extends InjectedFragment
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser)
         {
-            bus.post(new LogEvent.AddLogEvent(new AppLog.Navigation(NAVIGATION_PAGE_NAME)));
             if (mAdapter != null)
             {
                 bus.post(new LogEvent.AddLogEvent(
@@ -126,7 +127,17 @@ public class ClientConversationsFragment extends InjectedFragment
                                 (int) mLayerHelper.getUnreadConversationsCount(),
                                 mAdapter.getConversationsCount())));
             }
+            logNavigation();
             clearNotifications();
+        }
+    }
+
+    private void logNavigation()
+    {
+        if (bus != null && !mIsNavigationLogged)
+        {
+            bus.post(new LogEvent.AddLogEvent(new AppLog.Navigation(NAVIGATION_PAGE_NAME)));
+            mIsNavigationLogged = true;
         }
     }
 
