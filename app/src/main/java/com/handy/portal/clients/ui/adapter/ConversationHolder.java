@@ -42,6 +42,7 @@ public class ConversationHolder extends RecyclerView.ViewHolder
     {
         final Intent intent = new Intent(mContext, MessagesListActivity.class);
         intent.putExtra(LayerConstants.LAYER_CONVERSATION_KEY, mConversation.getId());
+        intent.putExtra(LayerConstants.KEY_HIDE_ATTACHMENT_BUTTON, true);
         mContext.startActivity(intent);
     }
 
