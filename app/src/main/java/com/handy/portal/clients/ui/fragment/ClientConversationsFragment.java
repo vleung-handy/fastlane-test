@@ -63,6 +63,7 @@ public class ClientConversationsFragment extends InjectedFragment
 
     private ConversationsAdapter mAdapter;
     private boolean mIsNavigationLogged = false;
+    private boolean mIsConversationsShownLogged = false;
 
     public static ClientConversationsFragment newInstance()
     {
@@ -97,6 +98,7 @@ public class ClientConversationsFragment extends InjectedFragment
         {
             clearNotifications();
             logNavigation();
+            logConversationsShown();
         }
         super.onResume();
     }
@@ -112,6 +114,10 @@ public class ClientConversationsFragment extends InjectedFragment
         {
             mEmptyView.setVisibility(View.VISIBLE);
         }
+        if (getUserVisibleHint())
+        {
+            logConversationsShown();
+        }
     }
 
     @Override
@@ -120,15 +126,9 @@ public class ClientConversationsFragment extends InjectedFragment
         super.setUserVisibleHint(isVisibleToUser);
         if (isVisibleToUser)
         {
-            if (mAdapter != null)
-            {
-                bus.post(new LogEvent.AddLogEvent(
-                        new ConversationsLog.ConversationsShown(
-                                (int) mLayerHelper.getUnreadConversationsCount(),
-                                mAdapter.getConversationsCount())));
-            }
-            logNavigation();
             clearNotifications();
+            logNavigation();
+            logConversationsShown();
         }
     }
 
@@ -138,6 +138,18 @@ public class ClientConversationsFragment extends InjectedFragment
         {
             bus.post(new LogEvent.AddLogEvent(new AppLog.Navigation(NAVIGATION_PAGE_NAME)));
             mIsNavigationLogged = true;
+        }
+    }
+
+    private void logConversationsShown()
+    {
+        if (bus != null && mAdapter != null && !mIsConversationsShownLogged)
+        {
+            bus.post(new LogEvent.AddLogEvent(
+                    new ConversationsLog.ConversationsShown(
+                            (int) mLayerHelper.getUnreadConversationsCount(),
+                            mAdapter.getConversationsCount())));
+            mIsConversationsShownLogged = true;
         }
     }
 
