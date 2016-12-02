@@ -53,6 +53,7 @@ import com.handy.portal.onboarding.ui.fragment.IDVerificationFragment;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsModule;
 import com.handy.portal.receiver.HandyPushReceiver;
+import com.handy.portal.receiver.LayerPushReceiver;
 import com.handy.portal.retrofit.DynamicEndpoint;
 import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
@@ -146,6 +147,7 @@ import retrofit.converter.GsonConverter;
         IDVerificationFragment.class,
         FirstDayActivity.class,
         LoginSltFragment.class,
+        LayerPushReceiver.class,
 },
         includes = {
                 HelpModule.class,

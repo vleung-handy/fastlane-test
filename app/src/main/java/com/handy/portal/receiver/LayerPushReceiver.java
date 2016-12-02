@@ -4,25 +4,38 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 
+import com.handy.portal.library.util.Utils;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.ConversationsLog;
 import com.handybook.shared.layer.LayerConstants;
 import com.handybook.shared.layer.receiver.PushNotificationReceiver;
 import com.handybook.shared.layer.ui.MessagesListActivity;
 import com.layer.sdk.messaging.Message;
 
+import org.greenrobot.eventbus.EventBus;
+
+import javax.inject.Inject;
+
 
 public class LayerPushReceiver extends PushNotificationReceiver
 {
+    @Inject
+    EventBus mBus;
+
     private static final String MESSAGES_BACK_NAVIGATION_DEEPLINK =
             "handypro://handy.com/hp/conversations";
 
     @Override
     public void onReceive(final Context context, final Intent intent)
     {
+
         if (LayerConstants.ACTION_PUSH.equals(intent.getAction()))
         {
+            Utils.inject(context, this);
             final Intent orderedBroadcastIntent = new Intent(LayerConstants.ACTION_SHOW_NOTIFICATION);
             orderedBroadcastIntent.putExtras(intent.getExtras());
             context.sendOrderedBroadcast(orderedBroadcastIntent, null);
+            mBus.post(new LogEvent.AddLogEvent(new ConversationsLog.PushNotificationReceived()));
         }
         else
         {
