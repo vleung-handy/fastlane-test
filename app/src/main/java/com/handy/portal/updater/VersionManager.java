@@ -191,6 +191,14 @@ public class VersionManager
         context.registerReceiver(downloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
+    public void cancelDownloadApk()
+    {
+        if (hasRequestedDownload())
+        {
+            downloadManager.remove(downloadReferenceId);
+        }
+    }
+
     @VisibleForTesting
     protected BroadcastReceiver downloadReceiver = new BroadcastReceiver()
     {

@@ -181,6 +181,7 @@ public class PleaseUpdateFragment extends InjectedFragment
     protected void onUpdateLaterButtonClicked()
     {
         bus.post(new LogEvent.AddLogEvent(new AppUpdateLog.Skipped(getApkDownloadUrl())));
+        mVersionManager.cancelDownloadApk();
         finishActivity();
     }
 
