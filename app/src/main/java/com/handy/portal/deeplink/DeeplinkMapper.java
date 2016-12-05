@@ -1,7 +1,8 @@
-package com.handy.portal.util;
+package com.handy.portal.deeplink;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 
 import com.google.common.collect.ImmutableMap;
 import com.handy.portal.constant.MainViewPage;
@@ -41,6 +42,12 @@ public class DeeplinkMapper
         // TODO: Add more
 
         DEEPLINK_MAP = ImmutableMap.copyOf(deeplinkMap);
+    }
+
+    @VisibleForTesting
+    public static ImmutableMap<String, MainViewPage> getDeeplinkMap()
+    {
+        return DEEPLINK_MAP;
     }
 
     @Nullable

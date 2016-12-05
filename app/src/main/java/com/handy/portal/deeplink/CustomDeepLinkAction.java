@@ -1,10 +1,9 @@
-package com.handy.portal.action;
+package com.handy.portal.deeplink;
 
 import android.content.Intent;
 import android.net.Uri;
 
 import com.crashlytics.android.Crashlytics;
-import com.handy.portal.service.DeepLinkService;
 import com.urbanairship.UAirship;
 import com.urbanairship.actions.Action;
 import com.urbanairship.actions.ActionArguments;

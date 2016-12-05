@@ -2,10 +2,8 @@ package com.handy.portal.notification.ui.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,26 +13,24 @@ import android.widget.TextView;
 
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.NotificationEvent;
 import com.handy.portal.library.ui.widget.InfiniteScrollListView;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
+import com.handy.portal.manager.PageNavigationManager;
 import com.handy.portal.notification.model.NotificationAction;
 import com.handy.portal.notification.model.NotificationMessage;
 import com.handy.portal.notification.ui.view.NotificationsListView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handy.portal.ui.widget.TitleView;
-import com.handy.portal.util.DeeplinkMapper;
-import com.handy.portal.util.DeeplinkUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -58,6 +54,9 @@ public final class NotificationsFragment extends ActionBarFragment
 
     @BindView(R.id.no_notifications_view)
     SwipeRefreshLayout mNoNotificationsRefreshLayout;
+
+    @Inject
+    PageNavigationManager mPageNavigationManager;
 
     private View mFragmentView;
     private boolean isRequestingNotifications = false;
@@ -149,45 +148,7 @@ public final class NotificationsFragment extends ActionBarFragment
         final String deeplinkUriString = notificationAction.getDeeplink();
         if (deeplinkUriString != null)
         {
-            final Uri uri = Uri.parse(deeplinkUriString);
-            final Bundle deeplinkData = DeeplinkUtils.createDeeplinkBundleFromUri(uri);
-            if (deeplinkData != null)
-            {
-                bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Opened(
-                        DeeplinkLog.Source.NOTIFICATION_FEED,
-                        uri
-                )));
-                final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
-                if (!TextUtils.isEmpty(deeplink))
-                {
-                    final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
-                    if (page != null)
-                    {
-                        bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
-                                DeeplinkLog.Source.NOTIFICATION_FEED,
-                                uri
-                        )));
-                        bus.post(new NavigationEvent.NavigateToPage(page, deeplinkData,
-                                !page.isTopLevel()));
-                    }
-                    else
-                    {
-                        bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
-                                DeeplinkLog.Source.NOTIFICATION_FEED,
-                                DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
-                                uri
-                        )));
-                    }
-                }
-            }
-            else
-            {
-                bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
-                        DeeplinkLog.Source.NOTIFICATION_FEED,
-                        DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
-                        uri
-                )));
-            }
+            mPageNavigationManager.handleDeeplinkUrl(DeeplinkLog.Source.NOTIFICATION_FEED, deeplinkUriString);
         }
     }
 

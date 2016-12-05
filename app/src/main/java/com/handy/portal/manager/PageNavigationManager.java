@@ -1,10 +1,19 @@
 package com.handy.portal.manager;
 
+import android.net.Uri;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
+
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
+import com.handy.portal.deeplink.DeeplinkMapper;
+import com.handy.portal.deeplink.DeeplinkUtils;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
+import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.payments.PaymentsManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -36,6 +45,101 @@ public class PageNavigationManager
         mConfigManager = configManager;
     }
 
+    /**
+     * making this a direct call because we specifically only want THIS manager
+     * to handle "deeplinks" which are specific to the logic in this manager
+     * and are not traditional Android deeplinks
+     *
+     * NOTE: cannot cleanly consolidate with the handling
+     * of the deeplink data bundle in handleDeeplinkUrl
+     * because of logging requirements and the way the log classes are currently structured
+     */
+    public void handleDeeplinkDataBundle(@Nullable final Bundle deeplinkData,
+                                          final String deeplinkSource)
+    {
+        if (deeplinkData != null)
+        {
+            final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
+            if (!TextUtils.isEmpty(deeplink))
+            {
+                final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
+                if(page != null)
+                {
+                    mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
+                            deeplinkSource,
+                            deeplinkData
+                    )));
+                    mBus.post(new NavigationEvent.NavigateToPage(page, deeplinkData));
+                }
+                else
+                {
+                    mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
+                            deeplinkSource,
+                            DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
+                            deeplinkData
+                    )));
+                }
+            }
+        }
+    }
+
+    /**
+     * making this a direct call because we specifically only want THIS manager
+     * to handle "deeplinks" which are specific to the logic in this manager
+     * and are not traditional Android deeplinks
+     *
+     * NOTE: cannot cleanly consolidate with the handling
+     * of the deeplink data bundle in handleDeeplinkDataBundle
+     * because of logging requirements and the way the log classes are currently structured
+     *
+     * @param deeplinkSource
+     * @param deeplinkString
+     */
+    public void handleDeeplinkUrl(@DeeplinkLog.Source.DeeplinkSource String deeplinkSource,
+                                  @NonNull String deeplinkString)
+    {
+        final Uri deeplinkUri = Uri.parse(deeplinkString);
+        final Bundle deeplinkData = DeeplinkUtils.createDeeplinkBundleFromUri(deeplinkUri);
+        if (deeplinkData != null)
+        {
+            //TODO find out why the the Opened event is being triggered when deeplinkdData != null
+            //rather than on the actual click
+            mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Opened(
+                    deeplinkSource,
+                    deeplinkUri
+            )));
+            final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
+            if (!TextUtils.isEmpty(deeplink))
+            {
+                final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
+                if(page != null)
+                {
+
+                    mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
+                            deeplinkSource,
+                            deeplinkUri
+                    )));
+                    mBus.post(new NavigationEvent.NavigateToPage(page, deeplinkData));
+                }
+                else
+                {
+                    mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
+                            deeplinkSource,
+                            DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
+                            deeplinkUri
+                    )));
+                }
+            }
+        }
+        else if(deeplinkUri != null)
+        {
+            mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
+                    deeplinkSource,
+                    DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
+                    deeplinkUri
+            )));
+        }
+    }
 
     @Subscribe
     public void onNavigateToPageEvent(NavigationEvent.NavigateToPage event)

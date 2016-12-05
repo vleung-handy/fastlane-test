@@ -20,6 +20,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.BuildConfigWrapper;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.deeplink.DeeplinkUtils;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
@@ -34,7 +35,6 @@ import com.handy.portal.onboarding.ui.activity.OnboardingFlowActivity;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.setup.SetupData;
 import com.handy.portal.setup.SetupManager;
-import com.handy.portal.util.DeeplinkUtils;
 import com.handybook.shared.layer.LayerHelper;
 
 import org.greenrobot.eventbus.EventBus;

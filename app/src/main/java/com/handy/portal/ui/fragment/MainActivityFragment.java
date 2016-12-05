@@ -39,16 +39,15 @@ import com.handy.portal.library.ui.layout.TabbedLayout;
 import com.handy.portal.library.ui.widget.TabButton;
 import com.handy.portal.library.ui.widget.TabButtonGroup;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
 import com.handy.portal.manager.AppseeManager;
 import com.handy.portal.manager.ConfigManager;
+import com.handy.portal.manager.PageNavigationManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
-import com.handy.portal.util.DeeplinkMapper;
 import com.handybook.shared.layer.LayerHelper;
 import com.squareup.picasso.Picasso;
 
@@ -77,6 +76,8 @@ public class MainActivityFragment extends InjectedFragment
     LayerHelper mLayerHelper;
     @Inject
     BookingManager mBookingManager;
+    @Inject
+    PageNavigationManager mPageNavigationManager;
 
     @BindView(R.id.tabs)
     TabButtonGroup mTabs;
@@ -234,8 +235,17 @@ public class MainActivityFragment extends InjectedFragment
         {
             switchToPage(MainViewPage.AVAILABLE_JOBS, false);
         }
-        handleDeeplink();
+        handleDeeplinkIfNecessary();
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
+    }
+
+    private void handleDeeplinkIfNecessary()
+    {
+        if (mDeeplinkData != null && !mDeeplinkHandled)
+        {
+            mPageNavigationManager.handleDeeplinkDataBundle(mDeeplinkData, mDeeplinkSource);
+        }
+        mDeeplinkHandled = true;
     }
 
     @Subscribe
@@ -255,36 +265,6 @@ public class MainActivityFragment extends InjectedFragment
             mDeeplinkData = intent.getBundleExtra(BundleKeys.DEEPLINK_DATA);
             mDeeplinkSource = intent.getStringExtra(BundleKeys.DEEPLINK_SOURCE);
         }
-    }
-
-    private void handleDeeplink()
-    {
-        if (mDeeplinkData != null && !mDeeplinkHandled)
-        {
-            final String deeplink = mDeeplinkData.getString(BundleKeys.DEEPLINK);
-            if (deeplink != null)
-            {
-                final MainViewPage targetPage = DeeplinkMapper.getPageForDeeplink(deeplink);
-                if (targetPage != null)
-                {
-                    bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
-                            mDeeplinkSource,
-                            mDeeplinkData
-                    )));
-                    switchToPage(targetPage, mDeeplinkData, false);
-                }
-                else
-                {
-                    // Unable to find a matching page for deeplink, so ignore it.
-                    bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
-                            mDeeplinkSource,
-                            DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
-                            mDeeplinkData
-                    )));
-                }
-            }
-        }
-        mDeeplinkHandled = true;
     }
 
     @Override

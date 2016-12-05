@@ -1,4 +1,4 @@
-package com.handy.portal.service;
+package com.handy.portal.deeplink;
 
 import android.app.IntentService;
 import android.content.Intent;
