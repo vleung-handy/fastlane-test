@@ -3,6 +3,7 @@ package com.handy.portal.clients.ui.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,9 +62,10 @@ public class ConversationHolder extends RecyclerView.ViewHolder
     }
 
     private Conversation mConversation;
+    @Nullable
     private final Identity mLayerIdentity;
 
-    public ConversationHolder(final View itemView, final Identity layerIdentity)
+    public ConversationHolder(final View itemView, @Nullable final Identity layerIdentity)
     {
         super(itemView);
         mContext = itemView.getContext();
@@ -110,12 +112,13 @@ public class ConversationHolder extends RecyclerView.ViewHolder
     private boolean isUnreadByRecipient(final Message message)
     {
         return message != null
+                && mLayerIdentity != null
                 && message.getRecipientStatus(mLayerIdentity) != Message.RecipientStatus.READ;
     }
 
     private boolean wasSentByMe(final Message message)
     {
-        if (message != null)
+        if (message != null && mLayerIdentity != null)
         {
             final Identity sender = message.getSender();
             return sender != null && mLayerIdentity.getUserId().equals(sender.getUserId());

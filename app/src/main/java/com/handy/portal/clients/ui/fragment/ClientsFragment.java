@@ -100,6 +100,7 @@ public class ClientsFragment extends ActionBarFragment
 
         if (mShouldShowMessagesTab)
         {
+            mTabLayout.setVisibility(View.VISIBLE);
             mMessagesTab = new TabWithCountView(getActivity());
             mMessagesTab.setTitle(R.string.messages);
             mTabLayout.getTabAt(1).setCustomView(mMessagesTab);
