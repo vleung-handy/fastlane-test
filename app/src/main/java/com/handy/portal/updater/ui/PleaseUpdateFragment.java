@@ -274,7 +274,7 @@ public class PleaseUpdateFragment extends InjectedFragment
     {
         if (mVersionManager.getUpdateDetails() == null
                 || mVersionManager.getUpdateDetails().isUpdateBlocking()
-                || mApkUri != null)
+                || isReadyToInstallUpdate())
         {
             mUpdateLaterButton.setVisibility(View.GONE);
         }
@@ -297,5 +297,10 @@ public class PleaseUpdateFragment extends InjectedFragment
         {
             mVersionManager.downloadApk();
         }
+    }
+
+    private boolean isReadyToInstallUpdate()
+    {
+        return mApkUri != null;
     }
 }
