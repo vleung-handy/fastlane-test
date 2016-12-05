@@ -5,11 +5,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handybook.shared.layer.LayerHelper;
 import com.handybook.shared.layer.ui.LayerRecyclerAdapter;
+import com.layer.sdk.messaging.Conversation;
 import com.layer.sdk.messaging.Identity;
+import com.layer.sdk.query.Predicate;
 import com.layer.sdk.query.RecyclerViewController;
+
+import java.util.List;
 
 public class ConversationsAdapter extends LayerRecyclerAdapter<ConversationHolder>
 {
@@ -22,6 +27,14 @@ public class ConversationsAdapter extends LayerRecyclerAdapter<ConversationHolde
         super(layerHelper);
         mListener = listener;
         mLayerIdentity = mLayerHelper.getLayerClient().getAuthenticatedUser();
+    }
+
+    @NonNull
+    @Override
+    protected List<Predicate> additionalPredicates()
+    {
+        return Lists.newArrayList(new Predicate(Conversation.Property.LAST_MESSAGE,
+                Predicate.Operator.NOT_EQUAL_TO, null));
     }
 
     @Override
