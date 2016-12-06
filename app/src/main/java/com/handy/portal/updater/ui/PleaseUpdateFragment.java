@@ -131,6 +131,7 @@ public class PleaseUpdateFragment extends InjectedFragment
     @Subscribe
     public void onDownloadUpdateSuccessful(AppUpdateEvent.DownloadUpdateSuccessful event)
     {
+        mUpdateLaterButton.setVisibility(View.GONE);
         mUpdateImage.setBackgroundResource(R.drawable.img_update_success);
         mUpdateButton.setEnabled(true);
         mUpdateText.setText(R.string.update_copy);
@@ -181,6 +182,7 @@ public class PleaseUpdateFragment extends InjectedFragment
     protected void onUpdateLaterButtonClicked()
     {
         bus.post(new LogEvent.AddLogEvent(new AppUpdateLog.Skipped(getApkDownloadUrl())));
+        mVersionManager.cancelDownloadApk();
         finishActivity();
     }
 
@@ -270,7 +272,9 @@ public class PleaseUpdateFragment extends InjectedFragment
 
     private void showUpdateLaterButtonForUpdateDetails()
     {
-        if (mVersionManager.getUpdateDetails() == null || mVersionManager.getUpdateDetails().isUpdateBlocking())
+        if (mVersionManager.getUpdateDetails() == null
+                || mVersionManager.getUpdateDetails().isUpdateBlocking()
+                || isReadyToInstallUpdate())
         {
             mUpdateLaterButton.setVisibility(View.GONE);
         }
@@ -293,5 +297,10 @@ public class PleaseUpdateFragment extends InjectedFragment
         {
             mVersionManager.downloadApk();
         }
+    }
+
+    private boolean isReadyToInstallUpdate()
+    {
+        return mApkUri != null;
     }
 }
