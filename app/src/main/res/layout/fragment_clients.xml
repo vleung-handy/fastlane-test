@@ -16,6 +16,7 @@
             style="@style/TextView.Large"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             app:tabBackground="@drawable/tab"
             app:tabIndicatorColor="@color/handy_blue"
             app:tabIndicatorHeight="2dp"
