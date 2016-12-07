@@ -15,6 +15,11 @@ import java.lang.ref.WeakReference;
  */
 public abstract class ActivitySafeCallback<T> extends CancellableCallback<T>
 {
+    /**
+     * NOTE: for the WeakReference to effectively avoid memory leaks,
+     * this callback should be used as a static class;
+     * otherwise this will still have a strong reference
+     */
     private WeakReference<Activity> mActivityWeakReference;
 
     public ActivitySafeCallback(@NonNull Activity activity)

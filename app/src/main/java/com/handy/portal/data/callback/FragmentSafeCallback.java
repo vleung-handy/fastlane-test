@@ -14,6 +14,11 @@ import java.lang.ref.WeakReference;
  */
 public abstract class FragmentSafeCallback<T> extends CancellableCallback<T>
 {
+    /**
+     * NOTE: for the WeakReference to effectively avoid memory leaks,
+     * this callback should be used as a static class;
+     * otherwise this will still have a strong reference
+     */
     private WeakReference<Fragment> mFragmentWeakReference;
 
     public FragmentSafeCallback(@NonNull Fragment fragment)
