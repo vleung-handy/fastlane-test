@@ -603,14 +603,7 @@ public final class DateTimeUtils
 
         if (daysBetween == 0)
         {
-            if (minutesBetween(new Date(), date) < 2)
-            {
-                return "Now";
-            }
-            else
-            {
-                return formatDateTo12HourClock(date);
-            }
+            return formatDateTo12HourClock(date);
         }
         else if (daysBetween == -1)
         {
