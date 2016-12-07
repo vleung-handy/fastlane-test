@@ -53,7 +53,7 @@ public class MainActivity extends BaseActivity
         super.onResume();
         bus.register(this);
         //Check config params every time we resume mainactivity, may have changes which result in flow changes on open
-        configManager.prefetch();
+        mConfigManager.prefetch();
         providerManager.prefetch();
         checkIfUserShouldUpdatePaymentInfo();
         checkIfNotificationIsEnabled();
@@ -95,8 +95,8 @@ public class MainActivity extends BaseActivity
         if (event.shouldUserUpdatePaymentInfo)
         {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if (configManager.getConfigurationResponse() != null &&
-                    configManager.getConfigurationResponse().shouldBlockClaimsIfMissingAccountInformation())
+            if (mConfigManager.getConfigurationResponse() != null &&
+                    mConfigManager.getConfigurationResponse().shouldBlockClaimsIfMissingAccountInformation())
             {
                 //Page Navigation Manager should be handling this, but if we got this back too late force a move to blocking fragment
                 if (fragmentManager.findFragmentByTag(PaymentBlockingFragment.FRAGMENT_TAG) == null) //only show if there isn't an instance of the fragment showing already

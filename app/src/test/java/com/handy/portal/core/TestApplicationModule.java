@@ -60,6 +60,10 @@ import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
+import com.handy.portal.setup.SetupManager;
+import com.handy.portal.setup.step.AcceptTermsStep;
+import com.handy.portal.setup.step.SetConfigurationStep;
+import com.handy.portal.setup.step.SetProviderProfileStep;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handy.portal.ui.activity.MainActivity;
@@ -146,6 +150,9 @@ import static org.mockito.Mockito.when;
         SplashActivity.class,
         SchedulePreferencesFragmentTest.class,
         ScheduleConfirmationFragmentTest.class,
+        AcceptTermsStep.class,
+        SetConfigurationStep.class,
+        SetProviderProfileStep.class,
 
 }, library = true)
 public class TestApplicationModule
@@ -240,6 +247,13 @@ public class TestApplicationModule
     final LoginManager provideLoginManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager)
     {
         return new LoginManager(bus, dataManager, prefsManager);
+    }
+
+    @Provides
+    @Singleton
+    final SetupManager provideApplicationSetupManager(final EventBus bus, final DataManager dataManager)
+    {
+        return new SetupManager(bus, dataManager);
     }
 
     @Provides
