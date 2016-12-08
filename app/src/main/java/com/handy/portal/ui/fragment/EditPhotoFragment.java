@@ -30,6 +30,7 @@ import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.RequestCode;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProfileEvent;
@@ -356,10 +357,10 @@ public class EditPhotoFragment extends ActionBarFragment
     private void uploadImage(final String uploadUrl, final File imageFile)
     {
         final TypedFile file = new TypedFile(IMAGE_MIME_TYPE, imageFile);
-        dataManager.uploadPhoto(uploadUrl, file, new DataManager.Callback<Void>()
+        dataManager.uploadPhoto(uploadUrl, file, new FragmentSafeCallback<Void>(this)
         {
             @Override
-            public void onSuccess(final Void response)
+            public void onCallbackSuccess(final Void response)
             {
                 bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.ImageRequestSuccess()));
                 bus.post(new LogEvent.AddLogEvent(
@@ -368,7 +369,7 @@ public class EditPhotoFragment extends ActionBarFragment
             }
 
             @Override
-            public void onError(final DataManager.DataManagerError error)
+            public void onCallbackError(final DataManager.DataManagerError error)
             {
                 bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.ImageRequestError()));
                 bus.post(new LogEvent.AddLogEvent(

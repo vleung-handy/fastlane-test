@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.helpcenter.constants.HelpCenterUrl;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
@@ -68,16 +69,16 @@ public class LoginSltFragment extends InjectedFragment
         if (!mPhoneNumberEditText.validate()) { return; }
 
         bus.post(new LogEvent.AddLogEvent(new LoginLog.login_submitted(LoginLog.TYPE_PHONE_TOKEN)));
-        mLoginManager.requestSlt(mPhoneNumberEditText.getPhoneNumber(), new DataManager.Callback<SuccessWrapper>()
+        mLoginManager.requestSlt(mPhoneNumberEditText.getPhoneNumber(), new FragmentSafeCallback<SuccessWrapper>(this)
         {
             @Override
-            public void onSuccess(SuccessWrapper response)
+            public void onCallbackSuccess(SuccessWrapper response)
             {
                 onRequestSltSuccess(response);
             }
 
             @Override
-            public void onError(final DataManager.DataManagerError error)
+            public void onCallbackError(final DataManager.DataManagerError error)
             {
                 onRequestSltError(error);
             }
