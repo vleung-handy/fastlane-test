@@ -13,6 +13,8 @@ import org.junit.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 
+import javax.inject.Inject;
+
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
@@ -33,21 +35,21 @@ public class PageNavigationManagerTest extends RobolectricGradleTestWrapper
     @Mock
     private ConfigManager mConfigManager;
 
-    private PageNavigationManager mPageNavigationManager;
+    @Inject
+    PageNavigationManager pageNavigationManager;
 
     @Before
     public void setUp() throws Exception
     {
         initMocks(this);
 
-        mPageNavigationManager = new PageNavigationManager(bus, mProviderManager, mWebUrlManager,
+        pageNavigationManager = new PageNavigationManager(bus, mProviderManager, mWebUrlManager,
                 mPaymentsManager, mConfigManager);
     }
 
     @Test
     public void onHandleSupportedDeeplinkUrl_shouldPostNavigationEventForDeeplinkPage() throws Exception
     {
-
         ArgumentCaptor<NavigationEvent.NavigateToPage> captor = ArgumentCaptor
                 .forClass(NavigationEvent.NavigateToPage.class);
         /*
@@ -56,9 +58,12 @@ public class PageNavigationManagerTest extends RobolectricGradleTestWrapper
         ImmutableMap<String, MainViewPage> deeplinkMap = DeeplinkMapper.getDeeplinkMap();
         for(String deeplinkString : deeplinkMap.keySet())
         {
-            mPageNavigationManager.handleDeeplinkUrl(null, deeplinkString);
+            pageNavigationManager.handleDeeplinkUrl(null, deeplinkString);
+
             //verify bus event emitted
             verify(bus, atLeastOnce()).post(captor.capture());
+
+            //verify that the event's target page matches the deeplink's
             MainViewPage mainViewPage = deeplinkMap.get(deeplinkString);
             assertEquals(mainViewPage, captor.getValue().targetPage);
         }

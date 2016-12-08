@@ -30,6 +30,7 @@ import com.handy.portal.manager.AppseeManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.FileManager;
 import com.handy.portal.manager.LoginManager;
+import com.handy.portal.manager.PageNavigationManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.manager.StripeManager;
@@ -37,6 +38,7 @@ import com.handy.portal.manager.SystemManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.UserInterfaceUpdateManager;
+import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.notification.ui.fragment.NotificationsFragment;
 import com.handy.portal.onboarding.ui.activity.OnboardingFlowActivity;
 import com.handy.portal.onboarding.ui.activity.OnboardingSubflowActivity;
@@ -50,6 +52,7 @@ import com.handy.portal.onboarding.ui.fragment.ScheduleConfirmationFragment;
 import com.handy.portal.onboarding.ui.fragment.ScheduleConfirmationFragmentTest;
 import com.handy.portal.onboarding.ui.fragment.SchedulePreferencesFragment;
 import com.handy.portal.onboarding.ui.fragment.SchedulePreferencesFragmentTest;
+import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.payments.ui.element.PaymentsBatchListView;
 import com.handy.portal.payments.ui.fragment.PaymentsDetailFragment;
@@ -236,6 +239,18 @@ public class TestApplicationModule
 
     @Provides
     @Singleton
+    final PageNavigationManager providePageNavigationManager(final EventBus bus,
+                                                             final ProviderManager providerManager,
+                                                             final WebUrlManager webUrlManager,
+                                                             final PaymentsManager paymentsManager,
+                                                             final ConfigManager configManager
+    )
+    {
+        return new PageNavigationManager(bus, providerManager, webUrlManager, paymentsManager, configManager);
+    }
+
+    @Provides
+    @Singleton
     final BookingManager provideBookingManager(final EventBus bus,
                                                final DataManager dataManager)
     {
@@ -268,7 +283,7 @@ public class TestApplicationModule
     @Singleton
     final ConfigManager provideConfigManager(final DataManager dataManager, final EventBus bus)
     {
-        return new ConfigManager(dataManager, bus);
+        return spy(new ConfigManager(dataManager, bus));
     }
 
     @Provides

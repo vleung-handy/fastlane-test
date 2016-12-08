@@ -241,7 +241,7 @@ public class MainActivityFragment extends InjectedFragment
 
     private void handleDeeplinkIfNecessary()
     {
-        if (mDeeplinkData != null && !mDeeplinkHandled)
+        if (!mDeeplinkHandled)
         {
             mPageNavigationManager.handleDeeplinkDataBundle(mDeeplinkData, mDeeplinkSource);
         }
