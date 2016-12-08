@@ -8,21 +8,16 @@ import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.TestUtils;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
-import com.handy.portal.core.TestBaseApplication;
 import com.handy.portal.dashboard.fragment.DashboardVideoLibraryFragment;
 import com.handy.portal.dashboard.fragment.RatingsAndFeedbackFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
-import com.handy.portal.manager.PageNavigationManager;
 import com.handy.portal.notification.ui.fragment.NotificationsFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsFragment;
 import com.handy.portal.ui.activity.MainActivity;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.robolectric.shadows.ShadowApplication;
 import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
-
-import javax.inject.Inject;
 
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.junit.Assert.assertEquals;
@@ -32,14 +27,9 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
 {
     private MainActivityFragment mFragment;
 
-    @Inject
-    PageNavigationManager mPageNavigationManager;
-
     @Before
     public void setUp() throws Exception
     {
-        ((TestBaseApplication) ShadowApplication.getInstance().getApplicationContext()).inject(this);
-
         mFragment = new MainActivityFragment();
         SupportFragmentTestUtil.startFragment(mFragment, MainActivity.class);
     }
