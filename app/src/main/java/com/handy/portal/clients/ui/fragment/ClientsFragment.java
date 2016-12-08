@@ -84,7 +84,6 @@ public class ClientsFragment extends ActionBarFragment
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
-        setActionBarTitle(R.string.your_clients);
         final TabAdapter tabAdapter = new TabAdapter(getChildFragmentManager());
         mViewPager.setAdapter(tabAdapter);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
@@ -123,6 +122,7 @@ public class ClientsFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
+        setActionBar(R.string.your_clients, false);
         final Integer lastUnreadRequestsCount = mBookingManager.getLastUnreadRequestsCount();
         if (lastUnreadRequestsCount != null)
         {
