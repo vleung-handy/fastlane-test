@@ -46,6 +46,9 @@ public class PageNavigationManager
     }
 
     /**
+     * NOTE: as the name suggests, this method is only to be used when the given deeplink
+     * data bundle is NOT derived from a Uri. reason is that we want to keep the logging logic
+     *
      * making this a direct call because we specifically only want THIS manager
      * to handle "deeplinks" which are specific to the logic in this manager
      * and are not traditional Android deeplinks
@@ -54,12 +57,12 @@ public class PageNavigationManager
      * of the deeplink data bundle in handleDeeplinkUrl
      * because of logging requirements and the way the log classes are currently structured
      */
-    public void handleDeeplinkDataBundle(@Nullable final Bundle deeplinkData,
-                                          final String deeplinkSource)
+    public void handleNonUriDerivedDeeplinkDataBundle(@Nullable final Bundle deeplinkDataBundle,
+                                                      @DeeplinkLog.Source.DeeplinkSource final String deeplinkSource)
     {
-        if (deeplinkData != null)
+        if (deeplinkDataBundle != null)
         {
-            final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
+            final String deeplink = deeplinkDataBundle.getString(BundleKeys.DEEPLINK);
             if (!TextUtils.isEmpty(deeplink))
             {
                 final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
@@ -67,16 +70,16 @@ public class PageNavigationManager
                 {
                     mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
                             deeplinkSource,
-                            deeplinkData
+                            deeplinkDataBundle
                     )));
-                    mBus.post(new NavigationEvent.NavigateToPage(page, deeplinkData));
+                    mBus.post(new NavigationEvent.NavigateToPage(page, deeplinkDataBundle));
                 }
                 else
                 {
                     mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
                             deeplinkSource,
                             DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
-                            deeplinkData
+                            deeplinkDataBundle
                     )));
                 }
             }
@@ -84,31 +87,28 @@ public class PageNavigationManager
     }
 
     /**
-     * making this a direct call because we specifically only want THIS manager
-     * to handle "deeplinks" which are specific to the logic in this manager
-     * and are not traditional Android deeplinks
-     *
-     * NOTE: cannot cleanly consolidate with the handling
-     * of the deeplink data bundle in handleDeeplinkDataBundle
-     * because of logging requirements and the way the log classes are currently structured
-     *
+     * see notes on {@link #handleNonUriDerivedDeeplinkDataBundle(Bundle, String)}
      * @param deeplinkSource
-     * @param deeplinkString
+     * @param deeplinkUrl
      */
     public void handleDeeplinkUrl(@DeeplinkLog.Source.DeeplinkSource String deeplinkSource,
-                                  @NonNull String deeplinkString)
+                                  @NonNull String deeplinkUrl)
     {
-        final Uri deeplinkUri = Uri.parse(deeplinkString);
-        final Bundle deeplinkData = DeeplinkUtils.createDeeplinkBundleFromUri(deeplinkUri);
-        if (deeplinkData != null)
+        final Uri deeplinkUri = Uri.parse(deeplinkUrl);
+        final Bundle deeplinkDataBundle = DeeplinkUtils.createDeeplinkBundleFromUri(deeplinkUri);
+        /*
+        not consolidating this part with handleNonUriDerivedDeeplinkDataBundle because logging is different
+         */
+        if (deeplinkDataBundle != null)
         {
-            //TODO find out why the the Opened event is being triggered when deeplinkdData != null
-            //rather than on the actual click
+            /*
+            TODO don't know why the Opened log event is being triggered here instead of on the actual click
+             */
             mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Opened(
                     deeplinkSource,
                     deeplinkUri
             )));
-            final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
+            final String deeplink = deeplinkDataBundle.getString(BundleKeys.DEEPLINK);
             if (!TextUtils.isEmpty(deeplink))
             {
                 final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
@@ -119,7 +119,8 @@ public class PageNavigationManager
                             deeplinkSource,
                             deeplinkUri
                     )));
-                    mBus.post(new NavigationEvent.NavigateToPage(page, deeplinkData));
+                    mBus.post(new NavigationEvent.NavigateToPage(page, deeplinkDataBundle, !page.isTopLevel()));
+                    //TODO PortalWebViewClient didn't use !page.isTopLevel() to determine whether to add to back stack. check if OK
                 }
                 else
                 {

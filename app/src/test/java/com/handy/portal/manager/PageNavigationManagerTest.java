@@ -1,9 +1,13 @@
 package com.handy.portal.manager;
 
+import android.net.Uri;
+import android.os.Bundle;
+
 import com.google.common.collect.ImmutableMap;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.deeplink.DeeplinkMapper;
+import com.handy.portal.deeplink.DeeplinkUtils;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.payments.PaymentsManager;
 
@@ -47,6 +51,10 @@ public class PageNavigationManagerTest extends RobolectricGradleTestWrapper
                 mPaymentsManager, mConfigManager);
     }
 
+    /**
+     * not ideal but we currently have two deeplink handler methods due to logging complications
+     * @throws Exception
+     */
     @Test
     public void onHandleSupportedDeeplinkUrl_shouldPostNavigationEventForDeeplinkPage() throws Exception
     {
@@ -56,15 +64,39 @@ public class PageNavigationManagerTest extends RobolectricGradleTestWrapper
         verify the deeplinks defined in DeeplinkMapper
          */
         ImmutableMap<String, MainViewPage> deeplinkMap = DeeplinkMapper.getDeeplinkMap();
-        for(String deeplinkString : deeplinkMap.keySet())
+        for(String deeplinkUrl : deeplinkMap.keySet())
         {
-            pageNavigationManager.handleDeeplinkUrl(null, deeplinkString);
+            MainViewPage targetDeeplinkPage = deeplinkMap.get(deeplinkUrl);
+
+            pageNavigationManager.handleDeeplinkUrl(null, deeplinkUrl);
 
             //verify bus event emitted
             verify(bus, atLeastOnce()).post(captor.capture());
 
             //verify that the event's target page matches the deeplink's
-            MainViewPage mainViewPage = deeplinkMap.get(deeplinkString);
+            assertEquals(targetDeeplinkPage, captor.getValue().targetPage);
+        }
+    }
+
+    @Test
+    public void onHandleSupportedNonUriDerivedDeeplinkBundle_shouldPostNavigationEventForDeeplinkPage() throws Exception
+    {
+        ArgumentCaptor<NavigationEvent.NavigateToPage> captor = ArgumentCaptor
+                .forClass(NavigationEvent.NavigateToPage.class);
+        /*
+        verify the deeplinks defined in DeeplinkMapper
+         */
+        ImmutableMap<String, MainViewPage> deeplinkMap = DeeplinkMapper.getDeeplinkMap();
+        for(String deeplinkUrl : deeplinkMap.keySet())
+        {
+            Bundle deeplinkDataBundle = DeeplinkUtils.createDeeplinkBundleFromUri(Uri.parse(deeplinkUrl));
+            pageNavigationManager.handleNonUriDerivedDeeplinkDataBundle(deeplinkDataBundle, null);
+
+            //verify bus event emitted
+            verify(bus, atLeastOnce()).post(captor.capture());
+
+            //verify that the event's target page matches the deeplink's
+            MainViewPage mainViewPage = deeplinkMap.get(deeplinkUrl);
             assertEquals(mainViewPage, captor.getValue().targetPage);
         }
     }
