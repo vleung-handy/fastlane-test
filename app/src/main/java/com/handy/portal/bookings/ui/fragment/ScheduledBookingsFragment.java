@@ -1,7 +1,10 @@
 package com.handy.portal.bookings.ui.fragment;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,7 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
+import com.handy.portal.bookings.ui.element.NewDateButtonView;
 import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
@@ -24,6 +28,8 @@ import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -35,6 +41,8 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     private static final String SOURCE_SCHEDULED_JOBS_LIST = "scheduled_jobs_list";
     @BindView(R.id.scheduled_jobs_list_view)
     BookingListView mScheduledJobsListView;
+    @BindView(R.id.scheduled_bookings_dates_scroll_view)
+    ViewGroup mScheduledJobsDatesScrollView;
     @BindView(R.id.scheduled_bookings_dates_scroll_view_layout)
     LinearLayout mScheduledJobsDatesScrollViewLayout;
     @BindView(R.id.scheduled_bookings_empty)
@@ -43,6 +51,9 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     Button mFindJobsForDayButton;
     @BindView(R.id.find_matching_jobs_button_container)
     ViewGroup mFindMatchingJobsButtonContainer;
+    @BindView(R.id.dates_view_pager)
+    ViewPager mDatesViewPager;
+    private DatesPagerAdapter mDatesPagerAdapter;
 
     @Override
     protected MainViewPage getAppPage()
@@ -68,6 +79,15 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     protected LinearLayout getDatesLayout()
     {
         return mScheduledJobsDatesScrollViewLayout;
+    }
+
+    @Override
+    protected void initDateButtons()
+    {
+        // FIXME: Consume config here
+        mScheduledJobsDatesScrollView.setVisibility(View.GONE);
+        mDatesPagerAdapter = new DatesPagerAdapter(getActivity());
+        mDatesViewPager.setAdapter(mDatesPagerAdapter);
     }
 
     protected int getFragmentResourceId()
@@ -232,5 +252,77 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     public void onRequestBookingsError(HandyEvent.ReceiveScheduledBookingsError event)
     {
         handleBookingsRetrievalError(event, R.string.error_fetching_scheduled_jobs);
+    }
+
+    private static class DatesPagerAdapter extends PagerAdapter
+    {
+        private static final int WEEKS_TOTAL = 4;
+        private static final int DAYS_IN_A_WEEK = 7;
+        private final List<View> mViews;
+
+        DatesPagerAdapter(final Context context)
+        {
+            mViews = new ArrayList<>();
+            final ViewGroup.LayoutParams layoutParams =
+                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.WRAP_CONTENT);
+            final Calendar calendar = Calendar.getInstance();
+            DateTimeUtils.convertToMidnight(calendar);
+            calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
+            for (int i = 0; i < WEEKS_TOTAL; i++)
+            {
+                final LinearLayout weekView = new LinearLayout(context);
+                weekView.setLayoutParams(layoutParams);
+                weekView.setOrientation(LinearLayout.HORIZONTAL);
+                for (int j = 0; j < DAYS_IN_A_WEEK; j++)
+                {
+                    final NewDateButtonView dateButtonView =
+                            new NewDateButtonView(context, calendar.getTime());
+                    weekView.addView(dateButtonView);
+                    calendar.add(Calendar.DATE, 1);
+                }
+                mViews.add(weekView);
+            }
+        }
+
+        @Override
+        public int getItemPosition(final Object object)
+        {
+            int index = mViews.indexOf(object);
+            if (index == -1)
+            {
+                return POSITION_NONE;
+            }
+            else
+            {
+                return index;
+            }
+        }
+
+        @Override
+        public Object instantiateItem(final ViewGroup container, final int position)
+        {
+            final View view = mViews.get(position);
+            container.addView(view);
+            return view;
+        }
+
+        @Override
+        public int getCount()
+        {
+            return mViews.size();
+        }
+
+        @Override
+        public boolean isViewFromObject(final View view, final Object object)
+        {
+            return view == object;
+        }
+
+        @Override
+        public void destroyItem(ViewGroup container, int position, Object object)
+        {
+            container.removeView(mViews.get(position));
+        }
     }
 }

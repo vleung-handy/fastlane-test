@@ -349,14 +349,20 @@ public final class DateTimeUtils
                 && (thenMonthDay == c.get(Calendar.DAY_OF_MONTH));
     }
 
+    public static void convertToMidnight(final Calendar calendar)
+    {
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        calendar.clear(Calendar.AM_PM);
+    }
+
     public static Date getDateWithoutTime(final Date date)
     {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
-        cal.set(Calendar.HOUR_OF_DAY, 0);
-        cal.set(Calendar.MINUTE, 0);
-        cal.set(Calendar.SECOND, 0);
-        cal.set(Calendar.MILLISECOND, 0);
+        convertToMidnight(cal);
         return cal.getTime();
     }
 

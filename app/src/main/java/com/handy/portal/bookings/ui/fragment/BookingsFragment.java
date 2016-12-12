@@ -209,12 +209,13 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
             initDateButtons();
 
-            if (mSelectedDay == null || !mDateDateButtonViewMap.containsKey(mSelectedDay))
+            if (mSelectedDay == null || (mDateDateButtonViewMap != null
+                    && !mDateDateButtonViewMap.containsKey(mSelectedDay)))
             {
                 mSelectedDay = DateTimeUtils.getDateWithoutTime(new Date());
             }
 
-            if (mDateDateButtonViewMap.containsKey(mSelectedDay))
+            if (mDateDateButtonViewMap != null && mDateDateButtonViewMap.containsKey(mSelectedDay))
             {
                 mDateDateButtonViewMap.get(mSelectedDay).setChecked(true);
             }
@@ -238,7 +239,10 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     private void requestBookingsForSelectedDay(boolean showOverlay, boolean useCachedIfPresent)
     {
-        requestBookings(Lists.newArrayList(mSelectedDay), showOverlay, useCachedIfPresent);
+        if (mSelectedDay != null)
+        {
+            requestBookings(Lists.newArrayList(mSelectedDay), showOverlay, useCachedIfPresent);
+        }
     }
 
     private void requestBookingsForOtherDays(Date dayToExclude)
@@ -342,7 +346,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         }
     }
 
-    private void initDateButtons()
+    protected void initDateButtons()
     {
         LinearLayout datesLayout = getDatesLayout();
         datesLayout.removeAllViews();
