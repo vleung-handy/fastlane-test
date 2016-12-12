@@ -4,24 +4,20 @@ import android.annotation.TargetApi;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
-import com.handy.portal.util.DeeplinkMapper;
-import com.handy.portal.util.DeeplinkUtils;
+import com.handy.portal.manager.PageNavigationManager;
 
 import org.greenrobot.eventbus.EventBus;
+
+import javax.inject.Inject;
 
 public class PortalWebViewClient extends WebViewClient
 {
@@ -29,6 +25,9 @@ public class PortalWebViewClient extends WebViewClient
     private WebView webView;
     private String mDeviceId;
     protected EventBus bus;
+
+    @Inject
+    PageNavigationManager mPageNavigationManager;
 
     public PortalWebViewClient(Fragment parentFragment,
                                WebView webView,
@@ -43,34 +42,8 @@ public class PortalWebViewClient extends WebViewClient
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url)
     {
-        final Uri uri = Uri.parse(url);
-        final Bundle deeplinkData = DeeplinkUtils.createDeeplinkBundleFromUri(uri);
-        if (deeplinkData != null)
-        {
-            bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Opened(
-                    DeeplinkLog.Source.WEBVIEW,
-                    uri
-            )));
-            final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
-            if (deeplink != null)
-            {
-                final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
-                bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
-                        DeeplinkLog.Source.WEBVIEW,
-                        uri
-                )));
-                bus.post(new NavigationEvent.NavigateToPage(page, deeplinkData));
-            }
-        }
-        else
-        {
-            bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
-                    DeeplinkLog.Source.WEBVIEW,
-                    DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
-                    uri
-            )));
-        }
-
+        mPageNavigationManager.handleDeeplinkUrl(DeeplinkLog.Source.WEBVIEW, url);
+        
         // To prevent a bug in webkit where it redirects to a url ending with /undefined
         if (url.substring(Math.max(0, url.length() - 10)).equals("/undefined"))
         {

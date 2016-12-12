@@ -22,6 +22,7 @@ import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
+import com.handy.portal.deeplink.DeeplinkUtils;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.event.ProfileEvent;
@@ -36,7 +37,6 @@ import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.ui.activity.LoginActivity;
-import com.handy.portal.util.DeeplinkUtils;
 import com.handybook.shared.layer.LayerHelper;
 
 import org.greenrobot.eventbus.EventBus;

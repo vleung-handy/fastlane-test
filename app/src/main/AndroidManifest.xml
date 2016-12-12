@@ -196,7 +196,7 @@
             >
         </activity>
 
-        <service android:name=".service.DeepLinkService">
+        <service android:name=".deeplink.DeepLinkService">
             <intent-filter>
                 <action android:name="com.handy.portal.DeepLinkBroadcast"/>
 

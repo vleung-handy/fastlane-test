@@ -1,4 +1,4 @@
-package com.handy.portal.util;
+package com.handy.portal.deeplink;
 
 import android.net.Uri;
 import android.os.Bundle;
