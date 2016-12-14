@@ -15,7 +15,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.adapter.DatesPagerAdapter;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
-import com.handy.portal.bookings.ui.element.NewDateButtonView;
+import com.handy.portal.bookings.ui.element.NewDateButton;
 import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
@@ -76,7 +76,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
             {
                 mDatesViewPager.setCurrentItem(position);
             }
-            final NewDateButtonView dateButton =
+            final NewDateButton dateButton =
                     mDatesPagerAdapter.getDateButtonForDate(mSelectedDay);
             if (dateButton != null)
             {

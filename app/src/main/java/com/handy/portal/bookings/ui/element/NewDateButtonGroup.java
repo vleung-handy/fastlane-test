@@ -13,10 +13,10 @@ import java.util.Map;
 
 
 public class NewDateButtonGroup extends LinearLayout
-        implements NewDateButtonView.SelectionChangedListener
+        implements NewDateButton.SelectionChangedListener
 {
     private final DatesPagerAdapter.DateSelectedListener mDateSelectedListener;
-    private Map<Date, NewDateButtonView> mDateButtons;
+    private Map<Date, NewDateButton> mDateButtons;
 
     public NewDateButtonGroup(
             final Context context,
@@ -37,49 +37,43 @@ public class NewDateButtonGroup extends LinearLayout
         setOrientation(LinearLayout.HORIZONTAL);
         for (final Date date : dates)
         {
-            final NewDateButtonView dateButtonView = new NewDateButtonView(getContext(), date);
-            dateButtonView.setSelectionChangedListener(this);
-            mDateButtons.put(date, dateButtonView);
-            addView(dateButtonView);
+            final NewDateButton dateButton = new NewDateButton(getContext(), date);
+            dateButton.setSelectionChangedListener(this);
+            mDateButtons.put(date, dateButton);
+            addView(dateButton);
         }
     }
 
-    public boolean selectDate(final Date date)
-    {
-        final NewDateButtonView view = getDateButtonForDate(date);
-        if (view != null)
-        {
-            view.select();
-            return true;
-        }
-        else
-        {
-            return false;
-        }
-    }
-
-    public NewDateButtonView getDateButtonForDate(final Date date)
+    public NewDateButton getDateButtonForDate(final Date date)
     {
         return mDateButtons.get(date);
     }
 
-    @Override
-    public void onSelectionChanged(final NewDateButtonView targetView)
+    public void clearSelection()
     {
-        if (!targetView.isSelected())
+        for (NewDateButton button : mDateButtons.values())
+        {
+            button.setSelected(false);
+        }
+    }
+
+    @Override
+    public void onSelectionChanged(final NewDateButton targetButton)
+    {
+        if (!targetButton.isSelected())
         {
             return;
         }
-        for (final NewDateButtonView view : mDateButtons.values())
+        for (final NewDateButton button : mDateButtons.values())
         {
-            if (view.isSelected() && !targetView.equals(view))
+            if (button.isSelected() && !targetButton.equals(button))
             {
-                view.setSelected(false);
+                button.setSelected(false);
             }
         }
         if (mDateSelectedListener != null)
         {
-            mDateSelectedListener.onDateSelected(targetView.getDate());
+            mDateSelectedListener.onDateSelected(targetButton.getDate());
         }
     }
 }

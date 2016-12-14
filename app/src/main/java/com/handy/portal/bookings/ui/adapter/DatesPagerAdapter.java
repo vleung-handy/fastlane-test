@@ -6,7 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.handy.portal.bookings.ui.element.NewDateButtonGroup;
-import com.handy.portal.bookings.ui.element.NewDateButtonView;
+import com.handy.portal.bookings.ui.element.NewDateButton;
 import com.handy.portal.library.util.DateTimeUtils;
 
 import java.util.ArrayList;
@@ -19,9 +19,27 @@ public class DatesPagerAdapter extends PagerAdapter
     private static final int WEEKS_TOTAL = 4;
     private static final int DAYS_IN_A_WEEK = 7;
     private final List<NewDateButtonGroup> mViews;
+    private final DateSelectedListener mDateSelectedListener;
+    private final DateSelectedListener mDateSelectedListenerWrapper = new DateSelectedListener()
+    {
+        @Override
+        public void onDateSelected(final Date date)
+        {
+            final NewDateButtonGroup selectedGroup = getDateButtonGroupForDate(date);
+            for (final NewDateButtonGroup group : mViews)
+            {
+                if (!group.equals(selectedGroup))
+                {
+                    group.clearSelection();
+                }
+            }
+            mDateSelectedListener.onDateSelected(date);
+        }
+    };
 
     public DatesPagerAdapter(final Context context, final DateSelectedListener dateSelectedListener)
     {
+        mDateSelectedListener = dateSelectedListener;
         mViews = new ArrayList<>();
         final Calendar calendar = Calendar.getInstance();
         DateTimeUtils.convertToMidnight(calendar);
@@ -34,7 +52,7 @@ public class DatesPagerAdapter extends PagerAdapter
                 dates.add(calendar.getTime());
                 calendar.add(Calendar.DATE, 1);
             }
-            mViews.add(new NewDateButtonGroup(context, dates, dateSelectedListener));
+            mViews.add(new NewDateButtonGroup(context, dates, mDateSelectedListenerWrapper));
         }
     }
 
@@ -80,18 +98,18 @@ public class DatesPagerAdapter extends PagerAdapter
 
     public void showClaimIndicatorForDate(final Date date)
     {
-        final NewDateButtonView dateButton = getDateButtonForDate(date);
+        final NewDateButton dateButton = getDateButtonForDate(date);
         if (dateButton != null)
         {
             dateButton.showClaimIndicator();
         }
     }
 
-    public NewDateButtonView getDateButtonForDate(final Date date)
+    public NewDateButton getDateButtonForDate(final Date date)
     {
         for (final NewDateButtonGroup view : mViews)
         {
-            final NewDateButtonView dateButton = view.getDateButtonForDate(date);
+            final NewDateButton dateButton = view.getDateButtonForDate(date);
             if (dateButton != null)
             {
                 return dateButton;
@@ -104,7 +122,7 @@ public class DatesPagerAdapter extends PagerAdapter
     {
         for (final NewDateButtonGroup view : mViews)
         {
-            final NewDateButtonView dateButton = view.getDateButtonForDate(date);
+            final NewDateButton dateButton = view.getDateButtonForDate(date);
             if (dateButton != null)
             {
                 return view;

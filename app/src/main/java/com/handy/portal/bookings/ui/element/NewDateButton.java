@@ -19,7 +19,7 @@ import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class NewDateButtonView extends LinearLayout
+public class NewDateButton extends LinearLayout
 {
     @BindView(R.id.day_of_week_text)
     TextView mDayOfWeekText;
@@ -60,7 +60,7 @@ public class NewDateButtonView extends LinearLayout
         }
     };
 
-    public NewDateButtonView(final Context context, final Date date)
+    public NewDateButton(final Context context, final Date date)
     {
         super(context);
         mDate = date;
@@ -170,7 +170,7 @@ public class NewDateButtonView extends LinearLayout
 
     public interface SelectionChangedListener
     {
-        void onSelectionChanged(NewDateButtonView view);
+        void onSelectionChanged(NewDateButton targetButton);
     }
 
     @Override
