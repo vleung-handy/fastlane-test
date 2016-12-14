@@ -76,6 +76,9 @@ public class ConfigurationResponse
     @SerializedName("login_slt_enabled")
     private boolean mSltEnabled;
 
+    @SerializedName("pro_schedule_date_nav_v2_enabled")
+    private boolean mNewDateScrollerEnabled;
+
 
     public boolean isAppseeAnalyticsEnabled()
     {
@@ -198,6 +201,11 @@ public class ConfigurationResponse
     }
 
     public boolean isSltEnabled() { return mSltEnabled; }
+
+    public boolean isNewDateScrollerEnabled()
+    {
+        return mNewDateScrollerEnabled;
+    }
 
     public static class HelpCenterInfo
     {

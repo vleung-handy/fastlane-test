@@ -25,6 +25,7 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
+import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -100,10 +101,17 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected void initDateButtons()
     {
-        // FIXME: Consume config here
-        mScheduledJobsDatesScrollView.setVisibility(View.GONE);
-        mDatesPagerAdapter = new DatesPagerAdapter(getActivity(), this);
-        mDatesViewPager.setAdapter(mDatesPagerAdapter);
+        final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
+        if (configuration != null && configuration.isNewDateScrollerEnabled())
+        {
+            mScheduledJobsDatesScrollView.setVisibility(View.GONE);
+            mDatesPagerAdapter = new DatesPagerAdapter(getActivity(), this);
+            mDatesViewPager.setAdapter(mDatesPagerAdapter);
+        }
+        else
+        {
+            super.initDateButtons();
+        }
     }
 
     protected int getFragmentResourceId()
