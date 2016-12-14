@@ -82,6 +82,14 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     @DrawableRes
     protected int mMessageIconRes = Integer.MIN_VALUE;
+    private Runnable mRefreshRunnable = new Runnable()
+    {
+        @Override
+        public void run()
+        {
+            setRefreshing(true);
+        }
+    };
 
     protected abstract int getFragmentResourceId();
 
@@ -247,11 +255,11 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         requestBookingsForOtherDays(mSelectedDay);
     }
 
-    private void requestBookingsForSelectedDay(boolean showOverlay, boolean useCachedIfPresent)
+    private void requestBookingsForSelectedDay(boolean refreshing, boolean useCachedIfPresent)
     {
         if (mSelectedDay != null)
         {
-            requestBookings(Lists.newArrayList(mSelectedDay), showOverlay, useCachedIfPresent);
+            requestBookings(Lists.newArrayList(mSelectedDay), refreshing, useCachedIfPresent);
         }
     }
 
@@ -273,7 +281,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         requestBookings(dates, false, true);
     }
 
-    private void requestBookings(List<Date> dates, boolean showOverlay, boolean useCachedIfPresent)
+    private void requestBookings(List<Date> dates, boolean refreshing, boolean useCachedIfPresent)
     {
         Crashlytics.log("Requesting bookings for the following dates" + dates.toString());
         if (mFetchErrorView == null)
@@ -283,9 +291,11 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             return;
         }
         mFetchErrorView.setVisibility(View.GONE);
-        if (showOverlay)
+        if (refreshing)
         {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+            getBookingListView().setAdapter(null);
+            // this delay will prevent the refreshing icon to flicker when loading cached data
+            getBookingListView().postDelayed(mRefreshRunnable, 200);
         }
         requestBookings(dates, useCachedIfPresent);
     }
@@ -299,13 +309,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             return;
         }
 
-        mRefreshLayout.setRefreshing(false);
-        getNoBookingsSwipeRefreshLayout().setRefreshing(false);
-        if (event.day.equals(mSelectedDay))
-        {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        }
-
+        getBookingListView().removeCallbacks(mRefreshRunnable);
+        setRefreshing(false);
         List<Booking> bookings = event.bookingsWrapper.getBookings();
         Collections.sort(bookings);
 
@@ -344,11 +349,9 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected void handleBookingsRetrievalError(HandyEvent.ReceiveBookingsError event, int errorStateStringId)
     {
-        mRefreshLayout.setRefreshing(false);
-        getNoBookingsSwipeRefreshLayout().setRefreshing(false);
+        setRefreshing(false);
         if (event.days.contains(mSelectedDay))
         {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             if (event.error != null && event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
             {
                 mErrorText.setText(R.string.error_fetching_connectivity_issue);
@@ -464,5 +467,11 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         arguments.putSerializable(BundleKeys.PAGE, getAppPage());
         bus.post(new NavigationEvent.NavigateToPage(MainViewPage.JOB_DETAILS, arguments,
                 TransitionStyle.JOB_LIST_TO_DETAILS, true));
+    }
+
+    private void setRefreshing(final boolean refreshing)
+    {
+        mRefreshLayout.setRefreshing(refreshing);
+        getNoBookingsSwipeRefreshLayout().setRefreshing(refreshing);
     }
 }
