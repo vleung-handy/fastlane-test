@@ -1,7 +1,9 @@
 package com.handy.portal.bookings.ui.element;
 
+import android.animation.LayoutTransition;
 import android.content.Context;
 import android.view.Gravity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,11 +21,13 @@ import butterknife.ButterKnife;
 
 public class NewDateButtonView extends LinearLayout
 {
-    @BindView(R.id.day_text)
+    @BindView(R.id.day_of_week_text)
     TextView mDayOfWeekText;
     @BindView(R.id.month_text)
     TextView mMonthText;
-    @BindView(R.id.date_text)
+    @BindView(R.id.day_of_month_holder)
+    ViewGroup mDayOfMonthHolder;
+    @BindView(R.id.day_of_month_text)
     TextView mDayOfMonthText;
     @BindView(R.id.schedule_indicator)
     ImageView mScheduleIndicator;
@@ -60,6 +64,7 @@ public class NewDateButtonView extends LinearLayout
         setBackgroundResource(R.color.white);
         setGravity(Gravity.CENTER_HORIZONTAL);
         setOrientation(VERTICAL);
+        setLayoutTransition(new LayoutTransition());
 
         ButterKnife.bind(this);
 
@@ -81,6 +86,13 @@ public class NewDateButtonView extends LinearLayout
             mMonthText.setVisibility(INVISIBLE);
             mDayOfMonthText.setTextColor(mWhite);
             mScheduleIndicator.setImageResource(R.drawable.circle_white);
+            if (mDayOfMonthHolder.getHeight() < mDayOfMonthHolder.getWidth())
+            {
+                // hacky way to make sure the background comes out as a circle
+                mDayOfMonthHolder.getLayoutParams().width = mDayOfMonthHolder.getHeight();
+                mDayOfMonthHolder.requestLayout();
+            }
+            mDayOfMonthHolder.setBackgroundResource(R.drawable.circle_handy_blue);
         }
         else
         {
@@ -88,6 +100,7 @@ public class NewDateButtonView extends LinearLayout
             final boolean isToday = DateTimeUtils.daysBetween(mDate, new Date()) == 0;
             mDayOfMonthText.setTextColor(isToday ? mDarkBlue : mBlack);
             mScheduleIndicator.setImageResource(R.drawable.circle_handy_blue);
+            mDayOfMonthHolder.setBackground(null);
         }
     }
 

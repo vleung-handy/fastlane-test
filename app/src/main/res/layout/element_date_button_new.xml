@@ -5,7 +5,7 @@
     >
 
     <TextView
-        android:id="@+id/day_text"
+        android:id="@+id/day_of_week_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_margin"
@@ -32,17 +32,19 @@
         />
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:id="@+id/day_of_month_holder"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin_small"
         android:layout_marginTop="-8dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
-        android:paddingTop="8dp"
+        android:paddingBottom="@dimen/default_padding_quarter"
+        android:paddingTop="@dimen/default_padding_half"
         >
 
         <TextView
-            android:id="@+id/date_text"
+            android:id="@+id/day_of_month_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextView.XLarge"
