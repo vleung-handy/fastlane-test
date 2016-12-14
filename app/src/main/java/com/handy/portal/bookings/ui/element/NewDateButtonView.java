@@ -106,11 +106,15 @@ public class NewDateButtonView extends LinearLayout
         else
         {
             mMonthText.setVisibility(mDayOfMonth == 1 ? VISIBLE : INVISIBLE);
-            final boolean isToday = DateTimeUtils.daysBetween(mDate, new Date()) == 0;
-            mDayOfMonthText.setTextColor(isToday ? mDarkBlue : mBlack);
+            mDayOfMonthText.setTextColor(DateTimeUtils.isToday(mDate) ? mDarkBlue : mBlack);
             mScheduleIndicator.setImageResource(R.drawable.circle_handy_blue);
             mDayOfMonthHolder.setBackground(null);
         }
+    }
+
+    public Date getDate()
+    {
+        return mDate;
     }
 
     public void select()

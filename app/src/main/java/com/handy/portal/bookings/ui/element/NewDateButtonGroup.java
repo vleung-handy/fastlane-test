@@ -4,6 +4,8 @@ import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.handy.portal.bookings.ui.adapter.DatesPagerAdapter;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -13,11 +15,17 @@ import java.util.Map;
 public class NewDateButtonGroup extends LinearLayout
         implements NewDateButtonView.SelectionChangedListener
 {
+    private final DatesPagerAdapter.DateSelectedListener mDateSelectedListener;
     private Map<Date, NewDateButtonView> mDateButtons;
 
-    public NewDateButtonGroup(final Context context, final List<Date> dates)
+    public NewDateButtonGroup(
+            final Context context,
+            final List<Date> dates,
+            final DatesPagerAdapter.DateSelectedListener dateSelectedListener
+    )
     {
         super(context);
+        mDateSelectedListener = dateSelectedListener;
         mDateButtons = new HashMap<>();
         init(dates);
     }
@@ -68,6 +76,10 @@ public class NewDateButtonGroup extends LinearLayout
             {
                 view.setSelected(false);
             }
+        }
+        if (mDateSelectedListener != null)
+        {
+            mDateSelectedListener.onDateSelected(targetView.getDate());
         }
     }
 }

@@ -20,7 +20,7 @@ public class DatesPagerAdapter extends PagerAdapter
     private static final int DAYS_IN_A_WEEK = 7;
     private final List<NewDateButtonGroup> mViews;
 
-    public DatesPagerAdapter(final Context context)
+    public DatesPagerAdapter(final Context context, final DateSelectedListener dateSelectedListener)
     {
         mViews = new ArrayList<>();
         final Calendar calendar = Calendar.getInstance();
@@ -34,7 +34,7 @@ public class DatesPagerAdapter extends PagerAdapter
                 dates.add(calendar.getTime());
                 calendar.add(Calendar.DATE, 1);
             }
-            mViews.add(new NewDateButtonGroup(context, dates));
+            mViews.add(new NewDateButtonGroup(context, dates, dateSelectedListener));
         }
     }
 
@@ -98,5 +98,10 @@ public class DatesPagerAdapter extends PagerAdapter
             }
         }
         return null;
+    }
+
+    public interface DateSelectedListener
+    {
+        void onDateSelected(Date date);
     }
 }

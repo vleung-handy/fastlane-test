@@ -34,6 +34,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.ReceiveScheduledBookingsSuccess>
+    implements DatesPagerAdapter.DateSelectedListener
 {
     private static final String SOURCE_SCHEDULED_JOBS_LIST = "scheduled_jobs_list";
     @BindView(R.id.scheduled_jobs_list_view)
@@ -83,7 +84,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         // FIXME: Consume config here
         mScheduledJobsDatesScrollView.setVisibility(View.GONE);
-        mDatesPagerAdapter = new DatesPagerAdapter(getActivity());
+        mDatesPagerAdapter = new DatesPagerAdapter(getActivity(), this);
         mDatesViewPager.setAdapter(mDatesPagerAdapter);
     }
 
@@ -256,5 +257,11 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     public void onRequestBookingsError(HandyEvent.ReceiveScheduledBookingsError event)
     {
         handleBookingsRetrievalError(event, R.string.error_fetching_scheduled_jobs);
+    }
+
+    @Override
+    public void onDateSelected(final Date date)
+    {
+        onDateClicked(date);
     }
 }

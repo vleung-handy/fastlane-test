@@ -380,10 +380,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             {
                 public void onClick(View v)
                 {
-                    bus.post(new HandyEvent.DateClicked(getTrackingType(), day));
-                    selectDay(day);
-                    beforeRequestBookings();
-                    requestBookings(Lists.newArrayList(day), true, true);
+                    onDateClicked(day);
                 }
             });
 
@@ -391,14 +388,25 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         }
     }
 
+    protected void onDateClicked(final Date day)
+    {
+        bus.post(new HandyEvent.DateClicked(getTrackingType(), day));
+        selectDay(day);
+        beforeRequestBookings();
+        requestBookings(Lists.newArrayList(day), true, true);
+    }
+
     private void selectDay(Date day)
     {
-        DateButtonView selectedDateButtonView = mDateDateButtonViewMap.get(mSelectedDay);
-        if (selectedDateButtonView != null)
+        if (mDateDateButtonViewMap != null)
         {
-            selectedDateButtonView.setChecked(false);
+            DateButtonView selectedDateButtonView = mDateDateButtonViewMap.get(mSelectedDay);
+            if (selectedDateButtonView != null)
+            {
+                selectedDateButtonView.setChecked(false);
+            }
+            mDateDateButtonViewMap.get(day).setChecked(true);
         }
-        mDateDateButtonViewMap.get(day).setChecked(true);
         mSelectedDay = day;
     }
 
