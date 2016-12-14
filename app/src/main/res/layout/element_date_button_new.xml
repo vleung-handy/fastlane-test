@@ -46,15 +46,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="@style/TextView.XLarge"
-            android:textColor="@drawable/date_text_color"
+            android:textColor="@color/black"
             tools:text="1"
             />
 
         <ImageView
             android:id="@+id/schedule_indicator"
-            android:layout_width="8dp"
-            android:layout_height="8dp"
-            android:src="@drawable/date_schedule_indicator"
+            android:layout_width="6dp"
+            android:layout_height="6dp"
+            android:src="@drawable/circle_handy_blue"
             android:visibility="invisible"
             tools:visibility="visible"
             />
