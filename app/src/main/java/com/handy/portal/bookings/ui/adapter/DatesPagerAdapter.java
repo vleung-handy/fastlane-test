@@ -87,7 +87,7 @@ public class DatesPagerAdapter extends PagerAdapter
         }
     }
 
-    private NewDateButtonView getDateButtonForDate(final Date date)
+    public NewDateButtonView getDateButtonForDate(final Date date)
     {
         for (final NewDateButtonGroup view : mViews)
         {
@@ -98,6 +98,29 @@ public class DatesPagerAdapter extends PagerAdapter
             }
         }
         return null;
+    }
+
+    public NewDateButtonGroup getDateButtonGroupForDate(final Date date)
+    {
+        for (final NewDateButtonGroup view : mViews)
+        {
+            final NewDateButtonView dateButton = view.getDateButtonForDate(date);
+            if (dateButton != null)
+            {
+                return view;
+            }
+        }
+        return null;
+    }
+
+    public int getItemPositionWithDate(final Date date)
+    {
+        final NewDateButtonGroup group = getDateButtonGroupForDate(date);
+        if (group != null)
+        {
+            return getItemPosition(group);
+        }
+        return -1;
     }
 
     public interface DateSelectedListener

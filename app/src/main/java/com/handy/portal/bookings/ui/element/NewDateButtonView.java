@@ -44,6 +44,21 @@ public class NewDateButtonView extends LinearLayout
     private final int mDayOfMonth;
     private boolean mIsSelected = false;
     private SelectionChangedListener mSelectionChangedListener;
+    private OnLayoutChangeListener mLayoutChangeListener = new OnLayoutChangeListener()
+    {
+        @Override
+        public void onLayoutChange(final View view, final int left, final int top,
+                                   final int right, final int bottom, final int oldLeft,
+                                   final int oldTop, final int oldRight, final int oldBottom)
+        {
+            if (mDayOfMonthHolder.getHeight() < mDayOfMonthHolder.getWidth())
+            {
+                // hacky way to make sure the background comes out as a circle
+                mDayOfMonthHolder.getLayoutParams().width = mDayOfMonthHolder.getHeight();
+                mDayOfMonthHolder.requestLayout();
+            }
+        }
+    };
 
     public NewDateButtonView(final Context context, final Date date)
     {
@@ -88,6 +103,13 @@ public class NewDateButtonView extends LinearLayout
         });
     }
 
+    @Override
+    protected void onAttachedToWindow()
+    {
+        super.onAttachedToWindow();
+        addOnLayoutChangeListener(mLayoutChangeListener);
+    }
+
     private void refreshState()
     {
         if (mIsSelected)
@@ -95,12 +117,6 @@ public class NewDateButtonView extends LinearLayout
             mMonthText.setVisibility(INVISIBLE);
             mDayOfMonthText.setTextColor(mWhite);
             mScheduleIndicator.setImageResource(R.drawable.circle_white);
-            if (mDayOfMonthHolder.getHeight() < mDayOfMonthHolder.getWidth())
-            {
-                // hacky way to make sure the background comes out as a circle
-                mDayOfMonthHolder.getLayoutParams().width = mDayOfMonthHolder.getHeight();
-                mDayOfMonthHolder.requestLayout();
-            }
             mDayOfMonthHolder.setBackgroundResource(R.drawable.circle_handy_blue);
         }
         else
@@ -155,5 +171,12 @@ public class NewDateButtonView extends LinearLayout
     public interface SelectionChangedListener
     {
         void onSelectionChanged(NewDateButtonView view);
+    }
+
+    @Override
+    protected void onDetachedFromWindow()
+    {
+        removeOnLayoutChangeListener(mLayoutChangeListener);
+        super.onDetachedFromWindow();
     }
 }

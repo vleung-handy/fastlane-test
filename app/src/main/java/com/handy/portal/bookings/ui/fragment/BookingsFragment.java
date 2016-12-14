@@ -237,7 +237,12 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     private void requestAllBookings()
     {
-        requestBookingsForSelectedDay(true, true);
+        // if we're using the dates pager, this will be triggered after calling
+        // NewDateButtonView.select() on the initial date
+        if (getDatesPagerAdapter() == null)
+        {
+            requestBookingsForSelectedDay(true, true);
+        }
 
         requestBookingsForOtherDays(mSelectedDay);
     }

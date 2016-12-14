@@ -15,6 +15,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.adapter.DatesPagerAdapter;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
+import com.handy.portal.bookings.ui.element.NewDateButtonView;
 import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
@@ -24,6 +25,7 @@ import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
+import com.handy.portal.ui.fragment.MainActivityFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -65,6 +67,22 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         bus.register(this);
         super.onResume();
         setActionBar(R.string.scheduled_jobs, false);
+        if (!MainActivityFragment.clearingBackStack
+                && mSelectedDay != null
+                && mDatesPagerAdapter != null)
+        {
+            final int position = mDatesPagerAdapter.getItemPositionWithDate(mSelectedDay);
+            if (position != -1)
+            {
+                mDatesViewPager.setCurrentItem(position);
+            }
+            final NewDateButtonView dateButton =
+                    mDatesPagerAdapter.getDateButtonForDate(mSelectedDay);
+            if (dateButton != null)
+            {
+                dateButton.select();
+            }
+        }
     }
 
     @Override
