@@ -15,7 +15,7 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
-import com.handy.portal.bookings.ui.element.NewDateButtonView;
+import com.handy.portal.bookings.ui.element.NewDateButtonGroup;
 import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
@@ -263,25 +263,18 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         DatesPagerAdapter(final Context context)
         {
             mViews = new ArrayList<>();
-            final ViewGroup.LayoutParams layoutParams =
-                    new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.WRAP_CONTENT);
             final Calendar calendar = Calendar.getInstance();
             DateTimeUtils.convertToMidnight(calendar);
             calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
             for (int i = 0; i < WEEKS_TOTAL; i++)
             {
-                final LinearLayout weekView = new LinearLayout(context);
-                weekView.setLayoutParams(layoutParams);
-                weekView.setOrientation(LinearLayout.HORIZONTAL);
+                final List<Date> dates = new ArrayList<>(DAYS_IN_A_WEEK);
                 for (int j = 0; j < DAYS_IN_A_WEEK; j++)
                 {
-                    final NewDateButtonView dateButtonView =
-                            new NewDateButtonView(context, calendar.getTime());
-                    weekView.addView(dateButtonView);
+                    dates.add(calendar.getTime());
                     calendar.add(Calendar.DATE, 1);
                 }
-                mViews.add(weekView);
+                mViews.add(new NewDateButtonGroup(context, dates));
             }
         }
 

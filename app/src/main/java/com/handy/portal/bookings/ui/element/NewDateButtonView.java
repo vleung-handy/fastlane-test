@@ -43,6 +43,7 @@ public class NewDateButtonView extends LinearLayout
     private final Date mDate;
     private final int mDayOfMonth;
     private boolean mIsSelected = false;
+    private SelectionChangedListener mSelectionChangedListener;
 
     public NewDateButtonView(final Context context, final Date date)
     {
@@ -77,6 +78,14 @@ public class NewDateButtonView extends LinearLayout
             mMonthText.setText(DateTimeUtils.getMonthShortName(mDate));
         }
         refreshState();
+        setOnClickListener(new OnClickListener()
+        {
+            @Override
+            public void onClick(final View view)
+            {
+                setSelected(true);
+            }
+        });
     }
 
     private void refreshState()
@@ -104,14 +113,43 @@ public class NewDateButtonView extends LinearLayout
         }
     }
 
+    public void select()
+    {
+        setSelected(true);
+    }
+
     public void setSelected(final boolean isSelected)
     {
+        if (isSelected() == isSelected)
+        {
+            return;
+        }
         mIsSelected = isSelected;
         refreshState();
+        if (mSelectionChangedListener != null)
+        {
+            mSelectionChangedListener.onSelectionChanged(this);
+        }
+    }
+
+    @Override
+    public boolean isSelected()
+    {
+        return mIsSelected;
+    }
+
+    public void setSelectionChangedListener(final SelectionChangedListener selectionChangedListener)
+    {
+        mSelectionChangedListener = selectionChangedListener;
     }
 
     public void setScheduleIndicator(final boolean isShown)
     {
         mScheduleIndicator.setVisibility(isShown ? VISIBLE : INVISIBLE);
+    }
+
+    public interface SelectionChangedListener
+    {
+        void onSelectionChanged(NewDateButtonView view);
     }
 }
