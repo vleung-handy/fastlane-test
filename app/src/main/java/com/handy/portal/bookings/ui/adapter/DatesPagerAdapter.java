@@ -5,14 +5,15 @@ import android.support.v4.view.PagerAdapter;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.handy.portal.bookings.ui.element.NewDateButtonGroup;
 import com.handy.portal.bookings.ui.element.NewDateButton;
+import com.handy.portal.bookings.ui.element.NewDateButtonGroup;
 import com.handy.portal.library.util.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class DatesPagerAdapter extends PagerAdapter
 {
@@ -41,7 +42,7 @@ public class DatesPagerAdapter extends PagerAdapter
     {
         mDateSelectedListener = dateSelectedListener;
         mViews = new ArrayList<>();
-        final Calendar calendar = Calendar.getInstance();
+        final Calendar calendar = Calendar.getInstance(Locale.US);
         DateTimeUtils.convertToMidnight(calendar);
         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
         for (int i = 0; i < WEEKS_TOTAL; i++)

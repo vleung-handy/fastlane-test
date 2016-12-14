@@ -21,8 +21,6 @@ import butterknife.ButterKnife;
 
 public class NewDateButton extends LinearLayout
 {
-    @BindView(R.id.day_of_week_text)
-    TextView mDayOfWeekText;
     @BindView(R.id.month_text)
     TextView mMonthText;
     @BindView(R.id.day_of_month_holder)
@@ -84,7 +82,6 @@ public class NewDateButton extends LinearLayout
 
         ButterKnife.bind(this);
 
-        mDayOfWeekText.setText(String.valueOf(DateTimeUtils.getDayOfWeek(mDate).charAt(0)));
         mDayOfMonthText.setText(String.valueOf(mDayOfMonth));
         final boolean isFirstOfTheMonth = mDayOfMonth == 1;
         mMonthText.setVisibility(isFirstOfTheMonth ? VISIBLE : INVISIBLE);

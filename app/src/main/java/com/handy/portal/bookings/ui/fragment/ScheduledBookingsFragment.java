@@ -52,6 +52,8 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     Button mFindJobsForDayButton;
     @BindView(R.id.find_matching_jobs_button_container)
     ViewGroup mFindMatchingJobsButtonContainer;
+    @BindView(R.id.dates_view_pager_holder)
+    ViewGroup mDatesViewPagerHolder;
     @BindView(R.id.dates_view_pager)
     ViewPager mDatesViewPager;
     private DatesPagerAdapter mDatesPagerAdapter;
@@ -110,6 +112,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         }
         else
         {
+            mDatesViewPagerHolder.setVisibility(View.GONE);
             super.initDateButtons();
         }
     }

@@ -5,26 +5,10 @@
     >
 
     <TextView
-        android:id="@+id/day_of_week_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_margin"
-        android:textAppearance="@style/TextView.Small"
-        tools:text="T"
-        />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginBottom="@dimen/default_margin_half"
-        android:layout_marginTop="@dimen/default_margin_half"
-        android:background="@color/border_gray"
-        />
-
-    <TextView
         android:id="@+id/month_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
         android:textAppearance="@style/TextView.Small"
         android:visibility="invisible"
         tools:text="Dec"
