@@ -59,10 +59,4 @@ public class TestBaseApplication extends BaseApplication
         Crashlytics crashlytics = new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(true).build()).build();
         Fabric.with(this, crashlytics);
     }
-
-    @Override
-    protected void startNewRelic()
-    {
-    }
-
 }

@@ -68,11 +68,6 @@
 -keep interface com.squareup.okhttp.** { *; }
 -dontwarn com.squareup.okhttp.**
 
-#Newrelic
--keep class com.newrelic.** { *; }
--dontwarn com.newrelic.**
--keepattributes Exceptions, Signature, InnerClasses
-
 #Stripe
 -keep class com.stripe.** { *; }
 
