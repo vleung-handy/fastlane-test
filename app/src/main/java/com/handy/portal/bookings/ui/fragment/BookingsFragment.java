@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,6 +23,7 @@ import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
+import com.handy.portal.bookings.ui.adapter.DatesPagerAdapter;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
 import com.handy.portal.constant.BundleKeys;
@@ -142,6 +144,9 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     protected abstract Class<? extends BookingElementView> getBookingElementViewClass();
 
     protected abstract String getBookingSourceName();
+
+    @Nullable
+    protected abstract DatesPagerAdapter getDatesPagerAdapter();
 
     //Event listeners
     public abstract void onBookingsRetrieved(T event);
@@ -319,6 +324,11 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             {
                 Crashlytics.logException(new RuntimeException("Date button for " + event.day + " not found"));
             }
+        }
+
+        if (getDatesPagerAdapter() != null && shouldShowClaimedIndicator(bookings))
+        {
+            getDatesPagerAdapter().showClaimIndicatorForDate(event.day);
         }
 
         if (mSelectedDay != null && mSelectedDay.equals(event.day))

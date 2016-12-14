@@ -1,9 +1,8 @@
 package com.handy.portal.bookings.ui.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.view.PagerAdapter;
+import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.View;
@@ -13,9 +12,9 @@ import android.widget.LinearLayout;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.ui.adapter.DatesPagerAdapter;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
-import com.handy.portal.bookings.ui.element.NewDateButtonGroup;
 import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
@@ -28,8 +27,6 @@ import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -149,6 +146,13 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         return SOURCE_SCHEDULED_JOBS_LIST;
     }
 
+    @Nullable
+    @Override
+    protected DatesPagerAdapter getDatesPagerAdapter()
+    {
+        return mDatesPagerAdapter;
+    }
+
     @Override
     protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
     {
@@ -252,70 +256,5 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     public void onRequestBookingsError(HandyEvent.ReceiveScheduledBookingsError event)
     {
         handleBookingsRetrievalError(event, R.string.error_fetching_scheduled_jobs);
-    }
-
-    private static class DatesPagerAdapter extends PagerAdapter
-    {
-        private static final int WEEKS_TOTAL = 4;
-        private static final int DAYS_IN_A_WEEK = 7;
-        private final List<View> mViews;
-
-        DatesPagerAdapter(final Context context)
-        {
-            mViews = new ArrayList<>();
-            final Calendar calendar = Calendar.getInstance();
-            DateTimeUtils.convertToMidnight(calendar);
-            calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-            for (int i = 0; i < WEEKS_TOTAL; i++)
-            {
-                final List<Date> dates = new ArrayList<>(DAYS_IN_A_WEEK);
-                for (int j = 0; j < DAYS_IN_A_WEEK; j++)
-                {
-                    dates.add(calendar.getTime());
-                    calendar.add(Calendar.DATE, 1);
-                }
-                mViews.add(new NewDateButtonGroup(context, dates));
-            }
-        }
-
-        @Override
-        public int getItemPosition(final Object object)
-        {
-            int index = mViews.indexOf(object);
-            if (index == -1)
-            {
-                return POSITION_NONE;
-            }
-            else
-            {
-                return index;
-            }
-        }
-
-        @Override
-        public Object instantiateItem(final ViewGroup container, final int position)
-        {
-            final View view = mViews.get(position);
-            container.addView(view);
-            return view;
-        }
-
-        @Override
-        public int getCount()
-        {
-            return mViews.size();
-        }
-
-        @Override
-        public boolean isViewFromObject(final View view, final Object object)
-        {
-            return view == object;
-        }
-
-        @Override
-        public void destroyItem(ViewGroup container, int position, Object object)
-        {
-            container.removeView(mViews.get(position));
-        }
     }
 }

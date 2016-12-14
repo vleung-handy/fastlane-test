@@ -143,9 +143,9 @@ public class NewDateButtonView extends LinearLayout
         mSelectionChangedListener = selectionChangedListener;
     }
 
-    public void setScheduleIndicator(final boolean isShown)
+    public void showClaimIndicator()
     {
-        mScheduleIndicator.setVisibility(isShown ? VISIBLE : INVISIBLE);
+        mScheduleIndicator.setVisibility(VISIBLE);
     }
 
     public interface SelectionChangedListener

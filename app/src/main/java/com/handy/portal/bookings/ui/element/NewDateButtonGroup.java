@@ -38,7 +38,7 @@ public class NewDateButtonGroup extends LinearLayout
 
     public boolean selectDate(final Date date)
     {
-        final NewDateButtonView view = mDateButtons.get(date);
+        final NewDateButtonView view = getDateButtonForDate(date);
         if (view != null)
         {
             view.select();
@@ -48,6 +48,11 @@ public class NewDateButtonGroup extends LinearLayout
         {
             return false;
         }
+    }
+
+    public NewDateButtonView getDateButtonForDate(final Date date)
+    {
+        return mDateButtons.get(date);
     }
 
     @Override
