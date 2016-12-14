@@ -11,7 +11,6 @@ import com.handy.portal.bookings.manager.BookingModalsManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.util.FontUtils;
-import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.location.manager.LocationScheduleUpdateManager;
 import com.handy.portal.logger.handylogger.EventLogManager;
@@ -35,7 +34,6 @@ import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.setup.SetupManager;
 import com.handy.portal.updater.VersionManager;
 import com.handybook.shared.core.HandyLibrary;
-import com.newrelic.agent.android.NewRelic;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -115,7 +113,6 @@ public class BaseApplication extends MultiDexApplication
         inject(this);
         HandyLibrary.init(mRestAdapter, this, !BuildConfig.DEBUG);
 
-        startNewRelic();
         startCrashlytics();
         //Start UA
         bus.post(new HandyEvent.StartUrbanAirship());
@@ -124,12 +121,6 @@ public class BaseApplication extends MultiDexApplication
                 .setDefaultFontPath(FontUtils.CIRCULAR_BOOK)
                 .setFontAttrId(R.attr.fontPath)
                 .build());
-    }
-
-    protected void startNewRelic()
-    {
-        String newRelicApiKey = PropertiesReader.getConfigProperties(this).getProperty("newrelic_api_key");
-        NewRelic.withApplicationToken(newRelicApiKey).start(this);
     }
 
     protected void startCrashlytics()
