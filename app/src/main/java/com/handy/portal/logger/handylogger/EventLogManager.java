@@ -183,7 +183,10 @@ public class EventLogManager
     {
         try
         {
-            mPrefsManager.setString(prefsKey, GSON.toJson(eventLogBundles));
+            synchronized (mPrefsManager)
+            {
+                mPrefsManager.setString(prefsKey, GSON.toJson(eventLogBundles));
+            }
         }
         catch (JsonParseException e)
         {
