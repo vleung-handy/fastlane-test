@@ -133,7 +133,7 @@ public class LoginActivityFragment extends InjectedFragment
                 {
                     case INPUTTING_PHONE_NUMBER:
                     {
-                        bus.post(new LogEvent.AddLogEvent(new LoginLog.login_submitted(LoginLog.TYPE_PHONE)));
+                        bus.post(new LogEvent.AddLogEvent(new LoginLog.LoginSubmitted(LoginLog.TYPE_PHONE)));
                         if (phoneNumberEditText.validate())
                         {
                             sendPhoneNumber(phoneNumberEditText.getPhoneNumber());
@@ -144,7 +144,7 @@ public class LoginActivityFragment extends InjectedFragment
                     break;
                     case INPUTTING_PIN:
                     {
-                        bus.post(new LogEvent.AddLogEvent(new LoginLog.login_submitted(TYPE_PIN)));
+                        bus.post(new LogEvent.AddLogEvent(new LoginLog.LoginSubmitted(TYPE_PIN)));
                         if (pinCodeEditText.validate())
                         {
                             sendLoginRequest(storedPhoneNumber, pinCodeEditText.getString());

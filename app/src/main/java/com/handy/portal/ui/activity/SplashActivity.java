@@ -351,6 +351,7 @@ public class SplashActivity extends BaseActivity
             String n = getIntent().getData().getQueryParameter("n");
             String sig = getIntent().getData().getQueryParameter("sig");
             String slt = getIntent().getData().getQueryParameter("slt");
+            bus.post(new LogEvent.AddLogEvent(new LoginLog.LoginSubmitted(LoginLog.TYPE_TOKEN)));
             mLoginManager.loginWithSlt(n, sig, slt);
         }
     }
