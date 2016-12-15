@@ -76,7 +76,7 @@ public class ConfigurationResponse
     @SerializedName("login_slt_enabled")
     private boolean mSltEnabled;
 
-    @SerializedName("pro_schedule_date_nav_v2_enabled")
+    @SerializedName("scheduled_jobs_calendar_navigation_enabled")
     private boolean mNewDateScrollerEnabled;
 
 
