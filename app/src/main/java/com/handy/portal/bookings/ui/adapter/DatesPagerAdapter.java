@@ -74,7 +74,7 @@ public class DatesPagerAdapter extends PagerAdapter
     @Override
     public Object instantiateItem(final ViewGroup container, final int position)
     {
-        final View view = mViews.get(position);
+        final View view = getItemAt(position);
         container.addView(view);
         return view;
     }
@@ -94,7 +94,7 @@ public class DatesPagerAdapter extends PagerAdapter
     @Override
     public void destroyItem(ViewGroup container, int position, Object object)
     {
-        container.removeView(mViews.get(position));
+        container.removeView(getItemAt(position));
     }
 
     public void showClaimIndicatorForDate(final Date date)
@@ -140,6 +140,11 @@ public class DatesPagerAdapter extends PagerAdapter
             return getItemPosition(group);
         }
         return -1;
+    }
+
+    public NewDateButtonGroup getItemAt(final int position)
+    {
+        return mViews.get(position);
     }
 
     public interface DateSelectedListener

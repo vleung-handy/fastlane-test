@@ -16,6 +16,7 @@ import com.handy.portal.bookings.ui.adapter.DatesPagerAdapter;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
 import com.handy.portal.bookings.ui.element.NewDateButton;
+import com.handy.portal.bookings.ui.element.NewDateButtonGroup;
 import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
@@ -30,6 +31,7 @@ import com.handy.portal.ui.fragment.MainActivityFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -37,7 +39,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.ReceiveScheduledBookingsSuccess>
-    implements DatesPagerAdapter.DateSelectedListener
+        implements DatesPagerAdapter.DateSelectedListener
 {
     private static final String SOURCE_SCHEDULED_JOBS_LIST = "scheduled_jobs_list";
     @BindView(R.id.scheduled_jobs_list_view)
@@ -57,6 +59,38 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @BindView(R.id.dates_view_pager)
     ViewPager mDatesViewPager;
     private DatesPagerAdapter mDatesPagerAdapter;
+    private ViewPager.OnPageChangeListener mDatesPageChangeListener =
+            new ViewPager.OnPageChangeListener()
+            {
+                @Override
+                public void onPageScrolled(final int position, final float positionOffset,
+                                           final int positionOffsetPixels)
+                {
+
+                }
+
+                @Override
+                public void onPageSelected(final int position)
+                {
+                    if (mSelectedDay != null)
+                    {
+                        final Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(mSelectedDay);
+                        final NewDateButtonGroup oldGroup
+                                = mDatesPagerAdapter.getDateButtonGroupForDate(mSelectedDay);
+                        final int oldPosition = mDatesPagerAdapter.getItemPosition(oldGroup);
+                        final int offset = position - oldPosition;
+                        calendar.add(Calendar.WEEK_OF_YEAR, offset);
+                        mDatesPagerAdapter.getDateButtonForDate(calendar.getTime()).select();
+                    }
+                }
+
+                @Override
+                public void onPageScrollStateChanged(final int state)
+                {
+
+                }
+            };
 
     @Override
     protected MainViewPage getAppPage()
@@ -92,6 +126,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     public void onPause()
     {
         bus.unregister(this);
+        mDatesViewPager.removeOnPageChangeListener(mDatesPageChangeListener);
         super.onPause();
     }
 
@@ -109,6 +144,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
             mScheduledJobsDatesScrollView.setVisibility(View.GONE);
             mDatesPagerAdapter = new DatesPagerAdapter(getActivity(), this);
             mDatesViewPager.setAdapter(mDatesPagerAdapter);
+            mDatesViewPager.addOnPageChangeListener(mDatesPageChangeListener);
         }
         else
         {
