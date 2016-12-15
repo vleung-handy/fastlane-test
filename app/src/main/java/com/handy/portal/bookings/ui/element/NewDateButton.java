@@ -37,6 +37,8 @@ public class NewDateButton extends LinearLayout
     int mBlack;
     @BindColor(R.color.white)
     int mWhite;
+    @BindColor(R.color.disabled)
+    int mGray;
 
     private final Date mDate;
     private final int mDayOfMonth;
@@ -90,14 +92,22 @@ public class NewDateButton extends LinearLayout
             mMonthText.setText(DateTimeUtils.getMonthShortName(mDate));
         }
         refreshState();
-        setOnClickListener(new OnClickListener()
+        if (DateTimeUtils.daysBetween(new Date(), mDate) < 0)
         {
-            @Override
-            public void onClick(final View view)
+            mDayOfMonthText.setTextColor(mGray);
+            setClickable(false);
+        }
+        else
+        {
+            setOnClickListener(new OnClickListener()
             {
-                setSelected(true);
-            }
-        });
+                @Override
+                public void onClick(final View view)
+                {
+                    setSelected(true);
+                }
+            });
+        }
     }
 
     @Override
