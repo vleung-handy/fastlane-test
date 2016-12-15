@@ -294,6 +294,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         if (refreshing)
         {
             getBookingListView().setAdapter(null);
+            getNoBookingsSwipeRefreshLayout().setVisibility(View.GONE);
             // this delay will prevent the refreshing icon to flicker when loading cached data
             getBookingListView().postDelayed(mRefreshRunnable, 200);
         }
@@ -310,7 +311,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         }
 
         getBookingListView().removeCallbacks(mRefreshRunnable);
-        setRefreshing(false);
         List<Booking> bookings = event.bookingsWrapper.getBookings();
         Collections.sort(bookings);
 
@@ -343,15 +343,16 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
         if (mSelectedDay != null && mSelectedDay.equals(event.day))
         {
+            setRefreshing(false);
             displayBookings(bookingsWrapper, mSelectedDay);
         }
     }
 
     protected void handleBookingsRetrievalError(HandyEvent.ReceiveBookingsError event, int errorStateStringId)
     {
-        setRefreshing(false);
         if (event.days.contains(mSelectedDay))
         {
+            setRefreshing(false);
             if (event.error != null && event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
             {
                 mErrorText.setText(R.string.error_fetching_connectivity_issue);
