@@ -16,7 +16,6 @@ import com.handy.portal.bookings.ui.adapter.DatesPagerAdapter;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
 import com.handy.portal.bookings.ui.element.NewDateButton;
-import com.handy.portal.bookings.ui.element.NewDateButtonGroup;
 import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.constant.MainViewPage;
@@ -31,7 +30,6 @@ import com.handy.portal.ui.fragment.MainActivityFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -66,29 +64,24 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 public void onPageScrolled(final int position, final float positionOffset,
                                            final int positionOffsetPixels)
                 {
-
+                    // do nothing
                 }
 
                 @Override
                 public void onPageSelected(final int position)
                 {
-                    if (mSelectedDay != null)
+                    final NewDateButton dateButton =
+                            mDatesPagerAdapter.getItemAt(position).getFirstEnabledDateButton();
+                    if (dateButton != null)
                     {
-                        final Calendar calendar = Calendar.getInstance();
-                        calendar.setTime(mSelectedDay);
-                        final NewDateButtonGroup oldGroup
-                                = mDatesPagerAdapter.getDateButtonGroupForDate(mSelectedDay);
-                        final int oldPosition = mDatesPagerAdapter.getItemPosition(oldGroup);
-                        final int offset = position - oldPosition;
-                        calendar.add(Calendar.WEEK_OF_YEAR, offset);
-                        mDatesPagerAdapter.getDateButtonForDate(calendar.getTime()).select();
+                        dateButton.select();
                     }
                 }
 
                 @Override
                 public void onPageScrollStateChanged(final int state)
                 {
-
+                    // do nothing
                 }
             };
 

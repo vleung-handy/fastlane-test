@@ -43,6 +43,7 @@ public class NewDateButton extends LinearLayout
     private final Date mDate;
     private final int mDayOfMonth;
     private boolean mIsSelected = false;
+    private boolean mIsEnabled;
     private SelectionChangedListener mSelectionChangedListener;
     private OnLayoutChangeListener mLayoutChangeListener = new OnLayoutChangeListener()
     {
@@ -92,10 +93,11 @@ public class NewDateButton extends LinearLayout
             mMonthText.setText(DateTimeUtils.getMonthShortName(mDate));
         }
         refreshState();
-        if (DateTimeUtils.daysBetween(new Date(), mDate) < 0)
+        if (DateTimeUtils.isDaysPast(mDate))
         {
+            mMonthText.setTextColor(mGray);
             mDayOfMonthText.setTextColor(mGray);
-            setClickable(false);
+            mIsEnabled = false;
         }
         else
         {
@@ -107,6 +109,7 @@ public class NewDateButton extends LinearLayout
                     setSelected(true);
                 }
             });
+            mIsEnabled = true;
         }
     }
 
@@ -147,7 +150,7 @@ public class NewDateButton extends LinearLayout
 
     public void setSelected(final boolean isSelected)
     {
-        if (isSelected() == isSelected)
+        if (isSelected() == isSelected || !isEnabled())
         {
             return;
         }
@@ -163,6 +166,11 @@ public class NewDateButton extends LinearLayout
     public boolean isSelected()
     {
         return mIsSelected;
+    }
+
+    public boolean isEnabled()
+    {
+        return mIsEnabled;
     }
 
     public void setSelectionChangedListener(final SelectionChangedListener selectionChangedListener)

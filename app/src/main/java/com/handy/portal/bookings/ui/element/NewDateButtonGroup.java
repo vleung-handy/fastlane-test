@@ -7,7 +7,7 @@ import android.widget.LinearLayout;
 import com.handy.portal.bookings.ui.adapter.DatesPagerAdapter;
 
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,7 +26,7 @@ public class NewDateButtonGroup extends LinearLayout
     {
         super(context);
         mDateSelectedListener = dateSelectedListener;
-        mDateButtons = new HashMap<>();
+        mDateButtons = new LinkedHashMap<>();
         init(dates);
     }
 
@@ -51,10 +51,22 @@ public class NewDateButtonGroup extends LinearLayout
 
     public void clearSelection()
     {
-        for (NewDateButton button : mDateButtons.values())
+        for (final NewDateButton button : mDateButtons.values())
         {
             button.setSelected(false);
         }
+    }
+
+    public NewDateButton getFirstEnabledDateButton()
+    {
+        for (final NewDateButton button : mDateButtons.values())
+        {
+            if (button.isEnabled())
+            {
+                return button;
+            }
+        }
+        return null;
     }
 
     @Override

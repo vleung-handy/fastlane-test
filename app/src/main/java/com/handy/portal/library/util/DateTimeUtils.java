@@ -399,6 +399,12 @@ public final class DateTimeUtils
         return daysBetween(today.getTime(), dayToCompare.getTime()) == 0;
     }
 
+    public static boolean isDaysPast(final Date date)
+    {
+        return DateTimeUtils.daysBetween(DateTimeUtils.getDateWithoutTime(new Date()),
+                DateTimeUtils.getDateWithoutTime(date)) < 0;
+    }
+
     // return a string in hh:mm:ss format
     public static String millisecondsToFormattedString(long millis)
     {
