@@ -38,8 +38,8 @@
 
         <ImageView
             android:id="@+id/schedule_indicator"
-            android:layout_width="6dp"
-            android:layout_height="6dp"
+            android:layout_width="@dimen/jobs_list_claim_indicator_size"
+            android:layout_height="@dimen/jobs_list_claim_indicator_size"
             android:src="@drawable/circle_handy_blue"
             android:visibility="invisible"
             tools:visibility="visible"

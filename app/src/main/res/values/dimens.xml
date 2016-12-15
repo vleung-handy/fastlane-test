@@ -101,6 +101,7 @@
     <dimen name="job_cell_icon_size_half">20dp</dimen>
     <dimen name="job_cell_dot_size">8dp</dimen>
     <dimen name="job_cell_left_strip_indicator_width">5dp</dimen>
+    <dimen name="jobs_list_claim_indicator_size">6dp</dimen>
 
     <!-- Dividers -->
     <dimen name="divider_height">1dp</dimen>
