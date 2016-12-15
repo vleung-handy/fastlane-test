@@ -33,11 +33,11 @@ public class LoginLog extends EventLog
     }
 
 
-    public static class login_submitted extends LoginLog
+    public static class LoginSubmitted extends LoginLog
     {
         private static final String EVENT_TYPE = "login_submitted";
 
-        public login_submitted(String type)
+        public LoginSubmitted(String type)
         {
             super(EVENT_TYPE, type);
         }

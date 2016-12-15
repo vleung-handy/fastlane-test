@@ -68,7 +68,7 @@ public class LoginSltFragment extends InjectedFragment
     {
         if (!mPhoneNumberEditText.validate()) { return; }
 
-        bus.post(new LogEvent.AddLogEvent(new LoginLog.login_submitted(LoginLog.TYPE_PHONE_TOKEN)));
+        bus.post(new LogEvent.AddLogEvent(new LoginLog.LoginSubmitted(LoginLog.TYPE_PHONE_TOKEN)));
         mLoginManager.requestSlt(mPhoneNumberEditText.getPhoneNumber(), new FragmentSafeCallback<SuccessWrapper>(this)
         {
             @Override
