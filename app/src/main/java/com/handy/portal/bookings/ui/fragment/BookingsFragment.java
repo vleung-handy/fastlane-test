@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -22,6 +23,7 @@ import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
+import com.handy.portal.bookings.ui.adapter.DatesPagerAdapter;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
 import com.handy.portal.constant.BundleKeys;
@@ -80,6 +82,14 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     @DrawableRes
     protected int mMessageIconRes = Integer.MIN_VALUE;
+    private Runnable mRefreshRunnable = new Runnable()
+    {
+        @Override
+        public void run()
+        {
+            setRefreshing(true);
+        }
+    };
 
     protected abstract int getFragmentResourceId();
 
@@ -142,6 +152,9 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     protected abstract Class<? extends BookingElementView> getBookingElementViewClass();
 
     protected abstract String getBookingSourceName();
+
+    @Nullable
+    protected abstract DatesPagerAdapter getDatesPagerAdapter();
 
     //Event listeners
     public abstract void onBookingsRetrieved(T event);
@@ -209,12 +222,13 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
             initDateButtons();
 
-            if (mSelectedDay == null || !mDateDateButtonViewMap.containsKey(mSelectedDay))
+            if (mSelectedDay == null || (mDateDateButtonViewMap != null
+                    && !mDateDateButtonViewMap.containsKey(mSelectedDay)))
             {
                 mSelectedDay = DateTimeUtils.getDateWithoutTime(new Date());
             }
 
-            if (mDateDateButtonViewMap.containsKey(mSelectedDay))
+            if (mDateDateButtonViewMap != null && mDateDateButtonViewMap.containsKey(mSelectedDay))
             {
                 mDateDateButtonViewMap.get(mSelectedDay).setChecked(true);
             }
@@ -231,14 +245,22 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     private void requestAllBookings()
     {
-        requestBookingsForSelectedDay(true, true);
+        // if we're using the dates pager, this will be triggered after calling
+        // NewDateButton.select() on the initial date
+        if (getDatesPagerAdapter() == null)
+        {
+            requestBookingsForSelectedDay(true, true);
+        }
 
         requestBookingsForOtherDays(mSelectedDay);
     }
 
-    private void requestBookingsForSelectedDay(boolean showOverlay, boolean useCachedIfPresent)
+    private void requestBookingsForSelectedDay(boolean refreshing, boolean useCachedIfPresent)
     {
-        requestBookings(Lists.newArrayList(mSelectedDay), showOverlay, useCachedIfPresent);
+        if (mSelectedDay != null)
+        {
+            requestBookings(Lists.newArrayList(mSelectedDay), refreshing, useCachedIfPresent);
+        }
     }
 
     private void requestBookingsForOtherDays(Date dayToExclude)
@@ -259,7 +281,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         requestBookings(dates, false, true);
     }
 
-    private void requestBookings(List<Date> dates, boolean showOverlay, boolean useCachedIfPresent)
+    private void requestBookings(List<Date> dates, boolean refreshing, boolean useCachedIfPresent)
     {
         Crashlytics.log("Requesting bookings for the following dates" + dates.toString());
         if (mFetchErrorView == null)
@@ -269,9 +291,12 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             return;
         }
         mFetchErrorView.setVisibility(View.GONE);
-        if (showOverlay)
+        if (refreshing)
         {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+            getBookingListView().setAdapter(null);
+            getNoBookingsSwipeRefreshLayout().setVisibility(View.GONE);
+            // this delay will prevent the refreshing icon to flicker when loading cached data
+            getBookingListView().postDelayed(mRefreshRunnable, 200);
         }
         requestBookings(dates, useCachedIfPresent);
     }
@@ -285,13 +310,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             return;
         }
 
-        mRefreshLayout.setRefreshing(false);
-        getNoBookingsSwipeRefreshLayout().setRefreshing(false);
-        if (event.day.equals(mSelectedDay))
-        {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        }
-
+        getBookingListView().removeCallbacks(mRefreshRunnable);
         List<Booking> bookings = event.bookingsWrapper.getBookings();
         Collections.sort(bookings);
 
@@ -317,19 +336,23 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             }
         }
 
+        if (getDatesPagerAdapter() != null && shouldShowClaimedIndicator(bookings))
+        {
+            getDatesPagerAdapter().showClaimIndicatorForDate(event.day);
+        }
+
         if (mSelectedDay != null && mSelectedDay.equals(event.day))
         {
+            setRefreshing(false);
             displayBookings(bookingsWrapper, mSelectedDay);
         }
     }
 
     protected void handleBookingsRetrievalError(HandyEvent.ReceiveBookingsError event, int errorStateStringId)
     {
-        mRefreshLayout.setRefreshing(false);
-        getNoBookingsSwipeRefreshLayout().setRefreshing(false);
         if (event.days.contains(mSelectedDay))
         {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            setRefreshing(false);
             if (event.error != null && event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
             {
                 mErrorText.setText(R.string.error_fetching_connectivity_issue);
@@ -342,7 +365,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         }
     }
 
-    private void initDateButtons()
+    protected void initDateButtons()
     {
         LinearLayout datesLayout = getDatesLayout();
         datesLayout.removeAllViews();
@@ -366,10 +389,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             {
                 public void onClick(View v)
                 {
-                    bus.post(new HandyEvent.DateClicked(getTrackingType(), day));
-                    selectDay(day);
-                    beforeRequestBookings();
-                    requestBookings(Lists.newArrayList(day), true, true);
+                    onDateClicked(day);
                 }
             });
 
@@ -377,14 +397,25 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         }
     }
 
+    protected void onDateClicked(final Date day)
+    {
+        bus.post(new HandyEvent.DateClicked(getTrackingType(), day));
+        selectDay(day);
+        beforeRequestBookings();
+        requestBookings(Lists.newArrayList(day), true, true);
+    }
+
     private void selectDay(Date day)
     {
-        DateButtonView selectedDateButtonView = mDateDateButtonViewMap.get(mSelectedDay);
-        if (selectedDateButtonView != null)
+        if (mDateDateButtonViewMap != null)
         {
-            selectedDateButtonView.setChecked(false);
+            DateButtonView selectedDateButtonView = mDateDateButtonViewMap.get(mSelectedDay);
+            if (selectedDateButtonView != null)
+            {
+                selectedDateButtonView.setChecked(false);
+            }
+            mDateDateButtonViewMap.get(day).setChecked(true);
         }
-        mDateDateButtonViewMap.get(day).setChecked(true);
         mSelectedDay = day;
     }
 
@@ -437,5 +468,11 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         arguments.putSerializable(BundleKeys.PAGE, getAppPage());
         bus.post(new NavigationEvent.NavigateToPage(MainViewPage.JOB_DETAILS, arguments,
                 TransitionStyle.JOB_LIST_TO_DETAILS, true));
+    }
+
+    private void setRefreshing(final boolean refreshing)
+    {
+        mRefreshLayout.setRefreshing(refreshing);
+        getNoBookingsSwipeRefreshLayout().setRefreshing(refreshing);
     }
 }

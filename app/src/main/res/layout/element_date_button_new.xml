@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <TextView
+        android:id="@+id/month_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:textAppearance="@style/TextView.Small"
+        android:visibility="invisible"
+        tools:text="Dec"
+        tools:visibility="visible"
+        />
+
+    <LinearLayout
+        android:id="@+id/day_of_month_holder"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin_small"
+        android:layout_marginTop="-8dp"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/default_padding_quarter"
+        android:paddingTop="@dimen/default_padding_half"
+        >
+
+        <TextView
+            android:id="@+id/day_of_month_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="@style/TextView.XLarge"
+            android:textColor="@color/black"
+            tools:text="1"
+            />
+
+        <ImageView
+            android:id="@+id/schedule_indicator"
+            android:layout_width="@dimen/jobs_list_claim_indicator_size"
+            android:layout_height="@dimen/jobs_list_claim_indicator_size"
+            android:src="@drawable/circle_handy_blue"
+            android:visibility="invisible"
+            tools:visibility="visible"
+            />
+    </LinearLayout>
+</merge>

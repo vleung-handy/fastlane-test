@@ -33,6 +33,34 @@
 
             </HorizontalScrollView>
 
+            <LinearLayout
+                android:id="@+id/dates_view_pager_holder"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                >
+
+                <include layout="@layout/layout_week_initials"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/border_gray"
+                    />
+
+                <com.handy.portal.library.ui.view.DynamicHeightViewPager
+                    android:id="@+id/dates_view_pager"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="@color/border_gray"
+                    />
+            </LinearLayout>
+
             <include layout="@layout/layout_fetch_error"/>
 
             <include layout="@layout/layout_scheduled_bookings_empty"/>
