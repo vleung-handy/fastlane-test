@@ -57,6 +57,7 @@ import com.handy.portal.manager.AppseeManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.Address;
 import com.handy.portal.payments.model.PaymentInfo;
+import com.handy.portal.ui.element.bookings.BookingMapProvider;
 import com.handy.portal.ui.fragment.TimerActionBarFragment;
 import com.handy.portal.ui.view.FlowLayout;
 
@@ -139,7 +140,7 @@ public class BookingFragment extends TimerActionBarFragment
     Button mActionButton;
 
 
-    private static BookingMapView sBookingMapView;
+    private BookingMapView mBookingMapView;
 
     private static final String BOOKING_PROXY_ID_PREFIX = "P";
 
@@ -168,6 +169,7 @@ public class BookingFragment extends TimerActionBarFragment
     {
         super.onAttach(context);
         mOnSupportClickListener = (View.OnClickListener) getParentFragment();
+        mBookingMapView = ((BookingMapProvider) context).getBookingMap();
     }
 
     @Override
@@ -179,12 +181,6 @@ public class BookingFragment extends TimerActionBarFragment
         mSourceExtras = getArguments();
 
         mHideActionButtons = getArguments().getBoolean(BundleKeys.BOOKING_SHOULD_HIDE_ACTION_BUTTONS);
-
-        if (sBookingMapView == null)
-        {
-            sBookingMapView = new BookingMapView(getActivity());
-            sBookingMapView.onCreate(null);
-        }
     }
 
     @Override
@@ -242,16 +238,16 @@ public class BookingFragment extends TimerActionBarFragment
         super.onResume();
         bus.register(this);
 
-        if (sBookingMapView.getParent() != null)
+        if (mBookingMapView.getParent() != null)
         {
-            ((ViewGroup) sBookingMapView.getParent()).removeView(sBookingMapView);
-            sBookingMapView.clear();
+            ((ViewGroup) mBookingMapView.getParent()).removeView(mBookingMapView);
+            mBookingMapView.clear();
         }
         initMapLayout();
-        mBookingMapLayout.addView(sBookingMapView);
-        sBookingMapView.onStart();
-        sBookingMapView.onResume();
-        sBookingMapView.disableParentScrolling(mScrollView);
+        mBookingMapLayout.addView(mBookingMapView);
+        mBookingMapView.onStart();
+        mBookingMapView.onResume();
+        mBookingMapView.disableParentScrolling(mScrollView);
 
         setDisplay();
     }
@@ -260,9 +256,9 @@ public class BookingFragment extends TimerActionBarFragment
     public void onPause()
     {
         bus.unregister(this);
-        sBookingMapView.onPause();
-        sBookingMapView.onStop();
-        sBookingMapView.clear();
+        mBookingMapView.onPause();
+        mBookingMapView.onStop();
+        mBookingMapView.clear();
         mBookingMapLayout.removeAllViews();
         super.onPause();
     }
@@ -480,7 +476,7 @@ public class BookingFragment extends TimerActionBarFragment
     public void onReceiveZipClusterPolygonsSuccess(final BookingEvent.ReceiveZipClusterPolygonsSuccess event)
     {
         Booking.BookingStatus bookingStatus = mBooking.inferBookingStatus(getLoggedInUserId());
-        sBookingMapView.setDisplay(mBooking, bookingStatus, event.zipClusterPolygons,
+        mBookingMapView.setDisplay(mBooking, bookingStatus, event.zipClusterPolygons,
                 mLocationManager.getLastLocation());
     }
 
@@ -567,7 +563,7 @@ public class BookingFragment extends TimerActionBarFragment
             }
             else
             {
-                sBookingMapView.setDisplay(
+                mBookingMapView.setDisplay(
                         mBooking, bookingStatus, null, mLocationManager.getLastLocation());
             }
         }

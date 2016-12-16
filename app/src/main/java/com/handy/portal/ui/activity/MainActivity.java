@@ -6,6 +6,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.handy.portal.R;
+import com.handy.portal.bookings.ui.element.BookingMapView;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.util.FragmentUtils;
@@ -16,18 +17,21 @@ import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragme
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.ui.fragment.PaymentBillBlockerDialogFragment;
 import com.handy.portal.payments.ui.fragment.PaymentBlockingFragment;
+import com.handy.portal.ui.element.bookings.BookingMapProvider;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
 //TODO: should move some of this logic out of here
-public class MainActivity extends BaseActivity
+public class MainActivity extends BaseActivity implements BookingMapProvider
 {
     @Inject
     ProviderManager providerManager;
     @Inject
     ConfigManager mConfigManager;
+
+    private BookingMapView mBookingMapView;
 
     private NotificationBlockerDialogFragment mNotificationBlockerDialogFragment
             = new NotificationBlockerDialogFragment();
@@ -64,6 +68,17 @@ public class MainActivity extends BaseActivity
     {
         bus.unregister(this);
         super.onPause();
+    }
+
+    @Override
+    public BookingMapView getBookingMap()
+    {
+        if (mBookingMapView == null)
+        {
+            mBookingMapView = new BookingMapView(this);
+            mBookingMapView.onCreate(null);
+        }
+        return mBookingMapView;
     }
 
     private void checkIfUserShouldUpdatePaymentInfo()
