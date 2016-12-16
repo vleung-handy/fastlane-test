@@ -249,10 +249,12 @@ public class LoginActivityFragment extends InjectedFragment
         {
             if (event.pinRequestDetails.getSuccess())
             {
+                bus.post(new LogEvent.AddLogEvent(new LoginLog.Success(LoginLog.TYPE_PHONE)));
                 changeState(LoginState.INPUTTING_PIN);
             }
             else
             {
+                bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(LoginLog.TYPE_PHONE)));
                 postLoginErrorEvent("phone number");
                 showToast(R.string.login_error_bad_phone);
                 changeState(LoginState.INPUTTING_PHONE_NUMBER);
@@ -264,9 +266,9 @@ public class LoginActivityFragment extends InjectedFragment
     @Subscribe
     public void onPinCodeRequestError(HandyEvent.ReceivePinCodeError event)
     {
-        bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(LoginLog.TYPE_PIN)));
         if (currentLoginState == LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE)
         {
+            bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(LoginLog.TYPE_PHONE)));
             postLoginErrorEvent("server");
             if (event.error != null && !TextUtils.isNullOrEmpty(event.error.getMessage()))
             {
@@ -316,9 +318,9 @@ public class LoginActivityFragment extends InjectedFragment
     @Subscribe
     public void onLoginRequestError(HandyEvent.ReceiveLoginError event)
     {
-        bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(LoginLog.TYPE_PIN)));
         if (currentLoginState == LoginState.WAITING_FOR_LOGIN_RESPONSE)
         {
+            bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(LoginLog.TYPE_PIN)));
             DataManager.DataManagerError.Type errorType = event.error == null ? null : event.error.getType();
             if (errorType != null)
             {
