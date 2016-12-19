@@ -2,15 +2,4 @@
 <resources>
     <attr name="fontPath"
           format="string"/>
-
-    <declare-styleable name="BasicInputTextView">
-        <attr name="minLength"
-              format="integer"/>
-    </declare-styleable>
-    <declare-styleable name="BulletListItem">
-        <attr name="iconDrawable"
-              format="reference"/>
-        <attr name="text"
-              format="string"/>
-    </declare-styleable>
 </resources>
