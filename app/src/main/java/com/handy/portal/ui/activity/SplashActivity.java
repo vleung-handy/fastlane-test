@@ -199,6 +199,7 @@ public class SplashActivity extends BaseActivity
     {
         mBus.post(new LogEvent.AddLogEvent(new LoginLog.Success(LoginLog.TYPE_TOKEN)));
         mAuthToken = mPrefsManager.getSecureString(PrefsKey.AUTH_TOKEN, null);
+        initLayerHelper();
         triggerSetup();
     }
 
