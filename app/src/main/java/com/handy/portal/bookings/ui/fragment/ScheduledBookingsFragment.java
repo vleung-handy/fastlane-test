@@ -210,38 +210,25 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     {
         super.afterDisplayBookings(bookingsForDay, dateOfBookings);
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.DateClicked(dateOfBookings, bookingsForDay.size())));
-        bus.post(new HandyEvent.RequestProviderInfo());
 
         //Show "Find Jobs" buttons only if we're inside of our available bookings length range and we have no jobs
 
-        int hoursSpanningAvailableBookings = DateTimeUtils.HOURS_IN_SIX_DAYS;
+        int numDaysForAvailableJobs = AvailableBookingsFragment.DEFAULT_NUM_DAYS_FOR_AVAILABLE_JOBS;
         if (configManager.getConfigurationResponse() != null)
         {
-            hoursSpanningAvailableBookings =
-                    configManager.getConfigurationResponse().getHoursSpanningAvailableBookings();
+            numDaysForAvailableJobs =
+                    configManager.getConfigurationResponse().getNumberOfDaysForAvailableJobs();
         }
 
         if (bookingsForDay.size() == 0 &&
-                DateTimeUtils.isDateWithinXHoursFromNow(dateOfBookings, hoursSpanningAvailableBookings))
+                DateTimeUtils.daysBetween(DateTimeUtils.getDateWithoutTime(new Date()),
+                        dateOfBookings) < numDaysForAvailableJobs)
         {
             mFindJobsForDayButton.setVisibility(View.VISIBLE);
         }
         else
         {
             mFindJobsForDayButton.setVisibility(View.GONE);
-        }
-    }
-
-    @Subscribe
-    public void onReceiveProviderInfoSuccess(HandyEvent.ReceiveProviderInfoSuccess event)
-    {
-        if (mBookingsForSelectedDay == null || mSelectedDay == null) { return; }
-
-        //show Find Matching Jobs buttons only if we're inside of our available bookings length range
-        int hoursSpanningAvailableBookings = DateTimeUtils.HOURS_IN_SIX_DAYS;
-        if (configManager.getConfigurationResponse() != null)
-        {
-            hoursSpanningAvailableBookings = configManager.getConfigurationResponse().getHoursSpanningAvailableBookings();
         }
     }
 

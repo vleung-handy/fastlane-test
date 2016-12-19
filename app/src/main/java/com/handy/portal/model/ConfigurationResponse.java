@@ -7,9 +7,6 @@ import java.util.ArrayList;
 
 public class ConfigurationResponse
 {
-    @SerializedName("hours_to_start_sending_messages")
-    private int mHoursSpanningAvailableBookings; //we use this value for amount of time forward to display available bookings
-
     @SerializedName("block_cleaner")
     private boolean mIsBlockCleaner;
 
@@ -120,11 +117,6 @@ public class ConfigurationResponse
     public boolean isCheckoutRatingFlowEnabled()
     {
         return mCheckoutRatingFlowEnabled;
-    }
-
-    public int getHoursSpanningAvailableBookings()
-    {
-        return mHoursSpanningAvailableBookings;
     }
 
     public boolean shouldBlockClaimsIfMissingAccountInformation()
