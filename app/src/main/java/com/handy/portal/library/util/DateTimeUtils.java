@@ -59,7 +59,6 @@ public final class DateTimeUtils
             new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
 
     public final static int HOURS_IN_DAY = 24;
-    public final static int HOURS_IN_SIX_DAYS = HOURS_IN_DAY * 6;
     public final static String UTC_TIMEZONE = "UTC";
     public static final int MINUTES_IN_AN_HOUR = 60;
     public static final int DAYS_IN_A_WEEK = 7;
@@ -109,14 +108,6 @@ public final class DateTimeUtils
             dates.add(day);
         }
         return dates;
-    }
-
-    public static boolean isDateWithinXHoursFromNow(Date date, int hours)
-    {
-        long currentTime = DateTimeUtils.getDateWithoutTime(new Date()).getTime();
-        long dateOfBookingsTime = date.getTime();
-        long dateDifference = dateOfBookingsTime - currentTime;
-        return dateDifference <= DateUtils.HOUR_IN_MILLIS * hours;
     }
 
     public static boolean isTimeWithinXMillisecondsFromNow(Date date, long milliSec)

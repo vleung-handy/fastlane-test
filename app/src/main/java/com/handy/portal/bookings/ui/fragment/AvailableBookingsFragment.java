@@ -54,7 +54,7 @@ import static com.handy.portal.bookings.manager.BookingModalsManager.BookingsFor
 
 public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.ReceiveAvailableBookingsSuccess>
 {
-    private final static int DEFAULT_NUM_DAYS_SPANNING_AVAILABLE_BOOKINGS = 7; //includes Today
+    public final static int DEFAULT_NUM_DAYS_FOR_AVAILABLE_JOBS = DateTimeUtils.DAYS_IN_A_WEEK; //includes Today
     private static final String SOURCE_AVAILABLE_JOBS_LIST = "available_jobs_list";
 
     @BindView(R.id.available_jobs_list_view)
@@ -193,7 +193,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected int numberOfDaysToDisplay()
     {
-        int daysSpanningAvailableBookings = DEFAULT_NUM_DAYS_SPANNING_AVAILABLE_BOOKINGS;
+        int daysSpanningAvailableBookings = DEFAULT_NUM_DAYS_FOR_AVAILABLE_JOBS;
         if (configManager.getConfigurationResponse() != null)
         {
             daysSpanningAvailableBookings = configManager.getConfigurationResponse()
