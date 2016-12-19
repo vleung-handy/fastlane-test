@@ -10,6 +10,7 @@ import android.webkit.WebResourceRequest;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.handy.portal.core.BaseApplication;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
@@ -37,6 +38,7 @@ public class PortalWebViewClient extends WebViewClient
         this.webView = webView;
         this.bus = bus;
         this.mDeviceId = deviceId;
+        ((BaseApplication) parentFragment.getActivity().getApplication()).inject(this);
     }
 
     @Override

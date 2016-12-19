@@ -138,6 +138,15 @@ android {
     dexOptions {
         javaMaxHeapSize "4g"
     }
+
+    sourceSets {
+        main {
+            res.srcDirs = [
+                    'src/main/library-res',
+                    'src/main/res'
+            ]
+        }
+    }
 }
 
 tasks.withType(Test) {

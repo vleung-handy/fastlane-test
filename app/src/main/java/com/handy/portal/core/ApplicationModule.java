@@ -84,6 +84,7 @@ import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateActivity;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
+import com.handy.portal.webview.PortalWebViewClient;
 import com.handy.portal.webview.PortalWebViewFragment;
 import com.squareup.okhttp.CertificatePinner;
 import com.squareup.okhttp.OkHttpClient;
@@ -148,6 +149,7 @@ import retrofit.converter.GsonConverter;
         FirstDayActivity.class,
         LoginSltFragment.class,
         LayerPushReceiver.class,
+        PortalWebViewClient.class,
 },
         includes = {
                 HelpModule.class,
