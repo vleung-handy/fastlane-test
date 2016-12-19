@@ -507,9 +507,11 @@ public class MainActivityFragment extends InjectedFragment
                 new TabOnClickListener(mJobsButton, MainViewPage.AVAILABLE_JOBS));
         mScheduleButton.setOnClickListener(
                 new TabOnClickListener(mScheduleButton, MainViewPage.SCHEDULED_JOBS));
+        mClientsButton.setOnClickListener(
+                new TabOnClickListener(mClientsButton, MainViewPage.CLIENTS));
+        mAlertsButton.setOnClickListener(
+                new TabOnClickListener(mAlertsButton, MainViewPage.NOTIFICATIONS));
         mButtonMore.setOnClickListener(new MoreButtonOnClickListener());
-
-        initOptionalTabs();
     }
 
     private void registerNavDrawerListeners()
@@ -720,38 +722,6 @@ public class MainActivityFragment extends InjectedFragment
         bus.post(new HandyEvent.UserLoggedOut());
         startActivity(new Intent(getActivity(), LoginActivity.class));
         getActivity().finish();
-    }
-
-    private void initOptionalTabs()
-    {
-        if (mConfigManager == null || mConfigManager.getConfigurationResponse() == null)
-        {
-            mAlertsButton.setVisibility(View.GONE);
-            mClientsButton.setVisibility(View.GONE);
-            return;
-        }
-
-        if (mConfigManager.getConfigurationResponse().shouldShowNotificationMenuButton())
-        {
-            mAlertsButton.setOnClickListener(
-                    new TabOnClickListener(mAlertsButton, MainViewPage.NOTIFICATIONS));
-            mAlertsButton.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            mAlertsButton.setVisibility(View.GONE);
-        }
-
-        if (mConfigManager.getConfigurationResponse().isPendingRequestsInboxEnabled())
-        {
-            mClientsButton.setOnClickListener(
-                    new TabOnClickListener(mClientsButton, MainViewPage.CLIENTS));
-            mClientsButton.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            mClientsButton.setVisibility(View.GONE);
-        }
     }
 
     @Override
