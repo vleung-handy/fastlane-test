@@ -134,11 +134,6 @@ public class DataManager
                 regionId, latitude, longitude, new BookingsWrapperRetroFitCallback(cb));
     }
 
-    public void getComplementaryBookings(String bookingId, BookingType type, Callback<BookingsWrapper> cb)
-    {
-        mService.getComplementaryBookings(bookingId, type.toString().toLowerCase(), new BookingsWrapperRetroFitCallback(cb));
-    }
-
     public void claimBooking(String bookingId, BookingType type, String claimSwitchJobId, BookingType claimSwitchJobType, final Callback<BookingClaimDetails> cb)
     {
         mService.claimBooking(

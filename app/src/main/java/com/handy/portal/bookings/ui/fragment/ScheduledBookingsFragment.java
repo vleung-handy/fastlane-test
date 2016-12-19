@@ -50,8 +50,6 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     SwipeRefreshLayout mNoScheduledBookingsLayout;
     @BindView(R.id.find_jobs_for_day_button)
     Button mFindJobsForDayButton;
-    @BindView(R.id.find_matching_jobs_button_container)
-    ViewGroup mFindMatchingJobsButtonContainer;
     @BindView(R.id.dates_view_pager_holder)
     ViewGroup mDatesViewPagerHolder;
     @BindView(R.id.dates_view_pager)
@@ -185,12 +183,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Override
     protected void beforeRequestBookings()
     {
-        //Crash #476, some timing issue where butterknife hasn't injected yet
-        //Ugly hack fix in lieu of restructuring code to track down root issue
-        if (mFindMatchingJobsButtonContainer != null)
-        {
-            mFindMatchingJobsButtonContainer.setVisibility(View.GONE);
-        }
+        // do nothing
     }
 
     @Override
@@ -250,14 +243,6 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         {
             hoursSpanningAvailableBookings = configManager.getConfigurationResponse().getHoursSpanningAvailableBookings();
         }
-
-        if (event.provider.isComplementaryJobsEnabled()
-                && DateTimeUtils.isDateWithinXHoursFromNow(mSelectedDay, hoursSpanningAvailableBookings)
-                && mBookingsForSelectedDay.size() == 1
-                && !mBookingsForSelectedDay.get(0).isProxy()) // currently disable "Find Matching Jobs" for proxies
-        {
-            mFindMatchingJobsButtonContainer.setVisibility(View.VISIBLE);
-        }
     }
 
     @OnClick(R.id.find_jobs_for_day_button)
@@ -271,18 +256,6 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
         //Return to available jobs on that day
         bus.post(new NavigationEvent.NavigateToPage(MainViewPage.AVAILABLE_JOBS, arguments, transitionStyle));
-    }
-
-    @OnClick(R.id.find_matching_jobs_button)
-    public void onFindMatchingJobsButtonClicked()
-    {
-        Booking booking = mBookingsForSelectedDay.get(0);
-        Bundle arguments = new Bundle();
-        arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
-        arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
-        arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
-
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.COMPLEMENTARY_JOBS, arguments, TransitionStyle.SLIDE_UP, true));
     }
 
     @Override

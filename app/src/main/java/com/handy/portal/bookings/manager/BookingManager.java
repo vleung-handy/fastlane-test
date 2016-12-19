@@ -46,7 +46,6 @@ public class BookingManager
 
     private final Cache<Date, BookingsWrapper> availableBookingsCache;
     private final Cache<Date, BookingsWrapper> scheduledBookingsCache;
-    private final Cache<Date, BookingsWrapper> complementaryBookingsCache;
     private final Cache<Date, BookingsWrapper> requestedBookingsCache;
     private Integer mLastUnreadRequestsCount = null;
 
@@ -75,11 +74,6 @@ public class BookingManager
                 .expireAfterWrite(2, TimeUnit.MINUTES)
                 .build();
 
-        this.complementaryBookingsCache = CacheBuilder.newBuilder()
-                .maximumSize(100)
-                .expireAfterWrite(2, TimeUnit.MINUTES)
-                .build();
-
         this.requestedBookingsCache = CacheBuilder.newBuilder()
                 .maximumSize(100)
                 .expireAfterWrite(5, TimeUnit.MINUTES)
@@ -90,7 +84,6 @@ public class BookingManager
     {
         availableBookingsCache.invalidateAll();
         scheduledBookingsCache.invalidateAll();
-        complementaryBookingsCache.invalidateAll();
         requestedBookingsCache.invalidateAll();
     }
 
@@ -371,35 +364,6 @@ public class BookingManager
         }
     }
 
-    public void requestComplementaryBookings(final String bookingId, final BookingType type, @NonNull final Date date)
-    {
-        final Date day = DateTimeUtils.getDateWithoutTime(date);
-        final BookingsWrapper cachedComplementaryBookings = complementaryBookingsCache.getIfPresent(day);
-        if (cachedComplementaryBookings != null)
-        {
-            mBus.post(new HandyEvent.ReceiveComplementaryBookingsSuccess(cachedComplementaryBookings.getBookings()));
-        }
-        else
-        {
-            mDataManager.getComplementaryBookings(bookingId, type, new DataManager.Callback<BookingsWrapper>()
-            {
-                @Override
-                public void onSuccess(BookingsWrapper bookingsWrapper)
-                {
-                    List<Booking> bookings = bookingsWrapper.getBookings();
-                    complementaryBookingsCache.put(day, bookingsWrapper);
-                    mBus.post(new HandyEvent.ReceiveComplementaryBookingsSuccess(bookings));
-                }
-
-                @Override
-                public void onError(DataManager.DataManagerError error)
-                {
-                    mBus.post(new HandyEvent.ReceiveComplementaryBookingsError(error));
-                }
-            });
-        }
-    }
-
     public void requestClaimJob(@NonNull final Booking booking, @Nullable final String source)
     {
         String bookingId = booking.getId();
@@ -668,7 +632,6 @@ public class BookingManager
     {
         availableBookingsCache.invalidateAll();
         scheduledBookingsCache.invalidateAll();
-        complementaryBookingsCache.invalidateAll();
         requestedBookingsCache.invalidateAll();
         // We want to get requested jobs count again because forcing cache invalidation implies
         // claiming or removing a job which will affect requested jobs count.
@@ -679,7 +642,6 @@ public class BookingManager
     {
         availableBookingsCache.invalidate(day);
         scheduledBookingsCache.invalidate(day);
-        complementaryBookingsCache.invalidate(day);
         requestedBookingsCache.invalidate(day);
     }
 

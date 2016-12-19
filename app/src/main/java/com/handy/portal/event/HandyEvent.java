@@ -764,26 +764,6 @@ public abstract class HandyEvent
     }
 
 
-    public static class ReceiveComplementaryBookingsSuccess
-    {
-        public final List<Booking> bookings;
-
-        public ReceiveComplementaryBookingsSuccess(List<Booking> bookings)
-        {
-            this.bookings = bookings;
-        }
-    }
-
-
-    public static class ReceiveComplementaryBookingsError extends ReceiveErrorEvent
-    {
-        public ReceiveComplementaryBookingsError(DataManager.DataManagerError error)
-        {
-            this.error = error;
-        }
-    }
-
-
     public static class RequestOnboardingSupplies extends RequestEvent
     {
         private final boolean mOptIn;
