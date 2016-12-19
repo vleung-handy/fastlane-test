@@ -10,9 +10,6 @@ public class ConfigurationResponse
     @SerializedName("hours_to_start_sending_messages")
     private int mHoursSpanningAvailableBookings; //we use this value for amount of time forward to display available bookings
 
-    @SerializedName("complementary_jobs_enabled")
-    private boolean mComplementaryJobsEnabled;
-
     @SerializedName("block_cleaner")
     private boolean mIsBlockCleaner;
 
@@ -113,11 +110,6 @@ public class ConfigurationResponse
     public boolean isBoxedSuppliesEnabled()
     {
         return mBoxedSuppliesEnabled;
-    }
-
-    public boolean isComplementaryJobsEnabled()
-    {
-        return mComplementaryJobsEnabled;
     }
 
     public boolean isBlockCleaner()

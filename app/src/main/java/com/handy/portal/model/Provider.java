@@ -17,8 +17,6 @@ public class Provider
     private String lastName;
     @SerializedName("country")
     private String country;
-    @SerializedName("complementary_jobs_enabled")
-    private boolean complementaryJobsEnabled;
     @SerializedName("block_cleaner")
     private boolean isBlockCleaner;
     //TODO: reorganize
@@ -90,11 +88,6 @@ public class Provider
     public boolean isUS()
     {
         return Country.US.equalsIgnoreCase(getCountry());
-    }
-
-    public boolean isComplementaryJobsEnabled()
-    {
-        return complementaryJobsEnabled;
     }
 
     public String getPaymentCurrencyCode()

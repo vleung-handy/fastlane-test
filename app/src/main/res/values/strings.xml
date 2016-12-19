@@ -227,15 +227,6 @@
     <string name="customer_no_show_cancelled">Customer no show report cancelled</string>
     <string name="unable_to_cancel_no_show">Unable to cancel customer no show report. Please try again.</string>
     <string name="remove_customer_no_show_question">Remove customer no show report?</string>
-
-    <string name="find_jobs_close_to_your_claimed_job">Find jobs close to your claimed job</string>
-    <string name="find_matching_jobs">Find Matching Jobs</string>
-    <string name="matching_jobs">Matching Jobs</string>
-    <string name="no_matching_jobs">No Matching Jobs</string>
-    <string name="n_matching_jobs">%1$d Matching Jobs</string>
-    <string name="one_matching_job">1 Matching Job</string>
-    <string name="no_matching_jobs_message">No matching jobs found. You\u2019ll be notified if there are any new matches.</string>
-    <string name="go_to_all_jobs">Go to All Jobs</string>
     <string name="booking_time">%1$s \u2013 %2$s</string>
 
     <!-- Payments -->

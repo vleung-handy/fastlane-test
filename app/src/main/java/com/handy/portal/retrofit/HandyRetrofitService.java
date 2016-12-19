@@ -111,11 +111,6 @@ public interface HandyRetrofitService
                            @Query("type") String type,
                            HandyRetrofitCallback cb);
 
-    @GET(JOBS_PATH + "{id}/complementary_jobs")
-    void getComplementaryBookings(@Path("id") String bookingId,
-                                  @Query("type") String type,
-                                  HandyRetrofitCallback cb);
-
     @FormUrlEncoded
     @POST(JOBS_PATH + "{id}/dismiss")
     void dismissJob(@Path("id") String bookingId,
