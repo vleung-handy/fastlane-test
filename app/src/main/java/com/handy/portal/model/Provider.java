@@ -15,13 +15,6 @@ public class Provider
     private String lastName;
     @SerializedName("country")
     private String country;
-    @SerializedName("block_cleaner")
-    private boolean isBlockCleaner;
-
-    public boolean isBlockCleaner()
-    {
-        return isBlockCleaner;
-    }
 
     public String getId()
     {
