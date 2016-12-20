@@ -49,8 +49,6 @@ public class TestDataManager extends DataManager
     public void getConfiguration(final Callback<ConfigurationResponse> cb)
     {
         ConfigurationResponse configurationResponse = spy(new ConfigurationResponse());
-        when(configurationResponse.shouldShowNotificationMenuButton()).thenReturn(true);
-        when(configurationResponse.isPendingRequestsInboxEnabled()).thenReturn(true);
         cb.onSuccess(configurationResponse);
     }
 
