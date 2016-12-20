@@ -18,6 +18,7 @@ import android.widget.Toast;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.constant.Country;
 import com.handy.portal.constant.FormDefinitionKey;
 import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.event.HandyEvent;
@@ -33,7 +34,6 @@ import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.definitions.FieldDefinition;
@@ -137,10 +137,11 @@ public class ProfileUpdateFragment extends ActionBarFragment
         bus.register(this);
         setBackButtonEnabled(true);
 
-        if (mProviderManager.getCachedActiveProvider() != null)
+        final ProviderProfile providerProfile = mProviderManager.getCachedProviderProfile();
+        if (providerProfile != null && providerProfile.getProviderPersonalInfo() != null)
         {
-            bus.post(new RegionDefinitionEvent.RequestFormDefinitions(
-                    mProviderManager.getCachedActiveProvider().getCountry(), this.getContext()));
+            String country = providerProfile.getProviderPersonalInfo().getAddress().getCountry();
+            bus.post(new RegionDefinitionEvent.RequestFormDefinitions(country, this.getContext()));
         }
 
         if (mEditingProImage)
@@ -220,11 +221,10 @@ public class ProfileUpdateFragment extends ActionBarFragment
 
     public void initialize()
     {
-        Provider provider = mProviderManager.getCachedActiveProvider();
         ProviderProfile profile = mProviderManager.getCachedProviderProfile();
-        if (provider == null || profile == null || profile.getProviderPersonalInfo() == null)
+        if (profile == null || profile.getProviderPersonalInfo() == null)
         {
-            Crashlytics.logException(new NullPointerException("Provider or ProviderProfile is null."));
+            Crashlytics.logException(new NullPointerException("ProviderProfile is null."));
             return;
         }
 
@@ -236,16 +236,20 @@ public class ProfileUpdateFragment extends ActionBarFragment
         mStateText.setText(info.getAddress().getState());
         mZipCodeText.setText(info.getAddress().getZip());
         mEmailText.setText(info.getEmail());
-        if (provider.isUK())
+        if (info.isUK())
         {
             mStateText.setVisibility(View.GONE);
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
         {
             String phone = info.getLocalPhone() != null ? info.getLocalPhone() : "";
-            String country = provider.getCountry() != null ? provider.getCountry() : "US";
+            String country = info.getAddress().getCountry();
+            if (TextUtils.isNullOrEmpty(country))
+            {
+                country = Country.US.toUpperCase();
+            }
             mPhoneText.setText(PhoneNumberUtils.formatNumber(phone, country));
-            mPhoneText.addTextChangedListener(new PhoneNumberFormattingTextWatcher(provider.getCountry()));
+            mPhoneText.addTextChangedListener(new PhoneNumberFormattingTextWatcher(country));
         }
         else
         {

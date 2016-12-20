@@ -33,7 +33,6 @@ import com.handy.portal.manager.AppseeManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
-import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.ui.activity.LoginActivity;
@@ -116,9 +115,9 @@ public class AccountSettingsFragment extends ActionBarFragment
     {
         super.onResume();
         bus.register(this);
-
         setActionBar(getString(R.string.account_settings), false);
-        populateInfo();
+        mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        requestProviderProfile();
     }
 
     @Override
@@ -235,10 +234,10 @@ public class AccountSettingsFragment extends ActionBarFragment
     public void onReceiveProviderProfileSuccess(ProfileEvent.ReceiveProviderProfileSuccess event)
     {
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        mProviderProfile = event.providerProfile;
+        populateInfo();
         mAccountSettingsLayout.setVisibility(View.VISIBLE);
         mFetchErrorView.setVisibility(View.GONE);
-
-        mProviderProfile = event.providerProfile;
     }
 
     @Subscribe
@@ -285,19 +284,10 @@ public class AccountSettingsFragment extends ActionBarFragment
     private void populateInfo()
     {
         mBus.post(new PaymentEvent.RequestPaymentFlow());
-
-        Provider provider = mProviderManager.getCachedActiveProvider();
-        if (provider != null)
+        if (mProviderProfile.getProviderPersonalInfo() != null)
         {
-            mProviderNameText.setText(provider.getFullName());
+            mProviderNameText.setText(mProviderProfile.getProviderPersonalInfo().getFullName());
         }
-
-        mProviderProfile = mProviderManager.getCachedProviderProfile();
-        if (mProviderProfile == null)
-        {
-            requestProviderProfile();
-        }
-
         if (mConfigManager.getConfigurationResponse() != null &&
                 mConfigManager.getConfigurationResponse().isBoxedSuppliesEnabled())
         { mOrderResupplyLayout.setVisibility(View.VISIBLE); }

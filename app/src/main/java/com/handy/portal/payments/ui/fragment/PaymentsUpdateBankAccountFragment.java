@@ -16,7 +16,6 @@ import com.handy.portal.event.StripeEvent;
 import com.handy.portal.library.ui.view.FormFieldTableRow;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.manager.ProviderManager;
-import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.definitions.FieldDefinition;
@@ -95,12 +94,14 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
 
         bus.register(this);
 
-        Provider provider = providerManager.getCachedActiveProvider();
-
-        if(provider != null)
+        final ProviderProfile providerProfile = providerManager.getCachedProviderProfile();
+        if (providerProfile != null && providerProfile.getProviderPersonalInfo() != null)
         {
-            bus.post(new RegionDefinitionEvent.RequestFormDefinitions(provider.getCountry(), this.getContext()));
-            if (!provider.isUS())
+            final ProviderPersonalInfo providerPersonalInfo =
+                    providerProfile.getProviderPersonalInfo();
+            bus.post(new RegionDefinitionEvent.RequestFormDefinitions(
+                    providerPersonalInfo.getAddress().getCountry(), this.getContext()));
+            if (!providerPersonalInfo.isUS())
             {
                 bankAccountSetupHelper.setVisibility(View.GONE);
             }

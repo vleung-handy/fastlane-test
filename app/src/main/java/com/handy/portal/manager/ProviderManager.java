@@ -86,6 +86,7 @@ public class ProviderManager
     public void setProviderId(final String providerId)
     {
         mPrefsManager.setSecureString(PrefsKey.LAST_PROVIDER_ID, providerId);
+        mBus.post(new HandyEvent.ProviderIdUpdated(providerId));
         Crashlytics.setUserIdentifier(providerId);
         //need to update the user identifier whenever provider id is updated
     }
@@ -415,8 +416,6 @@ public class ProviderManager
             public void onSuccess(Provider provider)//TODO: need a way to sync this and provider id received from onLoginSuccess!
             {
                 mProviderCache.put(PROVIDER_CACHE_KEY, provider);
-                setProviderId(provider.getId());
-                mBus.post(new HandyEvent.ProviderIdUpdated(provider.getId()));
                 mBus.post(new HandyEvent.ReceiveProviderInfoSuccess(provider));
             }
 

@@ -2,12 +2,12 @@ package com.handy.portal.dashboard.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 
 import com.handy.portal.R;
 import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.manager.ProviderManager;
-import com.handy.portal.model.Provider;
 import com.handy.portal.webview.PortalWebViewFragment;
 
 import javax.inject.Inject;
@@ -23,11 +23,11 @@ public class DashboardVideoLibraryFragment extends PortalWebViewFragment
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        Provider provider = mProviderManager.getCachedActiveProvider();
-        if (provider != null)
+        final String providerId = mProviderManager.getLastProviderId();
+        if (!TextUtils.isEmpty(providerId))
         {
             getArguments().putString(BundleKeys.TARGET_URL, VIDEO_URL + "&provider_id="
-                    + mProviderManager.getCachedActiveProvider().getId());
+                    + providerId);
         }
         else
         {

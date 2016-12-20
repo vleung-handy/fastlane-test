@@ -101,10 +101,12 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
 
         bus.register(this);
 
-        if (providerManager.getCachedActiveProvider() != null)
+        final ProviderProfile providerProfile = providerManager.getCachedProviderProfile();
+        if (providerProfile != null && providerProfile.getProviderPersonalInfo() != null)
         {
             bus.post(new RegionDefinitionEvent.RequestFormDefinitions(
-                    providerManager.getCachedActiveProvider().getCountry(), this.getContext()));
+                    providerProfile.getProviderPersonalInfo().getAddress().getCountry(),
+                    this.getContext()));
         }
     }
 
