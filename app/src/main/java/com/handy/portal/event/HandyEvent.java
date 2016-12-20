@@ -14,7 +14,6 @@ import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LoginDetails;
-import com.handy.portal.model.Provider;
 import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.model.TermsDetails;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
@@ -147,29 +146,6 @@ public abstract class HandyEvent
     public static class ReceiveLoginError extends ReceiveErrorEvent
     {
         public ReceiveLoginError(DataManager.DataManagerError error)
-        {
-            this.error = error;
-        }
-    }
-
-
-    public static class RequestProviderInfo extends RequestEvent {}
-
-
-    public static class ReceiveProviderInfoSuccess extends ReceiveSuccessEvent
-    {
-        public final Provider provider;
-
-        public ReceiveProviderInfoSuccess(Provider provider)
-        {
-            this.provider = provider;
-        }
-    }
-
-
-    public static class ReceiveProviderInfoError extends ReceiveErrorEvent
-    {
-        public ReceiveProviderInfoError(DataManager.DataManagerError error)
         {
             this.error = error;
         }

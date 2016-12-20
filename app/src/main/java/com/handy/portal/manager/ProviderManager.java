@@ -17,7 +17,6 @@ import com.handy.portal.event.ProfileEvent;
 import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.event.ProviderSettingsEvent;
 import com.handy.portal.library.util.TextUtils;
-import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderPersonalInfo;
 import com.handy.portal.model.ProviderPersonalInfo.ProfileImage.Type;
 import com.handy.portal.model.ProviderProfile;
@@ -41,8 +40,6 @@ public class ProviderManager
     private final EventBus mBus;
     private final DataManager mDataManager;
     private final PrefsManager mPrefsManager;
-    private Cache<String, Provider> mProviderCache;
-    private static final String PROVIDER_CACHE_KEY = "provider";
     private Cache<String, ProviderProfile> mProviderProfileCache;
     private static final String PROVIDER_PROFILE_CACHE_KEY = "provider_profile";
     private Cache<String, ProviderSettings> mProviderSettingsCache;
@@ -54,10 +51,6 @@ public class ProviderManager
         mBus = bus;
         mDataManager = dataManager;
         mPrefsManager = prefsManager;
-        mProviderCache = CacheBuilder.newBuilder()
-                .maximumSize(10)
-                .expireAfterWrite(1, TimeUnit.DAYS)
-                .build();
         mProviderProfileCache = CacheBuilder.newBuilder()
                 .maximumSize(10)
                 .expireAfterWrite(1, TimeUnit.DAYS)
@@ -67,11 +60,6 @@ public class ProviderManager
                 .expireAfterWrite(1, TimeUnit.HOURS)
                 .build();
         bus.register(this);
-    }
-
-    public void prefetch()
-    {
-        requestProviderInfo();
     }
 
     public void setProviderProfile(@NonNull final ProviderProfile providerProfile)
@@ -92,20 +80,6 @@ public class ProviderManager
     }
 
     @Subscribe
-    public void onRequestProviderInfo(HandyEvent.RequestProviderInfo event)
-    {
-        Provider cachedProvider = getCachedActiveProvider();
-        if (cachedProvider != null)
-        {
-            mBus.post(new HandyEvent.ReceiveProviderInfoSuccess(cachedProvider));
-        }
-        else
-        {
-            requestProviderInfo();
-        }
-    }
-
-    @Subscribe
     public void onUpdateProviderProfile(ProfileEvent.RequestProfileUpdate event)
     {
         String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
@@ -118,7 +92,6 @@ public class ProviderManager
                 mProviderProfileCache.put(PROVIDER_PROFILE_CACHE_KEY, providerProfile);
                 mBus.post(new ProfileEvent.ReceiveProfileUpdateSuccess(
                         providerProfile.getProviderPersonalInfo()));
-                requestProviderInfo();
             }
 
             @Override
@@ -408,25 +381,6 @@ public class ProviderManager
                 });
     }
 
-    private void requestProviderInfo()
-    {
-        mDataManager.getProviderInfo(new DataManager.Callback<Provider>()
-        {
-            @Override
-            public void onSuccess(Provider provider)//TODO: need a way to sync this and provider id received from onLoginSuccess!
-            {
-                mProviderCache.put(PROVIDER_CACHE_KEY, provider);
-                mBus.post(new HandyEvent.ReceiveProviderInfoSuccess(provider));
-            }
-
-            @Override
-            public void onError(DataManager.DataManagerError error)
-            {
-                mBus.post(new HandyEvent.ReceiveProviderInfoError(error));
-            }
-        });
-    }
-
     public void requestProviderProfile()
     {
         String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
@@ -472,12 +426,6 @@ public class ProviderManager
     public String getLastProviderId()
     {
         return mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
-    }
-
-    @Nullable
-    public Provider getCachedActiveProvider()
-    {
-        return mProviderCache.getIfPresent(PROVIDER_CACHE_KEY);
     }
 
     @Nullable

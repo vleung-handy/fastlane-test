@@ -17,7 +17,6 @@ import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LoginDetails;
-import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ProviderProfileResponse;
 import com.handy.portal.model.ProviderSettings;
@@ -185,15 +184,6 @@ class JobsCountHandyRetroFitCallback extends TypedHandyRetrofitCallback<HashMap<
 class LoginDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<LoginDetails>
 {
     LoginDetailsResponseHandyRetroFitCallback(DataManager.Callback callback)
-    {
-        super(callback);
-    }
-}
-
-
-class ProviderResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<Provider>
-{
-    ProviderResponseHandyRetroFitCallback(DataManager.Callback callback)
     {
         super(callback);
     }
