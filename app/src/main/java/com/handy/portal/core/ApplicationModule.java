@@ -86,6 +86,7 @@ import com.handy.portal.updater.ui.PleaseUpdateFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.PortalWebViewClient;
 import com.handy.portal.webview.PortalWebViewFragment;
+import com.handy.portal.webview.RequestSuppliesWebViewClient;
 import com.squareup.okhttp.CertificatePinner;
 import com.squareup.okhttp.OkHttpClient;
 
@@ -150,6 +151,7 @@ import retrofit.converter.GsonConverter;
         LoginSltFragment.class,
         LayerPushReceiver.class,
         PortalWebViewClient.class,
+        RequestSuppliesWebViewClient.class,
 },
         includes = {
                 HelpModule.class,
