@@ -25,7 +25,7 @@ import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PerformanceLog;
 import com.handy.portal.manager.ProviderManager;
-import com.handy.portal.model.Provider;
+import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -100,10 +100,11 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
     private void createDashboardView(ProviderEvaluation evaluation)
     {
         String welcomeString;
-        Provider provider = mProviderManager.getCachedActiveProvider();
-        if (provider != null && provider.getFirstName() != null)
+        ProviderProfile providerProfile = mProviderManager.getCachedProviderProfile();
+        if (providerProfile != null && providerProfile.getProviderPersonalInfo() != null)
         {
-            welcomeString = getString(R.string.welcome_back_formatted, provider.getFirstName());
+            welcomeString = getString(R.string.welcome_back_formatted,
+                    providerProfile.getProviderPersonalInfo().getFirstName());
         }
         else
         {

@@ -46,6 +46,7 @@ import com.handy.portal.manager.PageNavigationManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
 import com.handy.portal.model.ConfigurationResponse;
+import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.ui.activity.BaseActivity;
 import com.handy.portal.ui.activity.LoginActivity;
 import com.handybook.shared.layer.LayerHelper;
@@ -184,7 +185,17 @@ public class MainActivityFragment extends InjectedFragment
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
     {
+        initProName();
         initProImage(null);
+    }
+
+    private void initProName()
+    {
+        final ProviderProfile providerProfile = mProviderManager.getCachedProviderProfile();
+        if (providerProfile != null && providerProfile.getProviderPersonalInfo() != null)
+        {
+            mNavigationHeaderProName.setText(providerProfile.getProviderPersonalInfo().getFullName());
+        }
     }
 
     @Subscribe
@@ -351,12 +362,6 @@ public class MainActivityFragment extends InjectedFragment
     public void onShowLoadingOverlay(HandyEvent.SetLoadingOverlayVisibility event)
     {
         mLoadingOverlayView.setVisibility(event.isVisible ? View.VISIBLE : View.GONE);
-    }
-
-    @Subscribe
-    public void onReceiveProviderInfoSuccess(HandyEvent.ReceiveProviderInfoSuccess event)
-    {
-        mNavigationHeaderProName.setText(event.provider.getFullName());
     }
 
     @Subscribe

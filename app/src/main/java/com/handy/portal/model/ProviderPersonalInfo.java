@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.constant.Country;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -29,6 +30,8 @@ public class ProviderPersonalInfo implements Serializable
     private String mCardLast4;
     @SerializedName("operating_region")
     private String mOperatingRegion;
+    @SerializedName("currency_code")
+    private String mCurrencyCode;
     @SerializedName("profile_images")
     private ArrayList<ProfileImage> mProfileImages;
 
@@ -80,6 +83,21 @@ public class ProviderPersonalInfo implements Serializable
     public String getOperatingRegion()
     {
         return mOperatingRegion;
+    }
+
+    public String getCurrencyCode()
+    {
+        return mCurrencyCode;
+    }
+
+    public boolean isUK()
+    {
+        return Country.GB.equalsIgnoreCase(getAddress().getCountry());
+    }
+
+    public boolean isUS()
+    {
+        return Country.US.equalsIgnoreCase(getAddress().getCountry());
     }
 
     @Nullable

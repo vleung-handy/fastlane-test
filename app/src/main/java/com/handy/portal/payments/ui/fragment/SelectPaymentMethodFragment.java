@@ -12,6 +12,7 @@ import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.PaymentFlow;
 import com.handy.portal.ui.fragment.ActionBarFragment;
@@ -104,9 +105,10 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
         View view = inflater.inflate(R.layout.fragment_select_payment_method, container, false);
         ButterKnife.bind(this, view);
 
-        if (providerManager.getCachedActiveProvider() != null &&
-                !providerManager.getCachedActiveProvider().isUS()
-                )
+        final ProviderProfile providerProfile = providerManager.getCachedProviderProfile();
+        if (providerProfile != null
+                && providerProfile.getProviderPersonalInfo() != null
+                && !providerProfile.getProviderPersonalInfo().isUS())
         {
             debitCardOption.setVisibility(View.GONE);
         }

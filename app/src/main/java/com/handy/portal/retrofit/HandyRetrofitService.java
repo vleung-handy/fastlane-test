@@ -255,9 +255,6 @@ public interface HandyRetrofitService
                       @Part("pin_code") String pinCode,
                       HandyRetrofitCallback cb);
 
-    @GET(SESSIONS_PATH + "provider_info")
-    void getProviderInfo(HandyRetrofitCallback cb);
-
     //********Help Center********
     String SELF_SERVICE_PATH = "/self_service/";
 

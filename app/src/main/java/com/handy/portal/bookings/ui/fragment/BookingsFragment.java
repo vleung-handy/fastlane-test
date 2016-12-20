@@ -217,7 +217,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
         if (!MainActivityFragment.clearingBackStack)
         {
-            bus.post(new HandyEvent.RequestProviderInfo());
             bus.post(new ProviderSettingsEvent.RequestProviderSettings());
 
             initDateButtons();

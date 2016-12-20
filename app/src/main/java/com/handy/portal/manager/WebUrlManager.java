@@ -3,8 +3,6 @@ package com.handy.portal.manager;
 import android.support.annotation.StringDef;
 
 import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.model.Provider;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 
 import java.lang.annotation.Retention;
@@ -59,9 +57,7 @@ public class WebUrlManager
     //need to replace certain tokens, currently just WEB_URL_PROVIDER_ID_TOKEN so hacking it in, if need to replace more make a smarter function
     private String replaceVariablesInUrl(String url)
     {
-        Provider provider = mProviderManager.getCachedActiveProvider();
-        //Try to use the cached provider, and if not available fall back to last logged in provider id
-        String providerId = (provider != null ? provider.getId() : mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID));
+        final String providerId = mProviderManager.getLastProviderId();
         url = url.replace(WEB_URL_PROVIDER_ID_TOKEN, providerId);
         return url;
     }

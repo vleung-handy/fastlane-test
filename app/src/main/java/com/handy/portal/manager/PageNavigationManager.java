@@ -178,7 +178,7 @@ public class PageNavigationManager
 
     private boolean isCachedProviderBlockPro()
     {
-        return mProviderManager.getCachedActiveProvider() != null && mProviderManager.getCachedActiveProvider().isBlockCleaner();
+        return (mConfigManager.getConfigurationResponse() != null && mConfigManager.getConfigurationResponse().isBlockCleaner());
     }
 
     private boolean doesCachedProviderNeedPaymentInformation()

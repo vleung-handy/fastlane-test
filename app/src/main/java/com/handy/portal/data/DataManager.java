@@ -19,7 +19,6 @@ import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.model.ConfigurationResponse;
 import com.handy.portal.model.LoginDetails;
-import com.handy.portal.model.Provider;
 import com.handy.portal.model.ProviderProfile;
 import com.handy.portal.model.ProviderProfileResponse;
 import com.handy.portal.model.ProviderSettings;
@@ -276,11 +275,6 @@ public class DataManager
     public void requestLogin(String phoneNumber, String pinCode, final Callback<LoginDetails> cb)
     {
         mService.requestLogin(phoneNumber, pinCode, new LoginDetailsResponseHandyRetroFitCallback(cb));
-    }
-
-    public void getProviderInfo(Callback<Provider> cb)
-    {
-        mService.getProviderInfo(new ProviderResponseHandyRetroFitCallback(cb));
     }
 
     public void checkForUpdates(String appFlavor, int versionCode, final Callback<UpdateDetails> cb)

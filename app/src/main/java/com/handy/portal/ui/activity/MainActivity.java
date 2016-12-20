@@ -58,7 +58,6 @@ public class MainActivity extends BaseActivity implements BookingMapProvider
         bus.register(this);
         //Check config params every time we resume mainactivity, may have changes which result in flow changes on open
         mConfigManager.prefetch();
-        providerManager.prefetch();
         checkIfUserShouldUpdatePaymentInfo();
         checkIfNotificationIsEnabled();
     }
