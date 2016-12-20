@@ -71,7 +71,6 @@ public class MainActivityFragmentTest extends RobolectricGradleTestWrapper
          * needed for the alert tab to show
          */
         ConfigurationResponse configurationResponse = mock(ConfigurationResponse.class);
-        when(configurationResponse.shouldShowNotificationMenuButton()).thenReturn(true);
         when(mConfigManager.getConfigurationResponse()).thenReturn(configurationResponse);
 
         /**

@@ -16,9 +16,6 @@ public class ConfigurationResponse
     @SerializedName("block_payment_info")
     private boolean mBlockClaimsIfMissingAccountInformation;
 
-    @SerializedName("notifications_in_pro_app")
-    private boolean mShowNotificationMenuButton;
-
     @SerializedName("show_late_dispatch_opt_in")
     private boolean mShowLateDispatchOptIn;
 
@@ -42,9 +39,6 @@ public class ConfigurationResponse
 
     @SerializedName("weekly_payment_tiers_enabled")
     private boolean mWeeklyPaymentTiersEnabled;
-
-    @SerializedName("pending_requests_inbox_enabled")
-    private boolean mPendingRequestsInboxEnabled;
 
     @SerializedName("customer_no_show_modal_enabled")
     private boolean mCustomerNoShowModalEnabled;
@@ -84,11 +78,6 @@ public class ConfigurationResponse
         return mCustomerNoShowModalEnabled;
     }
 
-    public boolean isPendingRequestsInboxEnabled()
-    {
-        return mPendingRequestsInboxEnabled;
-    }
-
     public boolean isLocationScheduleServiceEnabled()
     {
         return mLocationScheduleServiceEnabled;
@@ -122,11 +111,6 @@ public class ConfigurationResponse
     public boolean shouldBlockClaimsIfMissingAccountInformation()
     {
         return mBlockClaimsIfMissingAccountInformation;
-    }
-
-    public boolean shouldShowNotificationMenuButton()
-    {
-        return mShowNotificationMenuButton;
     }
 
     public boolean shouldShowLateDispatchOptIn()
