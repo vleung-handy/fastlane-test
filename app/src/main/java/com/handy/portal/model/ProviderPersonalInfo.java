@@ -29,6 +29,8 @@ public class ProviderPersonalInfo implements Serializable
     private String mCardLast4;
     @SerializedName("operating_region")
     private String mOperatingRegion;
+    @SerializedName("currency_code")
+    private String mCurrencyCode;
     @SerializedName("profile_images")
     private ArrayList<ProfileImage> mProfileImages;
 
@@ -80,6 +82,11 @@ public class ProviderPersonalInfo implements Serializable
     public String getOperatingRegion()
     {
         return mOperatingRegion;
+    }
+
+    public String getCurrencyCode()
+    {
+        return mCurrencyCode;
     }
 
     @Nullable
