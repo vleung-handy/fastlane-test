@@ -154,7 +154,6 @@ public class IDVerificationFragment extends OnboardingSubflowFragment
 
             mNetverifySDK = NetverifySDK.create(getActivity(), subflowData.getJumioToken(),
                     subflowData.getJumioSecret(), JumioDataCenter.US);
-            mNetverifySDK.setName(subflowData.getFullName());
             mNetverifySDK.setCustomerId(subflowData.getCandidateId());
 
             mNetverifySDK.setEnableEpassport(true);
