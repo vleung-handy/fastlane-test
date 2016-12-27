@@ -2,12 +2,16 @@ package com.handy.portal;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.AppCompatActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.mockito.ArgumentCaptor;
 
 import java.util.List;
 
+import static org.hamcrest.CoreMatchers.instanceOf;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 
@@ -50,5 +54,14 @@ public class TestUtils
             { return fragments.get(i); }
         }
         return null;
+    }
+
+    public static void testFragmentNavigation(final Fragment fragment, final int viewId, final Class<?> fragmentClass, final int stringId)
+    {
+        fragment.getView().findViewById(viewId).performClick();
+        Fragment currentFragment = getScreenFragment(fragment.getFragmentManager());
+        assertThat(currentFragment, instanceOf(fragmentClass));
+        assertEquals(fragment.getString(stringId),
+                ((AppCompatActivity) fragment.getActivity()).getSupportActionBar().getTitle());
     }
 }

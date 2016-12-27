@@ -33,7 +33,6 @@ import com.handy.portal.manager.AppseeManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.FileManager;
 import com.handy.portal.manager.LoginManager;
-import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.PageNavigationManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
@@ -43,7 +42,6 @@ import com.handy.portal.manager.SystemManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.UserInterfaceUpdateManager;
-import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.notification.NotificationModule;
 import com.handy.portal.onboarding.OnboardingModule;
@@ -122,7 +120,6 @@ import retrofit.converter.GsonConverter;
         TermsFragment.class,
         UrbanAirshipManager.class,
         DeepLinkService.class,
-        MainActivityFragmentNavigationHelper.class,
         PortalWebViewFragment.class,
         BlockScheduleFragment.class,
         RequestSuppliesFragment.class,
@@ -470,13 +467,6 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final MainActivityFragmentNavigationHelper provideFragmentNavigationManager(EventBus bus)
-    {
-        return new MainActivityFragmentNavigationHelper(bus);
-    }
-
-    @Provides
-    @Singleton
     final ZipClusterManager provideZipClusterPolygonManager(final EventBus bus, final DataManager dataManager)
     {
         return new ZipClusterManager(bus, dataManager);
@@ -510,24 +500,12 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final WebUrlManager provideWebUrlManager(final ProviderManager providerManager,
-                                             final PrefsManager prefsManager,
-                                             final ConfigManager configManager,
-                                             final HandyRetrofitEndpoint baseUrlEndpoint)
-    {
-        return new WebUrlManager(providerManager, prefsManager, configManager, baseUrlEndpoint);
-    }
-
-    @Provides
-    @Singleton
     final PageNavigationManager providePageNavigationManager(final EventBus bus,
-                                                             final ProviderManager providerManager,
-                                                             final WebUrlManager webUrlManager,
                                                              final PaymentsManager paymentsManager,
                                                              final ConfigManager configManager
     )
     {
-        return new PageNavigationManager(bus, providerManager, webUrlManager, paymentsManager, configManager);
+        return new PageNavigationManager(bus, paymentsManager, configManager);
     }
 
     @Provides

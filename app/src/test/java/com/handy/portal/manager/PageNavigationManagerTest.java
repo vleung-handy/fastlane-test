@@ -10,6 +10,7 @@ import com.handy.portal.deeplink.DeeplinkMapper;
 import com.handy.portal.deeplink.DeeplinkUtils;
 import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.payments.PaymentsManager;
+import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 
 import org.greenrobot.eventbus.EventBus;
 import org.junit.Before;
@@ -33,11 +34,11 @@ public class PageNavigationManagerTest extends RobolectricGradleTestWrapper
     @Mock
     private ProviderManager mProviderManager;
     @Mock
-    private WebUrlManager mWebUrlManager;
-    @Mock
     private PaymentsManager mPaymentsManager;
     @Mock
     private ConfigManager mConfigManager;
+    @Mock
+    private HandyRetrofitEndpoint mEndpoint;
 
     @Inject
     PageNavigationManager pageNavigationManager;
@@ -47,12 +48,12 @@ public class PageNavigationManagerTest extends RobolectricGradleTestWrapper
     {
         initMocks(this);
 
-        pageNavigationManager = new PageNavigationManager(bus, mProviderManager, mWebUrlManager,
-                mPaymentsManager, mConfigManager);
+        pageNavigationManager = new PageNavigationManager(bus, mPaymentsManager, mConfigManager);
     }
 
     /**
      * not ideal but we currently have two deeplink handler methods due to logging complications
+     *
      * @throws Exception
      */
     @Test
@@ -64,7 +65,7 @@ public class PageNavigationManagerTest extends RobolectricGradleTestWrapper
         verify the deeplinks defined in DeeplinkMapper
          */
         ImmutableMap<String, MainViewPage> deeplinkMap = DeeplinkMapper.getDeeplinkMap();
-        for(String deeplinkUrl : deeplinkMap.keySet())
+        for (String deeplinkUrl : deeplinkMap.keySet())
         {
             MainViewPage targetDeeplinkPage = deeplinkMap.get(deeplinkUrl);
 
@@ -87,7 +88,7 @@ public class PageNavigationManagerTest extends RobolectricGradleTestWrapper
         verify the deeplinks defined in DeeplinkMapper
          */
         ImmutableMap<String, MainViewPage> deeplinkMap = DeeplinkMapper.getDeeplinkMap();
-        for(String deeplinkUrl : deeplinkMap.keySet())
+        for (String deeplinkUrl : deeplinkMap.keySet())
         {
             Bundle deeplinkDataBundle = DeeplinkUtils.createDeeplinkBundleFromUri(Uri.parse(deeplinkUrl));
             pageNavigationManager.handleNonUriDerivedDeeplinkDataBundle(deeplinkDataBundle, null);

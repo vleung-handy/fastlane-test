@@ -24,23 +24,17 @@ import javax.inject.Inject;
 public class PageNavigationManager
 {
     private final EventBus mBus;
-    private final ProviderManager mProviderManager;
     private final PaymentsManager mPaymentsManager;
-    private final WebUrlManager mWebUrlManager;
     private final ConfigManager mConfigManager;
 
     @Inject
     public PageNavigationManager(final EventBus bus,
-                                 final ProviderManager providerManager,
-                                 final WebUrlManager webUrlManager,
                                  final PaymentsManager paymentsManager,
                                  final ConfigManager configManager
     )
     {
         mBus = bus;
         mBus.register(this);
-        mProviderManager = providerManager;
-        mWebUrlManager = webUrlManager;
         mPaymentsManager = paymentsManager;
         mConfigManager = configManager;
     }
@@ -48,11 +42,11 @@ public class PageNavigationManager
     /**
      * NOTE: as the name suggests, this method is only to be used when the given deeplink
      * data bundle is NOT derived from a Uri. reason is that we want to keep the logging logic
-     *
+     * <p>
      * making this a direct call because we specifically only want THIS manager
      * to handle "deeplinks" which are specific to the logic in this manager
      * and are not traditional Android deeplinks
-     *
+     * <p>
      * NOTE: cannot cleanly consolidate with the handling
      * of the deeplink data bundle in handleDeeplinkUrl
      * because of logging requirements and the way the log classes are currently structured
@@ -66,7 +60,7 @@ public class PageNavigationManager
             if (!TextUtils.isEmpty(deeplink))
             {
                 final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
-                if(page != null)
+                if (page != null)
                 {
                     mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
                             deeplinkSource,
@@ -88,6 +82,7 @@ public class PageNavigationManager
 
     /**
      * see notes on {@link #handleNonUriDerivedDeeplinkDataBundle(Bundle, String)}
+     *
      * @param deeplinkSource
      * @param deeplinkUrl
      */
@@ -104,15 +99,12 @@ public class PageNavigationManager
             /*
             TODO don't know why the Opened log event is being triggered here instead of on the actual click
              */
-            mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Opened(
-                    deeplinkSource,
-                    deeplinkUri
-            )));
+            mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Opened(deeplinkSource, deeplinkUri)));
             final String deeplink = deeplinkDataBundle.getString(BundleKeys.DEEPLINK);
             if (!TextUtils.isEmpty(deeplink))
             {
                 final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
-                if(page != null)
+                if (page != null)
                 {
 
                     mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
@@ -132,7 +124,7 @@ public class PageNavigationManager
                 }
             }
         }
-        else if(deeplinkUri != null)
+        else if (deeplinkUri != null)
         {
             mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
                     deeplinkSource,
@@ -167,18 +159,12 @@ public class PageNavigationManager
             swapFragmentEvent.targetPage = MainViewPage.BLOCK_PRO_WEBVIEW;
         }
 
-        if (swapFragmentEvent.targetPage.getWebViewTarget() != null)
-        {
-            String constructedUrl = mWebUrlManager.constructUrlForTargetPage(swapFragmentEvent.targetPage);
-            swapFragmentEvent.arguments.putString(BundleKeys.TARGET_URL, constructedUrl);
-        }
-
         mBus.post(swapFragmentEvent);
     }
 
     private boolean isCachedProviderBlockPro()
     {
-        return (mConfigManager.getConfigurationResponse() != null && mConfigManager.getConfigurationResponse().isBlockCleaner());
+        return mConfigManager.getConfigurationResponse().isBlockCleaner();
     }
 
     private boolean doesCachedProviderNeedPaymentInformation()
@@ -188,6 +174,6 @@ public class PageNavigationManager
 
     private boolean configBlockingForPayment()
     {
-        return (mConfigManager.getConfigurationResponse() != null && mConfigManager.getConfigurationResponse().shouldBlockClaimsIfMissingAccountInformation());
+        return mConfigManager.getConfigurationResponse().shouldBlockClaimsIfMissingAccountInformation();
     }
 }
