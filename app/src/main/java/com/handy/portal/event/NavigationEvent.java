@@ -82,18 +82,6 @@ public abstract class NavigationEvent extends HandyEvent
     }
 
 
-    //Disable the drawer to block navigation
-    public static class SetNavigationDrawerActive extends NavigationEvent
-    {
-        public final boolean isActive;
-
-        public SetNavigationDrawerActive(boolean isActive)
-        {
-            this.isActive = isActive;
-        }
-    }
-
-
     //Highlight the navigation tab
     public static class SelectPage extends NavigationEvent
     {

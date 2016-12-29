@@ -16,7 +16,6 @@ import com.handy.portal.location.manager.LocationScheduleUpdateManager;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.LoginManager;
-import com.handy.portal.manager.MainActivityFragmentNavigationHelper;
 import com.handy.portal.manager.PageNavigationManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.manager.ProviderManager;
@@ -26,7 +25,6 @@ import com.handy.portal.manager.SystemManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.UserInterfaceUpdateManager;
-import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.manager.ZipClusterManager;
 import com.handy.portal.notification.NotificationMessageManager;
 import com.handy.portal.payments.PaymentsManager;
@@ -82,11 +80,7 @@ public class BaseApplication extends MultiDexApplication
     @Inject
     UrbanAirshipManager urbanAirshipManager;
     @Inject
-    MainActivityFragmentNavigationHelper mainActivityFragmentNavigationHelper;
-    @Inject
     PageNavigationManager mPageNavigationManager;
-    @Inject
-    WebUrlManager webUrlManager;
     @Inject
     NotificationMessageManager notificationMessageManager;
     @Inject

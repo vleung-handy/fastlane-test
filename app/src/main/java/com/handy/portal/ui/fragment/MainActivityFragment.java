@@ -118,7 +118,6 @@ public class MainActivityFragment extends InjectedFragment
     private ActionBarDrawerToggle mActionBarDrawerToggle;
     private MainViewPage currentPage = null;
 
-    //Are we currently clearing out the backstack?
     // Other fragments will want to know to avoid re-doing things on their onCreateView
     public static boolean clearingBackStack = false;
 
@@ -241,10 +240,9 @@ public class MainActivityFragment extends InjectedFragment
         {
             bus.post(new NotificationEvent.RequestUnreadCount());
         }
-        bus.post(new HandyEvent.UpdateMainActivityFragmentActive(true));
         if (currentPage == null)
         {
-            switchToPage(MainViewPage.AVAILABLE_JOBS, false);
+            switchToPage(MainViewPage.AVAILABLE_JOBS);
         }
         handleDeeplinkIfNecessary();
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
@@ -300,7 +298,6 @@ public class MainActivityFragment extends InjectedFragment
     @Override
     public void onPause()
     {
-        bus.post(new HandyEvent.UpdateMainActivityFragmentActive(false));
         mDrawerLayout.removeDrawerListener(mActionBarDrawerToggle);
         bus.unregister(this);
         super.onPause();
@@ -333,12 +330,6 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
-    @Subscribe
-    public void onSetNavigationDrawerActive(NavigationEvent.SetNavigationDrawerActive event)
-    {
-        setDrawerActive(event.isActive);
-    }
-
     private void setDrawerActive(boolean isActive)
     {
         if (mDrawerLayout != null)
@@ -350,7 +341,8 @@ public class MainActivityFragment extends InjectedFragment
     @Subscribe
     public void onSwapFragment(NavigationEvent.SwapFragmentEvent event)
     {
-        trackSwitchToPage(event.targetPage);
+        bus.post(new HandyEvent.Navigation(event.targetPage.toString().toLowerCase()));
+
         setTabVisibility(true);
         setDrawerActive(false);
         swapFragment(event);
@@ -549,7 +541,7 @@ public class MainActivityFragment extends InjectedFragment
             }
             if (mPage != currentPage)
             {
-                switchToPage(mPage, true);
+                switchToPage(mPage);
             }
         }
     }
@@ -577,11 +569,11 @@ public class MainActivityFragment extends InjectedFragment
             mButtonMore.toggle();
             if (mTransitionStyle != null)
             {
-                switchToPage(mPage, new Bundle(), mTransitionStyle, false);
+                switchToPage(mPage, new Bundle(), mTransitionStyle);
             }
             else
             {
-                switchToPage(mPage, true);
+                switchToPage(mPage);
             }
 
             mDrawerLayout.closeDrawers();
@@ -598,23 +590,18 @@ public class MainActivityFragment extends InjectedFragment
         }
     }
 
-    private void switchToPage(@NonNull MainViewPage page, boolean userTriggered)
+    private void switchToPage(@NonNull MainViewPage page)
     {
-        switchToPage(page, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, userTriggered);
-    }
-
-    private void switchToPage(@NonNull MainViewPage targetPage, @NonNull Bundle argumentsBundle, boolean userTriggered)
-    {
-        switchToPage(targetPage, argumentsBundle, TransitionStyle.NATIVE_TO_NATIVE, userTriggered);
+        switchToPage(page, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE);
     }
 
     private void switchToPage(@NonNull MainViewPage targetPage, @NonNull Bundle argumentsBundle,
-                              @NonNull TransitionStyle overrideTransitionStyle, boolean userTriggered)
+                              @NonNull TransitionStyle overrideTransitionStyle)
     {
         bus.post(new NavigationEvent.NavigateToPage(targetPage, argumentsBundle, overrideTransitionStyle, false));
     }
 
-///Fragment swapping and related
+// Fragment swapping and related
 
     private void clearFragmentBackStack()
     {
@@ -622,12 +609,6 @@ public class MainActivityFragment extends InjectedFragment
         FragmentManager supportFragmentManager = getActivity().getSupportFragmentManager();
         supportFragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE); //clears out the whole stack
         clearingBackStack = false;
-    }
-
-    //analytics event
-    private void trackSwitchToPage(MainViewPage targetPage)
-    {
-        bus.post(new HandyEvent.Navigation(targetPage.toString().toLowerCase()));
     }
 
     private void swapFragment(NavigationEvent.SwapFragmentEvent swapFragmentEvent)
@@ -695,6 +676,7 @@ public class MainActivityFragment extends InjectedFragment
         transaction.commit();
     }
 
+    // TODO: consider move log out logic somewhere else
     @SuppressWarnings("deprecation")
     private void logOutProvider()
     {

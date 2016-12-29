@@ -38,7 +38,6 @@ import com.handy.portal.manager.SystemManager;
 import com.handy.portal.manager.TermsManager;
 import com.handy.portal.manager.UrbanAirshipManager;
 import com.handy.portal.manager.UserInterfaceUpdateManager;
-import com.handy.portal.manager.WebUrlManager;
 import com.handy.portal.notification.ui.fragment.NotificationsFragment;
 import com.handy.portal.onboarding.ui.activity.OnboardingFlowActivity;
 import com.handy.portal.onboarding.ui.activity.OnboardingSubflowActivity;
@@ -55,6 +54,7 @@ import com.handy.portal.onboarding.ui.fragment.SchedulePreferencesFragmentTest;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.payments.ui.element.PaymentsBatchListView;
+import com.handy.portal.payments.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsDetailFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsFragmentTest;
@@ -78,10 +78,13 @@ import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.LoginSltFragment;
 import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.MainActivityFragmentTest;
+import com.handy.portal.ui.fragment.MainActivityFragmentTest2;
 import com.handy.portal.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
+import com.handy.portal.webview.BlockScheduleFragment;
+import com.handy.portal.webview.PortalWebViewClient;
 import com.handybook.shared.layer.LayerHelper;
 import com.securepreferences.SecurePreferences;
 
@@ -116,6 +119,7 @@ import static org.mockito.Mockito.when;
         SupportActionView.class,
         PaymentsFragmentTest.class,
         MainActivityFragmentTest.class,
+        MainActivityFragmentTest2.class,
         LocationSettingsBlockerDialogFragment.class,
         SendReceiptCheckoutFragment.class,
         SendReceiptCheckoutFragmentTest.class,
@@ -156,6 +160,9 @@ import static org.mockito.Mockito.when;
         AcceptTermsStep.class,
         SetConfigurationStep.class,
         SetProviderProfileStep.class,
+        PortalWebViewClient.class,
+        BlockScheduleFragment.class,
+        PaymentBlockingFragment.class,
 
 }, library = true)
 public class TestApplicationModule
@@ -240,13 +247,11 @@ public class TestApplicationModule
     @Provides
     @Singleton
     final PageNavigationManager providePageNavigationManager(final EventBus bus,
-                                                             final ProviderManager providerManager,
-                                                             final WebUrlManager webUrlManager,
                                                              final PaymentsManager paymentsManager,
                                                              final ConfigManager configManager
     )
     {
-        return new PageNavigationManager(bus, providerManager, webUrlManager, paymentsManager, configManager);
+        return new PageNavigationManager(bus, paymentsManager, configManager);
     }
 
     @Provides
@@ -359,5 +364,12 @@ public class TestApplicationModule
     final LayerHelper provideLayerHelper()
     {
         return mock(LayerHelper.class, Answers.RETURNS_DEEP_STUBS.get());
+    }
+
+    @Provides
+    @Singleton
+    final PaymentsManager providePaymentsManager(EventBus bus, final DataManager dataManager)
+    {
+        return spy(new PaymentsManager(bus, dataManager));
     }
 }

@@ -772,17 +772,6 @@ public abstract class HandyEvent
     public static class StartUrbanAirship extends HandyEvent {}
 
 
-    public static class UpdateMainActivityFragmentActive extends HandyEvent
-    {
-        public boolean active;
-
-        public UpdateMainActivityFragmentActive(boolean active)
-        {
-            this.active = active;
-        }
-    }
-
-
     // Pro should be logged out. Error won't be shown but this will allow us to sync our
     // tracking with iOS.
     public static class LogOutProvider extends HandyEvent {}
