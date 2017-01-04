@@ -76,9 +76,8 @@ import com.handy.portal.ui.element.SupportActionView;
 import com.handy.portal.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.LoginSltFragment;
-import com.handy.portal.ui.fragment.MainActivityFragment;
-import com.handy.portal.ui.fragment.MainActivityFragmentTest;
-import com.handy.portal.ui.fragment.MainActivityFragmentTest2;
+import com.handy.portal.ui.fragment.MainActivityTest;
+import com.handy.portal.ui.fragment.MainActivityTest2;
 import com.handy.portal.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.updater.VersionManager;
@@ -105,7 +104,6 @@ import static org.mockito.Mockito.when;
         TestBaseApplication.class,
         LoginActivityFragment.class,
         LoginActivity.class,
-        MainActivityFragment.class,
         MainActivity.class,
         ProfileUpdateFragment.class,
         PleaseUpdateFragment.class,
@@ -118,8 +116,8 @@ import static org.mockito.Mockito.when;
         PaymentsBatchListView.class,
         SupportActionView.class,
         PaymentsFragmentTest.class,
-        MainActivityFragmentTest.class,
-        MainActivityFragmentTest2.class,
+        MainActivityTest.class,
+        MainActivityTest2.class,
         LocationSettingsBlockerDialogFragment.class,
         SendReceiptCheckoutFragment.class,
         SendReceiptCheckoutFragmentTest.class,

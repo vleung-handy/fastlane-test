@@ -39,7 +39,7 @@ import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.ui.fragment.MainActivityFragment;
+import com.handy.portal.ui.activity.MainActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -111,7 +111,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         super.onResume();
         setActionBar(R.string.available_jobs, false);
 
-        if (!MainActivityFragment.clearingBackStack)
+        if (!MainActivity.clearingBackStack)
         {
             if (shouldShowAvailableBookingsToggle())
             {
