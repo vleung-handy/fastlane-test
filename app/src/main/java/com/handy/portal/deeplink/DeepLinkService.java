@@ -6,9 +6,9 @@ import android.net.Uri;
 import android.os.Bundle;
 
 import com.handy.portal.bookings.model.Booking.BookingType;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.library.util.Utils;
 
 import org.greenrobot.eventbus.EventBus;

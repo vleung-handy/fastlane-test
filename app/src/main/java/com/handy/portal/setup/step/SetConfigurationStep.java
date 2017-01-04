@@ -2,10 +2,10 @@ package com.handy.portal.setup.step;
 
 import android.content.Context;
 
+import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.flow.FlowStep;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.model.ConfigurationResponse;
 
 import javax.inject.Inject;
 

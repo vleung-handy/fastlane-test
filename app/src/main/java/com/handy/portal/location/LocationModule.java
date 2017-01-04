@@ -2,6 +2,7 @@ package com.handy.portal.location;
 
 import android.content.Context;
 
+import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.location.scheduler.LocationScheduleService;
@@ -9,7 +10,6 @@ import com.handy.portal.location.scheduler.geofences.handler.BookingGeofenceSche
 import com.handy.portal.location.scheduler.tracking.handler.LocationTrackingScheduleHandler;
 import com.handy.portal.location.ui.LocationPermissionsBlockerDialogFragment;
 import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
-import com.handy.portal.manager.ProviderManager;
 
 import org.greenrobot.eventbus.EventBus;
 

@@ -4,9 +4,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.constant.LocationKey;
-import com.handy.portal.model.LocationData;
-import com.handy.portal.model.ProBookingFeedback;
+import com.handy.portal.core.constant.LocationKey;
+import com.handy.portal.core.model.LocationData;
+import com.handy.portal.core.model.ProBookingFeedback;
 
 import java.util.List;
 

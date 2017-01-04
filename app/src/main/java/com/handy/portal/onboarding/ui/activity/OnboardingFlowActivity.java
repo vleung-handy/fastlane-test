@@ -5,8 +5,10 @@ import android.os.Bundle;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.RequestCode;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.constant.RequestCode;
+import com.handy.portal.core.ui.activity.BaseActivity;
+import com.handy.portal.core.ui.activity.SplashActivity;
 import com.handy.portal.flow.Flow;
 import com.handy.portal.onboarding.OnboardingFlowStep;
 import com.handy.portal.onboarding.SubflowLauncher;
@@ -15,8 +17,6 @@ import com.handy.portal.onboarding.model.subflow.OnboardingSubflowDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowStatus;
 import com.handy.portal.onboarding.model.subflow.SubflowType;
 import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
-import com.handy.portal.ui.activity.BaseActivity;
-import com.handy.portal.ui.activity.SplashActivity;
 
 import java.util.ArrayList;
 

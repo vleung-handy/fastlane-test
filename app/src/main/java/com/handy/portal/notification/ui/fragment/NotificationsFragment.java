@@ -13,17 +13,17 @@ import android.widget.TextView;
 
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.NotificationEvent;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.event.NotificationEvent;
+import com.handy.portal.core.manager.PageNavigationManager;
+import com.handy.portal.core.ui.fragment.ActionBarFragment;
+import com.handy.portal.core.ui.widget.TitleView;
 import com.handy.portal.library.ui.widget.InfiniteScrollListView;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
-import com.handy.portal.manager.PageNavigationManager;
 import com.handy.portal.notification.model.NotificationAction;
 import com.handy.portal.notification.model.NotificationMessage;
 import com.handy.portal.notification.ui.view.NotificationsListView;
-import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.ui.widget.TitleView;
 
 import org.greenrobot.eventbus.Subscribe;
 

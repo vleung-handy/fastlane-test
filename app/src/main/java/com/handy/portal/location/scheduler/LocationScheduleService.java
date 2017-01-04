@@ -12,13 +12,13 @@ import android.util.Log;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
-import com.handy.portal.event.SystemEvent;
+import com.handy.portal.core.event.SystemEvent;
+import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.location.LocationEvent;
 import com.handy.portal.location.scheduler.handler.LocationScheduleStrategiesHandler;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
-import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.model.ConfigurationResponse;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

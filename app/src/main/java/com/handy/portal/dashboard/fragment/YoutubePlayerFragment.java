@@ -11,7 +11,7 @@ import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.core.constant.BundleKeys;
 
 public class YoutubePlayerFragment extends YouTubePlayerSupportFragment implements YouTubePlayer.OnInitializedListener
 {

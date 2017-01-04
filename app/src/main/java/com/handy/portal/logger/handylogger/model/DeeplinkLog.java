@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringDef;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog.Ignored.Reason.DeeplinkIgnoredReason;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog.Source.DeeplinkSource;
 

@@ -7,14 +7,14 @@ import android.view.View;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.RequestCode;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.constant.RequestCode;
+import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.model.Designation;
 import com.handy.portal.library.ui.view.SimpleContentLayout;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
-import com.handy.portal.model.Designation;
 import com.handy.portal.onboarding.model.supplies.SuppliesInfo;
 import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
 import com.handy.portal.onboarding.model.supplies.SuppliesSection;

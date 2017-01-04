@@ -15,19 +15,19 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.constant.TransitionStyle;
-import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.constant.PrefsKey;
+import com.handy.portal.core.constant.TransitionStyle;
+import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.PrefsManager;
+import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
-import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 

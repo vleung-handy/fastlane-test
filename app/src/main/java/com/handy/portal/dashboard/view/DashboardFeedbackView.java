@@ -12,10 +12,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewPage;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.dashboard.model.ProviderFeedback;
-import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.ui.view.YoutubeImagePlaceholderView;
 import com.handy.portal.library.ui.widget.BulletTextView;
 import com.handy.portal.library.util.TextUtils;

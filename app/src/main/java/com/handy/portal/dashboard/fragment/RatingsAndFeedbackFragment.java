@@ -10,8 +10,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewPage;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.event.ProviderDashboardEvent;
+import com.handy.portal.core.manager.ProviderManager;
+import com.handy.portal.core.model.ProviderProfile;
+import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.dashboard.adapter.DashboardRatingsPagerAdapter;
 import com.handy.portal.dashboard.model.ProviderEvaluation;
 import com.handy.portal.dashboard.view.CirclePageIndicatorView;
@@ -19,14 +25,8 @@ import com.handy.portal.dashboard.view.DashboardOptionsPerformanceView;
 import com.handy.portal.dashboard.view.DashboardRatingsView;
 import com.handy.portal.dashboard.view.DashboardWelcomeView;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.event.ProviderDashboardEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PerformanceLog;
-import com.handy.portal.manager.ProviderManager;
-import com.handy.portal.model.ProviderProfile;
-import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 

@@ -3,7 +3,7 @@ package com.handy.portal.logger.handylogger.model;
 import android.os.Bundle;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.core.constant.BundleKeys;
 import com.urbanairship.push.PushMessage;
 
 import java.util.HashMap;

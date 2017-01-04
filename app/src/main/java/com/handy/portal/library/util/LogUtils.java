@@ -2,9 +2,9 @@ package com.handy.portal.library.util;
 
 
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.constant.LocationKey;
-import com.handy.portal.model.Address;
-import com.handy.portal.model.LocationData;
+import com.handy.portal.core.constant.LocationKey;
+import com.handy.portal.core.model.Address;
+import com.handy.portal.core.model.LocationData;
 
 public class LogUtils
 {

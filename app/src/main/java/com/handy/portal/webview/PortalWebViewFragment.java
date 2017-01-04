@@ -12,10 +12,10 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.util.SystemUtils;
-import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import java.util.ArrayList;
 import java.util.List;

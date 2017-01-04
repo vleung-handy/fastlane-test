@@ -2,8 +2,8 @@ package com.handy.portal.payments;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.handy.portal.core.model.SuccessWrapper;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;

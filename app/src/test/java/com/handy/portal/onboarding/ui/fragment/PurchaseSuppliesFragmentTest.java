@@ -6,10 +6,10 @@ import android.support.v4.app.Fragment;
 
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.TestUtils;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.RequestCode;
-import com.handy.portal.event.HandyEvent;
-import com.handy.portal.model.Designation;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.constant.RequestCode;
+import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.model.Designation;
 import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowData;
 import com.handy.portal.onboarding.model.subflow.SubflowType;

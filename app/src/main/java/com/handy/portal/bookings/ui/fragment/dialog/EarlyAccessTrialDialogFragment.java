@@ -5,7 +5,7 @@ import android.support.annotation.NonNull;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.BookingsWrapper;
-import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.core.constant.BundleKeys;
 
 public class EarlyAccessTrialDialogFragment extends JobAccessDialogFragment
 {

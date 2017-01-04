@@ -11,8 +11,8 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.core.manager.AppseeManager;
 import com.handy.portal.library.util.UIUtils;
-import com.handy.portal.manager.AppseeManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

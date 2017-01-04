@@ -12,7 +12,8 @@ import android.widget.ListView;
 import com.handy.portal.R;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.BookingsListWrapper;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.ui.adapter.CheckBoxListAdapter;
 import com.handy.portal.library.ui.view.StaticFieldTableRow;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.UIUtils;
@@ -20,7 +21,6 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.onboarding.model.claim.StartDateRange;
 import com.handy.portal.onboarding.model.claim.Zipcluster;
-import com.handy.portal.ui.adapter.CheckBoxListAdapter;
 
 import org.greenrobot.eventbus.Subscribe;
 

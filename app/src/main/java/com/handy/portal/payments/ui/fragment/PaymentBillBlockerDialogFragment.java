@@ -11,9 +11,9 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.constant.TransitionStyle;
-import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.constant.TransitionStyle;
+import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.library.ui.fragment.dialog.PopupDialogFragment;
 
 import org.greenrobot.eventbus.EventBus;

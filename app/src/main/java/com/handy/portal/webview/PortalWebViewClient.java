@@ -11,10 +11,10 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.handy.portal.core.BaseApplication;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
-import com.handy.portal.manager.PageNavigationManager;
 
 import org.greenrobot.eventbus.EventBus;
 

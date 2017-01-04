@@ -35,12 +35,18 @@ import com.handy.portal.bookings.ui.element.BookingDetailsJobInstructionsSection
 import com.handy.portal.bookings.ui.element.BookingDetailsProRequestInfoView;
 import com.handy.portal.bookings.ui.element.BookingMapView;
 import com.handy.portal.bookings.util.ClaimUtils;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.constant.RequestCode;
-import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.constant.PrefsKey;
+import com.handy.portal.core.constant.RequestCode;
+import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.AppseeManager;
+import com.handy.portal.core.manager.PrefsManager;
+import com.handy.portal.core.model.Address;
+import com.handy.portal.core.ui.element.bookings.BookingMapProvider;
+import com.handy.portal.core.ui.fragment.TimerActionBarFragment;
+import com.handy.portal.core.ui.view.FlowLayout;
 import com.handy.portal.library.ui.view.MapPlaceholderView;
 import com.handy.portal.library.ui.view.RoundedTextView;
 import com.handy.portal.library.util.CurrencyUtils;
@@ -53,13 +59,7 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
-import com.handy.portal.manager.AppseeManager;
-import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.model.Address;
 import com.handy.portal.payments.model.PaymentInfo;
-import com.handy.portal.ui.element.bookings.BookingMapProvider;
-import com.handy.portal.ui.fragment.TimerActionBarFragment;
-import com.handy.portal.ui.view.FlowLayout;
 
 import org.greenrobot.eventbus.Subscribe;
 

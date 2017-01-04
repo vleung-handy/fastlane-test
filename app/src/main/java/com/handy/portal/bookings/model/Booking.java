@@ -10,8 +10,8 @@ import com.google.common.collect.Lists;
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.R;
 import com.handy.portal.bookings.constant.BookingProgress;
-import com.handy.portal.constant.Country;
-import com.handy.portal.model.Address;
+import com.handy.portal.core.constant.Country;
+import com.handy.portal.core.model.Address;
 import com.handy.portal.payments.model.PaymentInfo;
 
 import java.io.Serializable;

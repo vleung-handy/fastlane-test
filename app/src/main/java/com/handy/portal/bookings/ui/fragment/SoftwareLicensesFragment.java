@@ -13,9 +13,9 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.google.common.io.CharStreams;
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.ui.fragment.ActionBarFragment;
 
 import java.io.IOException;
 import java.io.InputStream;

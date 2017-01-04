@@ -9,15 +9,15 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewPage;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.dashboard.model.ProviderEvaluation;
 import com.handy.portal.dashboard.model.ProviderFeedback;
 import com.handy.portal.dashboard.view.DashboardFeedbackView;
-import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.FeedbackLog;
-import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

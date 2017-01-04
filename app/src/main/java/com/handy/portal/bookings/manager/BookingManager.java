@@ -15,13 +15,13 @@ import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
-import com.handy.portal.constant.LocationKey;
-import com.handy.portal.constant.ProviderKey;
+import com.handy.portal.core.constant.LocationKey;
+import com.handy.portal.core.constant.ProviderKey;
+import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.model.LocationData;
+import com.handy.portal.core.model.TypeSafeMap;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.HandyEvent;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.model.LocationData;
-import com.handy.portal.model.TypeSafeMap;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 

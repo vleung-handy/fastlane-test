@@ -1,10 +1,10 @@
 package com.handy.portal.data;
 
 import com.handy.portal.RobolectricGradleTestWrapper;
-import com.handy.portal.manager.LoginManager;
-import com.handy.portal.manager.PrefsManager;
-import com.handy.portal.model.LoginDetails;
-import com.handy.portal.model.SuccessWrapper;
+import com.handy.portal.core.manager.LoginManager;
+import com.handy.portal.core.manager.PrefsManager;
+import com.handy.portal.core.model.LoginDetails;
+import com.handy.portal.core.model.SuccessWrapper;
 import com.handy.portal.retrofit.DynamicEndpoint;
 import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitCallback;

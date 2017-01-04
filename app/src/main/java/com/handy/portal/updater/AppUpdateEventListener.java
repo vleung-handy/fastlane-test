@@ -2,7 +2,7 @@ package com.handy.portal.updater;
 
 import android.support.annotation.NonNull;
 
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.updater.model.UpdateDetails;
 
 import org.greenrobot.eventbus.Subscribe;

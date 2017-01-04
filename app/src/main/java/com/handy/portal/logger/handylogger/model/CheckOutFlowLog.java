@@ -5,9 +5,9 @@ import android.support.annotation.NonNull;
 
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.core.model.LocationData;
 import com.handy.portal.library.util.LogUtils;
 import com.handy.portal.library.util.MathUtils;
-import com.handy.portal.model.LocationData;
 
 import java.util.List;
 

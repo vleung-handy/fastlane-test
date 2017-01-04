@@ -1,9 +1,9 @@
 package com.handy.portal.setup;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.ProviderProfile;
-import com.handy.portal.model.TermsDetailsGroup;
+import com.handy.portal.core.model.ConfigurationResponse;
+import com.handy.portal.core.model.ProviderProfile;
+import com.handy.portal.core.model.TermsDetailsGroup;
 import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.updater.model.UpdateDetails;
 

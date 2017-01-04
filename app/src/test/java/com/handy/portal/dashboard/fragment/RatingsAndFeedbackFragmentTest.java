@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.TestUtils;
-import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.core.ui.activity.MainActivity;
 
 import org.junit.Before;
 import org.junit.Test;

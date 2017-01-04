@@ -3,13 +3,13 @@ package com.handy.portal;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.handy.portal.core.ui.activity.LoginActivity;
 import com.handy.portal.test.data.TestUsers;
 import com.handy.portal.test.model.TestUser;
 import com.handy.portal.test.util.AppInteractionUtil;
 import com.handy.portal.test.util.TermsPageUtil;
 import com.handy.portal.test.util.TextViewUtil;
 import com.handy.portal.test.util.ViewUtil;
-import com.handy.portal.ui.activity.LoginActivity;
 
 import org.junit.After;
 import org.junit.Rule;

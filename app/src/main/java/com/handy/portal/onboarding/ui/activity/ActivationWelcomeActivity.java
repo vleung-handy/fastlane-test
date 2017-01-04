@@ -10,7 +10,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.event.ProfileEvent;
+import com.handy.portal.core.event.ProfileEvent;
 import com.handy.portal.library.util.Utils;
 import com.plattysoft.leonids.ParticleSystem;
 

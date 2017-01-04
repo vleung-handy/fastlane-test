@@ -1,9 +1,9 @@
 package com.handy.portal.location.manager;
 
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.location.LocationEvent;
-import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.model.ConfigurationResponse;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

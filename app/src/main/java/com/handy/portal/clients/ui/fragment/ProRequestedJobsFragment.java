@@ -25,13 +25,14 @@ import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.util.ClaimUtils;
 import com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapter;
 import com.handy.portal.clients.ui.fragment.dialog.RequestDismissalReasonsDialogFragment;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.constant.RequestCode;
-import com.handy.portal.constant.TransitionStyle;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.constant.RequestCode;
+import com.handy.portal.core.constant.TransitionStyle;
+import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.NavigationEvent;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout;
 import com.handy.portal.library.util.DateTimeUtils;
@@ -39,7 +40,6 @@ import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
-import com.handy.portal.model.ConfigurationResponse;
 
 import org.greenrobot.eventbus.Subscribe;
 

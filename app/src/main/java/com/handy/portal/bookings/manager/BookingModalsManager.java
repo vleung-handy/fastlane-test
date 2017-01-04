@@ -2,8 +2,8 @@ package com.handy.portal.bookings.manager;
 
 import android.support.annotation.NonNull;
 
+import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.manager.PrefsManager;
 
 import org.greenrobot.eventbus.EventBus;
 

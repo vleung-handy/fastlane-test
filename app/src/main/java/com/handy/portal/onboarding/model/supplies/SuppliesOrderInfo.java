@@ -1,6 +1,6 @@
 package com.handy.portal.onboarding.model.supplies;
 
-import com.handy.portal.model.Designation;
+import com.handy.portal.core.model.Designation;
 
 import java.io.Serializable;
 

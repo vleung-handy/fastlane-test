@@ -27,9 +27,9 @@ import com.google.android.gms.maps.model.PolygonOptions;
 import com.handy.portal.R;
 import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.core.model.ZipClusterPolygons;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.location.LocationUtils;
-import com.handy.portal.model.ZipClusterPolygons;
 
 import java.util.LinkedList;
 import java.util.List;

@@ -9,13 +9,13 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.dashboard.adapter.ReviewListAdapter;
 import com.handy.portal.dashboard.model.ProviderEvaluation;
 import com.handy.portal.dashboard.model.ProviderRating;
 import com.handy.portal.library.ui.listener.EndlessRecyclerViewScrollListener;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -26,8 +26,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.handy.portal.event.ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess;
-import static com.handy.portal.event.ProviderDashboardEvent.RequestProviderFiveStarRatings;
+import static com.handy.portal.core.event.ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess;
+import static com.handy.portal.core.event.ProviderDashboardEvent.RequestProviderFiveStarRatings;
 
 public class DashboardReviewsFragment extends ActionBarFragment
 {

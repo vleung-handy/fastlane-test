@@ -1,6 +1,6 @@
 package com.handy.portal.logger.handylogger.model;
 
-import com.handy.portal.ui.fragment.EditPhotoFragment;
+import com.handy.portal.core.ui.fragment.EditPhotoFragment;
 
 public class ProfilePhotoUploadLog extends EventLog
 {

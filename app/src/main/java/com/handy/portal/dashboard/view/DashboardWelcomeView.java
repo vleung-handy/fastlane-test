@@ -10,7 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.manager.AppseeManager;
+import com.handy.portal.core.manager.AppseeManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

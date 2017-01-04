@@ -97,7 +97,7 @@
         <!-- </intent-filter> -->
         <!-- </receiver> -->
         <activity
-            android:name=".ui.activity.SplashActivity"
+            android:name="com.handy.portal.core.ui.activity.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Translucent"
@@ -154,7 +154,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".ui.activity.MainActivity"
+            android:name="com.handy.portal.core.ui.activity.MainActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -162,14 +162,14 @@
             >
         </activity>
         <activity
-            android:name=".ui.activity.LoginActivity"
+            android:name="com.handy.portal.core.ui.activity.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/LoginTheme"
             >
         </activity>
         <activity
-            android:name=".ui.activity.TermsActivity"
+            android:name="com.handy.portal.core.ui.activity.TermsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/TermsTheme"

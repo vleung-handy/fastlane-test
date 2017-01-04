@@ -370,7 +370,7 @@
                             android:textSize="@dimen/default_text_size"
                             />
 
-                        <com.handy.portal.ui.view.FlowLayout
+                        <com.handy.portal.core.ui.view.FlowLayout
                             android:id="@+id/nearby_transits"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

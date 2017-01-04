@@ -13,12 +13,12 @@ import android.view.ViewGroup;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewPage;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.model.ConfigurationResponse;
+import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.view.TabWithCountView;
-import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.ui.fragment.ActionBarFragment;
 import com.handybook.shared.layer.LayerHelper;
 
 import org.greenrobot.eventbus.EventBus;

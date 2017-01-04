@@ -11,7 +11,8 @@ import android.support.v7.widget.Toolbar;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.ui.activity.BaseActivity;
 import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowData;
 import com.handy.portal.onboarding.model.subflow.SubflowType;
@@ -23,7 +24,6 @@ import com.handy.portal.onboarding.ui.fragment.OnboardingSubflowFragment;
 import com.handy.portal.onboarding.ui.fragment.PurchaseSuppliesFragment;
 import com.handy.portal.onboarding.ui.fragment.ScheduleConfirmationFragment;
 import com.handy.portal.onboarding.ui.fragment.SchedulePreferencesFragment;
-import com.handy.portal.ui.activity.BaseActivity;
 
 import java.util.ArrayList;
 
