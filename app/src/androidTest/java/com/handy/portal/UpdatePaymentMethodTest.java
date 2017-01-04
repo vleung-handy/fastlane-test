@@ -9,7 +9,6 @@ import com.handy.portal.test.data.TestUsers;
 import com.handy.portal.test.model.TestUser;
 import com.handy.portal.test.util.AppInteractionUtil;
 import com.handy.portal.test.util.FormFieldUtil;
-import com.handy.portal.test.util.TextViewUtil;
 import com.handy.portal.test.util.ViewUtil;
 import com.handy.portal.ui.activity.SplashActivity;
 
@@ -21,6 +20,8 @@ import org.junit.runner.RunWith;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
+import static android.support.test.espresso.matcher.ViewMatchers.withText;
+import static org.hamcrest.Matchers.allOf;
 
 //note that animations should be disabled on the device running these tests
 @RunWith(AndroidJUnit4.class)
@@ -89,7 +90,9 @@ public class UpdatePaymentMethodTest
 
         //verify bank account was updated
         ViewUtil.waitForViewVisible(R.id.bank_account_option, ViewUtil.LONG_MAX_WAIT_TIME_MS);
-        TextViewUtil.assertViewHasText(R.id.bank_account_details, "**** 6789");
+        ViewUtil.waitForViewVisibility(allOf(withId(R.id.bank_account_details), withText("**** 6789")),
+                true,
+                ViewUtil.SHORT_MAX_WAIT_TIME_MS);
 
         /*Test updating debit card info*/
         //click the debit card option
@@ -105,6 +108,8 @@ public class UpdatePaymentMethodTest
 
         //verify debit card was updated
         ViewUtil.waitForViewVisible(R.id.debit_card_option, ViewUtil.LONG_MAX_WAIT_TIME_MS);
-        TextViewUtil.assertViewHasText(R.id.debit_card_details, "**** 5556");
+        ViewUtil.waitForViewVisibility(allOf(withId(R.id.debit_card_details), withText("**** 5556")),
+                true,
+                ViewUtil.SHORT_MAX_WAIT_TIME_MS);
     }
 }

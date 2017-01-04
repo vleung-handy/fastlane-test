@@ -9,8 +9,13 @@ public class PaymentFlow
     public static final String STATUS_VERIFIED = "verified";
     public static final String STATUS_ERRORED = "errored";
 
-    private static final String PROCESSOR_STRIPE = "stripe";
-    private static final String PROCESSOR_STRIPE_DEBIT = "stripe_debit";
+    /**
+     * processor names for the new stripe connect payment flow.
+     * confirmed with backend that we no longer need to support the old payment flow
+     * with processor names "stripe" and "stripe_debit"
+     */
+    private static final String PROCESSOR_STRIPE_CONNECT = "stripe_connect_bank_account";
+    private static final String PROCESSOR_STRIPE_CONNECT_DEBIT = "stripe_connect_debit";
 
     @SerializedName("account_details")
     private String accountDetails;
@@ -31,11 +36,13 @@ public class PaymentFlow
 
     public boolean isBankAccount()
     {
-        return processorName != null && processorName.equalsIgnoreCase(PROCESSOR_STRIPE);
+        return processorName != null
+                && processorName.equalsIgnoreCase(PROCESSOR_STRIPE_CONNECT);
     }
 
     public boolean isDebitCard()
     {
-        return processorName != null && processorName.equalsIgnoreCase(PROCESSOR_STRIPE_DEBIT);
+        return processorName != null
+                && processorName.equalsIgnoreCase(PROCESSOR_STRIPE_CONNECT_DEBIT);
     }
 }
