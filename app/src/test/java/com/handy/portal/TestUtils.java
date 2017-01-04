@@ -64,4 +64,12 @@ public class TestUtils
         assertEquals(fragment.getString(stringId),
                 ((AppCompatActivity) fragment.getActivity()).getSupportActionBar().getTitle());
     }
+
+    public static void testFragmentNavigation(final AppCompatActivity activity, final int viewId, final Class<?> fragmentClass, final int stringId)
+    {
+        activity.findViewById(viewId).performClick();
+        Fragment currentFragment = getScreenFragment(activity.getSupportFragmentManager());
+        assertThat(currentFragment, instanceOf(fragmentClass));
+        assertEquals(activity.getString(stringId), activity.getSupportActionBar().getTitle());
+    }
 }

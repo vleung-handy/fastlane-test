@@ -12,8 +12,8 @@ import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.constant.TransitionStyle;
 import com.handy.portal.event.HandyEvent;
 import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.ui.fragment.MainActivityFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,7 +49,7 @@ public class PaymentBlockingFragment extends ActionBarFragment
     public void onResume()
     {
         super.onResume();
-        if (!MainActivityFragment.clearingBackStack)
+        if (!MainActivity.clearingBackStack)
         {
             displayPaymentInformationError();
         }

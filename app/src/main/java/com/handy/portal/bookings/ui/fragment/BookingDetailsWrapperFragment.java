@@ -49,9 +49,9 @@ import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.element.SupportActionContainerView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.ui.fragment.MainActivityFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -149,7 +149,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         super.onResume();
         bus.register(this);
 
-        if (!MainActivityFragment.clearingBackStack && mBooking == null)
+        if (!MainActivity.clearingBackStack && mBooking == null)
         {
             requestBookingDetails(mRequestedBookingId, mRequestedBookingType, mAssociatedBookingDate);
         }

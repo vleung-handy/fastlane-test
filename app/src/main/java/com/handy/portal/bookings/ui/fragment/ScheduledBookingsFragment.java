@@ -26,7 +26,7 @@ import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.ui.fragment.MainActivityFragment;
+import com.handy.portal.ui.activity.MainActivity;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -95,7 +95,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         bus.register(this);
         super.onResume();
         setActionBar(R.string.scheduled_jobs, false);
-        if (!MainActivityFragment.clearingBackStack
+        if (!MainActivity.clearingBackStack
                 && mSelectedDay != null
                 && mDatesPagerAdapter != null)
         {

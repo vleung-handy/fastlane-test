@@ -22,14 +22,12 @@ import javax.inject.Inject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class MainActivityFragmentTest2 extends RobolectricGradleTestWrapper
+public class MainActivityTest2 extends RobolectricGradleTestWrapper
 {
     @Inject
     ConfigManager mConfigManager;
     @Inject
     PaymentsManager mPaymentsManager;
-
-    private MainActivityFragment mFragment;
 
     @Before
     public void setUp() throws Exception
@@ -46,11 +44,10 @@ public class MainActivityFragmentTest2 extends RobolectricGradleTestWrapper
         when(mPaymentsManager.HACK_directAccessCacheNeedsPayment()).thenReturn(true);
 
         ActivityController<MainActivity> activityController = Robolectric.buildActivity(MainActivity.class).create();
-        mFragment = (MainActivityFragment) activityController.get().getSupportFragmentManager().getFragments().get(0);
         activityController.start().resume().visible();
 
-        TestUtils.testFragmentNavigation(mFragment, R.id.tab_nav_schedule, PaymentBlockingFragment.class, R.string.payment_blocking_title);
-        TestUtils.testFragmentNavigation(mFragment, R.id.tab_nav_available, PaymentBlockingFragment.class, R.string.payment_blocking_title);
+        TestUtils.testFragmentNavigation(activityController.get(), R.id.tab_nav_schedule, PaymentBlockingFragment.class, R.string.payment_blocking_title);
+        TestUtils.testFragmentNavigation(activityController.get(), R.id.tab_nav_available, PaymentBlockingFragment.class, R.string.payment_blocking_title);
     }
 
     @Test
@@ -61,9 +58,8 @@ public class MainActivityFragmentTest2 extends RobolectricGradleTestWrapper
         when(mConfigManager.getConfigurationResponse()).thenReturn(config);
 
         ActivityController<MainActivity> activityController = Robolectric.buildActivity(MainActivity.class).create();
-        mFragment = (MainActivityFragment) activityController.get().getSupportFragmentManager().getFragments().get(0);
         activityController.start().resume().visible();
 
-        TestUtils.testFragmentNavigation(mFragment, R.id.tab_nav_available, BlockScheduleFragment.class, R.string.block_jobs_schedule);
+        TestUtils.testFragmentNavigation(activityController.get(), R.id.tab_nav_available, BlockScheduleFragment.class, R.string.block_jobs_schedule);
     }
 }

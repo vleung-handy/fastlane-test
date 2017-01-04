@@ -72,7 +72,6 @@ import com.handy.portal.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.ui.fragment.EditPhotoFragment;
 import com.handy.portal.ui.fragment.LoginActivityFragment;
 import com.handy.portal.ui.fragment.LoginSltFragment;
-import com.handy.portal.ui.fragment.MainActivityFragment;
 import com.handy.portal.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.ui.fragment.RequestSuppliesFragment;
@@ -109,7 +108,6 @@ import retrofit.converter.GsonConverter;
 @Module(injects = {
         LoginActivityFragment.class,
         LoginActivity.class,
-        MainActivityFragment.class,
         BaseApplication.class,
         BaseActivity.class,
         SplashActivity.class,

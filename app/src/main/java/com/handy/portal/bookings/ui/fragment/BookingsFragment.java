@@ -41,9 +41,9 @@ import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.model.ProviderSettings;
+import com.handy.portal.ui.activity.MainActivity;
 import com.handy.portal.ui.element.DateButtonView;
 import com.handy.portal.ui.fragment.ActionBarFragment;
-import com.handy.portal.ui.fragment.MainActivityFragment;
 
 import java.util.Calendar;
 import java.util.Collections;
@@ -215,7 +215,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     {
         super.onResume();
 
-        if (!MainActivityFragment.clearingBackStack)
+        if (!MainActivity.clearingBackStack)
         {
             bus.post(new ProviderSettingsEvent.RequestProviderSettings());
 
