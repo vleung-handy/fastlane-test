@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 
 import com.google.common.collect.ImmutableMap;
-import com.handy.portal.constant.MainViewPage;
+import com.handy.portal.core.constant.MainViewPage;
 
 import java.util.HashMap;
 import java.util.Map;

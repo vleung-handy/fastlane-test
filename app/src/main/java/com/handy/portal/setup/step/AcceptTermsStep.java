@@ -3,12 +3,12 @@ package com.handy.portal.setup.step;
 import android.content.Context;
 import android.content.Intent;
 
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.model.TermsDetailsGroup;
+import com.handy.portal.core.ui.activity.TermsActivity;
 import com.handy.portal.flow.FlowStep;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.model.TermsDetailsGroup;
-import com.handy.portal.ui.activity.TermsActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

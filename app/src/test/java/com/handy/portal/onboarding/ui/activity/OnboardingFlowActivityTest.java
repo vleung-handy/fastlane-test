@@ -7,13 +7,13 @@ import android.os.Bundle;
 import com.google.common.collect.Lists;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.ui.activity.SplashActivity;
 import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.onboarding.model.subflow.OnboardingSubflowDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowStatus;
 import com.handy.portal.onboarding.model.subflow.SubflowType;
 import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
-import com.handy.portal.ui.activity.SplashActivity;
 
 import org.junit.Before;
 import org.junit.Test;

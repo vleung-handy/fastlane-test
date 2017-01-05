@@ -13,7 +13,8 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.google.common.base.Strings;
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.dashboard.adapter.DashboardTiersPagerAdapter;
 import com.handy.portal.dashboard.model.ProviderEvaluation;
 import com.handy.portal.dashboard.view.CirclePageIndicatorView;
@@ -25,7 +26,6 @@ import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DashboardTiersLog;
-import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

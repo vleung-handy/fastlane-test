@@ -10,12 +10,12 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.Transaction;
-import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 

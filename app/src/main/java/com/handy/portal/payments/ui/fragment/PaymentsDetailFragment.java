@@ -9,9 +9,10 @@ import android.widget.ExpandableListView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.model.NeoPaymentBatch;
@@ -19,7 +20,6 @@ import com.handy.portal.payments.model.Payment;
 import com.handy.portal.payments.model.PaymentGroup;
 import com.handy.portal.payments.ui.element.PaymentDetailExpandableListView;
 import com.handy.portal.payments.ui.element.PaymentsDetailListHeaderView;
-import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

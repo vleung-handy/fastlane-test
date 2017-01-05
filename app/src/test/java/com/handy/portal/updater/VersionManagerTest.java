@@ -8,9 +8,9 @@ import android.os.Environment;
 
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.core.BuildConfigWrapper;
+import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.library.util.CheckApplicationCapabilitiesUtils;
-import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.updater.model.UpdateDetails;
 
 import org.greenrobot.eventbus.EventBus;

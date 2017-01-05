@@ -12,20 +12,20 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.event.NavigationEvent;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.ui.element.bookings.BookingResultBannerTextView;
+import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.CompletedJobsLog;
-import com.handy.portal.manager.ConfigManager;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.Transaction;
 import com.handy.portal.payments.ui.element.TransactionView;
-import com.handy.portal.ui.element.bookings.BookingResultBannerTextView;
-import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import javax.inject.Inject;
 

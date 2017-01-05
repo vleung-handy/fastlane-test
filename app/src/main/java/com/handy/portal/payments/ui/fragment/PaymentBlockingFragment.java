@@ -8,12 +8,12 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.constant.TransitionStyle;
-import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.ui.activity.MainActivity;
-import com.handy.portal.ui.fragment.ActionBarFragment;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.constant.TransitionStyle;
+import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.ui.activity.MainActivity;
+import com.handy.portal.core.ui.fragment.ActionBarFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

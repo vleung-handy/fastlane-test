@@ -20,7 +20,7 @@
             android:orientation="vertical"
             >
 
-            <com.handy.portal.ui.element.bookings.BookingResultBannerTextView
+            <com.handy.portal.core.ui.element.bookings.BookingResultBannerTextView
                 android:id="@+id/booking_transactions_banner_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

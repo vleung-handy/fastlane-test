@@ -3,8 +3,8 @@ package com.handy.portal.logger.handylogger.model;
 import com.crashlytics.android.Crashlytics;
 import com.google.gson.Gson;
 import com.google.gson.JsonParseException;
-import com.handy.portal.constant.PrefsKey;
-import com.handy.portal.manager.PrefsManager;
+import com.handy.portal.core.constant.PrefsKey;
+import com.handy.portal.core.manager.PrefsManager;
 
 import java.io.Serializable;
 

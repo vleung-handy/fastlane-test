@@ -10,7 +10,7 @@ import java.util.List;
  * Flow is a wrapper for a collection of {@code FlowStep} objects. Its job is to execute flow steps
  * in order of their addition to the flow object after calling the {@code start()} method.
  *
- * @see com.handy.portal.ui.activity.BaseActivity.SetupHandler
+ * @see com.handy.portal.core.ui.activity.BaseActivity.SetupHandler
  */
 public class Flow implements Forwardable
 {

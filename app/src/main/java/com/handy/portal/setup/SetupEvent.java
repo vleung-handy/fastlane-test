@@ -1,7 +1,7 @@
 package com.handy.portal.setup;
 
+import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.HandyEvent;
 
 public class SetupEvent
 {

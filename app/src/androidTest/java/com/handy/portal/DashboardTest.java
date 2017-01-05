@@ -3,7 +3,7 @@ package com.handy.portal;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.core.ui.activity.MainActivity;
 
 import org.junit.Ignore;
 import org.junit.Rule;

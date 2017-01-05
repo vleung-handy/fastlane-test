@@ -3,7 +3,7 @@ package com.handy.portal.deeplink;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.core.constant.BundleKeys;
 
 import java.util.List;
 

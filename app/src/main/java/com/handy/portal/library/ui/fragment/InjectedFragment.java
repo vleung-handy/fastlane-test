@@ -7,8 +7,8 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.core.BaseApplication;
+import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.manager.ConfigManager;
 
 import org.greenrobot.eventbus.EventBus;
 

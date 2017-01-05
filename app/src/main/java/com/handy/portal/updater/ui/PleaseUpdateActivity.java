@@ -3,7 +3,7 @@ package com.handy.portal.updater.ui;
 import android.os.Bundle;
 
 import com.handy.portal.R;
-import com.handy.portal.ui.activity.BaseActivity;
+import com.handy.portal.core.ui.activity.BaseActivity;
 
 public class PleaseUpdateActivity extends BaseActivity
 {

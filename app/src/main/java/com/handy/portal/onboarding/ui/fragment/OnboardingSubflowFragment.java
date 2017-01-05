@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 
-import com.handy.portal.constant.BundleKeys;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowData;
 import com.handy.portal.onboarding.model.subflow.SubflowType;
 import com.handy.portal.onboarding.ui.activity.OnboardingSubflowActivity;
-import com.handy.portal.ui.fragment.ActionBarFragment;
 
 public abstract class OnboardingSubflowFragment extends ActionBarFragment
 {

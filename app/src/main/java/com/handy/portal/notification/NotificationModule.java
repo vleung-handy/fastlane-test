@@ -1,7 +1,7 @@
 package com.handy.portal.notification;
 
+import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.manager.PrefsManager;
 import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragment;
 import com.handy.portal.notification.ui.fragment.NotificationsFragment;
 import com.handy.portal.notification.ui.view.NotificationsListEntryView;

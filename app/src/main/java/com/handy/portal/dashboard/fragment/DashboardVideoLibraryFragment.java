@@ -6,8 +6,8 @@ import android.text.TextUtils;
 import android.view.View;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.webview.PortalWebViewFragment;
 
 import javax.inject.Inject;

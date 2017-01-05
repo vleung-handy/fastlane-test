@@ -5,9 +5,9 @@ import android.view.View;
 
 import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
+import com.handy.portal.core.ui.activity.TestActivity;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
-import com.handy.portal.ui.activity.TestActivity;
 
 import org.junit.Before;
 import org.junit.Test;

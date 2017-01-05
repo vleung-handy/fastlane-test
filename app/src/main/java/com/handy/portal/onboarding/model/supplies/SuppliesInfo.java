@@ -1,7 +1,7 @@
 package com.handy.portal.onboarding.model.supplies;
 
 import com.google.gson.annotations.SerializedName;
-import com.handy.portal.model.Designation;
+import com.handy.portal.core.model.Designation;
 
 import java.io.Serializable;
 

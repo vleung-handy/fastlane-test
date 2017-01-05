@@ -2,8 +2,8 @@ package com.handy.portal.updater;
 
 import android.app.Activity;
 
+import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.HandyEvent;
 import com.handy.portal.updater.model.UpdateDetails;
 
 public abstract class AppUpdateEvent

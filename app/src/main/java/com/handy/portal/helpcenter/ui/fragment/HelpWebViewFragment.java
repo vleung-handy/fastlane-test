@@ -6,10 +6,10 @@ import android.support.annotation.Nullable;
 import android.view.View;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.model.ConfigurationResponse;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.webview.PortalWebViewFragment;
 
 import javax.inject.Inject;

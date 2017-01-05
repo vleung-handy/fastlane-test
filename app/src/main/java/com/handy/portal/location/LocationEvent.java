@@ -3,8 +3,8 @@ package com.handy.portal.location;
 import android.location.Location;
 import android.support.annotation.NonNull;
 
+import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.HandyEvent;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 

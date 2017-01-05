@@ -4,12 +4,12 @@ import android.text.format.DateUtils;
 
 import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.core.model.ConfigurationResponse;
+import com.handy.portal.core.model.LoginDetails;
+import com.handy.portal.core.model.SuccessWrapper;
 import com.handy.portal.dashboard.model.ProviderEvaluation;
 import com.handy.portal.dashboard.model.ProviderFeedback;
 import com.handy.portal.dashboard.model.ProviderRating;
-import com.handy.portal.model.ConfigurationResponse;
-import com.handy.portal.model.LoginDetails;
-import com.handy.portal.model.SuccessWrapper;
 import com.handy.portal.retrofit.DynamicEndpoint;
 import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;

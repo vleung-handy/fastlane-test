@@ -4,9 +4,9 @@ import android.support.annotation.Nullable;
 
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
+import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.model.ZipClusterPolygons;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.HandyEvent;
-import com.handy.portal.model.ZipClusterPolygons;
 
 import java.util.List;
 

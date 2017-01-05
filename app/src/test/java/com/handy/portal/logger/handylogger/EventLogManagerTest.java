@@ -1,11 +1,11 @@
 package com.handy.portal.logger.handylogger;
 
 import com.handy.portal.RobolectricGradleTestWrapper;
-import com.handy.portal.constant.PrefsKey;
 import com.handy.portal.core.TestBaseApplication;
+import com.handy.portal.core.constant.PrefsKey;
+import com.handy.portal.core.manager.FileManager;
+import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.logger.handylogger.model.EventLog;
-import com.handy.portal.manager.FileManager;
-import com.handy.portal.manager.PrefsManager;
 
 import org.junit.Before;
 import org.junit.Ignore;

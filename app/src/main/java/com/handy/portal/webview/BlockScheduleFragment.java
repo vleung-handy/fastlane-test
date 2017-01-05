@@ -3,9 +3,9 @@ package com.handy.portal.webview;
 import android.os.Bundle;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.manager.ProviderManager;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 
 import javax.inject.Inject;

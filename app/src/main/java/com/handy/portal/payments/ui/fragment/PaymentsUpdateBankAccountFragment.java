@@ -8,21 +8,21 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
-import com.handy.portal.constant.FormDefinitionKey;
-import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.RegionDefinitionEvent;
-import com.handy.portal.event.StripeEvent;
+import com.handy.portal.core.constant.FormDefinitionKey;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.event.RegionDefinitionEvent;
+import com.handy.portal.core.event.StripeEvent;
+import com.handy.portal.core.manager.ProviderManager;
+import com.handy.portal.core.model.ProviderPersonalInfo;
+import com.handy.portal.core.model.ProviderProfile;
+import com.handy.portal.core.model.definitions.FieldDefinition;
+import com.handy.portal.core.model.definitions.FormDefinitionWrapper;
+import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.ui.view.FormFieldTableRow;
 import com.handy.portal.library.util.UIUtils;
-import com.handy.portal.manager.ProviderManager;
-import com.handy.portal.model.ProviderPersonalInfo;
-import com.handy.portal.model.ProviderProfile;
-import com.handy.portal.model.definitions.FieldDefinition;
-import com.handy.portal.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.BankAccountInfo;
-import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 

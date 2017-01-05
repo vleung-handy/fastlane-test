@@ -2,7 +2,7 @@ package com.handy.portal.logger.handylogger.model;
 
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.model.Address;
+import com.handy.portal.core.model.Address;
 import com.handy.portal.payments.model.PaymentInfo;
 
 import java.util.Date;

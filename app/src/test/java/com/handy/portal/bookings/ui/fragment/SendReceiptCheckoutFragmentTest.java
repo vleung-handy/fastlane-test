@@ -7,12 +7,12 @@ import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.TestUtils;
 import com.handy.portal.bookings.model.Booking;
-import com.handy.portal.constant.BundleKeys;
-import com.handy.portal.constant.MainViewPage;
 import com.handy.portal.core.TestBaseApplication;
-import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.ui.activity.MainActivity;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.ui.activity.MainActivity;
 
 import org.junit.Before;
 import org.junit.Test;

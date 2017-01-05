@@ -17,15 +17,15 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.BundleKeys;
 import com.handy.portal.core.BaseApplication;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.util.MyLeadingMarginSpan2;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.onboarding.model.status.LearningLinkDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowData;
 import com.handy.portal.onboarding.ui.view.LearningLinksView;
-import com.handy.portal.util.MyLeadingMarginSpan2;
 
 import org.greenrobot.eventbus.EventBus;
 

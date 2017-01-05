@@ -5,12 +5,12 @@ import android.support.test.espresso.DataInteraction;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
-import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.core.constant.PrefsKey;
+import com.handy.portal.core.ui.activity.SplashActivity;
 import com.handy.portal.test.data.TestUsers;
 import com.handy.portal.test.model.TestUser;
 import com.handy.portal.test.util.AppInteractionUtil;
 import com.handy.portal.test.util.ViewUtil;
-import com.handy.portal.ui.activity.SplashActivity;
 
 import org.junit.After;
 import org.junit.Ignore;

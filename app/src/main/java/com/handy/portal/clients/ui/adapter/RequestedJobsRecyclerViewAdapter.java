@@ -13,10 +13,10 @@ import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.DismissableBookingElementView;
 import com.handy.portal.clients.ui.element.ProRequestedJobsListGroupView;
+import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.manager.ConfigManager;
-import com.handy.portal.model.ConfigurationResponse;
 
 import org.greenrobot.eventbus.EventBus;
 

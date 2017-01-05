@@ -17,7 +17,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.bookings.ui.element.PostCheckoutRequestedBookingElementView;
-import com.handy.portal.event.HandyEvent;
+import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.LogEvent;

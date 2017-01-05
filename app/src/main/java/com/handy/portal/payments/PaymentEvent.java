@@ -2,8 +2,8 @@ package com.handy.portal.payments;
 
 import android.support.annotation.NonNull;
 
+import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.event.HandyEvent;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;

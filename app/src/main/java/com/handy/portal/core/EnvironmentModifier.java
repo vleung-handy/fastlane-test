@@ -5,10 +5,10 @@ import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.PrefsKey;
+import com.handy.portal.core.constant.PrefsKey;
+import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.library.util.TextUtils;
-import com.handy.portal.manager.PrefsManager;
 
 import java.util.Properties;
 

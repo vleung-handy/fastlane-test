@@ -7,15 +7,15 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.constant.MainViewPage;
-import com.handy.portal.constant.TransitionStyle;
-import com.handy.portal.event.HandyEvent;
-import com.handy.portal.event.NavigationEvent;
-import com.handy.portal.manager.ProviderManager;
-import com.handy.portal.model.ProviderProfile;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.constant.TransitionStyle;
+import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.ProviderManager;
+import com.handy.portal.core.model.ProviderProfile;
+import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.PaymentFlow;
-import com.handy.portal.ui.fragment.ActionBarFragment;
 
 import org.greenrobot.eventbus.Subscribe;
 

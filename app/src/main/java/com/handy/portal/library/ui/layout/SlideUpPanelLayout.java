@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.ui.activity.BaseActivity;
+import com.handy.portal.core.ui.activity.BaseActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
