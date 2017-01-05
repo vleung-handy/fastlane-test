@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:orientation="vertical"
@@ -13,6 +14,7 @@
             android:id="@+id/bookings_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
             android:orientation="vertical"
             >
 
@@ -60,6 +62,16 @@
                     android:background="@color/border_gray"
                     />
             </LinearLayout>
+
+            <com.handy.portal.availability.view.AvailableHoursView
+                android:id="@+id/available_hours_view"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/border_gray_bottom"
+                android:padding="@dimen/default_padding"
+                android:visibility="gone"
+                tools:visibility="visible"
+                />
 
             <include layout="@layout/layout_fetch_error"/>
 

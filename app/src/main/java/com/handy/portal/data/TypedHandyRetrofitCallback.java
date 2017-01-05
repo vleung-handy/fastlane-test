@@ -22,6 +22,7 @@ import com.handy.portal.dashboard.model.ProviderFeedback;
 import com.handy.portal.dashboard.model.ProviderRating;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
+import com.handy.portal.availability.model.ProviderAvailability;
 import com.handy.portal.notification.model.NotificationMessages;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
@@ -262,6 +263,14 @@ class ResupplyInfoRetrofitCallback extends TypedHandyRetrofitCallback<ProviderPr
     }
 }
 
+
+class ProviderAvailabilityRetrofitCallback extends TypedHandyRetrofitCallback<ProviderAvailability>
+{
+    ProviderAvailabilityRetrofitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
 
 class StripeTokenRetroFitCallback extends TypedHandyRetrofitCallback<StripeTokenResponse>
 {

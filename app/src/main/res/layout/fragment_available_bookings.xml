@@ -1,7 +1,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              xmlns:tools="http://schemas.android.com/tools"
               android:orientation="vertical"
     >
 
@@ -14,6 +14,7 @@
             android:id="@+id/bookings_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:animateLayoutChanges="true"
             android:orientation="vertical"
             >
 
@@ -36,18 +37,24 @@
 
             <include layout="@layout/layout_fetch_error"/>
 
-            <include tools:visibility="visible" layout="@layout/element_same_day_notification_toggle"/>
+            <include
+                layout="@layout/element_same_day_notification_toggle"
+                tools:visibility="visible"
+                />
 
             <com.handy.portal.bookings.ui.element.BookingsAccessLockedView
+                android:id="@+id/layout_job_access_locked"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:id="@+id/layout_job_access_locked"
                 android:visibility="gone"
                 />
 
             <!--must put the empty view above the swipe refresh layout, otherwise it gets pushed down
             even though the refresh layout has 0 height-->
-            <include tools:visibility="visible" layout="@layout/layout_available_bookings_empty"/>
+            <include
+                layout="@layout/layout_available_bookings_empty"
+                tools:visibility="visible"
+                />
 
             <com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout
                 android:id="@+id/refresh_layout"

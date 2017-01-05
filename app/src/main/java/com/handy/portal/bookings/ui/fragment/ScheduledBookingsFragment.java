@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.adapter.DatesPagerAdapter;
+import com.handy.portal.availability.view.AvailableHoursView;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
 import com.handy.portal.bookings.ui.element.NewDateButton;
@@ -22,16 +23,23 @@ import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.core.ui.activity.MainActivity;
+import com.handy.portal.data.DataManager;
+import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
+import com.handy.portal.availability.model.DailyAvailabilityTimeline;
+import com.handy.portal.availability.model.ProviderAvailability;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Date;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -39,6 +47,9 @@ import butterknife.OnClick;
 public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.ReceiveScheduledBookingsSuccess>
         implements DatesPagerAdapter.DateSelectedListener
 {
+    @Inject
+    ProviderManager mProviderManager;
+
     private static final String SOURCE_SCHEDULED_JOBS_LIST = "scheduled_jobs_list";
     @BindView(R.id.scheduled_jobs_list_view)
     BookingListView mScheduledJobsListView;
@@ -54,6 +65,8 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     ViewGroup mDatesViewPagerHolder;
     @BindView(R.id.dates_view_pager)
     ViewPager mDatesViewPager;
+    @BindView(R.id.available_hours_view)
+    AvailableHoursView mAvailableHoursView;
     private DatesPagerAdapter mDatesPagerAdapter;
     private ViewPager.OnPageChangeListener mDatesPageChangeListener =
             new ViewPager.OnPageChangeListener()
@@ -82,6 +95,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
                     // do nothing
                 }
             };
+    private ProviderAvailability mProviderAvailability;
 
     @Override
     protected MainViewPage getAppPage()
@@ -95,21 +109,66 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         bus.register(this);
         super.onResume();
         setActionBar(R.string.scheduled_jobs, false);
-        if (!MainActivity.clearingBackStack
-                && mSelectedDay != null
-                && mDatesPagerAdapter != null)
+        if (!MainActivity.clearingBackStack)
         {
-            final int position = mDatesPagerAdapter.getItemPositionWithDate(mSelectedDay);
-            if (position != -1)
+            if (mSelectedDay != null && mDatesPagerAdapter != null)
             {
-                mDatesViewPager.setCurrentItem(position);
+                final int position = mDatesPagerAdapter.getItemPositionWithDate(mSelectedDay);
+                if (position != -1)
+                {
+                    mDatesViewPager.setCurrentItem(position);
+                }
+                final NewDateButton dateButton =
+                        mDatesPagerAdapter.getDateButtonForDate(mSelectedDay);
+                if (dateButton != null)
+                {
+                    dateButton.select();
+                }
             }
-            final NewDateButton dateButton =
-                    mDatesPagerAdapter.getDateButtonForDate(mSelectedDay);
-            if (dateButton != null)
-            {
-                dateButton.select();
-            }
+            requestProviderAvailability();
+        }
+    }
+
+    private void requestProviderAvailability()
+    {
+        if (mProviderAvailability == null
+                && mConfigManager.getConfigurationResponse() != null
+                && mConfigManager.getConfigurationResponse().isAvailableHoursEnabled())
+        {
+            dataManager.getProviderAvailability(mProviderManager.getLastProviderId(),
+                    new FragmentSafeCallback<ProviderAvailability>(this)
+                    {
+                        @Override
+                        public void onCallbackSuccess(final ProviderAvailability providerAvailability)
+                        {
+                            mProviderAvailability = providerAvailability;
+                            showAvailableHours();
+                        }
+
+                        @Override
+                        public void onCallbackError(final DataManager.DataManagerError error)
+                        {
+                            // do nothing
+                        }
+                    });
+        }
+    }
+
+    private void showAvailableHours()
+    {
+        if (mProviderAvailability == null
+                || mSelectedDay == null
+                || !mProviderAvailability.covers(mSelectedDay))
+        {
+            mAvailableHoursView.setVisibility(View.GONE);
+        }
+        else
+        {
+            mAvailableHoursView.setVisibility(View.VISIBLE);
+            final DailyAvailabilityTimeline availabilityForSelectedDay =
+                    mProviderAvailability.getAvailabilityForDate(mSelectedDay);
+            mAvailableHoursView.setAvailableHours(availabilityForSelectedDay == null ? null
+                    : availabilityForSelectedDay.getAvailabilityIntervals());
         }
     }
 
@@ -281,5 +340,6 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     public void onDateSelected(final Date date)
     {
         onDateClicked(date);
+        showAvailableHours();
     }
 }

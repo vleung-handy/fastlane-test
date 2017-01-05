@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/no_available_hours"
+        android:textAppearance="@style/TextView.Medium"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="-8dp"
+        android:layout_marginRight="-8dp"
+        android:orientation="horizontal"
+        >
+
+        <LinearLayout
+            android:id="@+id/timelines"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/dashboard_chevron_width_height"
+            android:gravity="center_vertical"
+            android:src="@drawable/ic_chevron_gray"
+            android:tint="@color/text_light_gray"
+            />
+    </LinearLayout>
+</merge>
