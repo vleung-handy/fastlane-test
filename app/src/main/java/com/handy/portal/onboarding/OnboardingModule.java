@@ -1,8 +1,11 @@
 package com.handy.portal.onboarding;
 
+import com.handy.portal.onboarding.ui.activity.ActivationWelcomeActivity;
+import com.handy.portal.onboarding.ui.activity.FirstDayActivity;
 import com.handy.portal.onboarding.ui.activity.OnboardingFlowActivity;
 import com.handy.portal.onboarding.ui.activity.OnboardingSubflowActivity;
 import com.handy.portal.onboarding.ui.fragment.DeclineSuppliesDialogFragment;
+import com.handy.portal.onboarding.ui.fragment.IDVerificationFragment;
 import com.handy.portal.onboarding.ui.fragment.NewPurchaseSuppliesFragment;
 import com.handy.portal.onboarding.ui.fragment.OnboardingStatusFragment;
 import com.handy.portal.onboarding.ui.fragment.PurchaseSuppliesConfirmationFragment;
@@ -27,6 +30,9 @@ import dagger.Module;
                 ScheduleConfirmationFragment.class,
                 OnboardingStatusFragment.class,
                 NewPurchaseSuppliesFragment.class,
+                IDVerificationFragment.class,
+                FirstDayActivity.class,
+                ActivationWelcomeActivity.class,
         })
 public class OnboardingModule
 {

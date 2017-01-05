@@ -60,10 +60,7 @@ import com.handy.portal.location.LocationModule;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.notification.NotificationModule;
 import com.handy.portal.onboarding.OnboardingModule;
-import com.handy.portal.onboarding.ui.activity.ActivationWelcomeActivity;
-import com.handy.portal.onboarding.ui.activity.FirstDayActivity;
 import com.handy.portal.onboarding.ui.fragment.CameraPermissionsBlockerDialogFragment;
-import com.handy.portal.onboarding.ui.fragment.IDVerificationFragment;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsModule;
 import com.handy.portal.receiver.HandyPushReceiver;
@@ -77,9 +74,7 @@ import com.handy.portal.retrofit.stripe.StripeRetrofitEndpoint;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.setup.SetupManager;
 import com.handy.portal.setup.SetupModule;
-import com.handy.portal.updater.VersionManager;
-import com.handy.portal.updater.ui.PleaseUpdateActivity;
-import com.handy.portal.updater.ui.PleaseUpdateFragment;
+import com.handy.portal.updater.UpdaterModule;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.PortalWebViewClient;
 import com.handy.portal.webview.PortalWebViewFragment;
@@ -112,8 +107,6 @@ import retrofit.converter.GsonConverter;
         BaseActivity.class,
         SplashActivity.class,
         MainActivity.class,
-        PleaseUpdateActivity.class,
-        PleaseUpdateFragment.class,
         TermsActivity.class,
         TermsFragment.class,
         UrbanAirshipManager.class,
@@ -136,13 +129,10 @@ import retrofit.converter.GsonConverter;
         DashboardVideoLibraryFragment.class,
         DashboardFeedbackView.class,
         RequestSuppliesWebViewFragment.class,
-        ActivationWelcomeActivity.class,
         RequestSuppliesWebViewFragment.class,
         DashboardTiersFragment.class,
         SoftwareLicensesFragment.class,
         CameraPermissionsBlockerDialogFragment.class,
-        IDVerificationFragment.class,
-        FirstDayActivity.class,
         LoginSltFragment.class,
         LayerPushReceiver.class,
         PortalWebViewClient.class,
@@ -157,6 +147,7 @@ import retrofit.converter.GsonConverter;
                 OnboardingModule.class,
                 SetupModule.class,
                 ClientsModule.class,
+                UpdaterModule.class,
         }
 )
 public final class ApplicationModule
@@ -418,16 +409,6 @@ public final class ApplicationModule
     final ConfigManager provideConfigManager(final DataManager dataManager, final EventBus bus)
     {
         return new ConfigManager(dataManager, bus);
-    }
-
-    @Provides
-    @Singleton
-    final VersionManager provideVersionManager(final EventBus bus,
-                                               final DataManager dataManager,
-                                               final PrefsManager prefsManager,
-                                               final BuildConfigWrapper buildConfigWrapper)
-    {
-        return new VersionManager(context, bus, dataManager, prefsManager, buildConfigWrapper);
     }
 
     @Provides
