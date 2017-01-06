@@ -1,11 +1,11 @@
-package com.handy.portal.availability.model;
+package com.handy.portal.proavailability.model;
 
 import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.library.util.DateTimeUtils;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
@@ -23,26 +23,12 @@ public class AvailabilityInterval implements Serializable
     @Nullable
     public Date getStartTime()
     {
-        try
-        {
-            return TIME_FORMAT.parse(mStartTime);
-        }
-        catch (ParseException e)
-        {
-            return null;
-        }
+        return DateTimeUtils.parseDateString(mStartTime, TIME_FORMAT);
     }
 
     @Nullable
     public Date getEndTime()
     {
-        try
-        {
-            return TIME_FORMAT.parse(mEndTime);
-        }
-        catch (ParseException e)
-        {
-            return null;
-        }
+        return DateTimeUtils.parseDateString(mEndTime, TIME_FORMAT);
     }
 }

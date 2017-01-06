@@ -13,7 +13,7 @@ import android.widget.LinearLayout;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.adapter.DatesPagerAdapter;
-import com.handy.portal.availability.view.AvailableHoursView;
+import com.handy.portal.proavailability.view.AvailableHoursView;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
 import com.handy.portal.bookings.ui.element.NewDateButton;
@@ -31,8 +31,8 @@ import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
-import com.handy.portal.availability.model.DailyAvailabilityTimeline;
-import com.handy.portal.availability.model.ProviderAvailability;
+import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
+import com.handy.portal.proavailability.model.ProviderAvailability;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -114,7 +114,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
             if (mSelectedDay != null && mDatesPagerAdapter != null)
             {
                 final int position = mDatesPagerAdapter.getItemPositionWithDate(mSelectedDay);
-                if (position != -1)
+                if (position != DatesPagerAdapter.POSITION_NOT_FOUND)
                 {
                     mDatesViewPager.setCurrentItem(position);
                 }

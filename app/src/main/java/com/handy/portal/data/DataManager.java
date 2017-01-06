@@ -25,7 +25,7 @@ import com.handy.portal.library.util.IDVerificationUtils;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
-import com.handy.portal.availability.model.ProviderAvailability;
+import com.handy.portal.proavailability.model.ProviderAvailability;
 import com.handy.portal.notification.model.NotificationMessages;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;

@@ -1,4 +1,4 @@
-package com.handy.portal.availability.view;
+package com.handy.portal.proavailability.view;
 
 import android.content.Context;
 import android.os.Build;
@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FontUtils;
-import com.handy.portal.availability.model.AvailabilityInterval;
+import com.handy.portal.proavailability.model.AvailabilityInterval;
 
 import java.util.List;
 

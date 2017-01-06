@@ -1,4 +1,4 @@
-package com.handy.portal.availability.model;
+package com.handy.portal.proavailability.model;
 
 import android.support.annotation.Nullable;
 

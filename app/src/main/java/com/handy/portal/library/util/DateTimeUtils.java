@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.text.format.DateUtils;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 
 import java.text.ParseException;
@@ -619,6 +620,20 @@ public final class DateTimeUtils
         else
         {
             return formatMonthDate(date);
+        }
+    }
+
+    @Nullable
+    public static Date parseDateString(final String dateString, final SimpleDateFormat format)
+    {
+        try
+        {
+            return format.parse(dateString);
+        }
+        catch (ParseException e)
+        {
+            Crashlytics.logException(e);
+            return null;
         }
     }
 }

@@ -1,12 +1,12 @@
-package com.handy.portal.availability.model;
+package com.handy.portal.proavailability.model;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.library.util.DateTimeUtils;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -19,41 +19,22 @@ public class WeeklyAvailabilityTimeline implements Serializable
     @SerializedName("timelines")
     private ArrayList<DailyAvailabilityTimeline> mDailyAvailabilityTimelines;
 
-    public ArrayList<DailyAvailabilityTimeline> getDailyAvailabilityTimelines()
-    {
-        return mDailyAvailabilityTimelines;
-    }
-
     @Nullable
     public Date getStartDate()
     {
-        try
-        {
-            return DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.parse(mStartDate);
-        }
-        catch (ParseException e)
-        {
-            return null;
-        }
+        return DateTimeUtils.parseDateString(mStartDate, DateTimeUtils.YEAR_MONTH_DAY_FORMATTER);
     }
 
     @Nullable
     public Date getEndDate()
     {
-        try
-        {
-            return DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.parse(mEndDate);
-        }
-        catch (ParseException e)
-        {
-            return null;
-        }
+        return DateTimeUtils.parseDateString(mEndDate, DateTimeUtils.YEAR_MONTH_DAY_FORMATTER);
     }
 
     @Nullable
-    public DailyAvailabilityTimeline getAvailabilityForDate(final Date date)
+    public DailyAvailabilityTimeline getAvailabilityForDate(@NonNull final Date date)
     {
-        for (DailyAvailabilityTimeline dailyAvailabilityTimeline : getDailyAvailabilityTimelines())
+        for (DailyAvailabilityTimeline dailyAvailabilityTimeline : mDailyAvailabilityTimelines)
         {
             if (dailyAvailabilityTimeline.matchesDate(date))
             {
@@ -63,7 +44,7 @@ public class WeeklyAvailabilityTimeline implements Serializable
         return null;
     }
 
-    public boolean covers(final Date date)
+    public boolean covers(@NonNull final Date date)
     {
         final Date startDate = getStartDate();
         final Date endDate = getEndDate();
