@@ -17,6 +17,7 @@ import java.util.Locale;
 
 public class DatesPagerAdapter extends PagerAdapter
 {
+    public static final int POSITION_NOT_FOUND = -1;
     private static final int WEEKS_TOTAL = 4;
     private static final int DAYS_IN_A_WEEK = 7;
     private final List<NewDateButtonGroup> mViews;
@@ -61,7 +62,7 @@ public class DatesPagerAdapter extends PagerAdapter
     public int getItemPosition(final Object object)
     {
         int index = mViews.indexOf(object);
-        if (index == -1)
+        if (index == POSITION_NOT_FOUND)
         {
             return POSITION_NONE;
         }
@@ -139,7 +140,7 @@ public class DatesPagerAdapter extends PagerAdapter
         {
             return getItemPosition(group);
         }
-        return -1;
+        return POSITION_NOT_FOUND;
     }
 
     public NewDateButtonGroup getItemAt(final int position)

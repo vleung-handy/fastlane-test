@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.text.format.DateUtils;
 import android.widget.TextView;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 
 import java.text.ParseException;
@@ -24,7 +25,7 @@ public final class DateTimeUtils
     //TODO: refactor code throughout the app to put date formats here
     //TODO: rename these fields & methods to something better
     public final static SimpleDateFormat CLOCK_FORMATTER_12HR =
-            new SimpleDateFormat("h:mm a", Locale.getDefault());
+            new SimpleDateFormat("h:mma", Locale.getDefault());
     public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DAY_FORMATTER =
             new SimpleDateFormat("EEEE, MMMM d", Locale.getDefault());
     public final static SimpleDateFormat SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER =
@@ -180,7 +181,7 @@ public final class DateTimeUtils
     public static String formatDateTo12HourClock(Date date)
     {
         if (date == null) { return null; }
-        return getClockFormatter12hr().format(date);
+        return getClockFormatter12hr().format(date).toLowerCase();
     }
 
     @Nullable
@@ -619,6 +620,20 @@ public final class DateTimeUtils
         else
         {
             return formatMonthDate(date);
+        }
+    }
+
+    @Nullable
+    public static Date parseDateString(final String dateString, final SimpleDateFormat format)
+    {
+        try
+        {
+            return format.parse(dateString);
+        }
+        catch (ParseException e)
+        {
+            Crashlytics.logException(e);
+            return null;
         }
     }
 }

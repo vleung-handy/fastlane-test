@@ -67,6 +67,8 @@ public class ConfigurationResponse
     @SerializedName("scheduled_jobs_calendar_navigation_enabled")
     private boolean mNewDateScrollerEnabled;
 
+    @SerializedName("available_hours_enabled")
+    private boolean mAvailableHoursEnabled;
 
     public boolean isAppseeAnalyticsEnabled()
     {
@@ -173,6 +175,11 @@ public class ConfigurationResponse
     public boolean isNewDateScrollerEnabled()
     {
         return mNewDateScrollerEnabled;
+    }
+
+    public boolean isAvailableHoursEnabled()
+    {
+        return false;
     }
 
     public static class HelpCenterInfo

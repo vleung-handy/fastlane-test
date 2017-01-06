@@ -193,6 +193,9 @@ public interface HandyRetrofitService
     void getResupplyKit(@Path("id") String providerId,
                         HandyRetrofitCallback cb);
 
+    @GET(PROVIDERS_PATH + "{id}/availability_timeline")
+    void getProviderAvailability(@Path("id") String providerId, HandyRetrofitCallback cb);
+
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/on_my_way")
     void notifyOnMyWay(@Path("booking_id") String bookingId,

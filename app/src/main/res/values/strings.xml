@@ -658,4 +658,9 @@
     <string name="thursday_initial">T</string>
     <string name="friday_initial">F</string>
     <string name="saturday_initial">S</string>
+
+    <!-- Pro Availability -->
+    <string name="no_available_hours">No Available Hours</string>
+    <string name="available_hours">Available Hours</string>
+    <string name="set_hours">Set Hours</string>
 </resources>
