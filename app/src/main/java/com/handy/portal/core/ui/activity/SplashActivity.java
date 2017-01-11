@@ -25,6 +25,7 @@ import com.handy.portal.core.manager.LoginManager;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.deeplink.DeeplinkUtils;
+import com.handy.portal.logger.handylogger.GoogleServicesLoggerFragment;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
@@ -107,6 +108,22 @@ public class SplashActivity extends BaseActivity
         initLayerHelper();
 
         logFirstLaunch();
+        addGoogleServicesAvailabilityLoggerFragment();
+    }
+
+    private void addGoogleServicesAvailabilityLoggerFragment()
+    {
+        GoogleServicesLoggerFragment fragment = (GoogleServicesLoggerFragment)
+                getSupportFragmentManager().findFragmentByTag(GoogleServicesLoggerFragment.TAG);
+
+        if(fragment == null)
+        {
+            fragment = GoogleServicesLoggerFragment.newInstance();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(fragment, GoogleServicesLoggerFragment.TAG)
+                    .commit();
+        }
     }
 
     @Override

@@ -58,6 +58,7 @@ import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.LocationModule;
 import com.handy.portal.logger.handylogger.EventLogManager;
+import com.handy.portal.logger.handylogger.GoogleServicesLoggerFragment;
 import com.handy.portal.notification.NotificationModule;
 import com.handy.portal.onboarding.OnboardingModule;
 import com.handy.portal.onboarding.ui.activity.ActivationWelcomeActivity;
@@ -147,6 +148,7 @@ import retrofit.converter.GsonConverter;
         LayerPushReceiver.class,
         PortalWebViewClient.class,
         RequestSuppliesWebViewClient.class,
+        GoogleServicesLoggerFragment.class,
 },
         includes = {
                 HelpModule.class,
