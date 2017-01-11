@@ -13,9 +13,13 @@ public class HandyTimePicker extends LinearLayout
 {
     private static final int DEFAULT_CELLS_PER_ROW_COUNT = 3;
     public static final int NO_TIME_SELECTED = -1;
+    public static final int MINIMUM_START_TIME = 0;
+    public static final int MAXIMUM_START_TIME = 24;
+    private int mStartTime;
+    private int mEndTime;
     private int mSelectedStartTime = NO_TIME_SELECTED;
     private int mSelectedEndTime = NO_TIME_SELECTED;
-    private OnClickListener mListener;
+    private TimeClickListener mListener;
 
     public HandyTimePicker(final Context context)
     {
@@ -49,6 +53,14 @@ public class HandyTimePicker extends LinearLayout
 
     public void setTimeRange(final int startTime, final int endTime)
     {
+        if (startTime < MINIMUM_START_TIME
+                || endTime > MAXIMUM_START_TIME
+                || startTime >= endTime)
+        {
+            return;
+        }
+        mStartTime = startTime;
+        mEndTime = endTime;
         for (int rowStartTime = startTime; rowStartTime <= endTime;
              rowStartTime += DEFAULT_CELLS_PER_ROW_COUNT)
         {
@@ -65,14 +77,15 @@ public class HandyTimePicker extends LinearLayout
                         {
                             if (mListener != null)
                             {
-                                mListener.onClick(view);
+                                final int time = ((HandyTimePickerCell) view).getTime();
+                                mListener.onTimeClick(time);
                             }
                         }
                     }));
         }
     }
 
-    public void setTimeClickListener(final OnClickListener listener)
+    public void setTimeClickListener(final TimeClickListener listener)
     {
         mListener = listener;
     }
@@ -136,6 +149,21 @@ public class HandyTimePicker extends LinearLayout
     public int getSelectedEndTime()
     {
         return mSelectedEndTime;
+    }
+
+    public boolean hasSelectedStartTime()
+    {
+        return mSelectedStartTime != NO_TIME_SELECTED;
+    }
+
+    public boolean hasSelectedEndTime()
+    {
+        return mSelectedEndTime != NO_TIME_SELECTED;
+    }
+
+    public boolean hasSelectedRange()
+    {
+        return hasSelectedStartTime() && hasSelectedEndTime();
     }
 
     public boolean selectStartTime(final int time)
@@ -209,19 +237,28 @@ public class HandyTimePicker extends LinearLayout
     @Nullable
     private HandyTimePickerCell getCellForTime(final int time)
     {
-        for (int i = 0; i < getChildCount(); i++)
+        if (covers(time))
         {
-            final HandyTimePickerRow timePickerRow = (HandyTimePickerRow) getChildAt(i);
-            for (int j = 0; j < timePickerRow.mTimePickerCellViews.getChildCount(); j++)
+            for (int i = 0; i < getChildCount(); i++)
             {
-                final HandyTimePickerCell timePickerCell =
-                        (HandyTimePickerCell) timePickerRow.mTimePickerCellViews.getChildAt(j);
-                if (timePickerCell.getTime() == time)
+                final HandyTimePickerRow timePickerRow = (HandyTimePickerRow) getChildAt(i);
+                final HandyTimePickerCell timePickerCell = timePickerRow.getCellForTime(time);
+                if (timePickerCell != null)
                 {
                     return timePickerCell;
                 }
             }
         }
         return null;
+    }
+
+    private boolean covers(final int time)
+    {
+        return time >= mStartTime && time <= mEndTime;
+    }
+
+    public interface TimeClickListener
+    {
+        void onTimeClick(final int time);
     }
 }

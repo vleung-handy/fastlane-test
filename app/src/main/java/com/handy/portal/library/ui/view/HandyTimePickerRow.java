@@ -1,6 +1,7 @@
 package com.handy.portal.library.ui.view;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -59,5 +60,28 @@ public class HandyTimePickerRow extends FrameLayout
         {
             mGapViews.getChildAt(position).setVisibility(isVisible ? VISIBLE : INVISIBLE);
         }
+    }
+
+    @Nullable
+    public HandyTimePickerCell getCellForTime(final int time)
+    {
+        if (covers(time))
+        {
+            for (int i = 0; i < mTimePickerCellViews.getChildCount(); i++)
+            {
+                final HandyTimePickerCell timePickerCell =
+                        (HandyTimePickerCell) mTimePickerCellViews.getChildAt(i);
+                if (timePickerCell.getTime() == time)
+                {
+                    return timePickerCell;
+                }
+            }
+        }
+        return null;
+    }
+
+    private boolean covers(final int time)
+    {
+        return time >= mStartTime && time <= mEndTime;
     }
 }

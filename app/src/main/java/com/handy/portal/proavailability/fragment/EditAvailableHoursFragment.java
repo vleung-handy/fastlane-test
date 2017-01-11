@@ -12,7 +12,6 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.ui.view.HandyTimePicker;
-import com.handy.portal.library.ui.view.HandyTimePickerCell;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.proavailability.model.AvailabilityInterval;
 import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
@@ -44,23 +43,23 @@ public class EditAvailableHoursFragment extends ActionBarFragment
     private Date mDate;
     private DailyAvailabilityTimeline mAvailabilityTimeline;
     private TimeEditType mTimeEditType;
-    private View.OnClickListener mTimeClickListener = new View.OnClickListener()
+    private HandyTimePicker.TimeClickListener mTimeClickListener = new HandyTimePicker.TimeClickListener()
     {
         @Override
-        public void onClick(final View view)
+        public void onTimeClick(final int time)
         {
-            int targetTime = ((HandyTimePickerCell) view).getTime();
+            int targetTime = time;
 
             // Default selection to start time.
             if (mTimeEditType == null)
             {
                 mTimeEditType = TimeEditType.START_TIME;
             }
-            // Default selection to end time if a start time has been selected bu end time hasn't
+            // Default selection to end time if a start time has been selected but end time hasn't
             // been selected.
             else if (mTimeEditType == TimeEditType.START_TIME
-                    && mTimePicker.getSelectedStartTime() != HandyTimePicker.NO_TIME_SELECTED
-                    && mTimePicker.getSelectedEndTime() == HandyTimePicker.NO_TIME_SELECTED)
+                    && mTimePicker.hasSelectedStartTime()
+                    && !mTimePicker.hasSelectedEndTime())
             {
                 mTimeEditType = TimeEditType.END_TIME;
             }
@@ -70,8 +69,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment
             if (mTimePicker.getSelectedStartTime() == targetTime
                     || mTimePicker.getSelectedEndTime() == targetTime)
             {
-                if (mTimePicker.getSelectedStartTime() != HandyTimePicker.NO_TIME_SELECTED
-                        && mTimePicker.getSelectedEndTime() != HandyTimePicker.NO_TIME_SELECTED)
+                if (mTimePicker.hasSelectedRange())
                 {
                     final int selectedStartTime = mTimePicker.getSelectedStartTime();
                     resetTimeRange();
@@ -86,7 +84,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment
 
             // Tapping an earlier time when there is already a selected start time will force the
             // editing to start time.
-            if (mTimePicker.getSelectedStartTime() != HandyTimePicker.NO_TIME_SELECTED
+            if (mTimePicker.hasSelectedStartTime()
                     && targetTime < mTimePicker.getSelectedStartTime())
             {
                 mTimeEditType = TimeEditType.START_TIME;
@@ -94,32 +92,23 @@ public class EditAvailableHoursFragment extends ActionBarFragment
 
             // Tapping a later time when there is already a selected end time will force the editing
             // to end time.
-            if (mTimePicker.getSelectedEndTime() != HandyTimePicker.NO_TIME_SELECTED
-                    && targetTime > mTimePicker.getSelectedEndTime())
+            if (mTimePicker.hasSelectedEndTime() && targetTime > mTimePicker.getSelectedEndTime())
             {
                 mTimeEditType = TimeEditType.END_TIME;
             }
 
-            if (mTimeEditType == TimeEditType.START_TIME)
+            // Select start time.
+            if (mTimeEditType == TimeEditType.START_TIME && mTimePicker.selectStartTime(targetTime))
             {
-                if (mTimePicker.selectStartTime(targetTime))
-                {
-                    editStartTime();
-                    final Date date = DateTimeUtils.parseDateString(
-                            String.valueOf(targetTime), DateTimeUtils.HOUR_INT_FORMATTER);
-                    mStartTime.setText(DateTimeUtils.formatDateTo12HourClock(date));
-                }
+                editStartTime();
+                displayTime(mStartTime, targetTime);
             }
-            if (mTimeEditType == TimeEditType.END_TIME)
+
+            // Select end time.
+            if (mTimeEditType == TimeEditType.END_TIME && mTimePicker.selectEndTime(targetTime))
             {
-                if (mTimePicker.selectEndTime(targetTime))
-                {
-                    editEndTime();
-                    final Date date = DateTimeUtils.parseDateString(
-                            String.valueOf(targetTime), DateTimeUtils.HOUR_INT_FORMATTER);
-                    mEndTime.setText(DateTimeUtils.formatDateTo12HourClock(date));
-                    mResetTimeRangeButton.setVisibility(View.VISIBLE);
-                }
+                editEndTime();
+                displayTime(mEndTime, targetTime);
             }
         }
     };
@@ -133,15 +122,12 @@ public class EditAvailableHoursFragment extends ActionBarFragment
     @OnClick(R.id.reset_time_range)
     public void resetTimeRange()
     {
-        mStartTime.setBackgroundResource(R.color.handy_bg);
-        mStartTime.setTextColor(mBlack);
-        mEndTimeHolder.setBackgroundResource(R.color.handy_bg);
-        mEndTime.setTextColor(mBlack);
+        uneditStartTime();
+        uneditEndTime();
         mStartTime.setText(R.string.start_time);
         mEndTime.setText(R.string.end_time);
         mTimeEditType = TimeEditType.START_TIME;
         mResetTimeRangeButton.setVisibility(View.GONE);
-        // FIXME: Manage the state of this button
         mTimePicker.resetSelection();
     }
 
@@ -150,8 +136,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment
     {
         mStartTime.setBackgroundResource(R.color.tertiary_gray);
         mStartTime.setTextColor(mWhite);
-        mEndTimeHolder.setBackgroundResource(R.color.handy_bg);
-        mEndTime.setTextColor(mBlack);
+        uneditEndTime();
         mTimeEditType = TimeEditType.START_TIME;
     }
 
@@ -160,9 +145,31 @@ public class EditAvailableHoursFragment extends ActionBarFragment
     {
         mEndTimeHolder.setBackgroundResource(R.color.tertiary_gray);
         mEndTime.setTextColor(mWhite);
+        uneditStartTime();
+        mTimeEditType = TimeEditType.END_TIME;
+    }
+
+    private void uneditStartTime()
+    {
         mStartTime.setBackgroundResource(R.color.handy_bg);
         mStartTime.setTextColor(mBlack);
-        mTimeEditType = TimeEditType.END_TIME;
+    }
+
+    private void uneditEndTime()
+    {
+        mEndTimeHolder.setBackgroundResource(R.color.handy_bg);
+        mEndTime.setTextColor(mBlack);
+    }
+
+    private void displayTime(final TextView timeView, final int time)
+    {
+        final Date date = DateTimeUtils.parseDateString(
+                String.valueOf(time), DateTimeUtils.HOUR_INT_FORMATTER);
+        timeView.setText(DateTimeUtils.formatDateTo12HourClock(date));
+        if (mTimePicker.hasSelectedRange())
+        {
+            mResetTimeRangeButton.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
