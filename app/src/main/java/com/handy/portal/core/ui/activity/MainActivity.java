@@ -45,6 +45,7 @@ import com.handy.portal.library.ui.layout.TabbedLayout;
 import com.handy.portal.library.ui.widget.TabButton;
 import com.handy.portal.library.ui.widget.TabButtonGroup;
 import com.handy.portal.library.util.FragmentUtils;
+import com.handy.portal.logger.handylogger.GoogleServicesLoggerFragment;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
 import com.handy.portal.notification.NotificationUtils;
@@ -177,6 +178,26 @@ public class MainActivity extends BaseActivity
         if (mShouldIncludeMessagesCount)
         {
             mLayerHelper.registerUnreadConversationsCountChangedListener(this);
+        }
+        addGoogleServicesLoggerFragment();
+    }
+
+    /**
+     * adds the headless google services logger fragment
+     * see {@link GoogleServicesLoggerFragment}
+     */
+    private void addGoogleServicesLoggerFragment()
+    {
+        GoogleServicesLoggerFragment fragment = (GoogleServicesLoggerFragment)
+                getSupportFragmentManager().findFragmentByTag(GoogleServicesLoggerFragment.TAG);
+
+        if(fragment == null)
+        {
+            fragment = GoogleServicesLoggerFragment.newInstance();
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .add(fragment, GoogleServicesLoggerFragment.TAG)
+                    .commit();
         }
     }
 

@@ -57,6 +57,7 @@ import com.handy.portal.helpcenter.HelpModule;
 import com.handy.portal.library.util.PropertiesReader;
 import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.location.LocationModule;
+import com.handy.portal.logger.handylogger.AccountPermissionsBlockerDialogFragment;
 import com.handy.portal.logger.handylogger.EventLogManager;
 import com.handy.portal.logger.handylogger.GoogleServicesLoggerFragment;
 import com.handy.portal.notification.NotificationModule;
@@ -142,6 +143,7 @@ import retrofit.converter.GsonConverter;
         DashboardTiersFragment.class,
         SoftwareLicensesFragment.class,
         CameraPermissionsBlockerDialogFragment.class,
+        AccountPermissionsBlockerDialogFragment.class,
         IDVerificationFragment.class,
         FirstDayActivity.class,
         LoginSltFragment.class,

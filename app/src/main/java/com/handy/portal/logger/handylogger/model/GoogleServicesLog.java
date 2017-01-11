@@ -16,6 +16,9 @@ public abstract class GoogleServicesLog extends EventLog
         super(eventType, EVENT_CONTEXT);
     }
 
+    /**
+     * whether the play store is installed on the device
+     */
     public static class PlayStoreInstallationStatus extends GoogleServicesLog
     {
         private static final String EVENT_TYPE = "play_store_installation_status";
@@ -30,6 +33,10 @@ public abstract class GoogleServicesLog extends EventLog
         }
     }
 
+
+    /**
+     * whether play services is available on the device
+     */
     public static class PlayServicesAvailability extends GoogleServicesLog
     {
         private static final String EVENT_TYPE = "play_services_availability";

@@ -6,14 +6,13 @@ import android.accounts.AccountManager;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.model.GoogleServicesLog;
 
@@ -32,7 +31,16 @@ public class GoogleServicesLoggerFragment extends Fragment
 {
     private static final int GET_ACCOUNTS_PERMISSION_REQUEST_CODE = 1001;
 
+    private static final String[] REQUIRED_PERMISSIONS = new String[]{Manifest.permission.GET_ACCOUNTS};
+
     public static final String TAG = GoogleServicesLoggerFragment.class.getName();
+
+    /**
+     * needed because account existence is logged in onResume
+     * because we need to handle required permissions for it
+     * and we don't want multiple unnecessary logs for this instance
+     */
+    private static boolean sAccountExistenceLogged = false;
 
     @Inject
     EventBus mBus;
@@ -51,7 +59,6 @@ public class GoogleServicesLoggerFragment extends Fragment
 
         logGooglePlayStoreInstallationStatus();
         logGooglePlayServicesAvailability();
-        logGoogleAccountExistenceOrRequestAccountPermission();
     }
 
     private void logGooglePlayServicesAvailability()
@@ -80,33 +87,61 @@ public class GoogleServicesLoggerFragment extends Fragment
                 new GoogleServicesLog.PlayStoreInstallationStatus(playStoreInstalled)));
     }
 
+    @Override
+    public void onResume()
+    {
+        super.onResume();
+        logGoogleAccountExistenceOrRequestAccountPermission();
+        /*
+        putting this in resume to handle case in which user
+        is redirected to settings to change permissions, but
+        simply navigates back without doing anything
+
+        also cannot just use onRequestPermissionsResult()
+        because we use custom permissions dialog
+         */
+    }
+
+    @SuppressWarnings({"MissingPermission"})
     private void logGoogleAccountExistenceOrRequestAccountPermission()
     {
+        if(sAccountExistenceLogged) return;
+
         AccountManager accountManager = AccountManager.get(getContext());
-        if (ActivityCompat.checkSelfPermission(
-                getContext(),
-                Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)
+        if (!Utils.areAllPermissionsGranted(getContext(), REQUIRED_PERMISSIONS))
         {
-            //ask for permission to get accounts
-            ActivityCompat.requestPermissions(getActivity(),
-                    new String[]{Manifest.permission.GET_ACCOUNTS},
-                    GET_ACCOUNTS_PERMISSION_REQUEST_CODE);
+            if (Utils.wereAnyPermissionsRequestedPreviously(getActivity(), REQUIRED_PERMISSIONS))
+            {
+                /*
+                show our custom permissions dialog with explanation if
+                the user already denied permissions via default dialog
+                 */
+                if(getActivity().getSupportFragmentManager().findFragmentByTag(AccountPermissionsBlockerDialogFragment.TAG) == null)
+                {
+                    FragmentUtils.safeLaunchDialogFragment(new AccountPermissionsBlockerDialogFragment(),
+                            getActivity(), AccountPermissionsBlockerDialogFragment.TAG);
+                }
+            }
+            else
+            {
+                //ask for permission to get accounts using default permissions dialog
+                requestPermissions(REQUIRED_PERMISSIONS,
+                        GET_ACCOUNTS_PERMISSION_REQUEST_CODE);
+            }
         }
         else
         {
+            /*
+            won't throw SecurityException at this point because
+            this logic is only reached if all permissions were granted
+             */
             //check if google account set up on device
             Account[] accounts = accountManager.getAccountsByType("com.google");
             boolean googleAccountExists = accounts.length >= 1;
             mBus.post(new LogEvent.AddLogEvent(new GoogleServicesLog.AccountExistence(googleAccountExists)));
+            sAccountExistenceLogged = true;
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(final int requestCode, @NonNull final String[] permissions, @NonNull final int[] grantResults)
-    {
-        if (requestCode == GET_ACCOUNTS_PERMISSION_REQUEST_CODE)
-        {
-            logGoogleAccountExistenceOrRequestAccountPermission();
-        }
-    }
+    //don't need onRequestPermissionsResult() because onResume already checks for permissions again
 }

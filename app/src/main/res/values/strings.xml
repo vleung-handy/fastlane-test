@@ -449,7 +449,13 @@
     <string name="change_location_settings_dialog_action_button">Go to Settings</string>
     <string name="change_location_permissions_dialog_title">Location permissions required</string>
     <string name="change_location_permissions_dialog_message">Please grant location permissions so your customers are aware of your arrival time.</string>
-    <string name="change_location_permissions_dialog_action_button">Go to Settings</string>
+
+    <string name="permissions_dialog_action_button">Go to Settings</string>
+
+    <!-- Google services logging -->
+    <string name="change_account_permissions_dialog_title">Account permissions required</string>
+    <string name="change_account_permissions_dialog_message">Account permission is required for this app to function</string>
+    <!--TODO get official copy. this permission is suspicious; how to justify to users?-->
 
     <!-- Jumio ID Verification -->
     <string name="allow_camera_title">Allow camera access</string>
