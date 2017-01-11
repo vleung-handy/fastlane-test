@@ -103,15 +103,13 @@ public class EditAvailableHoursFragment extends ActionBarFragment
             // Select start time if applicable.
             if (mTimeEditType == TimeEditType.START_TIME && mTimePicker.selectStartTime(targetTime))
             {
-                editStartTime();
-                displayTime(mStartTime, targetTime);
+                updateStartTime(targetTime);
             }
 
             // Select end time if applicable.
             if (mTimeEditType == TimeEditType.END_TIME && mTimePicker.selectEndTime(targetTime))
             {
-                editEndTime();
-                displayTime(mEndTime, targetTime);
+                updateEndTime(targetTime);
             }
         }
     };
@@ -164,7 +162,19 @@ public class EditAvailableHoursFragment extends ActionBarFragment
         mEndTime.setTextColor(mBlack);
     }
 
-    private void displayTime(final TextView timeView, final int time)
+    private void updateStartTime(final int time)
+    {
+        editStartTime();
+        updateTime(mStartTime, time);
+    }
+
+    private void updateEndTime(final int time)
+    {
+        editEndTime();
+        updateTime(mEndTime, time);
+    }
+
+    private void updateTime(final TextView timeView, final int time)
     {
         final Date date = DateTimeUtils.parseDateString(
                 String.valueOf(time), DateTimeUtils.HOUR_INT_FORMATTER);
@@ -222,9 +232,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment
                     mAvailabilityTimeline.getAvailabilityIntervals().get(0);
             if (mTimePicker.selectTimeRange(interval.getStartTimeInt(), interval.getEndTimeInt()))
             {
-                displayTime(mStartTime, interval.getStartTimeInt());
-                displayTime(mEndTime, interval.getEndTimeInt());
-                editEndTime();
+                updateStartTime(interval.getStartTimeInt());
+                updateEndTime(interval.getEndTimeInt());
             }
         }
     }
