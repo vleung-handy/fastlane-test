@@ -20,6 +20,16 @@ public class AvailabilityInterval implements Serializable
     @SerializedName("end")
     private String mEndTime;
 
+    public int getStartTimeInt()
+    {
+        return DateTimeUtils.getHourInt(getStartTime());
+    }
+
+    public int getEndTimeInt()
+    {
+        return DateTimeUtils.getHourInt(getEndTime());
+    }
+
     @Nullable
     public Date getStartTime()
     {

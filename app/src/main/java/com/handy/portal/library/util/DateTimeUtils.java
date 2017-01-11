@@ -24,12 +24,16 @@ public final class DateTimeUtils
 {
     //TODO: refactor code throughout the app to put date formats here
     //TODO: rename these fields & methods to something better
+    public final static SimpleDateFormat HOUR_FORMATTER =
+            new SimpleDateFormat("h a", Locale.getDefault());
     public final static SimpleDateFormat CLOCK_FORMATTER_12HR =
             new SimpleDateFormat("h:mma", Locale.getDefault());
     public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DAY_FORMATTER =
             new SimpleDateFormat("EEEE, MMMM d", Locale.getDefault());
     public final static SimpleDateFormat SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER =
             new SimpleDateFormat("E, MMMM d", Locale.getDefault());
+    public final static SimpleDateFormat SHORT_DAY_OF_WEEK_SHORT_MONTH_DAY_FORMATTER =
+            new SimpleDateFormat("E, MMM d", Locale.getDefault());
     public final static SimpleDateFormat MONTH_SHORT_NAME_FORMATTER =
             new SimpleDateFormat("MMM", Locale.getDefault());
     public final static SimpleDateFormat SUMMARY_DATE_FORMATTER =
@@ -58,6 +62,9 @@ public final class DateTimeUtils
             new SimpleDateFormat("D", Locale.getDefault());
     public final static SimpleDateFormat YEAR_MONTH_DAY_FORMATTER =
             new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+
+    public static final SimpleDateFormat HOUR_INT_FORMATTER =
+            new SimpleDateFormat("H", Locale.getDefault());
 
     public final static int HOURS_IN_DAY = 24;
     public final static String UTC_TIMEZONE = "UTC";
@@ -178,6 +185,13 @@ public final class DateTimeUtils
     }
 
     @Nullable
+    public static String formatDateToHour(Date date)
+    {
+        if (date == null) { return null; }
+        return getHourFormatter().format(date).toLowerCase();
+    }
+
+    @Nullable
     public static String formatDateTo12HourClock(Date date)
     {
         if (date == null) { return null; }
@@ -189,6 +203,13 @@ public final class DateTimeUtils
     {
         if (date == null) { return null; }
         return getDayOfWeekMonthDayFormatter().format(date);
+    }
+
+    @Nullable
+    public static String formatDateShortDayOfWeekShortMonthDay(Date date)
+    {
+        if (date == null) { return null; }
+        return getShortDayOfWeekShortMonthDayFormatter().format(date);
     }
 
     @Nullable
@@ -492,6 +513,12 @@ public final class DateTimeUtils
         return Math.round((date1.getTime() - date2.getTime()) / (float) (DateUtils.MINUTE_IN_MILLIS));
     }
 
+    private static SimpleDateFormat getHourFormatter()
+    {
+        HOUR_FORMATTER.setTimeZone(TimeZone.getDefault());
+        return HOUR_FORMATTER;
+    }
+
     private static SimpleDateFormat getClockFormatter12hr()
     {
         CLOCK_FORMATTER_12HR.setTimeZone(TimeZone.getDefault());
@@ -502,6 +529,12 @@ public final class DateTimeUtils
     {
         DAY_OF_WEEK_MONTH_DAY_FORMATTER.setTimeZone(TimeZone.getDefault());
         return DAY_OF_WEEK_MONTH_DAY_FORMATTER;
+    }
+
+    private static SimpleDateFormat getShortDayOfWeekShortMonthDayFormatter()
+    {
+        SHORT_DAY_OF_WEEK_SHORT_MONTH_DAY_FORMATTER.setTimeZone(TimeZone.getDefault());
+        return SHORT_DAY_OF_WEEK_SHORT_MONTH_DAY_FORMATTER;
     }
 
     private static SimpleDateFormat getMonthShortNameFormatter()
@@ -634,6 +667,18 @@ public final class DateTimeUtils
         {
             Crashlytics.logException(e);
             return null;
+        }
+    }
+
+    public static Integer getHourInt(@Nullable final Date date)
+    {
+        if (date == null)
+        {
+            return 0;
+        }
+        else
+        {
+            return Integer.parseInt(HOUR_INT_FORMATTER.format(date));
         }
     }
 }

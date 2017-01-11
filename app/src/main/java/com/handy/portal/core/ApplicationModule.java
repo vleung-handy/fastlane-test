@@ -66,6 +66,7 @@ import com.handy.portal.onboarding.ui.fragment.CameraPermissionsBlockerDialogFra
 import com.handy.portal.onboarding.ui.fragment.IDVerificationFragment;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsModule;
+import com.handy.portal.proavailability.fragment.EditAvailableHoursFragment;
 import com.handy.portal.receiver.HandyPushReceiver;
 import com.handy.portal.receiver.LayerPushReceiver;
 import com.handy.portal.retrofit.DynamicEndpoint;
@@ -147,6 +148,7 @@ import retrofit.converter.GsonConverter;
         LayerPushReceiver.class,
         PortalWebViewClient.class,
         RequestSuppliesWebViewClient.class,
+        EditAvailableHoursFragment.class,
 },
         includes = {
                 HelpModule.class,

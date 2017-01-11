@@ -663,4 +663,7 @@
     <string name="no_available_hours">No Available Hours</string>
     <string name="available_hours">Available Hours</string>
     <string name="set_hours">Set Hours</string>
+    <string name="hours_for_date_formatted">Hours for %1$s</string>
+    <string name="start_time">Start Time</string>
+    <string name="end_time">End Time</string>
 </resources>

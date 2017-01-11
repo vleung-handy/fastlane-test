@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="76dp"
+    android:layout_height="60dp"
+    android:background="@color/inactive_gray"
+    android:visibility="invisible"
+    tools:visibility="visible"
+    />

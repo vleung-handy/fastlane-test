@@ -96,6 +96,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 }
             };
     private ProviderAvailability mProviderAvailability;
+    private DailyAvailabilityTimeline mAvailabilityForSelectedDay;
 
     @Override
     protected MainViewPage getAppPage()
@@ -167,6 +168,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
             mAvailableHoursView.setVisibility(View.VISIBLE);
             final DailyAvailabilityTimeline availabilityForSelectedDay =
                     mProviderAvailability.getAvailabilityForDate(mSelectedDay);
+            mAvailabilityForSelectedDay = availabilityForSelectedDay;
             mAvailableHoursView.setAvailableHours(availabilityForSelectedDay == null ? null
                     : availabilityForSelectedDay.getAvailabilityIntervals());
         }
@@ -302,6 +304,15 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
         //Return to available jobs on that day
         bus.post(new NavigationEvent.NavigateToPage(MainViewPage.AVAILABLE_JOBS, arguments, transitionStyle));
+    }
+
+    @OnClick(R.id.available_hours_view)
+    public void onAvailableHoursClicked()
+    {
+        final Bundle bundle = new Bundle();
+        bundle.putSerializable(BundleKeys.DATE, mSelectedDay);
+        bundle.putSerializable(BundleKeys.DAILY_AVAILABILITY_TIMELINE, mAvailabilityForSelectedDay);
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.EDIT_AVAILABLE_HOURS, bundle, true));
     }
 
     @Override
