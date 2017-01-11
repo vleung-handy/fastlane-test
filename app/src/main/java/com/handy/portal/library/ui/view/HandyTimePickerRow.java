@@ -1,6 +1,7 @@
 package com.handy.portal.library.ui.view;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -21,21 +22,21 @@ public class HandyTimePickerRow extends FrameLayout
 
     private final int mStartTime;
     private final int mEndTime;
-    private final OnClickListener mListener;
 
-    public HandyTimePickerRow(final Context context,
-                              final int startTime,
-                              final int endTime,
-                              final OnClickListener listener)
+    public HandyTimePickerRow(
+            final Context context,
+            final int startTime,
+            final int endTime,
+            @NonNull final HandyTimePickerCell.TimeClickListener timeClickListener
+    )
     {
         super(context);
         mStartTime = startTime;
         mEndTime = endTime;
-        mListener = listener;
-        init();
+        init(timeClickListener);
     }
 
-    private void init()
+    private void init(final HandyTimePickerCell.TimeClickListener timeClickListener)
     {
         inflate(getContext(), R.layout.element_time_picker_row, this);
         ButterKnife.bind(this);
@@ -45,7 +46,8 @@ public class HandyTimePickerRow extends FrameLayout
         }
         for (int time = mStartTime; time <= mEndTime; time++)
         {
-            mTimePickerCellViews.addView(new HandyTimePickerCell(getContext(), time, mListener));
+            mTimePickerCellViews.addView(new HandyTimePickerCell(getContext(), time,
+                    timeClickListener));
             if (time < mEndTime)
             {
                 LayoutInflater.from(getContext())
