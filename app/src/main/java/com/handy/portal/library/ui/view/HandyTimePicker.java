@@ -90,8 +90,12 @@ public class HandyTimePicker extends LinearLayout
         mListener = listener;
     }
 
-    public void selectTimeRange(final int startTime, final int endTime)
+    public boolean selectTimeRange(final int startTime, final int endTime)
     {
+        if (!isValidRange(startTime, endTime))
+        {
+            return false;
+        }
         resetSelection();
         mSelectedStartTime = startTime;
         mSelectedEndTime = endTime;
@@ -120,6 +124,7 @@ public class HandyTimePicker extends LinearLayout
                 }
             }
         }
+        return true;
     }
 
     public void resetSelection()
@@ -255,6 +260,11 @@ public class HandyTimePicker extends LinearLayout
     private boolean covers(final int time)
     {
         return time >= mStartTime && time <= mEndTime;
+    }
+
+    private boolean isValidRange(final int startTime, final int endTime)
+    {
+        return startTime < endTime && startTime >= mStartTime && endTime <= mEndTime;
     }
 
     public interface TimeClickListener

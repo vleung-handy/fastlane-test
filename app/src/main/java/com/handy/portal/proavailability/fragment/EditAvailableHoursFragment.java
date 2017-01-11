@@ -25,6 +25,8 @@ import butterknife.OnClick;
 
 public class EditAvailableHoursFragment extends ActionBarFragment
 {
+    private static final int DEFAULT_START_TIME = 7;
+    private static final int DEFAULT_END_TIME = 23;
     @BindView(R.id.time_picker)
     HandyTimePicker mTimePicker;
     @BindView(R.id.start_time)
@@ -69,13 +71,14 @@ public class EditAvailableHoursFragment extends ActionBarFragment
             if (mTimePicker.getSelectedStartTime() == targetTime
                     || mTimePicker.getSelectedEndTime() == targetTime)
             {
-                if (mTimePicker.hasSelectedRange())
+                if (mTimePicker.hasSelectedRange()) // a range is selected
                 {
+                    // Reset selection then reselect the original selected start time.
                     final int selectedStartTime = mTimePicker.getSelectedStartTime();
                     resetTimeRange();
                     targetTime = selectedStartTime;
                 }
-                else
+                else // a single time is currently selected
                 {
                     resetTimeRange();
                     return;
@@ -97,14 +100,14 @@ public class EditAvailableHoursFragment extends ActionBarFragment
                 mTimeEditType = TimeEditType.END_TIME;
             }
 
-            // Select start time.
+            // Select start time if applicable.
             if (mTimeEditType == TimeEditType.START_TIME && mTimePicker.selectStartTime(targetTime))
             {
                 editStartTime();
                 displayTime(mStartTime, targetTime);
             }
 
-            // Select end time.
+            // Select end time if applicable.
             if (mTimeEditType == TimeEditType.END_TIME && mTimePicker.selectEndTime(targetTime))
             {
                 editEndTime();
@@ -198,18 +201,32 @@ public class EditAvailableHoursFragment extends ActionBarFragment
         super.onViewCreated(view, savedInstanceState);
         final String dateFormatted = DateTimeUtils.formatDateShortDayOfWeekShortMonthDay(mDate);
         setActionBar(getString(R.string.hours_for_date_formatted, dateFormatted), true);
-        mTimePicker.setTimeRange(7, 23);
+        initTimePicker();
+        initTimeRange();
+        bus.post(new NavigationEvent.SetNavigationTabVisibility(false));
+    }
+
+    private void initTimePicker()
+    {
+        mTimePicker.setTimeRange(DEFAULT_START_TIME, DEFAULT_END_TIME);
         mTimePicker.setTimeClickListener(mTimeClickListener);
+    }
+
+    private void initTimeRange()
+    {
         if (mAvailabilityTimeline != null
                 && mAvailabilityTimeline.getAvailabilityIntervals() != null
                 && !mAvailabilityTimeline.getAvailabilityIntervals().isEmpty())
         {
             final AvailabilityInterval interval =
                     mAvailabilityTimeline.getAvailabilityIntervals().get(0);
-            mTimePicker.selectTimeRange(interval.getStartTimeInt(), interval.getEndTimeInt());
-            // FIXME: Set time in text fields
+            if (mTimePicker.selectTimeRange(interval.getStartTimeInt(), interval.getEndTimeInt()))
+            {
+                displayTime(mStartTime, interval.getStartTimeInt());
+                displayTime(mEndTime, interval.getEndTimeInt());
+                editEndTime();
+            }
         }
-        bus.post(new NavigationEvent.SetNavigationTabVisibility(false));
     }
 
     @Override
