@@ -96,6 +96,11 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
         return hasSelectedStartTime() && hasSelectedEndTime();
     }
 
+    public boolean hasSelectedOneTime()
+    {
+        return hasSelectedStartTime() ^ hasSelectedEndTime();
+    }
+
     public boolean covers(final int time)
     {
         return time >= mStartTime && time <= mEndTime;
