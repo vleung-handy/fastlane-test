@@ -49,8 +49,8 @@
 
             <ImageView
                 android:id="@+id/reset_time_range"
-                android:layout_width="26dp"
-                android:layout_height="26dp"
+                android:layout_width="@dimen/time_range_reset_button_size"
+                android:layout_height="@dimen/time_range_reset_button_size"
                 android:layout_gravity="center|end"
                 android:layout_marginEnd="@dimen/default_margin_half"
                 android:layout_marginRight="@dimen/default_margin_half"
