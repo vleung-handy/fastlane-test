@@ -10,7 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class WeeklyAvailabilityTimeline implements Serializable
+public class WeeklyAvailabilityTimelinesWrapper implements Serializable
 {
     @SerializedName("start_date")
     private String mStartDate;

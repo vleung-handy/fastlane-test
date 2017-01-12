@@ -16,8 +16,10 @@ import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.ui.view.HandyTimePicker;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.proavailability.model.AvailabilityInterval;
+import com.handy.portal.proavailability.model.AvailabilityTimelinesWrapper;
 import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 import butterknife.BindColor;
@@ -69,6 +71,20 @@ public class EditAvailableHoursFragment extends ActionBarFragment
     public void onEndTimeClicked()
     {
         mTimePicker.setSelectionType(HandyTimePicker.SelectionType.END_TIME);
+    }
+
+    @OnClick(R.id.save)
+    public void onSave()
+    {
+        final AvailabilityTimelinesWrapper timelinesWrapper = new AvailabilityTimelinesWrapper();
+        if (mTimePicker.hasSelectedRange())
+        {
+            final ArrayList<AvailabilityInterval> intervals = new ArrayList<>();
+            final int selectedStartTime = mTimePicker.getSelectedStartTime();
+            final int selectedEndTime = mTimePicker.getSelectedEndTime();
+            intervals.add(new AvailabilityInterval(selectedStartTime, selectedEndTime));
+            timelinesWrapper.addTimeline(mDate, intervals);
+        }
     }
 
     public void editStartTime()
