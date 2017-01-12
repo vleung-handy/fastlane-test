@@ -2,6 +2,8 @@ package com.handy.portal.flow;
 
 import android.support.annotation.NonNull;
 
+import com.handy.portal.setup.SetupHandler;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -10,7 +12,7 @@ import java.util.List;
  * Flow is a wrapper for a collection of {@code FlowStep} objects. Its job is to execute flow steps
  * in order of their addition to the flow object after calling the {@code start()} method.
  *
- * @see com.handy.portal.core.ui.activity.BaseActivity.SetupHandler
+ * @see SetupHandler
  */
 public class Flow implements Forwardable
 {

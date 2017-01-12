@@ -161,7 +161,7 @@ public class SplashActivity extends BaseActivity
     }
 
     @Override
-    protected void onSetupComplete(final SetupData setupData)
+    public void onSetupComplete(final SetupData setupData)
     {
         final Intent activityIntent = getTerminalActivityIntent(setupData);
         activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
@@ -171,7 +171,7 @@ public class SplashActivity extends BaseActivity
     }
 
     @Override
-    protected void onSetupFailure()
+    public void onSetupFailure()
     {
         onSetupComplete(null);
     }
