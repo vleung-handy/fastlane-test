@@ -1,8 +1,11 @@
 package com.handy.portal.proavailability.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,8 +14,12 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
+import com.handy.portal.data.DataManager;
+import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.ui.view.HandyTimePicker;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.proavailability.model.AvailabilityInterval;
@@ -22,6 +29,8 @@ import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
 import java.util.ArrayList;
 import java.util.Date;
 
+import javax.inject.Inject;
+
 import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,6 +38,9 @@ import butterknife.OnClick;
 
 public class EditAvailableHoursFragment extends ActionBarFragment
 {
+    @Inject
+    ProviderManager mProviderManager;
+
     private static final int DEFAULT_START_TIME = 7;
     private static final int DEFAULT_END_TIME = 23;
     @BindView(R.id.time_picker)
@@ -76,15 +88,67 @@ public class EditAvailableHoursFragment extends ActionBarFragment
     @OnClick(R.id.save)
     public void onSave()
     {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        dataManager.saveProviderAvailability(mProviderManager.getLastProviderId(),
+                getAvailabilityTimelinesWrapperFromTimePicker(),
+                new FragmentSafeCallback<Void>(this)
+                {
+                    @Override
+                    public void onCallbackSuccess(final Void response)
+                    {
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                        callTargetFragmentResult();
+                        getActivity().onBackPressed();
+                    }
+
+                    @Override
+                    public void onCallbackError(final DataManager.DataManagerError error)
+                    {
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                        String message = error.getMessage();
+                        if (TextUtils.isEmpty(message))
+                        {
+                            message = getString(R.string.an_error_has_occurred);
+                        }
+                        showToast(message);
+                    }
+                });
+    }
+
+    private void callTargetFragmentResult()
+    {
+        if (getTargetFragment() != null)
+        {
+            final Intent data = new Intent();
+            data.putExtra(BundleKeys.DATE, mDate);
+            data.putExtra(BundleKeys.DAILY_AVAILABILITY_TIMELINE,
+                    getDailyAvailabilityTimelineFromTimePicker());
+            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
+        }
+    }
+
+    private AvailabilityTimelinesWrapper getAvailabilityTimelinesWrapperFromTimePicker()
+    {
         final AvailabilityTimelinesWrapper timelinesWrapper = new AvailabilityTimelinesWrapper();
         if (mTimePicker.hasSelectedRange())
         {
-            final ArrayList<AvailabilityInterval> intervals = new ArrayList<>();
-            final int selectedStartTime = mTimePicker.getSelectedStartTime();
-            final int selectedEndTime = mTimePicker.getSelectedEndTime();
-            intervals.add(new AvailabilityInterval(selectedStartTime, selectedEndTime));
-            timelinesWrapper.addTimeline(mDate, intervals);
+            timelinesWrapper.addTimeline(mDate, getAvailabilityIntervalsFromTimePicker());
         }
+        return timelinesWrapper;
+    }
+
+    private DailyAvailabilityTimeline getDailyAvailabilityTimelineFromTimePicker()
+    {
+        return new DailyAvailabilityTimeline(mDate, getAvailabilityIntervalsFromTimePicker());
+    }
+
+    private ArrayList<AvailabilityInterval> getAvailabilityIntervalsFromTimePicker()
+    {
+        final ArrayList<AvailabilityInterval> intervals = new ArrayList<>();
+        final int selectedStartTime = mTimePicker.getSelectedStartTime();
+        final int selectedEndTime = mTimePicker.getSelectedEndTime();
+        intervals.add(new AvailabilityInterval(selectedStartTime, selectedEndTime));
+        return intervals;
     }
 
     public void editStartTime()

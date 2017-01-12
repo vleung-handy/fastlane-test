@@ -13,7 +13,7 @@ import java.util.Locale;
 public class AvailabilityInterval implements Serializable
 {
     private static final SimpleDateFormat TIME_FORMAT =
-            new SimpleDateFormat("HH:mm", Locale.getDefault());
+            new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
 
     @SerializedName("start")
     private String mStartTime;
