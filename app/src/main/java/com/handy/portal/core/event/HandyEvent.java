@@ -14,7 +14,6 @@ import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.core.model.LoginDetails;
 import com.handy.portal.core.model.SuccessWrapper;
-import com.handy.portal.core.model.TermsDetails;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 
@@ -626,31 +625,6 @@ public abstract class HandyEvent
     }
 
 
-    public static class TermsDisplayed extends AnalyticsEvent
-    {
-        private String code;
-
-        public TermsDisplayed(String code)
-        {
-            this.code = code;
-        }
-    }
-
-
-    public static class AcceptTerms extends AnalyticsEvent
-    {
-        private String code;
-
-        public final TermsDetails termsDetails;
-
-        public AcceptTerms(TermsDetails termsDetails)
-        {
-            this.termsDetails = termsDetails;
-            this.code = termsDetails.getCode();
-        }
-    }
-
-
     public static class ActionTriggered extends AnalyticsEvent
     {
         private String actionName;
@@ -678,11 +652,6 @@ public abstract class HandyEvent
     }
 
 
-    public static class AcceptTermsError extends AnalyticsEvent
-    {
-    }
-
-
     public static class TextCustomerClicked extends AnalyticsEvent
     {
     }
@@ -707,22 +676,6 @@ public abstract class HandyEvent
         public SetLoadingOverlayVisibility(boolean isVisible)
         {
             this.isVisible = isVisible;
-        }
-    }
-
-
-    public static class AcceptTermsSuccess extends HandyEvent
-    {
-        private String termsCode;
-
-        public AcceptTermsSuccess(String termsCode)
-        {
-            this.termsCode = termsCode;
-        }
-
-        public String getTermsCode()
-        {
-            return termsCode;
         }
     }
 

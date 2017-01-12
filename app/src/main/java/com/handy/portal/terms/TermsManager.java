@@ -1,6 +1,5 @@
-package com.handy.portal.core.manager;
+package com.handy.portal.terms;
 
-import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.data.DataManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -22,21 +21,21 @@ public class TermsManager
     }
 
     @Subscribe
-    public void onAcceptTerms(final HandyEvent.AcceptTerms event)
+    public void onAcceptTerms(final TermsEvent.AcceptTerms event)
     {
-        dataManager.acceptTerms(event.termsDetails.getCode(),
+        dataManager.acceptTerms(event.getTermsDetails().getCode(),
                 new DataManager.Callback<Void>()
                 {
                     @Override
                     public void onSuccess(Void response)
                     {
-                        bus.post(new HandyEvent.AcceptTermsSuccess(event.termsDetails.getCode()));
+                        bus.post(new TermsEvent.AcceptTermsSuccess(event.getTermsDetails().getCode()));
                     }
 
                     @Override
                     public void onError(DataManager.DataManagerError error)
                     {
-                        bus.post(new HandyEvent.AcceptTermsError());
+                        bus.post(new TermsEvent.AcceptTermsError());
                     }
                 });
     }
