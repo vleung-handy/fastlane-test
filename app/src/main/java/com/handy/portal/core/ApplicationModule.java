@@ -75,9 +75,7 @@ import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.setup.SetupManager;
 import com.handy.portal.setup.SetupModule;
 import com.handy.portal.terms.TermsModule;
-import com.handy.portal.updater.VersionManager;
-import com.handy.portal.updater.ui.PleaseUpdateActivity;
-import com.handy.portal.updater.ui.PleaseUpdateFragment;
+import com.handy.portal.updater.AppUpdaterModule;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.PortalWebViewClient;
 import com.handy.portal.webview.PortalWebViewFragment;
@@ -110,8 +108,6 @@ import retrofit.converter.GsonConverter;
         BaseActivity.class,
         SplashActivity.class,
         MainActivity.class,
-        PleaseUpdateActivity.class,
-        PleaseUpdateFragment.class,
         UrbanAirshipManager.class,
         DeepLinkService.class,
         PortalWebViewFragment.class,
@@ -154,6 +150,7 @@ import retrofit.converter.GsonConverter;
                 SetupModule.class,
                 ClientsModule.class,
                 TermsModule.class,
+                AppUpdaterModule.class,
         }
 )
 public final class ApplicationModule
@@ -415,16 +412,6 @@ public final class ApplicationModule
     final ConfigManager provideConfigManager(final DataManager dataManager, final EventBus bus)
     {
         return new ConfigManager(dataManager, bus);
-    }
-
-    @Provides
-    @Singleton
-    final VersionManager provideVersionManager(final EventBus bus,
-                                               final DataManager dataManager,
-                                               final PrefsManager prefsManager,
-                                               final BuildConfigWrapper buildConfigWrapper)
-    {
-        return new VersionManager(context, bus, dataManager, prefsManager, buildConfigWrapper);
     }
 
     @Provides
