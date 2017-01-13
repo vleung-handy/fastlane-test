@@ -15,18 +15,13 @@ import com.handy.portal.core.manager.AppseeManager;
 import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.core.model.ConfigurationResponse;
-import com.handy.portal.flow.Flow;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.location.LocationUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.setup.SetupData;
-import com.handy.portal.setup.SetupEvent;
-import com.handy.portal.setup.step.AcceptTermsStep;
-import com.handy.portal.setup.step.AppUpdateStep;
-import com.handy.portal.setup.step.SetConfigurationStep;
-import com.handy.portal.setup.step.SetProviderProfileStep;
+import com.handy.portal.setup.SetupHandler;
 import com.handy.portal.updater.AppUpdateEvent;
 import com.handy.portal.updater.AppUpdateEventListener;
 import com.handy.portal.updater.AppUpdateFlowLauncher;
@@ -41,7 +36,7 @@ import javax.inject.Inject;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public abstract class BaseActivity extends AppCompatActivity implements AppUpdateFlowLauncher
+public abstract class BaseActivity extends AppCompatActivity implements AppUpdateFlowLauncher, SetupHandler.Callback
 {
     @Inject
     PrefsManager mPrefsManager;
@@ -69,10 +64,12 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
     }
 
     // this is meant to be optionally overridden
-    protected void onSetupComplete(final SetupData setupData) {}
+    @Override
+    public void onSetupComplete(final SetupData setupData) {}
 
     // this is meant to be optionally overridden
-    protected void onSetupFailure() {}
+    @Override
+    public void onSetupFailure() {}
 
     //Public Properties
     public boolean getAllowCallbacks()
@@ -161,7 +158,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
     {
         if (mSetupHandler == null || !mSetupHandler.isOngoing())
         {
-            mSetupHandler = new SetupHandler(this);
+            mSetupHandler = new SetupHandler(this, this);
             mSetupHandler.start();
         }
     }
@@ -282,63 +279,6 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
     public void onReceiveUpdateAvailableError(AppUpdateEvent.ReceiveUpdateAvailableError event)
     {
         //TODO: Handle receive update available error, do we need to block?
-    }
-
-    public static class SetupHandler
-    {
-        @Inject
-        EventBus bus;
-
-        private BaseActivity mBaseActivity;
-        private Flow mSetupFlow;
-
-        public SetupHandler(final BaseActivity baseActivity)
-        {
-            Utils.inject(baseActivity, this);
-            bus.register(this);
-            mBaseActivity = baseActivity;
-        }
-
-        public void start()
-        {
-            bus.post(new SetupEvent.RequestSetupData());
-        }
-
-        public boolean isOngoing()
-        {
-            return mSetupFlow != null && !mSetupFlow.isComplete();
-        }
-
-        @Subscribe
-        public void onReceiveSetupDataSuccess(final SetupEvent.ReceiveSetupDataSuccess event)
-        {
-            final SetupData setupData = event.getSetupData();
-            mSetupFlow = new Flow()
-                    .addStep(new AppUpdateStep()) // this does NOTHING for now
-                    .addStep(new AcceptTermsStep(mBaseActivity,
-                            setupData.getTermsDetails()))
-                    .addStep(new SetConfigurationStep(mBaseActivity,
-                            setupData.getConfigurationResponse()))
-                    .addStep(new SetProviderProfileStep(mBaseActivity,
-                            setupData.getProviderProfile()))
-                    .setOnFlowCompleteListener(new Flow.OnFlowCompleteListener()
-                    {
-                        @Override
-                        public void onFlowComplete()
-                        {
-                            mBaseActivity.onSetupComplete(setupData);
-                        }
-                    })
-                    .start();
-            bus.unregister(SetupHandler.this);
-        }
-
-        @Subscribe
-        public void onReceiveSetupDataError(final SetupEvent.ReceiveSetupDataError event)
-        {
-            bus.unregister(this);
-            mBaseActivity.onSetupFailure();
-        }
     }
 
     private boolean isLocationServiceEnabled()

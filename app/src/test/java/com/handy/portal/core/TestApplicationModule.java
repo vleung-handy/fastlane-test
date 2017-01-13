@@ -24,7 +24,6 @@ import com.handy.portal.core.manager.StripeManager;
 import com.handy.portal.core.manager.SystemManager;
 import com.handy.portal.core.manager.UrbanAirshipManager;
 import com.handy.portal.core.manager.UserInterfaceUpdateManager;
-import com.handy.portal.core.ui.activity.BaseActivity;
 import com.handy.portal.core.ui.activity.LoginActivity;
 import com.handy.portal.core.ui.activity.MainActivity;
 import com.handy.portal.core.ui.activity.SplashActivity;
@@ -75,6 +74,7 @@ import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
+import com.handy.portal.setup.SetupHandler;
 import com.handy.portal.setup.SetupManager;
 import com.handy.portal.setup.step.AcceptTermsStep;
 import com.handy.portal.setup.step.SetConfigurationStep;
@@ -122,7 +122,7 @@ import static org.mockito.Mockito.when;
         SendReceiptCheckoutFragment.class,
         SendReceiptCheckoutFragmentTest.class,
         PaymentBatchListAdapter.class,
-        BaseActivity.SetupHandler.class,
+        SetupHandler.class,
         BookingDetailsWrapperFragment.class,
         BookingFragment.class,
         InProgressBookingFragment.class,
