@@ -1,10 +1,12 @@
 package com.handy.portal.proavailability.fragment;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -65,6 +67,32 @@ public class EditAvailableHoursFragment extends ActionBarFragment
 
     @OnClick(R.id.reset_time_range)
     public void resetTimeRange()
+    {
+        if (getFirstAvailabilityInterval() != null)
+        {
+            new AlertDialog.Builder(getActivity())
+                    .setCancelable(true)
+                    .setMessage(R.string.time_slot_removal_prompt)
+                    .setPositiveButton(R.string.remove, new DialogInterface.OnClickListener()
+                    {
+                        @Override
+                        public void onClick(final DialogInterface dialogInterface, final int i)
+                        {
+                            clearSelection();
+                            onSave();
+                        }
+                    })
+                    .setNegativeButton(R.string.keep, null)
+                    .create()
+                    .show();
+        }
+        else
+        {
+            clearSelection();
+        }
+    }
+
+    private void clearSelection()
     {
         uneditStartTime();
         uneditEndTime();

@@ -30,6 +30,8 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="continue_single_word">Continue</string>
+    <string name="remove">Remove</string>
+    <string name="keep">Keep</string>
 
     <!-- Environment -->
     <string name="select_environment">Select Environment</string>
@@ -666,4 +668,5 @@
     <string name="hours_for_date_formatted">Hours for %1$s</string>
     <string name="start_time">Start Time</string>
     <string name="end_time">End Time</string>
+    <string name="time_slot_removal_prompt">Are you sure you want to remove this time slot?</string>
 </resources>
