@@ -647,6 +647,11 @@ public class MainActivity extends BaseActivity
         if (newFragment != null && swapFragmentEvent.arguments != null)
         {
             newFragment.setArguments(swapFragmentEvent.arguments);
+            if (swapFragmentEvent.getReturnFragment() != null)
+            {
+                newFragment.setTargetFragment(swapFragmentEvent.getReturnFragment(),
+                        swapFragmentEvent.getRequestCode());
+            }
         }
 
         //Animate the transition, animations must come before the .replace call

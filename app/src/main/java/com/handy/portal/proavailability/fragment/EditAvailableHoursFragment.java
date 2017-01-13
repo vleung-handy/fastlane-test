@@ -130,10 +130,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment
     private AvailabilityTimelinesWrapper getAvailabilityTimelinesWrapperFromTimePicker()
     {
         final AvailabilityTimelinesWrapper timelinesWrapper = new AvailabilityTimelinesWrapper();
-        if (mTimePicker.hasSelectedRange())
-        {
-            timelinesWrapper.addTimeline(mDate, getAvailabilityIntervalsFromTimePicker());
-        }
+        timelinesWrapper.addTimeline(mDate, getAvailabilityIntervalsFromTimePicker());
         return timelinesWrapper;
     }
 
@@ -145,9 +142,12 @@ public class EditAvailableHoursFragment extends ActionBarFragment
     private ArrayList<AvailabilityInterval> getAvailabilityIntervalsFromTimePicker()
     {
         final ArrayList<AvailabilityInterval> intervals = new ArrayList<>();
-        final int selectedStartTime = mTimePicker.getSelectedStartTime();
-        final int selectedEndTime = mTimePicker.getSelectedEndTime();
-        intervals.add(new AvailabilityInterval(selectedStartTime, selectedEndTime));
+        if (mTimePicker.hasSelectedRange())
+        {
+            final int selectedStartTime = mTimePicker.getSelectedStartTime();
+            final int selectedEndTime = mTimePicker.getSelectedEndTime();
+            intervals.add(new AvailabilityInterval(selectedStartTime, selectedEndTime));
+        }
         return intervals;
     }
 

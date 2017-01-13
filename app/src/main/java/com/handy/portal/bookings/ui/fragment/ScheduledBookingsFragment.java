@@ -1,5 +1,7 @@
 package com.handy.portal.bookings.ui.fragment;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -13,13 +15,13 @@ import android.widget.LinearLayout;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.adapter.DatesPagerAdapter;
-import com.handy.portal.proavailability.view.AvailableHoursView;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
 import com.handy.portal.bookings.ui.element.NewDateButton;
 import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.constant.RequestCode;
 import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
@@ -33,11 +35,14 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
 import com.handy.portal.proavailability.model.ProviderAvailability;
+import com.handy.portal.proavailability.view.AvailableHoursView;
 
 import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -97,6 +102,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
             };
     private ProviderAvailability mProviderAvailability;
     private DailyAvailabilityTimeline mAvailabilityForSelectedDay;
+    private Map<Date, DailyAvailabilityTimeline> mUpdatedAvailabilityTimelines;
 
     @Override
     protected MainViewPage getAppPage()
@@ -143,6 +149,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
                         public void onCallbackSuccess(final ProviderAvailability providerAvailability)
                         {
                             mProviderAvailability = providerAvailability;
+                            mUpdatedAvailabilityTimelines = null;
                             showAvailableHours();
                         }
 
@@ -166,8 +173,16 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         else
         {
             mAvailableHoursView.setVisibility(View.VISIBLE);
-            final DailyAvailabilityTimeline availabilityForSelectedDay =
-                    mProviderAvailability.getAvailabilityForDate(mSelectedDay);
+            DailyAvailabilityTimeline availabilityForSelectedDay = null;
+            if (mUpdatedAvailabilityTimelines != null)
+            {
+                availabilityForSelectedDay = mUpdatedAvailabilityTimelines.get(mSelectedDay);
+            }
+            if (availabilityForSelectedDay == null)
+            {
+                availabilityForSelectedDay =
+                        mProviderAvailability.getAvailabilityForDate(mSelectedDay);
+            }
             mAvailabilityForSelectedDay = availabilityForSelectedDay;
             mAvailableHoursView.setAvailableHours(availabilityForSelectedDay == null ? null
                     : availabilityForSelectedDay.getAvailabilityIntervals());
@@ -226,6 +241,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     protected void requestBookings(List<Date> dates, boolean useCachedIfPresent)
     {
         mBookingManager.requestScheduledBookings(dates, useCachedIfPresent);
+        requestProviderAvailability();
     }
 
     @NonNull
@@ -312,7 +328,31 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         final Bundle bundle = new Bundle();
         bundle.putSerializable(BundleKeys.DATE, mSelectedDay);
         bundle.putSerializable(BundleKeys.DAILY_AVAILABILITY_TIMELINE, mAvailabilityForSelectedDay);
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.EDIT_AVAILABLE_HOURS, bundle, true));
+        final NavigationEvent.NavigateToPage navigationEvent =
+                new NavigationEvent.NavigateToPage(MainViewPage.EDIT_AVAILABLE_HOURS, bundle, true);
+        navigationEvent.setReturnFragment(this, RequestCode.EDIT_HOURS);
+        bus.post(navigationEvent);
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
+    {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && requestCode == RequestCode.EDIT_HOURS)
+        {
+            final Date date = (Date) data.getSerializableExtra(BundleKeys.DATE);
+            final DailyAvailabilityTimeline timeline = (DailyAvailabilityTimeline)
+                    data.getSerializableExtra(BundleKeys.DAILY_AVAILABILITY_TIMELINE);
+            if (date != null && timeline != null)
+            {
+                if (mUpdatedAvailabilityTimelines == null)
+                {
+                    mUpdatedAvailabilityTimelines = new HashMap<>();
+                }
+                mUpdatedAvailabilityTimelines.put(date, timeline);
+                showAvailableHours();
+            }
+        }
     }
 
     @Override
