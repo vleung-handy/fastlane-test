@@ -1,4 +1,4 @@
-package com.handy.portal.core.ui.activity;
+package com.handy.portal.terms;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -6,9 +6,8 @@ import android.os.Bundle;
 import com.handy.portal.R;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.model.TermsDetails;
-import com.handy.portal.core.model.TermsDetailsGroup;
-import com.handy.portal.core.ui.fragment.TermsFragment;
+import com.handy.portal.core.ui.activity.BaseActivity;
+import com.handy.portal.core.ui.activity.SplashActivity;
 
 import java.util.Iterator;
 

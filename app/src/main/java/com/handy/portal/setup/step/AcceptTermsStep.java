@@ -5,10 +5,10 @@ import android.content.Intent;
 
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.model.TermsDetailsGroup;
-import com.handy.portal.core.ui.activity.TermsActivity;
 import com.handy.portal.flow.FlowStep;
 import com.handy.portal.library.util.Utils;
+import com.handy.portal.terms.TermsActivity;
+import com.handy.portal.terms.TermsDetailsGroup;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

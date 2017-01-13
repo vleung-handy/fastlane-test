@@ -23,7 +23,6 @@ import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.manager.RegionDefinitionsManager;
 import com.handy.portal.core.manager.StripeManager;
 import com.handy.portal.core.manager.SystemManager;
-import com.handy.portal.core.manager.TermsManager;
 import com.handy.portal.core.manager.UrbanAirshipManager;
 import com.handy.portal.core.manager.UserInterfaceUpdateManager;
 import com.handy.portal.core.manager.ZipClusterManager;
@@ -31,7 +30,6 @@ import com.handy.portal.core.ui.activity.BaseActivity;
 import com.handy.portal.core.ui.activity.LoginActivity;
 import com.handy.portal.core.ui.activity.MainActivity;
 import com.handy.portal.core.ui.activity.SplashActivity;
-import com.handy.portal.core.ui.activity.TermsActivity;
 import com.handy.portal.core.ui.element.SupportActionView;
 import com.handy.portal.core.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.core.ui.fragment.EditPhotoFragment;
@@ -41,7 +39,6 @@ import com.handy.portal.core.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.core.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.core.ui.fragment.RequestSuppliesFragment;
 import com.handy.portal.core.ui.fragment.RequestSuppliesWebViewFragment;
-import com.handy.portal.core.ui.fragment.TermsFragment;
 import com.handy.portal.dashboard.fragment.DashboardFeedbackFragment;
 import com.handy.portal.dashboard.fragment.DashboardReviewsFragment;
 import com.handy.portal.dashboard.fragment.DashboardTiersFragment;
@@ -77,9 +74,8 @@ import com.handy.portal.retrofit.stripe.StripeRetrofitEndpoint;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
 import com.handy.portal.setup.SetupManager;
 import com.handy.portal.setup.SetupModule;
-import com.handy.portal.updater.VersionManager;
-import com.handy.portal.updater.ui.PleaseUpdateActivity;
-import com.handy.portal.updater.ui.PleaseUpdateFragment;
+import com.handy.portal.terms.TermsModule;
+import com.handy.portal.updater.AppUpdaterModule;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.PortalWebViewClient;
 import com.handy.portal.webview.PortalWebViewFragment;
@@ -112,10 +108,6 @@ import retrofit.converter.GsonConverter;
         BaseActivity.class,
         SplashActivity.class,
         MainActivity.class,
-        PleaseUpdateActivity.class,
-        PleaseUpdateFragment.class,
-        TermsActivity.class,
-        TermsFragment.class,
         UrbanAirshipManager.class,
         DeepLinkService.class,
         PortalWebViewFragment.class,
@@ -157,6 +149,8 @@ import retrofit.converter.GsonConverter;
                 OnboardingModule.class,
                 SetupModule.class,
                 ClientsModule.class,
+                TermsModule.class,
+                AppUpdaterModule.class,
         }
 )
 public final class ApplicationModule
@@ -418,24 +412,6 @@ public final class ApplicationModule
     final ConfigManager provideConfigManager(final DataManager dataManager, final EventBus bus)
     {
         return new ConfigManager(dataManager, bus);
-    }
-
-    @Provides
-    @Singleton
-    final VersionManager provideVersionManager(final EventBus bus,
-                                               final DataManager dataManager,
-                                               final PrefsManager prefsManager,
-                                               final BuildConfigWrapper buildConfigWrapper)
-    {
-        return new VersionManager(context, bus, dataManager, prefsManager, buildConfigWrapper);
-    }
-
-    @Provides
-    @Singleton
-    final TermsManager provideTermsManager(final EventBus bus,
-                                           final DataManager dataManager)
-    {
-        return new TermsManager(bus, dataManager);
     }
 
     @Provides

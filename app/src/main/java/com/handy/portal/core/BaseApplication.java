@@ -17,7 +17,6 @@ import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.manager.RegionDefinitionsManager;
 import com.handy.portal.core.manager.StripeManager;
 import com.handy.portal.core.manager.SystemManager;
-import com.handy.portal.core.manager.TermsManager;
 import com.handy.portal.core.manager.UrbanAirshipManager;
 import com.handy.portal.core.manager.UserInterfaceUpdateManager;
 import com.handy.portal.core.manager.ZipClusterManager;
@@ -30,6 +29,7 @@ import com.handy.portal.notification.NotificationMessageManager;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.setup.SetupManager;
+import com.handy.portal.terms.TermsManager;
 import com.handy.portal.updater.VersionManager;
 import com.handybook.shared.core.HandyLibrary;
 

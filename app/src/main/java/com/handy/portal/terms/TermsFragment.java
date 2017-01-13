@@ -1,4 +1,4 @@
-package com.handy.portal.core.ui.fragment;
+package com.handy.portal.terms;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,9 +13,6 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.core.constant.BundleKeys;
-import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.model.TermsDetails;
-import com.handy.portal.core.ui.activity.TermsActivity;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.view.HandyWebView;
 
@@ -89,7 +86,7 @@ public class TermsFragment extends InjectedFragment
         if (mAcceptCheckbox.isChecked())
         {
             mLoadingOverlay.setVisibility(View.VISIBLE);
-            bus.post(new HandyEvent.AcceptTerms(mTerms));
+            bus.post(new TermsEvent.AcceptTerms(mTerms));
         }
         else
         {
@@ -107,13 +104,13 @@ public class TermsFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onAcceptTermsSuccess(HandyEvent.AcceptTermsSuccess event)
+    public void onAcceptTermsSuccess(TermsEvent.AcceptTermsSuccess event)
     {
         ((TermsActivity) getActivity()).proceed();
     }
 
     @Subscribe
-    public void onAcceptTermsError(HandyEvent.AcceptTermsError event)
+    public void onAcceptTermsError(TermsEvent.AcceptTermsError event)
     {
         mLoadingOverlay.setVisibility(View.GONE);
         showToast(R.string.error_accepting_terms);
