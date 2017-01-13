@@ -18,7 +18,7 @@ public abstract class NavigationEvent extends HandyEvent
         public final Bundle arguments;
         public final TransitionStyle transitionStyle;
         private Fragment mReturnFragment;
-        private int mRequestCode;
+        private int mActivityRequestCode;
 
         public NavigateToPage(MainViewPage targetPage)
         {
@@ -53,21 +53,22 @@ public abstract class NavigationEvent extends HandyEvent
             this.transitionStyle = transitionStyle;
         }
 
-        public void setReturnFragment(final Fragment returnFragment,
+        public void setReturnFragment(@Nullable final Fragment returnFragment,
                                       final int requestCode)
         {
             mReturnFragment = returnFragment;
-            mRequestCode = requestCode;
+            mActivityRequestCode = requestCode;
         }
 
+        @Nullable
         public Fragment getReturnFragment()
         {
             return mReturnFragment;
         }
 
-        public int getRequestCode()
+        public int getActivityRequestCode()
         {
-            return mRequestCode;
+            return mActivityRequestCode;
         }
     }
 
@@ -79,7 +80,7 @@ public abstract class NavigationEvent extends HandyEvent
         public TransitionStyle transitionStyle;
         public boolean addToBackStack;
         private Fragment mReturnFragment;
-        private int mRequestCode;
+        private int mActivityRequestCode;
 
         public SwapFragmentEvent(final MainViewPage targetPage, final Bundle arguments,
                                  final TransitionStyle transitionStyle, final boolean addToBackStack)
@@ -90,20 +91,22 @@ public abstract class NavigationEvent extends HandyEvent
             this.transitionStyle = transitionStyle;
         }
 
-        public void setReturnFragment(final Fragment returnFragment, final int requestCode)
+        public void setReturnFragment(@Nullable final Fragment returnFragment,
+                                      final int requestCode)
         {
             mReturnFragment = returnFragment;
-            mRequestCode = requestCode;
+            mActivityRequestCode = requestCode;
         }
 
+        @Nullable
         public Fragment getReturnFragment()
         {
             return mReturnFragment;
         }
 
-        public int getRequestCode()
+        public int getActivityRequestCode()
         {
-            return mRequestCode;
+            return mActivityRequestCode;
         }
     }
 

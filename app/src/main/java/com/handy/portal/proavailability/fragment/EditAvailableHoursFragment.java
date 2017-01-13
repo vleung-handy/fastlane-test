@@ -58,9 +58,11 @@ public class EditAvailableHoursFragment extends ActionBarFragment
     @BindView(R.id.save)
     Button mSaveButton;
     @BindColor(R.color.black)
-    int mBlack;
+    int mBlackColorValue;
     @BindColor(R.color.white)
-    int mWhite;
+    int mWhiteColorValue;
+    @BindColor(R.color.error_red)
+    int mRedColorValue;
 
     private Date mDate;
     private DailyAvailabilityTimeline mAvailabilityTimeline;
@@ -70,7 +72,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment
     {
         if (getFirstAvailabilityInterval() != null)
         {
-            new AlertDialog.Builder(getActivity())
+            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                     .setCancelable(true)
                     .setMessage(R.string.time_slot_removal_prompt)
                     .setPositiveButton(R.string.remove, new DialogInterface.OnClickListener()
@@ -83,8 +85,17 @@ public class EditAvailableHoursFragment extends ActionBarFragment
                         }
                     })
                     .setNegativeButton(R.string.keep, null)
-                    .create()
-                    .show();
+                    .create();
+            alertDialog.setOnShowListener(new DialogInterface.OnShowListener()
+            {
+                @Override
+                public void onShow(final DialogInterface dialogInterface)
+                {
+                    alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(mRedColorValue);
+                    alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(mBlackColorValue);
+                }
+            });
+            alertDialog.show();
         }
         else
         {
@@ -182,27 +193,27 @@ public class EditAvailableHoursFragment extends ActionBarFragment
     public void editStartTime()
     {
         mStartTime.setBackgroundResource(R.color.tertiary_gray);
-        mStartTime.setTextColor(mWhite);
+        mStartTime.setTextColor(mWhiteColorValue);
         uneditEndTime();
     }
 
     private void editEndTime()
     {
         mEndTimeHolder.setBackgroundResource(R.color.tertiary_gray);
-        mEndTime.setTextColor(mWhite);
+        mEndTime.setTextColor(mWhiteColorValue);
         uneditStartTime();
     }
 
     private void uneditStartTime()
     {
         mStartTime.setBackgroundResource(R.color.handy_bg);
-        mStartTime.setTextColor(mBlack);
+        mStartTime.setTextColor(mBlackColorValue);
     }
 
     private void uneditEndTime()
     {
         mEndTimeHolder.setBackgroundResource(R.color.handy_bg);
-        mEndTime.setTextColor(mBlack);
+        mEndTime.setTextColor(mBlackColorValue);
     }
 
     private void updateStartTime(final int hour)

@@ -650,7 +650,7 @@ public class MainActivity extends BaseActivity
             if (swapFragmentEvent.getReturnFragment() != null)
             {
                 newFragment.setTargetFragment(swapFragmentEvent.getReturnFragment(),
-                        swapFragmentEvent.getRequestCode());
+                        swapFragmentEvent.getActivityRequestCode());
             }
         }
 
