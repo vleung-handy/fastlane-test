@@ -670,6 +670,13 @@ public final class DateTimeUtils
         }
     }
 
+    /**
+     * Gets the date object's integer representation of the hour (i.e. a number between 0 and 24).
+     * If date is null, 0 will be returned.
+     *
+     * @param date
+     * @return
+     */
     public static Integer getHourInt(@Nullable final Date date)
     {
         if (date == null)

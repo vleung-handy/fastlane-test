@@ -1,4 +1,4 @@
-package com.handy.portal.library.ui.view;
+package com.handy.portal.library.ui.view.timepicker;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -13,26 +13,26 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class HandyTimePickerRow extends FrameLayout
+class HandyTimePickerRow extends FrameLayout
 {
     @BindView(R.id.gaps)
     ViewGroup mGapViews;
     @BindView(R.id.cells)
     ViewGroup mTimePickerCellViews;
 
-    private final int mStartTime;
-    private final int mEndTime;
+    private final int mStartHour;
+    private final int mEndHour;
 
     public HandyTimePickerRow(
             final Context context,
-            final int startTime,
-            final int endTime,
+            final int startHour,
+            final int endHour,
             @NonNull final HandyTimePickerCell.TimeClickListener timeClickListener
     )
     {
         super(context);
-        mStartTime = startTime;
-        mEndTime = endTime;
+        mStartHour = startHour;
+        mEndHour = endHour;
         init(timeClickListener);
     }
 
@@ -40,15 +40,15 @@ public class HandyTimePickerRow extends FrameLayout
     {
         inflate(getContext(), R.layout.element_time_picker_row, this);
         ButterKnife.bind(this);
-        if (mEndTime < mStartTime)
+        if (mEndHour < mStartHour)
         {
             return;
         }
-        for (int time = mStartTime; time <= mEndTime; time++)
+        for (int hour = mStartHour; hour <= mEndHour; hour++)
         {
-            mTimePickerCellViews.addView(new HandyTimePickerCell(getContext(), time,
+            mTimePickerCellViews.addView(new HandyTimePickerCell(getContext(), hour,
                     timeClickListener));
-            if (time < mEndTime)
+            if (hour < mEndHour)
             {
                 LayoutInflater.from(getContext())
                         .inflate(R.layout.element_time_picker_gap, mGapViews, true);
@@ -65,15 +65,15 @@ public class HandyTimePickerRow extends FrameLayout
     }
 
     @Nullable
-    public HandyTimePickerCell getCellForTime(final int time)
+    public HandyTimePickerCell getCellForHour(final int hour)
     {
-        if (covers(time))
+        if (covers(hour))
         {
             for (int i = 0; i < mTimePickerCellViews.getChildCount(); i++)
             {
                 final HandyTimePickerCell timePickerCell =
                         (HandyTimePickerCell) mTimePickerCellViews.getChildAt(i);
-                if (timePickerCell.getTime() == time)
+                if (timePickerCell.getHour() == hour)
                 {
                     return timePickerCell;
                 }
@@ -82,8 +82,8 @@ public class HandyTimePickerRow extends FrameLayout
         return null;
     }
 
-    private boolean covers(final int time)
+    private boolean covers(final int hour)
     {
-        return time >= mStartTime && time <= mEndTime;
+        return hour >= mStartHour && hour <= mEndHour;
     }
 }

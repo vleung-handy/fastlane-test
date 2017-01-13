@@ -1,4 +1,4 @@
-package com.handy.portal.library.ui.view;
+package com.handy.portal.library.ui.view.timepicker;
 
 import android.content.Context;
 import android.os.Build;
@@ -17,13 +17,13 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
 
 
     private static final int DEFAULT_CELLS_PER_ROW_COUNT = 3;
-    public static final int NO_TIME_SELECTED = -1;
-    public static final int MINIMUM_START_TIME = 0;
-    public static final int MAXIMUM_START_TIME = 24;
-    private int mStartTime;
-    private int mEndTime;
-    private int mSelectedStartTime = NO_TIME_SELECTED;
-    private int mSelectedEndTime = NO_TIME_SELECTED;
+    public static final int NO_HOUR_SELECTED = -1;
+    public static final int MINIMUM_START_HOUR = 0;
+    public static final int MAXIMUM_START_HOUR = 24;
+    private int mStartHour;
+    private int mEndHour;
+    private int mSelectedStartHour = NO_HOUR_SELECTED;
+    private int mSelectedEndHour = NO_HOUR_SELECTED;
     private Callbacks mCallbacks;
     private SelectionType mSelectionType;
 
@@ -71,24 +71,24 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
         }
     }
 
-    public int getSelectedStartTime()
+    public int getSelectedStartHour()
     {
-        return mSelectedStartTime;
+        return mSelectedStartHour;
     }
 
-    public int getSelectedEndTime()
+    public int getSelectedEndHour()
     {
-        return mSelectedEndTime;
+        return mSelectedEndHour;
     }
 
     public boolean hasSelectedStartTime()
     {
-        return mSelectedStartTime != NO_TIME_SELECTED;
+        return mSelectedStartHour != NO_HOUR_SELECTED;
     }
 
     public boolean hasSelectedEndTime()
     {
-        return mSelectedEndTime != NO_TIME_SELECTED;
+        return mSelectedEndHour != NO_HOUR_SELECTED;
     }
 
     public boolean hasSelectedRange()
@@ -96,54 +96,49 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
         return hasSelectedStartTime() && hasSelectedEndTime();
     }
 
-    public boolean hasSelectedOneTime()
+    public boolean hasSelectedSingleTime()
     {
         return hasSelectedStartTime() ^ hasSelectedEndTime();
     }
 
-    public boolean covers(final int time)
+    public boolean covers(final int hour)
     {
-        return time >= mStartTime && time <= mEndTime;
+        return hour >= mStartHour && hour <= mEndHour;
     }
 
-    public boolean isValidRange(final int startTime, final int endTime)
+    public void setTimeRange(final int startHour, final int endHour)
     {
-        return startTime < endTime && startTime >= mStartTime && endTime <= mEndTime;
-    }
-
-    public void setTimeRange(final int startTime, final int endTime)
-    {
-        if (startTime < MINIMUM_START_TIME
-                || endTime > MAXIMUM_START_TIME
-                || startTime >= endTime)
+        if (startHour < MINIMUM_START_HOUR
+                || endHour > MAXIMUM_START_HOUR
+                || startHour >= endHour)
         {
             return;
         }
-        mStartTime = startTime;
-        mEndTime = endTime;
-        for (int rowStartTime = startTime; rowStartTime <= endTime;
-             rowStartTime += DEFAULT_CELLS_PER_ROW_COUNT)
+        mStartHour = startHour;
+        mEndHour = endHour;
+        for (int rowStartHour = startHour; rowStartHour <= endHour;
+             rowStartHour += DEFAULT_CELLS_PER_ROW_COUNT)
         {
-            int rowEndTime = rowStartTime + DEFAULT_CELLS_PER_ROW_COUNT - 1;
-            if (rowEndTime > endTime)
+            int rowEndHour = rowStartHour + DEFAULT_CELLS_PER_ROW_COUNT - 1;
+            if (rowEndHour > endHour)
             {
-                rowEndTime = endTime;
+                rowEndHour = endHour;
             }
-            addView(new HandyTimePickerRow(getContext(), rowStartTime, rowEndTime, this));
+            addView(new HandyTimePickerRow(getContext(), rowStartHour, rowEndHour, this));
         }
     }
 
     @Override
-    public void onTimeClick(final int time)
+    public void onHourClicked(final int hour)
     {
-        int targetTime = time;
+        int targetHour = hour;
 
-        // Default selection to start time.
+        // Default selection to start hour.
         if (mSelectionType == null)
         {
             setSelectionType(SelectionType.START_TIME);
         }
-        // Default selection to end time if a start time has been selected but end time hasn't
+        // Default selection to end hour if a start hour has been selected but end hour hasn't
         // been selected.
         else if (mSelectionType == SelectionType.START_TIME
                 && hasSelectedStartTime()
@@ -152,20 +147,20 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
             setSelectionType(SelectionType.END_TIME);
         }
 
-        // Tapping selected times on the picker will cancel the range and leave the start time,
+        // Tapping selected times on the picker will cancel the range and leave the start hour,
         // or deselect a single selection.
-        if (getSelectedStartTime() == targetTime
-                || getSelectedEndTime() == targetTime)
+        if (getSelectedStartHour() == targetHour
+                || getSelectedEndHour() == targetHour)
         {
             if (hasSelectedRange()) // a range is selected
             {
-                // Reset selection then reselect the original selected start time.
-                final int selectedStartTime = getSelectedStartTime();
+                // Reset selection then reselect the original selected start hour.
+                final int selectedStartTime = getSelectedStartHour();
                 clearSelection();
                 setSelectionType(SelectionType.START_TIME);
-                targetTime = selectedStartTime;
+                targetHour = selectedStartTime;
             }
-            else // a single time is currently selected
+            else // a single hour is currently selected
             {
                 clearSelection();
                 setSelectionType(null);
@@ -173,42 +168,42 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
             }
         }
 
-        // Tapping an earlier time when there is already a selected start time will force the
-        // selection to start time.
-        if (hasSelectedStartTime() && targetTime < getSelectedStartTime())
+        // Tapping an earlier hour when there is already a selected start hour will force the
+        // selection to start hour.
+        if (hasSelectedStartTime() && targetHour < getSelectedStartHour())
         {
             setSelectionType(SelectionType.START_TIME);
         }
 
-        // Tapping a later time when there is already a selected end time will force the selection
-        // to end time.
-        if (hasSelectedEndTime() && targetTime > getSelectedEndTime())
+        // Tapping a later hour when there is already a selected end hour will force the selection
+        // to end hour.
+        if (hasSelectedEndTime() && targetHour > getSelectedEndHour())
         {
             setSelectionType(SelectionType.END_TIME);
         }
 
-        // Select start time if applicable.
+        // Select start hour if applicable.
         if (mSelectionType == SelectionType.START_TIME)
         {
-            selectStartTime(targetTime);
+            selectStartHour(targetHour);
         }
 
-        // Select end time if applicable.
+        // Select end hour if applicable.
         if (mSelectionType == SelectionType.END_TIME)
         {
-            selectEndTime(targetTime);
+            selectEndHour(targetHour);
         }
     }
 
     public boolean selectTimeRange(final int startTime, final int endTime)
     {
-        if (!isValidRange(startTime, endTime))
+        if (startTime >= endTime || startTime < mStartHour || endTime > mEndHour)
         {
             return false;
         }
         clearSelection();
-        mSelectedStartTime = startTime;
-        mSelectedEndTime = endTime;
+        mSelectedStartHour = startTime;
+        mSelectedEndHour = endTime;
         for (int i = 0; i < getChildCount(); i++)
         {
             final HandyTimePickerRow timePickerRow = (HandyTimePickerRow) getChildAt(i);
@@ -216,7 +211,7 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
             {
                 final HandyTimePickerCell timePickerCell =
                         (HandyTimePickerCell) timePickerRow.mTimePickerCellViews.getChildAt(j);
-                final int timePickerCellTime = timePickerCell.getTime();
+                final int timePickerCellTime = timePickerCell.getHour();
                 if (timePickerCellTime >= startTime && timePickerCellTime <= endTime)
                 {
                     if (timePickerCellTime == startTime || timePickerCellTime == endTime)
@@ -239,7 +234,7 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
 
     public void clearSelection()
     {
-        mSelectedStartTime = mSelectedEndTime = NO_TIME_SELECTED;
+        mSelectedStartHour = mSelectedEndHour = NO_HOUR_SELECTED;
         for (int i = 0; i < getChildCount(); i++)
         {
             final HandyTimePickerRow timePickerRow = (HandyTimePickerRow) getChildAt(i);
@@ -257,47 +252,47 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
         notifyRangeUpdate();
     }
 
-    public void selectStartTime(final int time)
+    public void selectStartHour(final int hour)
     {
-        if (mSelectedEndTime == NO_TIME_SELECTED || time < mSelectedEndTime)
+        if (mSelectedEndHour == NO_HOUR_SELECTED || hour < mSelectedEndHour)
         {
-            resetCellForTime(mSelectedStartTime);
-            mSelectedStartTime = time;
-            if (getSelectedEndTime() != NO_TIME_SELECTED)
+            resetCellForHour(mSelectedStartHour);
+            mSelectedStartHour = hour;
+            if (getSelectedEndHour() != NO_HOUR_SELECTED)
             {
-                selectTimeRange(mSelectedStartTime, mSelectedEndTime);
+                selectTimeRange(mSelectedStartHour, mSelectedEndHour);
             }
             else
             {
-                selectCellForTime(time);
+                selectCellForTime(hour);
             }
             notifyRangeUpdate();
         }
     }
 
-    public void selectEndTime(final int time)
+    public void selectEndHour(final int hour)
     {
-        if (mSelectedStartTime == NO_TIME_SELECTED || time > mSelectedStartTime)
+        if (mSelectedStartHour == NO_HOUR_SELECTED || hour > mSelectedStartHour)
         {
-            resetCellForTime(mSelectedEndTime);
-            mSelectedEndTime = time;
-            if (getSelectedStartTime() != NO_TIME_SELECTED)
+            resetCellForHour(mSelectedEndHour);
+            mSelectedEndHour = hour;
+            if (getSelectedStartHour() != NO_HOUR_SELECTED)
             {
-                selectTimeRange(mSelectedStartTime, mSelectedEndTime);
+                selectTimeRange(mSelectedStartHour, mSelectedEndHour);
             }
             else
             {
-                selectCellForTime(time);
+                selectCellForTime(hour);
             }
             notifyRangeUpdate();
         }
     }
 
-    private void resetCellForTime(final int time)
+    private void resetCellForHour(final int hour)
     {
-        if (time != NO_TIME_SELECTED)
+        if (hour != NO_HOUR_SELECTED)
         {
-            final HandyTimePickerCell cell = getCellForTime(time);
+            final HandyTimePickerCell cell = getCellForHour(hour);
             if (cell != null)
             {
                 cell.reset();
@@ -307,9 +302,9 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
 
     private void selectCellForTime(final int time)
     {
-        if (time != NO_TIME_SELECTED)
+        if (time != NO_HOUR_SELECTED)
         {
-            final HandyTimePickerCell cell = getCellForTime(time);
+            final HandyTimePickerCell cell = getCellForHour(time);
             if (cell != null)
             {
                 cell.select();
@@ -318,14 +313,14 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
     }
 
     @Nullable
-    private HandyTimePickerCell getCellForTime(final int time)
+    private HandyTimePickerCell getCellForHour(final int hour)
     {
-        if (covers(time))
+        if (covers(hour))
         {
             for (int i = 0; i < getChildCount(); i++)
             {
                 final HandyTimePickerRow timePickerRow = (HandyTimePickerRow) getChildAt(i);
-                final HandyTimePickerCell timePickerCell = timePickerRow.getCellForTime(time);
+                final HandyTimePickerCell timePickerCell = timePickerRow.getCellForHour(hour);
                 if (timePickerCell != null)
                 {
                     return timePickerCell;
@@ -339,13 +334,13 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
     {
         if (mCallbacks != null)
         {
-            mCallbacks.onRangeUpdated(mSelectedStartTime, mSelectedEndTime);
+            mCallbacks.onRangeUpdated(mSelectedStartHour, mSelectedEndHour);
         }
     }
 
     public interface Callbacks
     {
-        void onRangeUpdated(int startTime, int endTime);
+        void onRangeUpdated(int startHour, int endHour);
 
         void onSelectionTypeChanged(SelectionType selectionType);
     }

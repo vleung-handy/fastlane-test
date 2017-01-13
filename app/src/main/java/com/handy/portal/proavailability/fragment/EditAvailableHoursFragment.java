@@ -22,7 +22,7 @@ import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
-import com.handy.portal.library.ui.view.HandyTimePicker;
+import com.handy.portal.library.ui.view.timepicker.HandyTimePicker;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.proavailability.model.AvailabilityInterval;
 import com.handy.portal.proavailability.model.AvailabilityTimelinesWrapper;
@@ -43,8 +43,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment
     @Inject
     ProviderManager mProviderManager;
 
-    private static final int DEFAULT_START_TIME = 7;
-    private static final int DEFAULT_END_TIME = 23;
+    private static final int DEFAULT_START_HOUR = 7;
+    private static final int DEFAULT_END_HOUR = 23;
     @BindView(R.id.time_picker)
     HandyTimePicker mTimePicker;
     @BindView(R.id.start_time)
@@ -172,9 +172,9 @@ public class EditAvailableHoursFragment extends ActionBarFragment
         final ArrayList<AvailabilityInterval> intervals = new ArrayList<>();
         if (mTimePicker.hasSelectedRange())
         {
-            final int selectedStartTime = mTimePicker.getSelectedStartTime();
-            final int selectedEndTime = mTimePicker.getSelectedEndTime();
-            intervals.add(new AvailabilityInterval(selectedStartTime, selectedEndTime));
+            final int selectedStartHour = mTimePicker.getSelectedStartHour();
+            final int selectedEndHour = mTimePicker.getSelectedEndHour();
+            intervals.add(new AvailabilityInterval(selectedStartHour, selectedEndHour));
         }
         return intervals;
     }
@@ -205,27 +205,27 @@ public class EditAvailableHoursFragment extends ActionBarFragment
         mEndTime.setTextColor(mBlack);
     }
 
-    private void updateStartTime(final int time)
+    private void updateStartTime(final int hour)
     {
-        updateTime(mStartTime, time, R.string.start_time);
+        updateTime(mStartTime, hour, R.string.start_time);
     }
 
-    private void updateEndTime(final int time)
+    private void updateEndTime(final int hour)
     {
-        updateTime(mEndTime, time, R.string.end_time);
+        updateTime(mEndTime, hour, R.string.end_time);
     }
 
-    private void updateTime(final TextView timeView, final int time,
+    private void updateTime(final TextView timeView, final int hour,
                             @StringRes final int emptyStringResId)
     {
-        if (time == HandyTimePicker.NO_TIME_SELECTED)
+        if (hour == HandyTimePicker.NO_HOUR_SELECTED)
         {
             timeView.setText(emptyStringResId);
         }
         else
         {
             final Date date = DateTimeUtils.parseDateString(
-                    String.valueOf(time), DateTimeUtils.HOUR_INT_FORMATTER);
+                    String.valueOf(hour), DateTimeUtils.HOUR_INT_FORMATTER);
             timeView.setText(DateTimeUtils.formatDateTo12HourClock(date));
         }
         updateResetTimeRangeButtonVisibility();
@@ -246,7 +246,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment
 
     private void updateSaveButtonVisibility()
     {
-        if (isOriginalIntervalSelected() || mTimePicker.hasSelectedOneTime())
+        if (isOriginalIntervalSelected() || mTimePicker.hasSelectedSingleTime())
         {
             mSaveButton.setVisibility(View.GONE);
         }
@@ -265,8 +265,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment
         }
         else
         {
-            return originalInterval.getStartTimeInt() == mTimePicker.getSelectedStartTime()
-                    && originalInterval.getEndTimeInt() == mTimePicker.getSelectedEndTime();
+            return originalInterval.getStartHour() == mTimePicker.getSelectedStartHour()
+                    && originalInterval.getEndHour() == mTimePicker.getSelectedEndHour();
         }
     }
 
@@ -303,14 +303,14 @@ public class EditAvailableHoursFragment extends ActionBarFragment
 
     private void initTimePicker()
     {
-        mTimePicker.setTimeRange(DEFAULT_START_TIME, DEFAULT_END_TIME);
+        mTimePicker.setTimeRange(DEFAULT_START_HOUR, DEFAULT_END_HOUR);
         mTimePicker.setCallbacks(new HandyTimePicker.Callbacks()
         {
             @Override
-            public void onRangeUpdated(final int startTime, final int endTime)
+            public void onRangeUpdated(final int startHour, final int endHour)
             {
-                updateStartTime(startTime);
-                updateEndTime(endTime);
+                updateStartTime(startHour);
+                updateEndTime(endHour);
             }
 
             @Override
@@ -338,10 +338,10 @@ public class EditAvailableHoursFragment extends ActionBarFragment
         final AvailabilityInterval interval = getFirstAvailabilityInterval();
         if (interval != null)
         {
-            if (mTimePicker.selectTimeRange(interval.getStartTimeInt(), interval.getEndTimeInt()))
+            if (mTimePicker.selectTimeRange(interval.getStartHour(), interval.getEndHour()))
             {
-                updateStartTime(interval.getStartTimeInt());
-                updateEndTime(interval.getEndTimeInt());
+                updateStartTime(interval.getStartHour());
+                updateEndTime(interval.getEndHour());
                 mTimePicker.setSelectionType(HandyTimePicker.SelectionType.END_TIME);
             }
         }
