@@ -173,6 +173,33 @@ public final class UIUtils
         }
     }
 
+    /**
+     * @param context
+     * @param containerView
+     * @param message
+     * @param drawableResourceId
+     * @return a long-duration snackbar with an image, with default padding and style
+     */
+    public static Snackbar getDefaultSnackbarWithImage(
+            @NonNull Context context,
+            @NonNull View containerView,
+            @NonNull String message,
+            @Nullable Integer drawableResourceId
+    )
+    {
+        final Snackbar snackbar = Snackbar
+                .make(containerView,
+                        message,
+                        Snackbar.LENGTH_LONG);
+
+        if(drawableResourceId != null)
+        {
+            int padding = context.getResources().getDimensionPixelOffset(R.dimen.default_padding);
+            UIUtils.setSnackbarImage(snackbar, drawableResourceId, padding);
+        }
+        return snackbar;
+    }
+
     public static void setSnackbarImage(Snackbar snackbar, @DrawableRes int imageRes, int padding)
     {
         //make the snackbar display an icon if there exists one.

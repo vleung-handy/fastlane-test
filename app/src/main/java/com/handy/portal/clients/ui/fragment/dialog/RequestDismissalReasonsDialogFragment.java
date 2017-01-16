@@ -66,7 +66,7 @@ public class RequestDismissalReasonsDialogFragment extends ConfirmBookingActionD
     }
 
     @Override
-    protected View inflateBookingActionContentView(final LayoutInflater inflater, final ViewGroup container)
+    protected View inflateConfirmActionContentView(final LayoutInflater inflater, final ViewGroup container)
     {
         return inflater.inflate(R.layout.fragment_dialog_request_dismissal_reasons, container, false);
     }
@@ -112,7 +112,7 @@ public class RequestDismissalReasonsDialogFragment extends ConfirmBookingActionD
     }
 
     @Override
-    protected void onConfirmBookingActionButtonClicked()
+    protected void onConfirmActionButtonClicked()
     {
         if (mSelectedReasonMachineName == null)
         {

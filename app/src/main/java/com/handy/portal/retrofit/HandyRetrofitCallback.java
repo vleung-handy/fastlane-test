@@ -52,6 +52,14 @@ public abstract class HandyRetrofitCallback implements retrofit.Callback<Respons
             {
                 objArray = new JSONArray(resp.toString());
             }
+            else if(resp.toString().trim().isEmpty())
+            {
+                /*
+                quick-fix to handle case in which resp.toString() is empty
+                note that resp.toString() is non-null
+                 */
+                obj = new JSONObject();
+            }
             else
             {
                 obj = new JSONObject(resp.toString());

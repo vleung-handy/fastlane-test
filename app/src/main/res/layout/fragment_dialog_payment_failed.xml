@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    android:id="@+id/payments_bill_blocker_window"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/default_padding"
+        android:paddingLeft="@dimen/default_padding_medium"
+        android:paddingRight="@dimen/default_padding_medium"
+        android:paddingTop="@dimen/default_padding"
+        >
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin_x2"
+            android:gravity="center"
+            android:lineSpacingExtra="@dimen/lineSpacing"
+            android:text="Payment Failed"
+            android:textAppearance="@style/TextView.Bold"
+            android:textSize="@dimen/large_text_size"
+            />
+
+        <TextView
+            android:id="@+id/payments_bill_blocker_content"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/payment_container_vertical_padding"
+            android:gravity="center"
+            android:lineSpacingExtra="@dimen/lineSpacing"
+            android:textAppearance="@style/HandyTextAppearanceMedium"
+            android:textColor="@color/dark_gray"
+            android:text="We attempted to send your deposit to the account you have on file but it failed.  You need to update your bank details so that we can send your direct deposit to the right account."
+            />
+
+        <Button
+            android:id="@+id/fragment_dialog_payment_failed_update_payment_method_now_button"
+            style="@style/Button.Red.Round"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_padding"
+            android:text="@string/payments_bill_blocker_update_now_button"
+            />
+
+        <Button
+            android:id="@+id/fragment_dialog_payment_failed_update_payment_method_later_button"
+            style="@style/Button.Transparent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/payment_failed_update_payment_method_not_now_button"
+            android:textAllCaps="true"
+            android:textAppearance="@style/TextView.Bold"
+            android:textColor="@color/tertiary_gray"
+            android:textSize="@dimen/small_text_size"
+            />
+    </LinearLayout>
+</RelativeLayout>

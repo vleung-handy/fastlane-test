@@ -2,11 +2,13 @@ package com.handy.portal.payments.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -16,29 +18,45 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.ui.element.bookings.BookingResultBannerTextView;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
+import com.handy.portal.data.DataManager;
+import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.CompletedJobsLog;
+import com.handy.portal.logger.handylogger.model.PaymentsLog;
+import com.handy.portal.payments.PaymentsManager;
+import com.handy.portal.payments.PaymentsUtil;
+import com.handy.portal.payments.model.BookingPaymentTransactionReviewRequest;
 import com.handy.portal.payments.model.BookingTransactions;
+import com.handy.portal.payments.model.PaymentReviewResponse;
+import com.handy.portal.payments.model.PaymentSupportItem;
 import com.handy.portal.payments.model.Transaction;
 import com.handy.portal.payments.ui.element.TransactionView;
+import com.handy.portal.payments.ui.fragment.dialog.PaymentDetailsSupportDialogFragment;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * fragment for handling bookings that are viewed for payment details
  */
-public class BookingTransactionsFragment extends ActionBarFragment
+public class BookingTransactionsFragment extends ActionBarFragment implements PaymentDetailsSupportDialogFragment.Callback
 {
     @Inject
     ConfigManager mConfigManager;
+    @Inject
+    ProviderManager mProviderManager;
+    @Inject
+    PaymentsManager mPaymentsManager;
 
     @BindView(R.id.booking_transactions_banner_text)
     BookingResultBannerTextView mBannerText;
@@ -74,6 +92,11 @@ public class BookingTransactionsFragment extends ActionBarFragment
     TextView mHelpText;
     @BindView(R.id.booking_transactions_transactions_summary_layout)
     ViewGroup mTransactionSummary;
+    @BindView(R.id.fragment_booking_transactions_payment_support_button)
+    Button mPaymentSupportButton;
+    @BindView(R.id.fragment_booking_transactions_content)
+    CoordinatorLayout mContentLayout;
+    //TODO consolidate with booking details frag and visibility conditional
 
 
     private BookingTransactions mBookingTransactions;
@@ -182,5 +205,66 @@ public class BookingTransactionsFragment extends ActionBarFragment
         {
             mTransactionSummary.setVisibility(View.GONE);
         }
+
+        //don't show payment support button if no payment support items
+        mPaymentSupportButton.setVisibility(
+                mBookingTransactions.getPaymentSupportItems() == null
+                        || mBookingTransactions.getPaymentSupportItems().length == 0 ?
+                        View.GONE : View.VISIBLE
+        );
+    }
+
+    @OnClick(R.id.fragment_booking_transactions_payment_support_button)
+    public void onPaymentSupportButtonClicked()
+    {
+        PaymentsUtil.showPaymentSupportDialog(this, mBookingTransactions.getPaymentSupportItems());
+    }
+
+    @Override
+    public void onPaymentSupportItemSubmitted(PaymentSupportItem paymentSupportItem)
+    {
+        BookingPaymentTransactionReviewRequest paymentReviewRequest
+                = new BookingPaymentTransactionReviewRequest(
+                String.valueOf(mBooking.getId()),
+                mBooking.getType().toString(),
+                paymentSupportItem.getMachineName(),
+                null);
+
+        bus.post(new LogEvent.AddLogEvent(
+                new PaymentsLog.BookingTransaction.SupportDialogSubmitButtonPressed(
+                        mBooking.getId(),
+                        paymentSupportItem.getMachineName(),
+                        null
+                )));
+
+//        //TODO test only, remove
+//        UIUtils.getDefaultSnackbarWithImage(getContext(),
+//                mContentLayout, "Test message", R.drawable.ic_green_envelope).show();
+
+        //TODO: BACKEND NOT READY.
+        //the payment support button won't show and this logic won't get triggered
+        //until backend ready and tested against this
+        mPaymentsManager.submitBookingPaymentTransactionReviewRequest(paymentReviewRequest, new FragmentSafeCallback<PaymentReviewResponse>(this)
+        {
+            @Override
+            public void onCallbackSuccess(final PaymentReviewResponse response)
+            {
+                int drawableResourceId = response.isSuccess() ?
+                        R.drawable.ic_green_envelope : R.drawable.ic_exclaimation_red;
+                UIUtils.getDefaultSnackbarWithImage(getContext(),
+                        mContentLayout,
+                        response.getMessage(),
+                        drawableResourceId).show();
+            }
+
+            @Override
+            public void onCallbackError(final DataManager.DataManagerError error)
+            {
+                UIUtils.getDefaultSnackbarWithImage(getContext(),
+                        mContentLayout,
+                        getString(R.string.an_error_has_occurred),
+                        R.drawable.ic_exclaimation_red).show();
+            }
+        });
     }
 }

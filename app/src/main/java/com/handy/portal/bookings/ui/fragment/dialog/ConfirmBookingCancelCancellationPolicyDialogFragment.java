@@ -49,7 +49,7 @@ public class ConfirmBookingCancelCancellationPolicyDialogFragment
     }
 
     @Override
-    protected void onConfirmBookingActionButtonClicked()
+    protected void onConfirmActionButtonClicked()
     {
         if (mAction != null)
         {

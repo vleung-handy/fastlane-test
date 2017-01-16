@@ -5,7 +5,7 @@
             <corners android:radius="@dimen/round_button_radius"/>
             <stroke android:width="@dimen/round_button_stroke"
                     android:color="@color/disabled"/>
-            <solid android:color="@color/transparent"/>
+            <solid android:color="@color/bg_inactive_grey_50"/>
         </shape>
     </item>
     <item android:state_pressed="false">

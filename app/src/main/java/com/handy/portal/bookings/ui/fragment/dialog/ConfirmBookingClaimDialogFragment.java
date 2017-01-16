@@ -47,7 +47,7 @@ public class ConfirmBookingClaimDialogFragment
     }
 
     @Override
-    protected void onConfirmBookingActionButtonClicked()
+    protected void onConfirmActionButtonClicked()
     {
         Intent intent = new Intent();
         intent.putExtra(BundleKeys.BOOKING, mBooking);
