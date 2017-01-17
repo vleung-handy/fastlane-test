@@ -11,9 +11,9 @@ import java.util.Date;
 
 public class DailyAvailabilityTimeline implements Serializable
 {
-    @SerializedName("date")
+    @SerializedName("timeline_date")
     private String mDate;
-    @SerializedName("intervals")
+    @SerializedName("interval_array")
     private ArrayList<AvailabilityInterval> mAvailabilityIntervals;
 
     public DailyAvailabilityTimeline(final Date date,

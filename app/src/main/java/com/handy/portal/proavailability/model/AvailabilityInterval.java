@@ -15,9 +15,9 @@ public class AvailabilityInterval implements Serializable
     private static final SimpleDateFormat TIME_FORMAT =
             new SimpleDateFormat("HH:mm:ss", Locale.getDefault());
 
-    @SerializedName("start")
+    @SerializedName("start_time")
     private String mStartTime;
-    @SerializedName("end")
+    @SerializedName("end_time")
     private String mEndTime;
 
     public AvailabilityInterval(final int startHour, final int endHour)
