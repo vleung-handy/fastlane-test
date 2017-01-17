@@ -159,6 +159,8 @@ public class PageNavigationManager
             swapFragmentEvent.targetPage = MainViewPage.BLOCK_PRO_WEBVIEW;
         }
 
+        swapFragmentEvent.setReturnFragment(event.getReturnFragment(), event.getActivityRequestCode());
+
         mBus.post(swapFragmentEvent);
     }
 

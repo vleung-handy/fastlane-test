@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <LinearLayout
+        android:id="@+id/gaps"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="@dimen/time_picker_gap_offset"
+        android:layout_marginStart="@dimen/time_picker_gap_offset"
+        android:orientation="horizontal"
+        />
+
+    <LinearLayout
+        android:id="@+id/cells"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/default_margin_half"
+        android:orientation="horizontal"
+        />
+
+</merge>

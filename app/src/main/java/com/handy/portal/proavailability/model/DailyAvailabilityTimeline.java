@@ -16,6 +16,13 @@ public class DailyAvailabilityTimeline implements Serializable
     @SerializedName("intervals")
     private ArrayList<AvailabilityInterval> mAvailabilityIntervals;
 
+    public DailyAvailabilityTimeline(final Date date,
+                                     final ArrayList<AvailabilityInterval> intervals)
+    {
+        mDate = DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date);
+        mAvailabilityIntervals = intervals;
+    }
+
     @Nullable
     public Date getDate()
     {
@@ -25,6 +32,7 @@ public class DailyAvailabilityTimeline implements Serializable
     /**
      * Checks if the date (excluding time) matches between this object's corresponding date and the
      * date passed in as a parameter.
+     *
      * @param date
      * @return
      */

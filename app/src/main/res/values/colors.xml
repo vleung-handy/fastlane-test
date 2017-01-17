@@ -52,6 +52,7 @@
     <color name="border_mid_gray">#CCCCCC</color>
     <color name="list_divider">#EEEEEE</color>
     <color name="form_label">#999999</color>
+    <color name="inactive_gray">#DAE0E3</color>
     <color name="payments_batch_list_entry_subtitle">#999999</color>
 
     <!--List colors-->

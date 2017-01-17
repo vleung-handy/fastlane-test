@@ -7,7 +7,7 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.ViewGroup;
-import android.widget.RelativeLayout;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -21,7 +21,7 @@ import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AvailableHoursView extends RelativeLayout
+public class AvailableHoursView extends FrameLayout
 {
     @BindView(R.id.title)
     TextView mTitle;

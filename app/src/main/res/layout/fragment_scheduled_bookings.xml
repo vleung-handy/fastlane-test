@@ -14,7 +14,6 @@
             android:id="@+id/bookings_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:animateLayoutChanges="true"
             android:orientation="vertical"
             >
 
@@ -68,7 +67,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/border_gray_bottom"
-                android:padding="@dimen/default_padding"
+                android:paddingBottom="1dp"
                 android:visibility="gone"
                 tools:visibility="visible"
                 />

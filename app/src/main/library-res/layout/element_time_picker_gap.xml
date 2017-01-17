@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="@dimen/time_picker_gap_width"
+    android:layout_height="@dimen/time_picker_cell_size"
+    android:background="@color/inactive_gray"
+    android:visibility="invisible"
+    tools:visibility="visible"
+    />

@@ -5,6 +5,7 @@ import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.core.model.ProviderSettings;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
+import com.handy.portal.proavailability.model.AvailabilityTimelinesWrapper;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -195,6 +196,11 @@ public interface HandyRetrofitService
 
     @GET(PROVIDERS_PATH + "{id}/availability_timeline")
     void getProviderAvailability(@Path("id") String providerId, HandyRetrofitCallback cb);
+
+    @POST(PROVIDERS_PATH + "{id}/availability_timeline")
+    void saveProviderAvailability(@Path("id") String providerId,
+                                  @Body AvailabilityTimelinesWrapper timelinesWrapper,
+                                  HandyRetrofitCallback cb);
 
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/on_my_way")

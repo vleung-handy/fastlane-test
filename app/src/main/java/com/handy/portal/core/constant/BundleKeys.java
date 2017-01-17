@@ -23,6 +23,7 @@ public class BundleKeys
     public static final String MESSAGE_ICON = "message_icon";
     public static final String EXTRAS = "extras";
     public static final String NAVIGATION_SOURCE = "navigation_source";
+    public static final String DATE = "date";
 
     // Terms
     public static final String TERMS_GROUP = "terms_group";
@@ -74,4 +75,7 @@ public class BundleKeys
     // Request Dismissal
     public static final String REASON_MACHINE_NAME = "reason_machine_name";
     public static final String REASON_DESCRIPTION = "reason_description";
+
+    // Pro Availability
+    public static final String DAILY_AVAILABILITY_TIMELINE = "daily_availability_timeline";
 }

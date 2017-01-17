@@ -197,5 +197,11 @@
 
     <dimen name="action_button_width">248dp</dimen>
 
+    <!-- Time Picker -->
+    <dimen name="time_picker_cell_size">60dp</dimen>
+    <dimen name="time_picker_gap_width">76dp</dimen>
+    <dimen name="time_picker_gap_offset">38dp</dimen>
 
+    <!-- Pro Availability -->
+    <dimen name="time_range_reset_button_size">26dp</dimen>
 </resources>

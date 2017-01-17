@@ -30,6 +30,7 @@ import com.handy.portal.payments.ui.fragment.PaymentsFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.payments.ui.fragment.SelectPaymentMethodFragment;
+import com.handy.portal.proavailability.fragment.EditAvailableHoursFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
 
@@ -83,7 +84,9 @@ public enum MainViewPage implements Serializable
     BLOCK_PRO_WEBVIEW(BlockScheduleFragment.class),
     PAYMENT_BLOCKING(PaymentBlockingFragment.class),
 
-    CLIENTS(ClientsFragment.class);
+    CLIENTS(ClientsFragment.class),
+    EDIT_AVAILABLE_HOURS(EditAvailableHoursFragment.class),
+    ;
 
     private static final MainViewPage[] TOP_LEVEL_PAGES = {
             AVAILABLE_JOBS, SCHEDULED_JOBS, CLIENTS, NOTIFICATIONS, DASHBOARD, PAYMENTS,

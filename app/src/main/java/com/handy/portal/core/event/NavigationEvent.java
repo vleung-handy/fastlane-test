@@ -3,6 +3,7 @@ package com.handy.portal.core.event;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.TransitionStyle;
@@ -16,6 +17,8 @@ public abstract class NavigationEvent extends HandyEvent
         @NonNull
         public final Bundle arguments;
         public final TransitionStyle transitionStyle;
+        private Fragment mReturnFragment;
+        private int mActivityRequestCode;
 
         public NavigateToPage(MainViewPage targetPage)
         {
@@ -49,6 +52,24 @@ public abstract class NavigationEvent extends HandyEvent
             this.arguments = (arguments != null) ? arguments : new Bundle();
             this.transitionStyle = transitionStyle;
         }
+
+        public void setReturnFragment(@Nullable final Fragment returnFragment,
+                                      final int requestCode)
+        {
+            mReturnFragment = returnFragment;
+            mActivityRequestCode = requestCode;
+        }
+
+        @Nullable
+        public Fragment getReturnFragment()
+        {
+            return mReturnFragment;
+        }
+
+        public int getActivityRequestCode()
+        {
+            return mActivityRequestCode;
+        }
     }
 
 
@@ -58,6 +79,8 @@ public abstract class NavigationEvent extends HandyEvent
         public Bundle arguments;
         public TransitionStyle transitionStyle;
         public boolean addToBackStack;
+        private Fragment mReturnFragment;
+        private int mActivityRequestCode;
 
         public SwapFragmentEvent(final MainViewPage targetPage, final Bundle arguments,
                                  final TransitionStyle transitionStyle, final boolean addToBackStack)
@@ -66,6 +89,24 @@ public abstract class NavigationEvent extends HandyEvent
             this.addToBackStack = addToBackStack;
             this.arguments = arguments;
             this.transitionStyle = transitionStyle;
+        }
+
+        public void setReturnFragment(@Nullable final Fragment returnFragment,
+                                      final int requestCode)
+        {
+            mReturnFragment = returnFragment;
+            mActivityRequestCode = requestCode;
+        }
+
+        @Nullable
+        public Fragment getReturnFragment()
+        {
+            return mReturnFragment;
+        }
+
+        public int getActivityRequestCode()
+        {
+            return mActivityRequestCode;
         }
     }
 
