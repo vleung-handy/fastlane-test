@@ -7,6 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -111,6 +114,40 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
+    {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (isAvailableHoursEnabled())
+        {
+            inflater.inflate(R.menu.menu_scheduled_bookings, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.action_available_hours:
+                final Bundle arguments = new Bundle();
+                arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY,
+                        mProviderAvailability);
+                bus.post(new NavigationEvent.NavigateToPage(
+                        MainViewPage.WEEKLY_AVAILABLE_HOURS, arguments, true));
+                return true;
+            default:
+                return false;
+        }
+    }
+
+    @Override
     public void onResume()
     {
         bus.register(this);
@@ -138,9 +175,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     private void requestProviderAvailability()
     {
-        if (mProviderAvailability == null
-                && mConfigManager.getConfigurationResponse() != null
-                && mConfigManager.getConfigurationResponse().isAvailableHoursEnabled())
+        if (mProviderAvailability == null && isAvailableHoursEnabled())
         {
             dataManager.getProviderAvailability(mProviderManager.getLastProviderId(),
                     new FragmentSafeCallback<ProviderAvailability>(this)
@@ -160,6 +195,12 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
                         }
                     });
         }
+    }
+
+    private boolean isAvailableHoursEnabled()
+    {
+        return mConfigManager.getConfigurationResponse() != null
+                && mConfigManager.getConfigurationResponse().isAvailableHoursEnabled();
     }
 
     private void showAvailableHours()
