@@ -140,7 +140,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY,
                         mProviderAvailability);
                 bus.post(new NavigationEvent.NavigateToPage(
-                        MainViewPage.WEEKLY_AVAILABLE_HOURS, arguments, true));
+                        MainViewPage.EDIT_WEEKLY_AVAILABLE_HOURS, arguments, true));
                 return true;
             default:
                 return false;

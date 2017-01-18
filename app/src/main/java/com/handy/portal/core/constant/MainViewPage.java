@@ -31,7 +31,7 @@ import com.handy.portal.payments.ui.fragment.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.payments.ui.fragment.SelectPaymentMethodFragment;
 import com.handy.portal.proavailability.fragment.EditAvailableHoursFragment;
-import com.handy.portal.proavailability.fragment.WeeklyAvailableHoursFragment;
+import com.handy.portal.proavailability.fragment.EditWeeklyAvailableHoursFragment;
 import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
 
@@ -87,7 +87,7 @@ public enum MainViewPage implements Serializable
 
     CLIENTS(ClientsFragment.class),
     EDIT_AVAILABLE_HOURS(EditAvailableHoursFragment.class),
-    WEEKLY_AVAILABLE_HOURS(WeeklyAvailableHoursFragment.class),
+    EDIT_WEEKLY_AVAILABLE_HOURS(EditWeeklyAvailableHoursFragment.class),
     ;
 
     private static final MainViewPage[] TOP_LEVEL_PAGES = {

@@ -49,4 +49,19 @@ public class AvailabilityInterval implements Serializable
     {
         return DateTimeUtils.parseDateString(mEndTime, TIME_FORMAT);
     }
+
+    @Override
+    public boolean equals(final Object object)
+    {
+        if (object instanceof AvailabilityInterval)
+        {
+            final AvailabilityInterval otherInterval = (AvailabilityInterval) object;
+            return otherInterval.getStartHour() == getStartHour()
+                    && otherInterval.getEndHour() == getEndHour();
+        }
+        else
+        {
+            return super.equals(object);
+        }
+    }
 }

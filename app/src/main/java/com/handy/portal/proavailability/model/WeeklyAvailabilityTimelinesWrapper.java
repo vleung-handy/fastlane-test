@@ -31,6 +31,11 @@ public class WeeklyAvailabilityTimelinesWrapper implements Serializable
         return DateTimeUtils.parseDateString(mEndDate, DateTimeUtils.YEAR_MONTH_DAY_FORMATTER);
     }
 
+    public ArrayList<DailyAvailabilityTimeline> getDailyAvailabilityTimelines()
+    {
+        return mDailyAvailabilityTimelines;
+    }
+
     @Nullable
     public DailyAvailabilityTimeline getAvailabilityForDate(@NonNull final Date date)
     {

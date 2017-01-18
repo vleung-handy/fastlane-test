@@ -13,6 +13,11 @@ public class ProviderAvailability implements Serializable
     @SerializedName("weekly_timelines")
     private ArrayList<WeeklyAvailabilityTimelinesWrapper> mWeeklyAvailabilityTimelineWrappers;
 
+    public ArrayList<WeeklyAvailabilityTimelinesWrapper> getWeeklyAvailabilityTimelineWrappers()
+    {
+        return mWeeklyAvailabilityTimelineWrappers;
+    }
+
     @Nullable
     public DailyAvailabilityTimeline getAvailabilityForDate(final Date date)
     {
