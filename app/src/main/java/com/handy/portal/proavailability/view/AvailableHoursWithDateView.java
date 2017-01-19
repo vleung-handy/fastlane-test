@@ -26,7 +26,7 @@ public class AvailableHoursWithDateView extends FrameLayout
     ViewGroup mTimelines;
 
     private final Date mDate;
-    private final DailyAvailabilityTimeline mAvailability;
+    private DailyAvailabilityTimeline mAvailability;
     private RemoveTimeSlotListener mRemoveTimeSlotListener;
 
     public AvailableHoursWithDateView(final Context context,
@@ -41,15 +41,29 @@ public class AvailableHoursWithDateView extends FrameLayout
         init();
     }
 
+    public Date getDate()
+    {
+        return mDate;
+    }
+
     private void init()
     {
         inflate(getContext(), R.layout.element_available_hours_with_date, this);
         ButterKnife.bind(this);
-
         setBackgroundResource(R.drawable.border_gray_bottom);
-
         mTitle.setText(DateTimeUtils.formatDayOfWeekMonthDate(mDate));
+        displayTimelines();
+    }
 
+    public void updateTimelines(final DailyAvailabilityTimeline availability)
+    {
+        mAvailability = availability;
+        displayTimelines();
+    }
+
+    private void displayTimelines()
+    {
+        mTimelines.removeAllViews();
         if (mAvailability != null)
         {
             final ArrayList<AvailabilityInterval> intervals =

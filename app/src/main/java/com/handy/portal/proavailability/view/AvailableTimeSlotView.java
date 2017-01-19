@@ -1,7 +1,6 @@
 package com.handy.portal.proavailability.view;
 
 import android.content.Context;
-import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -23,7 +22,7 @@ public class AvailableTimeSlotView extends FrameLayout
     @OnClick(R.id.remove)
     public void onRemoveClicked()
     {
-        mRemoveTimeSlotListener.onRemoveClicked(this, mDate, mInterval);
+        mRemoveTimeSlotListener.onRemoveClicked(mDate, mInterval);
     }
 
     private Date mDate;
@@ -55,6 +54,6 @@ public class AvailableTimeSlotView extends FrameLayout
 
     public interface RemoveTimeSlotListener
     {
-        void onRemoveClicked(final View view, final Date date, final AvailabilityInterval interval);
+        void onRemoveClicked(final Date date, final AvailabilityInterval interval);
     }
 }

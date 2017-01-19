@@ -1,6 +1,7 @@
 package com.handy.portal.proavailability.view;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -61,6 +62,20 @@ public class WeeklyAvailableHoursView extends LinearLayout
             addView(view);
             calendar.add(Calendar.DATE, 1);
         }
+    }
+
+    @Nullable
+    public AvailableHoursWithDateView getViewForDate(final Date date)
+    {
+        for (int i = 0; i < getChildCount(); i++)
+        {
+            final AvailableHoursWithDateView view = (AvailableHoursWithDateView) getChildAt(i);
+            if (view.getDate().equals(date))
+            {
+                return view;
+            }
+        }
+        return null;
     }
 
     public interface DateClickListener
