@@ -206,6 +206,10 @@
         <item name="android:background">@drawable/button_trans_round</item>
     </style>
 
+    <style name="Button.Transparent.Oval">
+        <item name="android:background">@drawable/button_trans_oval</item>
+    </style>
+
     <style name="Button.Green">
         <item name="android:background">@drawable/button_green</item>
     </style>

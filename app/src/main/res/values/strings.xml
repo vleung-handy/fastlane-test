@@ -671,4 +671,6 @@
     <string name="time_slot_removal_prompt">Are you sure you want to remove this time slot?</string>
     <string name="current_week">Current Week</string>
     <string name="next_week">Next Week</string>
+    <string name="copy_hours_from_current_week">Copy Hours from Current Week</string>
+    <string name="copied">Copied</string>
 </resources>
