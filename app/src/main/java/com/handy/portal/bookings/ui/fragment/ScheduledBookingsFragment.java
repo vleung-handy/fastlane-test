@@ -45,7 +45,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -105,7 +104,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
             };
     private ProviderAvailability mProviderAvailability;
     private DailyAvailabilityTimeline mAvailabilityForSelectedDay;
-    private Map<Date, DailyAvailabilityTimeline> mUpdatedAvailabilityTimelines;
+    private HashMap<Date, DailyAvailabilityTimeline> mUpdatedAvailabilityTimelines;
 
     @Override
     protected MainViewPage getAppPage()
@@ -137,10 +136,14 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         {
             case R.id.action_available_hours:
                 final Bundle arguments = new Bundle();
-                arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY,
-                        mProviderAvailability);
-                bus.post(new NavigationEvent.NavigateToPage(
-                        MainViewPage.EDIT_WEEKLY_AVAILABLE_HOURS, arguments, true));
+                arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY, mProviderAvailability);
+                arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY_CACHE,
+                        mUpdatedAvailabilityTimelines);
+                final NavigationEvent.NavigateToPage navigationEvent =
+                        new NavigationEvent.NavigateToPage(MainViewPage.EDIT_WEEKLY_AVAILABLE_HOURS,
+                                arguments, true);
+                navigationEvent.setReturnFragment(this, RequestCode.EDIT_HOURS);
+                bus.post(navigationEvent);
                 return true;
             default:
                 return false;
@@ -381,16 +384,15 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && requestCode == RequestCode.EDIT_HOURS)
         {
-            final Date date = (Date) data.getSerializableExtra(BundleKeys.DATE);
-            final DailyAvailabilityTimeline timeline = (DailyAvailabilityTimeline)
+            final DailyAvailabilityTimeline availability = (DailyAvailabilityTimeline)
                     data.getSerializableExtra(BundleKeys.DAILY_AVAILABILITY_TIMELINE);
-            if (date != null && timeline != null)
+            if (availability != null)
             {
                 if (mUpdatedAvailabilityTimelines == null)
                 {
                     mUpdatedAvailabilityTimelines = new HashMap<>();
                 }
-                mUpdatedAvailabilityTimelines.put(date, timeline);
+                mUpdatedAvailabilityTimelines.put(availability.getDate(), availability);
                 showAvailableHours();
             }
         }

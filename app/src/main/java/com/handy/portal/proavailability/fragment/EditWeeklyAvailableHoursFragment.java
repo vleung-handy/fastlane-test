@@ -40,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -102,7 +101,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
             final Bundle bundle = new Bundle();
             bundle.putSerializable(BundleKeys.DATE, date);
             bundle.putSerializable(BundleKeys.DAILY_AVAILABILITY_TIMELINE,
-                    mProviderAvailability.getAvailabilityForDate(date));
+                    getAvailablityForDate(date));
             final NavigationEvent.NavigateToPage navigationEvent =
                     new NavigationEvent.NavigateToPage(MainViewPage.EDIT_AVAILABLE_HOURS, bundle, true);
             navigationEvent.setReturnFragment(EditWeeklyAvailableHoursFragment.this,
@@ -110,7 +109,22 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
             bus.post(navigationEvent);
         }
     };
-    private Map<Date, DailyAvailabilityTimeline> mUpdatedAvailabilityTimelines;
+    private HashMap<Date, DailyAvailabilityTimeline> mUpdatedAvailabilityTimelines;
+
+    private DailyAvailabilityTimeline getAvailablityForDate(final Date date)
+    {
+        DailyAvailabilityTimeline availabilityForDate = null;
+        if (mUpdatedAvailabilityTimelines != null)
+        {
+            availabilityForDate = mUpdatedAvailabilityTimelines.get(date);
+        }
+        if (availabilityForDate == null)
+        {
+            availabilityForDate =
+                    mProviderAvailability.getAvailabilityForDate(date);
+        }
+        return availabilityForDate;
+    }
 
     private void removeInterval(final Date date, final AvailabilityInterval interval)
     {
@@ -136,6 +150,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
                                 new DailyAvailabilityTimeline(date, intervals);
                         mUpdatedAvailabilityTimelines.put(date, updatedAvailabilityTimeline);
                         mPagerAdapter.updateViewWithTimeline(updatedAvailabilityTimeline);
+                        callTargetFragmentResult(updatedAvailabilityTimeline);
                     }
 
                     @Override
@@ -152,12 +167,25 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
                 });
     }
 
+    private void callTargetFragmentResult(
+            final DailyAvailabilityTimeline updatedAvailabilityTimeline)
+    {
+        if (getTargetFragment() != null)
+        {
+            final Intent data = new Intent();
+            data.putExtra(BundleKeys.DAILY_AVAILABILITY_TIMELINE, updatedAvailabilityTimeline);
+            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
+        }
+    }
+
     @Override
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         mProviderAvailability = (ProviderAvailability) getArguments()
                 .getSerializable(BundleKeys.PROVIDER_AVAILABILITY);
+        mUpdatedAvailabilityTimelines = (HashMap<Date, DailyAvailabilityTimeline>) getArguments()
+                .getSerializable(BundleKeys.PROVIDER_AVAILABILITY_CACHE);
     }
 
     @Nullable
@@ -166,7 +194,6 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
                              @Nullable final ViewGroup container,
                              @Nullable final Bundle savedInstanceState)
     {
-        bus.post(new NavigationEvent.SetNavigationTabVisibility(false));
         final View view =
                 inflater.inflate(R.layout.fragment_edit_weekly_available_hours, container, false);
         ButterKnife.bind(this, view);
@@ -190,17 +217,17 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && requestCode == RequestCode.EDIT_HOURS)
         {
-            final Date date = (Date) data.getSerializableExtra(BundleKeys.DATE);
             final DailyAvailabilityTimeline timeline = (DailyAvailabilityTimeline)
                     data.getSerializableExtra(BundleKeys.DAILY_AVAILABILITY_TIMELINE);
-            if (date != null && timeline != null)
+            if (timeline != null)
             {
                 if (mUpdatedAvailabilityTimelines == null)
                 {
                     mUpdatedAvailabilityTimelines = new HashMap<>();
                 }
-                mUpdatedAvailabilityTimelines.put(date, timeline);
+                mUpdatedAvailabilityTimelines.put(timeline.getDate(), timeline);
                 mPagerAdapter.updateViewWithTimeline(timeline);
+                callTargetFragmentResult(timeline);
             }
         }
     }
@@ -261,17 +288,10 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
                     @Override
                     public void onCallbackError(final DataManager.DataManagerError error)
                     {
-                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         // FIXME: Show error state
                     }
                 });
-    }
-
-    @Override
-    public void onDestroyView()
-    {
-        bus.post(new NavigationEvent.SetNavigationTabVisibility(true));
-        super.onDestroyView();
     }
 
     private class TabAdapter extends PagerAdapter
