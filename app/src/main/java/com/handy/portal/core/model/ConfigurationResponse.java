@@ -179,7 +179,7 @@ public class ConfigurationResponse
 
     public boolean isAvailableHoursEnabled()
     {
-        return false;
+        return mAvailableHoursEnabled;
     }
 
     public static class HelpCenterInfo
