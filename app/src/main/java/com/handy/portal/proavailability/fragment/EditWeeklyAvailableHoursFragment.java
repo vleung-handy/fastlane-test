@@ -370,7 +370,6 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
 
     private void displayAvailableHours()
     {
-        mTabLayout.setupWithViewPager(mViewPager);
         mPagerAdapter = new TabAdapter(getActivity(), mProviderAvailability, mDateClickListener,
                 mRemoveTimeSlotListener);
         for (DailyAvailabilityTimeline availability : mUpdatedAvailabilityTimelines.values())
@@ -388,10 +387,17 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
                         .get(CURRENT_WEEK_INDEX);
         final WeeklyAvailabilityTimelinesWrapper nextWeekTimelines =
                 mProviderAvailability.getWeeklyAvailabilityTimelinesWrappers().get(NEXT_WEEK_INDEX);
+        final int selectedTabPosition = mTabLayout.getSelectedTabPosition();
+        mTabLayout.removeAllTabs();
+        mTabLayout.setupWithViewPager(mViewPager);
         mTabLayout.getTabAt(CURRENT_WEEK_INDEX).setCustomView(new TabWithDateRangeView(
                 getActivity(), R.string.current_week, currentWeekTimelines));
         mTabLayout.getTabAt(NEXT_WEEK_INDEX).setCustomView(new TabWithDateRangeView(getActivity(),
                 R.string.next_week, nextWeekTimelines));
+        if (selectedTabPosition != -1)
+        {
+            mViewPager.setCurrentItem(selectedTabPosition);
+        }
     }
 
     @Override
@@ -402,6 +408,11 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
         if (mProviderAvailability == null)
         {
             requestAvailableHours();
+        }
+        else
+        {
+            // This is here to fix a UI duplication bug related to tabs
+            displayTabs();
         }
     }
 

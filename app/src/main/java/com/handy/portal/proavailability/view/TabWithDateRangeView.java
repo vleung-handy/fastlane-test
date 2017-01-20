@@ -9,18 +9,21 @@ import com.handy.portal.R;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.proavailability.model.WeeklyAvailabilityTimelinesWrapper;
 
+import java.util.Date;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class TabWithDateRangeView extends FrameLayout
 {
+    private final Date mStartDate;
+    private final Date mEndDate;
     @BindView(R.id.title)
     TextView mTitle;
     @BindView(R.id.date_range)
     TextView mDateRange;
 
     private final int mTitleResId;
-    private final WeeklyAvailabilityTimelinesWrapper mWeekTimelines;
 
     public TabWithDateRangeView(final Context context,
                                 @StringRes final int titleResId,
@@ -28,7 +31,8 @@ public class TabWithDateRangeView extends FrameLayout
     {
         super(context);
         mTitleResId = titleResId;
-        mWeekTimelines = weekTimelines;
+        mStartDate = weekTimelines.getStartDate();
+        mEndDate = weekTimelines.getEndDate();
         init();
     }
 
@@ -37,10 +41,8 @@ public class TabWithDateRangeView extends FrameLayout
         inflate(getContext(), R.layout.view_tab_with_date_range, this);
         ButterKnife.bind(this);
         mTitle.setText(mTitleResId);
-        final String startDateFormatted =
-                DateTimeUtils.formatDateMonthDay(mWeekTimelines.getStartDate());
-        final String endDateFormatted =
-                DateTimeUtils.formatDateMonthDay(mWeekTimelines.getEndDate());
+        final String startDateFormatted = DateTimeUtils.formatDateMonthDay(mStartDate);
+        final String endDateFormatted = DateTimeUtils.formatDateMonthDay(mEndDate);
         mDateRange.setText(startDateFormatted + " - " + endDateFormatted);
     }
 }
