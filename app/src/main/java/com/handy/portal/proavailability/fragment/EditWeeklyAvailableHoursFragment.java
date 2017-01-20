@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
@@ -15,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
@@ -64,6 +66,10 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
     TabLayout mTabLayout;
     @BindView(R.id.available_hours_view_pager)
     ViewPager mViewPager;
+    @BindView(R.id.fetch_error_view)
+    View mFetchErrorView;
+    @BindView(R.id.fetch_error_text)
+    TextView mFetchErrorText;
     @BindView(R.id.copy_hours_button)
     Button mCopyHoursButton;
     @BindColor(R.color.black)
@@ -216,12 +222,50 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
         }
     }
 
+    @OnClick(R.id.try_again_button)
+    public void onRetryFetchAvailableHours()
+    {
+        requestAvailableHours();
+    }
+
     @OnClick(R.id.copy_hours_button)
     public void onCopyHoursClicked()
     {
-        final AvailabilityTimelinesWrapper timelinesWrapper = new AvailabilityTimelinesWrapper();
-        final List<DailyAvailabilityTimeline> timelines = new ArrayList<>();
+        final AvailabilityTimelinesWrapper timelinesWrapper =
+                createNextWeekTimelinesFromCurrentWeek();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        dataManager.saveProviderAvailability(mProviderManager.getLastProviderId(), timelinesWrapper,
+                new FragmentSafeCallback<Void>(this)
+                {
+                    @Override
+                    public void onCallbackSuccess(final Void response)
+                    {
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                        for (DailyAvailabilityTimeline timeline : timelinesWrapper.getTimelines())
+                        {
+                            updateAvailability(timeline);
+                        }
+                        setIsCurrentWeekAndNextWeekInSync(true);
+                    }
 
+                    @Override
+                    public void onCallbackError(final DataManager.DataManagerError error)
+                    {
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                        String message = error.getMessage();
+                        if (TextUtils.isEmpty(message))
+                        {
+                            message = getString(R.string.an_error_has_occurred);
+                        }
+                        showToast(message);
+                    }
+                });
+    }
+
+    @NonNull
+    private AvailabilityTimelinesWrapper createNextWeekTimelinesFromCurrentWeek()
+    {
+        final AvailabilityTimelinesWrapper timelinesWrapper = new AvailabilityTimelinesWrapper();
         final WeeklyAvailabilityTimelinesWrapper currentWeekTimelines =
                 mProviderAvailability.getWeeklyAvailabilityTimelinesWrappers()
                         .get(CURRENT_WEEK_INDEX);
@@ -243,38 +287,10 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
                 intervals.addAll(availability.getAvailabilityIntervals());
             }
             timelinesWrapper.addTimeline(nextWeekDate.getTime(), intervals);
-            timelines.add(new DailyAvailabilityTimeline(nextWeekDate.getTime(), intervals));
 
             currentWeekDate.add(Calendar.DATE, 1);
         }
-
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        dataManager.saveProviderAvailability(mProviderManager.getLastProviderId(), timelinesWrapper,
-                new FragmentSafeCallback<Void>(this)
-                {
-                    @Override
-                    public void onCallbackSuccess(final Void response)
-                    {
-                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                        for (DailyAvailabilityTimeline timeline : timelines)
-                        {
-                            updateAvailability(timeline);
-                        }
-                        setIsCurrentWeekAndNextWeekInSync(true);
-                    }
-
-                    @Override
-                    public void onCallbackError(final DataManager.DataManagerError error)
-                    {
-                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                        String message = error.getMessage();
-                        if (TextUtils.isEmpty(message))
-                        {
-                            message = getString(R.string.an_error_has_occurred);
-                        }
-                        showToast(message);
-                    }
-                });
+        return timelinesWrapper;
     }
 
     @Override
@@ -307,6 +323,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
     public void onViewCreated(final View view, final Bundle savedInstanceState)
     {
         super.onViewCreated(view, savedInstanceState);
+        mFetchErrorText.setText(R.string.error_fetching_available_hours);
         if (mProviderAvailability != null)
         {
             displayAvailableHours();
@@ -384,13 +401,13 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
         setActionBar(R.string.available_hours, true);
         if (mProviderAvailability == null)
         {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             requestAvailableHours();
         }
     }
 
     private void requestAvailableHours()
     {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         dataManager.getProviderAvailability(mProviderManager.getLastProviderId(),
                 new FragmentSafeCallback<ProviderAvailability>(this)
                 {
@@ -398,6 +415,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
                     public void onCallbackSuccess(final ProviderAvailability providerAvailability)
                     {
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                        mFetchErrorView.setVisibility(View.GONE);
                         mProviderAvailability = providerAvailability;
                         displayAvailableHours();
                         displayTabs();
@@ -408,7 +426,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
                     public void onCallbackError(final DataManager.DataManagerError error)
                     {
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                        // FIXME: Show error state
+                        mFetchErrorView.setVisibility(View.VISIBLE);
                     }
                 });
     }

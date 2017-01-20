@@ -20,4 +20,9 @@ public class AvailabilityTimelinesWrapper implements Serializable
     {
         mDailyAvailabilityTimelines.add(new DailyAvailabilityTimeline(date, intervals));
     }
+
+    public ArrayList<DailyAvailabilityTimeline> getTimelines()
+    {
+        return mDailyAvailabilityTimelines;
+    }
 }
