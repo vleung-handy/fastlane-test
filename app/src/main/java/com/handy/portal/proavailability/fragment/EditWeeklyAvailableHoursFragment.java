@@ -154,16 +154,14 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
         }
         if (availabilityForDate == null)
         {
-            availabilityForDate =
-                    mProviderAvailability.getAvailabilityForDate(date);
+            availabilityForDate = mProviderAvailability.getAvailabilityForDate(date);
         }
         return availabilityForDate;
     }
 
     private void removeInterval(final Date date, final AvailabilityInterval interval)
     {
-        final DailyAvailabilityTimeline availability =
-                mProviderAvailability.getAvailabilityForDate(date);
+        final DailyAvailabilityTimeline availability = getAvailablityForDate(date);
         final ArrayList<AvailabilityInterval> intervals = new ArrayList<>();
         if (availability != null && availability.getAvailabilityIntervals() != null)
         {
@@ -225,7 +223,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
         final List<DailyAvailabilityTimeline> timelines = new ArrayList<>();
 
         final WeeklyAvailabilityTimelinesWrapper currentWeekTimelines =
-                mProviderAvailability.getWeeklyAvailabilityTimelineWrappers()
+                mProviderAvailability.getWeeklyAvailabilityTimelinesWrappers()
                         .get(CURRENT_WEEK_INDEX);
         final Calendar currentWeekDate = Calendar.getInstance(Locale.US);
         final Date startDate = currentWeekTimelines.getStartDate();
@@ -238,8 +236,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
             nextWeekDate.setTime(date);
             nextWeekDate.add(Calendar.DATE, DateTimeUtils.DAYS_IN_A_WEEK);
 
-            final DailyAvailabilityTimeline availability =
-                    currentWeekTimelines.getAvailabilityForDate(date);
+            final DailyAvailabilityTimeline availability = getAvailablityForDate(date);
             final ArrayList<AvailabilityInterval> intervals = Lists.newArrayList();
             if (availability != null && availability.getAvailabilityIntervals() != null)
             {
@@ -370,13 +367,13 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
     private void displayTabs()
     {
         final WeeklyAvailabilityTimelinesWrapper currentWeekTimelines =
-                mProviderAvailability.getWeeklyAvailabilityTimelineWrappers()
+                mProviderAvailability.getWeeklyAvailabilityTimelinesWrappers()
                         .get(CURRENT_WEEK_INDEX);
         final WeeklyAvailabilityTimelinesWrapper nextWeekTimelines =
-                mProviderAvailability.getWeeklyAvailabilityTimelineWrappers().get(NEXT_WEEK_INDEX);
-        mTabLayout.getTabAt(0).setCustomView(new TabWithDateRangeView(getActivity(),
-                R.string.current_week, currentWeekTimelines));
-        mTabLayout.getTabAt(1).setCustomView(new TabWithDateRangeView(getActivity(),
+                mProviderAvailability.getWeeklyAvailabilityTimelinesWrappers().get(NEXT_WEEK_INDEX);
+        mTabLayout.getTabAt(CURRENT_WEEK_INDEX).setCustomView(new TabWithDateRangeView(
+                getActivity(), R.string.current_week, currentWeekTimelines));
+        mTabLayout.getTabAt(NEXT_WEEK_INDEX).setCustomView(new TabWithDateRangeView(getActivity(),
                 R.string.next_week, nextWeekTimelines));
     }
 
@@ -428,7 +425,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
         {
             mViews = new ArrayList<>();
             for (WeeklyAvailabilityTimelinesWrapper weeklyAvailabilityTimelinesWrapper :
-                    providerAvailability.getWeeklyAvailabilityTimelineWrappers())
+                    providerAvailability.getWeeklyAvailabilityTimelinesWrappers())
             {
                 mViews.add(new WeeklyAvailableHoursView(context, weeklyAvailabilityTimelinesWrapper,
                         dateClickListener, removeTimeSlotListener));

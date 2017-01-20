@@ -11,11 +11,11 @@ import java.util.Date;
 public class ProviderAvailability implements Serializable
 {
     @SerializedName("weekly_timelines")
-    private ArrayList<WeeklyAvailabilityTimelinesWrapper> mWeeklyAvailabilityTimelineWrappers;
+    private ArrayList<WeeklyAvailabilityTimelinesWrapper> mWeeklyAvailabilityTimelinesWrappers;
 
-    public ArrayList<WeeklyAvailabilityTimelinesWrapper> getWeeklyAvailabilityTimelineWrappers()
+    public ArrayList<WeeklyAvailabilityTimelinesWrapper> getWeeklyAvailabilityTimelinesWrappers()
     {
-        return mWeeklyAvailabilityTimelineWrappers;
+        return mWeeklyAvailabilityTimelinesWrappers;
     }
 
     @Nullable
@@ -34,7 +34,7 @@ public class ProviderAvailability implements Serializable
     public WeeklyAvailabilityTimelinesWrapper getWeeklyAvailabilityForDate(final Date date)
     {
         for (WeeklyAvailabilityTimelinesWrapper weeklyAvailabilityTimelinesWrapper :
-                mWeeklyAvailabilityTimelineWrappers)
+                mWeeklyAvailabilityTimelinesWrappers)
         {
             if (weeklyAvailabilityTimelinesWrapper.covers(date))
             {
