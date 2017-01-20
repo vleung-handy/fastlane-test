@@ -360,9 +360,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment
     @Nullable
     private AvailabilityInterval getFirstAvailabilityInterval()
     {
-        if (mAvailabilityTimeline != null
-                && mAvailabilityTimeline.getAvailabilityIntervals() != null
-                && !mAvailabilityTimeline.getAvailabilityIntervals().isEmpty())
+        if (mAvailabilityTimeline != null && mAvailabilityTimeline.hasIntervals())
         {
             return mAvailabilityTimeline.getAvailabilityIntervals().get(0);
         }

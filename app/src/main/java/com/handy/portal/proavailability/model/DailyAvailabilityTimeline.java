@@ -45,4 +45,9 @@ public class DailyAvailabilityTimeline implements Serializable
     {
         return mAvailabilityIntervals;
     }
+
+    public boolean hasIntervals()
+    {
+        return mAvailabilityIntervals != null && !mAvailabilityIntervals.isEmpty();
+    }
 }

@@ -2,6 +2,7 @@ package com.handy.portal.bookings.ui.fragment;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -24,6 +25,7 @@ import com.handy.portal.bookings.ui.element.NewDateButton;
 import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.constant.PrefsKey;
 import com.handy.portal.core.constant.RequestCode;
 import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
@@ -38,22 +40,27 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
 import com.handy.portal.proavailability.model.ProviderAvailability;
+import com.handy.portal.proavailability.model.WeeklyAvailabilityTimelinesWrapper;
 import com.handy.portal.proavailability.view.AvailableHoursView;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import javax.inject.Inject;
 
+import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.ReceiveScheduledBookingsSuccess>
         implements DatesPagerAdapter.DateSelectedListener
 {
+    private static final int NEXT_WEEK_AVAILABILITY_INDEX = 1;
     @Inject
     ProviderManager mProviderManager;
 
@@ -74,6 +81,12 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     ViewPager mDatesViewPager;
     @BindView(R.id.available_hours_view)
     AvailableHoursView mAvailableHoursView;
+    @BindView(R.id.set_available_hours_banner)
+    View mSetAvailableHoursBanner;
+    @BindDrawable(R.drawable.ic_available_hours)
+    Drawable mAvailableHoursIcon;
+    @BindDrawable(R.drawable.ic_available_hours_pending)
+    Drawable mAvailableHoursPendingIcon;
     private DatesPagerAdapter mDatesPagerAdapter;
     private ViewPager.OnPageChangeListener mDatesPageChangeListener =
             new ViewPager.OnPageChangeListener()
@@ -126,6 +139,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         if (isAvailableHoursEnabled())
         {
             inflater.inflate(R.menu.menu_scheduled_bookings, menu);
+            updateAvailableHoursMenuItem();
         }
     }
 
@@ -135,19 +149,26 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         switch (item.getItemId())
         {
             case R.id.action_available_hours:
-                final Bundle arguments = new Bundle();
-                arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY, mProviderAvailability);
-                arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY_CACHE,
-                        mUpdatedAvailabilityTimelines);
-                final NavigationEvent.NavigateToPage navigationEvent =
-                        new NavigationEvent.NavigateToPage(MainViewPage.EDIT_WEEKLY_AVAILABLE_HOURS,
-                                arguments, true);
-                navigationEvent.setReturnFragment(this, RequestCode.EDIT_HOURS);
-                bus.post(navigationEvent);
+                navigateToEditWeeklyAvailableHours();
                 return true;
             default:
                 return false;
         }
+    }
+
+    private void navigateToEditWeeklyAvailableHours()
+    {
+        final Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY, mProviderAvailability);
+        arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY_CACHE,
+                mUpdatedAvailabilityTimelines);
+        arguments.putSerializable(BundleKeys.SHOULD_DEFAULT_TO_NEXT_WEEK,
+                !hasAvailableHoursForNextWeek());
+        final NavigationEvent.NavigateToPage navigationEvent =
+                new NavigationEvent.NavigateToPage(MainViewPage.EDIT_WEEKLY_AVAILABLE_HOURS,
+                        arguments, true);
+        navigationEvent.setReturnFragment(this, RequestCode.EDIT_HOURS);
+        bus.post(navigationEvent);
     }
 
     @Override
@@ -173,6 +194,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 }
             }
             requestProviderAvailability();
+            setAvailableHoursBannerVisibility();
         }
     }
 
@@ -189,6 +211,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
                             mProviderAvailability = providerAvailability;
                             mUpdatedAvailabilityTimelines = null;
                             showAvailableHours();
+                            setAvailableHoursBannerVisibility();
                         }
 
                         @Override
@@ -198,6 +221,31 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
                         }
                     });
         }
+    }
+
+    private void setAvailableHoursBannerVisibility()
+    {
+        if (isAvailableHoursEnabled()
+                && mProviderAvailability != null
+                && !hasAvailableHoursForNextWeek()
+                && !hasDismissedAvailableHoursBannerThisWeek())
+        {
+            mSetAvailableHoursBanner.setVisibility(View.VISIBLE);
+        }
+        else
+        {
+            mSetAvailableHoursBanner.setVisibility(View.GONE);
+        }
+        updateAvailableHoursMenuItem();
+    }
+
+    private boolean hasDismissedAvailableHoursBannerThisWeek()
+    {
+        final String dateString = mPrefsManager
+                .getString(PrefsKey.DISMISSED_AVAILABLE_HOURS_BANNER_WEEK_START_DATE, null);
+        final WeeklyAvailabilityTimelinesWrapper nextWeekAvailability = getNextWeekAvailability();
+        return nextWeekAvailability != null && dateString != null &&
+                nextWeekAvailability.getStartDateString().equals(dateString);
     }
 
     private boolean isAvailableHoursEnabled()
@@ -217,20 +265,25 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         else
         {
             mAvailableHoursView.setVisibility(View.VISIBLE);
-            DailyAvailabilityTimeline availabilityForSelectedDay = null;
-            if (mUpdatedAvailabilityTimelines != null)
-            {
-                availabilityForSelectedDay = mUpdatedAvailabilityTimelines.get(mSelectedDay);
-            }
-            if (availabilityForSelectedDay == null)
-            {
-                availabilityForSelectedDay =
-                        mProviderAvailability.getAvailabilityForDate(mSelectedDay);
-            }
-            mAvailabilityForSelectedDay = availabilityForSelectedDay;
-            mAvailableHoursView.setAvailableHours(availabilityForSelectedDay == null ? null
-                    : availabilityForSelectedDay.getAvailabilityIntervals());
+            mAvailabilityForSelectedDay = getAvailabilityForDate(mSelectedDay);
+            mAvailableHoursView.setAvailableHours(mAvailabilityForSelectedDay == null ? null
+                    : mAvailabilityForSelectedDay.getAvailabilityIntervals());
         }
+    }
+
+    @Nullable
+    private DailyAvailabilityTimeline getAvailabilityForDate(final Date date)
+    {
+        DailyAvailabilityTimeline availability = null;
+        if (mUpdatedAvailabilityTimelines != null)
+        {
+            availability = mUpdatedAvailabilityTimelines.get(date);
+        }
+        if (mProviderAvailability != null && availability == null)
+        {
+            availability = mProviderAvailability.getAvailabilityForDate(date);
+        }
+        return availability;
     }
 
     @Override
@@ -351,6 +404,78 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         {
             mFindJobsForDayButton.setVisibility(View.GONE);
         }
+    }
+
+    @OnClick(R.id.set_hours_dismiss_button)
+    public void onDismissSetHoursBannerClicked()
+    {
+        mSetAvailableHoursBanner.setVisibility(View.GONE);
+        final WeeklyAvailabilityTimelinesWrapper nextWeekAvailability = getNextWeekAvailability();
+        if (nextWeekAvailability != null)
+        {
+            mPrefsManager.setString(PrefsKey.DISMISSED_AVAILABLE_HOURS_BANNER_WEEK_START_DATE,
+                    nextWeekAvailability.getStartDateString());
+        }
+        updateAvailableHoursMenuItem();
+    }
+
+    @OnClick(R.id.set_available_hours_banner)
+    public void onSetAvailableHoursBannerClicked()
+    {
+        navigateToEditWeeklyAvailableHours();
+    }
+
+    private void updateAvailableHoursMenuItem()
+    {
+        if (getMenu() == null)
+        {
+            return;
+        }
+        final MenuItem item = getMenu().findItem(R.id.action_available_hours);
+        if (item != null)
+        {
+            item.setIcon(hasAvailableHoursForNextWeek()
+                    || mSetAvailableHoursBanner.getVisibility() == View.VISIBLE ?
+                    mAvailableHoursIcon : mAvailableHoursPendingIcon);
+        }
+    }
+
+    private boolean hasAvailableHoursForNextWeek()
+    {
+        final WeeklyAvailabilityTimelinesWrapper weekAvailability = getNextWeekAvailability();
+        if (weekAvailability != null)
+        {
+            boolean hasAvailableHours = false;
+            final Calendar calendar = Calendar.getInstance(Locale.US);
+            calendar.setTime(weekAvailability.getStartDate());
+            while (DateTimeUtils.daysBetween(calendar.getTime(), weekAvailability.getEndDate()) >= 0)
+            {
+                final DailyAvailabilityTimeline availability =
+                        getAvailabilityForDate(calendar.getTime());
+                if (availability != null)
+                {
+                    hasAvailableHours = availability.hasIntervals();
+                }
+                if (hasAvailableHours)
+                {
+                    break;
+                }
+                calendar.add(Calendar.DATE, 1);
+            }
+            return hasAvailableHours;
+        }
+        return false;
+    }
+
+    @Nullable
+    private WeeklyAvailabilityTimelinesWrapper getNextWeekAvailability()
+    {
+        if (mProviderAvailability != null)
+        {
+            return mProviderAvailability.getWeeklyAvailabilityTimelinesWrappers()
+                    .get(NEXT_WEEK_AVAILABILITY_INDEX);
+        }
+        return null;
     }
 
     @OnClick(R.id.find_jobs_for_day_button)

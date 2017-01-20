@@ -19,6 +19,16 @@ public class WeeklyAvailabilityTimelinesWrapper implements Serializable
     @SerializedName("timelines")
     private ArrayList<DailyAvailabilityTimeline> mDailyAvailabilityTimelines;
 
+    public String getStartDateString()
+    {
+        return mStartDate;
+    }
+
+    public String getEndDateString()
+    {
+        return mEndDate;
+    }
+
     @Nullable
     public Date getStartDate()
     {

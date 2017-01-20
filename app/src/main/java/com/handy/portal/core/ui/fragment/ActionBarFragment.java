@@ -25,6 +25,7 @@ public abstract class ActionBarFragment extends InjectedFragment
 {
     @Inject
     EnvironmentModifier environmentModifier;
+    private Menu mMenu;
 
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState)
@@ -75,6 +76,7 @@ public abstract class ActionBarFragment extends InjectedFragment
                 }
             });
         }
+        mMenu = menu;
     }
 
     public void setEnvironmentMenuItemTitle(final MenuItem environmentMenuItemTitle)
@@ -171,4 +173,9 @@ public abstract class ActionBarFragment extends InjectedFragment
     }
 
     protected MainViewPage getAppPage() { return null; }
+
+    protected Menu getMenu()
+    {
+        return mMenu;
+    }
 }
