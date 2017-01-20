@@ -55,6 +55,8 @@ import butterknife.OnClick;
 
 public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
 {
+    private static final int CURRENT_WEEK_INDEX = 0;
+    private static final int NEXT_WEEK_INDEX = 1;
     @Inject
     ProviderManager mProviderManager;
 
@@ -84,7 +86,8 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
                 @Override
                 public void onPageSelected(final int position)
                 {
-                    mCopyHoursButton.setVisibility(position == 1 ? View.VISIBLE : View.GONE);
+                    mCopyHoursButton.setVisibility(position == NEXT_WEEK_INDEX ?
+                            View.VISIBLE : View.GONE);
                 }
 
                 @Override
@@ -222,7 +225,8 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
         final List<DailyAvailabilityTimeline> timelines = new ArrayList<>();
 
         final WeeklyAvailabilityTimelinesWrapper currentWeekTimelines =
-                mProviderAvailability.getWeeklyAvailabilityTimelineWrappers().get(0);
+                mProviderAvailability.getWeeklyAvailabilityTimelineWrappers()
+                        .get(CURRENT_WEEK_INDEX);
         final Calendar currentWeekDate = Calendar.getInstance(Locale.US);
         final Date startDate = currentWeekTimelines.getStartDate();
         final Date endDate = currentWeekTimelines.getEndDate();
@@ -366,9 +370,10 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
     private void displayTabs()
     {
         final WeeklyAvailabilityTimelinesWrapper currentWeekTimelines =
-                mProviderAvailability.getWeeklyAvailabilityTimelineWrappers().get(0);
+                mProviderAvailability.getWeeklyAvailabilityTimelineWrappers()
+                        .get(CURRENT_WEEK_INDEX);
         final WeeklyAvailabilityTimelinesWrapper nextWeekTimelines =
-                mProviderAvailability.getWeeklyAvailabilityTimelineWrappers().get(1);
+                mProviderAvailability.getWeeklyAvailabilityTimelineWrappers().get(NEXT_WEEK_INDEX);
         mTabLayout.getTabAt(0).setCustomView(new TabWithDateRangeView(getActivity(),
                 R.string.current_week, currentWeekTimelines));
         mTabLayout.getTabAt(1).setCustomView(new TabWithDateRangeView(getActivity(),
