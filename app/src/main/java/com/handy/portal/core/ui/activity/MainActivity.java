@@ -420,12 +420,19 @@ public class MainActivity extends BaseActivity
     public void onSwapFragment(NavigationEvent.SwapFragmentEvent event)
     {
         bus.post(new HandyEvent.Navigation(event.targetPage.toString().toLowerCase()));
-
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         setTabVisibility(true);
         setDrawerActive(false);
         swapFragment(event);
         clearOnBackPressedListenerStack();
         currentPage = event.targetPage;
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        super.onBackPressed();
     }
 
     @Subscribe

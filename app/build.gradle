@@ -142,8 +142,8 @@ android {
     sourceSets {
         main {
             res.srcDirs = [
-                    'src/main/library-res',
-                    'src/main/res'
+                    'src/main/res',
+                    'src/main/library-res'
             ]
         }
     }

@@ -159,7 +159,6 @@ public class EditAvailableHoursFragment extends ActionBarFragment
         if (getTargetFragment() != null)
         {
             final Intent data = new Intent();
-            data.putExtra(BundleKeys.DATE, mDate);
             data.putExtra(BundleKeys.DAILY_AVAILABILITY_TIMELINE,
                     getDailyAvailabilityTimelineFromTimePicker());
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);

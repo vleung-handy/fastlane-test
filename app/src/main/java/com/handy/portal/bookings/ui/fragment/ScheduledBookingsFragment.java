@@ -7,6 +7,9 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -42,7 +45,6 @@ import org.greenrobot.eventbus.Subscribe;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -102,12 +104,50 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
             };
     private ProviderAvailability mProviderAvailability;
     private DailyAvailabilityTimeline mAvailabilityForSelectedDay;
-    private Map<Date, DailyAvailabilityTimeline> mUpdatedAvailabilityTimelines;
+    private HashMap<Date, DailyAvailabilityTimeline> mUpdatedAvailabilityTimelines;
 
     @Override
     protected MainViewPage getAppPage()
     {
         return MainViewPage.SCHEDULED_JOBS;
+    }
+
+    @Override
+    public void onCreate(final Bundle savedInstanceState)
+    {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
+    {
+        super.onCreateOptionsMenu(menu, inflater);
+        if (isAvailableHoursEnabled())
+        {
+            inflater.inflate(R.menu.menu_scheduled_bookings, menu);
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(final MenuItem item)
+    {
+        switch (item.getItemId())
+        {
+            case R.id.action_available_hours:
+                final Bundle arguments = new Bundle();
+                arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY, mProviderAvailability);
+                arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY_CACHE,
+                        mUpdatedAvailabilityTimelines);
+                final NavigationEvent.NavigateToPage navigationEvent =
+                        new NavigationEvent.NavigateToPage(MainViewPage.EDIT_WEEKLY_AVAILABLE_HOURS,
+                                arguments, true);
+                navigationEvent.setReturnFragment(this, RequestCode.EDIT_HOURS);
+                bus.post(navigationEvent);
+                return true;
+            default:
+                return false;
+        }
     }
 
     @Override
@@ -138,9 +178,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     private void requestProviderAvailability()
     {
-        if (mProviderAvailability == null
-                && mConfigManager.getConfigurationResponse() != null
-                && mConfigManager.getConfigurationResponse().isAvailableHoursEnabled())
+        if (mProviderAvailability == null && isAvailableHoursEnabled())
         {
             dataManager.getProviderAvailability(mProviderManager.getLastProviderId(),
                     new FragmentSafeCallback<ProviderAvailability>(this)
@@ -160,6 +198,12 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
                         }
                     });
         }
+    }
+
+    private boolean isAvailableHoursEnabled()
+    {
+        return mConfigManager.getConfigurationResponse() != null
+                && mConfigManager.getConfigurationResponse().isAvailableHoursEnabled();
     }
 
     private void showAvailableHours()
@@ -340,16 +384,15 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK && requestCode == RequestCode.EDIT_HOURS)
         {
-            final Date date = (Date) data.getSerializableExtra(BundleKeys.DATE);
-            final DailyAvailabilityTimeline timeline = (DailyAvailabilityTimeline)
+            final DailyAvailabilityTimeline availability = (DailyAvailabilityTimeline)
                     data.getSerializableExtra(BundleKeys.DAILY_AVAILABILITY_TIMELINE);
-            if (date != null && timeline != null)
+            if (availability != null)
             {
                 if (mUpdatedAvailabilityTimelines == null)
                 {
                     mUpdatedAvailabilityTimelines = new HashMap<>();
                 }
-                mUpdatedAvailabilityTimelines.put(date, timeline);
+                mUpdatedAvailabilityTimelines.put(availability.getDate(), availability);
                 showAvailableHours();
             }
         }
