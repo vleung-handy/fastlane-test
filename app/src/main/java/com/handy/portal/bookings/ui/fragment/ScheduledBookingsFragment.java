@@ -21,6 +21,7 @@ import com.handy.portal.bookings.ui.adapter.DatesPagerAdapter;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
 import com.handy.portal.bookings.ui.element.NewDateButton;
+import com.handy.portal.bookings.ui.element.NewDateButtonGroup;
 import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
@@ -84,6 +85,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @BindDrawable(R.drawable.ic_available_hours_pending)
     Drawable mAvailableHoursPendingIcon;
     private DatesPagerAdapter mDatesPagerAdapter;
+    private int mLastDatesPosition;
     private ViewPager.OnPageChangeListener mDatesPageChangeListener =
             new ViewPager.OnPageChangeListener()
             {
@@ -97,12 +99,24 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 @Override
                 public void onPageSelected(final int position)
                 {
-                    final NewDateButton dateButton =
-                            mDatesPagerAdapter.getItemAt(position).getFirstEnabledDateButton();
+                    final NewDateButtonGroup dateButtonGroup =
+                            mDatesPagerAdapter.getItemAt(position);
+                    final NewDateButton dateButton;
+                    if (mLastDatesPosition > position)
+                    {
+                        dateButton =
+                                dateButtonGroup.getLastEnabledDateButton();
+                    }
+                    else
+                    {
+                        dateButton =
+                                dateButtonGroup.getFirstEnabledDateButton();
+                    }
                     if (dateButton != null)
                     {
                         dateButton.select();
                     }
+                    mLastDatesPosition = position;
                 }
 
                 @Override

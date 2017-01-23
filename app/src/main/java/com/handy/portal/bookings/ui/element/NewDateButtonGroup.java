@@ -4,8 +4,11 @@ import android.content.Context;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.google.common.collect.Lists;
 import com.handy.portal.bookings.ui.adapter.DatesPagerAdapter;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -60,6 +63,20 @@ public class NewDateButtonGroup extends LinearLayout
     public NewDateButton getFirstEnabledDateButton()
     {
         for (final NewDateButton button : mDateButtons.values())
+        {
+            if (button.isEnabled())
+            {
+                return button;
+            }
+        }
+        return null;
+    }
+
+    public NewDateButton getLastEnabledDateButton()
+    {
+        final ArrayList<NewDateButton> buttons = Lists.newArrayList(mDateButtons.values());
+        Collections.reverse(buttons);
+        for (final NewDateButton button : buttons)
         {
             if (button.isEnabled())
             {
