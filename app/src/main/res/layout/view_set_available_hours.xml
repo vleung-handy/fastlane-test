@@ -9,8 +9,8 @@
 
     <ImageView
         android:id="@+id/set_hours_icon"
-        android:layout_width="@dimen/available_hours_banner_icon_size"
-        android:layout_height="@dimen/available_hours_banner_icon_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:src="@drawable/ic_available_hours"
         android:tint="@color/error_red"

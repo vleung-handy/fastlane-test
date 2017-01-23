@@ -204,5 +204,4 @@
 
     <!-- Pro Availability -->
     <dimen name="time_range_reset_button_size">26dp</dimen>
-    <dimen name="available_hours_banner_icon_size">32dp</dimen>
 </resources>
