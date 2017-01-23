@@ -16,6 +16,7 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.core.manager.ProviderManager;
@@ -237,18 +238,16 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
                         null
                 )));
 
-//        //TODO test only, remove
-//        UIUtils.getDefaultSnackbarWithImage(getContext(),
-//                mContentLayout, "Test message", R.drawable.ic_green_envelope).show();
-
         //TODO: BACKEND NOT READY.
         //the payment support button won't show and this logic won't get triggered
         //until backend ready and tested against this
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         mPaymentsManager.submitBookingPaymentReviewRequest(paymentReviewRequest, new FragmentSafeCallback<PaymentReviewResponse>(this)
         {
             @Override
             public void onCallbackSuccess(final PaymentReviewResponse response)
             {
+                bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                 int drawableResourceId = response.isSuccess() ?
                         R.drawable.ic_green_envelope : R.drawable.ic_exclaimation_red;
                 UIUtils.getDefaultSnackbarWithImage(getContext(),
@@ -260,6 +259,7 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
             @Override
             public void onCallbackError(final DataManager.DataManagerError error)
             {
+                bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                 UIUtils.getDefaultSnackbarWithImage(getContext(),
                         mContentLayout,
                         getString(R.string.an_error_has_occurred),
