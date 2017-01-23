@@ -12,14 +12,14 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.library.ui.fragment.ConfirmActionSlideUpDialogFragment;
+import com.handy.portal.library.ui.fragment.dialog.ConfirmActionSlideUpDialogFragment;
 import com.handy.portal.payments.model.PaymentSupportItem;
 
 import butterknife.BindView;
 
-public class PaymentDetailsSupportRequestReviewDialogFragment extends ConfirmActionSlideUpDialogFragment
+public class PaymentSupportRequestReviewDialogFragment extends ConfirmActionSlideUpDialogFragment
 {
-    public static final String FRAGMENT_TAG = PaymentDetailsSupportRequestReviewDialogFragment.class.getName();
+    public static final String FRAGMENT_TAG = PaymentSupportRequestReviewDialogFragment.class.getName();
     private static final String BUNDLE_KEY_PRO_EMAIL = "BUNDLE_KEY_PRO_EMAIL";
     private static final String BUNDLE_KEY_EXPECTED_DEPOSIT_DATE
             = "BUNDLE_KEY_EXPECTED_DEPOSIT_DATE";
@@ -35,16 +35,16 @@ public class PaymentDetailsSupportRequestReviewDialogFragment extends ConfirmAct
     @BindView(R.id.payment_details_support_request_review_expected_deposit)
     TextView mExpectedDepositDateText;
 
-    public static PaymentDetailsSupportRequestReviewDialogFragment newInstance(@NonNull String proEmail,
-                                                                               @NonNull String expectedDepositDateFormatted,
-                                                                               @NonNull PaymentSupportItem paymentSupportItem)//tODO can we just send the title
+    public static PaymentSupportRequestReviewDialogFragment newInstance(@NonNull String proEmail,
+                                                                        @NonNull String expectedDepositDateFormatted,
+                                                                        @NonNull PaymentSupportItem paymentSupportItem)//tODO can we just send the title
     {
         Bundle args = new Bundle();
         args.putString(BUNDLE_KEY_PRO_EMAIL, proEmail);
         args.putString(BUNDLE_KEY_EXPECTED_DEPOSIT_DATE, expectedDepositDateFormatted);
         args.putSerializable(BUNDLE_KEY_SELECTED_PAYMENT_SUPPORT_ITEM, paymentSupportItem);
-        PaymentDetailsSupportRequestReviewDialogFragment fragment =
-                new PaymentDetailsSupportRequestReviewDialogFragment();
+        PaymentSupportRequestReviewDialogFragment fragment =
+                new PaymentSupportRequestReviewDialogFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -78,7 +78,7 @@ public class PaymentDetailsSupportRequestReviewDialogFragment extends ConfirmAct
     @Override
     protected View inflateConfirmActionContentView(final LayoutInflater inflater, final ViewGroup container)
     {
-        return inflater.inflate(R.layout.layout_payment_details_support_request_review, container, false);
+        return inflater.inflate(R.layout.layout_payment_support_request_review, container, false);
     }
 
     @Override

@@ -7,11 +7,11 @@ import com.google.common.cache.CacheBuilder;
 import com.handy.portal.core.model.SuccessWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
-import com.handy.portal.payments.model.BookingPaymentTransactionReviewRequest;
+import com.handy.portal.payments.model.BatchPaymentReviewRequest;
+import com.handy.portal.payments.model.BookingPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
 import com.handy.portal.payments.model.NeoPaymentBatch;
-import com.handy.portal.payments.model.PaymentBatchReviewRequest;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.model.PaymentGroup;
 import com.handy.portal.payments.model.PaymentOutstandingFees;
@@ -61,16 +61,16 @@ public class PaymentsManager
                 .build();
     }
 
-    public void submitPaymentBatchReviewRequest(@NonNull PaymentBatchReviewRequest paymentSupportRequest,
+    public void submitPaymentBatchReviewRequest(@NonNull BatchPaymentReviewRequest paymentSupportRequest,
                                                 DataManager.Callback<PaymentReviewResponse> cb)
     {
         mDataManager.submitPaymentBatchReviewRequest(paymentSupportRequest, cb);
     }
 
-    public void submitBookingPaymentTransactionReviewRequest(@NonNull BookingPaymentTransactionReviewRequest bookingPaymentTransactionReviewRequest,
+    public void submitBookingPaymentTransactionReviewRequest(@NonNull BookingPaymentReviewRequest bookingPaymentReviewRequest,
                                                 DataManager.Callback<PaymentReviewResponse> cb)
     {
-        mDataManager.submitBookingPaymentTransactionRequest(bookingPaymentTransactionReviewRequest, cb);
+        mDataManager.submitBookingPaymentTransactionRequest(bookingPaymentReviewRequest, cb);
     }
 
     @Subscribe

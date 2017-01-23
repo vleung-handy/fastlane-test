@@ -690,6 +690,6 @@
     <string name="payment_status_formatted">Status: %1$s</string>
     <string name="payment_details_support_click_on_payment_item_confirm_button">Got It</string>
     <string name="payment_details_support_title">Let us know what you need help with</string>
-    <string name="payment_details_support_click_on_payment_item_instructions">To get more info about a Job Payment, please tap on the line item in question</string>
+    <string name="payment_support_redirect_to_booking_transactions_instructions">To get more info about a Job Payment, please tap on the line item in question</string>
 
 </resources>

@@ -32,13 +32,13 @@ import com.handy.portal.logger.handylogger.model.CompletedJobsLog;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsUtil;
-import com.handy.portal.payments.model.BookingPaymentTransactionReviewRequest;
+import com.handy.portal.payments.model.BookingPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.PaymentReviewResponse;
 import com.handy.portal.payments.model.PaymentSupportItem;
 import com.handy.portal.payments.model.Transaction;
 import com.handy.portal.payments.ui.element.TransactionView;
-import com.handy.portal.payments.ui.fragment.dialog.PaymentDetailsSupportDialogFragment;
+import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportDialogFragment;
 
 import javax.inject.Inject;
 
@@ -49,7 +49,7 @@ import butterknife.OnClick;
 /**
  * fragment for handling bookings that are viewed for payment details
  */
-public class BookingTransactionsFragment extends ActionBarFragment implements PaymentDetailsSupportDialogFragment.Callback
+public class BookingTransactionsFragment extends ActionBarFragment implements PaymentSupportDialogFragment.Callback
 {
     @Inject
     ConfigManager mConfigManager;
@@ -223,8 +223,8 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
     @Override
     public void onPaymentSupportItemSubmitted(PaymentSupportItem paymentSupportItem)
     {
-        BookingPaymentTransactionReviewRequest paymentReviewRequest
-                = new BookingPaymentTransactionReviewRequest(
+        BookingPaymentReviewRequest paymentReviewRequest
+                = new BookingPaymentReviewRequest(
                 String.valueOf(mBooking.getId()),
                 mBooking.getType().toString(),
                 paymentSupportItem.getMachineName(),

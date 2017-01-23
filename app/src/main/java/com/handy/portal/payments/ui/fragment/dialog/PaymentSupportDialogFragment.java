@@ -9,7 +9,7 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 
 import com.handy.portal.R;
-import com.handy.portal.library.ui.fragment.ConfirmActionSlideUpDialogFragment;
+import com.handy.portal.library.ui.fragment.dialog.ConfirmActionSlideUpDialogFragment;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.payments.model.PaymentSupportItem;
 
@@ -19,9 +19,9 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PaymentDetailsSupportDialogFragment extends ConfirmActionSlideUpDialogFragment
+public class PaymentSupportDialogFragment extends ConfirmActionSlideUpDialogFragment
 {
-    public static final String FRAGMENT_TAG = PaymentDetailsSupportDialogFragment.class.getName();
+    public static final String FRAGMENT_TAG = PaymentSupportDialogFragment.class.getName();
     private static final String BUNDLE_KEY_PAYMENT_SUPPORT_ITEMS = "BUNDLE_KEY_PAYMENT_SUPPORT_ITEMS";
 
     @BindView(R.id.payment_details_support_items_radiogroup)
@@ -34,12 +34,12 @@ public class PaymentDetailsSupportDialogFragment extends ConfirmActionSlideUpDia
      * @param paymentSupportItems assumes this is not null or empty
      * @return
      */
-    public static PaymentDetailsSupportDialogFragment newInstance(
+    public static PaymentSupportDialogFragment newInstance(
             @NonNull PaymentSupportItem paymentSupportItems[])
     {
         Bundle args = new Bundle();
         args.putSerializable(BUNDLE_KEY_PAYMENT_SUPPORT_ITEMS, paymentSupportItems);
-        PaymentDetailsSupportDialogFragment fragment = new PaymentDetailsSupportDialogFragment();
+        PaymentSupportDialogFragment fragment = new PaymentSupportDialogFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -65,7 +65,7 @@ public class PaymentDetailsSupportDialogFragment extends ConfirmActionSlideUpDia
     @Override
     protected View inflateConfirmActionContentView(final LayoutInflater inflater, final ViewGroup container)
     {
-        return inflater.inflate(R.layout.layout_payment_details_support, container, false);
+        return inflater.inflate(R.layout.layout_payment_support, container, false);
     }
 
     @Override

@@ -1,4 +1,4 @@
-package com.handy.portal.library.ui.fragment;
+package com.handy.portal.library.ui.fragment.dialog;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,7 +9,6 @@ import android.widget.Button;
 import android.widget.ScrollView;
 
 import com.handy.portal.R;
-import com.handy.portal.library.ui.fragment.dialog.SlideUpDialogFragment;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

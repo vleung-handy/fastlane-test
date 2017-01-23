@@ -14,8 +14,8 @@ import com.handy.portal.payments.ui.fragment.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.payments.ui.fragment.SelectPaymentMethodFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
-import com.handy.portal.payments.ui.fragment.dialog.PaymentDetailsSupportDialogFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentFailedDialogFragment;
+import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportDialogFragment;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -41,7 +41,7 @@ import dagger.Provides;
                 PaymentBlockingFragment.class,
                 BookingTransactionsFragment.class,
                 BookingTransactionsWrapperFragment.class,
-                PaymentDetailsSupportDialogFragment.class,
+                PaymentSupportDialogFragment.class,
                 PaymentFailedDialogFragment.class,
         })
 public final class PaymentsModule

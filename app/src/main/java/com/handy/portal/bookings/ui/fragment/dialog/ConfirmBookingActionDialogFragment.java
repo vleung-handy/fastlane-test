@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.core.constant.BundleKeys;
-import com.handy.portal.library.ui.fragment.ConfirmActionSlideUpDialogFragment;
+import com.handy.portal.library.ui.fragment.dialog.ConfirmActionSlideUpDialogFragment;
 import com.handy.portal.library.util.Utils;
 
 /**

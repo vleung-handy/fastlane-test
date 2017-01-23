@@ -8,36 +8,37 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.library.ui.fragment.ConfirmActionSlideUpDialogFragment;
+import com.handy.portal.library.ui.fragment.dialog.ConfirmActionSlideUpDialogFragment;
 
 import butterknife.BindView;
 
-public class PaymentDetailsSupportClickOnPaymentItemFragment extends ConfirmActionSlideUpDialogFragment
+//TODO better name?
+public class PaymentSupportRedirectToBookingTransactionsDialogFragment extends ConfirmActionSlideUpDialogFragment
 {
     public static final String FRAGMENT_TAG =
-            PaymentDetailsSupportClickOnPaymentItemFragment.class.getName();
+            PaymentSupportRedirectToBookingTransactionsDialogFragment.class.getName();
 
     public static final String BUNDLE_KEY_PAYMENT_SUPPORT_ITEM_DISPLAY_NAME
             = "BUNDLE_KEY_PAYMENT_SUPPORT_ITEM_DISPLAY_NAME";
 
-    @BindView(R.id.payment_details_support_click_on_payment_item_title_text)
+    @BindView(R.id.payment_support_redirect_to_booking_transactions_title_text)
     TextView mTitleText;
 
-    public static PaymentDetailsSupportClickOnPaymentItemFragment newInstance(
+    public static PaymentSupportRedirectToBookingTransactionsDialogFragment newInstance(
             @NonNull String paymentSupportItemDisplayName
     )
     {
         Bundle args = new Bundle();
         args.putString(BUNDLE_KEY_PAYMENT_SUPPORT_ITEM_DISPLAY_NAME, paymentSupportItemDisplayName);
-        PaymentDetailsSupportClickOnPaymentItemFragment fragment =
-                new PaymentDetailsSupportClickOnPaymentItemFragment();
+        PaymentSupportRedirectToBookingTransactionsDialogFragment fragment =
+                new PaymentSupportRedirectToBookingTransactionsDialogFragment();
         fragment.setArguments(args);
         return fragment;
     }
     @Override
     protected View inflateConfirmActionContentView(final LayoutInflater inflater, final ViewGroup container)
     {
-        return inflater.inflate(R.layout.layout_payment_details_support_click_on_payment_item, container, false);
+        return inflater.inflate(R.layout.layout_payment_support_redirect_to_booking_transactions, container, false);
     }
 
     @Override

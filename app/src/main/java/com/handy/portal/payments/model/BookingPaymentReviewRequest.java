@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * a payment review request for a booking payment transaction
  */
-public class BookingPaymentTransactionReviewRequest
+public class BookingPaymentReviewRequest
 {
     /**
      * the id of the booking payment transaction to review
@@ -19,13 +19,17 @@ public class BookingPaymentTransactionReviewRequest
     @SerializedName("machine_name")
     private String mPaymentSupportItemMachineName;
 
+    /**
+     * text inputted by the user when the “other” option is selected
+     * (currently unsupported, so just sending null for now)
+     */
     @SerializedName("other_info")
     private String mOtherInfo;
 
-    public BookingPaymentTransactionReviewRequest(final String bookingId,
-                                                  final String bookingType,
-                                                  final String paymentSupportItemMachineName,
-                                                  final String otherInfo
+    public BookingPaymentReviewRequest(final String bookingId,
+                                       final String bookingType,
+                                       final String paymentSupportItemMachineName,
+                                       final String otherInfo
     )
     {
         mBookingId = bookingId;

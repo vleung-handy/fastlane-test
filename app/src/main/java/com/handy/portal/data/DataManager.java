@@ -29,10 +29,10 @@ import com.handy.portal.notification.model.NotificationMessages;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
-import com.handy.portal.payments.model.BookingPaymentTransactionReviewRequest;
+import com.handy.portal.payments.model.BatchPaymentReviewRequest;
+import com.handy.portal.payments.model.BookingPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
-import com.handy.portal.payments.model.PaymentBatchReviewRequest;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.model.PaymentFlow;
 import com.handy.portal.payments.model.PaymentOutstandingFees;
@@ -232,14 +232,14 @@ public class DataManager
         mService.getNeedsToUpdatePaymentInfo(new NeedsToUpdatePaymentInfoRetroFitCallback(cb));
     }
 
-    public void submitPaymentBatchReviewRequest(PaymentBatchReviewRequest paymentReviewRequest, Callback<PaymentReviewResponse> cb)
+    public void submitPaymentBatchReviewRequest(BatchPaymentReviewRequest paymentReviewRequest, Callback<PaymentReviewResponse> cb)
     {
         mService.submitPaymentBatchReviewRequest(paymentReviewRequest, new PaymentReviewRequestRetroFitCallback(cb));
     }
 
-    public void submitBookingPaymentTransactionRequest(BookingPaymentTransactionReviewRequest bookingPaymentTransactionReviewRequest, Callback<PaymentReviewResponse> cb)
+    public void submitBookingPaymentTransactionRequest(BookingPaymentReviewRequest bookingPaymentReviewRequest, Callback<PaymentReviewResponse> cb)
     {
-        mService.submitBookingPaymentTransactionReviewRequest(bookingPaymentTransactionReviewRequest, new PaymentReviewRequestRetroFitCallback(cb));
+        mService.submitBookingPaymentTransactionReviewRequest(bookingPaymentReviewRequest, new PaymentReviewRequestRetroFitCallback(cb));
     }
 
     public void getBookingTransactions(String bookingId, String bookingType, Callback<BookingTransactions> cb)

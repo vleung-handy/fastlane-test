@@ -30,18 +30,18 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsUtil;
+import com.handy.portal.payments.model.BatchPaymentReviewRequest;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.Payment;
-import com.handy.portal.payments.model.PaymentBatchReviewRequest;
 import com.handy.portal.payments.model.PaymentGroup;
 import com.handy.portal.payments.model.PaymentReviewResponse;
 import com.handy.portal.payments.model.PaymentSupportItem;
 import com.handy.portal.payments.ui.element.PaymentDetailExpandableListView;
 import com.handy.portal.payments.ui.element.PaymentsDetailListHeaderView;
-import com.handy.portal.payments.ui.fragment.dialog.PaymentDetailsSupportClickOnPaymentItemFragment;
-import com.handy.portal.payments.ui.fragment.dialog.PaymentDetailsSupportDialogFragment;
-import com.handy.portal.payments.ui.fragment.dialog.PaymentDetailsSupportRequestReviewDialogFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentFailedDialogFragment;
+import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportDialogFragment;
+import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportRedirectToBookingTransactionsDialogFragment;
+import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportRequestReviewDialogFragment;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -53,8 +53,8 @@ import butterknife.OnClick;
 
 public final class PaymentsDetailFragment extends ActionBarFragment
         implements ExpandableListView.OnChildClickListener,
-        PaymentDetailsSupportDialogFragment.Callback,
-        PaymentDetailsSupportRequestReviewDialogFragment.Callbacks
+        PaymentSupportDialogFragment.Callback,
+        PaymentSupportRequestReviewDialogFragment.Callbacks
 {
     @BindView(R.id.payments_detail_list_view)
     PaymentDetailExpandableListView paymentDetailExpandableListView; //using ExpandableListView because it is the only ListView that offers group view support
@@ -226,7 +226,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
                 break;
             case PaymentSupportItem.MachineName.INCORRECT_AMOUNT:
             case PaymentSupportItem.MachineName.INCORRECT_FEE:
-                showJobPaymentInfoRedirectDialogFragment(paymentSupportItem);
+                showRedirectToBookingTransactionsDialogFragment(paymentSupportItem);
                 break;
             default:
                 //still show request payment review dialog if we get unrecognized machine name
@@ -242,7 +242,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
      */
     private void showRequestPaymentReviewDialogFragment(PaymentSupportItem paymentSupportItem)
     {
-        if (getChildFragmentManager().findFragmentByTag(PaymentDetailsSupportRequestReviewDialogFragment.FRAGMENT_TAG) == null)
+        if (getChildFragmentManager().findFragmentByTag(PaymentSupportRequestReviewDialogFragment.FRAGMENT_TAG) == null)
         {
             //handle case in which we're unable to get the provider email
             ProviderProfile profile = mProviderManager.getCachedProviderProfile();
@@ -255,7 +255,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
                 showToast(R.string.error_missing_server_data);
                 return;
             }
-            final DialogFragment fragment = PaymentDetailsSupportRequestReviewDialogFragment.newInstance(
+            final DialogFragment fragment = PaymentSupportRequestReviewDialogFragment.newInstance(
                     profile.getProviderPersonalInfo().getEmail(),
                     DateTimeUtils.formatDayOfWeekMonthDateYear(mNeoPaymentBatch.getExpectedDepositDate()),
                     paymentSupportItem
@@ -263,7 +263,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
             fragment.setTargetFragment(this, RequestCode.PAYMENT_SUPPORT_REQUEST_REVIEW_SUBMITTED);
             FragmentUtils.safeLaunchDialogFragment(fragment,
                     this,
-                    PaymentDetailsSupportRequestReviewDialogFragment.FRAGMENT_TAG);
+                    PaymentSupportRequestReviewDialogFragment.FRAGMENT_TAG);
         }
     }
 
@@ -271,15 +271,15 @@ public final class PaymentsDetailFragment extends ActionBarFragment
      * shows a dialog to prompt user to go to the booking transactions page
      * @param paymentSupportItem
      */
-    private void showJobPaymentInfoRedirectDialogFragment(PaymentSupportItem paymentSupportItem)
+    private void showRedirectToBookingTransactionsDialogFragment(PaymentSupportItem paymentSupportItem)
     {
-        if (getChildFragmentManager().findFragmentByTag(PaymentDetailsSupportClickOnPaymentItemFragment.FRAGMENT_TAG) == null)
+        if (getChildFragmentManager().findFragmentByTag(PaymentSupportRedirectToBookingTransactionsDialogFragment.FRAGMENT_TAG) == null)
         {
             String paymentSupportItemDisplayName = paymentSupportItem.getDisplayName();
-            final DialogFragment fragment = PaymentDetailsSupportClickOnPaymentItemFragment.newInstance(paymentSupportItemDisplayName);
+            final DialogFragment fragment = PaymentSupportRedirectToBookingTransactionsDialogFragment.newInstance(paymentSupportItemDisplayName);
             FragmentUtils.safeLaunchDialogFragment(fragment,
                     this,
-                    PaymentDetailsSupportClickOnPaymentItemFragment.FRAGMENT_TAG);
+                    PaymentSupportRedirectToBookingTransactionsDialogFragment.FRAGMENT_TAG);
         }
     }
 
@@ -289,8 +289,12 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     @Override
     public void onRequestDepositReviewButtonClicked(@NonNull PaymentSupportItem paymentSupportItem)
     {
-        PaymentBatchReviewRequest paymentReviewRequest
-                = new PaymentBatchReviewRequest(String.valueOf(mNeoPaymentBatch.getBatchId()));
+        BatchPaymentReviewRequest paymentReviewRequest
+                = new BatchPaymentReviewRequest(
+                String.valueOf(mNeoPaymentBatch.getBatchId()),
+                paymentSupportItem.getMachineName(),
+                null
+        );
 
         bus.post(new LogEvent.AddLogEvent(new PaymentsLog.BatchTransaction.RequestReviewSubmitted(
                 String.valueOf(mNeoPaymentBatch.getBatchId()),

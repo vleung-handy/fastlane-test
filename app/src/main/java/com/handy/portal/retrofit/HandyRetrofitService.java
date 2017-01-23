@@ -5,8 +5,8 @@ import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.core.model.ProviderSettings;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
-import com.handy.portal.payments.model.BookingPaymentTransactionReviewRequest;
-import com.handy.portal.payments.model.PaymentBatchReviewRequest;
+import com.handy.portal.payments.model.BatchPaymentReviewRequest;
+import com.handy.portal.payments.model.BookingPaymentReviewRequest;
 import com.handy.portal.proavailability.model.AvailabilityTimelinesWrapper;
 
 import java.util.ArrayList;
@@ -141,12 +141,12 @@ public interface HandyRetrofitService
                                 HandyRetrofitCallback cb);
 
     @POST(PAYMENTS_PATH + "batch_review")
-    void submitPaymentBatchReviewRequest(@Body PaymentBatchReviewRequest paymentSupportRequest,
+    void submitPaymentBatchReviewRequest(@Body BatchPaymentReviewRequest paymentSupportRequest,
                                          HandyRetrofitCallback cb);
 
     @POST(PAYMENTS_PATH + "booking_review")
     void submitBookingPaymentTransactionReviewRequest
-            (@Body BookingPaymentTransactionReviewRequest bookingPaymentTransactionReviewRequest,
+            (@Body BookingPaymentReviewRequest bookingPaymentReviewRequest,
                                          HandyRetrofitCallback cb);
 
     @FormUrlEncoded

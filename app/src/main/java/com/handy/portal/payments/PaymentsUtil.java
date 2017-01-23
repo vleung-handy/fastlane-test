@@ -7,25 +7,23 @@ import android.support.v4.app.Fragment;
 import com.handy.portal.core.constant.RequestCode;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.payments.model.PaymentSupportItem;
-import com.handy.portal.payments.ui.fragment.dialog.PaymentDetailsSupportDialogFragment;
+import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportDialogFragment;
 
 public class PaymentsUtil
 {
     /**
-     * there are 3 places where this dialog can be triggered
-     *
-     * assumptions: payment support items not null or empty
+     * this is in util because there are 3 places where this dialog can be triggered
      */
     public static void showPaymentSupportDialog(@NonNull Fragment targetFragment,
-                                          @NonNull PaymentSupportItem[] paymentSupportItems)
+                                                @NonNull PaymentSupportItem[] paymentSupportItems)
     {
-        if (targetFragment.getChildFragmentManager().findFragmentByTag(PaymentDetailsSupportDialogFragment.FRAGMENT_TAG) == null)
+        if (targetFragment.getChildFragmentManager().findFragmentByTag(PaymentSupportDialogFragment.FRAGMENT_TAG) == null)
         {
-            final DialogFragment fragment = PaymentDetailsSupportDialogFragment.newInstance(paymentSupportItems);
+            final DialogFragment fragment = PaymentSupportDialogFragment.newInstance(paymentSupportItems);
             fragment.setTargetFragment(targetFragment, RequestCode.PAYMENT_SUPPORT_ITEM_SUBMITTED);
             FragmentUtils.safeLaunchDialogFragment(fragment,
                     targetFragment,
-                    PaymentDetailsSupportDialogFragment.FRAGMENT_TAG);
+                    PaymentSupportDialogFragment.FRAGMENT_TAG);
         }
     }
 }
