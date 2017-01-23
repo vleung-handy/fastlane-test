@@ -86,7 +86,7 @@ public class PaymentSupportRequestReviewDialogFragment extends ConfirmActionSlid
     {
         PaymentSupportItem paymentSupportItem =
                 (PaymentSupportItem) getArguments().getSerializable(BUNDLE_KEY_SELECTED_PAYMENT_SUPPORT_ITEM);
-        ((Callbacks) getTargetFragment()).onRequestDepositReviewButtonClicked(paymentSupportItem);
+        ((Callback) getTargetFragment()).onRequestDepositReviewButtonClicked(paymentSupportItem);
         dismiss();
     }
 
@@ -102,7 +102,7 @@ public class PaymentSupportRequestReviewDialogFragment extends ConfirmActionSlid
         return getString(R.string.payment_details_support_request_review_confirm_button);
     }
 
-    public interface Callbacks
+    public interface Callback
     {
         void onRequestDepositReviewButtonClicked(@NonNull PaymentSupportItem paymentSupportItem);
     }

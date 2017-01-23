@@ -38,7 +38,7 @@ import com.handy.portal.payments.model.PaymentReviewResponse;
 import com.handy.portal.payments.model.PaymentSupportItem;
 import com.handy.portal.payments.model.Transaction;
 import com.handy.portal.payments.ui.element.TransactionView;
-import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportDialogFragment;
+import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportReasonsDialogFragment;
 
 import javax.inject.Inject;
 
@@ -49,7 +49,7 @@ import butterknife.OnClick;
 /**
  * fragment for handling bookings that are viewed for payment details
  */
-public class BookingTransactionsFragment extends ActionBarFragment implements PaymentSupportDialogFragment.Callback
+public class BookingTransactionsFragment extends ActionBarFragment implements PaymentSupportReasonsDialogFragment.Callback
 {
     @Inject
     ConfigManager mConfigManager;
@@ -217,7 +217,7 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
     @OnClick(R.id.fragment_booking_transactions_payment_support_button)
     public void onPaymentSupportButtonClicked()
     {
-        PaymentsUtil.showPaymentSupportDialog(this, mBookingTransactions.getPaymentSupportItems());
+        PaymentsUtil.showPaymentSupportReasonsDialog(this, mBookingTransactions.getPaymentSupportItems());
     }
 
     @Override
@@ -244,7 +244,7 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
         //TODO: BACKEND NOT READY.
         //the payment support button won't show and this logic won't get triggered
         //until backend ready and tested against this
-        mPaymentsManager.submitBookingPaymentTransactionReviewRequest(paymentReviewRequest, new FragmentSafeCallback<PaymentReviewResponse>(this)
+        mPaymentsManager.submitBookingPaymentReviewRequest(paymentReviewRequest, new FragmentSafeCallback<PaymentReviewResponse>(this)
         {
             @Override
             public void onCallbackSuccess(final PaymentReviewResponse response)

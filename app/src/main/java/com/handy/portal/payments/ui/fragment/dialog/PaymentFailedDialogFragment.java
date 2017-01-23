@@ -18,6 +18,10 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 
+/**
+ * dialog that shows when payment status is failed
+ * links to update payment method
+ */
 public class PaymentFailedDialogFragment extends PopupDialogFragment
 {
     public static final String FRAGMENT_TAG = PaymentFailedDialogFragment.class.getName();

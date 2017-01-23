@@ -19,27 +19,26 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PaymentSupportDialogFragment extends ConfirmActionSlideUpDialogFragment
+/**
+ * captures the reason for the user wanting payment support
+ */
+public class PaymentSupportReasonsDialogFragment extends ConfirmActionSlideUpDialogFragment
 {
-    public static final String FRAGMENT_TAG = PaymentSupportDialogFragment.class.getName();
+    public static final String FRAGMENT_TAG = PaymentSupportReasonsDialogFragment.class.getName();
     private static final String BUNDLE_KEY_PAYMENT_SUPPORT_ITEMS = "BUNDLE_KEY_PAYMENT_SUPPORT_ITEMS";
 
-    @BindView(R.id.payment_details_support_items_radiogroup)
-    RadioGroup mSupportItemsRadioGroup;
+    @BindView(R.id.payment_support_reasons_radiogroup)
+    RadioGroup mSupportReasonsRadioGroup;
 
-    private Map<RadioButton, PaymentSupportItem> mRadioButtonToMachineNameMap
+    private Map<RadioButton, PaymentSupportItem> mRadioButtonToPaymentSupportItemMap
             = new HashMap<>();
 
-    /**
-     * @param paymentSupportItems assumes this is not null or empty
-     * @return
-     */
-    public static PaymentSupportDialogFragment newInstance(
+    public static PaymentSupportReasonsDialogFragment newInstance(
             @NonNull PaymentSupportItem paymentSupportItems[])
     {
         Bundle args = new Bundle();
         args.putSerializable(BUNDLE_KEY_PAYMENT_SUPPORT_ITEMS, paymentSupportItems);
-        PaymentSupportDialogFragment fragment = new PaymentSupportDialogFragment();
+        PaymentSupportReasonsDialogFragment fragment = new PaymentSupportReasonsDialogFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -52,7 +51,7 @@ public class PaymentSupportDialogFragment extends ConfirmActionSlideUpDialogFrag
         //don't enable confirm button until a radio button is clicked
         PaymentSupportItem[] paymentSupportItems = (PaymentSupportItem[]) getArguments().getSerializable(BUNDLE_KEY_PAYMENT_SUPPORT_ITEMS);
         mConfirmActionButton.setEnabled(false);
-        mSupportItemsRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+        mSupportReasonsRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(final RadioGroup group, final int checkedId)
             {
@@ -65,14 +64,14 @@ public class PaymentSupportDialogFragment extends ConfirmActionSlideUpDialogFrag
     @Override
     protected View inflateConfirmActionContentView(final LayoutInflater inflater, final ViewGroup container)
     {
-        return inflater.inflate(R.layout.layout_payment_support, container, false);
+        return inflater.inflate(R.layout.layout_payment_support_reasons, container, false);
     }
 
     @Override
     protected void onConfirmActionButtonClicked()
     {
-        RadioButton checkedRadioButton = UIUtils.getCheckedRadioButton(mSupportItemsRadioGroup);
-        PaymentSupportItem paymentSupportItem = mRadioButtonToMachineNameMap.get(checkedRadioButton);
+        RadioButton checkedRadioButton = UIUtils.getCheckedRadioButton(mSupportReasonsRadioGroup);
+        PaymentSupportItem paymentSupportItem = mRadioButtonToPaymentSupportItemMap.get(checkedRadioButton);
         Callback callback = (Callback) getTargetFragment();
         callback.onPaymentSupportItemSubmitted(paymentSupportItem);
         dismiss();
@@ -94,15 +93,15 @@ public class PaymentSupportDialogFragment extends ConfirmActionSlideUpDialogFrag
     {
         if (checkBoxListItems == null || checkBoxListItems.length == 0) { return; }
 
-        mRadioButtonToMachineNameMap.clear();
-        mSupportItemsRadioGroup.removeAllViews();
+        mRadioButtonToPaymentSupportItemMap.clear();
+        mSupportReasonsRadioGroup.removeAllViews();
         for (PaymentSupportItem checkBoxListItem : checkBoxListItems)
         {
             RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext())
-                    .inflate(R.layout.radio_button_dismissal_reason, mSupportItemsRadioGroup, false);
+                    .inflate(R.layout.radio_button_dismissal_reason, mSupportReasonsRadioGroup, false);
             radioButton.setText(checkBoxListItem.getDisplayName());
-            mRadioButtonToMachineNameMap.put(radioButton, checkBoxListItem);
-            mSupportItemsRadioGroup.addView(radioButton);
+            mRadioButtonToPaymentSupportItemMap.put(radioButton, checkBoxListItem);
+            mSupportReasonsRadioGroup.addView(radioButton);
         }
     }
 

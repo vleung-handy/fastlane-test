@@ -39,7 +39,7 @@ import com.handy.portal.payments.model.PaymentSupportItem;
 import com.handy.portal.payments.ui.element.PaymentDetailExpandableListView;
 import com.handy.portal.payments.ui.element.PaymentsDetailListHeaderView;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentFailedDialogFragment;
-import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportDialogFragment;
+import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportReasonsDialogFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportRedirectToBookingTransactionsDialogFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportRequestReviewDialogFragment;
 
@@ -53,8 +53,8 @@ import butterknife.OnClick;
 
 public final class PaymentsDetailFragment extends ActionBarFragment
         implements ExpandableListView.OnChildClickListener,
-        PaymentSupportDialogFragment.Callback,
-        PaymentSupportRequestReviewDialogFragment.Callbacks
+        PaymentSupportReasonsDialogFragment.Callback,
+        PaymentSupportRequestReviewDialogFragment.Callback
 {
     @BindView(R.id.payments_detail_list_view)
     PaymentDetailExpandableListView paymentDetailExpandableListView; //using ExpandableListView because it is the only ListView that offers group view support
@@ -152,7 +152,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
                 @Override
                 public void onRequestStatusSupportButtonClicked()
                 {
-                    PaymentsUtil.showPaymentSupportDialog(
+                    PaymentsUtil.showPaymentSupportReasonsDialog(
                             PaymentsDetailFragment.this,
                             mNeoPaymentBatch.getPaymentSupportItems()
                     );
@@ -199,7 +199,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     @OnClick(R.id.fragment_payments_detail_support_button)
     public void onPaymentSupportButtonClicked()
     {
-        PaymentsUtil.showPaymentSupportDialog(this, mNeoPaymentBatch.getPaymentSupportItems());
+        PaymentsUtil.showPaymentSupportReasonsDialog(this, mNeoPaymentBatch.getPaymentSupportItems());
     }
 
     /**
@@ -307,7 +307,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
 //                mMainContentLayout, "Test message", R.drawable.ic_green_envelope).show();
 
         //TODO: THIS ENDPOINT IS NOT IN PRODUCTION YET
-        mPaymentsManager.submitPaymentBatchReviewRequest(paymentReviewRequest, new FragmentSafeCallback<PaymentReviewResponse>(this)
+        mPaymentsManager.submitBatchPaymentReviewRequest(paymentReviewRequest, new FragmentSafeCallback<PaymentReviewResponse>(this)
         {
             @Override
             public void onCallbackSuccess(final PaymentReviewResponse response)

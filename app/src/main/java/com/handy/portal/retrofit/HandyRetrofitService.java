@@ -141,11 +141,11 @@ public interface HandyRetrofitService
                                 HandyRetrofitCallback cb);
 
     @POST(PAYMENTS_PATH + "batch_review")
-    void submitPaymentBatchReviewRequest(@Body BatchPaymentReviewRequest paymentSupportRequest,
+    void submitBatchPaymentReviewRequest(@Body BatchPaymentReviewRequest paymentSupportRequest,
                                          HandyRetrofitCallback cb);
 
     @POST(PAYMENTS_PATH + "booking_review")
-    void submitBookingPaymentTransactionReviewRequest
+    void submitBookingPaymentReviewRequest
             (@Body BookingPaymentReviewRequest bookingPaymentReviewRequest,
                                          HandyRetrofitCallback cb);
 

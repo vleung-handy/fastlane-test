@@ -234,12 +234,12 @@ public class DataManager
 
     public void submitPaymentBatchReviewRequest(BatchPaymentReviewRequest paymentReviewRequest, Callback<PaymentReviewResponse> cb)
     {
-        mService.submitPaymentBatchReviewRequest(paymentReviewRequest, new PaymentReviewRequestRetroFitCallback(cb));
+        mService.submitBatchPaymentReviewRequest(paymentReviewRequest, new PaymentReviewRequestRetroFitCallback(cb));
     }
 
     public void submitBookingPaymentTransactionRequest(BookingPaymentReviewRequest bookingPaymentReviewRequest, Callback<PaymentReviewResponse> cb)
     {
-        mService.submitBookingPaymentTransactionReviewRequest(bookingPaymentReviewRequest, new PaymentReviewRequestRetroFitCallback(cb));
+        mService.submitBookingPaymentReviewRequest(bookingPaymentReviewRequest, new PaymentReviewRequestRetroFitCallback(cb));
     }
 
     public void getBookingTransactions(String bookingId, String bookingType, Callback<BookingTransactions> cb)

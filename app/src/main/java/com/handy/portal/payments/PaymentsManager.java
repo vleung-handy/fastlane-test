@@ -61,14 +61,14 @@ public class PaymentsManager
                 .build();
     }
 
-    public void submitPaymentBatchReviewRequest(@NonNull BatchPaymentReviewRequest paymentSupportRequest,
+    public void submitBatchPaymentReviewRequest(@NonNull BatchPaymentReviewRequest paymentSupportRequest,
                                                 DataManager.Callback<PaymentReviewResponse> cb)
     {
         mDataManager.submitPaymentBatchReviewRequest(paymentSupportRequest, cb);
     }
 
-    public void submitBookingPaymentTransactionReviewRequest(@NonNull BookingPaymentReviewRequest bookingPaymentReviewRequest,
-                                                DataManager.Callback<PaymentReviewResponse> cb)
+    public void submitBookingPaymentReviewRequest(@NonNull BookingPaymentReviewRequest bookingPaymentReviewRequest,
+                                                  DataManager.Callback<PaymentReviewResponse> cb)
     {
         mDataManager.submitBookingPaymentTransactionRequest(bookingPaymentReviewRequest, cb);
     }
