@@ -397,7 +397,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
                 getActivity(), R.string.current_week, currentWeekTimelines));
         mTabLayout.getTabAt(NEXT_WEEK_INDEX).setCustomView(new TabWithDateRangeView(getActivity(),
                 R.string.next_week, nextWeekTimelines));
-        mViewPager.setCurrentItem(selectedTabPosition != -1 ?
+        mViewPager.setCurrentItem(selectedTabPosition != TabAdapter.POSITION_NOT_FOUND ?
                 selectedTabPosition : mDefaultSelectedTab);
     }
 
@@ -445,7 +445,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
 
     private class TabAdapter extends PagerAdapter
     {
-        private static final int POSITION_NOT_FOUND = -1;
+        public static final int POSITION_NOT_FOUND = -1;
         private List<WeeklyAvailableHoursView> mViews;
 
         TabAdapter(final Context context,
