@@ -24,6 +24,8 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.ui.view.timepicker.HandyTimePicker;
 import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.ProAvailabilityLog;
 import com.handy.portal.proavailability.model.AvailabilityInterval;
 import com.handy.portal.proavailability.model.AvailabilityTimelinesWrapper;
 import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
@@ -127,14 +129,18 @@ public class EditAvailableHoursFragment extends ActionBarFragment
     @OnClick(R.id.save)
     public void onSave()
     {
+        final AvailabilityTimelinesWrapper availabilityTimelinesWrapper =
+                getAvailabilityTimelinesWrapperFromTimePicker();
+        logSubmit(availabilityTimelinesWrapper);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         dataManager.saveProviderAvailability(mProviderManager.getLastProviderId(),
-                getAvailabilityTimelinesWrapperFromTimePicker(),
+                availabilityTimelinesWrapper,
                 new FragmentSafeCallback<Void>(this)
                 {
                     @Override
                     public void onCallbackSuccess(final Void response)
                     {
+                        logSuccess(availabilityTimelinesWrapper);
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         callTargetFragmentResult();
                         getActivity().onBackPressed();
@@ -143,6 +149,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment
                     @Override
                     public void onCallbackError(final DataManager.DataManagerError error)
                     {
+                        logError(availabilityTimelinesWrapper);
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         String message = error.getMessage();
                         if (TextUtils.isEmpty(message))
@@ -152,6 +159,60 @@ public class EditAvailableHoursFragment extends ActionBarFragment
                         showToast(message);
                     }
                 });
+    }
+
+    private void logSubmit(final AvailabilityTimelinesWrapper availabilityTimelinesWrapper)
+    {
+        final DailyAvailabilityTimeline timeline =
+                availabilityTimelinesWrapper.getTimelines().get(0);
+        if (timeline.hasIntervals())
+        {
+            final AvailabilityInterval interval = timeline.getAvailabilityIntervals().get(0);
+            bus.post(new LogEvent.AddLogEvent(
+                    new ProAvailabilityLog.SetHoursSubmitted(timeline.getDateString(),
+                            interval.getEndHour() - interval.getStartHour())));
+        }
+        else
+        {
+            bus.post(new LogEvent.AddLogEvent(
+                    new ProAvailabilityLog.RemoveHoursSubmitted(timeline.getDateString())));
+        }
+    }
+
+    private void logSuccess(final AvailabilityTimelinesWrapper availabilityTimelinesWrapper)
+    {
+        final DailyAvailabilityTimeline timeline =
+                availabilityTimelinesWrapper.getTimelines().get(0);
+        if (timeline.hasIntervals())
+        {
+            final AvailabilityInterval interval = timeline.getAvailabilityIntervals().get(0);
+            bus.post(new LogEvent.AddLogEvent(
+                    new ProAvailabilityLog.SetHoursSuccess(timeline.getDateString(),
+                            interval.getEndHour() - interval.getStartHour())));
+        }
+        else
+        {
+            bus.post(new LogEvent.AddLogEvent(
+                    new ProAvailabilityLog.RemoveHoursSuccess(timeline.getDateString())));
+        }
+    }
+
+    private void logError(final AvailabilityTimelinesWrapper availabilityTimelinesWrapper)
+    {
+        final DailyAvailabilityTimeline timeline =
+                availabilityTimelinesWrapper.getTimelines().get(0);
+        if (timeline.hasIntervals())
+        {
+            final AvailabilityInterval interval = timeline.getAvailabilityIntervals().get(0);
+            bus.post(new LogEvent.AddLogEvent(
+                    new ProAvailabilityLog.SetHoursError(timeline.getDateString(),
+                            interval.getEndHour() - interval.getStartHour())));
+        }
+        else
+        {
+            bus.post(new LogEvent.AddLogEvent(
+                    new ProAvailabilityLog.RemoveHoursError(timeline.getDateString())));
+        }
     }
 
     private void callTargetFragmentResult()

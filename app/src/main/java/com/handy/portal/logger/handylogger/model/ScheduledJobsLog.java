@@ -229,4 +229,34 @@ public class ScheduledJobsLog extends EventLog
             mBookingId = bookingId;
         }
     }
+
+
+    public static class SetWeekAvailabilitySelected extends ScheduledJobsLog
+    {
+        @SerializedName("date")
+        private String mDate;
+
+        private static final String EVENT_TYPE = "set_week_availability_selected";
+
+        public SetWeekAvailabilitySelected(final String date)
+        {
+            super(EVENT_TYPE);
+            mDate = date;
+        }
+    }
+
+
+    public static class SetDayAvailabilitySelected extends ScheduledJobsLog
+    {
+        @SerializedName("date")
+        private String mDate;
+
+        private static final String EVENT_TYPE = "set_day_availability_selected";
+
+        public SetDayAvailabilitySelected(final String date)
+        {
+            super(EVENT_TYPE);
+            mDate = date;
+        }
+    }
 }
