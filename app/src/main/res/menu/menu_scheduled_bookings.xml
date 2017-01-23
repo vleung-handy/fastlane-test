@@ -5,7 +5,7 @@
         android:id="@+id/action_available_hours"
         android:icon="@drawable/ic_available_hours"
         android:orderInCategory="100"
-        android:title=""
+        android:title="@string/available_hours"
         app:showAsAction="always"
         />
 </menu>

@@ -17,6 +17,12 @@
             android:orientation="vertical"
             >
 
+            <include
+                android:id="@+id/set_available_hours_banner"
+                layout="@layout/view_set_available_hours"
+                android:visibility="gone"
+                />
+
             <HorizontalScrollView
                 android:id="@+id/scheduled_bookings_dates_scroll_view"
                 android:layout_width="match_parent"

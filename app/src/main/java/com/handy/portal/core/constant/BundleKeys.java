@@ -80,4 +80,7 @@ public class BundleKeys
     public static final String DAILY_AVAILABILITY_TIMELINE = "daily_availability_timeline";
     public static final String PROVIDER_AVAILABILITY = "provider_availability";
     public static final String PROVIDER_AVAILABILITY_CACHE = "provider_availability_cache";
+    public static final String SHOULD_DEFAULT_TO_NEXT_WEEK = "should_default_to_next_week";
+
+
 }

@@ -166,7 +166,6 @@
     <string name="today">Today</string>
     <string name="tomorrow">Tomorrow</string>
     <string name="completed">Completed</string>
-    <string name="cta_find_jobs_for_this_day">Find Jobs</string>
     <string name="important">Important</string>
     <string name="i_agree">I agree to the Service Professional Agreement</string>
     <string name="error_accepting_terms">There was an error accepting the terms. Please try again.</string>
@@ -674,4 +673,5 @@
     <string name="copy_hours_from_current_week">Copy Hours from Current Week</string>
     <string name="copied">Copied</string>
     <string name="error_fetching_available_hours">There was an error fetching your available hours.</string>
+    <string name="set_hours_prompt">Set your available hours</string>
 </resources>

@@ -150,6 +150,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
     };
     private HashMap<Date, DailyAvailabilityTimeline> mUpdatedAvailabilityTimelines;
     private boolean mIsCurrentWeekAndNextWeekInSync;
+    private int mDefaultSelectedTab;
 
     private DailyAvailabilityTimeline getAvailablityForDate(final Date date)
     {
@@ -305,6 +306,8 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
         {
             mUpdatedAvailabilityTimelines = new HashMap<>();
         }
+        mDefaultSelectedTab = getArguments().getBoolean(BundleKeys.SHOULD_DEFAULT_TO_NEXT_WEEK,
+                false) ? NEXT_WEEK_INDEX : CURRENT_WEEK_INDEX;
     }
 
     @Nullable
@@ -394,10 +397,8 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
                 getActivity(), R.string.current_week, currentWeekTimelines));
         mTabLayout.getTabAt(NEXT_WEEK_INDEX).setCustomView(new TabWithDateRangeView(getActivity(),
                 R.string.next_week, nextWeekTimelines));
-        if (selectedTabPosition != -1)
-        {
-            mViewPager.setCurrentItem(selectedTabPosition);
-        }
+        mViewPager.setCurrentItem(selectedTabPosition != TabAdapter.POSITION_NOT_FOUND ?
+                selectedTabPosition : mDefaultSelectedTab);
     }
 
     @Override
@@ -444,7 +445,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
 
     private class TabAdapter extends PagerAdapter
     {
-        private static final int POSITION_NOT_FOUND = -1;
+        public static final int POSITION_NOT_FOUND = -1;
         private List<WeeklyAvailableHoursView> mViews;
 
         TabAdapter(final Context context,

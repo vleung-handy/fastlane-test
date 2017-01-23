@@ -14,6 +14,7 @@ public interface PrefsKey
     String SAME_DAY_LATE_DISPATCH_AVAILABLE_JOB_NOTIFICATION_EXPLAINED = "same_day_late_dispatch_available_job_notification_explained";
     String APP_FIRST_LAUNCH = "app_first_launch";
     String INSTALLATION_ID = "installation_id";
+    String DISMISSED_AVAILABLE_HOURS_BANNER_WEEK_START_DATE = "dismissed_available_hours_banner_week_start_date";
 
 
     @StringDef({

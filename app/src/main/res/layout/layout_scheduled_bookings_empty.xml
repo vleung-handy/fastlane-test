@@ -34,14 +34,5 @@
             android:textSize="@dimen/large_text_size"
             />
 
-        <Button
-            android:id="@+id/find_jobs_for_day_button"
-            style="@style/Button.PartnerBlueEmpty.Round"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/cta_find_jobs_for_this_day"
-            />
-
     </LinearLayout>
 </com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout>

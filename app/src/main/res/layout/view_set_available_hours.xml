@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_gray_bottom_bg"
+    android:padding="@dimen/default_padding"
+    >
+
+    <ImageView
+        android:id="@+id/set_hours_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_available_hours"
+        android:tint="@color/error_red"
+        />
+
+    <TextView
+        style="@style/TextView.Medium.Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_marginEnd="@dimen/default_margin"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginRight="@dimen/default_margin"
+        android:layout_marginStart="@dimen/default_margin"
+        android:layout_toEndOf="@+id/set_hours_icon"
+        android:layout_toLeftOf="@+id/set_hours_dismiss_button"
+        android:layout_toRightOf="@+id/set_hours_icon"
+        android:layout_toStartOf="@+id/set_hours_dismiss_button"
+        android:text="@string/set_hours_prompt"
+        />
+
+    <ImageView
+        android:id="@+id/set_hours_dismiss_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_x"
+        />
+
+</RelativeLayout>
