@@ -23,6 +23,11 @@ public class DailyAvailabilityTimeline implements Serializable
         mAvailabilityIntervals = intervals;
     }
 
+    public String getDateString()
+    {
+        return mDate;
+    }
+
     @Nullable
     public Date getDate()
     {

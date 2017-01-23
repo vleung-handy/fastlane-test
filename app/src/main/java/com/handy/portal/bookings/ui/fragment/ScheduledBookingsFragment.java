@@ -168,6 +168,8 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     private void navigateToEditWeeklyAvailableHours()
     {
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.SetWeekAvailabilitySelected(
+                DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(mSelectedDay))));
         final Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY, mProviderAvailability);
         arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY_CACHE,
@@ -480,6 +482,8 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @OnClick(R.id.available_hours_view)
     public void onAvailableHoursClicked()
     {
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.SetDayAvailabilitySelected(
+                mAvailabilityForSelectedDay.getDateString())));
         final Bundle bundle = new Bundle();
         bundle.putSerializable(BundleKeys.DATE, mSelectedDay);
         bundle.putSerializable(BundleKeys.DAILY_AVAILABILITY_TIMELINE, mAvailabilityForSelectedDay);
