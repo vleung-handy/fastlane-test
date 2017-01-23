@@ -57,7 +57,7 @@
             style="@style/Button.Transparent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/payment_failed_update_payment_method_not_now_button"
+            android:text="@string/payment_failed_dialog_dismiss_button"
             android:textAllCaps="true"
             android:textAppearance="@style/TextView.Bold"
             android:textColor="@color/tertiary_gray"

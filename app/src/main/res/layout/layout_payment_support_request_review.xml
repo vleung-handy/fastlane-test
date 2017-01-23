@@ -25,7 +25,7 @@
         style="@style/TextView.Medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/payment_details_support_request_review_deposit_delay"
+        android:text="@string/payment_support_request_review_dialog_deposit_delay"
         android:textAlignment="center"
         />
 
@@ -45,7 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/default_margin"
-        android:text="@string/payment_details_support_request_review_patience_plea"
+        android:text="@string/payment_support_request_review_dialog_patience_plea"
         android:textAlignment="center"
         />
 

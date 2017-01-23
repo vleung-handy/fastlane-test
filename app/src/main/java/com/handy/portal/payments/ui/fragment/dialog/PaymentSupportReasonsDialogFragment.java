@@ -86,7 +86,7 @@ public class PaymentSupportReasonsDialogFragment extends ConfirmActionSlideUpDia
     @Override
     protected String getConfirmButtonText()
     {
-        return getResources().getString(R.string.payment_details_support_submit_reason_button);
+        return getResources().getString(R.string.payment_support_reasons_dialog_submit_button);
     }
 
     private void populateSupportItemsRadioGroup(PaymentSupportItem[] checkBoxListItems)

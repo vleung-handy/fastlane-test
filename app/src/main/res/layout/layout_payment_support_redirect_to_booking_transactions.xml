@@ -24,7 +24,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/TextView.Medium"
-        android:text="@string/payment_support_redirect_to_booking_transactions_instructions"
+        android:text="@string/payment_support_redirect_to_booking_transactions_dialog_instructions"
         />
 </LinearLayout>
 

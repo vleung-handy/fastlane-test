@@ -65,6 +65,6 @@ public class PaymentSupportRedirectToBookingTransactionsDialogFragment extends C
     @Override
     protected String getConfirmButtonText()
     {
-        return getString(R.string.payment_details_support_click_on_payment_item_confirm_button);
+        return getString(R.string.payment_support_redirect_to_booking_transactions_dialog_confirm_button);
     }
 }

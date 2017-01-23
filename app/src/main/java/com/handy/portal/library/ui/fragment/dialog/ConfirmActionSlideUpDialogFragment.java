@@ -29,7 +29,7 @@ public abstract class ConfirmActionSlideUpDialogFragment extends SlideUpDialogFr
      *
      * @param inflater
      * @param container
-     * @return the view that will be stuffed inside confirm_booking_action_content of this fragment's view
+     * @return the view that will be stuffed inside confirm_action_content of this fragment's view
      */
     protected abstract View inflateConfirmActionContentView(LayoutInflater inflater, ViewGroup container);
 

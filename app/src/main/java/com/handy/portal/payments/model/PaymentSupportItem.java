@@ -26,16 +26,6 @@ public class PaymentSupportItem implements Serializable
         public static final String OTHER = "other";
     }
 
-    /**
-     * TODO temporarily existing for test only
-     * @param displayName
-     * @param machineName
-     */
-    public PaymentSupportItem(String displayName, String machineName)
-    {
-        mMachineName = machineName;
-        mDisplayName = displayName;
-    }
     public String getDisplayName()
     {
         return mDisplayName;

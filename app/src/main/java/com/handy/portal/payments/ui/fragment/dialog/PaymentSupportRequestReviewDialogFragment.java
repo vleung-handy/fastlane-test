@@ -2,10 +2,7 @@ package com.handy.portal.payments.ui.fragment.dialog;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.text.Html;
-import android.text.Spannable;
-import android.text.style.ForegroundColorSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,23 +53,12 @@ public class PaymentSupportRequestReviewDialogFragment extends ConfirmActionSlid
         PaymentSupportItem paymentSupportItem =
                 (PaymentSupportItem) getArguments().getSerializable(BUNDLE_KEY_SELECTED_PAYMENT_SUPPORT_ITEM);
         mTitleText.setText(paymentSupportItem.getDisplayName());
-        mDepositDelayText.setText(Html.fromHtml(getString(R.string.payment_details_support_request_review_deposit_delay)));
+        mDepositDelayText.setText(Html.fromHtml(getString(R.string.payment_support_request_review_dialog_deposit_delay)));
         mExpectedDepositDateText.setText(getArguments().getString(BUNDLE_KEY_EXPECTED_DEPOSIT_DATE));
 
         String proEmail = getArguments().getString(BUNDLE_KEY_PRO_EMAIL);
-        String emailTextFormatted = getString(R.string.payment_details_support_request_review_formatted,
-                proEmail);
-        mInstructionsText.setText(emailTextFormatted, TextView.BufferType.SPANNABLE);
-        final Spannable spannable = (Spannable) mInstructionsText.getText();
-        final int start = emailTextFormatted.indexOf(proEmail);
-        final int end = start + proEmail.length();
-
-        spannable.setSpan(
-                new ForegroundColorSpan(ContextCompat.getColor(getContext(), R.color.handy_blue)),
-                start,
-                end,
-                Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
-        );
+        mInstructionsText.setText(getString(R.string.payment_support_request_review_dialog_instructions_formatted,
+                proEmail));
     }
 
     @Override
@@ -99,7 +85,7 @@ public class PaymentSupportRequestReviewDialogFragment extends ConfirmActionSlid
     @Override
     protected String getConfirmButtonText()
     {
-        return getString(R.string.payment_details_support_request_review_confirm_button);
+        return getString(R.string.payment_support_request_review_dialog_confirm_button);
     }
 
     public interface Callback

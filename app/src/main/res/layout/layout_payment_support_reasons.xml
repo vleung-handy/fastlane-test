@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/TextView.Large.Bold"
-        android:text="@string/payment_details_support_title"
+        android:text="@string/payment_support_reasons_dialog_title"
         android:layout_marginBottom="@dimen/default_margin"
         />
     <RadioGroup
