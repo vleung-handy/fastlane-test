@@ -216,21 +216,6 @@ public class ScheduledJobsLog extends EventLog
     }
 
 
-    public static class FindJobsSelected extends ScheduledJobsLog
-    {
-        private static final String EVENT_TYPE = "find_jobs_selected";
-
-        @SerializedName("date")
-        private Date mSelectedDate;
-
-        public FindJobsSelected(final Date selectedDate)
-        {
-            super(EVENT_TYPE);
-            mSelectedDate = selectedDate;
-        }
-    }
-
-
     public static class CustomerNoShowModalShown extends ScheduledJobsLog
     {
         private static final String EVENT_TYPE = "customer_no_show_modal_shown";

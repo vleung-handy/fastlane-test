@@ -13,7 +13,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
@@ -27,7 +26,6 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.PrefsKey;
 import com.handy.portal.core.constant.RequestCode;
-import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ProviderManager;
@@ -73,8 +71,6 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     LinearLayout mScheduledJobsDatesScrollViewLayout;
     @BindView(R.id.scheduled_bookings_empty)
     SwipeRefreshLayout mNoScheduledBookingsLayout;
-    @BindView(R.id.find_jobs_for_day_button)
-    Button mFindJobsForDayButton;
     @BindView(R.id.dates_view_pager_holder)
     ViewGroup mDatesViewPagerHolder;
     @BindView(R.id.dates_view_pager)
@@ -393,17 +389,6 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
             numDaysForAvailableJobs =
                     configManager.getConfigurationResponse().getNumberOfDaysForAvailableJobs();
         }
-
-        if (bookingsForDay.size() == 0 &&
-                DateTimeUtils.daysBetween(DateTimeUtils.getDateWithoutTime(new Date()),
-                        dateOfBookings) < numDaysForAvailableJobs)
-        {
-            mFindJobsForDayButton.setVisibility(View.VISIBLE);
-        }
-        else
-        {
-            mFindJobsForDayButton.setVisibility(View.GONE);
-        }
     }
 
     @OnClick(R.id.set_hours_dismiss_button)
@@ -476,19 +461,6 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
                     .get(NEXT_WEEK_AVAILABILITY_INDEX);
         }
         return null;
-    }
-
-    @OnClick(R.id.find_jobs_for_day_button)
-    public void onFindJobsButtonClicked()
-    {
-        bus.post(new LogEvent.AddLogEvent((new ScheduledJobsLog.FindJobsSelected(mSelectedDay))));
-        TransitionStyle transitionStyle = TransitionStyle.PAGE_TO_PAGE;
-        long epochTime = mSelectedDay.getTime();
-        //navigate back to available bookings for this day
-        Bundle arguments = new Bundle();
-        arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
-        //Return to available jobs on that day
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.AVAILABLE_JOBS, arguments, transitionStyle));
     }
 
     @OnClick(R.id.available_hours_view)
