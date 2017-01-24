@@ -1,267 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
+<android.support.design.widget.CoordinatorLayout
+    android:id="@+id/fragment_booking_transactions_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_above="@+id/booking_action_button"
+    android:layout_height="match_parent"
     >
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/default_margin_xlarge"
+        android:layout_above="@+id/booking_action_button"
         >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
+            android:paddingBottom="@dimen/default_margin_xlarge"
             >
-
-            <com.handy.portal.core.ui.element.bookings.BookingResultBannerTextView
-                android:id="@+id/booking_transactions_banner_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/cleaner_green_trans_10"
-                android:drawableLeft="@drawable/ic_check_green"
-                android:drawablePadding="@dimen/inner_field_padding"
-                android:gravity="center_vertical"
-                android:padding="@dimen/default_padding"
-                android:text="@string/completed_job"
-                android:textColor="@color/cleaner_green"
-                android:textSize="@dimen/default_text_size"
-                android:visibility="gone"
-                tools:visibility="visible"
-                />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:divider="@drawable/divider_gray"
-                android:dividerPadding="@dimen/default_padding"
                 android:orientation="vertical"
-                android:showDividers="middle"
                 >
 
-                <TextView
-                    android:id="@+id/booking_transactions_location_text"
-                    style="@style/CircularBold"
-                    android:layout_width="wrap_content"
+                <com.handy.portal.core.ui.element.bookings.BookingResultBannerTextView
+                    android:id="@+id/booking_transactions_banner_text"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:background="@color/cleaner_green_trans_10"
+                    android:drawableLeft="@drawable/ic_check_green"
+                    android:drawablePadding="@dimen/inner_field_padding"
+                    android:gravity="center_vertical"
                     android:padding="@dimen/default_padding"
-                    android:textColor="@color/black"
+                    android:text="@string/completed_job"
+                    android:textColor="@color/cleaner_green"
                     android:textSize="@dimen/default_text_size"
-                    tools:text="Midtown East"
+                    android:visibility="gone"
+                    tools:visibility="visible"
                     />
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/default_padding"
-                    >
-
-                    <TextView
-                        style="@style/CircularBold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/date"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/default_text_size"
-                        />
-
-                    <TextView
-                        android:id="@+id/booking_transactions_date_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingEnd="@dimen/extra_padding"
-                        android:paddingLeft="@dimen/extra_padding"
-                        android:paddingRight="@dimen/extra_padding"
-                        android:paddingStart="@dimen/extra_padding"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/default_text_size"
-                        tools:text="Thursday, Augest 24, 2016"
-                        />
-                </LinearLayout>
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/default_padding"
-                    >
-
-                    <TextView
-                        style="@style/CircularBold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/time"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/default_text_size"
-                        />
-
-                    <TextView
-                        android:id="@+id/booking_transactions_time_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:paddingEnd="@dimen/extra_padding"
-                        android:paddingLeft="@dimen/extra_padding"
-                        android:paddingRight="@dimen/extra_padding"
-                        android:paddingStart="@dimen/extra_padding"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/default_text_size"
-                        tools:text="8:00 am \u2013 10:30 am"
-                        />
-                </LinearLayout>
-
-                <RelativeLayout
-                    android:id="@+id/booking_transactions_unassigned_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:padding="@dimen/default_padding"
-                    android:visibility="gone"
-                    tools:visibility="visible"
-                    >
-
-                    <TextView
-                        android:id="@+id/booking_transactions_unassigned_label"
-                        style="@style/CircularBold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/unassigned"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/default_text_size"
-                        />
-
-                    <TextView
-                        android:id="@+id/booking_transactions_unassigned_time_text"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@+id/booking_transactions_unassigned_label"
-                        android:paddingEnd="@dimen/extra_padding"
-                        android:paddingLeft="@dimen/extra_padding"
-                        android:paddingRight="@dimen/extra_padding"
-                        android:paddingStart="@dimen/extra_padding"
-                        android:textColor="@color/black"
-                        android:textSize="@dimen/default_text_size"
-                        tools:text="Thursday, Augest 24, 6:02 am"
-                        />
-
-                    <TextView
-                        android:id="@+id/booking_transactions_unassigned_help_text"
-                        style="@style/CircularBold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@id/booking_transactions_unassigned_label"
-                        android:layout_marginTop="@dimen/lineSpacing"
-                        android:text="@string/you_cancelled"
-                        android:textAllCaps="true"
-                        android:textColor="@color/plumber_red"
-                        android:textSize="@dimen/xsmall_text_size"
-                        android:visibility="gone"
-                        tools:visibility="visible"
-                        />
-
-                </RelativeLayout>
-
-                <LinearLayout
-                    android:id="@+id/booking_transactions_check_in_out_layout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:baselineAligned="false"
+                    android:background="@color/white"
                     android:divider="@drawable/divider_gray"
-                    android:dividerPadding="@dimen/horizontal_divider_padding"
-                    android:orientation="horizontal"
+                    android:dividerPadding="@dimen/default_padding"
+                    android:orientation="vertical"
                     android:showDividers="middle"
                     >
 
-                    <RelativeLayout
-                        android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/booking_transactions_location_text"
+                        style="@style/CircularBold"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:paddingBottom="@dimen/default_padding"
-                        android:paddingLeft="@dimen/default_padding"
-                        android:paddingTop="@dimen/default_padding"
+                        android:padding="@dimen/default_padding"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/default_text_size"
+                        tools:text="Midtown East"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/default_padding"
                         >
 
                         <TextView
-                            android:id="@+id/booking_transactions_check_in_label"
                             style="@style/CircularBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/check_in_2"
+                            android:text="@string/date"
                             android:textColor="@color/black"
                             android:textSize="@dimen/default_text_size"
                             />
 
                         <TextView
-                            android:id="@+id/booking_transactions_check_in_time_text"
+                            android:id="@+id/booking_transactions_date_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toRightOf="@id/booking_transactions_check_in_label"
+                            android:paddingEnd="@dimen/extra_padding"
+                            android:paddingLeft="@dimen/extra_padding"
+                            android:paddingRight="@dimen/extra_padding"
+                            android:paddingStart="@dimen/extra_padding"
                             android:textColor="@color/black"
                             android:textSize="@dimen/default_text_size"
-                            tools:text="8:16 am"
+                            tools:text="Thursday, Augest 24, 2016"
                             />
+                    </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/booking_transactions_late_text"
-                            style="@style/CircularBold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_below="@id/booking_transactions_check_in_label"
-                            android:layout_marginTop="@dimen/lineSpacing"
-                            android:text="@string/customer_no_show"
-                            android:textAllCaps="true"
-                            android:textColor="@color/electrician_yellow"
-                            android:textSize="@dimen/xsmall_text_size"
-                            android:visibility="gone"
-                            tools:visibility="visible"
-                            />
-
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:layout_width="0dp"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1.1"
-                        android:paddingBottom="@dimen/default_padding"
-                        android:paddingLeft="@dimen/extra_padding_medium"
-                        android:paddingRight="@dimen/default_padding"
-                        android:paddingTop="@dimen/default_padding"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/default_padding"
                         >
 
                         <TextView
-                            android:id="@+id/booking_transactions_check_out_label"
                             style="@style/CircularBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/check_out_2"
+                            android:text="@string/time"
                             android:textColor="@color/black"
                             android:textSize="@dimen/default_text_size"
                             />
 
                         <TextView
-                            android:id="@+id/booking_transactions_check_out_time_text"
+                            android:id="@+id/booking_transactions_time_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toRightOf="@id/booking_transactions_check_out_label"
+                            android:paddingEnd="@dimen/extra_padding"
+                            android:paddingLeft="@dimen/extra_padding"
+                            android:paddingRight="@dimen/extra_padding"
+                            android:paddingStart="@dimen/extra_padding"
                             android:textColor="@color/black"
                             android:textSize="@dimen/default_text_size"
-                            tools:text="8:16 am"
+                            tools:text="8:00 am \u2013 10:30 am"
                             />
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/booking_transactions_unassigned_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/default_padding"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        >
 
                         <TextView
-                            android:id="@+id/booking_transactions_check_out_help_text"
+                            android:id="@+id/booking_transactions_unassigned_label"
                             style="@style/CircularBold"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_below="@id/booking_transactions_check_out_label"
+                            android:text="@string/unassigned"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/default_text_size"
+                            />
+
+                        <TextView
+                            android:id="@+id/booking_transactions_unassigned_time_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@+id/booking_transactions_unassigned_label"
+                            android:paddingEnd="@dimen/extra_padding"
+                            android:paddingLeft="@dimen/extra_padding"
+                            android:paddingRight="@dimen/extra_padding"
+                            android:paddingStart="@dimen/extra_padding"
+                            android:textColor="@color/black"
+                            android:textSize="@dimen/default_text_size"
+                            tools:text="Thursday, Augest 24, 6:02 am"
+                            />
+
+                        <TextView
+                            android:id="@+id/booking_transactions_unassigned_help_text"
+                            style="@style/CircularBold"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/booking_transactions_unassigned_label"
                             android:layout_marginTop="@dimen/lineSpacing"
-                            android:text="@string/left_early"
+                            android:text="@string/you_cancelled"
                             android:textAllCaps="true"
                             android:textColor="@color/plumber_red"
                             android:textSize="@dimen/xsmall_text_size"
@@ -270,91 +172,208 @@
                             />
 
                     </RelativeLayout>
+
+                    <LinearLayout
+                        android:id="@+id/booking_transactions_check_in_out_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:baselineAligned="false"
+                        android:divider="@drawable/divider_gray"
+                        android:dividerPadding="@dimen/horizontal_divider_padding"
+                        android:orientation="horizontal"
+                        android:showDividers="middle"
+                        >
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:paddingBottom="@dimen/default_padding"
+                            android:paddingLeft="@dimen/default_padding"
+                            android:paddingTop="@dimen/default_padding"
+                            >
+
+                            <TextView
+                                android:id="@+id/booking_transactions_check_in_label"
+                                style="@style/CircularBold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/check_in_2"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/default_text_size"
+                                />
+
+                            <TextView
+                                android:id="@+id/booking_transactions_check_in_time_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_toRightOf="@id/booking_transactions_check_in_label"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/default_text_size"
+                                tools:text="8:16 am"
+                                />
+
+                            <TextView
+                                android:id="@+id/booking_transactions_late_text"
+                                style="@style/CircularBold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/booking_transactions_check_in_label"
+                                android:layout_marginTop="@dimen/lineSpacing"
+                                android:text="@string/customer_no_show"
+                                android:textAllCaps="true"
+                                android:textColor="@color/electrician_yellow"
+                                android:textSize="@dimen/xsmall_text_size"
+                                android:visibility="gone"
+                                tools:visibility="visible"
+                                />
+
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.1"
+                            android:paddingBottom="@dimen/default_padding"
+                            android:paddingLeft="@dimen/extra_padding_medium"
+                            android:paddingRight="@dimen/default_padding"
+                            android:paddingTop="@dimen/default_padding"
+                            >
+
+                            <TextView
+                                android:id="@+id/booking_transactions_check_out_label"
+                                style="@style/CircularBold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/check_out_2"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/default_text_size"
+                                />
+
+                            <TextView
+                                android:id="@+id/booking_transactions_check_out_time_text"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_toRightOf="@id/booking_transactions_check_out_label"
+                                android:textColor="@color/black"
+                                android:textSize="@dimen/default_text_size"
+                                tools:text="8:16 am"
+                                />
+
+                            <TextView
+                                android:id="@+id/booking_transactions_check_out_help_text"
+                                style="@style/CircularBold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_below="@id/booking_transactions_check_out_label"
+                                android:layout_marginTop="@dimen/lineSpacing"
+                                android:text="@string/left_early"
+                                android:textAllCaps="true"
+                                android:textColor="@color/plumber_red"
+                                android:textSize="@dimen/xsmall_text_size"
+                                android:visibility="gone"
+                                tools:visibility="visible"
+                                />
+
+                        </RelativeLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/booking_transactions_transactions_summary_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            >
 
             <LinearLayout
-                android:id="@+id/booking_transactions_transactions_layout"
+                android:id="@+id/booking_transactions_transactions_summary_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/row_margin"
-                android:background="@color/white"
-                android:divider="@drawable/divider_gray"
-                android:dividerPadding="@dimen/horizontal_divider_padding"
                 android:orientation="vertical"
-                android:showDividers="middle|end"
                 >
 
-                <TextView
-                    style="@style/CircularBold"
+                <LinearLayout
+                    android:id="@+id/booking_transactions_transactions_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/row_margin"
+                    android:background="@color/white"
+                    android:divider="@drawable/divider_gray"
+                    android:dividerPadding="@dimen/horizontal_divider_padding"
+                    android:orientation="vertical"
+                    android:showDividers="middle|end"
+                    >
+
+                    <TextView
+                        style="@style/CircularBold"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:padding="@dimen/default_padding"
+                        android:text="@string/transaction_summary"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/large_text_size"
+                        />
+                </LinearLayout>
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/white"
                     android:padding="@dimen/default_padding"
-                    android:text="@string/transaction_summary"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/large_text_size"
-                    />
+                    >
+
+                    <TextView
+                        style="@style/CircularBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/net_earnings"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/default_text_size"
+                        />
+
+                    <TextView
+                        android:id="@+id/booking_transactions_net_earnings_amount_text"
+                        style="@style/CircularBold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/large_text_size"
+                        tools:text="$32.50"
+                        />
+                </RelativeLayout>
             </LinearLayout>
 
-            <RelativeLayout
+            <Button
+                android:id="@+id/fragment_booking_transactions_payment_support_button"
+                style="@style/Button.Grey.Round"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:padding="@dimen/default_padding"
-                >
+                android:layout_marginLeft="@dimen/default_margin"
+                android:layout_marginRight="@dimen/default_margin"
+                android:layout_marginTop="@dimen/default_margin_half"
+                android:background="@drawable/border_gray_bg_white"
+                android:text="@string/payment_support_button"
+                android:textColor="@color/black"
+                />
 
-                <TextView
-                    style="@style/CircularBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/net_earnings"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/default_text_size"
-                    />
+            <TextView
+                android:id="@+id/booking_transactions_job_number_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_margin_medium"
+                android:gravity="center"
+                android:textColor="@color/tertiary_gray"
+                tools:text="Job # 123456"
+                />
 
-                <TextView
-                    android:id="@+id/booking_transactions_net_earnings_amount_text"
-                    style="@style/CircularBold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentRight="true"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/large_text_size"
-                    tools:text="$32.50"
-                    />
-            </RelativeLayout>
+            <TextView
+                android:id="@+id/booking_transactions_help_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/lineSpacing_x2"
+                android:gravity="center"
+                android:textColor="@color/tertiary_gray"
+                android:textSize="@dimen/small_text_size"
+                tools:text="Question about your payments?"
+                />
+
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/booking_transactions_job_number_text"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/default_margin_medium"
-            android:gravity="center"
-            android:textColor="@color/tertiary_gray"
-            tools:text="Job # 123456"
-            />
-
-        <TextView
-            android:id="@+id/booking_transactions_help_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="@dimen/lineSpacing_x2"
-            android:gravity="center"
-            android:textColor="@color/tertiary_gray"
-            android:textSize="@dimen/small_text_size"
-            tools:text="Question about your payments?"
-            />
-
-    </LinearLayout>
-</ScrollView>
-
+    </ScrollView>
+</android.support.design.widget.CoordinatorLayout>

@@ -126,13 +126,13 @@ public class ConfirmBookingCancelKeepRateDialogFragment extends ConfirmBookingAc
     }
 
     @Override
-    protected View inflateBookingActionContentView(final LayoutInflater inflater, final ViewGroup container)
+    protected View inflateConfirmActionContentView(final LayoutInflater inflater, final ViewGroup container)
     {
         return inflater.inflate(R.layout.layout_confirm_booking_cancel, container, false);
     }
 
     @Override
-    protected void onConfirmBookingActionButtonClicked()
+    protected void onConfirmActionButtonClicked()
     {
 
         final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);

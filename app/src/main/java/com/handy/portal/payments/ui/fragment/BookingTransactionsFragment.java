@@ -2,11 +2,13 @@ package com.handy.portal.payments.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.content.ContextCompat;
 import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -14,31 +16,48 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.ui.element.bookings.BookingResultBannerTextView;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
+import com.handy.portal.data.DataManager;
+import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.TextUtils;
+import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.CompletedJobsLog;
+import com.handy.portal.logger.handylogger.model.PaymentsLog;
+import com.handy.portal.payments.PaymentsManager;
+import com.handy.portal.payments.PaymentsUtil;
+import com.handy.portal.payments.model.BookingPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingTransactions;
+import com.handy.portal.payments.model.PaymentReviewResponse;
+import com.handy.portal.payments.model.PaymentSupportItem;
 import com.handy.portal.payments.model.Transaction;
 import com.handy.portal.payments.ui.element.TransactionView;
+import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportReasonsDialogFragment;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 /**
  * fragment for handling bookings that are viewed for payment details
  */
-public class BookingTransactionsFragment extends ActionBarFragment
+public class BookingTransactionsFragment extends ActionBarFragment implements PaymentSupportReasonsDialogFragment.Callback
 {
     @Inject
     ConfigManager mConfigManager;
+    @Inject
+    ProviderManager mProviderManager;
+    @Inject
+    PaymentsManager mPaymentsManager;
 
     @BindView(R.id.booking_transactions_banner_text)
     BookingResultBannerTextView mBannerText;
@@ -74,6 +93,11 @@ public class BookingTransactionsFragment extends ActionBarFragment
     TextView mHelpText;
     @BindView(R.id.booking_transactions_transactions_summary_layout)
     ViewGroup mTransactionSummary;
+    @BindView(R.id.fragment_booking_transactions_payment_support_button)
+    Button mPaymentSupportButton;
+    @BindView(R.id.fragment_booking_transactions_content)
+    CoordinatorLayout mContentLayout;
+    //TODO consolidate with booking details frag and visibility conditional
 
 
     private BookingTransactions mBookingTransactions;
@@ -182,5 +206,65 @@ public class BookingTransactionsFragment extends ActionBarFragment
         {
             mTransactionSummary.setVisibility(View.GONE);
         }
+
+        //don't show payment support button if no payment support items
+        mPaymentSupportButton.setVisibility(
+                mBookingTransactions.getPaymentSupportItems() == null
+                        || mBookingTransactions.getPaymentSupportItems().length == 0 ?
+                        View.GONE : View.VISIBLE
+        );
+    }
+
+    @OnClick(R.id.fragment_booking_transactions_payment_support_button)
+    public void onPaymentSupportButtonClicked()
+    {
+        PaymentsUtil.showPaymentSupportReasonsDialog(this, mBookingTransactions.getPaymentSupportItems());
+    }
+
+    @Override
+    public void onPaymentSupportItemSubmitted(PaymentSupportItem paymentSupportItem)
+    {
+        BookingPaymentReviewRequest paymentReviewRequest
+                = new BookingPaymentReviewRequest(
+                String.valueOf(mBooking.getId()),
+                mBooking.getType().toString(),
+                paymentSupportItem.getMachineName(),
+                null);
+
+        bus.post(new LogEvent.AddLogEvent(
+                new PaymentsLog.BookingTransaction.SupportDialogSubmitButtonPressed(
+                        mBooking.getId(),
+                        paymentSupportItem.getMachineName(),
+                        null
+                )));
+
+        //TODO: BACKEND NOT READY.
+        //the payment support button won't show and this logic won't get triggered
+        //until backend ready and tested against this
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        mPaymentsManager.submitBookingPaymentReviewRequest(paymentReviewRequest, new FragmentSafeCallback<PaymentReviewResponse>(this)
+        {
+            @Override
+            public void onCallbackSuccess(final PaymentReviewResponse response)
+            {
+                bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                int drawableResourceId = response.isSuccess() ?
+                        R.drawable.ic_green_envelope : R.drawable.ic_exclaimation_red;
+                UIUtils.getDefaultSnackbarWithImage(getContext(),
+                        mContentLayout,
+                        response.getMessage(),
+                        drawableResourceId).show();
+            }
+
+            @Override
+            public void onCallbackError(final DataManager.DataManagerError error)
+            {
+                bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                UIUtils.getDefaultSnackbarWithImage(getContext(),
+                        mContentLayout,
+                        getString(R.string.an_error_has_occurred),
+                        R.drawable.ic_exclaimation_red).show();
+            }
+        });
     }
 }

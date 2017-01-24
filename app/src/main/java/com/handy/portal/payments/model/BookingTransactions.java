@@ -15,6 +15,13 @@ public class BookingTransactions implements Serializable
     private int mNetEarnings;
     @SerializedName("currency_symbol")
     private String mCurrencySymbol;
+    @SerializedName("payment_support_items")
+    private PaymentSupportItem mPaymentSupportItems[];
+
+    public PaymentSupportItem[] getPaymentSupportItems()
+    {
+        return mPaymentSupportItems;
+    }
 
     public BookingTransactions() { }
 

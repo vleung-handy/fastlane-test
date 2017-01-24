@@ -7,13 +7,15 @@ import com.handy.portal.payments.ui.element.PaymentsBatchListView;
 import com.handy.portal.payments.ui.fragment.BookingTransactionsFragment;
 import com.handy.portal.payments.ui.fragment.BookingTransactionsWrapperFragment;
 import com.handy.portal.payments.ui.fragment.OutstandingFeesFragment;
-import com.handy.portal.payments.ui.fragment.PaymentBillBlockerDialogFragment;
 import com.handy.portal.payments.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsDetailFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.payments.ui.fragment.SelectPaymentMethodFragment;
+import com.handy.portal.payments.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
+import com.handy.portal.payments.ui.fragment.dialog.PaymentFailedDialogFragment;
+import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportReasonsDialogFragment;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -39,6 +41,8 @@ import dagger.Provides;
                 PaymentBlockingFragment.class,
                 BookingTransactionsFragment.class,
                 BookingTransactionsWrapperFragment.class,
+                PaymentSupportReasonsDialogFragment.class,
+                PaymentFailedDialogFragment.class,
         })
 public final class PaymentsModule
 {

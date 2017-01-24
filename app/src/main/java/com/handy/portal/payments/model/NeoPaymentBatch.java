@@ -36,7 +36,6 @@ public class NeoPaymentBatch extends PaymentBatch
     @SerializedName("net_earnings_total_amount")
     private int netEarningsTotalAmount;
 
-
     @SerializedName("gross_earnings_total_amount")
     private int grossEarningsTotalAmount;
 
@@ -49,22 +48,32 @@ public class NeoPaymentBatch extends PaymentBatch
     @SerializedName("payment_groups")
     private PaymentGroup paymentGroups[];
 
-    public enum Status{
-        FAILED("Failed"),
-        PENDING("Pending"),
-        IN_REVIEW("In Review"),
-        PAID("Paid");
+    @SerializedName("payment_support_items")
+    private PaymentSupportItem mPaymentSupportItems[];
 
-        private final String name;
-        Status(final String name)
-        {
-            this.name = name;
-        }
-        @Override
-        public String toString()
-        {
-            return this.name;
-        }
+    @SerializedName("last4")
+    private String mPaymentMethodLast4Digits;
+
+    /**
+     * values that getStatus() should return
+     */
+    public static class Status
+    {
+        public static final String FAILED = "Failed";
+        public static final String PENDING = "Pending";
+        public static final String IN_REVIEW = "In Review";
+        public static final String IN_TRANSIT = "In Transit";
+        public static final String PAID = "Paid";
+    }
+
+    public String getPaymentMethodLast4Digits()
+    {
+        return mPaymentMethodLast4Digits;
+    }
+
+    public PaymentSupportItem[] getPaymentSupportItems()
+    {
+        return mPaymentSupportItems;
     }
 
     public int getNumFees()

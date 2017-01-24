@@ -5,6 +5,8 @@ import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.core.model.ProviderSettings;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
+import com.handy.portal.payments.model.BatchPaymentReviewRequest;
+import com.handy.portal.payments.model.BookingPaymentReviewRequest;
 import com.handy.portal.proavailability.model.AvailabilityTimelinesWrapper;
 
 import java.util.ArrayList;
@@ -137,6 +139,15 @@ public interface HandyRetrofitService
     void getBookingTransactions(@Query("booking_id") String bookingId,
                                 @Query("booking_type") String bookingType,
                                 HandyRetrofitCallback cb);
+
+    @POST(PAYMENTS_PATH + "batch_review")
+    void submitBatchPaymentReviewRequest(@Body BatchPaymentReviewRequest paymentSupportRequest,
+                                         HandyRetrofitCallback cb);
+
+    @POST(PAYMENTS_PATH + "booking_review")
+    void submitBookingPaymentReviewRequest
+            (@Body BookingPaymentReviewRequest bookingPaymentReviewRequest,
+                                         HandyRetrofitCallback cb);
 
     @FormUrlEncoded
     @POST(STRIPE_PATH + "create_bank_account")

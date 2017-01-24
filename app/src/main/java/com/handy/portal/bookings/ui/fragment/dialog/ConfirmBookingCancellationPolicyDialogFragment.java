@@ -50,7 +50,7 @@ public abstract class ConfirmBookingCancellationPolicyDialogFragment
     }
 
     @Override
-    protected View inflateBookingActionContentView(final LayoutInflater inflater, final ViewGroup container)
+    protected View inflateConfirmActionContentView(final LayoutInflater inflater, final ViewGroup container)
     {
         return inflater.inflate(R.layout.layout_confirm_booking_cancellation_policy, container, false);
     }

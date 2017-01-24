@@ -83,7 +83,7 @@ public class ClaimTest
                 = allOf(withId(R.id.booking_action_button), withText(R.string.claim_job));
         ViewUtil.waitForViewVisibility(bookingActionButtonMatcher, true, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         onView(bookingActionButtonMatcher).perform(click());
-        onView(withId(R.id.confirm_booking_action_button)).perform(click());
+        onView(withId(R.id.confirm_action_button)).perform(click());
 
         //wait for loading screen to disappear and bookings to reload
         ViewUtil.waitForViewVisible(R.id.scheduled_bookings_dates_scroll_view, ViewUtil.LONG_MAX_WAIT_TIME_MS);

@@ -59,7 +59,7 @@ public class PaymentsBatchListItemView extends TableLayout
             statusText.setText(neoPaymentBatch.getStatus());
             //color status text
 
-            statusText.setTextColor(ContextCompat.getColor(getContext(), NeoPaymentBatch.Status.FAILED.toString().equalsIgnoreCase(neoPaymentBatch.getStatus()) ? R.color.plumber_red : R.color.tertiary_gray));
+            statusText.setTextColor(ContextCompat.getColor(getContext(), NeoPaymentBatch.Status.FAILED.equalsIgnoreCase(neoPaymentBatch.getStatus()) ? R.color.plumber_red : R.color.tertiary_gray));
 
             PaymentGroup paymentGroups[] = neoPaymentBatch.getPaymentGroups();
             int numJobs = 0;

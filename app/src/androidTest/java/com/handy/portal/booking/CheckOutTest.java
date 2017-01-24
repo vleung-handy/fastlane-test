@@ -76,8 +76,8 @@ public class CheckOutTest
         // This dialog only shows up sometimes, don't fail if it does not show
         try
         {
-            ViewUtil.waitForViewVisible(R.id.confirm_booking_action_button, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
-            onView(withId(R.id.confirm_booking_action_button)).perform(click());
+            ViewUtil.waitForViewVisible(R.id.confirm_action_button, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
+            onView(withId(R.id.confirm_action_button)).perform(click());
         }
         catch (PerformException e) { }
 

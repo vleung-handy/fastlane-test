@@ -50,8 +50,8 @@ import com.handy.portal.logger.handylogger.model.SideMenuLog;
 import com.handy.portal.notification.NotificationUtils;
 import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragment;
 import com.handy.portal.payments.PaymentEvent;
-import com.handy.portal.payments.ui.fragment.PaymentBillBlockerDialogFragment;
 import com.handy.portal.payments.ui.fragment.PaymentBlockingFragment;
+import com.handy.portal.payments.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handybook.shared.layer.LayerHelper;
 import com.squareup.picasso.Picasso;
 

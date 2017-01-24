@@ -22,7 +22,6 @@ import com.handy.portal.dashboard.model.ProviderFeedback;
 import com.handy.portal.dashboard.model.ProviderRating;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
-import com.handy.portal.proavailability.model.ProviderAvailability;
 import com.handy.portal.notification.model.NotificationMessages;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
@@ -31,8 +30,10 @@ import com.handy.portal.payments.model.CreateDebitCardResponse;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.model.PaymentFlow;
 import com.handy.portal.payments.model.PaymentOutstandingFees;
+import com.handy.portal.payments.model.PaymentReviewResponse;
 import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
 import com.handy.portal.payments.model.StripeTokenResponse;
+import com.handy.portal.proavailability.model.ProviderAvailability;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.setup.SetupData;
 import com.handy.portal.updater.model.UpdateDetails;
@@ -136,6 +137,13 @@ class BookingTransactionsRetroFitCallback extends TypedHandyRetrofitCallback<Boo
     }
 }
 
+class PaymentReviewRequestRetroFitCallback extends TypedHandyRetrofitCallback<PaymentReviewResponse>
+{
+    PaymentReviewRequestRetroFitCallback(DataManager.Callback callback)
+    {
+        super(callback);
+    }
+}
 
 class BookingClaimHandyRetroFitCallback extends TypedHandyRetrofitCallback<BookingClaimDetails>
 {

@@ -53,7 +53,7 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
     }
 
     @Override
-    protected View inflateBookingActionContentView(final LayoutInflater inflater,
+    protected View inflateConfirmActionContentView(final LayoutInflater inflater,
                                                    final ViewGroup container)
     {
         return inflater.inflate(R.layout.layout_confirm_booking_swap, container, false);
@@ -97,7 +97,7 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
     }
 
     @Override
-    protected void onConfirmBookingActionButtonClicked()
+    protected void onConfirmActionButtonClicked()
     {
         final Intent intent = new Intent();
         intent.putExtra(BundleKeys.BOOKING, mBooking);

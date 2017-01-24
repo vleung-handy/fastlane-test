@@ -6,11 +6,108 @@ public class PaymentsLog extends EventLog
 {
     private static final String EVENT_CONTEXT = "payments";
 
-    public PaymentsLog(String eventType)
+    private PaymentsLog(String eventType)
     {
         super(eventType, EVENT_CONTEXT);
     }
 
+    //TODO agree on contract
+    public static class BatchTransaction extends PaymentsLog
+    {
+        private static final String EVENT_SUB_CONTEXT = "batch";
+
+        private BatchTransaction(final String eventType)
+        {
+            super(EVENT_SUB_CONTEXT + "_" + eventType);
+        }
+
+        public static class SupportDialogSubmitted extends BatchTransaction
+        {
+            private static final String EVENT_TYPE = "payment_support_submitted";
+
+            @SerializedName("machine_name")
+            private String mPaymentSupportItemMachineName;
+
+            @SerializedName("batch_id")
+            private String mBatchId;
+
+            /**
+             * text inputted by the user when the “other” option is selected
+             * (currently unsupported, so just sending null for now)
+             */
+            @SerializedName("other_text")
+            private String mOtherText;
+
+            public SupportDialogSubmitted(final String batchId,
+                                          final String paymentSupportItemMachineName,
+                                          final String otherText)
+            {
+                super(EVENT_TYPE);
+                mBatchId = batchId;
+                mPaymentSupportItemMachineName = paymentSupportItemMachineName;
+                mOtherText = otherText;
+            }
+        }
+
+        public static class RequestReviewSubmitted extends BatchTransaction
+        {
+            private static final String EVENT_TYPE = "request_review_submitted";
+
+            @SerializedName("machine_name")
+            private String mPaymentSupportItemMachineName;
+
+            @SerializedName("batch_id")
+            private String mBatchId;
+
+            public RequestReviewSubmitted(final String batchId,
+                                          final String paymentSupportItemMachineName)
+            {
+                super(EVENT_TYPE);
+                mBatchId = batchId;
+                mPaymentSupportItemMachineName = paymentSupportItemMachineName;
+            }
+        }
+    }
+
+    public static class BookingTransaction extends PaymentsLog
+    {
+        private static final String EVENT_SUB_CONTEXT = "booking";
+
+        private BookingTransaction(final String eventType)
+        {
+            super(EVENT_SUB_CONTEXT + "_" + eventType);
+        }
+
+        public static class SupportDialogSubmitButtonPressed extends BookingTransaction
+        {
+            private static final String EVENT_TYPE = "payment_support_submitted";
+
+            @SerializedName("machine_name")
+            private String mPaymentSupportItemMachineName;
+
+            @SerializedName("booking_id")
+            private String mBookingId;
+
+            /**
+             * text inputted by the user when the “other” option is selected
+             * (currently unsupported, so just sending null for now)
+             */
+            @SerializedName("other_text")
+            private String mOtherText;
+
+            public SupportDialogSubmitButtonPressed(final String bookingId,
+                                                    final String paymentSupportItemMachineName,
+                                                    final String otherText)
+            {
+                super(EVENT_TYPE);
+                mBookingId = bookingId;
+                mPaymentSupportItemMachineName = paymentSupportItemMachineName;
+                mOtherText = otherText;
+            }
+        }
+    }
+
+    //in the context of the payment batches screen
     public static class BatchSelected extends PaymentsLog
     {
         private static final String EVENT_TYPE = "batch_selected";
@@ -28,7 +125,11 @@ public class PaymentsLog extends EventLog
         }
     }
 
-
+    /*
+    in context of batch payment screen
+    TODO may want to make this extend BatchTransaction log.
+    need discussion on how this log is currently being used
+     */
     public static class DetailSelected extends PaymentsLog
     {
         private static final String EVENT_TYPE = "detail_selected";
@@ -55,6 +156,7 @@ public class PaymentsLog extends EventLog
     }
 
 
+    //in the context of the payment batches screen
     public static class FeeDetailSelected extends PaymentsLog
     {
         private static final String EVENT_TYPE = "fee_detail_selected";

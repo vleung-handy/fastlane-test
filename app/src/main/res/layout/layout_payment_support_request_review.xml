@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/default_padding"
+    android:paddingLeft="@dimen/default_padding"
+    android:paddingRight="@dimen/default_padding"
+    >
+    <TextView
+        android:id="@+id/payment_details_support_request_review_title_text"
+        style="@style/TextView.Large.Bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:textAlignment="center"
+        tools:text="I don't see the deposit in my bank account yet"
+        />
+
+    <TextView
+        android:id="@+id/payment_details_support_request_review_deposit_delay_text"
+        style="@style/TextView.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/payment_support_request_review_dialog_deposit_delay"
+        android:textAlignment="center"
+        />
+
+    <TextView
+        android:id="@+id/payment_details_support_request_review_expected_deposit"
+        style="@style/TextView.Medium.Bold"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_margin"
+        android:textAlignment="center"
+        android:textColor="@color/handy_green"
+        tools:text="Monday, Sept 4, 2017"
+        />
+
+    <TextView
+        style="@style/TextView.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:text="@string/payment_support_request_review_dialog_patience_plea"
+        android:textAlignment="center"
+        />
+
+    <TextView
+        android:id="@+id/payment_details_support_request_review_instructions"
+        style="@style/TextView.Medium"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        tools:text="We will contact you at pro@email.com"
+        />
+</LinearLayout>
+

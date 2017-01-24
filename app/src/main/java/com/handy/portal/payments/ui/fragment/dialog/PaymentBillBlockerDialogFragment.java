@@ -1,4 +1,4 @@
-package com.handy.portal.payments.ui.fragment;
+package com.handy.portal.payments.ui.fragment.dialog;
 
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;

@@ -13,7 +13,7 @@ that is shown when cancellation policy is shown in confirm claim. i don't know h
     >
 
     <ImageView
-        android:id="@+id/confirm_booking_action_dismiss_button"
+        android:id="@+id/confirm_action_dismiss_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="end"
@@ -22,14 +22,14 @@ that is shown when cancellation policy is shown in confirm claim. i don't know h
         />
 
     <ScrollView
-        android:id="@+id/confirm_booking_action_content"
+        android:id="@+id/confirm_action_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
         />
 
     <Button
-        android:id="@+id/confirm_booking_action_button"
+        android:id="@+id/confirm_action_button"
         style="@style/Button.Green.Round"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -40,4 +40,3 @@ that is shown when cancellation policy is shown in confirm claim. i don't know h
         android:textSize="@dimen/large_text_size"
         />
 </LinearLayout>
-

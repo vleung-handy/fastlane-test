@@ -238,7 +238,7 @@
     <string name="current_pay_week">CURRENT PAY WEEK</string>
     <string name="total_earnings">Total Earnings</string>
     <string name="no_more_payments">You have no more payments to load.</string>
-    <string name="expected_deposit">Expect deposit by</string>
+    <string name="expected_deposit_formatted">Expect deposit by %1$s</string>
     <string name="edit_payment_method">Edit Payment Method</string>
     <string name="select_payment_method">Select Payment Method</string>
     <string name="payment_flow_error">Failed to get payment flow</string>
@@ -268,7 +268,7 @@
         Please update your bank details, otherwise %1$s via direct deposit
     </string>
     <string name="payment_bill_blocker_content_colored">we can’t issue payments</string>
-    <string name="payments_bill_blocker_update_now_button">Update Now</string>
+    <string name="payments_update_now">Update Now</string>
     <string name="payments_bill_blocker_remind_me_later_button">REMIND ME LATER</string>
     <string name="bank_account">Bank Account</string>
     <string name="debit_card">Debit Card</string>
@@ -674,4 +674,22 @@
     <string name="copied">Copied</string>
     <string name="error_fetching_available_hours">There was an error fetching your available hours.</string>
     <string name="set_hours_prompt">Set your available hours</string>
+
+    <!-- Payments -->
+    <string name="payment_status_formatted">Status: %1$s</string>
+    <string name="payment_method_info_last4_formatted">•••• %1$s</string>
+    <string name="payment_failed_dialog_dismiss_button">Not Now</string>
+    <string name="payment_support_reasons_dialog_title">Let us know what you need help with</string>
+    <string name="payment_support_reasons_dialog_submit_button">Submit</string>
+    <string name="payment_support_request_review_dialog_deposit_delay"><![CDATA[Deposits take <b>3 to 5 business days</b> to arrive. You should see the deposit by]]></string>
+    <string name="payment_support_request_review_dialog_instructions_formatted">If you still have questions about your deposit, click below to Request a Deposit Review and we will respond shortly to %1$s.</string>
+    <string name="payment_support_request_review_dialog_confirmation_toast">We will review the status of your deposit and email you shortly with an update</string>
+    <string name="payment_support_request_review_dialog_patience_plea">We are not able to speed up this timeline, so if the above date has not passed, please wait patiently.</string>
+    <string name="payment_support_request_review_dialog_confirm_button">Request a Deposit Review</string>
+    <string name="payment_support_redirect_to_booking_transactions_dialog_confirm_button">Got It</string>
+    <string name="payment_support_redirect_to_booking_transactions_dialog_instructions">To get more info about a Job Payment, please tap on the line item in question.</string>
+    <string name="payment_failed_dialog_title">Payment Failed</string>
+    <string name="payment_failed_dialog_message">We attempted to send your deposit to the account you have on file but it failed. You need to update your bank details so that we can send your direct deposit to the right account.</string>
+    <string name="payment_support_button">Payment Support</string>
+
 </resources>

@@ -173,7 +173,6 @@
             </TableRow>
 
         </TableLayout>
-
     </LinearLayout>
 
     <include layout="@layout/element_payment_outstanding_fees"/>

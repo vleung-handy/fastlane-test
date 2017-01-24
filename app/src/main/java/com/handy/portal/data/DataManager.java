@@ -25,19 +25,22 @@ import com.handy.portal.library.util.IDVerificationUtils;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
-import com.handy.portal.proavailability.model.AvailabilityTimelinesWrapper;
-import com.handy.portal.proavailability.model.ProviderAvailability;
 import com.handy.portal.notification.model.NotificationMessages;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
+import com.handy.portal.payments.model.BatchPaymentReviewRequest;
+import com.handy.portal.payments.model.BookingPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.model.PaymentFlow;
 import com.handy.portal.payments.model.PaymentOutstandingFees;
+import com.handy.portal.payments.model.PaymentReviewResponse;
 import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
 import com.handy.portal.payments.model.StripeTokenResponse;
+import com.handy.portal.proavailability.model.AvailabilityTimelinesWrapper;
+import com.handy.portal.proavailability.model.ProviderAvailability;
 import com.handy.portal.retrofit.DynamicEndpoint;
 import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
@@ -227,6 +230,16 @@ public class DataManager
     public void getNeedsToUpdatePaymentInfo(Callback<RequiresPaymentInfoUpdate> cb)
     {
         mService.getNeedsToUpdatePaymentInfo(new NeedsToUpdatePaymentInfoRetroFitCallback(cb));
+    }
+
+    public void submitPaymentBatchReviewRequest(BatchPaymentReviewRequest paymentReviewRequest, Callback<PaymentReviewResponse> cb)
+    {
+        mService.submitBatchPaymentReviewRequest(paymentReviewRequest, new PaymentReviewRequestRetroFitCallback(cb));
+    }
+
+    public void submitBookingPaymentTransactionRequest(BookingPaymentReviewRequest bookingPaymentReviewRequest, Callback<PaymentReviewResponse> cb)
+    {
+        mService.submitBookingPaymentReviewRequest(bookingPaymentReviewRequest, new PaymentReviewRequestRetroFitCallback(cb));
     }
 
     public void getBookingTransactions(String bookingId, String bookingType, Callback<BookingTransactions> cb)
