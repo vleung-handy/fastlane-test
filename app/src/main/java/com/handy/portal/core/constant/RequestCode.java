@@ -11,6 +11,4 @@ public abstract class RequestCode
     public static final int GALLERY = 117;
     public static final int CONFIRM_DISMISS = 118;
     public static final int EDIT_HOURS = 119;
-    public static final int PAYMENT_SUPPORT_ITEM_SUBMITTED = 120;
-    public static final int PAYMENT_SUPPORT_REQUEST_REVIEW_SUBMITTED = 121;
 }

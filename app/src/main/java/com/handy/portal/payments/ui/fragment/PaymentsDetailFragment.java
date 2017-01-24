@@ -15,7 +15,6 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
-import com.handy.portal.core.constant.RequestCode;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ProviderManager;
@@ -261,7 +260,6 @@ public final class PaymentsDetailFragment extends ActionBarFragment
                     DateTimeUtils.formatDayOfWeekMonthDateYear(mNeoPaymentBatch.getExpectedDepositDate()),
                     paymentSupportItem
             );
-            fragment.setTargetFragment(this, RequestCode.PAYMENT_SUPPORT_REQUEST_REVIEW_SUBMITTED);
             FragmentUtils.safeLaunchDialogFragment(fragment,
                     this,
                     PaymentSupportRequestReviewDialogFragment.FRAGMENT_TAG);

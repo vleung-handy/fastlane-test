@@ -80,7 +80,7 @@ public class PaymentSupportReasonsDialogFragment extends ConfirmActionSlideUpDia
             return;
         }
         PaymentSupportItem paymentSupportItem = mRadioButtonToPaymentSupportItemMap.get(checkedRadioButton);
-        Callback callback = (Callback) getTargetFragment();
+        Callback callback = (Callback) getParentFragment();
         callback.onPaymentSupportItemSubmitted(paymentSupportItem);
         dismiss();
     }

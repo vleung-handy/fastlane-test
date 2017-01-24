@@ -72,7 +72,7 @@ public class PaymentSupportRequestReviewDialogFragment extends ConfirmActionSlid
     {
         PaymentSupportItem paymentSupportItem =
                 (PaymentSupportItem) getArguments().getSerializable(BUNDLE_KEY_SELECTED_PAYMENT_SUPPORT_ITEM);
-        ((Callback) getTargetFragment()).onRequestDepositReviewButtonClicked(paymentSupportItem);
+        ((Callback) getParentFragment()).onRequestDepositReviewButtonClicked(paymentSupportItem);
         dismiss();
     }
 
