@@ -76,7 +76,7 @@ public class PaymentsDetailListHeaderView extends LinearLayout
             paymentStatusExpectedDepositDate.setVisibility(VISIBLE);
             paymentStatusExpectedDepositDate.setText(
                     getResources().getString(R.string.expected_deposit_formatted,
-                            DateTimeUtils.SUMMARY_DATE_FORMATTER.format(
+                            DateTimeUtils.formatDayOfWeekMonthDate(
                                     neoPaymentBatch.getExpectedDepositDate())));
         }
     }

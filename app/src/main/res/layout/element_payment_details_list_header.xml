@@ -94,6 +94,8 @@
                 android:id="@+id/payments_detail_list_header_payment_status_payment_method_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/TextView.Medium"
+                android:textColor="@color/subtitle_grey"
                 android:layout_below="@id/payments_detail_list_header_payment_status_expected_deposit_date"
                 android:layout_toRightOf="@id/payment_details_list_header_payment_status_help_button"
                 tools:text="Chase account •••• 1234"
