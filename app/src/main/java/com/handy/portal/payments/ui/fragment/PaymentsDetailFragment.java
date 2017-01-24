@@ -120,6 +120,10 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         {
             paymentDetailExpandableListView.expandGroup(i);
         }
+
+        //adding below in case this gets transformed into an updateDisplay(NeoPaymentBatch) method
+        //not ideal but may be refactored later
+        paymentsDetailListHeaderView.setPaymentStatusHelpButtonVisible(true);
         if (NeoPaymentBatch.Status.FAILED.equalsIgnoreCase(mNeoPaymentBatch.getStatus()))
         {
             //don't show the bottom payment support button if failed
@@ -142,22 +146,31 @@ public final class PaymentsDetailFragment extends ActionBarFragment
                 }
             });
         }
-        else
+        else //if not failed
         {
-            //if not failed, show payment support button
-            mPaymentSupportButton.setVisibility(View.VISIBLE);
-            //show payment support dialog on ? button click
-            paymentsDetailListHeaderView.setCallbackListener(new PaymentsDetailListHeaderView.Callback()
+            if(mNeoPaymentBatch.getPaymentSupportItems() == null
+                    || mNeoPaymentBatch.getPaymentSupportItems().length == 0)
             {
-                @Override
-                public void onRequestStatusSupportButtonClicked()
+                //don't show any payment supports that are based on the payment support items
+                mPaymentSupportButton.setVisibility(View.GONE);
+                paymentsDetailListHeaderView.setPaymentStatusHelpButtonVisible(false);
+            }
+            else
+            {
+                mPaymentSupportButton.setVisibility(View.VISIBLE);
+                //show payment support dialog on ? button click
+                paymentsDetailListHeaderView.setCallbackListener(new PaymentsDetailListHeaderView.Callback()
                 {
-                    PaymentsUtil.showPaymentSupportReasonsDialog(
-                            PaymentsDetailFragment.this,
-                            mNeoPaymentBatch.getPaymentSupportItems()
-                    );
-                }
-            });
+                    @Override
+                    public void onRequestStatusSupportButtonClicked()
+                    {
+                        PaymentsUtil.showPaymentSupportReasonsDialog(
+                                PaymentsDetailFragment.this,
+                                mNeoPaymentBatch.getPaymentSupportItems()
+                        );
+                    }
+                });
+            }
         }
 
     }

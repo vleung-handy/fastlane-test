@@ -150,6 +150,20 @@ public class PaymentsDetailListHeaderView extends LinearLayout
         }
     }
 
+    /**
+     * this is exposed because this button is shown based
+     * on factors outside of the view class's knowledge
+     * (dependent on what the callback needs to do)
+     *
+     * TODO this is a quick-fix but is not ideal because there is already an updateDisplay() method
+     * @param visible
+     */
+    public void setPaymentStatusHelpButtonVisible(boolean visible)
+    {
+        //this is visible by default in the layout xml
+        mPaymentStatusHelpButton.setVisibility(visible ? VISIBLE : GONE);
+    }
+
     public void updateDisplay(@NonNull NeoPaymentBatch neoPaymentBatch)
     {
         paymentDetailDateRangeText.setText(DateTimeUtils.formatDateRange(DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER, neoPaymentBatch.getStartDate(), neoPaymentBatch.getEndDate()));
