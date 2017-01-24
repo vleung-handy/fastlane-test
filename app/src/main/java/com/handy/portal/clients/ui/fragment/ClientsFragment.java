@@ -15,7 +15,6 @@ import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
-import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.view.TabWithCountView;
@@ -49,7 +48,6 @@ public class ClientsFragment extends ActionBarFragment
     @BindView(R.id.clients_tab_layout)
     TabLayout mTabLayout;
 
-    private boolean mShouldShowMessagesTab;
     private TabWithCountView mRequestsTab;
     private TabWithCountView mMessagesTab;
 
@@ -63,13 +61,8 @@ public class ClientsFragment extends ActionBarFragment
     public void onCreate(final Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        final ConfigurationResponse configuration = configManager.getConfigurationResponse();
-        mShouldShowMessagesTab = configuration != null && configuration.isChatEnabled();
         mBus.register(this);
-        if (mShouldShowMessagesTab)
-        {
-            mLayerHelper.registerUnreadConversationsCountChangedListener(this);
-        }
+        mLayerHelper.registerUnreadConversationsCountChangedListener(this);
     }
 
     @Override
@@ -97,23 +90,20 @@ public class ClientsFragment extends ActionBarFragment
         mRequestsTab.setTitle(R.string.job_requests);
         mTabLayout.getTabAt(0).setCustomView(mRequestsTab);
 
-        if (mShouldShowMessagesTab)
-        {
-            mTabLayout.setVisibility(View.VISIBLE);
-            mMessagesTab = new TabWithCountView(getActivity());
-            mMessagesTab.setTitle(R.string.messages);
-            mTabLayout.getTabAt(1).setCustomView(mMessagesTab);
+        mTabLayout.setVisibility(View.VISIBLE);
+        mMessagesTab = new TabWithCountView(getActivity());
+        mMessagesTab.setTitle(R.string.messages);
+        mTabLayout.getTabAt(1).setCustomView(mMessagesTab);
 
-            final Bundle deeplinkData =
-                    getActivity().getIntent().getBundleExtra(BundleKeys.DEEPLINK_DATA);
-            if (deeplinkData != null)
+        final Bundle deeplinkData =
+                getActivity().getIntent().getBundleExtra(BundleKeys.DEEPLINK_DATA);
+        if (deeplinkData != null)
+        {
+            final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
+            if (!TextUtils.isEmpty(deeplink)
+                    && deeplink.endsWith(CONVERSATIONS_DEEPLINK_SUFFIX))
             {
-                final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
-                if (!TextUtils.isEmpty(deeplink)
-                        && deeplink.endsWith(CONVERSATIONS_DEEPLINK_SUFFIX))
-                {
-                    mViewPager.setCurrentItem(1);
-                }
+                mViewPager.setCurrentItem(1);
             }
         }
     }
@@ -128,10 +118,7 @@ public class ClientsFragment extends ActionBarFragment
         {
             mRequestsTab.setCount((long) lastUnreadRequestsCount);
         }
-        if (mShouldShowMessagesTab)
-        {
-            mMessagesTab.setCount(mLayerHelper.getUnreadConversationsCount());
-        }
+        mMessagesTab.setCount(mLayerHelper.getUnreadConversationsCount());
     }
 
     @Subscribe
@@ -155,10 +142,7 @@ public class ClientsFragment extends ActionBarFragment
         {
             super(fragmentManager);
             mFragments.add(ProRequestedJobsFragment.newInstance());
-            if (mShouldShowMessagesTab)
-            {
-                mFragments.add(ClientConversationsFragment.newInstance());
-            }
+            mFragments.add(ClientConversationsFragment.newInstance());
         }
 
         @Override
@@ -177,10 +161,7 @@ public class ClientsFragment extends ActionBarFragment
     @Override
     public void onDestroy()
     {
-        if (mShouldShowMessagesTab)
-        {
-            mLayerHelper.unregisterUnreadConversationsCountChangedListener(this);
-        }
+        mLayerHelper.unregisterUnreadConversationsCountChangedListener(this);
         mBus.unregister(this);
         super.onDestroy();
     }
