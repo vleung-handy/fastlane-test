@@ -82,7 +82,7 @@ public class PaymentsLog extends EventLog
         {
             private static final String EVENT_TYPE = "payment_support_submitted";
 
-            @SerializedName("support_item_machine_name")
+            @SerializedName("machine_name")
             private String mPaymentSupportItemMachineName;
 
             @SerializedName("booking_id")
@@ -107,7 +107,7 @@ public class PaymentsLog extends EventLog
         }
     }
 
-    //payment batches
+    //in the context of the payment batches screen
     public static class BatchSelected extends PaymentsLog
     {
         private static final String EVENT_TYPE = "batch_selected";
@@ -125,8 +125,11 @@ public class PaymentsLog extends EventLog
         }
     }
 
-
-    //payment batch TODO may want to make this extend a sub payments log
+    /*
+    in context of batch payment screen
+    TODO may want to make this extend BatchTransaction log.
+    need discussion on how this log is currently being used
+     */
     public static class DetailSelected extends PaymentsLog
     {
         private static final String EVENT_TYPE = "detail_selected";
@@ -153,7 +156,7 @@ public class PaymentsLog extends EventLog
     }
 
 
-    //payment batches
+    //in the context of the payment batches screen
     public static class FeeDetailSelected extends PaymentsLog
     {
         private static final String EVENT_TYPE = "fee_detail_selected";
