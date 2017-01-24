@@ -12,7 +12,6 @@ import com.handy.portal.library.ui.fragment.dialog.ConfirmActionSlideUpDialogFra
 
 import butterknife.BindView;
 
-//TODO better name?
 public class PaymentSupportRedirectToBookingTransactionsDialogFragment extends ConfirmActionSlideUpDialogFragment
 {
     public static final String FRAGMENT_TAG =

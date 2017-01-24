@@ -71,6 +71,14 @@ public class PaymentSupportReasonsDialogFragment extends ConfirmActionSlideUpDia
     protected void onConfirmActionButtonClicked()
     {
         RadioButton checkedRadioButton = UIUtils.getCheckedRadioButton(mSupportReasonsRadioGroup);
+        if(checkedRadioButton == null)
+        {
+            /*
+            should NEVER happen because confirm button is disabled until a radio button is checked
+            and there's no way to clear a check for the radio group
+             */
+            return;
+        }
         PaymentSupportItem paymentSupportItem = mRadioButtonToPaymentSupportItemMap.get(checkedRadioButton);
         Callback callback = (Callback) getTargetFragment();
         callback.onPaymentSupportItemSubmitted(paymentSupportItem);
