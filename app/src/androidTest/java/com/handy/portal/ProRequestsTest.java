@@ -104,7 +104,7 @@ public class ProRequestsTest
 
         //claim the booking
         onView(withId(R.id.booking_action_button)).perform(click());
-        onView(withId(R.id.confirm_booking_action_button)).perform(click());
+        onView(withId(R.id.confirm_action_button)).perform(click());
 
         //wait for scheduled jobs
         ViewUtil.waitForViewVisible(R.id.scheduled_jobs_list_view, ViewUtil.LONG_MAX_WAIT_TIME_MS);
