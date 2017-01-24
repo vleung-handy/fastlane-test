@@ -58,9 +58,6 @@ public class ConfigurationResponse
     @SerializedName("appsee_analytics_enabled")
     private boolean mAppseeAnalyticsEnabled;
 
-    @SerializedName("chat_enabled")
-    private boolean mChatEnabled;
-
     @SerializedName("login_slt_enabled")
     private boolean mSltEnabled;
 
@@ -163,11 +160,6 @@ public class ConfigurationResponse
     public RequestDismissal getRequestDismissal()
     {
         return mRequestDismissal;
-    }
-
-    public boolean isChatEnabled()
-    {
-        return mChatEnabled;
     }
 
     public boolean isSltEnabled() { return mSltEnabled; }

@@ -132,7 +132,6 @@ public class MainActivity extends BaseActivity
     private boolean mDeeplinkHandled;
     private String mDeeplinkSource;
     private Integer mJobRequestsCount = null;
-    private boolean mShouldIncludeMessagesCount;
 
     @Override
     protected boolean shouldTriggerSetup()
@@ -172,12 +171,7 @@ public class MainActivity extends BaseActivity
             }
         };
 
-        final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
-        mShouldIncludeMessagesCount = configuration != null && configuration.isChatEnabled();
-        if (mShouldIncludeMessagesCount)
-        {
-            mLayerHelper.registerUnreadConversationsCountChangedListener(this);
-        }
+        mLayerHelper.registerUnreadConversationsCountChangedListener(this);
     }
 
     @Override
@@ -225,10 +219,7 @@ public class MainActivity extends BaseActivity
     @Override
     public void onDestroy()
     {
-        if (mShouldIncludeMessagesCount)
-        {
-            mLayerHelper.unregisterUnreadConversationsCountChangedListener(this);
-        }
+        mLayerHelper.unregisterUnreadConversationsCountChangedListener(this);
         super.onDestroy();
     }
 
@@ -550,10 +541,7 @@ public class MainActivity extends BaseActivity
         if (mClientsButton != null && mJobRequestsCount != null)
         {
             int clientsButtonUnreadCount = mJobRequestsCount;
-            if (mShouldIncludeMessagesCount)
-            {
-                clientsButtonUnreadCount += mLayerHelper.getUnreadConversationsCount();
-            }
+            clientsButtonUnreadCount += mLayerHelper.getUnreadConversationsCount();
             mClientsButton.setUnreadCount(clientsButtonUnreadCount);
         }
     }
