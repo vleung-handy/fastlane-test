@@ -29,11 +29,12 @@ public class PaymentsDetailListHeaderViewTest extends RobolectricGradleTestWrapp
     {
         paymentsDetailListHeaderView = (PaymentsDetailListHeaderView) LayoutInflater
                 .from(Robolectric.setupActivity(TestActivity.class)).inflate(R.layout.element_payment_details_list_header, null);
-        expectDepositLayout = paymentsDetailListHeaderView.findViewById(R.id.payments_detail_expect_deposit_date_layout);
+        expectDepositLayout = paymentsDetailListHeaderView.findViewById(R.id.payments_detail_list_header_payment_status_expected_deposit_date);
 
         neoPaymentBatch = mock(NeoPaymentBatch.class);
         Date date = new Date();
         when(neoPaymentBatch.getExpectedDepositDate()).thenReturn(date);
+        when(neoPaymentBatch.getRemainingFeeAmount()).thenReturn(100);
     }
 
     @Test

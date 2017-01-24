@@ -54,6 +54,18 @@ public class NeoPaymentBatch extends PaymentBatch
     @SerializedName("last4")
     private String mPaymentMethodLast4Digits;
 
+    /**
+     * values that getStatus() should return
+     */
+    public static class Status
+    {
+        public static final String FAILED = "Failed";
+        public static final String PENDING = "Pending";
+        public static final String IN_REVIEW = "In Review";
+        public static final String IN_TRANSIT = "In Transit";
+        public static final String PAID = "Paid";
+    }
+
     public String getPaymentMethodLast4Digits()
     {
         return mPaymentMethodLast4Digits;
@@ -62,24 +74,6 @@ public class NeoPaymentBatch extends PaymentBatch
     public PaymentSupportItem[] getPaymentSupportItems()
     {
         return mPaymentSupportItems;
-    }
-
-    public enum Status{
-        FAILED("Failed"),
-        PENDING("Pending"),
-        IN_REVIEW("In Review"),
-        PAID("Paid");
-
-        private final String name;
-        Status(final String name)
-        {
-            this.name = name;
-        }
-        @Override
-        public String toString()
-        {
-            return this.name;
-        }
     }
 
     public int getNumFees()

@@ -121,7 +121,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         {
             paymentDetailExpandableListView.expandGroup(i);
         }
-        if (NeoPaymentBatch.Status.FAILED.toString().equalsIgnoreCase(mNeoPaymentBatch.getStatus()))
+        if (NeoPaymentBatch.Status.FAILED.equalsIgnoreCase(mNeoPaymentBatch.getStatus()))
         {
             //don't show the bottom payment support button if failed
             mPaymentSupportButton.setVisibility(View.GONE);

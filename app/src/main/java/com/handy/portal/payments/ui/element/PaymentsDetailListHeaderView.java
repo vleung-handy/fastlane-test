@@ -65,8 +65,8 @@ public class PaymentsDetailListHeaderView extends LinearLayout
     private void updateExpectedDepositDate(@NonNull NeoPaymentBatch neoPaymentBatch)
     {
         String batchPaymentStatus = neoPaymentBatch.getStatus();
-        if (NeoPaymentBatch.Status.FAILED.name().equalsIgnoreCase(batchPaymentStatus)
-                || NeoPaymentBatch.Status.PAID.name().equalsIgnoreCase(batchPaymentStatus))
+        if (NeoPaymentBatch.Status.FAILED.equalsIgnoreCase(batchPaymentStatus)
+                || NeoPaymentBatch.Status.PAID.equalsIgnoreCase(batchPaymentStatus))
         {
             //don't show the deposit date if payment status is failed or paid
             paymentStatusExpectedDepositDate.setVisibility(GONE);
@@ -92,7 +92,7 @@ public class PaymentsDetailListHeaderView extends LinearLayout
             final int start = paymentStatusFormatted.indexOf(neoPaymentBatch.getStatus());
             final int end = start + neoPaymentBatch.getStatus().length();
             int colorResourceId;
-            if(NeoPaymentBatch.Status.FAILED.toString().equalsIgnoreCase(neoPaymentBatch.getStatus()))
+            if(NeoPaymentBatch.Status.FAILED.equalsIgnoreCase(neoPaymentBatch.getStatus()))
             {
                 colorResourceId = R.color.error_red;
             }
@@ -130,8 +130,13 @@ public class PaymentsDetailListHeaderView extends LinearLayout
 
     private void updatePaymentStatusLayout(@NonNull NeoPaymentBatch neoPaymentBatch)
     {
-        if(neoPaymentBatch.getPaymentGroups() == null
-                || neoPaymentBatch.getPaymentGroups().length == 0)
+        if ((neoPaymentBatch.getPaymentGroups() == null
+                || neoPaymentBatch.getPaymentGroups().length == 0) //unsure if 0 payment groups means 0 payment
+                && neoPaymentBatch.getFeesTotalAmount() == 0
+                && neoPaymentBatch.getNetEarningsTotalAmount() == 0
+                && neoPaymentBatch.getGrossEarningsTotalAmount() == 0
+                && neoPaymentBatch.getRemainingFeeAmount() == 0
+                )
         {
             //don't show the payment status layout if there are no payments
             mPaymentStatusLayout.setVisibility(GONE);
