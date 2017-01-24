@@ -348,7 +348,7 @@
                 android:layout_marginRight="@dimen/default_margin"
                 android:layout_marginTop="@dimen/default_margin_half"
                 android:background="@drawable/border_gray_bg_white"
-                android:text="Payment Support"
+                android:text="@string/payment_support_button"
                 android:textColor="@color/black"
                 />
 

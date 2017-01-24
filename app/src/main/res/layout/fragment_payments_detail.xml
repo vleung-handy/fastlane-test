@@ -32,7 +32,6 @@
 
             </com.handy.portal.payments.ui.element.PaymentDetailExpandableListView>
 
-            <!-- TODO consolidate with the transactions fragment!-->
             <Button
                 android:id="@+id/fragment_payments_detail_support_button"
                 android:layout_width="match_parent"
@@ -44,7 +43,7 @@
                 android:layout_marginLeft="@dimen/default_margin"
                 android:layout_marginRight="@dimen/default_margin"
                 android:layout_marginBottom="@dimen/default_margin"
-                android:text="Payment Support"
+                android:text="@string/payment_support_button"
                 />
         </LinearLayout>
     </ScrollView>

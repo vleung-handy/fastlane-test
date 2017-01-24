@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/default_padding"
-            android:text="@string/payments_bill_blocker_update_now_button"
+            android:text="@string/payments_update_now"
             />
 
         <Button
