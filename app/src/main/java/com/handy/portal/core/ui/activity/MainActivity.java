@@ -132,6 +132,7 @@ public class MainActivity extends BaseActivity
     private boolean mDeeplinkHandled;
     private String mDeeplinkSource;
     private Integer mJobRequestsCount = null;
+    private boolean mUploadProfilePictureBlockerShown = false;
 
     @Override
     protected boolean shouldTriggerSetup()
@@ -281,6 +282,23 @@ public class MainActivity extends BaseActivity
                     FragmentUtils.safeLaunchDialogFragment(paymentBillBlockerDialogFragment, this, PaymentBillBlockerDialogFragment.FRAGMENT_TAG);
                 }
             }
+        }
+        else
+        {
+            showUploadProfilePictureBlockerIfNecessary();
+        }
+    }
+
+    private void showUploadProfilePictureBlockerIfNecessary()
+    {
+        final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
+        if (configuration != null
+                && configuration.isProfilePictureEnabled()
+                && mProviderManager.getCachedProfileImageUrl(THUMBNAIL) == null
+                && !mUploadProfilePictureBlockerShown)
+        {
+            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_PICTURE, true));
+            mUploadProfilePictureBlockerShown = true;
         }
     }
 
