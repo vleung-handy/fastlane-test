@@ -76,6 +76,6 @@ public class InfoDialogFragment extends ConfirmActionSlideUpDialogFragment
     @Override
     protected String getConfirmButtonText()
     {
-        return getString(R.string.payment_support_redirect_to_booking_transactions_dialog_confirm_button);
+        return getString(R.string.info_dialog_confirm_button);
     }
 }
