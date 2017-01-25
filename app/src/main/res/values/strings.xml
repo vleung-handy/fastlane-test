@@ -677,7 +677,7 @@
 
     <!-- Payments -->
     <string name="payment_status_formatted">Status: %1$s</string>
-    <string name="payment_method_info_last4_formatted">•••• %1$s</string>
+    <string name="payment_method_info_last4_formatted">Account •••• %1$s</string>
     <string name="payment_failed_dialog_dismiss_button">Not Now</string>
     <string name="payment_support_reasons_dialog_title">Let us know what you need help with</string>
     <string name="payment_support_reasons_dialog_submit_button">Submit</string>
