@@ -30,8 +30,6 @@ public class PaymentDetailExpandableListView extends ExpandableListView
         PaymentDetailExpandableListAdapter itemsAdapter = new PaymentDetailExpandableListAdapter(
                 neoPaymentBatch);
         setAdapter(itemsAdapter);
-
-
     }
 
 }
