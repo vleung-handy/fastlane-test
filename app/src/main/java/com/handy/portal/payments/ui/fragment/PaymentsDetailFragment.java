@@ -7,9 +7,11 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.LinearLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
@@ -22,6 +24,7 @@ import com.handy.portal.core.model.ProviderProfile;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
+import com.handy.portal.library.ui.fragment.dialog.InfoDialogFragment;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.TextUtils;
@@ -40,7 +43,6 @@ import com.handy.portal.payments.ui.element.PaymentDetailExpandableListView;
 import com.handy.portal.payments.ui.element.PaymentsDetailListHeaderView;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentFailedDialogFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportReasonsDialogFragment;
-import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportRedirectToBookingTransactionsDialogFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportRequestReviewDialogFragment;
 
 import org.greenrobot.eventbus.EventBus;
@@ -49,7 +51,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public final class PaymentsDetailFragment extends ActionBarFragment
         implements ExpandableListView.OnChildClickListener,
@@ -60,8 +61,6 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     PaymentDetailExpandableListView paymentDetailExpandableListView; //using ExpandableListView because it is the only ListView that offers group view support
     @BindView(R.id.payment_details_list_header)
     PaymentsDetailListHeaderView paymentsDetailListHeaderView;
-    @BindView(R.id.fragment_payments_detail_support_button)
-    Button mPaymentSupportButton;
     @BindView(R.id.fragment_payments_detail_content)
     CoordinatorLayout mMainContentLayout;
 
@@ -74,6 +73,14 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     PaymentsManager mPaymentsManager;
     @Inject
     EventBus mBus;
+
+    /*
+    can't include this view's layout xml
+    because adding as footer of payment list view
+    as part of hack to allow payment support button
+    to scroll along with it
+     */
+    private Button mPaymentSupportButton;
 
     @Override
     protected MainViewPage getAppPage()
@@ -106,6 +113,32 @@ public final class PaymentsDetailFragment extends ActionBarFragment
                     .inflate(R.layout.fragment_payments_detail, container, false);
         }
         ButterKnife.bind(this, mFragmentView);
+
+        //TODO quick-fix for release, clean this and related code up later
+        if(mPaymentSupportButton == null) //needed to prevent multiple creations of this because view is not always re-inflated
+        {
+            //HACK to allow payment support button to scroll along with the expandable list view
+            mPaymentSupportButton = (Button) inflater.inflate(R.layout.element_payment_support_button, paymentDetailExpandableListView, false);
+
+            //hacky - need to wrap payment support inside this layout to set margins because AbsList.LayoutParams doesn't have margins
+            LinearLayout expandableListFooterView = new LinearLayout(getContext());
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
+            int defaultMargin = getResources().getDimensionPixelSize(R.dimen.default_margin);
+            int defaultMarginHalf = getResources().getDimensionPixelSize(R.dimen.default_margin_half);
+            layoutParams.setMargins(defaultMargin, defaultMarginHalf, defaultMargin, defaultMargin);
+            mPaymentSupportButton.setLayoutParams(layoutParams);
+            expandableListFooterView.addView(mPaymentSupportButton);
+
+            mPaymentSupportButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v)
+                {
+                    PaymentsUtil.showPaymentSupportReasonsDialog(PaymentsDetailFragment.this, mNeoPaymentBatch.getPaymentSupportItems());
+                }
+            });
+            paymentDetailExpandableListView.addFooterView(expandableListFooterView);
+        }
+
         return mFragmentView;
     }
 
@@ -209,12 +242,6 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         bus.post(event);
     }
 
-    @OnClick(R.id.fragment_payments_detail_support_button)
-    public void onPaymentSupportButtonClicked()
-    {
-        PaymentsUtil.showPaymentSupportReasonsDialog(this, mNeoPaymentBatch.getPaymentSupportItems());
-    }
-
     /**
      * show a new screen depending on which support item was submitted
      * @param paymentSupportItem
@@ -238,8 +265,12 @@ public final class PaymentsDetailFragment extends ActionBarFragment
                 showRequestPaymentReviewDialogFragment(paymentSupportItem);
                 break;
             case PaymentSupportItem.MachineName.INCORRECT_AMOUNT:
+                showRedirectToBookingTransactionsDialogFragment(paymentSupportItem.getDisplayName(),
+                        getString(R.string.payment_support_redirect_to_booking_transactions_dialog_payment_instructions));
+                break;
             case PaymentSupportItem.MachineName.INCORRECT_FEE:
-                showRedirectToBookingTransactionsDialogFragment(paymentSupportItem);
+                showRedirectToBookingTransactionsDialogFragment(paymentSupportItem.getDisplayName(),
+                        getString(R.string.payment_support_redirect_to_booking_transactions_dialog_fee_instructions));
                 break;
             default:
                 //still show request payment review dialog if we get unrecognized machine name
@@ -281,17 +312,15 @@ public final class PaymentsDetailFragment extends ActionBarFragment
 
     /**
      * shows a dialog to prompt user to go to the booking transactions page
-     * @param paymentSupportItem
      */
-    private void showRedirectToBookingTransactionsDialogFragment(PaymentSupportItem paymentSupportItem)
+    private void showRedirectToBookingTransactionsDialogFragment(@NonNull String titleText, @NonNull String messageText)
     {
-        if (getChildFragmentManager().findFragmentByTag(PaymentSupportRedirectToBookingTransactionsDialogFragment.FRAGMENT_TAG) == null)
+        if (getChildFragmentManager().findFragmentByTag(InfoDialogFragment.FRAGMENT_TAG) == null)
         {
-            String paymentSupportItemDisplayName = paymentSupportItem.getDisplayName();
-            final DialogFragment fragment = PaymentSupportRedirectToBookingTransactionsDialogFragment.newInstance(paymentSupportItemDisplayName);
+            final DialogFragment fragment = InfoDialogFragment.newInstance(titleText, messageText);
             FragmentUtils.safeLaunchDialogFragment(fragment,
                     this,
-                    PaymentSupportRedirectToBookingTransactionsDialogFragment.FRAGMENT_TAG);
+                    InfoDialogFragment.FRAGMENT_TAG);
         }
     }
 
