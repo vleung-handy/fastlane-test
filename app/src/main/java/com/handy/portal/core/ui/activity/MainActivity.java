@@ -40,6 +40,7 @@ import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.core.model.ProviderProfile;
 import com.handy.portal.core.ui.element.bookings.BookingMapProvider;
+import com.handy.portal.core.ui.fragment.EditPhotoFragment;
 import com.handy.portal.library.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.handy.portal.library.ui.layout.TabbedLayout;
 import com.handy.portal.library.ui.widget.TabButton;
@@ -297,7 +298,9 @@ public class MainActivity extends BaseActivity
                 && mProviderManager.getCachedProfileImageUrl(THUMBNAIL) == null
                 && !mUploadProfilePictureBlockerShown)
         {
-            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_PICTURE, true));
+            final Bundle arguments = new Bundle();
+            arguments.putSerializable(BundleKeys.NAVIGATION_SOURCE, EditPhotoFragment.Source.MAIN);
+            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_PICTURE, arguments, true));
             mUploadProfilePictureBlockerShown = true;
         }
     }
