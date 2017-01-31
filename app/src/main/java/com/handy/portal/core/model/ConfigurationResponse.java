@@ -67,6 +67,9 @@ public class ConfigurationResponse
     @SerializedName("pro_availability_schedule_enabled")
     private boolean mAvailableHoursEnabled;
 
+    @SerializedName("portal_profile_share_enabled")
+    private boolean mProfileShareEnabled;
+
     public boolean isAppseeAnalyticsEnabled()
     {
         return mAppseeAnalyticsEnabled;
@@ -172,6 +175,11 @@ public class ConfigurationResponse
     public boolean isAvailableHoursEnabled()
     {
         return mAvailableHoursEnabled;
+    }
+
+    public boolean isProfileShareEnabled()
+    {
+        return mProfileShareEnabled;
     }
 
     public static class HelpCenterInfo

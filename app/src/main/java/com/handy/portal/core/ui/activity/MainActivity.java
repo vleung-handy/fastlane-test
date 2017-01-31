@@ -1,5 +1,6 @@
 package com.handy.portal.core.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -11,9 +12,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.view.View;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -29,6 +32,7 @@ import com.handy.portal.bookings.ui.element.BookingMapView;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.constant.RequestCode;
 import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
@@ -46,7 +50,11 @@ import com.handy.portal.library.ui.layout.TabbedLayout;
 import com.handy.portal.library.ui.widget.TabButton;
 import com.handy.portal.library.ui.widget.TabButtonGroup;
 import com.handy.portal.library.util.FragmentUtils;
+import com.handy.portal.library.util.ShareUtils;
+import com.handy.portal.library.util.SystemUtils;
+import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
 import com.handy.portal.notification.NotificationUtils;
 import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragment;
@@ -117,6 +125,8 @@ public class MainActivity extends BaseActivity
     TabbedLayout mContentFrame;
     @BindView(R.id.provider_image)
     ImageView mProImage;
+    @BindView(R.id.navigation_header_cta_button)
+    Button mNavigationHeaderCtaButton;
 
     private BookingMapView mBookingMapView;
 
@@ -208,6 +218,7 @@ public class MainActivity extends BaseActivity
 
         initProName();
         initProImage(null);
+        initNavigationHeaderCtaButton();
     }
 
     @Override
@@ -348,6 +359,18 @@ public class MainActivity extends BaseActivity
         }
     }
 
+    private void initNavigationHeaderCtaButton()
+    {
+        if (shouldEnableProfileShareButton())
+        {
+            mNavigationHeaderCtaButton.setText(R.string.share_profile);
+        }
+        else
+        {
+            mNavigationHeaderCtaButton.setText(R.string.edit_profile);
+        }
+    }
+
     private void handleDeeplinkIfNecessary()
     {
         if (!mDeeplinkHandled)
@@ -395,8 +418,64 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    @OnClick({R.id.provider_image, R.id.navigation_header_edit_profile_button})
-    public void onEditProfileClicked()
+    @OnClick(R.id.navigation_header_cta_button)
+    public void onNavigationHeaderCtaClicked()
+    {
+        if (shouldEnableProfileShareButton())
+        {
+            bus.post(new LogEvent.AddLogEvent(new ProfileLog.ProfileShareClicked()));
+
+            final Intent dummyIntent = new Intent();
+            dummyIntent.setAction(Intent.ACTION_SEND);
+            dummyIntent.setType("text/plain");
+
+            final Intent activityPickerIntent = new Intent();
+            activityPickerIntent.setAction(Intent.ACTION_PICK_ACTIVITY);
+            activityPickerIntent.putExtra(Intent.EXTRA_TITLE, getString(R.string.share_with));
+            activityPickerIntent.putExtra(Intent.EXTRA_INTENT, dummyIntent);
+            startActivityForResult(activityPickerIntent, RequestCode.PICK_ACTIVITY);
+        }
+        else
+        {
+            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_UPDATE, true));
+        }
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent intent)
+    {
+        if (requestCode == RequestCode.PICK_ACTIVITY
+                && resultCode == Activity.RESULT_OK
+                && intent != null)
+        {
+            final ProviderProfile providerProfile = mProviderManager.getCachedProviderProfile();
+            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.book_my_service));
+            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.profile_share_text_formatted,
+                    providerProfile.getProviderPersonalInfo().getFirstName(),
+                    providerProfile.getReferralInfo().getProfileUrl()));
+            Utils.safeLaunchIntent(intent, this);
+
+            final String channel = ShareUtils.getChannelFromIntent(this, intent);
+            final String appName = SystemUtils.getAppNameFromIntent(this, intent);
+            bus.post(new LogEvent.AddLogEvent(new ProfileLog.ProfileShareSubmitted(
+                    appName, channel)));
+        }
+        super.onActivityResult(requestCode, resultCode, intent);
+    }
+
+    private boolean shouldEnableProfileShareButton()
+    {
+        final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
+        final ProviderProfile providerProfile = mProviderManager.getCachedProviderProfile();
+        return configuration != null
+                && configuration.isProfileShareEnabled()
+                && providerProfile != null
+                && providerProfile.getReferralInfo() != null
+                && !TextUtils.isEmpty(providerProfile.getReferralInfo().getProfileUrl());
+    }
+
+    @OnClick(R.id.provider_image)
+    public void onProfileImageClicked()
     {
         bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_UPDATE, true));
     }

@@ -134,4 +134,31 @@ public class ProfileLog extends EventLog
             mErrorMessage = errorMessage;
         }
     }
+
+    public static class ProfileShareClicked extends ProfileLog
+    {
+        private static final String EVENT_TYPE = "profile_share_clicked";
+
+        public ProfileShareClicked()
+        {
+            super(EVENT_TYPE);
+        }
+    }
+
+    public static class ProfileShareSubmitted extends ProfileLog
+    {
+        private static final String EVENT_TYPE = "profile_share_submitted";
+
+        @SerializedName("app_name")
+        private final String mAppName;
+        @SerializedName("channel")
+        private final String mChannel;
+
+        public ProfileShareSubmitted(final String appName, final String channel)
+        {
+            super(EVENT_TYPE);
+            mAppName = appName;
+            mChannel = channel;
+        }
+    }
 }

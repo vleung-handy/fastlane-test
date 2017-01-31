@@ -7,24 +7,31 @@ import java.io.Serializable;
 public class ReferralInfo implements Serializable
 {
     @SerializedName("referral_code")
-    private String referralCode;
+    private String mReferralCode;
     @SerializedName("referral_link")
-    private String referralLink;
+    private String mReferralLink;
     @SerializedName("bonus_amount")
-    private String bonusAmount;
+    private String mBonusAmount;
+    @SerializedName("profile_url")
+    private String mProfileUrl;
 
     public String getReferralCode()
     {
-        return referralCode;
+        return mReferralCode;
     }
 
     public String getReferralLink()
     {
-        return referralLink;
+        return mReferralLink;
     }
 
     public String getBonusAmount()
     {
-        return bonusAmount;
+        return mBonusAmount;
+    }
+
+    public String getProfileUrl()
+    {
+        return mProfileUrl;
     }
 }
