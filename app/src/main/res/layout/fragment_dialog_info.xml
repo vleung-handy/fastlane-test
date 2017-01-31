@@ -11,7 +11,7 @@
     android:paddingRight="@dimen/default_padding"
     >
     <TextView
-        android:id="@+id/payment_support_redirect_to_booking_transactions_title_text"
+        android:id="@+id/fragment_dialog_info_title_text"
         android:textAlignment="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -20,11 +20,12 @@
         android:layout_marginBottom="@dimen/default_margin"
         />
     <TextView
+        android:id="@+id/fragment_dialog_info_message_text"
         android:textAlignment="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         style="@style/TextView.Medium"
-        android:text="@string/payment_support_redirect_to_booking_transactions_dialog_instructions"
+        tools:text="@string/payment_support_redirect_to_booking_transactions_dialog_payment_instructions"
         />
 </LinearLayout>
 

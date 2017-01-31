@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Button
+    android:id="@+id/payment_support_button"
+    style="@style/Button.Grey.Round"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/border_gray_bg_white"
+    android:text="@string/payment_support_button"
+    android:textColor="@color/black"
+    />
