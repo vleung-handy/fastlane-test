@@ -292,7 +292,7 @@
     <string name="resupply_kit_on_its_way">Your resupply kit is on its way!</string>
     <string name="your_contact_information">Contact information</string>
     <string name="edit_your_profile">Edit Your Profile</string>
-    <string name="share_profile">Share Profile</string>
+    <string name="share_profile">Share Your Profile</string>
     <string name="edit_profile">Edit Profile</string>
     <string name="update_profile_success">Successfully updated profile information</string>
     <string name="update_profile_failed">Failed to update profile information</string>
