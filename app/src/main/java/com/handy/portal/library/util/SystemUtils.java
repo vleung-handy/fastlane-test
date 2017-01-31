@@ -4,12 +4,15 @@ import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 /**
  * utilities to access information about the system
@@ -88,5 +91,26 @@ public final class SystemUtils
 
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null && activeNetwork.isConnectedOrConnecting();
+    }
+
+    @Nullable
+    public static String getAppNameFromIntent(final Context context, final Intent intent)
+    {
+        final PackageManager packageManager = context.getPackageManager();
+        final String packageName = intent.getComponent().getPackageName();
+        ApplicationInfo applicationInfo = null;
+        if (!android.text.TextUtils.isEmpty(packageName))
+        {
+            try
+            {
+                applicationInfo = packageManager.getApplicationInfo(packageName, 0);
+            }
+            catch (final PackageManager.NameNotFoundException e)
+            {
+                applicationInfo = null;
+            }
+        }
+        return applicationInfo != null ?
+                (String) packageManager.getApplicationLabel(applicationInfo) : null;
     }
 }

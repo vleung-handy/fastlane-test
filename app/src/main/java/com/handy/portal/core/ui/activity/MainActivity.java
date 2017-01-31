@@ -1,5 +1,6 @@
 package com.handy.portal.core.ui.activity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
@@ -31,6 +32,7 @@ import com.handy.portal.bookings.ui.element.BookingMapView;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.constant.RequestCode;
 import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
@@ -48,8 +50,11 @@ import com.handy.portal.library.ui.layout.TabbedLayout;
 import com.handy.portal.library.ui.widget.TabButton;
 import com.handy.portal.library.ui.widget.TabButtonGroup;
 import com.handy.portal.library.util.FragmentUtils;
+import com.handy.portal.library.util.ShareUtils;
+import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
 import com.handy.portal.notification.NotificationUtils;
 import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragment;
@@ -418,20 +423,44 @@ public class MainActivity extends BaseActivity
     {
         if (shouldEnableProfileShareButton())
         {
-            final ProviderProfile providerProfile = mProviderManager.getCachedProviderProfile();
-            final Intent sendIntent = new Intent();
-            sendIntent.setAction(Intent.ACTION_SEND);
-            sendIntent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.book_my_service));
-            sendIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.profile_share_text_formatted,
-                    providerProfile.getProviderPersonalInfo().getFirstName(),
-                    providerProfile.getReferralInfo().getProfileUrl()));
-            sendIntent.setType("text/plain");
-            Utils.safeLaunchIntent(Intent.createChooser(sendIntent, getString(R.string.share_with)), this);
+            bus.post(new LogEvent.AddLogEvent(new ProfileLog.ProfileShareClicked()));
+
+            final Intent dummyIntent = new Intent();
+            dummyIntent.setAction(Intent.ACTION_SEND);
+            dummyIntent.setType("text/plain");
+
+            final Intent activityPickerIntent = new Intent();
+            activityPickerIntent.setAction(Intent.ACTION_PICK_ACTIVITY);
+            activityPickerIntent.putExtra(Intent.EXTRA_TITLE, getString(R.string.share_with));
+            activityPickerIntent.putExtra(Intent.EXTRA_INTENT, dummyIntent);
+            startActivityForResult(activityPickerIntent, RequestCode.PICK_ACTIVITY);
         }
         else
         {
             bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_UPDATE, true));
         }
+    }
+
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent intent)
+    {
+        if (requestCode == RequestCode.PICK_ACTIVITY
+                && resultCode == Activity.RESULT_OK
+                && intent != null)
+        {
+            final ProviderProfile providerProfile = mProviderManager.getCachedProviderProfile();
+            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.book_my_service));
+            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.profile_share_text_formatted,
+                    providerProfile.getProviderPersonalInfo().getFirstName(),
+                    providerProfile.getReferralInfo().getProfileUrl()));
+            Utils.safeLaunchIntent(intent, this);
+
+            final String channel = ShareUtils.getChannelFromIntent(this, intent);
+            final String appName = SystemUtils.getAppNameFromIntent(this, intent);
+            bus.post(new LogEvent.AddLogEvent(new ProfileLog.ProfileShareSubmitted(
+                    appName, channel)));
+        }
+        super.onActivityResult(requestCode, resultCode, intent);
     }
 
     private boolean shouldEnableProfileShareButton()
