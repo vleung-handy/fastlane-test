@@ -483,7 +483,8 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     public void onAvailableHoursClicked()
     {
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.SetDayAvailabilitySelected(
-                mAvailabilityForSelectedDay.getDateString())));
+                mSelectedDay != null ? DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(mSelectedDay)
+                        : null)));
         final Bundle bundle = new Bundle();
         bundle.putSerializable(BundleKeys.DATE, mSelectedDay);
         bundle.putSerializable(BundleKeys.DAILY_AVAILABILITY_TIMELINE, mAvailabilityForSelectedDay);
