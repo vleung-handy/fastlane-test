@@ -422,14 +422,17 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
 
     private void showJobSupportSlideUpPanel()
     {
-        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.JobSupportSelected(mBooking.getId())));
+        if (mBooking != null)
+        {
+            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.JobSupportSelected(mBooking.getId())));
 
-        LinearLayout layout = UIUtils.createLinearLayout(getContext(), LinearLayout.VERTICAL);
-        layout.addView(new SupportActionContainerView(
-                getContext(), SupportActionUtils.ETA_ACTION_NAMES, mBooking));
-        layout.addView(new SupportActionContainerView(
-                getContext(), SupportActionUtils.ISSUE_ACTION_NAMES, mBooking));
-        mSlideUpPanelContainer.showPanel(R.string.job_support, layout);
+            LinearLayout layout = UIUtils.createLinearLayout(getContext(), LinearLayout.VERTICAL);
+            layout.addView(new SupportActionContainerView(
+                    getContext(), SupportActionUtils.ETA_ACTION_NAMES, mBooking));
+            layout.addView(new SupportActionContainerView(
+                    getContext(), SupportActionUtils.ISSUE_ACTION_NAMES, mBooking));
+            mSlideUpPanelContainer.showPanel(R.string.job_support, layout);
+        }
     }
 
     @Subscribe
