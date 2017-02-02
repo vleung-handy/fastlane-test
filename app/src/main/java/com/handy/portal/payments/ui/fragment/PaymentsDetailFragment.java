@@ -333,6 +333,8 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         BatchPaymentReviewRequest paymentReviewRequest
                 = new BatchPaymentReviewRequest(
                 String.valueOf(mNeoPaymentBatch.getBatchId()),
+                mNeoPaymentBatch.getStartDate(),
+                mNeoPaymentBatch.getEndDate(),
                 paymentSupportItem.getMachineName(),
                 null
         );
