@@ -310,7 +310,7 @@ public class MainActivity extends BaseActivity
                 && !mUploadProfilePictureBlockerShown)
         {
             final Bundle arguments = new Bundle();
-            arguments.putSerializable(BundleKeys.NAVIGATION_SOURCE, EditPhotoFragment.Source.MAIN);
+            arguments.putSerializable(BundleKeys.NAVIGATION_SOURCE, EditPhotoFragment.Source.APP);
             bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_PICTURE, arguments, true));
             mUploadProfilePictureBlockerShown = true;
         }
