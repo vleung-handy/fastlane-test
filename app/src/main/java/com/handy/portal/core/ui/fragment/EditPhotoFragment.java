@@ -65,7 +65,7 @@ public class EditPhotoFragment extends ActionBarFragment
 
     public enum Source
     {
-        ONBOARDING, PROFILE, MAIN
+        ONBOARDING, PROFILE, APP
     }
 
 
