@@ -97,8 +97,6 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
     Button mPaymentSupportButton;
     @BindView(R.id.fragment_booking_transactions_content)
     CoordinatorLayout mContentLayout;
-    //TODO consolidate with booking details frag and visibility conditional
-
 
     private BookingTransactions mBookingTransactions;
     private Booking mBooking;
@@ -227,7 +225,7 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
         BookingPaymentReviewRequest paymentReviewRequest
                 = new BookingPaymentReviewRequest(
                 String.valueOf(mBooking.getId()),
-                mBooking.getType().toString(),
+                mBooking.getType().toString().toLowerCase(),
                 paymentSupportItem.getMachineName(),
                 null);
 
@@ -238,9 +236,6 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
                         null
                 )));
 
-        //TODO: BACKEND NOT READY.
-        //the payment support button won't show and this logic won't get triggered
-        //until backend ready and tested against this
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         mPaymentsManager.submitBookingPaymentReviewRequest(paymentReviewRequest, new FragmentSafeCallback<PaymentReviewResponse>(this)
         {
