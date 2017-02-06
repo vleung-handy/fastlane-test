@@ -1,37 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout
+    android:id="@+id/fragment_payments_detail_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fragment_payments_detail_content"
     >
+
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:fillViewport="true"
-        android:overScrollMode="always">
+        android:overScrollMode="always"
+        >
 
-        <LinearLayout
+        <com.handy.portal.payments.ui.element.PaymentDetailExpandableListView
+            android:id="@+id/payments_detail_list_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:divider="@color/list_divider"
+            android:dividerHeight="1px"
+            android:footerDividersEnabled="true"
+            android:groupIndicator="@color/transparent"
+            android:headerDividersEnabled="true"
+            android:paddingTop="1dp"
+            android:transcriptMode="disabled"
+            >
 
-            <include layout="@layout/element_payment_details_list_header"/>
-
-            <com.handy.portal.payments.ui.element.PaymentDetailExpandableListView
-                android:id="@+id/payments_detail_list_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:divider="@color/list_divider"
-                android:dividerHeight="1px"
-                android:footerDividersEnabled="true"
-                android:groupIndicator="@color/transparent"
-                android:headerDividersEnabled="true"
-                android:paddingTop="1dp"
-                android:transcriptMode="disabled">
-
-            </com.handy.portal.payments.ui.element.PaymentDetailExpandableListView>
-        </LinearLayout>
+        </com.handy.portal.payments.ui.element.PaymentDetailExpandableListView>
     </ScrollView>
 
 </android.support.design.widget.CoordinatorLayout>
