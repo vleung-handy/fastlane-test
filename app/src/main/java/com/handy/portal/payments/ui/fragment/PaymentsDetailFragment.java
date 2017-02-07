@@ -7,11 +7,8 @@ import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.Button;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
-import android.widget.LinearLayout;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
@@ -59,8 +56,6 @@ public final class PaymentsDetailFragment extends ActionBarFragment
 {
     @BindView(R.id.payments_detail_list_view)
     PaymentDetailExpandableListView paymentDetailExpandableListView; //using ExpandableListView because it is the only ListView that offers group view support
-    @BindView(R.id.payment_details_list_header)
-    PaymentsDetailListHeaderView paymentsDetailListHeaderView;
     @BindView(R.id.fragment_payments_detail_content)
     CoordinatorLayout mMainContentLayout;
 
@@ -73,14 +68,6 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     PaymentsManager mPaymentsManager;
     @Inject
     EventBus mBus;
-
-    /*
-    can't include this view's layout xml
-    because adding as footer of payment list view
-    as part of hack to allow payment support button
-    to scroll along with it
-     */
-    private Button mPaymentSupportButton;
 
     @Override
     protected MainViewPage getAppPage()
@@ -113,32 +100,6 @@ public final class PaymentsDetailFragment extends ActionBarFragment
                     .inflate(R.layout.fragment_payments_detail, container, false);
         }
         ButterKnife.bind(this, mFragmentView);
-
-        //TODO quick-fix for release, clean this and related code up later
-        if(mPaymentSupportButton == null) //needed to prevent multiple creations of this because view is not always re-inflated
-        {
-            //HACK to allow payment support button to scroll along with the expandable list view
-            mPaymentSupportButton = (Button) inflater.inflate(R.layout.element_payment_support_button, paymentDetailExpandableListView, false);
-
-            //hacky - need to wrap payment support inside this layout to set margins because AbsList.LayoutParams doesn't have margins
-            LinearLayout expandableListFooterView = new LinearLayout(getContext());
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(AbsListView.LayoutParams.MATCH_PARENT, AbsListView.LayoutParams.WRAP_CONTENT);
-            int defaultMargin = getResources().getDimensionPixelSize(R.dimen.default_margin);
-            int defaultMarginHalf = getResources().getDimensionPixelSize(R.dimen.default_margin_half);
-            layoutParams.setMargins(defaultMargin, defaultMarginHalf, defaultMargin, defaultMargin);
-            mPaymentSupportButton.setLayoutParams(layoutParams);
-            expandableListFooterView.addView(mPaymentSupportButton);
-
-            mPaymentSupportButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View v)
-                {
-                    PaymentsUtil.showPaymentSupportReasonsDialog(PaymentsDetailFragment.this, mNeoPaymentBatch.getPaymentSupportItems());
-                }
-            });
-            paymentDetailExpandableListView.addFooterView(expandableListFooterView);
-        }
-
         return mFragmentView;
     }
 
@@ -147,8 +108,17 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     {
         super.onViewCreated(view, savedInstanceState);
         paymentDetailExpandableListView.setOnChildClickListener(this);
-        paymentsDetailListHeaderView.updateDisplay(mNeoPaymentBatch);
         paymentDetailExpandableListView.updateData(mNeoPaymentBatch);
+        paymentDetailExpandableListView.getPaymentSupportButton().setOnClickListener(
+                new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(final View v)
+                    {
+                        PaymentsUtil.showPaymentSupportReasonsDialog(PaymentsDetailFragment.this, mNeoPaymentBatch.getPaymentSupportItems());
+                    }
+                }
+        );
         for (int i = 0; i < mNeoPaymentBatch.getPaymentGroups().length; i++)
         {
             paymentDetailExpandableListView.expandGroup(i);
@@ -156,13 +126,13 @@ public final class PaymentsDetailFragment extends ActionBarFragment
 
         //adding below in case this gets transformed into an updateDisplay(NeoPaymentBatch) method
         //not ideal but may be refactored later
-        paymentsDetailListHeaderView.setPaymentStatusHelpButtonVisible(true);
+        paymentDetailExpandableListView.getHeaderView().setPaymentStatusHelpButtonVisible(true);
         if (NeoPaymentBatch.Status.FAILED.equalsIgnoreCase(mNeoPaymentBatch.getStatus()))
         {
             //don't show the bottom payment support button if failed
-            mPaymentSupportButton.setVisibility(View.GONE);
+            paymentDetailExpandableListView.getPaymentSupportButton().setVisibility(View.GONE);
             //show dialog on ? button click that suggests why payment failed and directs user to update payment method
-            paymentsDetailListHeaderView.setCallbackListener(new PaymentsDetailListHeaderView.Callback()
+            paymentDetailExpandableListView.getHeaderView().setCallbackListener(new PaymentsDetailListHeaderView.Callback()
             {
                 @Override
                 public void onRequestStatusSupportButtonClicked()
@@ -185,14 +155,14 @@ public final class PaymentsDetailFragment extends ActionBarFragment
                     || mNeoPaymentBatch.getPaymentSupportItems().length == 0)
             {
                 //don't show any payment supports that are based on the payment support items
-                mPaymentSupportButton.setVisibility(View.GONE);
-                paymentsDetailListHeaderView.setPaymentStatusHelpButtonVisible(false);
+                paymentDetailExpandableListView.getPaymentSupportButton().setVisibility(View.GONE);
+                paymentDetailExpandableListView.getHeaderView().setPaymentStatusHelpButtonVisible(false);
             }
             else
             {
-                mPaymentSupportButton.setVisibility(View.VISIBLE);
+                paymentDetailExpandableListView.getPaymentSupportButton().setVisibility(View.VISIBLE);
                 //show payment support dialog on ? button click
-                paymentsDetailListHeaderView.setCallbackListener(new PaymentsDetailListHeaderView.Callback()
+                paymentDetailExpandableListView.getHeaderView().setCallbackListener(new PaymentsDetailListHeaderView.Callback()
                 {
                     @Override
                     public void onRequestStatusSupportButtonClicked()
