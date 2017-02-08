@@ -18,7 +18,6 @@ import com.handy.portal.R;
 import com.handy.portal.clients.ui.adapter.ConversationsAdapter;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.ConversationsLog;
 import com.handybook.shared.layer.LayerConstants;
 import com.handybook.shared.layer.LayerHelper;
@@ -35,7 +34,6 @@ import static com.handybook.shared.layer.LayerConstants.LAYER_CONVERSATION_KEY;
 public class ClientConversationsFragment extends InjectedFragment
         implements ConversationsAdapter.Listener
 {
-    private static final String NAVIGATION_PAGE_NAME = "conversations";
     private static final int REFRESH_DURATION_MILLIS = 3000;
 
     @Inject
@@ -66,7 +64,6 @@ public class ClientConversationsFragment extends InjectedFragment
     };
 
     private ConversationsAdapter mAdapter;
-    private boolean mIsNavigationLogged = false;
     private boolean mIsConversationsShownLogged = false;
 
     public static ClientConversationsFragment newInstance()
@@ -127,7 +124,6 @@ public class ClientConversationsFragment extends InjectedFragment
         if (getUserVisibleHint())
         {
             clearNotifications();
-            logNavigation();
             logConversationsShown();
         }
         super.onResume();
@@ -159,17 +155,7 @@ public class ClientConversationsFragment extends InjectedFragment
         if (isVisibleToUser)
         {
             clearNotifications();
-            logNavigation();
             logConversationsShown();
-        }
-    }
-
-    private void logNavigation()
-    {
-        if (bus != null && !mIsNavigationLogged)
-        {
-            bus.post(new LogEvent.AddLogEvent(new AppLog.Navigation(NAVIGATION_PAGE_NAME)));
-            mIsNavigationLogged = true;
         }
     }
 

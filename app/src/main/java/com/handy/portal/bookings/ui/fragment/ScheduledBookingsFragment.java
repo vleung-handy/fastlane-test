@@ -395,7 +395,6 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
     {
         super.afterDisplayBookings(bookingsForDay, dateOfBookings);
-        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.DateClicked(dateOfBookings, bookingsForDay.size())));
 
         //Show "Find Jobs" buttons only if we're inside of our available bookings length range and we have no jobs
 

@@ -38,7 +38,6 @@ import com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -57,8 +56,6 @@ import static com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapt
 
 public class ProRequestedJobsFragment extends InjectedFragment
 {
-    private static final String NAVIGATION_PAGE_NAME = "requested_jobs";
-
     @Inject
     BookingManager mBookingManager;
 
@@ -77,7 +74,6 @@ public class ProRequestedJobsFragment extends InjectedFragment
     private RequestedJobsRecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private int mUnreadJobsCount;
-    private boolean mIsNavigationLogged = false;
 
     private SwipeRefreshLayout.OnRefreshListener onProRequestedJobsListRefreshListener = new SwipeRefreshLayout.OnRefreshListener()
     {
@@ -178,10 +174,6 @@ public class ProRequestedJobsFragment extends InjectedFragment
             showContentViewAndHideOthers(mJobListSwipeRefreshLayout);
             mJobListSwipeRefreshLayout.setRefreshing(true);
             requestProRequestedJobs(true);
-        }
-        if (getUserVisibleHint())
-        {
-            logNavigation();
         }
     }
 
@@ -362,25 +354,6 @@ public class ProRequestedJobsFragment extends InjectedFragment
                     requestClaimJob(booking);
                     break;
             }
-        }
-    }
-
-    @Override
-    public void setUserVisibleHint(final boolean isVisibleToUser)
-    {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser)
-        {
-            logNavigation();
-        }
-    }
-
-    private void logNavigation()
-    {
-        if (bus != null && !mIsNavigationLogged)
-        {
-            bus.post(new LogEvent.AddLogEvent(new AppLog.Navigation(NAVIGATION_PAGE_NAME)));
-            mIsNavigationLogged = true;
         }
     }
 
