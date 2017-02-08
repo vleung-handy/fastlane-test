@@ -12,7 +12,6 @@ import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.deeplink.DeeplinkMapper;
 import com.handy.portal.deeplink.DeeplinkUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.payments.PaymentsManager;
 
@@ -137,7 +136,6 @@ public class PageNavigationManager
     @Subscribe
     public void onNavigateToPageEvent(NavigationEvent.NavigateToPage event)
     {
-        mBus.post(new LogEvent.AddLogEvent(new AppLog.Navigation(event.targetPage.name().toLowerCase())));
         //Ordering is important for these checks, they have different priorities
 
         NavigationEvent.SwapFragmentEvent swapFragmentEvent = new NavigationEvent.SwapFragmentEvent(

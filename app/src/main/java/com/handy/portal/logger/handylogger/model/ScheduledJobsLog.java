@@ -3,8 +3,6 @@ package com.handy.portal.logger.handylogger.model;
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.Booking;
 
-import java.util.Date;
-
 public class ScheduledJobsLog extends EventLog
 {
     private static final String EVENT_CONTEXT = "scheduled_jobs";
@@ -12,23 +10,6 @@ public class ScheduledJobsLog extends EventLog
     public ScheduledJobsLog(String eventType)
     {
         super(eventType, EVENT_CONTEXT);
-    }
-
-    public static class DateClicked extends ScheduledJobsLog
-    {
-        private static final String EVENT_TYPE = "date_selected";
-
-        @SerializedName("date")
-        private Date mDate;
-        @SerializedName("job_count")
-        private int mJobCount;
-
-        public DateClicked(Date date, int jobCount)
-        {
-            super(EVENT_TYPE);
-            mDate = date;
-            mJobCount = jobCount;
-        }
     }
 
 

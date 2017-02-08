@@ -236,7 +236,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
     {
-        bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.DateClicked(dateOfBookings, bookingsForDay.size())));
         super.afterDisplayBookings(bookingsForDay, dateOfBookings);
     }
 
