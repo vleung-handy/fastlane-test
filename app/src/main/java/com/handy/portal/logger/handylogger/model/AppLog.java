@@ -30,20 +30,4 @@ public class AppLog extends EventLog
             mNewOpen = newOpen;
         }
     }
-
-
-    public static class Navigation extends AppLog
-    {
-        private static final String EVENT_TYPE = "navigation";
-
-        @SerializedName("page_name")
-        private String mPageName;
-
-        public Navigation(final String pageName)
-        {
-            super(EVENT_TYPE);
-            mPageName = pageName;
-        }
-    }
-
 }

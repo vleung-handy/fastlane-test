@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.Booking;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,23 +16,6 @@ public abstract class AvailableJobsLog extends EventLog
     protected AvailableJobsLog(final String eventType)
     {
         super(eventType, EVENT_CONTEXT);
-    }
-
-    public static class DateClicked extends AvailableJobsLog
-    {
-        private static final String EVENT_TYPE = "date_selected";
-
-        @SerializedName("date")
-        private Date mDate;
-        @SerializedName("job_count")
-        private int mJobCount;
-
-        public DateClicked(final Date date, final int jobCount)
-        {
-            super(EVENT_TYPE);
-            mDate = date;
-            mJobCount = jobCount;
-        }
     }
 
 
