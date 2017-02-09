@@ -38,8 +38,6 @@ import com.handy.portal.core.ui.activity.MainActivity;
 import com.handy.portal.helpcenter.constants.HelpCenterUrl;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FragmentUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 
 import org.greenrobot.eventbus.Subscribe;
 
