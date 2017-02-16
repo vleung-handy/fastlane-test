@@ -5,8 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class ConfigurationResponse
-{
+public class ConfigurationResponse {
     @SerializedName("block_cleaner")
     private boolean mIsBlockCleaner;
 
@@ -70,159 +69,130 @@ public class ConfigurationResponse
     @SerializedName("portal_profile_share_enabled")
     private boolean mProfileShareEnabled;
 
-    public boolean isAppseeAnalyticsEnabled()
-    {
+    public boolean isAppseeAnalyticsEnabled() {
         return mAppseeAnalyticsEnabled;
     }
 
-    public boolean isCustomerNoShowModalEnabled()
-    {
+    public boolean isCustomerNoShowModalEnabled() {
         return mCustomerNoShowModalEnabled;
     }
 
-    public boolean isLocationScheduleServiceEnabled()
-    {
+    public boolean isLocationScheduleServiceEnabled() {
         return mLocationScheduleServiceEnabled;
     }
 
-    public boolean isBookingGeofenceServiceEnabled()
-    {
+    public boolean isBookingGeofenceServiceEnabled() {
         return mBookingGeofenceServiceEnabled;
     }
 
-    public boolean isLocationServiceEnabled()
-    {
+    public boolean isLocationServiceEnabled() {
         return mLocationScheduleServiceEnabled || mBookingGeofenceServiceEnabled;
     }
 
-    public boolean isBoxedSuppliesEnabled()
-    {
+    public boolean isBoxedSuppliesEnabled() {
         return mBoxedSuppliesEnabled;
     }
 
-    public boolean isBlockCleaner()
-    {
+    public boolean isBlockCleaner() {
         return mIsBlockCleaner;
     }
 
-    public boolean isCheckoutRatingFlowEnabled()
-    {
+    public boolean isCheckoutRatingFlowEnabled() {
         return mCheckoutRatingFlowEnabled;
     }
 
-    public boolean shouldBlockClaimsIfMissingAccountInformation()
-    {
+    public boolean shouldBlockClaimsIfMissingAccountInformation() {
         return mBlockClaimsIfMissingAccountInformation;
     }
 
-    public boolean shouldShowLateDispatchOptIn()
-    {
+    public boolean shouldShowLateDispatchOptIn() {
         return mShowLateDispatchOptIn;
     }
 
-    public boolean shouldShowWeeklyPaymentTiers()
-    {
+    public boolean shouldShowWeeklyPaymentTiers() {
         return mWeeklyPaymentTiersEnabled;
     }
 
-    public boolean shouldUseHelpCenterWebView()
-    {
+    public boolean shouldUseHelpCenterWebView() {
         return mHelpCenterInfo != null && mHelpCenterInfo.shouldUseHelpCenterWebView();
     }
 
-    public int getNumberOfDaysForRequestedJobs()
-    {
+    public int getNumberOfDaysForRequestedJobs() {
         return mNumberOfDaysForRequestedJobs;
     }
 
-    public int getNumberOfDaysForAvailableJobs()
-    {
+    public int getNumberOfDaysForAvailableJobs() {
         return mNumberOfDaysForAvailableJobs;
     }
 
-    public String getHelpCenterUrl()
-    {
+    public String getHelpCenterUrl() {
         return mHelpCenterInfo == null ? null : mHelpCenterInfo.getHelpCenterUrl();
     }
 
-    public boolean showBookingTransactionSummary()
-    {
+    public boolean showBookingTransactionSummary() {
         return mShowBookingTransactionSummary;
     }
 
-    public boolean isProfilePictureEnabled()
-    {
+    public boolean isProfilePictureEnabled() {
         return mProfilePictureEnabled;
     }
 
-    public boolean isProfilePictureUploadEnabled()
-    {
+    public boolean isProfilePictureUploadEnabled() {
         return mProfilePictureUploadEnabled;
     }
 
-    public RequestDismissal getRequestDismissal()
-    {
+    public RequestDismissal getRequestDismissal() {
         return mRequestDismissal;
     }
 
     public boolean isSltEnabled() { return mSltEnabled; }
 
-    public boolean isNewDateScrollerEnabled()
-    {
+    public boolean isNewDateScrollerEnabled() {
         return mNewDateScrollerEnabled;
     }
 
-    public boolean isAvailableHoursEnabled()
-    {
+    public boolean isAvailableHoursEnabled() {
         return mAvailableHoursEnabled;
     }
 
-    public boolean isProfileShareEnabled()
-    {
+    public boolean isProfileShareEnabled() {
         return mProfileShareEnabled;
     }
 
-    public static class HelpCenterInfo
-    {
+    public static class HelpCenterInfo {
         @SerializedName("should_use_help_center_web_view")
         private boolean mShouldUseHelpCenterWebView;
 
         @SerializedName("help_center_url")
         private String mHelpCenterUrl;
 
-        public boolean shouldUseHelpCenterWebView()
-        {
+        public boolean shouldUseHelpCenterWebView() {
             return mShouldUseHelpCenterWebView;
         }
 
-        public String getHelpCenterUrl()
-        {
+        public String getHelpCenterUrl() {
             return mHelpCenterUrl;
         }
     }
 
 
     // Configuration info concerning pro request dismissals
-    public static class RequestDismissal
-    {
+    public static class RequestDismissal {
         @SerializedName("enabled")
         private boolean mIsEnabled;
 
         @SerializedName("reasons")
         private ArrayList<Reason> mReasons;
 
-        public boolean isEnabled()
-        {
+        public boolean isEnabled() {
             return mIsEnabled;
         }
 
-        public ArrayList<Reason> getReasons()
-        {
+        public ArrayList<Reason> getReasons() {
             return mReasons;
         }
 
-        public static class Reason implements Serializable
-        {
+        public static class Reason implements Serializable {
             public static final String MACHINE_NAME_OTHER = "other";
 
             @SerializedName("machine_name")
@@ -230,13 +200,11 @@ public class ConfigurationResponse
             @SerializedName("display_name")
             private String mDisplayName;
 
-            public String getMachineName()
-            {
+            public String getMachineName() {
                 return mMachineName;
             }
 
-            public String getDisplayName()
-            {
+            public String getDisplayName() {
                 return mDisplayName;
             }
         }

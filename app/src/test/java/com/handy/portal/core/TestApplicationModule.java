@@ -163,12 +163,10 @@ import static org.mockito.Mockito.when;
         PaymentBlockingFragment.class,
 
 }, library = true)
-public class TestApplicationModule
-{
+public class TestApplicationModule {
     private final Application mApplication;
 
-    public TestApplicationModule(final Application application)
-    {
+    public TestApplicationModule(final Application application) {
         mApplication = application;
     }
 
@@ -178,20 +176,17 @@ public class TestApplicationModule
 
     @Provides
     @Singleton
-    final AppseeManager provideAppseeManager()
-    {
+    final AppseeManager provideAppseeManager() {
         return mock(AppseeManager.class);
     }
 
     @Provides
-    final BuildConfigWrapper provideBuildConfigWrapper()
-    {
+    final BuildConfigWrapper provideBuildConfigWrapper() {
         return mock(BuildConfigWrapper.class);
     }
 
     @Provides
-    final EnvironmentModifier provideEnvironmentModifier()
-    {
+    final EnvironmentModifier provideEnvironmentModifier() {
         EnvironmentModifier environmentModifier = mock(EnvironmentModifier.class);
         when(environmentModifier.getEnvironmentPrefix()).thenReturn("ms");
         when(environmentModifier.getEnvironment()).thenReturn(EnvironmentModifier.Environment.S);
@@ -200,21 +195,18 @@ public class TestApplicationModule
 
     @Provides
     @Singleton
-    final HandyRetrofitEndpoint provideHandyEndpoint()
-    {
+    final HandyRetrofitEndpoint provideHandyEndpoint() {
         return new HandyRetrofitEndpoint(mApplication);
     }
 
     @Provides
-    final HandyRetrofitService provideHandyService()
-    {
+    final HandyRetrofitService provideHandyService() {
         return mock(HandyRetrofitService.class);
     }
 
     @Provides
     @Singleton
-    final DataManager provideDataManager(final HandyRetrofitEndpoint endpoint)
-    {
+    final DataManager provideDataManager(final HandyRetrofitEndpoint endpoint) {
         return new TestDataManager(
                 mock(HandyRetrofitService.class),
                 endpoint,
@@ -225,20 +217,17 @@ public class TestApplicationModule
 
     @Provides
     @Singleton
-    final EventBus provideBus()
-    {
+    final EventBus provideBus() {
         return spy(new EventBus());
     }
 
     @Provides
-    final Application provideApplication()
-    {
+    final Application provideApplication() {
         return mock(Application.class);
     }
 
     @Provides
-    final SecurePreferences providePrefs()
-    {
+    final SecurePreferences providePrefs() {
         return mock(SecurePreferences.class);
     }
 
@@ -247,36 +236,31 @@ public class TestApplicationModule
     final PageNavigationManager providePageNavigationManager(final EventBus bus,
                                                              final PaymentsManager paymentsManager,
                                                              final ConfigManager configManager
-    )
-    {
+    ) {
         return new PageNavigationManager(bus, paymentsManager, configManager);
     }
 
     @Provides
     @Singleton
     final BookingManager provideBookingManager(final EventBus bus,
-                                               final DataManager dataManager)
-    {
+                                               final DataManager dataManager) {
         return spy(new BookingManager(bus, dataManager));
     }
 
     @Provides
     @Singleton
-    final LoginManager provideLoginManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager)
-    {
+    final LoginManager provideLoginManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager) {
         return new LoginManager(bus, dataManager, prefsManager);
     }
 
     @Provides
     @Singleton
-    final SetupManager provideApplicationSetupManager(final EventBus bus, final DataManager dataManager)
-    {
+    final SetupManager provideApplicationSetupManager(final EventBus bus, final DataManager dataManager) {
         return new SetupManager(bus, dataManager);
     }
 
     @Provides
-    final ProviderManager provideProviderManager()
-    {
+    final ProviderManager provideProviderManager() {
         ProviderManager providerManager = mock(ProviderManager.class);
         when(providerManager.getLastProviderId()).thenReturn("444");
         return providerManager;
@@ -284,33 +268,28 @@ public class TestApplicationModule
 
     @Provides
     @Singleton
-    final ConfigManager provideConfigManager(final DataManager dataManager, final EventBus bus)
-    {
+    final ConfigManager provideConfigManager(final DataManager dataManager, final EventBus bus) {
         return spy(new ConfigManager(dataManager, bus));
     }
 
     @Provides
-    final SystemManager provideSytemManager()
-    {
+    final SystemManager provideSytemManager() {
         return mock(SystemManager.class);
     }
 
     @Provides
-    final VersionManager provideVersionManager()
-    {
+    final VersionManager provideVersionManager() {
         return mock(VersionManager.class);
     }
 
     @Provides
-    final TermsManager provideTermsManager()
-    {
+    final TermsManager provideTermsManager() {
         return mock(TermsManager.class);
     }
 
     @Provides
     @Singleton
-    final PrefsManager providePrefsManager()
-    {
+    final PrefsManager providePrefsManager() {
         return new PrefsManager(mApplication.getApplicationContext());
     }
 
@@ -322,52 +301,44 @@ public class TestApplicationModule
             final FileManager fileManager,
             final PrefsManager prefsManager,
             final ProviderManager providerManager
-    )
-    {
+    ) {
         return spy(new EventLogManager(mApplication, bus, dataManager, fileManager, prefsManager, providerManager));
     }
 
     @Provides
     @Singleton
-    final FileManager provideFileManager()
-    {
+    final FileManager provideFileManager() {
         return new FileManager(mApplication);
     }
 
     @Provides
-    final StripeManager provideStripeManager()
-    {
+    final StripeManager provideStripeManager() {
         return mock(StripeManager.class);
     }
 
     @Provides
-    final UserInterfaceUpdateManager provideUserInterfaceUpdateManager()
-    {
+    final UserInterfaceUpdateManager provideUserInterfaceUpdateManager() {
         return mock(UserInterfaceUpdateManager.class);
     }
 
     @Provides
-    final UrbanAirshipManager providerUrbanAirshipManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication)
-    {
+    final UrbanAirshipManager providerUrbanAirshipManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication) {
         return mock(UrbanAirshipManager.class);
     }
 
     @Provides
-    final RestAdapter provideRestAdapter()
-    {
+    final RestAdapter provideRestAdapter() {
         return mock(RestAdapter.class);
     }
 
     @Provides
-    final LayerHelper provideLayerHelper()
-    {
+    final LayerHelper provideLayerHelper() {
         return mock(LayerHelper.class, Answers.RETURNS_DEEP_STUBS.get());
     }
 
     @Provides
     @Singleton
-    final PaymentsManager providePaymentsManager(EventBus bus, final DataManager dataManager)
-    {
+    final PaymentsManager providePaymentsManager(EventBus bus, final DataManager dataManager) {
         return spy(new PaymentsManager(bus, dataManager));
     }
 }
