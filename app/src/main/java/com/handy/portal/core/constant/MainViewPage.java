@@ -24,7 +24,6 @@ import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
 import com.handy.portal.notification.ui.fragment.NotificationsFragment;
 import com.handy.portal.payments.ui.fragment.BookingTransactionsWrapperFragment;
 import com.handy.portal.payments.ui.fragment.OutstandingFeesFragment;
-import com.handy.portal.payments.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsDetailFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsUpdateBankAccountFragment;
@@ -32,7 +31,6 @@ import com.handy.portal.payments.ui.fragment.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.payments.ui.fragment.SelectPaymentMethodFragment;
 import com.handy.portal.proavailability.fragment.EditAvailableHoursFragment;
 import com.handy.portal.proavailability.fragment.EditWeeklyAvailableHoursFragment;
-import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
 
 import java.io.Serializable;
@@ -80,9 +78,6 @@ public enum MainViewPage implements Serializable {
     HELP_WEBVIEW(HelpWebViewFragment.class),
 
     WEB_PAGE(PortalWebViewFragment.class),
-
-    BLOCK_PRO_WEBVIEW(BlockScheduleFragment.class),
-    PAYMENT_BLOCKING(PaymentBlockingFragment.class),
 
     CLIENTS(ClientsFragment.class),
     EDIT_AVAILABLE_HOURS(EditAvailableHoursFragment.class),

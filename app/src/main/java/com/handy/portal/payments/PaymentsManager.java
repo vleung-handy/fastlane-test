@@ -38,14 +38,6 @@ public class PaymentsManager {
     private Cache<String, Boolean> mNeedsUpdatedPaymentInformationCache;
     private static final String NEEDS_UPDATED_PAYMENT_CACHE_KEY = "needs_updated_payment";
 
-    public boolean HACK_directAccessCacheNeedsPayment() {
-        Boolean cachedValue = mNeedsUpdatedPaymentInformationCache.getIfPresent(NEEDS_UPDATED_PAYMENT_CACHE_KEY);
-        if (cachedValue != null) {
-            return cachedValue;
-        }
-        return false;
-    }
-
     @Inject
     public PaymentsManager(final EventBus bus, final DataManager dataManager) {
         mBus = bus;
