@@ -76,8 +76,7 @@ import static com.handy.portal.core.model.ProviderPersonalInfo.ProfileImage.Type
 
 //TODO: should move some of this logic out of here
 public class MainActivity extends BaseActivity
-        implements BookingMapProvider, LayerHelper.UnreadConversationsCountChangedListener
-{
+        implements BookingMapProvider, LayerHelper.UnreadConversationsCountChangedListener {
     @Inject
     ProviderManager providerManager;
     @Inject
@@ -146,14 +145,12 @@ public class MainActivity extends BaseActivity
     private boolean mUploadProfilePictureBlockerShown = false;
 
     @Override
-    protected boolean shouldTriggerSetup()
-    {
+    protected boolean shouldTriggerSetup() {
         return true;
     }
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
@@ -164,19 +161,16 @@ public class MainActivity extends BaseActivity
         setDeeplinkData(savedInstanceState);
 
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close)
-        {
+                R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
-            public void onDrawerOpened(final View drawerView)
-            {
+            public void onDrawerOpened(final View drawerView) {
                 super.onDrawerOpened(drawerView);
                 bus.post(new LogEvent.AddLogEvent(new SideMenuLog.Opened()));
                 setDrawerActive(true);
             }
 
             @Override
-            public void onDrawerClosed(final View drawerView)
-            {
+            public void onDrawerClosed(final View drawerView) {
                 super.onDrawerClosed(drawerView);
                 bus.post(new LogEvent.AddLogEvent(new SideMenuLog.Closed()));
                 setDrawerActive(false);
@@ -187,8 +181,7 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         bus.register(this);
         //Check config params every time we resume mainactivity, may have changes which result in flow changes on open
@@ -196,18 +189,15 @@ public class MainActivity extends BaseActivity
         checkIfUserShouldUpdatePaymentInfo();
         checkIfNotificationIsEnabled();
 
-        if (mClientsButton != null && mClientsButton.getVisibility() == View.VISIBLE)
-        {
+        if (mClientsButton != null && mClientsButton.getVisibility() == View.VISIBLE) {
             mJobRequestsCount = mBookingManager.getLastUnreadRequestsCount();
             updateClientsButtonUnreadCount();
             mBookingManager.requestProRequestedJobsCount();
         }
-        if (mAlertsButton != null && mAlertsButton.getVisibility() == View.VISIBLE)
-        {
+        if (mAlertsButton != null && mAlertsButton.getVisibility() == View.VISIBLE) {
             bus.post(new NotificationEvent.RequestUnreadCount());
         }
-        if (currentPage == null)
-        {
+        if (currentPage == null) {
             switchToPage(MainViewPage.AVAILABLE_JOBS);
         }
         handleDeeplinkIfNecessary();
@@ -222,71 +212,59 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         mDrawerLayout.removeDrawerListener(mActionBarDrawerToggle);
         bus.unregister(this);
         super.onPause();
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         mLayerHelper.unregisterUnreadConversationsCountChangedListener(this);
         super.onDestroy();
     }
 
     @Override
-    public BookingMapView getBookingMap()
-    {
-        if (mBookingMapView == null)
-        {
+    public BookingMapView getBookingMap() {
+        if (mBookingMapView == null) {
             mBookingMapView = new BookingMapView(this);
             mBookingMapView.onCreate(null);
         }
         return mBookingMapView;
     }
 
-    private void checkIfUserShouldUpdatePaymentInfo()
-    {
+    private void checkIfUserShouldUpdatePaymentInfo() {
         bus.post(new PaymentEvent.RequestShouldUserUpdatePaymentInfo());
     }
 
-    public void checkIfNotificationIsEnabled()
-    {
+    public void checkIfNotificationIsEnabled() {
         if (NotificationUtils.isNotificationEnabled(this) == NotificationUtils.NOTIFICATION_DISABLED
-                && !mNotificationBlockerDialogFragment.isAdded())
-        {
+                && !mNotificationBlockerDialogFragment.isAdded()) {
             FragmentUtils.safeLaunchDialogFragment(mNotificationBlockerDialogFragment, this,
                     NotificationBlockerDialogFragment.FRAGMENT_TAG);
         }
     }
 
-    private void setFullScreen()
-    {
+    private void setFullScreen() {
         getWindow().getDecorView().setSystemUiVisibility(
                 View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                         | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
     }
 
     @Subscribe
-    public void onReceiveUserShouldUpdatePaymentInfo(PaymentEvent.ReceiveShouldUserUpdatePaymentInfoSuccess event)
-    {
+    public void onReceiveUserShouldUpdatePaymentInfo(PaymentEvent.ReceiveShouldUserUpdatePaymentInfoSuccess event) {
         //check if we need to show the payment bill blocker, we will have either soft and hard blocking (modal and blockingfragment) depending on config params
-        if (event.shouldUserUpdatePaymentInfo)
-        {
+        if (event.shouldUserUpdatePaymentInfo) {
             FragmentManager fragmentManager = getSupportFragmentManager();
             if (mConfigManager.getConfigurationResponse() != null &&
-                    mConfigManager.getConfigurationResponse().shouldBlockClaimsIfMissingAccountInformation())
-            {
+                    mConfigManager.getConfigurationResponse().shouldBlockClaimsIfMissingAccountInformation()) {
                 //Page Navigation Manager should be handling this, but if we got this back too late force a move to blocking fragment
                 if (fragmentManager.findFragmentByTag(PaymentBlockingFragment.FRAGMENT_TAG) == null) //only show if there isn't an instance of the fragment showing already
                 {
                     bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PAYMENT_BLOCKING, new Bundle()));
                 }
             }
-            else
-            {
+            else {
                 //Non-blocking modal
                 if (fragmentManager.findFragmentByTag(PaymentBillBlockerDialogFragment.FRAGMENT_TAG) == null) //only show if there isn't an instance of the fragment showing already
                 {
@@ -295,20 +273,17 @@ public class MainActivity extends BaseActivity
                 }
             }
         }
-        else
-        {
+        else {
             showUploadProfilePictureBlockerIfNecessary();
         }
     }
 
-    private void showUploadProfilePictureBlockerIfNecessary()
-    {
+    private void showUploadProfilePictureBlockerIfNecessary() {
         final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
         if (configuration != null
                 && configuration.isProfilePictureEnabled()
                 && mProviderManager.getCachedProfileImageUrl(THUMBNAIL) == null
-                && !mUploadProfilePictureBlockerShown)
-        {
+                && !mUploadProfilePictureBlockerShown) {
             final Bundle arguments = new Bundle();
             arguments.putSerializable(BundleKeys.NAVIGATION_SOURCE, EditPhotoFragment.Source.APP);
             bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_PICTURE, arguments, true));
@@ -317,82 +292,65 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    protected void onRestoreInstanceState(final Bundle savedInstanceState)
-    {
+    protected void onRestoreInstanceState(final Bundle savedInstanceState) {
         super.onRestoreInstanceState(savedInstanceState);
         setDeeplinkData(savedInstanceState);
     }
 
-    private void initProName()
-    {
+    private void initProName() {
         final ProviderProfile providerProfile = mProviderManager.getCachedProviderProfile();
-        if (providerProfile != null && providerProfile.getProviderPersonalInfo() != null)
-        {
+        if (providerProfile != null && providerProfile.getProviderPersonalInfo() != null) {
             mNavigationHeaderProName.setText(providerProfile.getProviderPersonalInfo().getFullName());
         }
     }
 
     @Subscribe
-    public void initProImage(final ProfileEvent.ProfilePhotoUpdated event)
-    {
+    public void initProImage(final ProfileEvent.ProfilePhotoUpdated event) {
         final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
-        if (configuration != null && configuration.isProfilePictureEnabled())
-        {
+        if (configuration != null && configuration.isProfilePictureEnabled()) {
             mProImage.setVisibility(View.VISIBLE);
             final String profilePhotoUrl = mProviderManager.getCachedProfileImageUrl(THUMBNAIL);
-            if (profilePhotoUrl != null)
-            {
+            if (profilePhotoUrl != null) {
                 Picasso.with(this)
                         .load(profilePhotoUrl)
                         .placeholder(R.drawable.img_pro_placeholder)
                         .noFade()
                         .into(mProImage);
             }
-            else
-            {
+            else {
                 mProImage.setImageResource(R.drawable.img_pro_placeholder);
             }
         }
-        else
-        {
+        else {
             mProImage.setVisibility(View.GONE);
         }
     }
 
-    private void initNavigationHeaderCtaButton()
-    {
-        if (shouldEnableProfileShareButton())
-        {
+    private void initNavigationHeaderCtaButton() {
+        if (shouldEnableProfileShareButton()) {
             mNavigationHeaderCtaButton.setText(R.string.share_profile);
         }
-        else
-        {
+        else {
             mNavigationHeaderCtaButton.setText(R.string.edit_profile);
         }
     }
 
-    private void handleDeeplinkIfNecessary()
-    {
-        if (!mDeeplinkHandled)
-        {
+    private void handleDeeplinkIfNecessary() {
+        if (!mDeeplinkHandled) {
             mPageNavigationManager.handleNonUriDerivedDeeplinkDataBundle(mDeeplinkData, mDeeplinkSource);
         }
         mDeeplinkHandled = true;
     }
 
     @Subscribe
-    public void onReceiveUnreadCountSuccess(NotificationEvent.ReceiveUnreadCountSuccess event)
-    {
-        if (mAlertsButton != null)
-        {
+    public void onReceiveUnreadCountSuccess(NotificationEvent.ReceiveUnreadCountSuccess event) {
+        if (mAlertsButton != null) {
             mAlertsButton.setUnreadCount(event.getUnreadCount());
         }
     }
 
-    private void setDeeplinkData(final Bundle savedInstanceState)
-    {
-        if (savedInstanceState == null || !(mDeeplinkHandled = savedInstanceState.getBoolean(BundleKeys.DEEPLINK_HANDLED)))
-        {
+    private void setDeeplinkData(final Bundle savedInstanceState) {
+        if (savedInstanceState == null || !(mDeeplinkHandled = savedInstanceState.getBoolean(BundleKeys.DEEPLINK_HANDLED))) {
             final Intent intent = getIntent();
             mDeeplinkData = intent.getBundleExtra(BundleKeys.DEEPLINK_DATA);
             mDeeplinkSource = intent.getStringExtra(BundleKeys.DEEPLINK_SOURCE);
@@ -400,29 +358,23 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState)
-    {
-        try
-        {
-            if (outState == null)
-            {
+    public void onSaveInstanceState(Bundle outState) {
+        try {
+            if (outState == null) {
                 outState = new Bundle();
             }
             outState.putBoolean(BundleKeys.DEEPLINK_HANDLED, mDeeplinkHandled);
             super.onSaveInstanceState(outState);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             // Non fatal
             Crashlytics.logException(e);
         }
     }
 
     @OnClick(R.id.navigation_header_cta_button)
-    public void onNavigationHeaderCtaClicked()
-    {
-        if (shouldEnableProfileShareButton())
-        {
+    public void onNavigationHeaderCtaClicked() {
+        if (shouldEnableProfileShareButton()) {
             bus.post(new LogEvent.AddLogEvent(new ProfileLog.ProfileShareClicked()));
 
             final Intent dummyIntent = new Intent();
@@ -435,19 +387,16 @@ public class MainActivity extends BaseActivity
             activityPickerIntent.putExtra(Intent.EXTRA_INTENT, dummyIntent);
             startActivityForResult(activityPickerIntent, RequestCode.PICK_ACTIVITY);
         }
-        else
-        {
+        else {
             bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_UPDATE, true));
         }
     }
 
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent intent)
-    {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {
         if (requestCode == RequestCode.PICK_ACTIVITY
                 && resultCode == Activity.RESULT_OK
-                && intent != null)
-        {
+                && intent != null) {
             final ProviderProfile providerProfile = mProviderManager.getCachedProviderProfile();
             intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.book_my_service));
             intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.profile_share_text_formatted,
@@ -463,8 +412,7 @@ public class MainActivity extends BaseActivity
         super.onActivityResult(requestCode, resultCode, intent);
     }
 
-    private boolean shouldEnableProfileShareButton()
-    {
+    private boolean shouldEnableProfileShareButton() {
         final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
         final ProviderProfile providerProfile = mProviderManager.getCachedProviderProfile();
         return configuration != null
@@ -475,41 +423,33 @@ public class MainActivity extends BaseActivity
     }
 
     @OnClick(R.id.provider_image)
-    public void onProfileImageClicked()
-    {
+    public void onProfileImageClicked() {
         bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_UPDATE, true));
     }
 
     @Subscribe
-    public void onSetNavigationTabVisibility(NavigationEvent.SetNavigationTabVisibility event)
-    {
+    public void onSetNavigationTabVisibility(NavigationEvent.SetNavigationTabVisibility event) {
         setTabVisibility(event.isVisible);
     }
 
-    private void setTabVisibility(boolean isVisible)
-    {
-        if (mContentFrame != null)
-        {
+    private void setTabVisibility(boolean isVisible) {
+        if (mContentFrame != null) {
             mContentFrame.setAutoHideShowTabs(isVisible);
         }
 
-        if (mTabs != null)
-        {
+        if (mTabs != null) {
             mTabs.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         }
     }
 
-    private void setDrawerActive(boolean isActive)
-    {
-        if (mDrawerLayout != null)
-        {
+    private void setDrawerActive(boolean isActive) {
+        if (mDrawerLayout != null) {
             mDrawerLayout.setDrawerLockMode(isActive ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
         }
     }
 
     @Subscribe
-    public void onSwapFragment(NavigationEvent.SwapFragmentEvent event)
-    {
+    public void onSwapFragment(NavigationEvent.SwapFragmentEvent event) {
         bus.post(new HandyEvent.Navigation(event.targetPage.toString().toLowerCase()));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         setTabVisibility(true);
@@ -520,101 +460,84 @@ public class MainActivity extends BaseActivity
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         super.onBackPressed();
     }
 
     @Subscribe
-    public void onShowLoadingOverlay(HandyEvent.SetLoadingOverlayVisibility event)
-    {
+    public void onShowLoadingOverlay(HandyEvent.SetLoadingOverlayVisibility event) {
         mLoadingOverlayView.setVisibility(event.isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Subscribe
-    public void onLogOutProvider(HandyEvent.LogOutProvider event)
-    {
+    public void onLogOutProvider(HandyEvent.LogOutProvider event) {
         logOutProvider();
         Toast.makeText(this, R.string.handy_account_no_longer_active, Toast.LENGTH_SHORT).show();
     }
 
     @Subscribe
-    public void updateSelectedTabButton(NavigationEvent.SelectPage event)
-    {
+    public void updateSelectedTabButton(NavigationEvent.SelectPage event) {
         if (event.page == null) { return; }
-        switch (event.page)
-        {
+        switch (event.page) {
             case AVAILABLE_JOBS:
-            case BLOCK_PRO_WEBVIEW:
-            {
+            case BLOCK_PRO_WEBVIEW: {
                 mJobsButton.toggle();
                 mNavTrayLinks.clearCheck();
             }
             break;
-            case CLIENTS:
-            {
+            case CLIENTS: {
                 mClientsButton.toggle();
                 mNavTrayLinks.clearCheck();
             }
             break;
             case SEND_RECEIPT_CHECKOUT:
-            case SCHEDULED_JOBS:
-            {
+            case SCHEDULED_JOBS: {
                 mScheduleButton.toggle();
                 mNavTrayLinks.clearCheck();
             }
             break;
-            case NOTIFICATIONS:
-            {
+            case NOTIFICATIONS: {
                 mAlertsButton.toggle();
                 mNavTrayLinks.clearCheck();
             }
             break;
-            case PAYMENTS:
-            {
+            case PAYMENTS: {
                 mButtonMore.toggle();
                 mNavLinkPayments.toggle();
             }
             break;
             case YOUTUBE_PLAYER:
-            case DASHBOARD:
-            {
+            case DASHBOARD: {
                 mButtonMore.toggle();
                 mNavLinkRatingsAndFeedback.toggle();
             }
             break;
-            case REFER_A_FRIEND:
-            {
+            case REFER_A_FRIEND: {
                 mButtonMore.toggle();
                 mNavLinkReferAFriend.toggle();
             }
             break;
-            case ACCOUNT_SETTINGS:
-            {
+            case ACCOUNT_SETTINGS: {
                 mButtonMore.toggle();
                 mNavAccountSettings.toggle();
             }
             break;
-            case DASHBOARD_VIDEO_LIBRARY:
-            {
+            case DASHBOARD_VIDEO_LIBRARY: {
                 mButtonMore.toggle();
                 mNavLinkVideoLibrary.toggle();
             }
-            case PROFILE_UPDATE:
-            {
+            case PROFILE_UPDATE: {
                 mButtonMore.toggle();
                 mNavAccountSettings.toggle();
             }
             break;
-            case PROFILE_PICTURE:
-            {
+            case PROFILE_PICTURE: {
                 mButtonMore.toggle();
                 mNavAccountSettings.toggle();
             }
             break;
-            case HELP_WEBVIEW:
-            {
+            case HELP_WEBVIEW: {
                 mButtonMore.toggle();
                 mNavLinkHelp.toggle();
             }
@@ -624,22 +547,18 @@ public class MainActivity extends BaseActivity
 
     @Subscribe
     public void onReceiveProRequestedJobsCountSuccess(
-            final BookingEvent.ReceiveProRequestedJobsCountSuccess event)
-    {
+            final BookingEvent.ReceiveProRequestedJobsCountSuccess event) {
         mJobRequestsCount = event.getCount();
         updateClientsButtonUnreadCount();
     }
 
     @Override
-    public void onUnreadConversationsCountChanged(final long count)
-    {
+    public void onUnreadConversationsCountChanged(final long count) {
         updateClientsButtonUnreadCount();
     }
 
-    private void updateClientsButtonUnreadCount()
-    {
-        if (mClientsButton != null && mJobRequestsCount != null)
-        {
+    private void updateClientsButtonUnreadCount() {
+        if (mClientsButton != null && mJobRequestsCount != null) {
             int clientsButtonUnreadCount = mJobRequestsCount;
             clientsButtonUnreadCount += mLayerHelper.getUnreadConversationsCount();
             mClientsButton.setUnreadCount(clientsButtonUnreadCount);
@@ -648,14 +567,12 @@ public class MainActivity extends BaseActivity
 
 //Click Listeners
 
-    private void registerButtonListeners()
-    {
+    private void registerButtonListeners() {
         registerBottomNavListeners();
         registerNavDrawerListeners();
     }
 
-    private void registerBottomNavListeners()
-    {
+    private void registerBottomNavListeners() {
         mJobsButton = new TabButton(this)
                 .init(R.string.tab_claim, R.drawable.ic_menu_search);
         mJobsButton.setId(R.id.tab_nav_available);
@@ -684,8 +601,7 @@ public class MainActivity extends BaseActivity
         mButtonMore.setOnClickListener(new MoreButtonOnClickListener());
     }
 
-    private void registerNavDrawerListeners()
-    {
+    private void registerNavDrawerListeners() {
         mNavLinkPayments.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.PAYMENTS, null));
         mNavLinkRatingsAndFeedback.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.DASHBOARD, null));
         mNavLinkReferAFriend.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.REFER_A_FRIEND, null));
@@ -694,31 +610,26 @@ public class MainActivity extends BaseActivity
         mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.HELP_WEBVIEW, null));
     }
 
-    private void switchToPage(@NonNull MainViewPage page)
-    {
+    private void switchToPage(@NonNull MainViewPage page) {
         switchToPage(page, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE);
     }
 
     private void switchToPage(@NonNull MainViewPage targetPage, @NonNull Bundle argumentsBundle,
-                              @NonNull TransitionStyle overrideTransitionStyle)
-    {
+                              @NonNull TransitionStyle overrideTransitionStyle) {
         bus.post(new NavigationEvent.NavigateToPage(targetPage, argumentsBundle, overrideTransitionStyle, false));
     }
 
 // Fragment swapping and related
 
-    private void clearFragmentBackStack()
-    {
+    private void clearFragmentBackStack() {
         clearingBackStack = true;
         FragmentManager supportFragmentManager = getSupportFragmentManager();
         supportFragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE); //clears out the whole stack
         clearingBackStack = false;
     }
 
-    private void swapFragment(NavigationEvent.SwapFragmentEvent swapFragmentEvent)
-    {
-        if (!swapFragmentEvent.addToBackStack)
-        {
+    private void swapFragment(NavigationEvent.SwapFragmentEvent swapFragmentEvent) {
+        if (!swapFragmentEvent.addToBackStack) {
             clearFragmentBackStack();
         }
 
@@ -726,32 +637,26 @@ public class MainActivity extends BaseActivity
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         Fragment newFragment = null;
-        if (swapFragmentEvent.targetPage != null)
-        {
-            try
-            {
+        if (swapFragmentEvent.targetPage != null) {
+            try {
                 newFragment = (Fragment) swapFragmentEvent.targetPage.getClassType().newInstance();
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 Crashlytics.logException(new RuntimeException("Error instantiating fragment class", e));
                 return;
             }
         }
 
-        if (newFragment != null && swapFragmentEvent.arguments != null)
-        {
+        if (newFragment != null && swapFragmentEvent.arguments != null) {
             newFragment.setArguments(swapFragmentEvent.arguments);
-            if (swapFragmentEvent.getReturnFragment() != null)
-            {
+            if (swapFragmentEvent.getReturnFragment() != null) {
                 newFragment.setTargetFragment(swapFragmentEvent.getReturnFragment(),
                         swapFragmentEvent.getActivityRequestCode());
             }
         }
 
         //Animate the transition, animations must come before the .replace call
-        if (swapFragmentEvent.transitionStyle != null)
-        {
+        if (swapFragmentEvent.transitionStyle != null) {
             transaction.setCustomAnimations(
                     swapFragmentEvent.transitionStyle.getIncomingAnimId(),
                     swapFragmentEvent.transitionStyle.getOutgoingAnimId(),
@@ -760,8 +665,7 @@ public class MainActivity extends BaseActivity
             );
 
             //Runs async, covers the transition
-            if (swapFragmentEvent.transitionStyle.shouldShowOverlay())
-            {
+            if (swapFragmentEvent.transitionStyle.shouldShowOverlay()) {
                 TransientOverlayDialogFragment overlayDialogFragment = TransientOverlayDialogFragment
                         .newInstance(R.anim.overlay_fade_in_then_out, R.drawable.ic_success_circle, swapFragmentEvent.transitionStyle.getOverlayStringId());
                 overlayDialogFragment.show(getSupportFragmentManager(), "overlay dialog fragment");
@@ -772,12 +676,10 @@ public class MainActivity extends BaseActivity
         // and add the transaction to the back stack so the user can navigate back
         transaction.replace(R.id.main_container, newFragment);
 
-        if (swapFragmentEvent.addToBackStack)
-        {
+        if (swapFragmentEvent.addToBackStack) {
             transaction.addToBackStack(null);
         }
-        else
-        {
+        else {
             transaction.disallowAddToBackStack();
         }
 
@@ -787,8 +689,7 @@ public class MainActivity extends BaseActivity
 
     // TODO: consider move log out logic somewhere else
     @SuppressWarnings("deprecation")
-    private void logOutProvider()
-    {
+    private void logOutProvider() {
         //want to remain in the current environment after user is logged out
         EnvironmentModifier.Environment currentEnvironment = mEnvironmentModifier.getEnvironment();
         String currentEnvironmentPrefix = mEnvironmentModifier.getEnvironmentPrefix();
@@ -796,20 +697,17 @@ public class MainActivity extends BaseActivity
         mPrefsManager.clear();
         clearFragmentBackStack();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             CookieManager.getInstance().removeAllCookies(null);
             CookieManager.getInstance().flush();
         }
-        else
-        {
+        else {
             CookieSyncManager.createInstance(this);
             CookieManager.getInstance().removeAllCookie();
             CookieSyncManager.getInstance().sync();
         }
 
-        if (mLayerHelper.getLayerClient().isAuthenticated())
-        {
+        if (mLayerHelper.getLayerClient().isAuthenticated()) {
             mLayerHelper.deauthenticate();
         }
 
@@ -821,58 +719,48 @@ public class MainActivity extends BaseActivity
     }
 
     // Inner classes
-    private class TabOnClickListener implements View.OnClickListener
-    {
+    private class TabOnClickListener implements View.OnClickListener {
         private TabButton mTabButton;
         private MainViewPage mPage;
 
-        TabOnClickListener(@Nullable final TabButton tabButton, final MainViewPage page)
-        {
+        TabOnClickListener(@Nullable final TabButton tabButton, final MainViewPage page) {
             mTabButton = tabButton;
             mPage = page;
         }
 
         @Override
-        public void onClick(View view)
-        {
-            if (mTabButton != null)
-            {
+        public void onClick(View view) {
+            if (mTabButton != null) {
                 mTabButton.toggle();
             }
-            if (mPage != currentPage)
-            {
+            if (mPage != currentPage) {
                 switchToPage(mPage);
             }
         }
     }
 
 
-    private class NavDrawerOnClickListener extends TabOnClickListener
-    {
+    private class NavDrawerOnClickListener extends TabOnClickListener {
         private MainViewPage mPage;
         private TransitionStyle mTransitionStyle;
 
         NavDrawerOnClickListener(
                 final MainViewPage mPage,
                 final TransitionStyle transitionStyleOverride
-        )
-        {
+        ) {
             super(null, mPage);
             this.mPage = mPage;
             mTransitionStyle = transitionStyleOverride;
         }
 
         @Override
-        public void onClick(View view)
-        {
+        public void onClick(View view) {
             bus.post(new LogEvent.AddLogEvent(new SideMenuLog.ItemSelected(mPage.name().toLowerCase())));
             mButtonMore.toggle();
-            if (mTransitionStyle != null)
-            {
+            if (mTransitionStyle != null) {
                 switchToPage(mPage, new Bundle(), mTransitionStyle);
             }
-            else
-            {
+            else {
                 switchToPage(mPage);
             }
 
@@ -881,11 +769,9 @@ public class MainActivity extends BaseActivity
     }
 
 
-    private class MoreButtonOnClickListener implements View.OnClickListener
-    {
+    private class MoreButtonOnClickListener implements View.OnClickListener {
         @Override
-        public void onClick(View view)
-        {
+        public void onClick(View view) {
             mDrawerLayout.openDrawer(mNavigationDrawer);
         }
     }

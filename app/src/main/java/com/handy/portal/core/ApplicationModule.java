@@ -157,14 +157,12 @@ import retrofit.converter.GsonConverter;
                 AppUpdaterModule.class,
         }
 )
-public final class ApplicationModule
-{
+public final class ApplicationModule {
     private final Application application;
     private final Context context;
     private final Properties configs;
 
-    public ApplicationModule(final Application application)
-    {
+    public ApplicationModule(final Application application) {
         this.application = application;
         this.context = this.application.getApplicationContext();
         configs = PropertiesReader.getConfigProperties(context);
@@ -179,39 +177,33 @@ public final class ApplicationModule
     final AppseeManager provideAppseeManager(final ConfigManager configManager,
                                              final ProviderManager providerManager,
                                              final FileManager fileManager,
-                                             final EventBus eventBus)
-    {
+                                             final EventBus eventBus) {
         String appseeApiKey = configs.getProperty("appsee_api_key");
         return new AppseeManager(appseeApiKey, configManager, providerManager, fileManager, eventBus);
     }
 
     @Provides
     @Singleton
-    final BuildConfigWrapper provideBuildConfigWrapper()
-    {
+    final BuildConfigWrapper provideBuildConfigWrapper() {
         return new BuildConfigWrapper();
     }
 
     @Provides
     @Singleton
-    final EnvironmentModifier provideEnvironmentModifier(PrefsManager prefsManager)
-    {
+    final EnvironmentModifier provideEnvironmentModifier(PrefsManager prefsManager) {
         return new EnvironmentModifier(context, prefsManager);
     }
 
     @Provides
     @Singleton
-    final UserInterfaceUpdateManager provideUserInterfaceManager(final EventBus bus)
-    {
+    final UserInterfaceUpdateManager provideUserInterfaceManager(final EventBus bus) {
         return new UserInterfaceUpdateManager(bus);
     }
 
     @Provides
     @Singleton
-    final HandyRetrofitEndpoint provideHandyEndpoint(final BuildConfigWrapper buildConfigWrapper, final EnvironmentModifier environmentModifier)
-    {
-        if (buildConfigWrapper.isDebug())
-        {
+    final HandyRetrofitEndpoint provideHandyEndpoint(final BuildConfigWrapper buildConfigWrapper, final EnvironmentModifier environmentModifier) {
+        if (buildConfigWrapper.isDebug()) {
             return new HandyRetrofitFluidEndpoint(context, environmentModifier);
         }
         return new HandyRetrofitEndpoint(context);
@@ -222,12 +214,10 @@ public final class ApplicationModule
     final RestAdapter provideRestAdapter(final BuildConfigWrapper buildConfigWrapper,
                                          final HandyRetrofitEndpoint endpoint,
                                          final PrefsManager prefsManager,
-                                         final EventBus bus)
-    {
+                                         final EventBus bus) {
         final OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
-        if (!BuildConfig.DEBUG)
-        {
+        if (!BuildConfig.DEBUG) {
             okHttpClient.setCertificatePinner(new CertificatePinner.Builder()
                     .add(configs.getProperty("hostname"),
                             "sha1/tbHJQrYmt+5isj5s44sk794iYFc=",
@@ -241,17 +231,14 @@ public final class ApplicationModule
         final String password = configs.getProperty("api_password");
 
         final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
-                .setRequestInterceptor(new RequestInterceptor()
-                {
+                .setRequestInterceptor(new RequestInterceptor() {
                     final String auth = "Basic " + Base64.encodeToString((username + ":" + password)
                             .getBytes(), Base64.NO_WRAP);
 
                     @Override
-                    public void intercept(RequestFacade request)
-                    {
+                    public void intercept(RequestFacade request) {
                         String authToken = prefsManager.getSecureString(PrefsKey.AUTH_TOKEN, null);
-                        if (authToken != null)
-                        {
+                        if (authToken != null) {
                             request.addHeader("X-Auth-Token", authToken);
                         }
 
@@ -265,14 +252,11 @@ public final class ApplicationModule
                         request.addQueryParam("device_carrier", getDeviceCarrier());
                         request.addQueryParam("timezone", TimeZone.getDefault().getID());
                     }
-                }).setErrorHandler(new ErrorHandler()
-                {
+                }).setErrorHandler(new ErrorHandler() {
                     @Override
-                    public Throwable handleError(final RetrofitError cause)
-                    {
+                    public Throwable handleError(final RetrofitError cause) {
                         Response response = cause.getResponse();
-                        if (response != null && response.getStatus() == 401)
-                        {
+                        if (response != null && response.getStatus() == 401) {
                             bus.post(new HandyEvent.LogOutProvider());
                         }
 
@@ -282,8 +266,7 @@ public final class ApplicationModule
                         .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
                         .create())).setClient(new OkClient(okHttpClient)).build();
 
-        if (buildConfigWrapper.isDebug())
-        {
+        if (buildConfigWrapper.isDebug()) {
             restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
         }
         return restAdapter;
@@ -291,23 +274,20 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final HandyRetrofitService provideHandyService(final RestAdapter restAdapter)
-    {
+    final HandyRetrofitService provideHandyService(final RestAdapter restAdapter) {
         return restAdapter.create(HandyRetrofitService.class);
     }
 
     //stripe
     @Provides
     @Singleton
-    final StripeRetrofitEndpoint provideStripeEndpoint()
-    {
+    final StripeRetrofitEndpoint provideStripeEndpoint() {
         return new StripeRetrofitEndpoint(context);
     }
 
     @Provides
     @Singleton
-    final FileManager provideFileManager()
-    {
+    final FileManager provideFileManager() {
         return new FileManager(context);
     }
 
@@ -319,8 +299,7 @@ public final class ApplicationModule
         okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
 
         final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
-                .setRequestInterceptor(new RequestInterceptor()
-                {
+                .setRequestInterceptor(new RequestInterceptor() {
                     @Override
                     public void intercept(RequestFacade request) { }
                 }).setClient(new OkClient(okHttpClient)).build();
@@ -329,8 +308,7 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final DynamicEndpoint provideDynamicEndpoint()
-    {
+    final DynamicEndpoint provideDynamicEndpoint() {
         return new DynamicEndpoint();
     }
 
@@ -338,27 +316,22 @@ public final class ApplicationModule
     @Singleton
     final DynamicEndpointService provideDynamicEndpointService(
             final DynamicEndpoint endpoint,
-            final PrefsManager prefsManager)
-    {
+            final PrefsManager prefsManager) {
         final OkHttpClient okHttpClient = new OkHttpClient();
         okHttpClient.setReadTimeout(60, TimeUnit.SECONDS);
         okHttpClient.setWriteTimeout(90, TimeUnit.SECONDS);
 
         final RestAdapter restAdapter = new RestAdapter.Builder().setEndpoint(endpoint)
-                .setRequestInterceptor(new RequestInterceptor()
-                {
+                .setRequestInterceptor(new RequestInterceptor() {
                     @Override
-                    public void intercept(RequestFacade request)
-                    {
+                    public void intercept(RequestFacade request) {
                         String authToken = prefsManager.getSecureString(PrefsKey.AUTH_TOKEN, null);
-                        if (authToken != null)
-                        {
+                        if (authToken != null) {
                             request.addHeader("X-Auth-Token", authToken);
                         }
                     }
                 }).setClient(new OkClient(okHttpClient)).build();
-        if (BuildConfig.DEBUG)
-        {
+        if (BuildConfig.DEBUG) {
             restAdapter.setLogLevel(RestAdapter.LogLevel.FULL);
         }
         return restAdapter.create(DynamicEndpointService.class);
@@ -366,15 +339,13 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final EventBus provideBus()
-    {
+    final EventBus provideBus() {
         return new MainBus();
     }
 
     @Provides
     @Singleton
-    final Application provideApplication()
-    {
+    final Application provideApplication() {
         return this.application;
     }
 
@@ -385,43 +356,37 @@ public final class ApplicationModule
                                          final StripeRetrofitService stripeService, //TODO: refactor and move somewhere else?
                                          final DynamicEndpoint dynamicEndpoint,
                                          final DynamicEndpointService dynamicEndpointService
-    )
-    {
+    ) {
         return new DataManager(service, endpoint, stripeService, dynamicEndpoint, dynamicEndpointService);
     }
 
     @Provides
     @Singleton
-    final SystemManager provideSystemManager(final EventBus bus)
-    {
+    final SystemManager provideSystemManager(final EventBus bus) {
         return new SystemManager(context, bus);
     }
 
     @Provides
     @Singleton
-    final LoginManager provideLoginManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager)
-    {
+    final LoginManager provideLoginManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager) {
         return new LoginManager(bus, dataManager, prefsManager);
     }
 
     @Provides
     @Singleton
-    final ProviderManager provideProviderManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager)
-    {
+    final ProviderManager provideProviderManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager) {
         return new ProviderManager(bus, dataManager, prefsManager);
     }
 
     @Provides
     @Singleton
-    final ConfigManager provideConfigManager(final DataManager dataManager, final EventBus bus)
-    {
+    final ConfigManager provideConfigManager(final DataManager dataManager, final EventBus bus) {
         return new ConfigManager(dataManager, bus);
     }
 
     @Provides
     @Singleton
-    final PrefsManager providePrefsManager()
-    {
+    final PrefsManager providePrefsManager() {
         return new PrefsManager(context);
     }
 
@@ -431,8 +396,7 @@ public final class ApplicationModule
                                                          final DataManager dataManager,
                                                          final PrefsManager prefsManager,
                                                          final Application associatedApplication,
-                                                         final CustomDeepLinkAction customDeepLinkAction)
-    {
+                                                         final CustomDeepLinkAction customDeepLinkAction) {
         return new UrbanAirshipManager(bus, dataManager, prefsManager, associatedApplication, customDeepLinkAction);
     }
 
@@ -445,15 +409,13 @@ public final class ApplicationModule
 
     @Provides
     @Singleton
-    final ZipClusterManager provideZipClusterPolygonManager(final EventBus bus, final DataManager dataManager)
-    {
+    final ZipClusterManager provideZipClusterPolygonManager(final EventBus bus, final DataManager dataManager) {
         return new ZipClusterManager(bus, dataManager);
     }
 
     @Provides
     @Singleton
-    final StripeManager provideStripeManager(final EventBus bus, final DataManager dataManager)
-    {
+    final StripeManager provideStripeManager(final EventBus bus, final DataManager dataManager) {
         return new StripeManager(context, bus, dataManager);
     }
 
@@ -463,16 +425,14 @@ public final class ApplicationModule
                                                   final DataManager dataManager,
                                                   final FileManager fileManager,
                                                   final PrefsManager prefsManager,
-                                                  final ProviderManager providerManager)
-    {
+                                                  final ProviderManager providerManager) {
         return new EventLogManager(
                 context, bus, dataManager, fileManager, prefsManager, providerManager);
     }
 
     @Provides
     @Singleton
-    final RegionDefinitionsManager provideRegionDefinitionsManager(final EventBus bus)
-    {
+    final RegionDefinitionsManager provideRegionDefinitionsManager(final EventBus bus) {
         return new RegionDefinitionsManager(bus);
     }
 
@@ -481,28 +441,23 @@ public final class ApplicationModule
     final PageNavigationManager providePageNavigationManager(final EventBus bus,
                                                              final PaymentsManager paymentsManager,
                                                              final ConfigManager configManager
-    )
-    {
+    ) {
         return new PageNavigationManager(bus, paymentsManager, configManager);
     }
 
     @Provides
     @Singleton
     final SetupManager provideApplicationSetupManager(final EventBus bus,
-                                                      final DataManager dataManager)
-    {
+                                                      final DataManager dataManager) {
         return new SetupManager(bus, dataManager);
     }
 
-    private String getDeviceCarrier()
-    {
+    private String getDeviceCarrier() {
         final TelephonyManager telephonyManager =
                 ((TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE));
-        if (telephonyManager != null)
-        {
+        if (telephonyManager != null) {
             final String networkOperatorName = telephonyManager.getNetworkOperatorName();
-            if (networkOperatorName != null)
-            {
+            if (networkOperatorName != null) {
                 return networkOperatorName;
             }
         }

@@ -20,8 +20,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
-public class PageNavigationManager
-{
+public class PageNavigationManager {
     private final EventBus mBus;
     private final PaymentsManager mPaymentsManager;
     private final ConfigManager mConfigManager;
@@ -30,8 +29,7 @@ public class PageNavigationManager
     public PageNavigationManager(final EventBus bus,
                                  final PaymentsManager paymentsManager,
                                  final ConfigManager configManager
-    )
-    {
+    ) {
         mBus = bus;
         mBus.register(this);
         mPaymentsManager = paymentsManager;
@@ -51,24 +49,19 @@ public class PageNavigationManager
      * because of logging requirements and the way the log classes are currently structured
      */
     public void handleNonUriDerivedDeeplinkDataBundle(@Nullable final Bundle deeplinkDataBundle,
-                                                      @DeeplinkLog.Source.DeeplinkSource final String deeplinkSource)
-    {
-        if (deeplinkDataBundle != null)
-        {
+                                                      @DeeplinkLog.Source.DeeplinkSource final String deeplinkSource) {
+        if (deeplinkDataBundle != null) {
             final String deeplink = deeplinkDataBundle.getString(BundleKeys.DEEPLINK);
-            if (!TextUtils.isEmpty(deeplink))
-            {
+            if (!TextUtils.isEmpty(deeplink)) {
                 final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
-                if (page != null)
-                {
+                if (page != null) {
                     mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
                             deeplinkSource,
                             deeplinkDataBundle
                     )));
                     mBus.post(new NavigationEvent.NavigateToPage(page, deeplinkDataBundle));
                 }
-                else
-                {
+                else {
                     mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
                             deeplinkSource,
                             DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
@@ -86,25 +79,21 @@ public class PageNavigationManager
      * @param deeplinkUrl
      */
     public void handleDeeplinkUrl(@DeeplinkLog.Source.DeeplinkSource String deeplinkSource,
-                                  @NonNull String deeplinkUrl)
-    {
+                                  @NonNull String deeplinkUrl) {
         final Uri deeplinkUri = Uri.parse(deeplinkUrl);
         final Bundle deeplinkDataBundle = DeeplinkUtils.createDeeplinkBundleFromUri(deeplinkUri);
         /*
         not consolidating this part with handleNonUriDerivedDeeplinkDataBundle because logging is different
          */
-        if (deeplinkDataBundle != null)
-        {
+        if (deeplinkDataBundle != null) {
             /*
             TODO don't know why the Opened log event is being triggered here instead of on the actual click
              */
             mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Opened(deeplinkSource, deeplinkUri)));
             final String deeplink = deeplinkDataBundle.getString(BundleKeys.DEEPLINK);
-            if (!TextUtils.isEmpty(deeplink))
-            {
+            if (!TextUtils.isEmpty(deeplink)) {
                 final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
-                if (page != null)
-                {
+                if (page != null) {
 
                     mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
                             deeplinkSource,
@@ -113,8 +102,7 @@ public class PageNavigationManager
                     mBus.post(new NavigationEvent.NavigateToPage(page, deeplinkDataBundle, !page.isTopLevel()));
                     //TODO PortalWebViewClient didn't use !page.isTopLevel() to determine whether to add to back stack. check if OK
                 }
-                else
-                {
+                else {
                     mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
                             deeplinkSource,
                             DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
@@ -123,8 +111,7 @@ public class PageNavigationManager
                 }
             }
         }
-        else if (deeplinkUri != null)
-        {
+        else if (deeplinkUri != null) {
             mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
                     deeplinkSource,
                     DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
@@ -134,8 +121,7 @@ public class PageNavigationManager
     }
 
     @Subscribe
-    public void onNavigateToPageEvent(NavigationEvent.NavigateToPage event)
-    {
+    public void onNavigateToPageEvent(NavigationEvent.NavigateToPage event) {
         //Ordering is important for these checks, they have different priorities
 
         NavigationEvent.SwapFragmentEvent swapFragmentEvent = new NavigationEvent.SwapFragmentEvent(
@@ -146,14 +132,12 @@ public class PageNavigationManager
                 configBlockingForPayment() &&
                 (event.targetPage == MainViewPage.AVAILABLE_JOBS ||
                         event.targetPage == MainViewPage.SCHEDULED_JOBS ||
-                        event.targetPage == MainViewPage.BLOCK_PRO_WEBVIEW))
-        {
+                        event.targetPage == MainViewPage.BLOCK_PRO_WEBVIEW)) {
             swapFragmentEvent.targetPage = MainViewPage.PAYMENT_BLOCKING;
         }
 
         //HACK : Magical hack to turn block pros available jobs into the webview block jobs
-        else if (isCachedProviderBlockPro() && event.targetPage == MainViewPage.AVAILABLE_JOBS)
-        {
+        else if (isCachedProviderBlockPro() && event.targetPage == MainViewPage.AVAILABLE_JOBS) {
             swapFragmentEvent.targetPage = MainViewPage.BLOCK_PRO_WEBVIEW;
         }
 
@@ -162,18 +146,15 @@ public class PageNavigationManager
         mBus.post(swapFragmentEvent);
     }
 
-    private boolean isCachedProviderBlockPro()
-    {
+    private boolean isCachedProviderBlockPro() {
         return mConfigManager.getConfigurationResponse().isBlockCleaner();
     }
 
-    private boolean doesCachedProviderNeedPaymentInformation()
-    {
+    private boolean doesCachedProviderNeedPaymentInformation() {
         return mPaymentsManager.HACK_directAccessCacheNeedsPayment();
     }
 
-    private boolean configBlockingForPayment()
-    {
+    private boolean configBlockingForPayment() {
         return mConfigManager.getConfigurationResponse().shouldBlockClaimsIfMissingAccountInformation();
     }
 }

@@ -25,8 +25,7 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class PageNavigationManagerTest extends RobolectricGradleTestWrapper
-{
+public class PageNavigationManagerTest extends RobolectricGradleTestWrapper {
     @Mock
     private EventBus bus;
     @Mock
@@ -44,8 +43,7 @@ public class PageNavigationManagerTest extends RobolectricGradleTestWrapper
     PageNavigationManager pageNavigationManager;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         initMocks(this);
 
         pageNavigationManager = new PageNavigationManager(bus, mPaymentsManager, mConfigManager);
@@ -57,16 +55,14 @@ public class PageNavigationManagerTest extends RobolectricGradleTestWrapper
      * @throws Exception
      */
     @Test
-    public void onHandleSupportedDeeplinkUrl_shouldPostNavigationEventForDeeplinkPage() throws Exception
-    {
+    public void onHandleSupportedDeeplinkUrl_shouldPostNavigationEventForDeeplinkPage() throws Exception {
         ArgumentCaptor<NavigationEvent.NavigateToPage> captor = ArgumentCaptor
                 .forClass(NavigationEvent.NavigateToPage.class);
         /*
         verify the deeplinks defined in DeeplinkMapper
          */
         ImmutableMap<String, MainViewPage> deeplinkMap = DeeplinkMapper.getDeeplinkMap();
-        for (String deeplinkUrl : deeplinkMap.keySet())
-        {
+        for (String deeplinkUrl : deeplinkMap.keySet()) {
             MainViewPage targetDeeplinkPage = deeplinkMap.get(deeplinkUrl);
 
             pageNavigationManager.handleDeeplinkUrl(null, deeplinkUrl);
@@ -80,16 +76,14 @@ public class PageNavigationManagerTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void onHandleSupportedNonUriDerivedDeeplinkBundle_shouldPostNavigationEventForDeeplinkPage() throws Exception
-    {
+    public void onHandleSupportedNonUriDerivedDeeplinkBundle_shouldPostNavigationEventForDeeplinkPage() throws Exception {
         ArgumentCaptor<NavigationEvent.NavigateToPage> captor = ArgumentCaptor
                 .forClass(NavigationEvent.NavigateToPage.class);
         /*
         verify the deeplinks defined in DeeplinkMapper
          */
         ImmutableMap<String, MainViewPage> deeplinkMap = DeeplinkMapper.getDeeplinkMap();
-        for (String deeplinkUrl : deeplinkMap.keySet())
-        {
+        for (String deeplinkUrl : deeplinkMap.keySet()) {
             Bundle deeplinkDataBundle = DeeplinkUtils.createDeeplinkBundleFromUri(Uri.parse(deeplinkUrl));
             pageNavigationManager.handleNonUriDerivedDeeplinkDataBundle(deeplinkDataBundle, null);
 

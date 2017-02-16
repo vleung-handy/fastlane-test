@@ -44,12 +44,10 @@ import dagger.Provides;
                 PaymentSupportReasonsDialogFragment.class,
                 PaymentFailedDialogFragment.class,
         })
-public final class PaymentsModule
-{
+public final class PaymentsModule {
     @Provides
     @Singleton
-    final PaymentsManager providePaymentsManager(EventBus bus, final DataManager dataManager)
-    {
+    final PaymentsManager providePaymentsManager(EventBus bus, final DataManager dataManager) {
         return new PaymentsManager(bus, dataManager);
     }
 }
