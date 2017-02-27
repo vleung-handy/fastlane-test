@@ -53,8 +53,8 @@ def computeVersionCode(versionName) {
 }
 
 android {
-    compileSdkVersion 24
-    buildToolsVersion '24.0.2'
+    compileSdkVersion 25
+    buildToolsVersion '24.0.3'
     useLibrary 'org.apache.http.legacy'
     testBuildType "debug"
 
@@ -62,7 +62,7 @@ android {
         multiDexEnabled true
         applicationId "com.handy.portal"
         minSdkVersion 16
-        targetSdkVersion 24
+        targetSdkVersion 25
         versionName '1.17.0'
         versionCode computeVersionCode(versionName)
         proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
@@ -155,8 +155,8 @@ tasks.withType(Test) {
 }
 
 ext {
-    supportLibraryVersion = '24.2.1'
-    googlePlayServicesVersion = '9.6.1'
+    supportLibraryVersion = '25.1.0'
+    googlePlayServicesVersion = '9.8.0'
     jumioVersion = '2.4.0'
 }
 
@@ -179,6 +179,7 @@ dependencies {
     compile "com.google.android.gms:play-services-gcm:$googlePlayServicesVersion"
     compile "com.google.android.gms:play-services-location:$googlePlayServicesVersion"
     compile "com.google.android.gms:play-services-maps:$googlePlayServicesVersion"
+    compile "com.google.firebase:firebase-messaging:$googlePlayServicesVersion"
     compile 'com.google.guava:guava:19.0'
 
     //Square libraries, butterknife, dagger, retrofit, picasso
@@ -247,7 +248,6 @@ dependencies {
     //Layer
     compile 'com.layer.atlas:layer-atlas:0.3.5'
     compile 'com.layer.sdk:layer-sdk:0.23.4'
-    compile 'com.google.firebase:firebase-messaging:9.6.1'
 
     //Testing
     testCompile 'org.robolectric:robolectric:3.1.4'
