@@ -97,7 +97,7 @@ public class ReferAFriendFragment extends ActionBarFragment
         super.onResume();
         bus.register(this);
 
-        setActionBar(R.string.refer_a_friend, false);
+        setActionBar(R.string.earn_more_money, false);
         populateInfo();
     }
 
