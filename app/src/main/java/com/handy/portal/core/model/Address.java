@@ -4,87 +4,80 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class Address implements Serializable
-{
+public class Address implements Serializable {
     @SerializedName("address1")
-    private String address1;
+    private String mAddress1;
     @SerializedName("address2")
-    private String address2;
+    private String mAddress2;
     @SerializedName("city")
-    private String city;
+    private String mCity;
     @SerializedName("state")
-    private String state;
+    private String mState;
     @SerializedName("country")
-    private String country;
+    private String mCountry;
     @SerializedName("zipcode")
-    private String zip;
+    private String mZip;
     @SerializedName("latitude")
-    private float latitude;
+    private float mLatitude;
     @SerializedName("longitude")
-    private float longitude;
+    private float mLongitude;
     @SerializedName("short_region")
-    private String shortRegion;
+    private String mShortRegion;
+    @SerializedName("user_id")
+    private String mUserId;
 
-    public float getLatitude()
-    {
-        return latitude;
+    public String getAddress1() {
+        return mAddress1;
     }
 
-    public float getLongitude()
-    {
-        return longitude;
+    public String getAddress2() {
+        return mAddress2;
     }
 
-    public String getShortRegion()
-    {
-        return shortRegion;
+    public String getCity() {
+        return mCity;
     }
 
-    public String getAddress1()
-    {
-        return address1;
+    public String getState() {
+        return mState;
     }
 
-    public String getAddress2()
-    {
-        return address2;
+    public String getCountry() {
+        return mCountry;
     }
 
-    public String getCity()
-    {
-        return city;
+    public String getZip() {
+        return mZip;
     }
 
-    public String getState()
-    {
-        return state;
+    public float getLatitude() {
+        return mLatitude;
     }
 
-    public String getZip()
-    {
-        return zip;
+    public float getLongitude() {
+        return mLongitude;
     }
 
-    public String getStreetAddress()
-    {
+    public String getShortRegion() {
+        return mShortRegion;
+    }
+
+    public String getUserId() {
+        return mUserId;
+    }
+
+    public String getStreetAddress() {
         return (getAddress1() + (getAddress2() != null ? " " + getAddress2() : ""));
     }
 
-    public String getCityStateZip()
-    {
+    public String getCityStateZip() {
         return (getCity() != null ? getCity() : "") +
                 (getCity() != null && getState() != null ? ", " : "") +
                 (getState() != null ? getState() : "") +
                 (getZip() != null ? (" " + getZip()) : "");
     }
 
-    public String getCountry()
-    {
-        return country;
-    }
-
-    public String getShippingAddress()
-    {
-        return getStreetAddress() + "\n" +  getCityStateZip();
+    public String getShippingAddress() {
+        return getStreetAddress() + "\n" + getCityStateZip();
     }
 }
