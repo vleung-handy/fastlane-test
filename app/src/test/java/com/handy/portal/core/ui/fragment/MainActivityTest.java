@@ -79,7 +79,7 @@ public class MainActivityTest extends RobolectricGradleTestWrapper
     @Test
     public void testReferAFriendNav() throws Exception
     {
-        TestUtils.testFragmentNavigation(mActivity, R.id.nav_link_refer_a_friend, ReferAFriendFragment.class, R.string.refer_a_friend);
+        TestUtils.testFragmentNavigation(mActivity, R.id.nav_link_refer_a_friend, ReferAFriendFragment.class, R.string.earn_more_money);
     }
 
     @Test

@@ -28,7 +28,7 @@
         style="@style/TrayButton"
         android:drawableLeft="@drawable/tray_refer_a_friend"
         android:drawableStart="@drawable/tray_refer_a_friend"
-        android:text="@string/refer_a_friend"
+        android:text="@string/earn_more_money"
         />
 
     <RadioButton

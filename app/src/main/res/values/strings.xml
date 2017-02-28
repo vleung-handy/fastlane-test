@@ -422,7 +422,7 @@
     <string name="notify_available_jobs_update_error">Oops! There was an error turning on notifications. Please check your connection and try again.</string>
 
     <!-- Account settings layout -->
-    <string name="refer_a_friend">Refer a Friend</string>
+    <string name="earn_more_money">Earn More Money</string>
     <string name="account_settings">Account Settings</string>
 
     <string name="purchase_supplies">Purchase Supplies</string>
