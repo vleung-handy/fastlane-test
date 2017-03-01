@@ -17,15 +17,13 @@ import org.greenrobot.eventbus.EventBus;
 import javax.inject.Inject;
 
 public class ConfirmBookingClaimDialogFragment
-        extends ConfirmBookingCancellationPolicyDialogFragment
-{
+        extends ConfirmBookingCancellationPolicyDialogFragment {
     @Inject
     EventBus mBus;
 
     public static final String FRAGMENT_TAG = ConfirmBookingClaimDialogFragment.class.getName();
 
-    public static ConfirmBookingClaimDialogFragment newInstance(@NonNull Booking booking)
-    {
+    public static ConfirmBookingClaimDialogFragment newInstance(@NonNull Booking booking) {
         ConfirmBookingClaimDialogFragment fragment = new ConfirmBookingClaimDialogFragment();
         Bundle args = new Bundle();
         args.putSerializable(BundleKeys.BOOKING, booking);
@@ -35,28 +33,23 @@ public class ConfirmBookingClaimDialogFragment
     }
 
     @Override
-    protected int getConfirmButtonBackgroundResourceId()
-    {
+    protected int getConfirmButtonBackgroundResourceId() {
         return R.drawable.button_green_round;
     }
 
     @Override
-    protected String getConfirmButtonText()
-    {
+    protected String getConfirmButtonText() {
         return getString(R.string.confirm_claim);
     }
 
     @Override
-    protected void onConfirmActionButtonClicked()
-    {
+    protected void onConfirmActionButtonClicked() {
         Intent intent = new Intent();
         intent.putExtra(BundleKeys.BOOKING, mBooking);
-        if (getTargetFragment() != null)
-        {
+        if (getTargetFragment() != null) {
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
         }
-        else
-        {
+        else {
             Crashlytics.logException(new Exception("getTargetFragment() is null for confirm booking claim dialog fragment"));
         }
         mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ConfirmClaimConfirmed()));
@@ -64,14 +57,12 @@ public class ConfirmBookingClaimDialogFragment
     }
 
     @Override
-    public void afterShowCancellationPolicyButtonClicked()
-    {
+    public void afterShowCancellationPolicyButtonClicked() {
         mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ConfirmClaimDetailsShown()));
     }
 
     @Override
-    public void afterViewCreated()
-    {
+    public void afterViewCreated() {
         mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ConfirmClaimShown()));
     }
 }

@@ -22,36 +22,29 @@ public final class Utils //TODO: we should reorganize these methods into more sp
     public final static float XXHDPI = 3.0f;
 
     //TODO move somewhere else
-    public static boolean areAllPermissionsGranted(@NonNull Context context, @NonNull String[] permissions)
-    {
-        for (String permission : permissions)
-        {
+    public static boolean areAllPermissionsGranted(@NonNull Context context, @NonNull String[] permissions) {
+        for (String permission : permissions) {
             if (ActivityCompat.checkSelfPermission(context,
-                    permission) != PackageManager.PERMISSION_GRANTED)
-            {
+                    permission) != PackageManager.PERMISSION_GRANTED) {
                 return false;
             }
         }
         return true;
     }
 
-    public static boolean wereAnyPermissionsRequestedPreviously(@NonNull Activity activity, @NonNull String[] permissions)
-    {
-        for (String permission : permissions)
-        {
+    public static boolean wereAnyPermissionsRequestedPreviously(@NonNull Activity activity, @NonNull String[] permissions) {
+        for (String permission : permissions) {
             /**
              *  The method returns true if the app has requested this permission previously and the user denied the request.
              */
-            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission))
-            {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(activity, permission)) {
                 return true;
             }
         }
         return false;
     }
 
-    public static int getObjectIdentifier(Object object)
-    {
+    public static int getObjectIdentifier(Object object) {
         return System.identityHashCode(object);
     }
 
@@ -60,13 +53,10 @@ public final class Utils //TODO: we should reorganize these methods into more sp
      * @param context
      * @return true if the given intent was successfully launched
      */
-    public static boolean safeLaunchIntent(@NonNull Intent intent, @NonNull Context context)
-    {
-        try
-        {
+    public static boolean safeLaunchIntent(@NonNull Intent intent, @NonNull Context context) {
+        try {
             //check if there's an activity to handle this intent
-            if (intent.resolveActivity(context.getPackageManager()) != null)
-            {
+            if (intent.resolveActivity(context.getPackageManager()) != null) {
                 context.startActivity(intent);
                 return true;
             }
@@ -79,8 +69,7 @@ public final class Utils //TODO: we should reorganize these methods into more sp
                 Crashlytics.logException(new Exception("No activity found to handle the intent " + intent.toString()));
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             Toast toast = Toast.makeText(context, R.string.an_error_has_occurred, Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
@@ -89,21 +78,17 @@ public final class Utils //TODO: we should reorganize these methods into more sp
         return false;
     }
 
-    public static void inject(Context context, Object object)
-    {
+    public static void inject(Context context, Object object) {
         ((BaseApplication) context.getApplicationContext()).inject(object);
     }
 
-    public static int getAppVersion(Context context)
-    {
-        try
-        {
+    public static int getAppVersion(Context context) {
+        try {
             PackageInfo packageInfo = context.getPackageManager()
                     .getPackageInfo(context.getPackageName(), 0);
             return packageInfo.versionCode;
         }
-        catch (PackageManager.NameNotFoundException e)
-        {
+        catch (PackageManager.NameNotFoundException e) {
             // should never happen
             Crashlytics.logException(new RuntimeException("Could not get package name", e));
             return -1;

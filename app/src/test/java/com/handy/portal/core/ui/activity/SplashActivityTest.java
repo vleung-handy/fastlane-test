@@ -13,11 +13,9 @@ import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
 import static org.robolectric.Shadows.shadowOf;
 
-public class SplashActivityTest extends RobolectricGradleTestWrapper
-{
+public class SplashActivityTest extends RobolectricGradleTestWrapper {
     @Test
-    public void shouldLaunchLoginActivityIfNotLoggedIn()
-    {
+    public void shouldLaunchLoginActivityIfNotLoggedIn() {
         ActivityController<SplashActivity> activityController =
                 Robolectric.buildActivity(SplashActivity.class, null).create().start().resume().visible();
         Intent nextStartedActivity =
@@ -27,8 +25,7 @@ public class SplashActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldLaunchMainActivityIfLoggingInWithSlt()
-    {
+    public void shouldLaunchMainActivityIfLoggingInWithSlt() {
         Intent intent = new Intent();
         Uri.Builder builder = new Uri.Builder();
         builder.scheme("http")

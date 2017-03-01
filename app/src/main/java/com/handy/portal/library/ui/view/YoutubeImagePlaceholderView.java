@@ -16,8 +16,7 @@ import com.squareup.picasso.Picasso;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class YoutubeImagePlaceholderView extends FrameLayout
-{
+public class YoutubeImagePlaceholderView extends FrameLayout {
     @BindView(R.id.video_image)
     ImageView mVideoImage;
 
@@ -25,33 +24,28 @@ public class YoutubeImagePlaceholderView extends FrameLayout
     private String mImageUrlFormatted = "http://img.youtube.com/vi/%s/maxresdefault.jpg";
     private String mSection;
 
-    public YoutubeImagePlaceholderView(final Context context)
-    {
+    public YoutubeImagePlaceholderView(final Context context) {
         super(context);
         init();
     }
 
-    public YoutubeImagePlaceholderView(final Context context, final AttributeSet attrs)
-    {
+    public YoutubeImagePlaceholderView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public YoutubeImagePlaceholderView(final Context context, final AttributeSet attrs, final int defStyleAttr)
-    {
+    public YoutubeImagePlaceholderView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public YoutubeImagePlaceholderView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
-    {
+    public YoutubeImagePlaceholderView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    public void setID(String id)
-    {
+    public void setID(String id) {
         mId = id;
         mImageUrlFormatted = String.format(mImageUrlFormatted, id);
         Picasso.with(getContext())
@@ -59,23 +53,19 @@ public class YoutubeImagePlaceholderView extends FrameLayout
                 .into(mVideoImage);
     }
 
-    public void setSection(String section)
-    {
+    public void setSection(String section) {
         mSection = section;
     }
 
-    public String getID()
-    {
+    public String getID() {
         return mId;
     }
 
-    public String getSection()
-    {
+    public String getSection() {
         return mSection;
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), R.layout.element_youtube_image_view, this);
         ButterKnife.bind(this);
 

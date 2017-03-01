@@ -11,22 +11,18 @@ import com.handy.portal.bookings.model.Booking;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DismissableBookingElementView extends BookingElementView
-{
+public class DismissableBookingElementView extends BookingElementView {
     @BindView(R.id.available_booking_container)
     ViewGroup mAvailableBookingContainer;
 
     @Override
-    public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent)
-    {
+    public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent) {
         View availableBookingView;
-        if (convertView != null)
-        {
+        if (convertView != null) {
             ButterKnife.bind(this, convertView);
             availableBookingView = mAvailableBookingContainer.getChildAt(0);
         }
-        else
-        {
+        else {
             convertView = LayoutInflater.from(parentContext)
                     .inflate(R.layout.element_dismissable_booking_list_entry, parent, false);
             ButterKnife.bind(this, convertView);
@@ -38,8 +34,7 @@ public class DismissableBookingElementView extends BookingElementView
                 availableBookingView,
                 mAvailableBookingContainer,
                 AvailableBookingElementView.class);
-        if (mAvailableBookingContainer.getChildCount() == 0)
-        {
+        if (mAvailableBookingContainer.getChildCount() == 0) {
             mAvailableBookingContainer.addView(availableBookingElementMediator.getAssociatedView());
         }
         mAssociatedView = convertView;

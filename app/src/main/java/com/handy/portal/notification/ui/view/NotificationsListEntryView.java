@@ -15,8 +15,7 @@ import com.handy.portal.notification.model.NotificationType;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class NotificationsListEntryView extends FrameLayout
-{
+public class NotificationsListEntryView extends FrameLayout {
     @BindView(R.id.notification_container)
     ViewGroup mNotificationContainer;
 
@@ -29,71 +28,56 @@ public class NotificationsListEntryView extends FrameLayout
     @BindView(R.id.notification_time)
     TextView mNotificationTime;
 
-    public NotificationsListEntryView(Context context)
-    {
+    public NotificationsListEntryView(Context context) {
         super(context);
         inflate(getContext(), R.layout.element_notification_list_entry, this);
         ButterKnife.bind(this);
     }
 
-    public void updateDisplay(NotificationMessage notificationMessage)
-    {
+    public void updateDisplay(NotificationMessage notificationMessage) {
         setNotificationBackground(notificationMessage);
         setNotificationText(notificationMessage);
         setNotificationImage(notificationMessage);
     }
 
-    public void setNotificationBackground(final NotificationMessage notificationMessage)
-    {
-        if (notificationMessage.isInteracted())
-        {
+    public void setNotificationBackground(final NotificationMessage notificationMessage) {
+        if (notificationMessage.isInteracted()) {
             mNotificationContainer.setBackgroundResource(R.color.handy_bg);
         }
-        else
-        {
+        else {
             mNotificationContainer.setBackgroundResource(R.drawable.button_white);
         }
     }
 
     @SuppressWarnings("deprecation")
-    private void setNotificationText(final NotificationMessage notificationMessage)
-    {
-        if (notificationMessage.isInteracted())
-        {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            {
+    private void setNotificationText(final NotificationMessage notificationMessage) {
+        if (notificationMessage.isInteracted()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 mNotificationBody.setText(Html.fromHtml(notificationMessage.getBody(),
                         Html.FROM_HTML_MODE_LEGACY));
             }
-            else
-            {
+            else {
                 mNotificationBody.setText(Html.fromHtml(notificationMessage.getBody()));
             }
         }
-        else
-        {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            {
+        else {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 mNotificationBody.setText(Html.fromHtml(notificationMessage.getHtmlBody(),
                         Html.FROM_HTML_MODE_LEGACY));
             }
-            else
-            {
+            else {
                 mNotificationBody.setText(Html.fromHtml(notificationMessage.getHtmlBody()));
             }
         }
         mNotificationTime.setText(notificationMessage.getFormattedTime());
     }
 
-    private void setNotificationImage(final NotificationMessage notificationMessage)
-    {
+    private void setNotificationImage(final NotificationMessage notificationMessage) {
         final NotificationType notificationType = notificationMessage.getType();
-        if (notificationMessage.isInteracted())
-        {
+        if (notificationMessage.isInteracted()) {
             mNotificationIcon.setImageResource(notificationType.getInactiveIconResId());
         }
-        else
-        {
+        else {
             mNotificationIcon.setImageResource(notificationType.getActiveIconResId());
         }
     }

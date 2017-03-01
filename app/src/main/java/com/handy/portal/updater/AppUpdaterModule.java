@@ -22,16 +22,14 @@ import dagger.Provides;
                 PleaseUpdateActivity.class,
                 PleaseUpdateFragment.class,
         })
-public final class AppUpdaterModule
-{
+public final class AppUpdaterModule {
     @Provides
     @Singleton
     final VersionManager provideVersionManager(final Context context,
                                                final EventBus bus,
                                                final DataManager dataManager,
                                                final PrefsManager prefsManager,
-                                               final BuildConfigWrapper buildConfigWrapper)
-    {
+                                               final BuildConfigWrapper buildConfigWrapper) {
         return new VersionManager(context, bus, dataManager, prefsManager, buildConfigWrapper);
     }
 }

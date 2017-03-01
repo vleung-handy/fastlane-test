@@ -26,19 +26,16 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
-public class DashboardFeedbackFragmentTest extends RobolectricGradleTestWrapper
-{
+public class DashboardFeedbackFragmentTest extends RobolectricGradleTestWrapper {
     private DashboardFeedbackFragment mFragment;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         mFragment = new DashboardFeedbackFragment();
     }
 
     @Test
-    public void shouldShowTitleAndFeedback() throws Exception
-    {
+    public void shouldShowTitleAndFeedback() throws Exception {
         Bundle args = new Bundle();
         args.putSerializable(BundleKeys.PROVIDER_EVALUATION, TestDataManager.createProviderEvaluation());
         mFragment.setArguments(args);
@@ -51,8 +48,7 @@ public class DashboardFeedbackFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldLaunchVideoLibrary() throws Exception
-    {
+    public void shouldLaunchVideoLibrary() throws Exception {
         Bundle args = new Bundle();
         args.putSerializable(BundleKeys.PROVIDER_EVALUATION, TestDataManager.createProviderEvaluation());
         mFragment.setArguments(args);
@@ -65,8 +61,7 @@ public class DashboardFeedbackFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldShowNoResultViewIfNoFeedback() throws Exception
-    {
+    public void shouldShowNoResultViewIfNoFeedback() throws Exception {
         Bundle args = new Bundle();
         ProviderEvaluation evaluation = TestDataManager.createProviderEvaluation();
         when(evaluation.getProviderFeedback()).thenReturn(new ArrayList<ProviderFeedback>());

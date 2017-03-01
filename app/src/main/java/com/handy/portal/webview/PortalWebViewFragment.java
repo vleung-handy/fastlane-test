@@ -23,15 +23,13 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PortalWebViewFragment extends ActionBarFragment
-{
+public class PortalWebViewFragment extends ActionBarFragment {
     @BindView(R.id.portal_web_view)
     WebView webView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
+                             Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_webportal, container, false);
         ButterKnife.bind(this, view);
@@ -45,21 +43,17 @@ public class PortalWebViewFragment extends ActionBarFragment
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
 
         initWebView();
 
-        if (validateRequiredArguments() && webView != null)
-        {
-            webView.setWebChromeClient(new WebChromeClient()
-            {
+        if (validateRequiredArguments() && webView != null) {
+            webView.setWebChromeClient(new WebChromeClient() {
                 @Override
-                public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback)
-                {
+                public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
                     callback.invoke(origin, true, false);
                 }
             });
@@ -68,29 +62,24 @@ public class PortalWebViewFragment extends ActionBarFragment
     }
 
     @Override
-    protected List<String> requiredArguments()
-    {
+    protected List<String> requiredArguments() {
         List<String> requiredArguments = new ArrayList<>();
         requiredArguments.add(BundleKeys.TARGET_URL);
         return requiredArguments;
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item)
-    {
-        if (item.getItemId() == android.R.id.home && webView.canGoBack())
-        {
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        if (item.getItemId() == android.R.id.home && webView.canGoBack()) {
             webView.goBack();
             return true;
         }
-        else
-        {
+        else {
             return super.onOptionsItemSelected(item);
         }
     }
 
-    protected void initWebView()
-    {
+    protected void initWebView() {
         webView.getSettings().setJavaScriptEnabled(true);
         webView.getSettings().setGeolocationEnabled(true);
         webView.setWebViewClient(new PortalWebViewClient(this, webView, bus,
@@ -98,28 +87,24 @@ public class PortalWebViewFragment extends ActionBarFragment
     }
 
     @NonNull
-    protected WebView getWebView()
-    {
+    protected WebView getWebView() {
         return webView;
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         webView.onResume();
         super.onResume();
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
         webView.onPause();
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         /*
         quick-fix: since the whole app shares one loading spinner,
         have to remove it when this fragment is destroyed (i.e. back press)

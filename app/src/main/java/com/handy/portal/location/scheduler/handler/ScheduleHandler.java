@@ -32,8 +32,7 @@ import javax.inject.Inject;
  */
 public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrategyHandler, ScheduleStrategyType extends ScheduleStrategy>
         extends BroadcastReceiver
-        implements ScheduleStrategyHandler.StrategyCallbacks<StrategyHandlerType>
-{
+        implements ScheduleStrategyHandler.StrategyCallbacks<StrategyHandlerType> {
     @Inject
     protected EventBus mBus;
 
@@ -45,8 +44,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
     private Set<StrategyHandlerType> mActiveStrategies = new HashSet<>();
 
     public ScheduleHandler(@NonNull LinkedList<ScheduleStrategyType> sortedByDateAscendingStrategies,
-                           @NonNull Context context)
-    {
+                           @NonNull Context context) {
         Utils.inject(context, this);
 
         mSortedStrategies = sortedByDateAscendingStrategies;
@@ -64,8 +62,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
 
     protected abstract String getWakeupAlarmBroadcastAction();
 
-    protected IntentFilter getAlarmIntentFilter()
-    {
+    protected IntentFilter getAlarmIntentFilter() {
         IntentFilter intentFilter = new IntentFilter();
         intentFilter.addAction(getWakeupAlarmBroadcastAction());
         return intentFilter;
@@ -76,8 +73,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
      * <p/>
      * starts handling this schedule if it wasn't handled before
      */
-    public void startIfNotStarted()
-    {
+    public void startIfNotStarted() {
         if (mIsStarted) { return; }
         mIsStarted = true;
         scanSchedule();
@@ -95,15 +91,12 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
      * <p/>
      * TODO: stop the service when schedule is completely handled
      */
-    protected final void scanSchedule()
-    {
-        try
-        {
+    protected final void scanSchedule() {
+        try {
             //look for any strategies within scope and starts them if not already started
             ListIterator<ScheduleStrategyType> strategyListIterator
                     = mSortedStrategies.listIterator();
-            while (strategyListIterator.hasNext())
-            {
+            while (strategyListIterator.hasNext()) {
                 ScheduleStrategyType strategy = strategyListIterator.next();
 
                 strategyListIterator.remove(); //strategy is handled, don't need to handle again
@@ -127,8 +120,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
 
             //TODO: when the schedule is completely expired, we want to request a schedule for the next N days in case the user never opens the app
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             Log.e(getClass().getName(), e.getMessage());
             Crashlytics.logException(e);
         }
@@ -143,32 +135,27 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
      * @param intent
      */
     @Override
-    public void onReceive(final Context context, final Intent intent)
-    {
+    public void onReceive(final Context context, final Intent intent) {
         Bundle extrasBundle = intent.getExtras();
-        if (extrasBundle == null)
-        {
+        if (extrasBundle == null) {
             //shouldn't happen
             Log.e(getClass().getName(), "Args is null on receive alarm");
             return;
         }
         String intentAction = intent.getAction();
-        if (intentAction == null)
-        {
+        if (intentAction == null) {
             Log.e(getClass().getName(), "Intent action is null on receive alarm");
             return;
         }
 
-        if (intentAction.equals(getWakeupAlarmBroadcastAction()))
-        {
+        if (intentAction.equals(getWakeupAlarmBroadcastAction())) {
             ScheduleStrategyType scheduleStrategy = ParcelableUtils.unmarshall(extrasBundle, getStrategyBundleExtraKey(), getStrategyCreator());
             if (scheduleStrategy == null) { return; }
             onStrategyAlarmTriggered(scheduleStrategy);
         }
     }
 
-    public final void startStrategy(@NonNull final ScheduleStrategyType scheduleStrategyType) throws SecurityException, IllegalStateException
-    {
+    public final void startStrategy(@NonNull final ScheduleStrategyType scheduleStrategyType) throws SecurityException, IllegalStateException {
         Log.d(getClass().getName(), "starting strategy...");
         StrategyHandlerType strategyHandlerType = createStrategyHandler(scheduleStrategyType);
         mActiveStrategies.add(strategyHandlerType); //only needed for removing updates on destroy
@@ -177,10 +164,8 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
 
     public abstract StrategyHandlerType createStrategyHandler(ScheduleStrategyType scheduleStrategyType);
 
-    public void stopAllActiveStrategies()
-    {
-        for (StrategyHandlerType strategyHandlerType : mActiveStrategies)
-        {
+    public void stopAllActiveStrategies() {
+        for (StrategyHandlerType strategyHandlerType : mActiveStrategies) {
             strategyHandlerType.stopStrategy();
         }
         mActiveStrategies.clear();
@@ -192,46 +177,37 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
      * called when this handler is destroyed
      * sends out all queued location updates to the server
      */
-    protected final void sendAllQueuedStrategyUpdates()
-    {
+    protected final void sendAllQueuedStrategyUpdates() {
         Log.d(getClass().getName(), "sending out all queued location updates");
         Iterator<StrategyHandlerType> locationStrategyHandlerIterator = mActiveStrategies.iterator();
-        while (locationStrategyHandlerIterator.hasNext())
-        {
+        while (locationStrategyHandlerIterator.hasNext()) {
             ScheduleStrategyHandler locationScheduleScheduleStrategyHandler = locationStrategyHandlerIterator.next();
-            if (locationScheduleScheduleStrategyHandler.isStrategyExpired())
-            {
+            if (locationScheduleScheduleStrategyHandler.isStrategyExpired()) {
                 //remove, just in case it wasn't properly removed before
                 locationStrategyHandlerIterator.remove();
             }
-            else
-            {
+            else {
                 locationScheduleScheduleStrategyHandler.buildStrategyBatchUpdatesAndNotifyReady();
             }
         }
     }
 
-    private void cancelScheduledAlarms()
-    {
-        try
-        {
+    private void cancelScheduledAlarms() {
+        try {
             //cancels scheduled alarms
             PendingIntent pendingIntent = getAlarmPendingIntent(new Intent());
             mAlarmManager.cancel(pendingIntent);
 
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             Crashlytics.logException(e);
         }
     }
 
-    public final void destroy()
-    {
+    public final void destroy() {
         cancelScheduledAlarms();
 
-        try
-        {
+        try {
             //sends all location updates that are supposed to be sent to server
             sendAllQueuedStrategyUpdates();
 
@@ -242,8 +218,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
             //unregister the alarm receiver
             mContext.unregisterReceiver(this);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             Crashlytics.logException(e);
         }
     }
@@ -253,8 +228,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
      *
      * @param strategy
      */
-    private void scheduleAlarm(@NonNull ScheduleStrategyType strategy)
-    {
+    private void scheduleAlarm(@NonNull ScheduleStrategyType strategy) {
         /**
          * passing byte array to avoid exception
          *
@@ -275,8 +249,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
      * @param intentWithExtras this should already have any extras added to it if needed
      * @return the pending intent used to schedule and cancel alarms
      */
-    private PendingIntent getAlarmPendingIntent(@NonNull Intent intentWithExtras)
-    {
+    private PendingIntent getAlarmPendingIntent(@NonNull Intent intentWithExtras) {
         //the intent data/action/package (but NOT extras), and flags passed to PendingIntent.getBroadcast, are used as identifiers to cancel alarms
         intentWithExtras.setAction(getWakeupAlarmBroadcastAction());
         intentWithExtras.setPackage(mContext.getPackageName());
@@ -297,17 +270,14 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
      *
      * @param scheduleStrategyType
      */
-    public final void onStrategyAlarmTriggered(ScheduleStrategyType scheduleStrategyType)
-    {
+    public final void onStrategyAlarmTriggered(ScheduleStrategyType scheduleStrategyType) {
         if (scheduleStrategyType == null) { return; }
         Log.d(getClass().getName(), "Got strategy " + scheduleStrategyType.toString());
-        try
-        {
+        try {
             startStrategy(scheduleStrategyType);
             scanSchedule();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             //in case it throws security exception or google client not connected
             e.printStackTrace();
             Crashlytics.logException(e);
@@ -322,8 +292,7 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
      * unlike the location service, so it is harder to guarantee that the bus will be unregistered
      * when we no longer care about this object (ex. what if this object loses its reference?)
      */
-    public void onNetworkReconnected()
-    {
+    public void onNetworkReconnected() {
         //maybe do something
     }
 
@@ -332,17 +301,14 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
      *
      * @param strategyHandler
      */
-    public void onStrategyExpired(StrategyHandlerType strategyHandler)
-    {
-        try
-        {
+    public void onStrategyExpired(StrategyHandlerType strategyHandler) {
+        try {
             Log.d(getClass().getName(), "strategy expired, posting remaining update objects in queue...");
             //strategy expired, we want to post any remaining update objects in the queue
             strategyHandler.buildStrategyBatchUpdatesAndNotifyReady();
             mActiveStrategies.remove(strategyHandler);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             //not trusting post delayed
             e.printStackTrace();
             Crashlytics.logException(e);
@@ -352,20 +318,16 @@ public abstract class ScheduleHandler<StrategyHandlerType extends ScheduleStrate
     /**
      * might want to call this when the network is reconnected
      */
-    protected void restartActiveStrategies()
-    {
+    protected void restartActiveStrategies() {
         Log.d(getClass().getName(), "restarting active strategies");
         Iterator<StrategyHandlerType> strategyHandlerIterator = mActiveStrategies.iterator();
-        while (strategyHandlerIterator.hasNext())
-        {
+        while (strategyHandlerIterator.hasNext()) {
             StrategyHandlerType locationLocationTrackingStrategyHandler = strategyHandlerIterator.next();
-            if (locationLocationTrackingStrategyHandler.isStrategyExpired())
-            {
+            if (locationLocationTrackingStrategyHandler.isStrategyExpired()) {
                 //remove, just in case it wasn't properly removed before
                 strategyHandlerIterator.remove();
             }
-            else
-            {
+            else {
                 locationLocationTrackingStrategyHandler.startStrategy();
             }
         }

@@ -16,8 +16,7 @@ import org.greenrobot.eventbus.Subscribe;
  * wrapping Appsee in a manager in case we want more control over it ex. easily toggle it on for
  * specific users only via configs, or catch exceptions
  */
-public class AppseeManager
-{
+public class AppseeManager {
     private final String mAppSeeApiKey;
     private ConfigManager mConfigManager;
     private ProviderManager mProviderManager;
@@ -34,8 +33,7 @@ public class AppseeManager
             @NonNull final ProviderManager providerManager,
             @NonNull final FileManager fileManager,
             @NonNull final EventBus eventBus
-            )
-    {
+    ) {
         mAppSeeApiKey = appseeApiKey;
         mConfigManager = configurationManager;
         mFileManager = fileManager;
@@ -45,30 +43,26 @@ public class AppseeManager
 
     /**
      * Appsee appears to use default internal storage directory for video storage
-     *
+     * <p>
      * this method should not cause a crash as all exceptions are caught
+     *
      * @return
      */
-    private boolean isEnoughSpaceAvailableForRecording()
-    {
+    private boolean isEnoughSpaceAvailableForRecording() {
         long freeSpaceBytes = mFileManager.getInternalStorageDirectoryFreeSpaceBytes();
-        if(freeSpaceBytes < 0)
-        {
+        if (freeSpaceBytes < 0) {
             addAppseeEvent("unable to get files directory free space");
         }
-        long freeSpaceMegabytes = freeSpaceBytes/1000000;
+        long freeSpaceMegabytes = freeSpaceBytes / 1000000;
         return freeSpaceMegabytes >= LOW_STORAGE_SPACE_THRESHOLD_MEGABYTES;
     }
 
-    private void addAppseeEvent(String eventText)
-    {
-        try
-        {
+    private void addAppseeEvent(String eventText) {
+        try {
             //although Appsee.addEvent() already has a try/catch, there can be an exception in the catch
             Appsee.addEvent(eventText);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             Crashlytics.logException(e);
         }
     }
@@ -76,12 +70,10 @@ public class AppseeManager
     /**
      * @return whether Appsee.start() can be called
      */
-    public boolean isAppseeEnabled()
-    {
+    public boolean isAppseeEnabled() {
         ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
         boolean isEnoughStorageSpaceAvailableForRecording = isEnoughSpaceAvailableForRecording();
-        if(!isEnoughStorageSpaceAvailableForRecording)
-        {
+        if (!isEnoughStorageSpaceAvailableForRecording) {
             String logErrorMessage = "not enabling Appsee - low disk space (<" + LOW_STORAGE_SPACE_THRESHOLD_MEGABYTES + "mb)";
             Crashlytics.logException(new Exception(logErrorMessage));
             addAppseeEvent(logErrorMessage); //log in Appsee so we don't get confused when no recording
@@ -100,10 +92,10 @@ public class AppseeManager
      * TODO this is not a sure way of knowing that provider is logged in
      * they can have this in their prefs but not be authenticated
      * not putting in preferences manager because of this uncertainty
+     *
      * @return
      */
-    private boolean isUserLoggedIn()
-    {
+    private boolean isUserLoggedIn() {
         return !Strings.isNullOrEmpty(mProviderManager.getLastProviderId());
     }
 
@@ -111,13 +103,11 @@ public class AppseeManager
      * starts recording the screen if Appsee is enabled
      * (based on resulting videos, starting recording again after already started will have no effect)
      * else stops recording the screen
-     *
+     * <p>
      * according to docs, should ONLY be called from Activity.onCreate() or Activity.onResume()
      */
-    public void startOrStopRecordingAsNecessary()
-    {
-        if (isAppseeEnabled())
-        {
+    public void startOrStopRecordingAsNecessary() {
+        if (isAppseeEnabled()) {
             //start appsee recording
             startRecording();
             updateUserId();
@@ -131,11 +121,10 @@ public class AppseeManager
 
     /**
      * should call after recording start, and when active provider changes
-     *
+     * <p>
      * TODO is this harmless if recording isn't started? also can it be called any time in lifecycle?
      */
-    private void updateUserId()
-    {
+    private void updateUserId() {
         //set user id if present
 //        Appsee.setUserId(mProviderManager.getLastProviderId());
         //TODO uncomment when legal says this is OK
@@ -147,15 +136,12 @@ public class AppseeManager
      * start recording the screen
      * does nothing if recording was already started
      */
-    private void startRecording()
-    {
-        try
-        {
+    private void startRecording() {
+        try {
             //although Appsee.start() already has a try/catch, there can be an exception in the catch
             Appsee.start(mAppSeeApiKey);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             Crashlytics.logException(e);
         }
     }
@@ -164,15 +150,12 @@ public class AppseeManager
      * stops recording the screen
      * does nothing if recording was not started
      */
-    private void stopRecording()
-    {
-        try
-        {
+    private void stopRecording() {
+        try {
             //although Appsee.stop() already has a try/catch, there can be an exception in the catch
             Appsee.stop();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             Crashlytics.logException(e);
         }
     }
@@ -185,24 +168,19 @@ public class AppseeManager
      *
      * @param views
      */
-    public static void markViewsAsSensitive(View... views)
-    {
-        for (View view : views)
-        {
-            try
-            {
+    public static void markViewsAsSensitive(View... views) {
+        for (View view : views) {
+            try {
                 Appsee.markViewAsSensitive(view);
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 Crashlytics.logException(e);
             }
         }
     }
 
     @Subscribe
-    public void onProviderIdUpdated(HandyEvent.ProviderIdUpdated event)
-    {
+    public void onProviderIdUpdated(HandyEvent.ProviderIdUpdated event) {
         updateUserId();
     }
 }

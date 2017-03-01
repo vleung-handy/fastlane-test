@@ -11,73 +11,61 @@ import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 /**
  * events used by the bus
  */
-public abstract class LocationEvent
-{
-    public static class SendGeolocationRequest extends HandyEvent.RequestEvent
-    {
+public abstract class LocationEvent {
+    public static class SendGeolocationRequest extends HandyEvent.RequestEvent {
         private final LocationBatchUpdate mLocationBatchUpdate;
 
-        public SendGeolocationRequest(LocationBatchUpdate locationBatchUpdate)
-        {
+        public SendGeolocationRequest(LocationBatchUpdate locationBatchUpdate) {
             mLocationBatchUpdate = locationBatchUpdate;
         }
 
-        public LocationBatchUpdate getLocationBatchUpdate()
-        {
+        public LocationBatchUpdate getLocationBatchUpdate() {
             return mLocationBatchUpdate;
         }
     }
 
 
-    public static class LocationUpdated extends HandyEvent
-    {
+    public static class LocationUpdated extends HandyEvent {
         private final Location mLocationUpdate;
 
-        public LocationUpdated(final Location locationUpdate)
-        {
+        public LocationUpdated(final Location locationUpdate) {
             mLocationUpdate = locationUpdate;
         }
 
-        public Location getLocationUpdate()
-        {
+        public Location getLocationUpdate() {
             return mLocationUpdate;
         }
     }
 
 
-    public static class ReceiveLocationScheduleSuccess extends HandyEvent.ReceiveSuccessEvent
-    {
+    public static class ReceiveLocationScheduleSuccess extends HandyEvent.ReceiveSuccessEvent {
         private final LocationScheduleStrategies mLocationScheduleStrategies;
 
-        public ReceiveLocationScheduleSuccess(@NonNull LocationScheduleStrategies locationScheduleStrategies)
-        {
+        public ReceiveLocationScheduleSuccess(@NonNull LocationScheduleStrategies locationScheduleStrategies) {
             mLocationScheduleStrategies = locationScheduleStrategies;
         }
 
-        public LocationScheduleStrategies getLocationScheduleStrategies()
-        {
+        public LocationScheduleStrategies getLocationScheduleStrategies() {
             return mLocationScheduleStrategies;
         }
     }
 
-    public static class ReceiveLocationScheduleError extends HandyEvent.ReceiveErrorEvent
-    {
-        public ReceiveLocationScheduleError(DataManager.DataManagerError error)
-        {
+
+    public static class ReceiveLocationScheduleError extends HandyEvent.ReceiveErrorEvent {
+        public ReceiveLocationScheduleError(DataManager.DataManagerError error) {
             this.error = error;
         }
     }
 
 
-    public static class RequestLocationSchedule extends HandyEvent.RequestEvent
-    {
+    public static class RequestLocationSchedule extends HandyEvent.RequestEvent {
     }
 
-    public static class RequestStopLocationService extends HandyEvent.RequestEvent
-    {
+
+    public static class RequestStopLocationService extends HandyEvent.RequestEvent {
     }
 
-    public static class LocationServiceStarted extends HandyEvent
-    {
+
+    public static class LocationServiceStarted extends HandyEvent {
     }
 }

@@ -4,8 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class NotificationAction implements Serializable
-{
+public class NotificationAction implements Serializable {
     @SerializedName("type")
     private String mType;
 
@@ -15,18 +14,15 @@ public class NotificationAction implements Serializable
     @SerializedName("text")
     private String mText;
 
-    public String getType()
-    {
+    public String getType() {
         return mType;
     }
 
-    public String getDeeplink()
-    {
+    public String getDeeplink() {
         return mDeeplink;
     }
 
-    public String getText()
-    {
+    public String getText() {
         return mText;
     }
 }

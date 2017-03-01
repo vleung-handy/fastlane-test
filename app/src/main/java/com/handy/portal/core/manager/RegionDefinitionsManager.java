@@ -20,15 +20,13 @@ import java.io.IOException;
 import javax.inject.Inject;
 
 //manager for region specific form definitions, etc
-public class RegionDefinitionsManager
-{
+public class RegionDefinitionsManager {
     private final EventBus bus;
 
     private final Cache<String, FormDefinitionWrapper> formDefinitionCache;
 
     @Inject
-    public RegionDefinitionsManager(final EventBus bus)
-    {
+    public RegionDefinitionsManager(final EventBus bus) {
         this.bus = bus;
         this.bus.register(this);
         formDefinitionCache = CacheBuilder.newBuilder()
@@ -37,49 +35,40 @@ public class RegionDefinitionsManager
     }
 
     @Subscribe
-    public void onRequestFormDefinitions(final RegionDefinitionEvent.RequestFormDefinitions event)
-    {
+    public void onRequestFormDefinitions(final RegionDefinitionEvent.RequestFormDefinitions event) {
         //TODO: make a network call instead?
         FormDefinitionWrapper formDefinitionWrapper = null;
         String region = event.region.toLowerCase();
         Context context = event.context;
-        if (formDefinitionCache.getIfPresent(region) == null)
-        {
+        if (formDefinitionCache.getIfPresent(region) == null) {
             String path = "region/" + region + "/form_definitions.json"; //TODO: cleanup
 
-            try
-            {
+            try {
                 String fileContents = IOUtils.loadJSONFromAsset(context, path);
-                try
-                {
+                try {
                     formDefinitionWrapper = (new Gson()).fromJson(fileContents, FormDefinitionWrapper.class);//TODO: add exception handling
                     formDefinitionCache.put(region, formDefinitionWrapper);
                 }
-                catch (JsonSyntaxException ex)
-                {
+                catch (JsonSyntaxException ex) {
                     Crashlytics.logException(ex);
                 }
 
             }
-            catch (IOException e)
-            {
+            catch (IOException e) {
                 Crashlytics.logException(e);
             }
 
         }
-        else
-        {
+        else {
             formDefinitionWrapper = formDefinitionCache.getIfPresent(region);
         }
 
-        if (formDefinitionWrapper == null)
-        {
+        if (formDefinitionWrapper == null) {
             //TODO: set proper error object
             bus.post(new RegionDefinitionEvent.ReceiveFormDefinitionsError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.CLIENT)));
 
         }
-        else
-        {
+        else {
             bus.post(new RegionDefinitionEvent.ReceiveFormDefinitionsSuccess(formDefinitionWrapper));
 
         }

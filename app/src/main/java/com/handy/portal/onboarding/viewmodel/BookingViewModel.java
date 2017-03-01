@@ -4,55 +4,44 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.TextUtils;
 
-public class BookingViewModel
-{
+public class BookingViewModel {
     private Booking mBooking;
     public boolean mSelected;
 
-    public BookingViewModel(final Booking booking)
-    {
+    public BookingViewModel(final Booking booking) {
         mBooking = booking;
     }
 
-    public boolean isSelected()
-    {
+    public boolean isSelected() {
         return mSelected;
     }
 
-    public void setSelected(final boolean selected)
-    {
+    public void setSelected(final boolean selected) {
         this.mSelected = selected;
     }
 
-    public String getTitle()
-    {
-        if (mBooking.isProxy())
-        {
+    public String getTitle() {
+        if (mBooking.isProxy()) {
             return mBooking.getLocationName();
         }
-        else
-        {
+        else {
             return mBooking.getAddress().getShortRegion();
         }
     }
 
-    public String getSubTitle()
-    {
+    public String getSubTitle() {
         String startTime = DateTimeUtils.formatDateTo12HourClock(mBooking.getStartDate());
         String endTime = DateTimeUtils.formatDateTo12HourClock(mBooking.getEndDate());
 
-        if (!TextUtils.isNullOrEmpty(startTime) && !TextUtils.isNullOrEmpty(endTime))
-        {
+        if (!TextUtils.isNullOrEmpty(startTime) && !TextUtils.isNullOrEmpty(endTime)) {
             return startTime.toLowerCase() + " - " + endTime.toLowerCase();
         }
-        else
-        {
+        else {
             return "";
         }
     }
 
-    public Booking getBooking()
-    {
+    public Booking getBooking() {
         return mBooking;
     }
 }

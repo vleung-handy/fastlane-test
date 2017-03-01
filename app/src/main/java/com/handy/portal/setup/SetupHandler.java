@@ -15,8 +15,7 @@ import org.greenrobot.eventbus.Subscribe;
 
 import javax.inject.Inject;
 
-public class SetupHandler
-{
+public class SetupHandler {
     @Inject
     EventBus bus;
 
@@ -25,27 +24,23 @@ public class SetupHandler
     private Flow mSetupFlow;
 
     public SetupHandler(@NonNull final Callback setupHandlerCallback,
-                        @NonNull final Context context)
-    {
+                        @NonNull final Context context) {
         Utils.inject(context, this);
         bus.register(this);
         mSetupHandlerCallback = setupHandlerCallback;
         mContext = context;
     }
 
-    public void start()
-    {
+    public void start() {
         bus.post(new SetupEvent.RequestSetupData());
     }
 
-    public boolean isOngoing()
-    {
+    public boolean isOngoing() {
         return mSetupFlow != null && !mSetupFlow.isComplete();
     }
 
     @Subscribe
-    public void onReceiveSetupDataSuccess(final SetupEvent.ReceiveSetupDataSuccess event)
-    {
+    public void onReceiveSetupDataSuccess(final SetupEvent.ReceiveSetupDataSuccess event) {
         final SetupData setupData = event.getSetupData();
         mSetupFlow = new Flow()
                 .addStep(new AppUpdateStep()) // this does NOTHING for now
@@ -55,11 +50,9 @@ public class SetupHandler
                         setupData.getConfigurationResponse()))
                 .addStep(new SetProviderProfileStep(mContext,
                         setupData.getProviderProfile()))
-                .setOnFlowCompleteListener(new Flow.OnFlowCompleteListener()
-                {
+                .setOnFlowCompleteListener(new Flow.OnFlowCompleteListener() {
                     @Override
-                    public void onFlowComplete()
-                    {
+                    public void onFlowComplete() {
                         mSetupHandlerCallback.onSetupComplete(setupData);
                     }
                 })
@@ -68,15 +61,14 @@ public class SetupHandler
     }
 
     @Subscribe
-    public void onReceiveSetupDataError(final SetupEvent.ReceiveSetupDataError event)
-    {
+    public void onReceiveSetupDataError(final SetupEvent.ReceiveSetupDataError event) {
         bus.unregister(this);
         mSetupHandlerCallback.onSetupFailure();
     }
 
-    public interface Callback
-    {
+    public interface Callback {
         void onSetupComplete(final SetupData setupData);
+
         void onSetupFailure();
     }
 }

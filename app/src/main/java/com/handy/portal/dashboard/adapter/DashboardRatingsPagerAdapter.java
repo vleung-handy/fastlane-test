@@ -10,8 +10,7 @@ import com.handy.portal.dashboard.model.ProviderEvaluation;
 import com.handy.portal.dashboard.view.DashboardRatingsView;
 import com.handy.portal.library.util.DateTimeUtils;
 
-public class DashboardRatingsPagerAdapter extends PagerAdapter
-{
+public class DashboardRatingsPagerAdapter extends PagerAdapter {
     public static final int PAST_28_DAYS_PAGE_POSITION = 0;
     public static final int LIFETIME_PAGE_POSITION = 1;
 
@@ -20,25 +19,21 @@ public class DashboardRatingsPagerAdapter extends PagerAdapter
     private ProviderEvaluation mProviderEvaluation;
     private boolean mShouldAnimate;
 
-    public DashboardRatingsPagerAdapter(final Context context, ProviderEvaluation providerEvaluation, boolean shouldAnimate)
-    {
+    public DashboardRatingsPagerAdapter(final Context context, ProviderEvaluation providerEvaluation, boolean shouldAnimate) {
         mContext = context;
         mProviderEvaluation = providerEvaluation;
         mShouldAnimate = shouldAnimate;
     }
 
     @Override
-    public Object instantiateItem(final ViewGroup container, final int position)
-    {
+    public Object instantiateItem(final ViewGroup container, final int position) {
         DashboardRatingsView view = new DashboardRatingsView(mContext);
         ProviderEvaluation.Rating rating;
-        if (position == PAST_28_DAYS_PAGE_POSITION)
-        {
+        if (position == PAST_28_DAYS_PAGE_POSITION) {
             rating = mProviderEvaluation.getRolling();
             view.setTitle(mContext.getString(R.string.past_28_days));
         }
-        else
-        {
+        else {
             rating = mProviderEvaluation.getLifeTime();
             view.setTitle(mContext.getString(R.string.lifetime_rating));
         }
@@ -49,29 +44,23 @@ public class DashboardRatingsPagerAdapter extends PagerAdapter
                 DateTimeUtils.formatMonthDateYear(rating.getEndDate())));
         view.setJobRatings(rating.getFiveStarRatedBookingCount(),
                 rating.getRatedBookingCount(), rating.getTotalBookingCount());
-        if (rating.getTotalBookingCount() == PAST_28_DAYS_PAGE_POSITION)
-        {
+        if (rating.getTotalBookingCount() == PAST_28_DAYS_PAGE_POSITION) {
             view.setFiveStarRatingPercentage(0.0f);
         }
-        else
-        {
-            if (rating.getRatedBookingCount() > 0)
-            {
+        else {
+            if (rating.getRatedBookingCount() > 0) {
                 view.setFiveStarRatingPercentage(
                         ((float) rating.getFiveStarRatedBookingCount()) / rating.getRatedBookingCount());
             }
-            else
-            {
+            else {
                 view.setFiveStarRatingPercentage(0);
             }
         }
 
-        if (mShouldAnimate)
-        {
+        if (mShouldAnimate) {
             view.startAnimation();
         }
-        else
-        {
+        else {
             view.setOnResumeState();
         }
 
@@ -81,20 +70,17 @@ public class DashboardRatingsPagerAdapter extends PagerAdapter
     }
 
     @Override
-    public int getCount()
-    {
+    public int getCount() {
         return PAGE_COUNT;
     }
 
     @Override
-    public boolean isViewFromObject(final View view, final Object object)
-    {
+    public boolean isViewFromObject(final View view, final Object object) {
         return view == object;
     }
 
     @Override
-    public void destroyItem(final ViewGroup container, final int position, final Object object)
-    {
+    public void destroyItem(final ViewGroup container, final int position, final Object object) {
         container.removeView((View) object);
     }
 }

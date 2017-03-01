@@ -5,8 +5,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.regex.Pattern;
 
-public class FieldDefinition
-{
+public class FieldDefinition {
     @SerializedName("display_name")
     String displayName;
 
@@ -21,45 +20,42 @@ public class FieldDefinition
 
     private Pattern compiledPattern;
 
+
     public enum InputType {
         //TODO: can we make this more concise
         @SerializedName("number")
-        NUMBER ("number"),
+        NUMBER("number"),
 
         @SerializedName("alphanumeric")
-        ALPHA_NUMERIC ("alphanumeric");
+        ALPHA_NUMERIC("alphanumeric");
 
         private final String value;
-        public String getValue()
-        {
+
+        public String getValue() {
             return value;
         }
-        InputType(String value)
-        {
+
+        InputType(String value) {
             this.value = value;
         }
     }
 
-    public InputType getInputType()
-    {
+    public InputType getInputType() {
         return inputType;
     }
 
-    public String getDisplayName()
-    {
+    public String getDisplayName() {
         return displayName;
     }
 
     public Pattern getCompiledPattern() {
-        if (compiledPattern == null && pattern != null)
-        {
+        if (compiledPattern == null && pattern != null) {
             compiledPattern = Pattern.compile(pattern);
         }
         return compiledPattern;
     }
 
-    public String getHintText()
-    {
+    public String getHintText() {
         return hintText;
     }
 }

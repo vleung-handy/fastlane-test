@@ -10,20 +10,17 @@ import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
 import static junit.framework.Assert.assertEquals;
 
-public class LoginSltFragmentTest extends RobolectricGradleTestWrapper
-{
+public class LoginSltFragmentTest extends RobolectricGradleTestWrapper {
     private LoginSltFragment mFragment;
 
     @Before
-    public void setUp()
-    {
+    public void setUp() {
         mFragment = new LoginSltFragment();
         SupportFragmentTestUtil.startFragment(mFragment, LoginActivity.class);
     }
 
     @Test
-    public void testRequestSltSuccess()
-    {
+    public void testRequestSltSuccess() {
         String phone = "3479999999";
         mFragment.mPhoneNumberEditText.setText(phone);
         mFragment.mLoginButton.performClick();

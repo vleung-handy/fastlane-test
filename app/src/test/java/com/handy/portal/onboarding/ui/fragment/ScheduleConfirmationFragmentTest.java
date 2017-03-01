@@ -50,8 +50,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.robolectric.Shadows.shadowOf;
 
-public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapper
-{
+public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapper {
     @Inject
     BookingManager mBookingManager;
 
@@ -70,8 +69,7 @@ public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapp
     private ActivityController<OnboardingSubflowActivity> mActivityController;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         ((TestBaseApplication) RuntimeEnvironment.application).inject(this);
         initMocks(this);
 
@@ -88,8 +86,7 @@ public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapp
                 .thenReturn(mBookings);
     }
 
-    private void startFragment()
-    {
+    private void startFragment() {
         mActivityController = Robolectric.buildActivity(OnboardingSubflowActivity.class, mIntent);
         mActivityController.create().resume().visible();
         mFragment = (ScheduleConfirmationFragment) mActivityController.get()
@@ -97,8 +94,7 @@ public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapp
     }
 
     @Test
-    public void shouldDisplayPendingBookings() throws Exception
-    {
+    public void shouldDisplayPendingBookings() throws Exception {
         final Booking booking = mock(Booking.class, Answers.RETURNS_DEEP_STUBS.get());
         when(booking.isProxy()).thenReturn(true);
         when(booking.getLocationName()).thenReturn("Manhattan");
@@ -113,8 +109,7 @@ public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapp
     }
 
     @Test
-    public void shouldNotDisplaySuppliesOrderInfoIfNotAvailable() throws Exception
-    {
+    public void shouldNotDisplaySuppliesOrderInfoIfNotAvailable() throws Exception {
         when(mIntent.getSerializableExtra(BundleKeys.SUPPLIES_ORDER_INFO)).thenReturn(null);
 
         startFragment();
@@ -124,8 +119,7 @@ public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapp
     }
 
     @Test
-    public void shouldNotDisplaySuppliesOrderInfoIfDesignationIsUndecided() throws Exception
-    {
+    public void shouldNotDisplaySuppliesOrderInfoIfDesignationIsUndecided() throws Exception {
         when(mSuppliesOrderInfo.getDesignation()).thenReturn(Designation.UNDECIDED);
 
         startFragment();
@@ -135,8 +129,7 @@ public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapp
     }
 
     @Test
-    public void shouldDisplaySuppliesOrderInfoWithOptionToOptInIfDesignationIsNo() throws Exception
-    {
+    public void shouldDisplaySuppliesOrderInfoWithOptionToOptInIfDesignationIsNo() throws Exception {
         when(mSuppliesOrderInfo.getDesignation()).thenReturn(Designation.NO);
 
         startFragment();
@@ -147,8 +140,7 @@ public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapp
     }
 
     @Test
-    public void shouldDisplaySuppliesOrderInfoWithOptionToEditIfDesignationIsYes() throws Exception
-    {
+    public void shouldDisplaySuppliesOrderInfoWithOptionToEditIfDesignationIsYes() throws Exception {
         when(mSuppliesOrderInfo.getDesignation()).thenReturn(Designation.YES);
 
         startFragment();
@@ -159,8 +151,7 @@ public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapp
     }
 
     @Test
-    public void shouldDisplayPaymentInfo() throws Exception
-    {
+    public void shouldDisplayPaymentInfo() throws Exception {
         when(mSuppliesOrderInfo.getDesignation()).thenReturn(Designation.YES);
         when(mSuppliesOrderInfo.getPaymentText()).thenReturn("Card ending in 1234");
         when(mSuppliesOrderInfo.getOrderTotalText()).thenReturn("$40");
@@ -174,8 +165,7 @@ public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapp
     }
 
     @Test
-    public void shouldDisplayFeeInfo() throws Exception
-    {
+    public void shouldDisplayFeeInfo() throws Exception {
         when(mSuppliesOrderInfo.getDesignation()).thenReturn(Designation.YES);
         when(mSuppliesOrderInfo.getPaymentText()).thenReturn(null);
         when(mSuppliesOrderInfo.getOrderTotalText()).thenReturn("$40");
@@ -190,8 +180,7 @@ public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapp
     }
 
     @Test
-    public void shouldLaunchSuppliesSubflowOnEditSuppliesOrder() throws Exception
-    {
+    public void shouldLaunchSuppliesSubflowOnEditSuppliesOrder() throws Exception {
         when(mSuppliesOrderInfo.getDesignation()).thenReturn(Designation.YES);
 
         startFragment();
@@ -203,8 +192,7 @@ public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapp
     }
 
     @Test
-    public void shouldLaunchClaimSubflowOnEditJobs() throws Exception
-    {
+    public void shouldLaunchClaimSubflowOnEditJobs() throws Exception {
         startFragment();
         mFragment.onEditJobsButtonClicked();
 
@@ -214,8 +202,7 @@ public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapp
     }
 
     @Test
-    public void shouldDisplayNewPendingBookingsAfterEditingJobs() throws Exception
-    {
+    public void shouldDisplayNewPendingBookingsAfterEditingJobs() throws Exception {
         shouldDisplayPendingBookings();
 
         final Intent data = new Intent();
@@ -232,8 +219,7 @@ public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapp
     }
 
     @Test
-    public void shouldDisplayNewSuppliesOrderInfoBookingsAfterEditingSuppliesOrder() throws Exception
-    {
+    public void shouldDisplayNewSuppliesOrderInfoBookingsAfterEditingSuppliesOrder() throws Exception {
         shouldDisplaySuppliesOrderInfoWithOptionToEditIfDesignationIsYes();
 
         final Intent data = new Intent();
@@ -249,8 +235,7 @@ public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapp
     }
 
     @Test
-    public void shouldClaimBookings() throws Exception
-    {
+    public void shouldClaimBookings() throws Exception {
         final Booking booking = mock(Booking.class, Answers.RETURNS_DEEP_STUBS.get());
         when(booking.getId()).thenReturn("555");
         when(booking.getType()).thenReturn(Booking.BookingType.BOOKING_PROXY);
@@ -271,8 +256,7 @@ public class ScheduleConfirmationFragmentTest extends RobolectricGradleTestWrapp
     }
 
     @Test
-    public void shouldTerminateAfterClaiming() throws Exception
-    {
+    public void shouldTerminateAfterClaiming() throws Exception {
         shouldClaimBookings();
         final JobClaimResponse jobClaimResponse = mock(JobClaimResponse.class);
         final BookingClaimDetails bookingClaimDetails =

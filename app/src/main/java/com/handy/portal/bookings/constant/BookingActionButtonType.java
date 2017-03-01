@@ -3,8 +3,7 @@ package com.handy.portal.bookings.constant;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 
-public enum BookingActionButtonType
-{
+public enum BookingActionButtonType {
     CLAIM(R.id.claim_button, Booking.Action.ACTION_CLAIM, R.string.claim, BookingActionButtonStyle.GREEN),
     REMOVE(R.id.remove_button, Booking.Action.ACTION_REMOVE, R.string.remove_job, BookingActionButtonStyle.RED_EMPTY),
     ON_MY_WAY(R.id.on_my_way_button, Booking.Action.ACTION_ON_MY_WAY, R.string.on_my_way, BookingActionButtonStyle.BLUE),
@@ -20,45 +19,37 @@ public enum BookingActionButtonType
     private int displayNameId;
     private BookingActionButtonStyle style;
 
-    BookingActionButtonType(int id, String actionName, int displayNameId, BookingActionButtonStyle style)
-    {
+    BookingActionButtonType(int id, String actionName, int displayNameId, BookingActionButtonStyle style) {
         this.id = id;
         this.actionName = actionName;
         this.displayNameId = displayNameId;
         this.style = style;
     }
 
-    public int getId()
-    {
+    public int getId() {
         return id;
     }
 
-    public int getBackgroundDrawableId()
-    {
+    public int getBackgroundDrawableId() {
         return style.getBackgroundDrawableId();
     }
 
-    public String getActionName()
-    {
+    public String getActionName() {
         return actionName;
     }
 
-    public int getDisplayNameId(Booking booking)
-    {
-        if (this == CLAIM)
-        {
+    public int getDisplayNameId(Booking booking) {
+        if (this == CLAIM) {
             return booking.isRecurring() ? R.string.claim_series : R.string.claim_job;
         }
         return displayNameId;
     }
 
-    public int getLayoutTemplateId()
-    {
+    public int getLayoutTemplateId() {
         return style.getLayoutTemplateId();
     }
 
-    public int getTextStyleId()
-    {
+    public int getTextStyleId() {
         return style.getTextStyleId();
     }
 }

@@ -29,16 +29,14 @@ import dagger.Provides;
                 LocationPingService.class,
                 LocationPermissionsBlockerDialogFragment.class,
         })
-public final class LocationModule
-{
+public final class LocationModule {
     @Provides
     @Singleton
     final LocationManager provideLocationManager(
             final Context context,
             final EventBus bus,
             final DataManager dataManager,
-            final ProviderManager providerManager)
-    {
+            final ProviderManager providerManager) {
         return new LocationManager(context, bus, dataManager, providerManager);
     }
 }

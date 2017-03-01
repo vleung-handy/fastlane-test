@@ -7,8 +7,7 @@ import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 
-public class ZipClusterPolygons implements Serializable
-{
+public class ZipClusterPolygons implements Serializable {
     @SerializedName("center")
     private Coordinates mCenter;
 
@@ -33,10 +32,8 @@ public class ZipClusterPolygons implements Serializable
     public List<LatLng> getPoints() {
 
         LinkedList<LatLng> points = new LinkedList<>();
-        for (List<Coordinates> polygon : mOutlines)
-        {
-            for (Coordinates coordinates : polygon)
-            {
+        for (List<Coordinates> polygon : mOutlines) {
+            for (Coordinates coordinates : polygon) {
                 points.add(new LatLng(coordinates.mLatitude, coordinates.mLongitude));
             }
         }
@@ -44,8 +41,7 @@ public class ZipClusterPolygons implements Serializable
         return points;
     }
 
-    public static class Coordinates implements Serializable
-    {
+    public static class Coordinates implements Serializable {
         @SerializedName("lat")
         private float mLatitude;
         @SerializedName("lng")

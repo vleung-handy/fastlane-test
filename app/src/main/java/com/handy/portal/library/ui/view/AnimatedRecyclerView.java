@@ -8,31 +8,25 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.LayoutAnimationController;
 
-public class AnimatedRecyclerView extends RecyclerView
-{
+public class AnimatedRecyclerView extends RecyclerView {
 
-    public AnimatedRecyclerView(Context context)
-    {
+    public AnimatedRecyclerView(Context context) {
         super(context);
     }
 
-    public AnimatedRecyclerView(Context context, @Nullable AttributeSet attrs)
-    {
+    public AnimatedRecyclerView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public AnimatedRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle)
-    {
+    public AnimatedRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 
     @Override
-    protected void attachLayoutAnimationParameters(View child, ViewGroup.LayoutParams params, int index, int count)
-    {
+    protected void attachLayoutAnimationParameters(View child, ViewGroup.LayoutParams params, int index, int count) {
         LayoutAnimationController.AnimationParameters animationParams =
                 params.layoutAnimationParameters;
-        if (animationParams == null)
-        {
+        if (animationParams == null) {
             animationParams = new LayoutAnimationController.AnimationParameters();
             params.layoutAnimationParameters = animationParams;
         }

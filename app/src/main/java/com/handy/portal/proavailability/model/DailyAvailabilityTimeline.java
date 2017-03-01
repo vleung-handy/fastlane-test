@@ -9,28 +9,24 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class DailyAvailabilityTimeline implements Serializable
-{
+public class DailyAvailabilityTimeline implements Serializable {
     @SerializedName("timeline_date")
     private String mDate;
     @SerializedName("interval_array")
     private ArrayList<AvailabilityInterval> mAvailabilityIntervals;
 
     public DailyAvailabilityTimeline(final Date date,
-                                     final ArrayList<AvailabilityInterval> intervals)
-    {
+                                     final ArrayList<AvailabilityInterval> intervals) {
         mDate = DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date);
         mAvailabilityIntervals = intervals;
     }
 
-    public String getDateString()
-    {
+    public String getDateString() {
         return mDate;
     }
 
     @Nullable
-    public Date getDate()
-    {
+    public Date getDate() {
         return DateTimeUtils.parseDateString(mDate, DateTimeUtils.YEAR_MONTH_DAY_FORMATTER);
     }
 
@@ -41,18 +37,15 @@ public class DailyAvailabilityTimeline implements Serializable
      * @param date
      * @return
      */
-    public boolean matchesDate(final Date date)
-    {
+    public boolean matchesDate(final Date date) {
         return DateTimeUtils.daysBetween(getDate(), date) == 0;
     }
 
-    public ArrayList<AvailabilityInterval> getAvailabilityIntervals()
-    {
+    public ArrayList<AvailabilityInterval> getAvailabilityIntervals() {
         return mAvailabilityIntervals;
     }
 
-    public boolean hasIntervals()
-    {
+    public boolean hasIntervals() {
         return mAvailabilityIntervals != null && !mAvailabilityIntervals.isEmpty();
     }
 }

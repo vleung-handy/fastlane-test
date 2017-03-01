@@ -14,22 +14,19 @@ import javax.inject.Inject;
  * mediator that fires the event to get location schedules upon receiving certain app events.
  * in other words, it controls when location schedules are fetched,
  * and in a way functions as an adapter for a booking changed push event
- *
+ * <p>
  * this is the ONLY COMPONENT THAT FIRES THE REQUEST LOCATION SCHEDULE EVENT!
- *
+ * <p>
  * purpose: we currently want to know when a scheduled booking has been changed/created/removed
  * so we can get updated location schedules, but we don't want to
  * fire events for that in the booking manager, to reduce confusion/coupling.
- *
  */
-public class LocationScheduleUpdateManager
-{
+public class LocationScheduleUpdateManager {
     private final EventBus mBus;
     private final ConfigManager mConfigManager;
 
     @Inject
-    public LocationScheduleUpdateManager(final EventBus bus, final ConfigManager configManager)
-    {
+    public LocationScheduleUpdateManager(final EventBus bus, final ConfigManager configManager) {
         mBus = bus;
         mConfigManager = configManager;
         mBus.register(this);
@@ -37,38 +34,32 @@ public class LocationScheduleUpdateManager
 
     /* listen to events in which a booking might be modified or created */
     @Subscribe
-    public void onReceiveClaimJobSuccess(HandyEvent.ReceiveClaimJobSuccess event)
-    {
+    public void onReceiveClaimJobSuccess(HandyEvent.ReceiveClaimJobSuccess event) {
         requestLocationScheduleIfNecessary();
     }
 
     @Subscribe
-    public void onReceiveClaimJobsSuccess(HandyEvent.ReceiveClaimJobsSuccess event)
-    {
+    public void onReceiveClaimJobsSuccess(HandyEvent.ReceiveClaimJobsSuccess event) {
         requestLocationScheduleIfNecessary();
     }
 
     @Subscribe
-    public void onReceiveRemoveJobSuccess(HandyEvent.ReceiveRemoveJobSuccess event)
-    {
+    public void onReceiveRemoveJobSuccess(HandyEvent.ReceiveRemoveJobSuccess event) {
         requestLocationScheduleIfNecessary();
     }
 
     @Subscribe
-    public void onReceiveScheduledBookingsBatchSuccess(HandyEvent.ReceiveScheduledBookingsBatchSuccess event)
-    {
+    public void onReceiveScheduledBookingsBatchSuccess(HandyEvent.ReceiveScheduledBookingsBatchSuccess event) {
         requestLocationScheduleIfNecessary();
     }
 
     @Subscribe
-    public void onLoginSuccess(HandyEvent.ReceiveLoginSuccess event)
-    {
+    public void onLoginSuccess(HandyEvent.ReceiveLoginSuccess event) {
         requestLocationScheduleIfNecessary();
     }
 
     @Subscribe
-    public void onLocationServiceStarted(LocationEvent.LocationServiceStarted event)
-    {
+    public void onLocationServiceStarted(LocationEvent.LocationServiceStarted event) {
         requestLocationScheduleIfNecessary();
     }
 
@@ -76,11 +67,9 @@ public class LocationScheduleUpdateManager
      * requests the location schedule if config params are on
      * TODO clean way to get reference to a context so we can check if service is running?
      */
-    private void requestLocationScheduleIfNecessary()
-    {
+    private void requestLocationScheduleIfNecessary() {
         ConfigurationResponse configurationResponse = mConfigManager.getConfigurationResponse();
-        if(configurationResponse != null && configurationResponse.isLocationServiceEnabled())
-        {
+        if (configurationResponse != null && configurationResponse.isLocationServiceEnabled()) {
             mBus.post(new LocationEvent.RequestLocationSchedule());
         }
     }

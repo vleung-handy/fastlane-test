@@ -15,8 +15,7 @@ import com.handy.portal.R;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-public class BookingResultBannerTextView extends TextView
-{
+public class BookingResultBannerTextView extends TextView {
     public static final int COMPLETED_JOB = 0;
     public static final int CUSTOMER_NO_SHOW = 1;
     public static final int CUSTOMER_CANCELLED = 2;
@@ -29,32 +28,26 @@ public class BookingResultBannerTextView extends TextView
     @Retention(RetentionPolicy.SOURCE)
     @interface BookingResult {}
 
-    public BookingResultBannerTextView(final Context context)
-    {
+    public BookingResultBannerTextView(final Context context) {
         super(context);
     }
 
-    public BookingResultBannerTextView(final Context context, final AttributeSet attrs)
-    {
+    public BookingResultBannerTextView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public BookingResultBannerTextView(final Context context, final AttributeSet attrs, final int defStyleAttr)
-    {
+    public BookingResultBannerTextView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public BookingResultBannerTextView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
-    {
+    public BookingResultBannerTextView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public void setDisplay(@BookingResult int bookingResult)
-    {
+    public void setDisplay(@BookingResult int bookingResult) {
         Drawable icon = null;
-        switch (bookingResult)
-        {
+        switch (bookingResult) {
             case COMPLETED_JOB:
                 setText(R.string.completed_job_2);
                 setTextColor(ContextCompat.getColor(getContext(), R.color.cleaner_green));
@@ -81,8 +74,7 @@ public class BookingResultBannerTextView extends TextView
                 break;
         }
 
-        if (icon != null)
-        {
+        if (icon != null) {
             icon.setBounds(0, 0, icon.getMinimumWidth(), icon.getMinimumHeight());
             setCompoundDrawables(icon, null, null, null);
         }

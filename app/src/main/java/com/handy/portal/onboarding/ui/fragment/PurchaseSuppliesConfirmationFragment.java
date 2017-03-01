@@ -39,8 +39,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFragment
-{
+public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFragment {
     @BindView(R.id.shipping_summary)
     SimpleContentLayout mShippingSummary;
     @BindView(R.id.edit_address_form)
@@ -91,36 +90,31 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
     private boolean mAddressLoading = false;
     private boolean mPaymentLoading = false;
 
-    public static PurchaseSuppliesConfirmationFragment newInstance()
-    {
+    public static PurchaseSuppliesConfirmationFragment newInstance() {
         return new PurchaseSuppliesConfirmationFragment();
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSuppliesInfo = mSubflowData.getSuppliesInfo();
         mSuppliesOrderInfo = new SuppliesOrderInfo();
     }
 
     @OnClick(R.id.cancel_edit_address)
-    void onCancelAddressEditClicked()
-    {
+    void onCancelAddressEditClicked() {
         mShippingSummary.setVisibility(View.VISIBLE);
         mEditAddressForm.setVisibility(View.GONE);
     }
 
     @OnClick(R.id.cancel_edit_payment)
-    void onCancelPaymentEditClicked()
-    {
+    void onCancelPaymentEditClicked() {
         mPaymentSummary.setVisibility(View.VISIBLE);
         mEditPaymentForm.setVisibility(View.GONE);
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mShippingSummary.setContent(getString(R.string.shipping_address),
                 getString(R.string.loading));
@@ -128,13 +122,11 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
         final String orderTotalFormatted = getString(R.string.order_total_formatted,
                 mSuppliesInfo.getCost());
         mSuppliesOrderInfo.setOrderTotalText(mSuppliesInfo.getCost());
-        if (mSuppliesInfo.isCardRequired())
-        {
+        if (mSuppliesInfo.isCardRequired()) {
             mOrderSummary.setContent(getString(R.string.starter_supply_kit), orderTotalFormatted)
                     .setImage(ContextCompat.getDrawable(getContext(), R.drawable.img_supplies));
         }
-        else
-        {
+        else {
             mOrderSummary.setVisibility(View.GONE);
         }
 
@@ -143,40 +135,33 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         bus.register(this);
-        if (mAddressFieldDefinitions == null)
-        {
+        if (mAddressFieldDefinitions == null) {
             bus.post(new RegionDefinitionEvent.RequestFormDefinitions(Country.US, getActivity()));
         }
 
-        if (mProviderPersonalInfo != null)
-        {
+        if (mProviderPersonalInfo != null) {
             onProviderLoaded();
         }
-        else
-        {
+        else {
             showLoadingOverlay();
             bus.post(new ProfileEvent.RequestProviderProfile(true));
         }
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         bus.unregister(this);
         super.onPause();
     }
 
     @Subscribe
-    public void onReceiveProviderInfoSuccess(final ProfileEvent.ReceiveProviderProfileSuccess event)
-    {
+    public void onReceiveProviderInfoSuccess(final ProfileEvent.ReceiveProviderProfileSuccess event) {
         //as a side effect of our implementation of "RequestProfileUpdate", an update call will
         //cause this method to trigger. We don't need to update this if we already have one.
-        if (mProviderPersonalInfo == null)
-        {
+        if (mProviderPersonalInfo == null) {
             mProviderPersonalInfo = event.providerProfile.getProviderPersonalInfo();
             onProviderLoaded();
 
@@ -184,60 +169,49 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
         }
     }
 
-    private void onProviderLoaded()
-    {
+    private void onProviderLoaded() {
         populateShippingSummary();
         populatePaymentSummary();
     }
 
-    private void populatePaymentSummary()
-    {
-        if (mSuppliesInfo.isCardRequired())
-        {
+    private void populatePaymentSummary() {
+        if (mSuppliesInfo.isCardRequired()) {
             String cardLast4 = mProviderPersonalInfo.getCardLast4();
             // If pro already has a card, do not prompt them to enter card information, but instead
             // just show the existing one.
-            if (!TextUtils.isNullOrEmpty(cardLast4))
-            {
+            if (!TextUtils.isNullOrEmpty(cardLast4)) {
                 final String cardInfoFormatted = getString(R.string.card_info_formatted,
                         getString(R.string.card), cardLast4);
                 mSuppliesOrderInfo.setPaymentText(cardInfoFormatted);
                 mPaymentSummary.setContent(getString(R.string.payment_method), cardInfoFormatted)
                         .setAction(getString(R.string.edit),
-                                new View.OnClickListener()
-                                {
+                                new View.OnClickListener() {
                                     @Override
-                                    public void onClick(final View v)
-                                    {
+                                    public void onClick(final View v) {
                                         unfreezeEditPaymentForm();
                                     }
                                 });
 
                 freezeEditPaymentForm();
             }
-            else
-            {
+            else {
                 //Since the user doesn't have any payments, don't let them cancel out.
                 mCancelEditPayment.setVisibility(View.GONE);
                 unfreezeEditPaymentForm();
             }
         }
-        else
-        {
+        else {
             // Since card information is not required, just inform pro that they will be charged
             // through a supplies fee.
             final String feeNoticeFormatted =
                     getString(R.string.supplies_fee_notice_formatted, mSuppliesInfo.getCost());
             mPaymentSummary.setContent(getString(R.string.supplies_fee), feeNoticeFormatted)
                     .setAction(ContextCompat.getDrawable(getContext(), R.drawable.ic_question_gray),
-                            new View.OnClickListener()
-                            {
+                            new View.OnClickListener() {
                                 @Override
-                                public void onClick(final View v)
-                                {
+                                public void onClick(final View v) {
                                     final String feesHelpLink = mSuppliesInfo.getFeesHelpLink();
-                                    if (!TextUtils.isNullOrEmpty(feesHelpLink))
-                                    {
+                                    if (!TextUtils.isNullOrEmpty(feesHelpLink)) {
                                         final Intent intent = new Intent(Intent.ACTION_VIEW,
                                                 Uri.parse(feesHelpLink));
                                         Utils.safeLaunchIntent(intent, getActivity());
@@ -249,11 +223,9 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
     }
 
     @Subscribe
-    public void onReceiveProviderInfoError(final ProfileEvent.ReceiveProviderProfileError event)
-    {
+    public void onReceiveProviderInfoError(final ProfileEvent.ReceiveProviderProfileError event) {
         showEditAddressForm();
-        if (mSuppliesInfo.isCardRequired())
-        {
+        if (mSuppliesInfo.isCardRequired()) {
             unfreezeEditPaymentForm();
         }
         mCancelEditAddress.setVisibility(View.GONE);
@@ -261,41 +233,34 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
         hideLoadingOverlay();
     }
 
-    private void freezeEditPaymentForm()
-    {
+    private void freezeEditPaymentForm() {
         mPaymentSummary.setVisibility(View.VISIBLE);
         mEditPaymentForm.setVisibility(View.GONE);
     }
 
-    private void unfreezeEditPaymentForm()
-    {
+    private void unfreezeEditPaymentForm() {
         mEditPaymentForm.setVisibility(View.VISIBLE);
         mPaymentSummary.setVisibility(View.GONE);
         mCreditCardNumberField.requestFocus();
     }
 
 
-    private void populateShippingSummary()
-    {
+    private void populateShippingSummary() {
         final Address address = mProviderPersonalInfo.getAddress();
         final String shippingSummary =
                 mProviderPersonalInfo.getFullName() + "\n" + address.getShippingAddress();
         mSuppliesOrderInfo.setShippingText(shippingSummary);
         mShippingSummary.setContent(getString(R.string.shipping_address), shippingSummary)
-                .setAction(getString(R.string.edit), new View.OnClickListener()
-                {
+                .setAction(getString(R.string.edit), new View.OnClickListener() {
                     @Override
-                    public void onClick(final View v)
-                    {
+                    public void onClick(final View v) {
                         showEditAddressForm();
                     }
                 });
     }
 
-    private void showEditAddressForm()
-    {
-        if (mProviderPersonalInfo != null)
-        {
+    private void showEditAddressForm() {
+        if (mProviderPersonalInfo != null) {
             final Address address = mProviderPersonalInfo.getAddress();
             mAddress1Field.getValue().setText(address.getAddress1());
             mAddress2Field.getValue().setText(address.getAddress2());
@@ -313,8 +278,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
 
     @Subscribe
     public void onReceiveFormDefinitions(
-            final RegionDefinitionEvent.ReceiveFormDefinitionsSuccess event)
-    {
+            final RegionDefinitionEvent.ReceiveFormDefinitionsSuccess event) {
         mAddressFieldDefinitions = event.formDefinitionWrapper
                 .getFieldDefinitionsForForm(FormDefinitionKey.UPDATE_ADDRESS);
         UIUtils.setFieldsFromDefinition(mAddress1Field,
@@ -341,54 +305,46 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
     }
 
     @Override
-    protected int getButtonType()
-    {
+    protected int getButtonType() {
         return ButtonTypes.SINGLE_FIXED;
     }
 
     @Override
-    protected int getLayoutResId()
-    {
+    protected int getLayoutResId() {
         return R.layout.view_purchase_supplies_confirmation;
     }
 
     @Override
-    protected String getTitle()
-    {
+    protected String getTitle() {
         return getString(R.string.purchase_supplies);
     }
 
     @Nullable
     @Override
-    protected String getHeaderText()
-    {
+    protected String getHeaderText() {
         return getString(mSuppliesInfo.isCardRequired() ?
                 R.string.enter_payment_information : R.string.confirm_shipping_details);
     }
 
     @Nullable
     @Override
-    protected String getSubHeaderText()
-    {
+    protected String getSubHeaderText() {
         return mSuppliesInfo.getChargeNotice();
     }
 
     @Override
-    protected void onPrimaryButtonClicked()
-    {
+    protected void onPrimaryButtonClicked() {
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                 NativeOnboardingLog.Types.SUPPLIES_CONFIRM_PURCHASE_SELECTED)));
 
         UIUtils.dismissKeyboard(getActivity());
 
-        if (!validateForms())
-        {
+        if (!validateForms()) {
             //there is something invalid about the form, do nothing until it's valid.
             return;
         }
 
-        if (mEditAddressForm.getVisibility() == View.VISIBLE)
-        {
+        if (mEditAddressForm.getVisibility() == View.VISIBLE) {
             mAddressReady = false;
 
             showLoadingOverlay();
@@ -405,13 +361,11 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
             bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                     NativeOnboardingLog.ServerTypes.UPDATE_ADDRESS.submitted())));
         }
-        else
-        {
+        else {
             mAddressReady = true;
         }
 
-        if (mEditPaymentForm.getVisibility() == View.VISIBLE && mSuppliesInfo.isCardRequired())
-        {
+        if (mEditPaymentForm.getVisibility() == View.VISIBLE && mSuppliesInfo.isCardRequired()) {
             mPaymentReady = false;
 
             mCard = new Card(
@@ -426,15 +380,13 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
             bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                     NativeOnboardingLog.ServerTypes.GET_STRIPE_TOKEN.submitted())));
         }
-        else
-        {
+        else {
             mPaymentReady = true;
         }
 
         //this is when both address and payment already exists
         if (mEditAddressForm.getVisibility() != View.VISIBLE
-                && mEditPaymentForm.getVisibility() != View.VISIBLE)
-        {
+                && mEditPaymentForm.getVisibility() != View.VISIBLE) {
             mAddressReady = true;
             mPaymentReady = true;
             confirmPurchase();
@@ -446,18 +398,15 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
      *
      * @return true if form is valid.
      */
-    private boolean validateForms()
-    {
+    private boolean validateForms() {
         boolean validAddress = true;
         boolean validPayment = true;
 
-        if (mEditAddressForm.getVisibility() == View.VISIBLE)
-        {
+        if (mEditAddressForm.getVisibility() == View.VISIBLE) {
             validAddress = validateAddress();
         }
 
-        if (mEditPaymentForm.getVisibility() == View.VISIBLE)
-        {
+        if (mEditPaymentForm.getVisibility() == View.VISIBLE) {
             validPayment = validatePayment();
         }
 
@@ -470,8 +419,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
      * @param event
      */
     @Subscribe
-    public void onReceiveProfileUpdateSuccess(final ProfileEvent.ReceiveProfileUpdateSuccess event)
-    {
+    public void onReceiveProfileUpdateSuccess(final ProfileEvent.ReceiveProfileUpdateSuccess event) {
         mAddressReady = true;
         mAddressLoading = false;
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
@@ -482,8 +430,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
     }
 
     @Subscribe
-    public void onReceiveProfileUpdateError(final ProfileEvent.ReceiveProfileUpdateError event)
-    {
+    public void onReceiveProfileUpdateError(final ProfileEvent.ReceiveProfileUpdateError event) {
         mAddressLoading = false;
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                 NativeOnboardingLog.ServerTypes.UPDATE_ADDRESS.error())));
@@ -498,8 +445,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
      */
     @Subscribe
     public void onReceiveStripeChargeTokenSuccess(
-            final StripeEvent.ReceiveStripeChargeTokenSuccess event)
-    {
+            final StripeEvent.ReceiveStripeChargeTokenSuccess event) {
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                 NativeOnboardingLog.ServerTypes.GET_STRIPE_TOKEN.success())));
         bus.post(new PaymentEvent.RequestUpdateCreditCard(event.getToken()));
@@ -514,8 +460,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
      */
     @Subscribe
     public void onReceiveUpdateCreditCardSuccess(
-            final PaymentEvent.ReceiveUpdateCreditCardSuccess event)
-    {
+            final PaymentEvent.ReceiveUpdateCreditCardSuccess event) {
         mPaymentReady = true;
         mPaymentLoading = false;
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
@@ -528,8 +473,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
 
     @Subscribe
     public void onReceiveStripeChargeTokenError(
-            final StripeEvent.ReceiveStripeChargeTokenError event)
-    {
+            final StripeEvent.ReceiveStripeChargeTokenError event) {
         mPaymentLoading = false;
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                 NativeOnboardingLog.ServerTypes.GET_STRIPE_TOKEN.error())));
@@ -539,8 +483,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
 
     @Subscribe
     public void onReceiveUpdateCreditCardError(
-            final PaymentEvent.ReceiveUpdateCreditCardError event)
-    {
+            final PaymentEvent.ReceiveUpdateCreditCardError event) {
         mPaymentLoading = false;
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                 NativeOnboardingLog.ServerTypes.UPDATE_CREDIT_CARD.error())));
@@ -548,17 +491,14 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
         showError(event.error.getMessage(), true);
     }
 
-    private void confirmPurchase()
-    {
-        if (mAddressReady && mPaymentReady)
-        {
+    private void confirmPurchase() {
+        if (mAddressReady && mPaymentReady) {
             showLoadingOverlay();
             bus.post(new HandyEvent.RequestOnboardingSupplies(true));
             bus.post(new LogEvent.AddLogEvent(
                     new NativeOnboardingLog.RequestSupplies.Submitted(true)));
         }
-        else
-        {
+        else {
             smartHideLoadingOverlay();
         }
     }
@@ -566,17 +506,14 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
     /**
      * Only hide the overlay if both the address and payment have finished loading
      */
-    private void smartHideLoadingOverlay()
-    {
-        if (!mAddressLoading && !mPaymentLoading)
-        {
+    private void smartHideLoadingOverlay() {
+        if (!mAddressLoading && !mPaymentLoading) {
             hideLoadingOverlay();
         }
     }
 
     @Subscribe
-    public void onReceiveOnboardingSuppliesSuccess(final HandyEvent.ReceiveOnboardingSuppliesSuccess event)
-    {
+    public void onReceiveOnboardingSuppliesSuccess(final HandyEvent.ReceiveOnboardingSuppliesSuccess event) {
         bus.post(new LogEvent.AddLogEvent(
                 new NativeOnboardingLog.RequestSupplies.Success(true)));
         hideLoadingOverlay();
@@ -587,16 +524,14 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
     }
 
     @Subscribe
-    public void onReceiveOnboardingSuppliesError(final HandyEvent.ReceiveOnboardingSuppliesError event)
-    {
+    public void onReceiveOnboardingSuppliesError(final HandyEvent.ReceiveOnboardingSuppliesError event) {
         bus.post(new LogEvent.AddLogEvent(
                 new NativeOnboardingLog.RequestSupplies.Error(true)));
         hideLoadingOverlay();
         showError(event.error.getMessage(), true);
     }
 
-    private boolean validateAddress()
-    {
+    private boolean validateAddress() {
         boolean allFieldsValid = UIUtils.validateField(mAddress1Field,
                 mAddressFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.ADDRESS));
         allFieldsValid &= UIUtils.validateField(mAddress2Field,
@@ -610,8 +545,7 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
         return allFieldsValid;
     }
 
-    private boolean validatePayment()
-    {
+    private boolean validatePayment() {
         boolean allFieldsValid = UIUtils.validateField(mCreditCardNumberField,
                 mPaymentFieldDefinitions.get(FormDefinitionKey.FieldDefinitionKey.CREDIT_CARD_NUMBER));
         allFieldsValid &= UIUtils.validateField(mExpirationDateField,

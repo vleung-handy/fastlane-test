@@ -50,8 +50,7 @@ import butterknife.OnClick;
 /**
  * fragment for handling bookings that are viewed for payment details
  */
-public class BookingTransactionsFragment extends ActionBarFragment implements PaymentSupportReasonsDialogFragment.Callback
-{
+public class BookingTransactionsFragment extends ActionBarFragment implements PaymentSupportReasonsDialogFragment.Callback {
     @Inject
     ConfigManager mConfigManager;
     @Inject
@@ -102,11 +101,9 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
     private Booking mBooking;
     private Transaction[] mTransactions;
     // Used to handle link clicked events when parsing html strings for text view
-    private TextUtils.LaunchWebViewCallback mLaunchWebViewCallback = new TextUtils.LaunchWebViewCallback()
-    {
+    private TextUtils.LaunchWebViewCallback mLaunchWebViewCallback = new TextUtils.LaunchWebViewCallback() {
         @Override
-        public void launchUrl(final String url)
-        {
+        public void launchUrl(final String url) {
             Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.TARGET_URL, url);
             bus.post(new NavigationEvent.NavigateToPage(MainViewPage.WEB_PAGE, arguments, true));
@@ -115,8 +112,7 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
     };
 
     public static BookingTransactionsFragment newInstance(
-            @NonNull final BookingTransactions bookingTransactions)
-    {
+            @NonNull final BookingTransactions bookingTransactions) {
         BookingTransactionsFragment fragment = new BookingTransactionsFragment();
         Bundle args = new Bundle();
         args.putSerializable(BundleKeys.BOOKING_TRANSACTIONS, bookingTransactions);
@@ -126,13 +122,11 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBookingTransactions = (BookingTransactions)
                 getArguments().getSerializable(BundleKeys.BOOKING_TRANSACTIONS);
-        if (mBookingTransactions == null)
-        {
+        if (mBookingTransactions == null) {
             Crashlytics.log("Either booking or transactions is null in onReceiveBookingDetailsSuccess");
             return;
         }
@@ -141,55 +135,46 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
     }
 
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
-    {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_booking_transactions, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setActionBarTitle(R.string.job_details);
         setDisplay();
     }
 
-    private void setDisplay()
-    {
+    private void setDisplay() {
         mLocationText.setText(mBooking.getRegionName());
         mDateText.setText(DateTimeUtils.formatDateDayOfWeekMonthDay(mBooking.getStartDate()));
         String startTime = DateTimeUtils.getTimeWithoutDate(mBooking.getStartDate());
         String endTime = DateTimeUtils.getTimeWithoutDate(mBooking.getEndDate());
         mTimeText.setText(getString(R.string.dash_formatted, startTime, endTime));
-        if (mBooking.getCheckInTime() != null)
-        {
+        if (mBooking.getCheckInTime() != null) {
             mCheckInTimeText.setText(DateTimeUtils.getTimeWithoutDate(mBooking.getCheckInTime()));
         }
-        else
-        {
+        else {
             mCheckInLabelText.setTextColor(ContextCompat.getColor(getContext(), R.color.text_light_gray));
         }
-        if (mBooking.getCheckOutTime() != null)
-        {
+        if (mBooking.getCheckOutTime() != null) {
             mCheckOutTimeText.setText(DateTimeUtils.getTimeWithoutDate(mBooking.getCheckOutTime()));
         }
-        else
-        {
+        else {
             mCheckOutLabelText.setTextColor(ContextCompat.getColor(getContext(), R.color.text_light_gray));
         }
 
-        for (Transaction t : mTransactions)
-        {
+        for (Transaction t : mTransactions) {
             TransactionView transactionView = new TransactionView(getContext());
             transactionView.setDisplay(t, mLaunchWebViewCallback);
             mTransactionsLayout.addView(transactionView);
         }
         mNetEarningAmountText.setText(CurrencyUtils.formatPriceWithCents(
                 mBookingTransactions.getNetEarnings(), mBookingTransactions.getCurrencySymbol()));
-        if (mBookingTransactions.getNetEarnings() < 0)
-        {
+        if (mBookingTransactions.getNetEarnings() < 0) {
             mNetEarningAmountText.setTextColor(ContextCompat.getColor(getContext(), R.color.plumber_red));
         }
 
@@ -200,8 +185,7 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
         TextUtils.setTextViewHTML(mHelpText, getString(R.string.question_about_payment), mLaunchWebViewCallback);
 
         if (mConfigManager.getConfigurationResponse() == null ||
-                !mConfigManager.getConfigurationResponse().showBookingTransactionSummary())
-        {
+                !mConfigManager.getConfigurationResponse().showBookingTransactionSummary()) {
             mTransactionSummary.setVisibility(View.GONE);
         }
 
@@ -214,14 +198,12 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
     }
 
     @OnClick(R.id.fragment_booking_transactions_payment_support_button)
-    public void onPaymentSupportButtonClicked()
-    {
+    public void onPaymentSupportButtonClicked() {
         PaymentsUtil.showPaymentSupportReasonsDialog(this, mBookingTransactions.getPaymentSupportItems());
     }
 
     @Override
-    public void onPaymentSupportItemSubmitted(PaymentSupportItem paymentSupportItem)
-    {
+    public void onPaymentSupportItemSubmitted(PaymentSupportItem paymentSupportItem) {
         BookingPaymentReviewRequest paymentReviewRequest
                 = new BookingPaymentReviewRequest(
                 String.valueOf(mBooking.getId()),
@@ -237,11 +219,9 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
                 )));
 
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        mPaymentsManager.submitBookingPaymentReviewRequest(paymentReviewRequest, new FragmentSafeCallback<PaymentReviewResponse>(this)
-        {
+        mPaymentsManager.submitBookingPaymentReviewRequest(paymentReviewRequest, new FragmentSafeCallback<PaymentReviewResponse>(this) {
             @Override
-            public void onCallbackSuccess(final PaymentReviewResponse response)
-            {
+            public void onCallbackSuccess(final PaymentReviewResponse response) {
                 bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                 int drawableResourceId = response.isSuccess() ?
                         R.drawable.ic_green_envelope : R.drawable.ic_exclaimation_red;
@@ -252,8 +232,7 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
             }
 
             @Override
-            public void onCallbackError(final DataManager.DataManagerError error)
-            {
+            public void onCallbackError(final DataManager.DataManagerError error) {
                 bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                 UIUtils.getDefaultSnackbarWithImage(getContext(),
                         mContentLayout,

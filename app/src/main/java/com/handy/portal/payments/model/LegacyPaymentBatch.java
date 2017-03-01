@@ -4,8 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-public class LegacyPaymentBatch extends PaymentBatch
-{
+public class LegacyPaymentBatch extends PaymentBatch {
     @SerializedName("booking_id")
     private int bookingId;
 
@@ -21,28 +20,23 @@ public class LegacyPaymentBatch extends PaymentBatch
     @SerializedName("earned_by_provider")
     private int earnedByProvider;
 
-    public int getBookingId()
-    {
+    public int getBookingId() {
         return bookingId;
     }
 
-    public Date getDate()
-    {
+    public Date getDate() {
         return date;
     }
 
-    public String getStatus()
-    {
+    public String getStatus() {
         return status;
     }
 
-    public String getCurrencySymbol()
-    {
+    public String getCurrencySymbol() {
         return currencySymbol;
     }
 
-    public int getEarnedByProvider()
-    {
+    public int getEarnedByProvider() {
         return earnedByProvider;
     }
 

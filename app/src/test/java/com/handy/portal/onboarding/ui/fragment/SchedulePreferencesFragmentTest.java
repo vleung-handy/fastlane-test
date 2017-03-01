@@ -58,8 +58,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.robolectric.Shadows.shadowOf;
 
-public class SchedulePreferencesFragmentTest extends RobolectricGradleTestWrapper
-{
+public class SchedulePreferencesFragmentTest extends RobolectricGradleTestWrapper {
     @Inject
     BookingManager mBookingManager;
 
@@ -73,8 +72,7 @@ public class SchedulePreferencesFragmentTest extends RobolectricGradleTestWrappe
     private ActivityController<OnboardingSubflowActivity> mActivityController;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         initMocks(this);
         ((TestBaseApplication) RuntimeEnvironment.application).inject(this);
         when(mOnboardingDetails.getSubflowDataByType(SubflowType.CLAIM)).thenReturn(mSubflowData);
@@ -83,8 +81,7 @@ public class SchedulePreferencesFragmentTest extends RobolectricGradleTestWrappe
         when(mIntent.getSerializableExtra(BundleKeys.SUBFLOW_TYPE)).thenReturn(SubflowType.CLAIM);
     }
 
-    private void startFragment()
-    {
+    private void startFragment() {
         mActivityController = Robolectric.buildActivity(OnboardingSubflowActivity.class, mIntent);
         mActivityController.create().resume().visible();
         mFragment = (SchedulePreferencesFragment) mActivityController.get()
@@ -92,8 +89,7 @@ public class SchedulePreferencesFragmentTest extends RobolectricGradleTestWrappe
     }
 
     @Test
-    public void shouldNotShowLocationsFieldIfThereAreNoLocations() throws Exception
-    {
+    public void shouldNotShowLocationsFieldIfThereAreNoLocations() throws Exception {
         when(mSubflowData.getZipclusters()).thenReturn(Lists.<Zipcluster>newArrayList());
 
         startFragment();
@@ -102,8 +98,7 @@ public class SchedulePreferencesFragmentTest extends RobolectricGradleTestWrappe
     }
 
     @Test
-    public void testLocationsDialogInteraction() throws Exception
-    {
+    public void testLocationsDialogInteraction() throws Exception {
         final Zipcluster zipcluster1 = mock(Zipcluster.class);
         when(zipcluster1.getId()).thenReturn("1");
         when(zipcluster1.getName()).thenReturn("Manhattan");
@@ -151,8 +146,7 @@ public class SchedulePreferencesFragmentTest extends RobolectricGradleTestWrappe
     }
 
     @Test
-    public void testDateDialogInteraction() throws Exception
-    {
+    public void testDateDialogInteraction() throws Exception {
         StartDateRange dateRange = mock(StartDateRange.class);
         final Calendar fiveDaysFromNow = Calendar.getInstance();
         fiveDaysFromNow.add(Calendar.DATE, 5);
@@ -176,8 +170,7 @@ public class SchedulePreferencesFragmentTest extends RobolectricGradleTestWrappe
     }
 
     @Test
-    public void shouldRequestForJobs() throws Exception
-    {
+    public void shouldRequestForJobs() throws Exception {
         final Zipcluster zipcluster1 = mock(Zipcluster.class);
         when(zipcluster1.getId()).thenReturn("1");
         final Zipcluster zipcluster2 = mock(Zipcluster.class);
@@ -211,8 +204,7 @@ public class SchedulePreferencesFragmentTest extends RobolectricGradleTestWrappe
     }
 
     @Test
-    public void shouldGoToScheduleBuilderAfterReceivingClaimableJobs() throws Exception
-    {
+    public void shouldGoToScheduleBuilderAfterReceivingClaimableJobs() throws Exception {
         startFragment();
         final HandyEvent.ReceiveOnboardingJobsSuccess event =
                 mock(HandyEvent.ReceiveOnboardingJobsSuccess.class,

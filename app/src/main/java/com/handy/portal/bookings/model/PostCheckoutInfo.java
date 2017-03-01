@@ -5,20 +5,17 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
-public class PostCheckoutInfo implements Serializable
-{
+public class PostCheckoutInfo implements Serializable {
     @SerializedName("customer")
     private Booking.User mCustomer;
     @SerializedName("suggested_jobs")
     private List<Booking> mSuggestedJobs;
 
-    public Booking.User getCustomer()
-    {
+    public Booking.User getCustomer() {
         return mCustomer;
     }
 
-    public List<Booking> getSuggestedJobs()
-    {
+    public List<Booking> getSuggestedJobs() {
         return mSuggestedJobs;
     }
 }

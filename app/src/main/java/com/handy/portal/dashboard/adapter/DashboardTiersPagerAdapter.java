@@ -11,20 +11,17 @@ import com.handy.portal.dashboard.view.DashboardRegionTierView;
 
 import java.util.List;
 
-public class DashboardTiersPagerAdapter extends PagerAdapter
-{
+public class DashboardTiersPagerAdapter extends PagerAdapter {
     private Context mContext;
     private ProviderEvaluation mProviderEvaluation;
 
-    public DashboardTiersPagerAdapter(final Context context, ProviderEvaluation providerEvaluation)
-    {
+    public DashboardTiersPagerAdapter(final Context context, ProviderEvaluation providerEvaluation) {
         mContext = context;
         mProviderEvaluation = providerEvaluation;
     }
 
     @Override
-    public Object instantiateItem(final ViewGroup container, final int position)
-    {
+    public Object instantiateItem(final ViewGroup container, final int position) {
         ProviderEvaluation.Incentive currentIncentive =
                 mProviderEvaluation.getPayRates().getIncentives().get(position);
         List<ProviderEvaluation.Tier> currentTiers = currentIncentive.getTiers();
@@ -34,14 +31,11 @@ public class DashboardTiersPagerAdapter extends PagerAdapter
                 currentIncentive.getRegionName(), currentIncentive.getServiceName(),
                 currentIncentive.getType());
 
-        if (currentTiers != null)
-        {
-            for (int i = 0; i < currentTiers.size(); i++)
-            {
+        if (currentTiers != null) {
+            for (int i = 0; i < currentTiers.size(); i++) {
                 ProviderEvaluation.Tier currentTier = currentTiers.get(i);
 
-                if (currentIncentive.getType().equals(ProviderEvaluation.Incentive.ROLLING_TYPE))
-                {
+                if (currentIncentive.getType().equals(ProviderEvaluation.Incentive.ROLLING_TYPE)) {
                     view.addTier(currentIncentive.getType(),
                             Double.toString(mProviderEvaluation.getRolling().getProRating()),
                             currentTier.getName(), currentTier.getJobRequirementRangeMinimum(),
@@ -50,8 +44,7 @@ public class DashboardTiersPagerAdapter extends PagerAdapter
                             currentTier.getHourlyRateInCents(), false);
                 }
                 else if (currentIncentive.getCurrentTier() != 0 &&
-                        i + 1 == currentIncentive.getCurrentTier())
-                {
+                        i + 1 == currentIncentive.getCurrentTier()) {
                     view.addTier(currentIncentive.getType(), null, currentTier.getName(),
                             currentTier.getJobRequirementRangeMinimum(),
                             currentTier.getJobRequirementRangeMaximum(),
@@ -59,8 +52,7 @@ public class DashboardTiersPagerAdapter extends PagerAdapter
                             currentTier.getHourlyRateInCents(), true);
 
                 }
-                else
-                {
+                else {
                     view.addTier(currentIncentive.getType(), null, currentTier.getName(),
                             currentTier.getJobRequirementRangeMinimum(),
                             currentTier.getJobRequirementRangeMaximum(),
@@ -69,8 +61,7 @@ public class DashboardTiersPagerAdapter extends PagerAdapter
                 }
             }
         }
-        else
-        {
+        else {
             Crashlytics.logException(new NullPointerException("Tiers is null"));
         }
 
@@ -79,20 +70,17 @@ public class DashboardTiersPagerAdapter extends PagerAdapter
     }
 
     @Override
-    public int getCount()
-    {
+    public int getCount() {
         return mProviderEvaluation.getPayRates().getIncentives().size();
     }
 
     @Override
-    public boolean isViewFromObject(final View view, final Object object)
-    {
+    public boolean isViewFromObject(final View view, final Object object) {
         return view == object;
     }
 
     @Override
-    public void destroyItem(final ViewGroup container, final int position, final Object object)
-    {
+    public void destroyItem(final ViewGroup container, final int position, final Object object) {
         container.removeView((View) object);
     }
 }

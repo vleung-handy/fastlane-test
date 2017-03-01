@@ -7,8 +7,7 @@ import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.terms.TermsDetailsGroup;
 import com.handy.portal.updater.model.UpdateDetails;
 
-public class SetupData
-{
+public class SetupData {
     @SerializedName("update_details")
     private UpdateDetails mUpdateDetails;
     @SerializedName("terms_details")
@@ -22,33 +21,27 @@ public class SetupData
     @SerializedName("startup_deeplink")
     private String mStartupDeeplink;
 
-    public UpdateDetails getUpdateDetails()
-    {
+    public UpdateDetails getUpdateDetails() {
         return mUpdateDetails;
     }
 
-    public TermsDetailsGroup getTermsDetails()
-    {
+    public TermsDetailsGroup getTermsDetails() {
         return mTermsDetailsGroup;
     }
 
-    public ConfigurationResponse getConfigurationResponse()
-    {
+    public ConfigurationResponse getConfigurationResponse() {
         return mConfigurationResponse;
     }
 
-    public ProviderProfile getProviderProfile()
-    {
+    public ProviderProfile getProviderProfile() {
         return mProviderProfile;
     }
 
-    public OnboardingDetails getOnboardingDetails()
-    {
+    public OnboardingDetails getOnboardingDetails() {
         return mOnboardingDetails;
     }
 
-    public String getStartupDeeplink()
-    {
+    public String getStartupDeeplink() {
         return mStartupDeeplink;
     }
 }

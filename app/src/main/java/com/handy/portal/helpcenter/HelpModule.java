@@ -10,6 +10,5 @@ import dagger.Module;
         injects = {
                 HelpWebViewFragment.class,
         })
-public final class HelpModule
-{
+public final class HelpModule {
 }

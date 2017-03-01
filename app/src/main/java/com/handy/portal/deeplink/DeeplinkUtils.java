@@ -7,28 +7,22 @@ import com.handy.portal.core.constant.BundleKeys;
 
 import java.util.List;
 
-public class DeeplinkUtils
-{
+public class DeeplinkUtils {
     public static final String HANDY_PRO_PATH_PREFIX = "hp";
 
-    public static Bundle createDeeplinkBundleFromUri(final Uri uri)
-    {
-        if (uri != null)
-        {
+    public static Bundle createDeeplinkBundleFromUri(final Uri uri) {
+        if (uri != null) {
             final Bundle deeplinkBundle = new Bundle();
             final String path = sanitizeUriPath(uri);
-            if (DeeplinkMapper.getPageForDeeplink(path) != null)
-            {
+            if (DeeplinkMapper.getPageForDeeplink(path) != null) {
                 deeplinkBundle.putString(BundleKeys.DEEPLINK, path);
-                for (String key : uri.getQueryParameterNames())
-                {
+                for (String key : uri.getQueryParameterNames()) {
                     deeplinkBundle.putString(key, uri.getQueryParameter(key));
                     // TODO: Support list types
                 }
                 return deeplinkBundle;
             }
-            else
-            {
+            else {
                 return null;
             }
         }
@@ -36,18 +30,14 @@ public class DeeplinkUtils
     }
 
     // This removes "/hp" from the beginning of the URI.
-    private static String sanitizeUriPath(final Uri uri)
-    {
+    private static String sanitizeUriPath(final Uri uri) {
         final List<String> pathSegments = uri.getPathSegments();
         final StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < pathSegments.size(); i++)
-        {
+        for (int i = 0; i < pathSegments.size(); i++) {
             final String segment = pathSegments.get(i);
-            if (!segment.equalsIgnoreCase(HANDY_PRO_PATH_PREFIX))
-            {
+            if (!segment.equalsIgnoreCase(HANDY_PRO_PATH_PREFIX)) {
                 builder.append(segment);
-                if (i < pathSegments.size() - 1)
-                {
+                if (i < pathSegments.size() - 1) {
                     builder.append("/");
                 }
             }

@@ -32,8 +32,7 @@ import static com.handybook.shared.layer.LayerConstants.LAYER_CONVERSATION_KEY;
 
 
 public class ClientConversationsFragment extends InjectedFragment
-        implements ConversationsAdapter.Listener
-{
+        implements ConversationsAdapter.Listener {
     private static final int REFRESH_DURATION_MILLIS = 3000;
 
     @Inject
@@ -46,16 +45,13 @@ public class ClientConversationsFragment extends InjectedFragment
     @BindView(R.id.client_conversations_empty_refresh_layout)
     SwipeRefreshLayout mEmptyRefreshLayout;
 
-    private BroadcastReceiver mPushNotificationReceiver = new BroadcastReceiver()
-    {
+    private BroadcastReceiver mPushNotificationReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(final Context context, final Intent intent)
-        {
+        public void onReceive(final Context context, final Intent intent) {
             final Bundle extras = intent.getExtras();
             if (extras == null) { return; }
             final Uri conversationId = extras.getParcelable(LAYER_CONVERSATION_KEY);
-            if (conversationId != null && ClientConversationsFragment.this.getUserVisibleHint())
-            {
+            if (conversationId != null && ClientConversationsFragment.this.getUserVisibleHint()) {
                 // Assuming this receiver has a high system priority, this will prevent push
                 // notifications regarding any conversation from being displayed.
                 abortBroadcast();
@@ -66,23 +62,20 @@ public class ClientConversationsFragment extends InjectedFragment
     private ConversationsAdapter mAdapter;
     private boolean mIsConversationsShownLogged = false;
 
-    public static ClientConversationsFragment newInstance()
-    {
+    public static ClientConversationsFragment newInstance() {
         return new ClientConversationsFragment();
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                             final Bundle savedInstanceState)
-    {
+                             final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_client_conversations, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
 
     @Override
-    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         initRefreshLayout(mRefreshLayout);
         initRefreshLayout(mEmptyRefreshLayout);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -91,23 +84,18 @@ public class ClientConversationsFragment extends InjectedFragment
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    private void initRefreshLayout(final SwipeRefreshLayout refreshLayout)
-    {
+    private void initRefreshLayout(final SwipeRefreshLayout refreshLayout) {
         refreshLayout.setColorSchemeResources(R.color.handy_blue);
-        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
+        refreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh()
-            {
+            public void onRefresh() {
                 refreshLayout.setRefreshing(true);
                 mAdapter.refreshConversations();
                 // This will fake the finishing of loading state. The reason is because
                 // onConversationsChanged() doesn't get called if data did not change.
-                refreshLayout.postDelayed(new Runnable()
-                {
+                refreshLayout.postDelayed(new Runnable() {
                     @Override
-                    public void run()
-                    {
+                    public void run() {
                         refreshLayout.setRefreshing(false);
                     }
                 }, REFRESH_DURATION_MILLIS);
@@ -116,13 +104,11 @@ public class ClientConversationsFragment extends InjectedFragment
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         final IntentFilter filter = new IntentFilter(LayerConstants.ACTION_SHOW_NOTIFICATION);
         filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
         getActivity().registerReceiver(mPushNotificationReceiver, filter);
-        if (getUserVisibleHint())
-        {
+        if (getUserVisibleHint()) {
             clearNotifications();
             logConversationsShown();
         }
@@ -130,39 +116,31 @@ public class ClientConversationsFragment extends InjectedFragment
     }
 
     @Override
-    public void onConversationsChanged()
-    {
+    public void onConversationsChanged() {
         mRefreshLayout.setRefreshing(false);
         mEmptyRefreshLayout.setRefreshing(false);
-        if (mAdapter.getItemCount() > 0)
-        {
+        if (mAdapter.getItemCount() > 0) {
             mEmptyRefreshLayout.setVisibility(View.GONE);
         }
-        else
-        {
+        else {
             mEmptyRefreshLayout.setVisibility(View.VISIBLE);
         }
-        if (getUserVisibleHint())
-        {
+        if (getUserVisibleHint()) {
             logConversationsShown();
         }
     }
 
     @Override
-    public void setUserVisibleHint(final boolean isVisibleToUser)
-    {
+    public void setUserVisibleHint(final boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        if (isVisibleToUser)
-        {
+        if (isVisibleToUser) {
             clearNotifications();
             logConversationsShown();
         }
     }
 
-    private void logConversationsShown()
-    {
-        if (bus != null && mAdapter != null && !mIsConversationsShownLogged)
-        {
+    private void logConversationsShown() {
+        if (bus != null && mAdapter != null && !mIsConversationsShownLogged) {
             bus.post(new LogEvent.AddLogEvent(
                     new ConversationsLog.ConversationsShown(
                             (int) mLayerHelper.getUnreadConversationsCount(),
@@ -171,22 +149,18 @@ public class ClientConversationsFragment extends InjectedFragment
         }
     }
 
-    private void clearNotifications()
-    {
-        if (mAdapter == null)
-        {
+    private void clearNotifications() {
+        if (mAdapter == null) {
             return;
         }
-        for (int i = 0; i < mAdapter.getItemCount(); i++)
-        {
+        for (int i = 0; i < mAdapter.getItemCount(); i++) {
             PushNotificationReceiver.getNotifications(getActivity())
                     .clear(mAdapter.getConversationItem(i));
         }
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         getActivity().unregisterReceiver(mPushNotificationReceiver);
         super.onPause();
     }

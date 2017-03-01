@@ -14,30 +14,25 @@ import com.handy.portal.library.ui.view.DialogBlockerView;
 
 import butterknife.ButterKnife;
 
-public class NotificationBlockerDialogFragment extends InjectedDialogFragment
-{
+public class NotificationBlockerDialogFragment extends InjectedDialogFragment {
     private static final String PACKAGE_PREFIX = "package:";
 
     public static final String FRAGMENT_TAG = "fragment_dialog_notification_blocker";
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setCancelable(false);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = new DialogBlockerView(getContext())
                 .setTitle(R.string.notification_blocker_title)
                 .setMessage(R.string.notification_blocker_body)
-                .setActionButton(R.string.enable_now, new View.OnClickListener()
-                {
+                .setActionButton(R.string.enable_now, new View.OnClickListener() {
                     @Override
-                    public void onClick(final View v)
-                    {
+                    public void onClick(final View v) {
                         Intent intent = new Intent();
                         intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                         intent.setData(Uri.parse(PACKAGE_PREFIX + getContext().getPackageName()));

@@ -8,10 +8,8 @@ import android.support.v4.app.Fragment;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.TransitionStyle;
 
-public abstract class NavigationEvent extends HandyEvent
-{
-    public static class NavigateToPage extends NavigationEvent
-    {
+public abstract class NavigationEvent extends HandyEvent {
+    public static class NavigateToPage extends NavigationEvent {
         public final MainViewPage targetPage;
         public final boolean addToBackStack;
         @NonNull
@@ -20,33 +18,27 @@ public abstract class NavigationEvent extends HandyEvent
         private Fragment mReturnFragment;
         private int mActivityRequestCode;
 
-        public NavigateToPage(MainViewPage targetPage)
-        {
+        public NavigateToPage(MainViewPage targetPage) {
             this(targetPage, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, false);
         }
 
-        public NavigateToPage(MainViewPage targetPage, boolean addToBackStack)
-        {
+        public NavigateToPage(MainViewPage targetPage, boolean addToBackStack) {
             this(targetPage, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, addToBackStack);
         }
 
-        public NavigateToPage(MainViewPage targetPage, Bundle arguments)
-        {
+        public NavigateToPage(MainViewPage targetPage, Bundle arguments) {
             this(targetPage, arguments, TransitionStyle.NATIVE_TO_NATIVE, false);
         }
 
-        public NavigateToPage(MainViewPage targetPage, Bundle arguments, boolean addToBackStack)
-        {
+        public NavigateToPage(MainViewPage targetPage, Bundle arguments, boolean addToBackStack) {
             this(targetPage, arguments, TransitionStyle.NATIVE_TO_NATIVE, addToBackStack);
         }
 
-        public NavigateToPage(MainViewPage targetPage, Bundle arguments, TransitionStyle transitionStyle)
-        {
+        public NavigateToPage(MainViewPage targetPage, Bundle arguments, TransitionStyle transitionStyle) {
             this(targetPage, arguments, transitionStyle, false);
         }
 
-        public NavigateToPage(MainViewPage targetPage, @Nullable Bundle arguments, TransitionStyle transitionStyle, boolean addToBackStack)
-        {
+        public NavigateToPage(MainViewPage targetPage, @Nullable Bundle arguments, TransitionStyle transitionStyle, boolean addToBackStack) {
             this.targetPage = targetPage;
             this.addToBackStack = addToBackStack;
             this.arguments = (arguments != null) ? arguments : new Bundle();
@@ -54,27 +46,23 @@ public abstract class NavigationEvent extends HandyEvent
         }
 
         public void setReturnFragment(@Nullable final Fragment returnFragment,
-                                      final int requestCode)
-        {
+                                      final int requestCode) {
             mReturnFragment = returnFragment;
             mActivityRequestCode = requestCode;
         }
 
         @Nullable
-        public Fragment getReturnFragment()
-        {
+        public Fragment getReturnFragment() {
             return mReturnFragment;
         }
 
-        public int getActivityRequestCode()
-        {
+        public int getActivityRequestCode() {
             return mActivityRequestCode;
         }
     }
 
 
-    public static class SwapFragmentEvent extends NavigationEvent
-    {
+    public static class SwapFragmentEvent extends NavigationEvent {
         public MainViewPage targetPage;
         public Bundle arguments;
         public TransitionStyle transitionStyle;
@@ -83,8 +71,7 @@ public abstract class NavigationEvent extends HandyEvent
         private int mActivityRequestCode;
 
         public SwapFragmentEvent(final MainViewPage targetPage, final Bundle arguments,
-                                 final TransitionStyle transitionStyle, final boolean addToBackStack)
-        {
+                                 final TransitionStyle transitionStyle, final boolean addToBackStack) {
             this.targetPage = targetPage;
             this.addToBackStack = addToBackStack;
             this.arguments = arguments;
@@ -92,40 +79,34 @@ public abstract class NavigationEvent extends HandyEvent
         }
 
         public void setReturnFragment(@Nullable final Fragment returnFragment,
-                                      final int requestCode)
-        {
+                                      final int requestCode) {
             mReturnFragment = returnFragment;
             mActivityRequestCode = requestCode;
         }
 
         @Nullable
-        public Fragment getReturnFragment()
-        {
+        public Fragment getReturnFragment() {
             return mReturnFragment;
         }
 
-        public int getActivityRequestCode()
-        {
+        public int getActivityRequestCode() {
             return mActivityRequestCode;
         }
     }
 
 
     //show hide the tabs restrict navigation, also need to block the drawer?
-    public static class SetNavigationTabVisibility extends NavigationEvent
-    {
+    public static class SetNavigationTabVisibility extends NavigationEvent {
         public final boolean isVisible;
 
-        public SetNavigationTabVisibility(boolean isVisible)
-        {
+        public SetNavigationTabVisibility(boolean isVisible) {
             this.isVisible = isVisible;
         }
     }
 
 
     //Highlight the navigation tab
-    public static class SelectPage extends NavigationEvent
-    {
+    public static class SelectPage extends NavigationEvent {
         public final MainViewPage page;
 
         public SelectPage(@Nullable final MainViewPage page) { this.page = page; }

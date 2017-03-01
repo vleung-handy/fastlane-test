@@ -1,75 +1,61 @@
 package com.handy.portal.logger.handylogger.model;
 
-public class ImageUploadLog extends EventLog
-{
+public class ImageUploadLog extends EventLog {
     private static final String EVENT_CONTEXT = "image_upload";
 
-    public ImageUploadLog(final String eventType)
-    {
+    public ImageUploadLog(final String eventType) {
         super(eventType, EVENT_CONTEXT);
     }
 
-    public static class MetadataRequestSubmitted extends ImageUploadLog
-    {
+    public static class MetadataRequestSubmitted extends ImageUploadLog {
         private static final String EVENT_TYPE = "metadata_request_submitted";
 
-        public MetadataRequestSubmitted()
-        {
+        public MetadataRequestSubmitted() {
             super(EVENT_TYPE);
         }
     }
 
 
-    public static class MetadataRequestSuccess extends ImageUploadLog
-    {
+    public static class MetadataRequestSuccess extends ImageUploadLog {
         private static final String EVENT_TYPE = "metadata_request_success";
 
-        public MetadataRequestSuccess()
-        {
+        public MetadataRequestSuccess() {
             super(EVENT_TYPE);
         }
     }
 
 
-    public static class MetadataRequestError extends ImageUploadLog
-    {
+    public static class MetadataRequestError extends ImageUploadLog {
         private static final String EVENT_TYPE = "metadata_request_error";
 
-        public MetadataRequestError()
-        {
+        public MetadataRequestError() {
             super(EVENT_TYPE);
         }
     }
 
 
-    public static class ImageRequestSubmitted extends ImageUploadLog
-    {
+    public static class ImageRequestSubmitted extends ImageUploadLog {
         private static final String EVENT_TYPE = "image_request_submitted";
 
-        public ImageRequestSubmitted()
-        {
+        public ImageRequestSubmitted() {
             super(EVENT_TYPE);
         }
     }
 
 
-    public static class ImageRequestSuccess extends ImageUploadLog
-    {
+    public static class ImageRequestSuccess extends ImageUploadLog {
         private static final String EVENT_TYPE = "image_request_success";
 
-        public ImageRequestSuccess()
-        {
+        public ImageRequestSuccess() {
             super(EVENT_TYPE);
         }
     }
 
 
-    public static class ImageRequestError extends ImageUploadLog
-    {
+    public static class ImageRequestError extends ImageUploadLog {
         private static final String EVENT_TYPE = "image_request_error";
 
-        public ImageRequestError()
-        {
+        public ImageRequestError() {
             super(EVENT_TYPE);
         }
     }

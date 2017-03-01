@@ -9,20 +9,17 @@ import org.greenrobot.eventbus.Subscribe;
  * manager for keeping track of UI update request events
  * to prevent funny UI bugs like loading screens getting stuck
  */
-public class UserInterfaceUpdateManager
-{
+public class UserInterfaceUpdateManager {
     private final EventBus mBus;
     private Boolean mLoadingOverlayVisibility;
 
-    public UserInterfaceUpdateManager(final EventBus bus)
-    {
+    public UserInterfaceUpdateManager(final EventBus bus) {
         mBus = bus;
         mBus.register(this);
     }
 
     @Subscribe
-    public void onRequestSetLoadingOverlayVisibility(HandyEvent.SetLoadingOverlayVisibility event)
-    {
+    public void onRequestSetLoadingOverlayVisibility(HandyEvent.SetLoadingOverlayVisibility event) {
         mLoadingOverlayVisibility = event.isVisible;
     }
 }

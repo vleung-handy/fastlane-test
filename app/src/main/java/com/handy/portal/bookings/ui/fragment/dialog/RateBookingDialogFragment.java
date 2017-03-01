@@ -39,8 +39,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class RateBookingDialogFragment extends InjectedDialogFragment
-{
+public class RateBookingDialogFragment extends InjectedDialogFragment {
     @Inject
     PrefsManager mPrefsManager;
     @Inject
@@ -65,8 +64,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
 
     private Booking mBooking;
 
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme);
         mBus.register(this);
@@ -74,37 +72,31 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(final Bundle savedInstanceState)
-    {
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.getWindow().setWindowAnimations(R.style.dialog_animation_slide_up_down_from_bottom);
         return dialog;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dialog_rate_booking, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         mBooking = null;
 
         Bundle bundle = getArguments();
-        if (bundle != null && bundle.containsKey(BundleKeys.BOOKING))
-        {
+        if (bundle != null && bundle.containsKey(BundleKeys.BOOKING)) {
             mBooking = (Booking) bundle.getSerializable(BundleKeys.BOOKING);
-            if (mBooking != null)
-            {
+            if (mBooking != null) {
                 mAmountText.setText(getString(R.string.you_earned_money_formatted,
                         mBooking.getFormattedProviderPayout()));
                 PaymentInfo bonusInfo = mBooking.getBonusPaymentToProvider();
-                if (bonusInfo != null && bonusInfo.getAdjustedAmount() > 0)
-                {
+                if (bonusInfo != null && bonusInfo.getAdjustedAmount() > 0) {
                     String amount = CurrencyUtils.formatPrice(
                             bonusInfo.getAdjustedAmount(), bonusInfo.getCurrencySymbol());
                     mBonusAmountText.setText(getString(R.string.bonus_formatted, amount));
@@ -115,8 +107,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             }
         }
 
-        if (mBooking == null)
-        {
+        if (mBooking == null) {
             Crashlytics.logException(new Exception("No valid booking passed to RateBookingDialogFragment, aborting rating"));
         }
 
@@ -124,26 +115,22 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         mBus.unregister(this);
         super.onDestroy();
     }
 
     @OnClick(R.id.close_button)
-    public void onCloseButtonClick()
-    {
+    public void onCloseButtonClick() {
         dismiss();
     }
 
     @OnClick(R.id.rate_booking_submit_button)
-    public void onConfirmCheckoutButtonClick()
-    {
+    public void onConfirmCheckoutButtonClick() {
         //Endpoint is expecting a rating of 1 - 5
         final int bookingRatingScore = getBookingRatingScore();
         mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.CustomerRatingSubmitted(bookingRatingScore)));
-        if (bookingRatingScore > 0)
-        {
+        if (bookingRatingScore > 0) {
             showLoadingOverlay();
             final LocationData locationData = mLocationManager.getLastKnownLocationData();
             mBus.post(new LogEvent.AddLogEvent(
@@ -151,21 +138,18 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
             mBookingManager.rateCustomer(
                     mBooking.getId(), bookingRatingScore, getBookingRatingComment());
         }
-        else
-        {
+        else {
             UIUtils.showToast(getContext(), getString(R.string.rate_booking_need_rating), Toast.LENGTH_SHORT);
         }
     }
 
     @Subscribe
-    public void onReceiveRateCustomerSuccess(final BookingEvent.RateCustomerSuccess event)
-    {
+    public void onReceiveRateCustomerSuccess(final BookingEvent.RateCustomerSuccess event) {
         mBookingManager.requestPostCheckoutInfo(mBooking.getId());
     }
 
     @Subscribe
-    public void onRateCustomerError(final BookingEvent.RateCustomerError event)
-    {
+    public void onRateCustomerError(final BookingEvent.RateCustomerError event) {
         hideLoadingOverlay();
         UIUtils.showToast(getContext(), getString(R.string.an_error_has_occurred), Toast.LENGTH_SHORT);
         //allow them to try again. they can always click the X button if they don't want to.
@@ -173,14 +157,12 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
 
     @Subscribe
     public void onReceivePostCheckoutInfoSuccess(
-            final BookingEvent.ReceivePostCheckoutInfoSuccess event)
-    {
+            final BookingEvent.ReceivePostCheckoutInfoSuccess event) {
         hideLoadingOverlay();
         final PostCheckoutInfo postCheckoutInfo = event.getPostCheckoutInfo();
         mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.ProTeamJobsReturned(
                 postCheckoutInfo.getSuggestedJobs())));
-        if (!postCheckoutInfo.getSuggestedJobs().isEmpty())
-        {
+        if (!postCheckoutInfo.getSuggestedJobs().isEmpty()) {
             FragmentUtils.safeLaunchDialogFragment(
                     PostCheckoutDialogFragment.newInstance(postCheckoutInfo), getActivity(),
                     PostCheckoutDialogFragment.TAG);
@@ -190,19 +172,16 @@ public class RateBookingDialogFragment extends InjectedDialogFragment
 
     @Subscribe
     public void onReceivePostCheckoutInfoError(
-            final BookingEvent.ReceivePostCheckoutInfoError event)
-    {
+            final BookingEvent.ReceivePostCheckoutInfoError event) {
         dismiss();
     }
 
-    private int getBookingRatingScore()
-    {
+    private int getBookingRatingScore() {
         //Endpoint is expected a 1 indexed rating
         return 1 + UIUtils.indexOfCheckedRadioButton(mRatingRadioGroup);
     }
 
-    private String getBookingRatingComment()
-    {
+    private String getBookingRatingComment() {
         return (mCommentText.getText() != null ? mCommentText.getText().toString() : "");
     }
 }

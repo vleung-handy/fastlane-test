@@ -2,8 +2,7 @@ package com.handy.portal.onboarding.model.subflow;
 
 import com.google.gson.annotations.SerializedName;
 
-public enum SubflowType
-{
+public enum SubflowType {
     @SerializedName("status")
     STATUS(1),
     @SerializedName("id_verification")
@@ -19,13 +18,11 @@ public enum SubflowType
 
     private int mNumberOfSteps;
 
-    SubflowType(final int numberOfSteps)
-    {
+    SubflowType(final int numberOfSteps) {
         mNumberOfSteps = numberOfSteps;
     }
 
-    public int getNumberOfSteps()
-    {
+    public int getNumberOfSteps() {
         return mNumberOfSteps;
     }
 }

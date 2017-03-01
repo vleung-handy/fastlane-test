@@ -5,8 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
-public class ResupplyInfo implements Serializable
-{
+public class ResupplyInfo implements Serializable {
     @SerializedName("can_request_supplies")
     private boolean canRequestSupplies;
     @SerializedName("can_request_supplies_now")
@@ -18,28 +17,23 @@ public class ResupplyInfo implements Serializable
     @SerializedName("supply_list")
     private List<SupplyListItem> supplyList;
 
-    public boolean providerCanRequestSupplies()
-    {
+    public boolean providerCanRequestSupplies() {
         return canRequestSupplies;
     }
 
-    public boolean providerCanRequestSuppliesNow()
-    {
+    public boolean providerCanRequestSuppliesNow() {
         return canRequestSuppliesNow;
     }
 
-    public String getHelperText()
-    {
+    public String getHelperText() {
         return helperText;
     }
 
-    public String getFeeAmount()
-    {
+    public String getFeeAmount() {
         return feeAmount;
     }
 
-    public List<SupplyListItem> getSupplyList()
-    {
+    public List<SupplyListItem> getSupplyList() {
         return supplyList;
     }
 }

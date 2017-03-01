@@ -12,49 +12,40 @@ import com.handy.portal.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PriceMarker extends FrameLayout
-{
+public class PriceMarker extends FrameLayout {
     @BindView(R.id.marker_text)
     TextView mMarkerText;
 
     private boolean mActive = false;
 
-    public PriceMarker(final Context context)
-    {
+    public PriceMarker(final Context context) {
         super(context);
     }
 
-    public PriceMarker(final Context context, final AttributeSet attrs)
-    {
+    public PriceMarker(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public PriceMarker(final Context context, final AttributeSet attrs, final int defStyleAttr)
-    {
+    public PriceMarker(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public PriceMarker(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
-    {
+    public PriceMarker(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public PriceMarker(final Context context, boolean isActive)
-    {
+    public PriceMarker(final Context context, boolean isActive) {
         super(context);
         mActive = isActive;
         init();
     }
 
-    private void init()
-    {
-        if (mActive)
-        {
+    private void init() {
+        if (mActive) {
             inflate(getContext(), R.layout.price_marker_active, this);
         }
-        else
-        {
+        else {
             inflate(getContext(), R.layout.price_marker_inactive, this);
         }
         ButterKnife.bind(this);

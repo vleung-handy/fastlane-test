@@ -31,13 +31,11 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
     private final DataManager dataManager;
 
 
-    private final class RequestStripeTokenKeys
-    {
+    private final class RequestStripeTokenKeys {
         private static final String API_KEY = "key";
 
 
-        private final class BankAccount
-        {
+        private final class BankAccount {
             private static final String BANK_ACCOUNT = "bank_account";
             private static final String BANK_ACCOUNT_COUNTRY = BANK_ACCOUNT + "[country]";
             private static final String BANK_ACCOUNT_CURRENCY = BANK_ACCOUNT + "[currency]";
@@ -46,8 +44,7 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
         }
 
 
-        private final class DebitCard
-        {
+        private final class DebitCard {
             private static final String CARD = "card";
             private static final String CARD_NUMBER = CARD + "[number]";
             private static final String CARD_EXP_MONTH = CARD + "[exp_month]";
@@ -58,8 +55,7 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
     }
 
     @Inject
-    public StripeManager(final Context context, final EventBus bus, final DataManager dataManager)
-    {
+    public StripeManager(final Context context, final EventBus bus, final DataManager dataManager) {
         this.bus = bus;
         this.bus.register(this);
         this.dataManager = dataManager;
@@ -70,19 +66,15 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
     }
 
     @Subscribe
-    public void onRequestStripeTokenFromBankAccount(final StripeEvent.RequestStripeTokenFromBankAccount event)
-    {
-        dataManager.getStripeToken(buildParamsFromBankAccountInfo(event.bankAccountInfo), new DataManager.Callback<StripeTokenResponse>()
-        {
+    public void onRequestStripeTokenFromBankAccount(final StripeEvent.RequestStripeTokenFromBankAccount event) {
+        dataManager.getStripeToken(buildParamsFromBankAccountInfo(event.bankAccountInfo), new DataManager.Callback<StripeTokenResponse>() {
             @Override
-            public void onSuccess(StripeTokenResponse response)
-            {
+            public void onSuccess(StripeTokenResponse response) {
                 bus.post(new StripeEvent.ReceiveStripeTokenFromBankAccountSuccess(response));
             }
 
             @Override
-            public void onError(DataManager.DataManagerError error)
-            {
+            public void onError(DataManager.DataManagerError error) {
                 bus.post(new StripeEvent.ReceiveStripeTokenFromBankAccountError(error));
 
             }
@@ -90,19 +82,15 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
     }
 
     @Subscribe
-    public void onRequestStripeTokenFromDebitCard(final StripeEvent.RequestStripeTokenFromDebitCard event)
-    {
-        dataManager.getStripeToken(buildParamsFromDebitCardInfo(event.debitCardInfo), new DataManager.Callback<StripeTokenResponse>()
-        {
+    public void onRequestStripeTokenFromDebitCard(final StripeEvent.RequestStripeTokenFromDebitCard event) {
+        dataManager.getStripeToken(buildParamsFromDebitCardInfo(event.debitCardInfo), new DataManager.Callback<StripeTokenResponse>() {
             @Override
-            public void onSuccess(StripeTokenResponse response)
-            {
+            public void onSuccess(StripeTokenResponse response) {
                 bus.post(new StripeEvent.ReceiveStripeTokenFromDebitCardSuccess(response, event.requestIdentifier));
             }
 
             @Override
-            public void onError(DataManager.DataManagerError error)
-            {
+            public void onError(DataManager.DataManagerError error) {
                 bus.post(new StripeEvent.ReceiveStripeTokenFromDebitCardError(error));
 
             }
@@ -110,27 +98,22 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
     }
 
     @Subscribe
-    public void onRequestStripeChargeToken(final StripeEvent.RequestStripeChargeToken event)
-    {
+    public void onRequestStripeChargeToken(final StripeEvent.RequestStripeChargeToken event) {
         final String stripeApiKey = pickStripeApiKey(event.getCountry().toLowerCase());
-        new Stripe().createToken(event.getCard(), stripeApiKey, new TokenCallback()
-        {
+        new Stripe().createToken(event.getCard(), stripeApiKey, new TokenCallback() {
             @Override
-            public void onSuccess(final Token token)
-            {
+            public void onSuccess(final Token token) {
                 bus.post(new StripeEvent.ReceiveStripeChargeTokenSuccess(token));
             }
 
             @Override
-            public void onError(final Exception error)
-            {
+            public void onError(final Exception error) {
                 bus.post(new StripeEvent.ReceiveStripeChargeTokenError(error));
             }
         });
     }
 
-    private Map<String, String> buildParamsFromDebitCardInfo(DebitCardInfo debitCardInfo)
-    {
+    private Map<String, String> buildParamsFromDebitCardInfo(DebitCardInfo debitCardInfo) {
         Map<String, String> params = new HashMap<>();
         params.put(RequestStripeTokenKeys.DebitCard.CARD_NUMBER, debitCardInfo.getCardNumber());
         params.put(RequestStripeTokenKeys.DebitCard.CARD_EXP_MONTH, debitCardInfo.getExpMonth());
@@ -141,8 +124,7 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
         return params;
     }
 
-    private Map<String, String> buildParamsFromBankAccountInfo(BankAccountInfo bankAccountInfo)
-    {
+    private Map<String, String> buildParamsFromBankAccountInfo(BankAccountInfo bankAccountInfo) {
         Map<String, String> params = new HashMap<>();
         params.put(RequestStripeTokenKeys.BankAccount.BANK_ACCOUNT_ACCOUNT_NUMBER, bankAccountInfo.getAccountNumber());
         params.put(RequestStripeTokenKeys.BankAccount.BANK_ACCOUNT_COUNTRY, bankAccountInfo.getCountry());
@@ -152,8 +134,7 @@ public class StripeManager //TODO: should we consolidate this with PaymentsManag
         return params;
     }
 
-    private String pickStripeApiKey(final String country)
-    {
+    private String pickStripeApiKey(final String country) {
         if (Country.GB.equalsIgnoreCase(country)) { return STRIPE_API_KEY_GB; }
         else if (Country.CA.equalsIgnoreCase(country)) { return STRIPE_API_KEY_CA; }
         else { return STRIPE_API_KEY_US; }

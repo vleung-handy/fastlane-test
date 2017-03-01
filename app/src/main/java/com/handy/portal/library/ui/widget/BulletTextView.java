@@ -13,52 +13,44 @@ import com.handy.portal.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BulletTextView extends FrameLayout
-{
+public class BulletTextView extends FrameLayout {
     @BindView(R.id.text_with_bullet)
     TextView mTextView;
 
-    public BulletTextView(final Context context, CharSequence text)
-    {
+    public BulletTextView(final Context context, CharSequence text) {
         super(context);
         init();
         setText(text);
     }
 
-    public BulletTextView(final Context context)
-    {
+    public BulletTextView(final Context context) {
         super(context);
         init();
     }
 
-    public BulletTextView(final Context context, final AttributeSet attrs)
-    {
+    public BulletTextView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public BulletTextView(final Context context, final AttributeSet attrs, final int defStyleAttr)
-    {
+    public BulletTextView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public BulletTextView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
-    {
+    public BulletTextView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), R.layout.text_view_bullet, this);
         ButterKnife.bind(this);
         mTextView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 
-    public void setText(CharSequence text)
-    {
+    public void setText(CharSequence text) {
         mTextView.setText(text);
     }
 }

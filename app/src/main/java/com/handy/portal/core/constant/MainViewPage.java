@@ -43,8 +43,7 @@ import java.io.Serializable;
  * <p/>
  * easily deeplink-able - see DeeplinkMapper
  */
-public enum MainViewPage implements Serializable
-{
+public enum MainViewPage implements Serializable {
     AVAILABLE_JOBS(AvailableBookingsFragment.class),
     SCHEDULED_JOBS(ScheduledBookingsFragment.class),
     JOB_DETAILS(BookingDetailsWrapperFragment.class),
@@ -87,8 +86,7 @@ public enum MainViewPage implements Serializable
 
     CLIENTS(ClientsFragment.class),
     EDIT_AVAILABLE_HOURS(EditAvailableHoursFragment.class),
-    EDIT_WEEKLY_AVAILABLE_HOURS(EditWeeklyAvailableHoursFragment.class),
-    ;
+    EDIT_WEEKLY_AVAILABLE_HOURS(EditWeeklyAvailableHoursFragment.class),;
 
     private static final MainViewPage[] TOP_LEVEL_PAGES = {
             AVAILABLE_JOBS, SCHEDULED_JOBS, CLIENTS, NOTIFICATIONS, DASHBOARD, PAYMENTS,
@@ -97,22 +95,17 @@ public enum MainViewPage implements Serializable
 
     private Class mClassType;
 
-    MainViewPage(Class classType)
-    {
+    MainViewPage(Class classType) {
         mClassType = classType;
     }
 
-    public Class getClassType()
-    {
+    public Class getClassType() {
         return mClassType;
     }
 
-    public boolean isTopLevel()
-    {
-        for (final MainViewPage page : TOP_LEVEL_PAGES)
-        {
-            if (page == this)
-            {
+    public boolean isTopLevel() {
+        for (final MainViewPage page : TOP_LEVEL_PAGES) {
+            if (page == this) {
                 return true;
             }
         }

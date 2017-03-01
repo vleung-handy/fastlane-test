@@ -29,8 +29,7 @@ import butterknife.ButterKnife;
 import static com.handy.portal.core.event.ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess;
 import static com.handy.portal.core.event.ProviderDashboardEvent.RequestProviderFiveStarRatings;
 
-public class DashboardReviewsFragment extends ActionBarFragment
-{
+public class DashboardReviewsFragment extends ActionBarFragment {
     @BindView(R.id.reviews_list)
     RecyclerView mReviewRecyclerView;
     @BindView(R.id.no_result_view)
@@ -43,15 +42,13 @@ public class DashboardReviewsFragment extends ActionBarFragment
     private ProviderEvaluation mEvaluation;
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mEvaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.PROVIDER_EVALUATION);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_dashboard_reviews, container, false);
@@ -61,8 +58,7 @@ public class DashboardReviewsFragment extends ActionBarFragment
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setActionBarTitle(R.string.five_star_reviews);
 
@@ -77,19 +73,15 @@ public class DashboardReviewsFragment extends ActionBarFragment
         mReviewRecyclerView.setLayoutManager(linearLayoutManager);
         ReviewListAdapter adapter = new ReviewListAdapter(mRatings);
         mReviewRecyclerView.setAdapter(adapter);
-        mReviewRecyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager)
-        {
+        mReviewRecyclerView.addOnScrollListener(new EndlessRecyclerViewScrollListener(linearLayoutManager) {
             @Override
-            public void onLoadMore(int page, int totalItemsCount)
-            {
+            public void onLoadMore(int page, int totalItemsCount) {
                 if (mEvaluation != null &&
                         mEvaluation.getFiveStarRatingsWithComments() != null &&
-                        !mEvaluation.getFiveStarRatingsWithComments().isEmpty())
-                {
+                        !mEvaluation.getFiveStarRatingsWithComments().isEmpty()) {
 
                     Date untilBookingDate = ((ReviewListAdapter) mReviewRecyclerView.getAdapter()).getToBookingDate();
-                    if (untilBookingDate != null)
-                    {
+                    if (untilBookingDate != null) {
                         String untilBookingDateString = DateTimeUtils.formatIso8601(untilBookingDate);
                         bus.post(new RequestProviderFiveStarRatings(MIN_STAR, untilBookingDateString));
                     }
@@ -98,13 +90,11 @@ public class DashboardReviewsFragment extends ActionBarFragment
         });
 
         if (mEvaluation == null || mEvaluation.getFiveStarRatingsWithComments() == null
-                || mEvaluation.getFiveStarRatingsWithComments().isEmpty())
-        {
+                || mEvaluation.getFiveStarRatingsWithComments().isEmpty()) {
             mNoResultView.setVisibility(View.VISIBLE);
             mNoResultText.setText(R.string.no_reviews);
         }
-        else
-        {
+        else {
             mNoResultView.setVisibility(View.GONE);
             mRatings.addAll(mEvaluation.getFiveStarRatingsWithComments());
             adapter.notifyDataSetChanged();
@@ -112,30 +102,25 @@ public class DashboardReviewsFragment extends ActionBarFragment
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         bus.register(this);
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         bus.unregister(this);
         super.onPause();
     }
 
     @Subscribe
-    public void onReceiveProviderFiveStarRatingsSuccess(ReceiveProviderFiveStarRatingsSuccess event)
-    {
+    public void onReceiveProviderFiveStarRatingsSuccess(ReceiveProviderFiveStarRatingsSuccess event) {
         ReviewListAdapter adapter = (ReviewListAdapter) mReviewRecyclerView.getAdapter();
 
-        if (event.getProviderRatings().isEmpty())
-        {
+        if (event.getProviderRatings().isEmpty()) {
             adapter.setDoneLoading(true);
         }
-        else
-        {
+        else {
             mRatings.addAll(event.getProviderRatings());
         }
 

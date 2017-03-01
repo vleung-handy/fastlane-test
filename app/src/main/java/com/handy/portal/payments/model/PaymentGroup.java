@@ -4,8 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class PaymentGroup implements Serializable
-{
+public class PaymentGroup implements Serializable {
     @SerializedName("label")
     private String label;
 
@@ -18,27 +17,24 @@ public class PaymentGroup implements Serializable
     @SerializedName("payments")
     private Payment[] payments;
 
-    public enum MachineName{
+
+    public enum MachineName {
         completed_jobs, withholdings
     }
 
-    public String getLabel()
-    {
+    public String getLabel() {
         return label;
     }
 
-    public String getMachineName()
-    {
+    public String getMachineName() {
         return machineName;
     }
 
-    public Integer getAmount()
-    {
+    public Integer getAmount() {
         return amount;
     }
 
-    public Payment[] getPayments()
-    {
+    public Payment[] getPayments() {
         return payments;
     }
 }

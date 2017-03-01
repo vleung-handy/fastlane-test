@@ -14,8 +14,7 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TabWithDateRangeView extends FrameLayout
-{
+public class TabWithDateRangeView extends FrameLayout {
     private final Date mStartDate;
     private final Date mEndDate;
     @BindView(R.id.title)
@@ -27,8 +26,7 @@ public class TabWithDateRangeView extends FrameLayout
 
     public TabWithDateRangeView(final Context context,
                                 @StringRes final int titleResId,
-                                final WeeklyAvailabilityTimelinesWrapper weekTimelines)
-    {
+                                final WeeklyAvailabilityTimelinesWrapper weekTimelines) {
         super(context);
         mTitleResId = titleResId;
         mStartDate = weekTimelines.getStartDate();
@@ -36,8 +34,7 @@ public class TabWithDateRangeView extends FrameLayout
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), R.layout.view_tab_with_date_range, this);
         ButterKnife.bind(this);
         mTitle.setText(mTitleResId);

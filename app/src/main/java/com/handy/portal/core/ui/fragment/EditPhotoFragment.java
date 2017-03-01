@@ -57,14 +57,12 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import retrofit.mime.TypedFile;
 
-public class EditPhotoFragment extends ActionBarFragment
-{
+public class EditPhotoFragment extends ActionBarFragment {
     @Inject
     PrefsManager mPrefsManager;
 
 
-    public enum Source
-    {
+    public enum Source {
         ONBOARDING, PROFILE, APP
     }
 
@@ -80,14 +78,12 @@ public class EditPhotoFragment extends ActionBarFragment
     private Source mSource;
 
     @Override
-    protected MainViewPage getAppPage()
-    {
+    protected MainViewPage getAppPage() {
         return MainViewPage.PROFILE_PICTURE;
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSource = (Source) getArguments().getSerializable(BundleKeys.NAVIGATION_SOURCE);
     }
@@ -95,8 +91,7 @@ public class EditPhotoFragment extends ActionBarFragment
     @Override
     public View onCreateView(final LayoutInflater inflater,
                              final ViewGroup container,
-                             final Bundle savedInstanceState)
-    {
+                             final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_edit_photo, container, false);
         ButterKnife.bind(this, view);
@@ -105,8 +100,7 @@ public class EditPhotoFragment extends ActionBarFragment
 
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setActionBar(R.string.edit_photo, false);
         setOptionsMenuEnabled(true);
@@ -115,26 +109,21 @@ public class EditPhotoFragment extends ActionBarFragment
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         bus.register(this);
-        if (mShowLoadingOverlayOnResume)
-        {
+        if (mShowLoadingOverlayOnResume) {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         }
-        else
-        {
+        else {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         }
     }
 
     @OnClick(R.id.take_photo_button)
-    public void onTakePhotoButtonClicked()
-    {
+    public void onTakePhotoButtonClicked() {
         if (!Utils.areAllPermissionsGranted(getActivity(), new String[]{Manifest.permission.CAMERA,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE}))
-        {
+                Manifest.permission.WRITE_EXTERNAL_STORAGE})) {
             requestPermissions(new String[]{Manifest.permission.CAMERA,
                             Manifest.permission.WRITE_EXTERNAL_STORAGE},
                     REQUEST_CODE_PERMISSION_CAMERA);
@@ -152,8 +141,7 @@ public class EditPhotoFragment extends ActionBarFragment
                 FileProviderUtils.getApplicationFileProviderAuthority(getContext()));
         cameraImageIntent.putExtra(MediaStore.EXTRA_OUTPUT, imageFileUri);
         final int frontFacingCameraId = getFrontFacingCameraId();
-        if (frontFacingCameraId != -1)
-        {
+        if (frontFacingCameraId != -1) {
             cameraImageIntent.putExtra(EXTRA_CAMERA_FACING, frontFacingCameraId);
         }
         startActivityForResult(cameraImageIntent, RequestCode.CAMERA);
@@ -162,49 +150,38 @@ public class EditPhotoFragment extends ActionBarFragment
     @Override
     public void onRequestPermissionsResult(final int requestCode,
                                            @NonNull final String[] permissions,
-                                           @NonNull final int[] grantResults)
-    {
+                                           @NonNull final int[] grantResults) {
         if (requestCode == REQUEST_CODE_PERMISSION_CAMERA
                 && grantResults.length > 0
-                && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-        {
+                && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             onTakePhotoButtonClicked();
         }
     }
 
-    private int getFrontFacingCameraId()
-    {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-        {
+    private int getFrontFacingCameraId() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             final CameraManager cameraManager = (CameraManager) getActivity()
                     .getSystemService(Context.CAMERA_SERVICE);
-            try
-            {
-                for (final String cameraId : cameraManager.getCameraIdList())
-                {
+            try {
+                for (final String cameraId : cameraManager.getCameraIdList()) {
                     final CameraCharacteristics cameraCharacteristics =
                             cameraManager.getCameraCharacteristics(cameraId);
                     final Integer lensFacing =
                             cameraCharacteristics.get(CameraCharacteristics.LENS_FACING);
-                    if (lensFacing != null && lensFacing == CameraMetadata.LENS_FACING_FRONT)
-                    {
+                    if (lensFacing != null && lensFacing == CameraMetadata.LENS_FACING_FRONT) {
                         return Integer.parseInt(cameraId);
                     }
                 }
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 Crashlytics.logException(e);
             }
         }
-        else
-        {
-            for (int cameraId = 0; cameraId < Camera.getNumberOfCameras(); cameraId++)
-            {
+        else {
+            for (int cameraId = 0; cameraId < Camera.getNumberOfCameras(); cameraId++) {
                 Camera.CameraInfo cameraInfo = new Camera.CameraInfo();
                 Camera.getCameraInfo(cameraId, cameraInfo);
-                if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT)
-                {
+                if (cameraInfo.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
                     return cameraId;
                 }
             }
@@ -213,34 +190,28 @@ public class EditPhotoFragment extends ActionBarFragment
     }
 
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
-    {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK)
-        {
-            if (requestCode == UCrop.REQUEST_CROP)
-            {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == UCrop.REQUEST_CROP) {
                 bus.post(new ProfileEvent.RequestPhotoUploadUrl(IMAGE_MIME_TYPE));
                 bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.MetadataRequestSubmitted()));
                 bus.post(new LogEvent.AddLogEvent(
                         new ProfilePhotoUploadLog.ProfilePhotoUploadSubmitted(mSource)));
             }
-            else
-            {
+            else {
                 bus.post(new LogEvent.AddLogEvent(new ProfilePhotoLog.ImageChosen()));
                 mShowLoadingOverlayOnResume = true;
                 cropImage();
             }
         }
-        else
-        {
+        else {
             bus.post(new LogEvent.AddLogEvent(new ProfilePhotoLog.ImagePickerDismissed()));
             mShowLoadingOverlayOnResume = false;
         }
     }
 
-    private void cropImage()
-    {
+    private void cropImage() {
         final Uri imageUri = Uri.fromFile(getImageFile());
         final UCrop.Options options = new UCrop.Options();
         final int blue = ContextCompat.getColor(getActivity(), R.color.handy_blue);
@@ -256,11 +227,9 @@ public class EditPhotoFragment extends ActionBarFragment
                 .start(getActivity(), this);
     }
 
-    private File getImageFile()
-    {
+    private File getImageFile() {
         final File directory = new File(Environment.getExternalStorageDirectory(), IMAGE_DIRECTORY);
-        if (!directory.exists())
-        {
+        if (!directory.exists()) {
             directory.mkdirs();
         }
         return new File(Environment.getExternalStorageDirectory(),
@@ -269,8 +238,7 @@ public class EditPhotoFragment extends ActionBarFragment
 
     @Subscribe
     public void onReceivePhotoUploadUrlError(
-            final ProfileEvent.ReceivePhotoUploadUrlError event)
-    {
+            final ProfileEvent.ReceivePhotoUploadUrlError event) {
         bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.MetadataRequestError()));
         bus.post(new LogEvent.AddLogEvent(
                 new ProfilePhotoUploadLog.ProfilePhotoUploadError(mSource)));
@@ -279,12 +247,10 @@ public class EditPhotoFragment extends ActionBarFragment
 
     @Subscribe
     public void onReceivePhotoUploadUrlSuccess(
-            final ProfileEvent.ReceivePhotoUploadUrlSuccess event)
-    {
+            final ProfileEvent.ReceivePhotoUploadUrlSuccess event) {
         bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.MetadataRequestSuccess()));
         final File imageFile = getImageFile();
-        if (!imageFile.exists())
-        {
+        if (!imageFile.exists()) {
             showToast(R.string.an_error_has_occurred);
             return;
         }
@@ -293,36 +259,29 @@ public class EditPhotoFragment extends ActionBarFragment
         uploadImage(event.getUploadUrl(), imageFile);
     }
 
-    private void compressImage(final File imageFile)
-    {
-        try
-        {
+    private void compressImage(final File imageFile) {
+        try {
             Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getPath());
-            while (imageFile.length() > MAX_IMAGE_SIZE_MB)
-            {
+            while (imageFile.length() > MAX_IMAGE_SIZE_MB) {
                 final FileOutputStream outputStream = new FileOutputStream(imageFile);
                 bitmap.compress(Bitmap.CompressFormat.JPEG, 80, outputStream);
                 outputStream.close();
                 bitmap = BitmapFactory.decodeFile(imageFile.getPath());
             }
         }
-        catch (IOException e)
-        {
+        catch (IOException e) {
             Crashlytics.logException(e);
         }
     }
 
-    private void fixImageRotation(final File imageFile)
-    {
-        try
-        {
+    private void fixImageRotation(final File imageFile) {
+        try {
             Bitmap bitmap = BitmapFactory.decodeFile(imageFile.getPath());
             final ExifInterface ei = new ExifInterface(imageFile.getPath());
             int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
                     ExifInterface.ORIENTATION_UNDEFINED);
 
-            switch (orientation)
-            {
+            switch (orientation) {
                 case ExifInterface.ORIENTATION_ROTATE_90:
                     bitmap = rotateImage(bitmap, 90);
                     break;
@@ -340,28 +299,23 @@ public class EditPhotoFragment extends ActionBarFragment
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream);
             outputStream.close();
         }
-        catch (IOException e)
-        {
+        catch (IOException e) {
             Crashlytics.logException(e);
         }
     }
 
-    private Bitmap rotateImage(Bitmap source, float angle)
-    {
+    private Bitmap rotateImage(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(), matrix,
                 true);
     }
 
-    private void uploadImage(final String uploadUrl, final File imageFile)
-    {
+    private void uploadImage(final String uploadUrl, final File imageFile) {
         final TypedFile file = new TypedFile(IMAGE_MIME_TYPE, imageFile);
-        dataManager.uploadPhoto(uploadUrl, file, new FragmentSafeCallback<Void>(this)
-        {
+        dataManager.uploadPhoto(uploadUrl, file, new FragmentSafeCallback<Void>(this) {
             @Override
-            public void onCallbackSuccess(final Void response)
-            {
+            public void onCallbackSuccess(final Void response) {
                 bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.ImageRequestSuccess()));
                 bus.post(new LogEvent.AddLogEvent(
                         new ProfilePhotoUploadLog.ProfilePhotoUploadSuccess(mSource)));
@@ -369,8 +323,7 @@ public class EditPhotoFragment extends ActionBarFragment
             }
 
             @Override
-            public void onCallbackError(final DataManager.DataManagerError error)
-            {
+            public void onCallbackError(final DataManager.DataManagerError error) {
                 bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.ImageRequestError()));
                 bus.post(new LogEvent.AddLogEvent(
                         new ProfilePhotoUploadLog.ProfilePhotoUploadError(mSource)));
@@ -382,8 +335,7 @@ public class EditPhotoFragment extends ActionBarFragment
 
     @Subscribe
     public void onReceiveProviderProfileSuccess(
-            final ProfileEvent.ReceiveProviderProfileSuccess event)
-    {
+            final ProfileEvent.ReceiveProviderProfileSuccess event) {
         bus.post(new ProfileEvent.ProfilePhotoUpdated());
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         showToast(R.string.upload_photo_success);
@@ -391,31 +343,26 @@ public class EditPhotoFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveProviderProfileError(final ProfileEvent.ReceiveProviderProfileError event)
-    {
+    public void onReceiveProviderProfileError(final ProfileEvent.ReceiveProviderProfileError event) {
         showError(event.error);
         getActivity().onBackPressed();
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         bus.unregister(this);
         super.onPause();
     }
 
     @Override
-    public void onDestroyView()
-    {
+    public void onDestroyView() {
         bus.post(new NavigationEvent.SetNavigationTabVisibility(true));
         super.onDestroyView();
     }
 
-    private void showError(final DataManager.DataManagerError error)
-    {
+    private void showError(final DataManager.DataManagerError error) {
         String message = error.getMessage();
-        if (TextUtils.isNullOrEmpty(message))
-        {
+        if (TextUtils.isNullOrEmpty(message)) {
             message = getString(R.string.an_error_has_occurred);
         }
         showToast(message);

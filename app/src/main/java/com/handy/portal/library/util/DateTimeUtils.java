@@ -20,8 +20,7 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
-public final class DateTimeUtils
-{
+public final class DateTimeUtils {
     //TODO: refactor code throughout the app to put date formats here
     //TODO: rename these fields & methods to something better
     public final static SimpleDateFormat HOUR_FORMATTER =
@@ -73,23 +72,20 @@ public final class DateTimeUtils
 
 
     //returns a today or tomorrow prepend as needed
-    public static String getTodayTomorrowStringByStartDate(Date startDate, Context context)
-    {
+    public static String getTodayTomorrowStringByStartDate(Date startDate, Context context) {
         String prepend = "";
 
         Calendar calendar = Calendar.getInstance();
 
         Date currentTime = calendar.getTime();
 
-        if (DateTimeUtils.equalCalendarDates(currentTime, startDate))
-        {
+        if (DateTimeUtils.equalCalendarDates(currentTime, startDate)) {
             prepend = (context.getString(R.string.today) + ", ");
         }
 
         calendar.add(Calendar.DATE, 1);
         Date tomorrowTime = calendar.getTime();
-        if (DateTimeUtils.equalCalendarDates(tomorrowTime, startDate))
-        {
+        if (DateTimeUtils.equalCalendarDates(tomorrowTime, startDate)) {
             prepend = (context.getString(R.string.tomorrow) + ", ");
         }
 
@@ -103,11 +99,9 @@ public final class DateTimeUtils
      * <p>
      * currently used for creating request params
      */
-    public static List<Date> getDateWithoutTimeList(Date inclusiveStartDate, int numDays)
-    {
+    public static List<Date> getDateWithoutTimeList(Date inclusiveStartDate, int numDays) {
         List<Date> dates = new ArrayList<>();
-        for (int i = 0; i < numDays; i++)
-        {
+        for (int i = 0; i < numDays; i++) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(inclusiveStartDate);
             calendar.add(Calendar.DATE, i);
@@ -118,36 +112,31 @@ public final class DateTimeUtils
         return dates;
     }
 
-    public static boolean isTimeWithinXMillisecondsFromNow(Date date, long milliSec)
-    {
+    public static boolean isTimeWithinXMillisecondsFromNow(Date date, long milliSec) {
         long timeDifference = date.getTime() - System.currentTimeMillis();
         return timeDifference >= 0 && timeDifference <= milliSec;
     }
 
     @Nullable
-    public static String getMonthShortName(Date date)
-    {
+    public static String getMonthShortName(Date date) {
         if (date == null) { return null; }
         return getMonthShortNameFormatter().format(date);
     }
 
     @Nullable
-    public static String getYear(Date date)
-    {
+    public static String getYear(Date date) {
         if (date == null) { return null; }
         return getYearFormatter().format(date);
     }
 
     @Nullable
-    public static String getMonthAndYear(Date date)
-    {
+    public static String getMonthAndYear(Date date) {
         if (date == null) { return null; }
         return getMonthYearFormatter().format(date);
     }
 
     @Nullable
-    public static Integer getYearInt(Date date)
-    {
+    public static Integer getYearInt(Date date) {
         if (date == null) { return null; }
         Calendar c = Calendar.getInstance();
         c.setTime(date);
@@ -161,8 +150,7 @@ public final class DateTimeUtils
      * @param date
      * @return
      */
-    public static String getDayOfWeek(Date date)
-    {
+    public static String getDayOfWeek(Date date) {
         return DAY_OF_WEEK_FORMATTER.format(date);
     }
 
@@ -172,63 +160,54 @@ public final class DateTimeUtils
      * @param date
      * @return
      */
-    public static int getDayOfYear(Date date)
-    {
+    public static int getDayOfYear(Date date) {
         return Integer.parseInt(DAY_OF_YEAR_FORMATTER.format(date));
     }
 
-    public static int getDayOfMonth(Date date)
-    {
+    public static int getDayOfMonth(Date date) {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         return c.get(Calendar.DAY_OF_MONTH);
     }
 
     @Nullable
-    public static String formatDateToHour(Date date)
-    {
+    public static String formatDateToHour(Date date) {
         if (date == null) { return null; }
         return getHourFormatter().format(date).toLowerCase();
     }
 
     @Nullable
-    public static String formatDateTo12HourClock(Date date)
-    {
+    public static String formatDateTo12HourClock(Date date) {
         if (date == null) { return null; }
         return getClockFormatter12hr().format(date).toLowerCase();
     }
 
     @Nullable
-    public static String formatDateDayOfWeekMonthDay(Date date)
-    {
+    public static String formatDateDayOfWeekMonthDay(Date date) {
         if (date == null) { return null; }
         return getDayOfWeekMonthDayFormatter().format(date);
     }
 
     @Nullable
-    public static String formatDateShortDayOfWeekShortMonthDay(Date date)
-    {
+    public static String formatDateShortDayOfWeekShortMonthDay(Date date) {
         if (date == null) { return null; }
         return getShortDayOfWeekShortMonthDayFormatter().format(date);
     }
 
     @Nullable
-    public static String formatDateMonthDay(Date date)
-    {
+    public static String formatDateMonthDay(Date date) {
         if (date == null) { return null; }
         return getSummaryDateFormatter().format(date);
     }
 
     @Nullable
-    public static String formatDetailedDate(Date date)
-    {
+    public static String formatDetailedDate(Date date) {
         if (date == null) { return null; }
         return getDetailedDateFormatter().format(date);
     }
 
     @Nullable
-    public static String formatMonthDate(Date date)
-    {
+    public static String formatMonthDate(Date date) {
         if (date == null) { return null; }
         return getMonthDateFormatter().format(date);
     }
@@ -246,22 +225,17 @@ public final class DateTimeUtils
      * @param date
      * @return
      */
-    public static String getHtmlFormattedDateString(String date)
-    {
+    public static String getHtmlFormattedDateString(String date) {
         String rval = DateTimeUtils.toJobViewDateString(date);
-        if (rval == null)
-        {
+        if (rval == null) {
             return "";
         }
-        else
-        {
+        else {
             int idx = rval.indexOf(" ");
-            if (idx < 0)
-            {
+            if (idx < 0) {
                 return "";
             }
-            else
-            {
+            else {
                 return "<b>" + rval.substring(0, idx) + "</b>" + rval.substring(idx, rval.length());
             }
         }
@@ -277,12 +251,10 @@ public final class DateTimeUtils
      * @return
      */
     @Nullable
-    public static String toJobViewDateString(String date)
-    {
+    public static String toJobViewDateString(String date) {
         if (android.text.TextUtils.isEmpty(date)) { return null; }
 
-        try
-        {
+        try {
             Date d = YEAR_MONTH_DAY_FORMATTER.parse(date);
             String rval = MONTH_DATE_YEAR_FORMATTER.format(d);
 
@@ -290,65 +262,55 @@ public final class DateTimeUtils
             int today = getDayOfYear(new Date());
 
             String prefix;
-            if (jobDate - today == 0)
-            {
+            if (jobDate - today == 0) {
                 prefix = "TODAY, ";
             }
-            else if (jobDate - today == 1)
-            {
+            else if (jobDate - today == 1) {
                 prefix = "TOMORROW, ";
             }
-            else
-            {
+            else {
                 prefix = getDayOfWeek(d).toUpperCase() + ", ";
             }
 
             return prefix + rval;
         }
-        catch (ParseException e)
-        {
+        catch (ParseException e) {
             e.printStackTrace();
             return null;
         }
     }
 
     @Nullable
-    public static String formatMonthDateYear(Date date)
-    {
+    public static String formatMonthDateYear(Date date) {
         if (date == null) { return null; }
         return getMonthDateYearFormatter().format(date);
     }
 
     @Nullable
-    public static String formatDayOfWeekMonthDateYear(Date date)
-    {
+    public static String formatDayOfWeekMonthDateYear(Date date) {
         if (date == null) { return null; }
         return getDayOfWeekMonthDateYearFormatter().format(date);
     }
 
     @Nullable
-    public static String formatDayOfWeekMonthDate(Date date)
-    {
+    public static String formatDayOfWeekMonthDate(Date date) {
         if (date == null) { return null; }
         return getDayOfWeekMonthDateFormatter().format(date);
     }
 
     @Nullable
-    public static String formatIso8601(Date date)
-    {
+    public static String formatIso8601(Date date) {
         if (date == null) { return null; }
         return getIso8601Formatter().format(date);
     }
 
     @Nullable
-    public static String formatDateRange(SimpleDateFormat dateFormat, Date start, Date end)
-    {
+    public static String formatDateRange(SimpleDateFormat dateFormat, Date start, Date end) {
         if (start == null || end == null) { return null; }
         return dateFormat.format(start) + " – " + dateFormat.format(end);
     }
 
-    public static boolean equalCalendarDates(final Date date1, final Date date2)
-    {
+    public static boolean equalCalendarDates(final Date date1, final Date date2) {
         Calendar c = Calendar.getInstance();
         c.setTime(date1);
 
@@ -362,8 +324,7 @@ public final class DateTimeUtils
                 && (thenMonthDay == c.get(Calendar.DAY_OF_MONTH));
     }
 
-    public static void convertToMidnight(final Calendar calendar)
-    {
+    public static void convertToMidnight(final Calendar calendar) {
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
@@ -371,16 +332,14 @@ public final class DateTimeUtils
         calendar.clear(Calendar.AM_PM);
     }
 
-    public static Date getDateWithoutTime(final Date date)
-    {
+    public static Date getDateWithoutTime(final Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         convertToMidnight(cal);
         return cal.getTime();
     }
 
-    public static Date getBeginningOfDay(Date date)
-    {
+    public static Date getBeginningOfDay(Date date) {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         c.set(Calendar.HOUR_OF_DAY, 0);
@@ -390,8 +349,7 @@ public final class DateTimeUtils
         return c.getTime();
     }
 
-    public static boolean isStartOfYear(Date date)
-    {
+    public static boolean isStartOfYear(Date date) {
         Calendar c = Calendar.getInstance();
         c.setTime(date);
         return c.get(Calendar.HOUR_OF_DAY) == 0
@@ -401,8 +359,7 @@ public final class DateTimeUtils
                 && c.get(Calendar.DAY_OF_YEAR) == 1;
     }
 
-    public static boolean isToday(Date date)
-    {
+    public static boolean isToday(Date date) {
         Calendar today = Calendar.getInstance();
         today.setTime(getBeginningOfDay(new Date()));
 
@@ -412,15 +369,13 @@ public final class DateTimeUtils
         return daysBetween(today.getTime(), dayToCompare.getTime()) == 0;
     }
 
-    public static boolean isDaysPast(final Date date)
-    {
+    public static boolean isDaysPast(final Date date) {
         return DateTimeUtils.daysBetween(DateTimeUtils.getDateWithoutTime(new Date()),
                 DateTimeUtils.getDateWithoutTime(date)) < 0;
     }
 
     // return a string in hh:mm:ss format
-    public static String millisecondsToFormattedString(long millis)
-    {
+    public static String millisecondsToFormattedString(long millis) {
         long hours = TimeUnit.MILLISECONDS.toHours(millis);
         long minutes = TimeUnit.MILLISECONDS.toMinutes(millis) - TimeUnit.HOURS.toMinutes(hours);
         long seconds = TimeUnit.MILLISECONDS.toSeconds(millis) -
@@ -428,20 +383,16 @@ public final class DateTimeUtils
         return String.format(Locale.getDefault(), "%02d:%02d:%02d", hours, minutes, seconds);
     }
 
-    public static String getTimeWithoutDate(final Date date)
-    {
+    public static String getTimeWithoutDate(final Date date) {
         Calendar cal = Calendar.getInstance();
         cal.setTime(date);
         return getLocalTime12HoursFormatter().format(cal.getTime()).toLowerCase();
     }
 
-    public static CountDownTimer setCountDownTimer(final TextView textView, long timeRemainMillis)
-    {
-        return new CountDownTimer(timeRemainMillis, DateUtils.SECOND_IN_MILLIS)
-        {
+    public static CountDownTimer setCountDownTimer(final TextView textView, long timeRemainMillis) {
+        return new CountDownTimer(timeRemainMillis, DateUtils.SECOND_IN_MILLIS) {
             @Override
-            public void onTick(final long millisUntilFinished)
-            {
+            public void onTick(final long millisUntilFinished) {
                 textView.setText(textView.getContext().getString(R.string.start_timer_formatted,
                         DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)));
             }
@@ -452,13 +403,10 @@ public final class DateTimeUtils
     }
 
     public static CountDownTimer setActionBarCountdownTimer(
-            final Context context, final ActionBar actionBar, long timeRemainMillis, final int stringId)
-    {
-        return new CountDownTimer(timeRemainMillis, DateUtils.SECOND_IN_MILLIS)
-        {
+            final Context context, final ActionBar actionBar, long timeRemainMillis, final int stringId) {
+        return new CountDownTimer(timeRemainMillis, DateUtils.SECOND_IN_MILLIS) {
             @Override
-            public void onTick(final long millisUntilFinished)
-            {
+            public void onTick(final long millisUntilFinished) {
                 actionBar.setTitle(context.getString(stringId, DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)));
             }
 
@@ -467,8 +415,7 @@ public final class DateTimeUtils
         }.start();
     }
 
-    public static String dayDifferenceInWords(final Date date)
-    {
+    public static String dayDifferenceInWords(final Date date) {
         Calendar today = Calendar.getInstance();
         today.setTime(getBeginningOfDay(new Date()));
 
@@ -479,132 +426,109 @@ public final class DateTimeUtils
 
         String dayDifferenceInWords;
 
-        if (daysBetween == 0)
-        {
+        if (daysBetween == 0) {
             dayDifferenceInWords = "Today";
         }
-        else if (daysBetween == 1)
-        {
+        else if (daysBetween == 1) {
             dayDifferenceInWords = "Tomorrow";
         }
-        else if (daysBetween == -1)
-        {
+        else if (daysBetween == -1) {
             dayDifferenceInWords = "Yesterday";
         }
-        else if (daysBetween > 1)
-        {
+        else if (daysBetween > 1) {
             dayDifferenceInWords = String.valueOf(Math.abs(daysBetween)) + " days from now";
         }
-        else
-        {
+        else {
             dayDifferenceInWords = String.valueOf(Math.abs(daysBetween)) + " days ago";
         }
 
         return dayDifferenceInWords;
     }
 
-    public static int daysBetween(Date d1, Date d2)
-    {
+    public static int daysBetween(Date d1, Date d2) {
         return Math.round((d2.getTime() - d1.getTime()) / (float) (DateUtils.HOUR_IN_MILLIS * HOURS_IN_DAY));
     }
 
-    public static int minutesBetween(final Date date1, final Date date2)
-    {
+    public static int minutesBetween(final Date date1, final Date date2) {
         return Math.round((date1.getTime() - date2.getTime()) / (float) (DateUtils.MINUTE_IN_MILLIS));
     }
 
-    private static SimpleDateFormat getHourFormatter()
-    {
+    private static SimpleDateFormat getHourFormatter() {
         HOUR_FORMATTER.setTimeZone(TimeZone.getDefault());
         return HOUR_FORMATTER;
     }
 
-    private static SimpleDateFormat getClockFormatter12hr()
-    {
+    private static SimpleDateFormat getClockFormatter12hr() {
         CLOCK_FORMATTER_12HR.setTimeZone(TimeZone.getDefault());
         return CLOCK_FORMATTER_12HR;
     }
 
-    private static SimpleDateFormat getDayOfWeekMonthDayFormatter()
-    {
+    private static SimpleDateFormat getDayOfWeekMonthDayFormatter() {
         DAY_OF_WEEK_MONTH_DAY_FORMATTER.setTimeZone(TimeZone.getDefault());
         return DAY_OF_WEEK_MONTH_DAY_FORMATTER;
     }
 
-    private static SimpleDateFormat getShortDayOfWeekShortMonthDayFormatter()
-    {
+    private static SimpleDateFormat getShortDayOfWeekShortMonthDayFormatter() {
         SHORT_DAY_OF_WEEK_SHORT_MONTH_DAY_FORMATTER.setTimeZone(TimeZone.getDefault());
         return SHORT_DAY_OF_WEEK_SHORT_MONTH_DAY_FORMATTER;
     }
 
-    private static SimpleDateFormat getMonthShortNameFormatter()
-    {
+    private static SimpleDateFormat getMonthShortNameFormatter() {
         MONTH_SHORT_NAME_FORMATTER.setTimeZone(TimeZone.getDefault());
         return MONTH_SHORT_NAME_FORMATTER;
     }
 
-    private static SimpleDateFormat getSummaryDateFormatter()
-    {
+    private static SimpleDateFormat getSummaryDateFormatter() {
         SUMMARY_DATE_FORMATTER.setTimeZone(TimeZone.getDefault());
         return SUMMARY_DATE_FORMATTER;
     }
 
-    private static SimpleDateFormat getDetailedDateFormatter()
-    {
+    private static SimpleDateFormat getDetailedDateFormatter() {
         DETAILED_DATE_FORMATTER.setTimeZone(TimeZone.getDefault());
         return DETAILED_DATE_FORMATTER;
     }
 
-    private static SimpleDateFormat getMonthDateFormatter()
-    {
+    private static SimpleDateFormat getMonthDateFormatter() {
         MONTH_DATE_FORMATTER.setTimeZone(TimeZone.getDefault());
         return MONTH_DATE_FORMATTER;
     }
 
-    private static SimpleDateFormat getMonthDateYearFormatter()
-    {
+    private static SimpleDateFormat getMonthDateYearFormatter() {
         MONTH_DATE_YEAR_FORMATTER.setTimeZone(TimeZone.getDefault());
         return MONTH_DATE_YEAR_FORMATTER;
     }
 
-    private static SimpleDateFormat getDayOfWeekMonthDateYearFormatter()
-    {
+    private static SimpleDateFormat getDayOfWeekMonthDateYearFormatter() {
         DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER.setTimeZone(TimeZone.getDefault());
         return DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER;
     }
 
-    private static SimpleDateFormat getDayOfWeekMonthDateFormatter()
-    {
+    private static SimpleDateFormat getDayOfWeekMonthDateFormatter() {
         DAY_OF_WEEK_MONTH_DATE_FORMATTER.setTimeZone(TimeZone.getDefault());
         return DAY_OF_WEEK_MONTH_DATE_FORMATTER;
     }
 
-    private static SimpleDateFormat getYearFormatter()
-    {
+    private static SimpleDateFormat getYearFormatter() {
         YEAR_FORMATTER.setTimeZone(TimeZone.getDefault());
         return YEAR_FORMATTER;
     }
 
-    private static SimpleDateFormat getMonthYearFormatter()
-    {
+    private static SimpleDateFormat getMonthYearFormatter() {
         MONTH_YEAR_FORMATTER.setTimeZone(TimeZone.getDefault());
         return MONTH_YEAR_FORMATTER;
     }
 
-    private static SimpleDateFormat getIso8601Formatter()
-    {
+    private static SimpleDateFormat getIso8601Formatter() {
         ISO8601_FORMATTER.setTimeZone(TimeZone.getTimeZone(UTC_TIMEZONE));
         return ISO8601_FORMATTER;
     }
 
-    private static SimpleDateFormat getLocalTime12HoursFormatter()
-    {
+    private static SimpleDateFormat getLocalTime12HoursFormatter() {
         LOCAL_TIME_12_HOURS.setTimeZone(TimeZone.getDefault());
         return LOCAL_TIME_12_HOURS;
     }
 
-    public static String formatDateToNumberTimeUnit(final Date date)
-    {
+    public static String formatDateToNumberTimeUnit(final Date date) {
         final Calendar calendar = Calendar.getInstance();
         final long timePastMillis = calendar.getTimeInMillis() - date.getTime();
         final long minutes = TimeUnit.MILLISECONDS.toMinutes(timePastMillis);
@@ -628,8 +552,7 @@ public final class DateTimeUtils
         }
     }
 
-    public static String formatDateToRelativeAccuracy(final Date date)
-    {
+    public static String formatDateToRelativeAccuracy(final Date date) {
         final Calendar today = Calendar.getInstance();
         today.setTime(getBeginningOfDay(new Date()));
 
@@ -638,33 +561,26 @@ public final class DateTimeUtils
 
         final int daysBetween = daysBetween(today.getTime(), dayToCompare.getTime());
 
-        if (daysBetween == 0)
-        {
+        if (daysBetween == 0) {
             return formatDateTo12HourClock(date);
         }
-        else if (daysBetween == -1)
-        {
+        else if (daysBetween == -1) {
             return "Yesterday";
         }
-        else if (daysBetween > -7)
-        {
+        else if (daysBetween > -7) {
             return getDayOfWeek(date);
         }
-        else
-        {
+        else {
             return formatMonthDate(date);
         }
     }
 
     @Nullable
-    public static Date parseDateString(final String dateString, final SimpleDateFormat format)
-    {
-        try
-        {
+    public static Date parseDateString(final String dateString, final SimpleDateFormat format) {
+        try {
             return format.parse(dateString);
         }
-        catch (ParseException e)
-        {
+        catch (ParseException e) {
             Crashlytics.logException(e);
             return null;
         }
@@ -677,14 +593,11 @@ public final class DateTimeUtils
      * @param date
      * @return
      */
-    public static Integer getHourInt(@Nullable final Date date)
-    {
-        if (date == null)
-        {
+    public static Integer getHourInt(@Nullable final Date date) {
+        if (date == null) {
             return 0;
         }
-        else
-        {
+        else {
             return Integer.parseInt(HOUR_INT_FORMATTER.format(date));
         }
     }

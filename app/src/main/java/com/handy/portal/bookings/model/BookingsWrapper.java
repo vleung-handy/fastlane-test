@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class BookingsWrapper implements Serializable
-{
+public class BookingsWrapper implements Serializable {
     @SerializedName("date")
     private Date date;
     @SerializedName("sanitized_date")
@@ -23,8 +22,7 @@ public class BookingsWrapper implements Serializable
     private List<Booking> mUndismissedBookings;
 
 
-    public static class PriorityAccessInfo implements Serializable
-    {
+    public static class PriorityAccessInfo implements Serializable {
         @SerializedName("minimum_keep_rate")
         private Integer mMinimumKeepRate; //percentage out of 100. range is 0-100 inclusive
         @SerializedName("current_keep_rate")
@@ -36,26 +34,21 @@ public class BookingsWrapper implements Serializable
         @SerializedName("description")
         private String mMessageDescription;
 
-        public Integer getMinimumKeepRate()
-        {
+        public Integer getMinimumKeepRate() {
             return mMinimumKeepRate;
         }
 
-        public Integer getCurrentKeepRate()
-        {
+        public Integer getCurrentKeepRate() {
             return mCurrentKeepRate;
         }
 
         @Nullable
-        public BookingsForDayPriorityAccessStatus getBookingsForDayStatus()
-        {
-            if(mBookingsForDayStatus == null) return null;
-            try
-            {
+        public BookingsForDayPriorityAccessStatus getBookingsForDayStatus() {
+            if (mBookingsForDayStatus == null) { return null; }
+            try {
                 return BookingsForDayPriorityAccessStatus.valueOf(mBookingsForDayStatus.toUpperCase());
             }
-            catch (Exception e)
-            {
+            catch (Exception e) {
                 //IllegalArgumentException if mBookingsForDayStatus can't be converted to an enum.
                 // This should never expected to happen, so log it
                 Crashlytics.logException(e);
@@ -66,8 +59,7 @@ public class BookingsWrapper implements Serializable
         /**
          * the access status for the bookings for the date associated with this object
          */
-        public enum BookingsForDayPriorityAccessStatus
-        {
+        public enum BookingsForDayPriorityAccessStatus {
             LOCKED,
             UNLOCKED,
             NEW_PRO
@@ -75,52 +67,44 @@ public class BookingsWrapper implements Serializable
 
         /**
          * title of the user-facing message that may be displayed based on the access status
+         *
          * @return
          */
-        public String getMessageTitle()
-        {
+        public String getMessageTitle() {
             return mMessageTitle;
         }
 
         /**
          * description of the user-facing message that may be displayed based on the access status
+         *
          * @return
          */
-        public String getMessageDescription()
-        {
+        public String getMessageDescription() {
             return mMessageDescription;
         }
     }
 
-    public final Date getDate()
-    {
+    public final Date getDate() {
         return date;
     }
 
-    public String getSanitizedDate()
-    {
+    public String getSanitizedDate() {
         return sanitizedDate;
     }
 
-    public PriorityAccessInfo getPriorityAccessInfo()
-    {
+    public PriorityAccessInfo getPriorityAccessInfo() {
         return mPriorityAccessInfo;
     }
 
-    public List<Booking> getBookings()
-    {
+    public List<Booking> getBookings() {
         return bookings;
     }
 
-    public List<Booking> getUndismissedBookings()
-    {
-        if (mUndismissedBookings == null)
-        {
+    public List<Booking> getUndismissedBookings() {
+        if (mUndismissedBookings == null) {
             mUndismissedBookings = new ArrayList<>();
-            for (Booking booking : bookings)
-            {
-                if (!booking.isDismissed())
-                {
+            for (Booking booking : bookings) {
+                if (!booking.isDismissed()) {
                     mUndismissedBookings.add(booking);
                 }
             }

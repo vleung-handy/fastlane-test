@@ -25,8 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragment
-{
+public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragment {
     @BindView(R.id.loading_overlay)
     protected View mLoadingOverlay;
     @BindView(R.id.action_button_group)
@@ -56,8 +55,7 @@ public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragm
     protected ViewGroup mMainContentContainer;
 
 
-    public static final class ButtonTypes
-    {
+    public static final class ButtonTypes {
         public static final int NONE = 0;
         public static final int SINGLE = 1;
         public static final int DOUBLE = 2;
@@ -65,8 +63,7 @@ public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragm
     }
 
 
-    public static final class HeaderImageTypes
-    {
+    public static final class HeaderImageTypes {
         public static final int NONE = 0;
         public static final int WELCOME = 1;
         public static final int COMPLETE = 2;
@@ -75,21 +72,18 @@ public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragm
 
     protected abstract int getButtonType();
 
-    protected int getHeaderImageType()
-    {
+    protected int getHeaderImageType() {
         return HeaderImageTypes.NONE;
     }
 
     @OnClick({R.id.group_primary_button, R.id.single_action_button})
-    void triggerPrimaryButton()
-    {
+    void triggerPrimaryButton() {
         onPrimaryButtonClicked();
     }
 
     @Nullable
     @OnClick(R.id.group_secondary_button)
-    void triggerSecondaryButton()
-    {
+    void triggerSecondaryButton() {
         onSecondaryButtonClicked();
     }
 
@@ -103,36 +97,30 @@ public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragm
     @Nullable
     abstract protected String getSubHeaderText();
 
-    protected String getPrimaryButtonText()
-    {
+    protected String getPrimaryButtonText() {
         return getString(R.string.continue_to_next_step);
     }
 
     abstract protected void onPrimaryButtonClicked();
 
-    protected String getSecondaryButtonText()
-    {
+    protected String getSecondaryButtonText() {
         return getString(R.string.skip_this_step);
     }
 
-    protected void onSecondaryButtonClicked()
-    {
+    protected void onSecondaryButtonClicked() {
         // do nothing
     }
 
-    protected void showLoadingOverlay()
-    {
+    protected void showLoadingOverlay() {
         mLoadingOverlay.setVisibility(View.VISIBLE);
     }
 
-    protected void hideLoadingOverlay()
-    {
+    protected void hideLoadingOverlay() {
         mLoadingOverlay.setVisibility(View.GONE);
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPercentComplete = getArguments().getInt(BundleKeys.PERCENT_COMPLETE);
     }
@@ -141,8 +129,7 @@ public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragm
     @Override
     public View onCreateView(final LayoutInflater inflater,
                              @Nullable final ViewGroup container,
-                             @Nullable final Bundle savedInstanceState)
-    {
+                             @Nullable final Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_onboarding_subflow, container, false);
         inflateMainContent(inflater, container, view);
 
@@ -157,14 +144,11 @@ public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragm
         return view;
     }
 
-    private void initPercentCompleteView()
-    {
-        if (mIsSingleStepMode || mPercentComplete <= 0 || mPercentComplete >= 100)
-        {
+    private void initPercentCompleteView() {
+        if (mIsSingleStepMode || mPercentComplete <= 0 || mPercentComplete >= 100) {
             mProgressView.setVisibility(View.GONE);
         }
-        else
-        {
+        else {
             mProgressBar.setProgress(mPercentComplete);
             mProgressPercent.setText(getString(R.string.percent_complete_formatted,
                     mPercentComplete));
@@ -172,21 +156,17 @@ public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragm
     }
 
     @Override
-    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
-    {
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         final boolean disallowExit = getArguments().getBoolean(BundleKeys.DISALLOW_EXIT, false);
-        if (!disallowExit)
-        {
+        if (!disallowExit) {
             inflater.inflate(R.menu.menu_x_back, menu);
         }
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item)
-    {
-        switch (item.getItemId())
-        {
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.action_exit:
                 cancel(new Intent());
                 return true;
@@ -197,12 +177,10 @@ public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragm
 
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         boolean allowBackNavigation = false;
-        if (getArguments() != null)
-        {
+        if (getArguments() != null) {
             allowBackNavigation =
                     getArguments().getBoolean(BundleKeys.ALLOW_BACK_NAVIGATION, false);
         }
@@ -211,36 +189,29 @@ public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragm
 
     private void inflateMainContent(final LayoutInflater inflater,
                                     final @Nullable ViewGroup container,
-                                    final View view)
-    {
+                                    final View view) {
         mMainContentContainer = (ViewGroup) view.findViewById(R.id.main_content);
         if (getLayoutResId() != 0
                 && mMainContentContainer != null
-                && mMainContentContainer.getChildCount() == 0)
-        {
+                && mMainContentContainer.getChildCount() == 0) {
             final View mainContent =
                     inflater.inflate(getLayoutResId(), container, false);
             mMainContentContainer.addView(mainContent);
         }
     }
 
-    private void initOrHideText(final TextView textView, @Nullable String text)
-    {
-        if (!TextUtils.isNullOrEmpty(text))
-        {
+    private void initOrHideText(final TextView textView, @Nullable String text) {
+        if (!TextUtils.isNullOrEmpty(text)) {
             textView.setText(text);
             textView.setVisibility(View.VISIBLE);
         }
-        else
-        {
+        else {
             textView.setVisibility(View.GONE);
         }
     }
 
-    private void initOrHideImageHeader()
-    {
-        switch (getHeaderImageType())
-        {
+    private void initOrHideImageHeader() {
+        switch (getHeaderImageType()) {
             case HeaderImageTypes.WELCOME:
                 mHeaderImage.setImageResource(R.drawable.img_avatar_welcome);
                 break;
@@ -257,10 +228,8 @@ public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragm
         }
     }
 
-    private void initActionButtons()
-    {
-        switch (getButtonType())
-        {
+    private void initActionButtons() {
+        switch (getButtonType()) {
             case ButtonTypes.DOUBLE:
                 mGroupSecondaryButton.setText(getSecondaryButtonText());
                 mGroupSecondaryButton.setVisibility(View.VISIBLE);
@@ -281,20 +250,16 @@ public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragm
         }
     }
 
-    public void disableButtons()
-    {
+    public void disableButtons() {
         setButtonsEnabled(false);
     }
 
-    public void enableButtons()
-    {
+    public void enableButtons() {
         setButtonsEnabled(true);
     }
 
-    private void setButtonsEnabled(final boolean enabled)
-    {
-        switch (getButtonType())
-        {
+    private void setButtonsEnabled(final boolean enabled) {
+        switch (getButtonType()) {
             case ButtonTypes.DOUBLE:
                 setButtonEnabled(mGroupSecondaryButton, enabled);
             case ButtonTypes.SINGLE:
@@ -309,26 +274,22 @@ public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragm
         }
     }
 
-    private void setButtonEnabled(final Button button, final boolean enabled)
-    {
+    private void setButtonEnabled(final Button button, final boolean enabled) {
         final float alpha = enabled ? 1.0f : 0.5f;
         button.setAlpha(alpha);
         button.setEnabled(enabled);
     }
 
-    public void showError(final String message, final boolean autoDismiss)
-    {
+    public void showError(final String message, final boolean autoDismiss) {
         showError(message, null, null, autoDismiss);
     }
 
     public void showError(@Nullable final String message,
                           @Nullable final String actionText,
                           @Nullable final ErrorActionOnClickListener actionListener,
-                          final boolean autoDismiss)
-    {
+                          final boolean autoDismiss) {
         String errorMessage = message;
-        if (TextUtils.isNullOrEmpty(errorMessage))
-        {
+        if (TextUtils.isNullOrEmpty(errorMessage)) {
             errorMessage = getString(R.string.an_error_has_occurred);
         }
         final Snackbar snackbar = Snackbar.make(mScrollView, errorMessage,
@@ -340,17 +301,13 @@ public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragm
 
     private void setErrorAction(final Snackbar snackbar,
                                 @Nullable final String actionText,
-                                @Nullable final ErrorActionOnClickListener actionListener)
-    {
+                                @Nullable final ErrorActionOnClickListener actionListener) {
         final String resolvedActionText =
                 TextUtils.isNullOrEmpty(actionText) ? getString(R.string.ok) : actionText;
-        snackbar.setAction(resolvedActionText, new View.OnClickListener()
-        {
+        snackbar.setAction(resolvedActionText, new View.OnClickListener() {
             @Override
-            public void onClick(final View v)
-            {
-                if (actionListener != null)
-                {
+            public void onClick(final View v) {
+                if (actionListener != null) {
                     actionListener.onClick(snackbar);
                 }
                 snackbar.dismiss();
@@ -358,8 +315,7 @@ public abstract class OnboardingSubflowUIFragment extends OnboardingSubflowFragm
         });
     }
 
-    public interface ErrorActionOnClickListener
-    {
+    public interface ErrorActionOnClickListener {
         void onClick(final Snackbar snackbar);
     }
 }

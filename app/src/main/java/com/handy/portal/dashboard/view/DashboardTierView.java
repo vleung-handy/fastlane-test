@@ -20,8 +20,7 @@ import com.handy.portal.dashboard.model.ProviderEvaluation;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DashboardTierView extends FrameLayout
-{
+public class DashboardTierView extends FrameLayout {
     @BindView(R.id.tier_dot)
     ImageView mTierDot;
     @BindView(R.id.tier_text)
@@ -33,77 +32,65 @@ public class DashboardTierView extends FrameLayout
     @BindView(R.id.tier_row_layout)
     ViewGroup mTierRowLayout;
 
-    public DashboardTierView(final Context context)
-    {
+    public DashboardTierView(final Context context) {
         super(context);
         init();
     }
 
-    public DashboardTierView(final Context context, final AttributeSet attrs)
-    {
+    public DashboardTierView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public DashboardTierView(final Context context, final AttributeSet attrs, final int defStyleAttr)
-    {
+    public DashboardTierView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public DashboardTierView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
-    {
+    public DashboardTierView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), R.layout.element_tier, this);
         ButterKnife.bind(this);
     }
 
     public void setDisplay(String incentiveType, @Nullable String rating, String tierName, int minJobs,
                            int maxJobs, String currencySymbol, int hourlyRateInCents,
-                           boolean enabled, boolean isTwoColumns)
-    {
+                           boolean enabled, boolean isTwoColumns) {
         mTierText.setText(tierName);
         if (incentiveType.equals(ProviderEvaluation.Incentive.ROLLING_TYPE)
-                && rating != null)
-        {
+                && rating != null) {
             mTierMiddleText.setText(rating);
         }
         else if (incentiveType.equals(ProviderEvaluation.Incentive.HANDYMEN_ROLLING_TYPE) ||
-                incentiveType.equals(ProviderEvaluation.Incentive.HANDYMEN_TIERED_TYPE))
-        {
+                incentiveType.equals(ProviderEvaluation.Incentive.HANDYMEN_TIERED_TYPE)) {
             mTierMiddleText.setVisibility(GONE);
         }
-        else
-        {
+        else {
             mTierMiddleText.setText(maxJobs == 0 ? Integer.toString(minJobs) + "+" :
                     getContext().getString(R.string.dash_formatted_numbers,
                             minJobs, maxJobs));
         }
         mTierRateText.setText("" + currencySymbol + (hourlyRateInCents / 100));
 
-        if (enabled)
-        {
+        if (enabled) {
             mTierDot.setVisibility(View.VISIBLE);
             mTierText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
             mTierMiddleText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
             mTierRateText.setTextColor(ContextCompat.getColor(getContext(), R.color.handy_blue));
         }
-        else
-        {
+        else {
             mTierDot.setVisibility(View.GONE);
             mTierText.setTextColor(ContextCompat.getColor(getContext(), R.color.tertiary_gray));
             mTierMiddleText.setTextColor(ContextCompat.getColor(getContext(), R.color.tertiary_gray));
             mTierRateText.setTextColor(ContextCompat.getColor(getContext(), R.color.tertiary_gray));
         }
 
-        if (isTwoColumns)
-        {
+        if (isTwoColumns) {
             // Change column ratio to 3:1 if two columns
             mTierRowLayout.setLayoutParams(new LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 3f));
         }

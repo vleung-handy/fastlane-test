@@ -35,8 +35,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class OnboardingStatusFragmentTest extends RobolectricGradleTestWrapper
-{
+public class OnboardingStatusFragmentTest extends RobolectricGradleTestWrapper {
     private OnboardingStatusFragment mFragment;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private OnboardingDetails mOnboardingDetails;
@@ -48,8 +47,7 @@ public class OnboardingStatusFragmentTest extends RobolectricGradleTestWrapper
     private ProviderProfile mProviderProfile;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         initMocks(this);
         when(mOnboardingDetails.getSubflowDataByType(SubflowType.STATUS))
                 .thenReturn(mStatusData);
@@ -58,8 +56,7 @@ public class OnboardingStatusFragmentTest extends RobolectricGradleTestWrapper
         when(mIntent.getSerializableExtra(BundleKeys.SUBFLOW_TYPE)).thenReturn(SubflowType.STATUS);
     }
 
-    private void startFragment()
-    {
+    private void startFragment() {
         final ActivityController<OnboardingSubflowActivity> activityController =
                 Robolectric.buildActivity(OnboardingSubflowActivity.class, mIntent);
         activityController.create().resume().visible();
@@ -68,8 +65,7 @@ public class OnboardingStatusFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldTerminateOnPrimaryButtonClicked() throws Exception
-    {
+    public void shouldTerminateOnPrimaryButtonClicked() throws Exception {
         when(mStatusData.getButton().getTitle()).thenReturn("Button");
 
         startFragment();
@@ -82,8 +78,7 @@ public class OnboardingStatusFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldNotShowPrimaryButtonIfButtonIsNull() throws Exception
-    {
+    public void shouldNotShowPrimaryButtonIfButtonIsNull() throws Exception {
         when(mStatusData.getButton()).thenReturn(null);
 
         startFragment();
@@ -92,8 +87,7 @@ public class OnboardingStatusFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldNotShowJobsSectionIfThereAreNoClaims() throws Exception
-    {
+    public void shouldNotShowJobsSectionIfThereAreNoClaims() throws Exception {
         when(mStatusData.getClaims()).thenReturn(Lists.<Booking>newArrayList());
 
         startFragment();
@@ -104,8 +98,7 @@ public class OnboardingStatusFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldShowJobsSectionIfThereAreClaims() throws Exception
-    {
+    public void shouldShowJobsSectionIfThereAreClaims() throws Exception {
         final Booking booking1 = mock(Booking.class, Answers.RETURNS_DEEP_STUBS.get());
         when(booking1.isProxy()).thenReturn(true);
         when(booking1.getLocationName()).thenReturn("Manhattan");
@@ -130,8 +123,7 @@ public class OnboardingStatusFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldNotShowSuppliesInfoIfDesignationIsUndecided() throws Exception
-    {
+    public void shouldNotShowSuppliesInfoIfDesignationIsUndecided() throws Exception {
         when(mStatusData.getSuppliesInfo().getDesignation()).thenReturn(Designation.UNDECIDED);
 
         startFragment();
@@ -142,8 +134,7 @@ public class OnboardingStatusFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldShowSuppliesInfoIfDesignationIsYes() throws Exception
-    {
+    public void shouldShowSuppliesInfoIfDesignationIsYes() throws Exception {
         when(mStatusData.getSuppliesInfo().getDesignation()).thenReturn(Designation.YES);
         when(mStatusData.getSuppliesInfo().getCost()).thenReturn("$50");
         final ProviderPersonalInfo providerPersonalInfo = mProviderProfile.getProviderPersonalInfo();
@@ -167,8 +158,7 @@ public class OnboardingStatusFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldShowSuppliesInfoWithoutPaymentIfDesignationIsYesButThereIsNoPaymentMethod() throws Exception
-    {
+    public void shouldShowSuppliesInfoWithoutPaymentIfDesignationIsYesButThereIsNoPaymentMethod() throws Exception {
         when(mStatusData.getSuppliesInfo().getDesignation()).thenReturn(Designation.YES);
         when(mStatusData.getSuppliesInfo().getCost()).thenReturn("$50");
         final ProviderPersonalInfo providerPersonalInfo = mProviderProfile.getProviderPersonalInfo();
@@ -191,8 +181,7 @@ public class OnboardingStatusFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldShowNotRequestedInSuppliesInfoIfDesignationIsNo() throws Exception
-    {
+    public void shouldShowNotRequestedInSuppliesInfoIfDesignationIsNo() throws Exception {
         when(mStatusData.getSuppliesInfo().getDesignation()).thenReturn(Designation.NO);
 
         startFragment();
@@ -205,8 +194,7 @@ public class OnboardingStatusFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldShowLearningLinks() throws Exception
-    {
+    public void shouldShowLearningLinks() throws Exception {
         final LearningLink learningLink1 = mock(LearningLink.class);
         when(learningLink1.getTitle()).thenReturn("Learning Link 1");
         final LearningLink learningLink2 = mock(LearningLink.class);

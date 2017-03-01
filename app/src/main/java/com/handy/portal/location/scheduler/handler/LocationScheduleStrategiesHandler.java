@@ -13,48 +13,39 @@ import java.util.List;
 /**
  * handles LocationScheduleStrategies
  */
-public class LocationScheduleStrategiesHandler
-{
+public class LocationScheduleStrategiesHandler {
     private List<ScheduleHandler> mScheduleHandlerList;
+
     public LocationScheduleStrategiesHandler(LocationScheduleStrategies locationScheduleStrategies,
                                              boolean locationTrackingEnabled,
                                              boolean bookingGeofencesEnabled,
                                              GoogleApiClient googleApiClient,
-                                             Context context)
-    {
+                                             Context context) {
         mScheduleHandlerList = new LinkedList<>();
-        if(bookingGeofencesEnabled)
-        {
+        if (bookingGeofencesEnabled) {
             mScheduleHandlerList.add(new BookingGeofenceScheduleHandler(
                     locationScheduleStrategies.getBookingGeofenceStrategies(), googleApiClient, context));
         }
-        if(locationTrackingEnabled)
-        {
+        if (locationTrackingEnabled) {
             mScheduleHandlerList.add(new LocationTrackingScheduleHandler(
                     locationScheduleStrategies.getLocationTrackingStrategies(), googleApiClient, context));
         }
     }
 
-    public void startIfNotStarted()
-    {
-        for(ScheduleHandler scheduleHandler : mScheduleHandlerList)
-        {
+    public void startIfNotStarted() {
+        for (ScheduleHandler scheduleHandler : mScheduleHandlerList) {
             scheduleHandler.startIfNotStarted();
         }
     }
 
-    public void destroy()
-    {
-        for(ScheduleHandler scheduleHandler : mScheduleHandlerList)
-        {
+    public void destroy() {
+        for (ScheduleHandler scheduleHandler : mScheduleHandlerList) {
             scheduleHandler.destroy();
         }
     }
 
-    public void onNetworkReconnected()
-    {
-        for(ScheduleHandler scheduleHandler : mScheduleHandlerList)
-        {
+    public void onNetworkReconnected() {
+        for (ScheduleHandler scheduleHandler : mScheduleHandlerList) {
             scheduleHandler.onNetworkReconnected();
         }
     }

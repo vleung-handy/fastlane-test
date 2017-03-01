@@ -15,8 +15,7 @@ import butterknife.ButterKnife;
 /**
  * The view that is shown when bookings access is locked for a certain day
  */
-public class BookingsAccessLockedView extends FrameLayout
-{
+public class BookingsAccessLockedView extends FrameLayout {
     @BindView(R.id.layout_job_access_locked_title)
     TextView mTitleText;
 
@@ -26,51 +25,43 @@ public class BookingsAccessLockedView extends FrameLayout
     @BindView(R.id.layout_job_access_locked_keep_rate_info_button)
     TextView mKeepRateInfoButton;
 
-    public BookingsAccessLockedView(final Context context)
-    {
+    public BookingsAccessLockedView(final Context context) {
         super(context);
         init();
     }
 
-    public BookingsAccessLockedView(final Context context, final AttributeSet attrs)
-    {
+    public BookingsAccessLockedView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public BookingsAccessLockedView(final Context context, final AttributeSet attrs, final int defStyleAttr)
-    {
+    public BookingsAccessLockedView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public BookingsAccessLockedView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
-    {
+    public BookingsAccessLockedView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), R.layout.layout_job_access_locked, this);
         ButterKnife.bind(this);
     }
 
-    public BookingsAccessLockedView setTitleText(String titleText)
-    {
+    public BookingsAccessLockedView setTitleText(String titleText) {
         mTitleText.setText(titleText);
         return this;
     }
 
-    public BookingsAccessLockedView setDescriptionText(String descriptionText)
-    {
+    public BookingsAccessLockedView setDescriptionText(String descriptionText) {
         mDescriptionText.setText(descriptionText);
         return this;
     }
 
-    public BookingsAccessLockedView setKeepRateInfoButtonClickListener(OnClickListener onClickListener)
-    {
+    public BookingsAccessLockedView setKeepRateInfoButtonClickListener(OnClickListener onClickListener) {
         mKeepRateInfoButton.setOnClickListener(onClickListener);
         return this;
     }

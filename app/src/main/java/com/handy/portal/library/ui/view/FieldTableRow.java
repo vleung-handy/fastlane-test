@@ -14,8 +14,7 @@ import com.handy.portal.library.util.UIUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public abstract class FieldTableRow extends TableRow implements Errorable
-{
+public abstract class FieldTableRow extends TableRow implements Errorable {
     @BindView(R.id.label_text)
     TextView mLabelText;
     @BindView(R.id.value_text)
@@ -25,61 +24,51 @@ public abstract class FieldTableRow extends TableRow implements Errorable
 
     protected abstract int getLayoutResId();
 
-    public FieldTableRow(Context context)
-    {
+    public FieldTableRow(Context context) {
         super(context);
         init();
     }
 
-    public FieldTableRow(Context context, AttributeSet attrs)
-    {
+    public FieldTableRow(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), getLayoutResId(), this);
         ButterKnife.bind(this);
         mValueText.addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(this));
     }
 
-    public TextView getLabel()
-    {
+    public TextView getLabel() {
         return mLabelText;
     }
 
-    public TextView getValue()
-    {
+    public TextView getValue() {
         return mValueText;
     }
 
-    public FieldTableRow setLabel(@StringRes final int labelResId)
-    {
+    public FieldTableRow setLabel(@StringRes final int labelResId) {
         getLabel().setText(labelResId);
         return this;
     }
 
-    public FieldTableRow setValue(final String value)
-    {
+    public FieldTableRow setValue(final String value) {
         getValue().setText(value);
         return this;
     }
 
-    public FieldTableRow setHint(@StringRes final int hintResId)
-    {
+    public FieldTableRow setHint(@StringRes final int hintResId) {
         getValue().setHint(hintResId);
         return this;
     }
 
-    public View getErrorIndicator()
-    {
+    public View getErrorIndicator() {
         return mErrorIndicator;
     }
 
     @Override
-    public void setErrorState(boolean error)
-    {
+    public void setErrorState(boolean error) {
         int errorColor = ContextCompat.getColor(getContext(), R.color.plumber_red);
         int normalLabelColor = ContextCompat.getColor(getContext(), R.color.form_label);
         int normalValueColor = ContextCompat.getColor(getContext(), R.color.black);

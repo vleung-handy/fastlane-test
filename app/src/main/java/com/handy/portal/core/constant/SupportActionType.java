@@ -2,8 +2,7 @@ package com.handy.portal.core.constant;
 
 import com.handy.portal.R;
 
-public enum SupportActionType
-{
+public enum SupportActionType {
     NOTIFY_EARLY(R.string.will_be_early, R.drawable.ic_early),
     NOTIFY_LATE(R.string.will_be_late, R.drawable.ic_alarm_clock),
     REPORT_NO_SHOW(R.string.customer_not_home, R.drawable.ic_person_x),
@@ -19,19 +18,16 @@ public enum SupportActionType
     private int textId;
     private int iconId;
 
-    SupportActionType(int textId, int iconId)
-    {
+    SupportActionType(int textId, int iconId) {
         this.textId = textId;
         this.iconId = iconId;
     }
 
-    public int getTextId()
-    {
+    public int getTextId() {
         return textId;
     }
 
-    public int getIconId()
-    {
+    public int getIconId() {
         return iconId;
     }
 }

@@ -5,8 +5,7 @@ import android.support.annotation.IntDef;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
-public interface BookingProgress
-{
+public interface BookingProgress {
     int READY_FOR_CLAIM = 2;
     int READY_FOR_ON_MY_WAY = 3;
     int READY_FOR_CHECK_IN = 4;

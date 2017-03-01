@@ -5,11 +5,9 @@ import android.os.Bundle;
 import com.handy.portal.R;
 import com.handy.portal.core.ui.activity.BaseActivity;
 
-public class PleaseUpdateActivity extends BaseActivity
-{
+public class PleaseUpdateActivity extends BaseActivity {
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_please_update);
     }
@@ -20,20 +18,17 @@ public class PleaseUpdateActivity extends BaseActivity
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         //Do nothing
     }
 
     @Override
-    public void checkForUpdates()
-    {
+    public void checkForUpdates() {
         //Do nothing
     }
 
     @Override
-    public void launchAppUpdater()
-    {
+    public void launchAppUpdater() {
         //do nothing
     }
 }

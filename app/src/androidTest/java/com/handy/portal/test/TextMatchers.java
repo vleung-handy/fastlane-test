@@ -13,23 +13,19 @@ import java.util.regex.Pattern;
 /**
  * currently not being used but leaving for reference
  */
-public class TextMatchers
-{
+public class TextMatchers {
     @NonNull
-    public static Matcher<View> withPattern(@NonNull final Pattern pattern)
-    {
+    public static Matcher<View> withPattern(@NonNull final Pattern pattern) {
         return new BoundedMatcher<View, TextView>(TextView.class) {
 
             @Override
-            public void describeTo(final Description description)
-            {
+            public void describeTo(final Description description) {
                 description.appendText("with string pattern: ");
                 //todo
             }
 
             @Override
-            protected boolean matchesSafely(final TextView item)
-            {
+            protected boolean matchesSafely(final TextView item) {
                 String text = (String) item.getText();
                 return pattern.matcher(text).matches();
             }

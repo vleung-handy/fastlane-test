@@ -46,8 +46,7 @@ import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SplashActivity extends BaseActivity
-{
+public class SplashActivity extends BaseActivity {
     @Inject
     PrefsManager mPrefsManager;
     @Inject
@@ -72,13 +71,10 @@ public class SplashActivity extends BaseActivity
 
     private String mAuthToken;
 
-    private Runnable mLoadingAnimationStarter = new Runnable()
-    {
+    private Runnable mLoadingAnimationStarter = new Runnable() {
         @Override
-        public void run()
-        {
-            if (mProgressSpinner != null)
-            {
+        public void run() {
+            if (mProgressSpinner != null) {
                 mProgressSpinner.setVisibility(View.VISIBLE);
                 final AnimationDrawable animation =
                         (AnimationDrawable) mProgressSpinner.getBackground();
@@ -88,8 +84,7 @@ public class SplashActivity extends BaseActivity
     };
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState)
-    {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
@@ -97,8 +92,7 @@ public class SplashActivity extends BaseActivity
 
         mProgressSpinner.postDelayed(mLoadingAnimationStarter, mProgressSpinnerStartOffsetMillis);
 
-        if (buildConfigWrapper.isDebug())
-        {
+        if (buildConfigWrapper.isDebug()) {
             processInjectedCredentials();
         }
 
@@ -110,59 +104,48 @@ public class SplashActivity extends BaseActivity
     }
 
     @Override
-    protected void onDestroy()
-    {
+    protected void onDestroy() {
         mBus.unregister(this);
         super.onDestroy();
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
 
-        if (!hasUser())
-        {
-            if (hasSltLoginRequest())
-            {
+        if (!hasUser()) {
+            if (hasSltLoginRequest()) {
                 sltLogin();
             }
-            else
-            {
+            else {
                 // get configuration to figure out witch login display to use
                 mConfigManager.prefetch();
             }
         }
-        else
-        {
+        else {
             triggerSetup();
         }
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         mProgressSpinner.removeCallbacks(mLoadingAnimationStarter);
         super.onPause();
     }
 
     @Override
-    public final void onSaveInstanceState(final Bundle outState)
-    {
-        try
-        {
+    public final void onSaveInstanceState(final Bundle outState) {
+        try {
             super.onSaveInstanceState(outState);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             // Non fatal
             Crashlytics.logException(e);
         }
     }
 
     @Override
-    public void onSetupComplete(final SetupData setupData)
-    {
+    public void onSetupComplete(final SetupData setupData) {
         final Intent activityIntent = getTerminalActivityIntent(setupData);
         activityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -171,32 +154,27 @@ public class SplashActivity extends BaseActivity
     }
 
     @Override
-    public void onSetupFailure()
-    {
+    public void onSetupFailure() {
         onSetupComplete(null);
     }
 
     @Override
-    protected boolean shouldTriggerSetup()
-    {
+    protected boolean shouldTriggerSetup() {
         return hasUser();
     }
 
     @Override
-    public void checkForUpdates()
-    {
+    public void checkForUpdates() {
         //Do nothing
     }
 
     @Override
-    public void launchAppUpdater()
-    {
+    public void launchAppUpdater() {
         //do nothing
     }
 
     @Subscribe
-    public void onLoginSuccess(HandyEvent.ReceiveLoginSuccess event)
-    {
+    public void onLoginSuccess(HandyEvent.ReceiveLoginSuccess event) {
         mBus.post(new LogEvent.AddLogEvent(new LoginLog.Success(LoginLog.TYPE_TOKEN)));
         mAuthToken = mPrefsManager.getSecureString(PrefsKey.AUTH_TOKEN, null);
         initLayerHelper();
@@ -204,18 +182,14 @@ public class SplashActivity extends BaseActivity
     }
 
     @Subscribe
-    public void onLoginError(HandyEvent.ReceiveLoginError event)
-    {
+    public void onLoginError(HandyEvent.ReceiveLoginError event) {
         mBus.post(new LogEvent.AddLogEvent(new LoginLog.Error(LoginLog.TYPE_TOKEN)));
         DataManager.DataManagerError.Type errorType = event.error == null ? null : event.error.getType();
-        if (errorType != null)
-        {
-            if (errorType.equals(DataManager.DataManagerError.Type.NETWORK))
-            {
+        if (errorType != null) {
+            if (errorType.equals(DataManager.DataManagerError.Type.NETWORK)) {
                 Toast.makeText(this, R.string.error_connectivity, Toast.LENGTH_SHORT).show();
             }
-            else if (errorType.equals(DataManager.DataManagerError.Type.CLIENT))
-            {
+            else if (errorType.equals(DataManager.DataManagerError.Type.CLIENT)) {
                 Toast.makeText(this, R.string.login_error_bad_login, Toast.LENGTH_SHORT).show();
             }
             else //server error
@@ -223,8 +197,7 @@ public class SplashActivity extends BaseActivity
                 Toast.makeText(this, R.string.login_error_connectivity, Toast.LENGTH_SHORT).show();
             }
         }
-        else
-        {
+        else {
             //should never happen
             Toast.makeText(this, R.string.login_error_connectivity, Toast.LENGTH_SHORT).show();
             Crashlytics.logException(new Exception("Login request error type is null"));
@@ -233,29 +206,24 @@ public class SplashActivity extends BaseActivity
     }
 
     @Subscribe
-    public void onReceiveConfigurationSuccess(HandyEvent.ReceiveConfigurationSuccess event)
-    {
+    public void onReceiveConfigurationSuccess(HandyEvent.ReceiveConfigurationSuccess event) {
         // Start Login Screen if not logged in.
         // Config is needed to determine pin vs slt login
-        if (!hasUser())
-        {
+        if (!hasUser()) {
             launchLoginActivity();
         }
     }
 
     @Subscribe
-    public void onReceiveConfigurationError(HandyEvent.ReceiveConfigurationError event)
-    {
+    public void onReceiveConfigurationError(HandyEvent.ReceiveConfigurationError event) {
         // Start Login Screen if not logged in.
         // Config is needed to determine pin vs slt login
-        if (!hasUser())
-        {
+        if (!hasUser()) {
             launchLoginActivity();
         }
     }
 
-    private void launchLoginActivity()
-    {
+    private void launchLoginActivity() {
         final Intent loginActivityIntent = getActivityIntent(LoginActivity.class);
         loginActivityIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -263,22 +231,18 @@ public class SplashActivity extends BaseActivity
         finish();
     }
 
-    private Intent getTerminalActivityIntent(@Nullable final SetupData setupData)
-    {
+    private Intent getTerminalActivityIntent(@Nullable final SetupData setupData) {
         final Intent activityIntent;
-        if (setupData != null && shouldShowOnboarding(setupData.getOnboardingDetails()))
-        {
+        if (setupData != null && shouldShowOnboarding(setupData.getOnboardingDetails())) {
             activityIntent = getActivityIntent(OnboardingFlowActivity.class);
             activityIntent.putExtra(BundleKeys.ONBOARDING_DETAILS,
                     setupData.getOnboardingDetails());
         }
-        else
-        {
+        else {
             final String startupDeeplink = setupData != null ?
                     setupData.getStartupDeeplink() : null;
             Uri defaultDeeplinkUri = null;
-            if (!TextUtils.isEmpty(startupDeeplink))
-            {
+            if (!TextUtils.isEmpty(startupDeeplink)) {
                 defaultDeeplinkUri = Uri.parse(startupDeeplink);
             }
             activityIntent = getActivityIntent(MainActivity.class, defaultDeeplinkUri);
@@ -286,33 +250,27 @@ public class SplashActivity extends BaseActivity
         return activityIntent;
     }
 
-    private boolean shouldShowOnboarding(final OnboardingDetails onboardingDetails)
-    {
-        if (onboardingDetails != null && onboardingDetails.getSubflows() != null)
-        {
+    private boolean shouldShowOnboarding(final OnboardingDetails onboardingDetails) {
+        if (onboardingDetails != null && onboardingDetails.getSubflows() != null) {
             return anyOnboardingSubflowsIncomplete(onboardingDetails);
         }
         return false;
     }
 
-    private boolean anyOnboardingSubflowsIncomplete(final OnboardingDetails onboardingDetails)
-    {
+    private boolean anyOnboardingSubflowsIncomplete(final OnboardingDetails onboardingDetails) {
         return !onboardingDetails.getSubflowsByStatus(SubflowStatus.INCOMPLETE).isEmpty();
     }
 
-    private Intent getActivityIntent(final Class<? extends BaseActivity> activityClass)
-    {
+    private Intent getActivityIntent(final Class<? extends BaseActivity> activityClass) {
         return getActivityIntent(activityClass, null);
     }
 
     private Intent getActivityIntent(final Class<? extends BaseActivity> activityClass,
-                                     @Nullable final Uri defaultDeeplinkUri)
-    {
+                                     @Nullable final Uri defaultDeeplinkUri) {
         final Intent intent = new Intent(this, activityClass);
         final boolean isLinkDeeplinkAttached = attachDeeplinkDataIfAvailable(intent,
                 getIntent().getData(), DeeplinkLog.Source.LINK);
-        if (!isLinkDeeplinkAttached)
-        {
+        if (!isLinkDeeplinkAttached) {
             attachDeeplinkDataIfAvailable(intent, defaultDeeplinkUri, DeeplinkLog.Source.STARTUP);
         }
         return intent;
@@ -321,23 +279,19 @@ public class SplashActivity extends BaseActivity
     private boolean attachDeeplinkDataIfAvailable(
             @NonNull final Intent intent,
             @Nullable final Uri data,
-            @NonNull @DeeplinkLog.Source.DeeplinkSource final String source)
-    {
+            @NonNull @DeeplinkLog.Source.DeeplinkSource final String source) {
         final Bundle deeplinkBundle = DeeplinkUtils.createDeeplinkBundleFromUri(data);
-        if (deeplinkBundle != null)
-        {
+        if (deeplinkBundle != null) {
             intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkBundle);
             intent.putExtra(BundleKeys.DEEPLINK_SOURCE, source);
             return true;
         }
-        else
-        {
+        else {
             return false;
         }
     }
 
-    private boolean hasSltLoginRequest()
-    {
+    private boolean hasSltLoginRequest() {
         Intent intent = getIntent();
         return intent != null && intent.getData() != null &&
                 !TextUtils.isEmpty(intent.getData().getQueryParameter("n")) &&
@@ -345,10 +299,8 @@ public class SplashActivity extends BaseActivity
                 !TextUtils.isEmpty(intent.getData().getQueryParameter("slt"));
     }
 
-    private void sltLogin()
-    {
-        if (hasSltLoginRequest())
-        {
+    private void sltLogin() {
+        if (hasSltLoginRequest()) {
             String n = getIntent().getData().getQueryParameter("n");
             String sig = getIntent().getData().getQueryParameter("sig");
             String slt = getIntent().getData().getQueryParameter("slt");
@@ -357,27 +309,21 @@ public class SplashActivity extends BaseActivity
         }
     }
 
-    private void initLayerHelper()
-    {
-        if (mAuthToken != null)
-        {
+    private void initLayerHelper() {
+        if (mAuthToken != null) {
             mLayerHelper.initLayer(mAuthToken);
         }
-        else if (mLayerHelper.getLayerClient().isAuthenticated())
-        {
+        else if (mLayerHelper.getLayerClient().isAuthenticated()) {
             mLayerHelper.deauthenticate();
         }
     }
 
-    private void logFirstLaunch()
-    {
-        if (mPrefsManager.getSecureBoolean(PrefsKey.APP_FIRST_LAUNCH, true))
-        {
+    private void logFirstLaunch() {
+        if (mPrefsManager.getSecureBoolean(PrefsKey.APP_FIRST_LAUNCH, true)) {
             mBus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(true, true)));
             mPrefsManager.setSecureBoolean(PrefsKey.APP_FIRST_LAUNCH, false);
         }
-        else
-        {
+        else {
             mBus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(false, true)));
         }
     }
@@ -386,22 +332,18 @@ public class SplashActivity extends BaseActivity
      * called on debug builds only
      */
     @SuppressWarnings("deprecation")
-    private void processInjectedCredentials()
-    {
+    private void processInjectedCredentials() {
         final String authToken = getIntent().getStringExtra(PrefsKey.AUTH_TOKEN);
-        if (authToken != null)
-        {
+        if (authToken != null) {
             //want to set even if empty string, in the case of testing
             mPrefsManager.setSecureString(PrefsKey.AUTH_TOKEN, authToken);
             //For use with WebView
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP)
-            {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
                 CookieManager.getInstance().setCookie(endpoint.getBaseUrl(),
                         "user_credentials=" + authToken);
                 CookieManager.getInstance().flush();
             }
-            else
-            {
+            else {
                 CookieSyncManager.createInstance(this);
                 CookieManager.getInstance().setCookie(endpoint.getBaseUrl(),
                         "user_credentials=" + authToken);
@@ -410,8 +352,7 @@ public class SplashActivity extends BaseActivity
         }
     }
 
-    private boolean hasUser()
-    {
+    private boolean hasUser() {
         return !TextUtils.isEmpty(mAuthToken);
     }
 }

@@ -12,12 +12,11 @@ import com.handy.portal.library.util.TextUtils;
 
 import java.util.Properties;
 
-public class EnvironmentModifier
-{
+public class EnvironmentModifier {
     public static final String IP_ADDRESS_REGEX = "(\\d+\\.){3}\\d+";
 
-    public enum Environment
-    {
+
+    public enum Environment {
         Q(R.string.q),
         L(R.string.local),
         S(R.string.staging),;
@@ -26,13 +25,11 @@ public class EnvironmentModifier
 
         private int mDisplayNameResId;
 
-        Environment(@StringRes final int displayNameResId)
-        {
+        Environment(@StringRes final int displayNameResId) {
             mDisplayNameResId = displayNameResId;
         }
 
-        public int getDisplayNameResId()
-        {
+        public int getDisplayNameResId() {
             return mDisplayNameResId;
         }
     }
@@ -42,11 +39,9 @@ public class EnvironmentModifier
     private final PrefsManager mPrefsManager;
     private boolean mIsPinRequestEnabled = true;
 
-    public EnvironmentModifier(Context context, PrefsManager prefsManager)
-    {
+    public EnvironmentModifier(Context context, PrefsManager prefsManager) {
         mPrefsManager = prefsManager;
-        try
-        {
+        try {
             Properties properties = PropertiesReader.getProperties(context, "override.properties");
             boolean disablePinRequest = Boolean.parseBoolean(properties.getProperty("disable_pin_request", "false"));
             mIsPinRequestEnabled = !disablePinRequest;
@@ -55,55 +50,46 @@ public class EnvironmentModifier
 
             if (!TextUtils.isNullOrEmpty(environmentPrefix)) // this means it's an override to point to a Q/L environment
             {
-                if (environmentPrefix.matches(IP_ADDRESS_REGEX))
-                {
+                if (environmentPrefix.matches(IP_ADDRESS_REGEX)) {
                     prefsManager.setSecureString(PrefsKey.ENVIRONMENT, Environment.L.name());
                     prefsManager.setSecureString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix);
                 }
-                else
-                {
+                else {
                     prefsManager.setSecureString(PrefsKey.ENVIRONMENT, Environment.Q.name());
                     prefsManager.setSecureString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix);
                 }
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    public String getEnvironmentPrefix()
-    {
+    public String getEnvironmentPrefix() {
         return mPrefsManager.getSecureString(PrefsKey.ENVIRONMENT_PREFIX, null);
     }
 
-    public Environment getEnvironment()
-    {
+    public Environment getEnvironment() {
         final String environmentName =
                 mPrefsManager.getSecureString(PrefsKey.ENVIRONMENT, DEFAULT_ENVIRONMENT);
         return Environment.valueOf(environmentName);
     }
 
-    public boolean isPinRequestEnabled()
-    {
+    public boolean isPinRequestEnabled() {
         return mIsPinRequestEnabled;
     }
 
     public void setEnvironment(final Environment environment,
                                @Nullable final String environmentPrefix,
-                               @Nullable final OnEnvironmentChangedListener callback)
-    {
+                               @Nullable final OnEnvironmentChangedListener callback) {
         mPrefsManager.setSecureString(PrefsKey.ENVIRONMENT, environment.name());
         mPrefsManager.setSecureString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix);
-        if (callback != null)
-        {
+        if (callback != null) {
             callback.onEnvironmentChanged(environmentPrefix);
         }
     }
 
-    public interface OnEnvironmentChangedListener
-    {
+    public interface OnEnvironmentChangedListener {
         void onEnvironmentChanged(String newEnvironmentPrefix);
     }
 }

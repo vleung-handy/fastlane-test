@@ -8,26 +8,20 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.TypeSafeMatcher;
 
-public class ViewMatchers
-{
+public class ViewMatchers {
     @NonNull
     public static Matcher<View> childAtIndex(@NonNull final Matcher<View> parentMatcher,
-                                             final int childIndex)
-    {
-        return new TypeSafeMatcher<View>()
-        {
+                                             final int childIndex) {
+        return new TypeSafeMatcher<View>() {
 
             @Override
-            public void describeTo(final Description description)
-            {
+            public void describeTo(final Description description) {
                 description.appendText("with child view at index " + childIndex + " of matcher " + parentMatcher.toString());
             }
 
             @Override
-            protected boolean matchesSafely(final View view)
-            {
-                if(!parentMatcher.matches(view.getParent()) || !(view.getParent() instanceof ViewGroup))
-                {
+            protected boolean matchesSafely(final View view) {
+                if (!parentMatcher.matches(view.getParent()) || !(view.getParent() instanceof ViewGroup)) {
                     //if view's parent isn't a ViewGroup we can't get the child at a specific index, so no match
                     return false;
                 }

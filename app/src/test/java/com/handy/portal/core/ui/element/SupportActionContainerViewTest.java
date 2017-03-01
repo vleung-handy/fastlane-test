@@ -12,20 +12,17 @@ import org.robolectric.RuntimeEnvironment;
 
 import static org.junit.Assert.assertEquals;
 
-public class SupportActionContainerViewTest extends RobolectricGradleTestWrapper
-{
+public class SupportActionContainerViewTest extends RobolectricGradleTestWrapper {
     private SupportActionContainerView mView;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         mView = new SupportActionContainerView(RuntimeEnvironment.application,
                 SupportActionUtils.ETA_ACTION_NAMES, new Booking());
     }
 
     @Test
-    public void shouldNotBeSeenIfSizeIsZero()
-    {
+    public void shouldNotBeSeenIfSizeIsZero() {
         mView = new SupportActionContainerView(RuntimeEnvironment.application,
                 SupportActionUtils.ETA_ACTION_NAMES, new Booking());
 

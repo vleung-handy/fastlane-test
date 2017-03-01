@@ -3,8 +3,7 @@ package com.handy.portal.core.constant;
 import com.handy.portal.R;
 
 //have information about the anims and overlays that override the defaults
-public enum TransitionStyle
-{
+public enum TransitionStyle {
     JOB_CLAIM_SUCCESS(R.anim.fade_in, R.anim.fade_and_shrink_away, OverlayStyle.JOB_CLAIM_SUCCESS),
     JOB_REMOVE_SUCCESS(R.anim.fade_in, R.anim.fade_and_shrink_away, OverlayStyle.JOB_REMOVE_SUCCESS),
     SERIES_CLAIM_SUCCESS(R.anim.fade_in, R.anim.fade_and_shrink_away, OverlayStyle.SERIES_CLAIM_SUCCESS),
@@ -24,8 +23,7 @@ public enum TransitionStyle
     private int popOutgoingAnimId;
     private OverlayStyle overlayStyle;
 
-    TransitionStyle()
-    {
+    TransitionStyle() {
         this.incomingAnimId = R.anim.none;
         this.outgoingAnimId = R.anim.none;
         this.popIncomingAnimId = R.anim.none;
@@ -33,15 +31,13 @@ public enum TransitionStyle
         this.overlayStyle = OverlayStyle.NONE;
     }
 
-    TransitionStyle(int incomingAnimId, int outgoingAnimId, OverlayStyle overlayStyle)
-    {
+    TransitionStyle(int incomingAnimId, int outgoingAnimId, OverlayStyle overlayStyle) {
         this.incomingAnimId = incomingAnimId;
         this.outgoingAnimId = outgoingAnimId;
         this.overlayStyle = overlayStyle;
     }
 
-    TransitionStyle(int incomingAnimId, int outgoingAnimId, int popIncomingAnimId, int popOutgoingAnimId)
-    {
+    TransitionStyle(int incomingAnimId, int outgoingAnimId, int popIncomingAnimId, int popOutgoingAnimId) {
         this.incomingAnimId = incomingAnimId;
         this.outgoingAnimId = outgoingAnimId;
         this.popIncomingAnimId = popIncomingAnimId;
@@ -49,38 +45,31 @@ public enum TransitionStyle
         this.overlayStyle = OverlayStyle.NONE;
     }
 
-    public boolean shouldShowOverlay()
-    {
+    public boolean shouldShowOverlay() {
         return (overlayStyle.shouldShowOverlay());
     }
 
-    public int getOverlayStringId()
-    {
+    public int getOverlayStringId() {
         return overlayStyle.getOverlayStringId();
     }
 
-    public int getOverlayImageId()
-    {
+    public int getOverlayImageId() {
         return overlayStyle.getOverlayImageId();
     }
 
-    public int getIncomingAnimId()
-    {
+    public int getIncomingAnimId() {
         return incomingAnimId;
     }
 
-    public int getOutgoingAnimId()
-    {
+    public int getOutgoingAnimId() {
         return outgoingAnimId;
     }
 
-    public int getPopIncomingAnimId()
-    {
+    public int getPopIncomingAnimId() {
         return popIncomingAnimId;
     }
 
-    public int getPopOutgoingAnimId()
-    {
+    public int getPopOutgoingAnimId() {
         return popOutgoingAnimId;
     }
 

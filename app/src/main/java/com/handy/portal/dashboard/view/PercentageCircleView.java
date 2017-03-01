@@ -15,8 +15,7 @@ import android.view.View;
 
 import com.handy.portal.library.util.FontUtils;
 
-public class PercentageCircleView extends View
-{
+public class PercentageCircleView extends View {
     private static final int STROKE_WIDTH_DP = 5;
     private static final float ONE_PERCENT = .01f;
 
@@ -34,33 +33,28 @@ public class PercentageCircleView extends View
     private float mPercentage = 1.0f;
     private int mSize = 0;
 
-    public PercentageCircleView(Context context)
-    {
+    public PercentageCircleView(Context context) {
         super(context);
         init();
     }
 
-    public PercentageCircleView(Context context, AttributeSet attrs)
-    {
+    public PercentageCircleView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public PercentageCircleView(Context context, AttributeSet attrs, int defStyleAttr)
-    {
+    public PercentageCircleView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public PercentageCircleView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
-    {
+    public PercentageCircleView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         mPaintCircle.setColor(Color.GREEN);
         mPaintNumber.setColor(Color.GREEN);
         mPaintSign.setColor(Color.GREEN);
@@ -74,11 +68,9 @@ public class PercentageCircleView extends View
     }
 
     @Override
-    protected void onDraw(final Canvas canvas)
-    {
+    protected void onDraw(final Canvas canvas) {
         super.onDraw(canvas);
-        if (!mInitialized)
-        {
+        if (!mInitialized) {
             initialize();
             mInitialized = true;
         }
@@ -96,24 +88,22 @@ public class PercentageCircleView extends View
         canvas.drawText(Integer.toString((int) (mCurrentPercentage * 100)), xPos, yPos, mPaintNumber);
         if (digits == 1) // needed because the sign is too close to the digit
         { canvas.drawText(mPercentageSign, xPos + mPaintSign.getTextSize() * (digits + 1), yPos - mPaintSign.getTextSize(), mPaintSign); }
-        else
-        { canvas.drawText(mPercentageSign, xPos + ((mPaintSign.getTextSize() + 1) * digits), yPos - mPaintSign.getTextSize(), mPaintSign); }
+        else {
+            canvas.drawText(mPercentageSign, xPos + ((mPaintSign.getTextSize() + 1) * digits), yPos - mPaintSign.getTextSize(), mPaintSign);
+        }
         canvas.drawText(mSubText, xPos, yPos + mPaintSubText.getTextSize() * 1.4f, mPaintSubText);
 
-        if (mCurrentPercentage < mPercentage)
-        {
+        if (mCurrentPercentage < mPercentage) {
             mCurrentPercentage += ONE_PERCENT;
             invalidate();
         }
     }
 
-    public void setPercentage(float percentage)
-    {
+    public void setPercentage(float percentage) {
         mPercentage = percentage;
     }
 
-    public void setColor(int backgroundColor, int subtitleColor, int contentColor)
-    {
+    public void setColor(int backgroundColor, int subtitleColor, int contentColor) {
         mPaintBackground.setColor(backgroundColor);
         mPaintSubText.setColor(subtitleColor);
 
@@ -122,26 +112,22 @@ public class PercentageCircleView extends View
         mPaintSign.setColor(contentColor);
     }
 
-    public void setContentColor(int colorId)
-    {
+    public void setContentColor(int colorId) {
         int color = ContextCompat.getColor(getContext(), colorId);
         mPaintCircle.setColor(color);
         mPaintNumber.setColor(color);
         mPaintSign.setColor(color);
     }
 
-    public void setSubText(String subText)
-    {
+    public void setSubText(String subText) {
         mSubText = subText;
     }
 
-    public void setPercentageSign(String percentageSign)
-    {
+    public void setPercentageSign(String percentageSign) {
         mPercentageSign = percentageSign;
     }
 
-    private void initialize()
-    {
+    private void initialize() {
         mSize = Math.min(getWidth(), getHeight());
         int stroke = (int) TypedValue.applyDimension(
                 TypedValue.COMPLEX_UNIT_DIP, STROKE_WIDTH_DP, getResources().getDisplayMetrics());
@@ -159,14 +145,11 @@ public class PercentageCircleView extends View
         mInnerBox = new RectF(stroke, stroke, mSize - stroke, mSize - stroke);
     }
 
-    private int getDigits(int num)
-    {
-        if (num == 0)
-        {
+    private int getDigits(int num) {
+        if (num == 0) {
             return 1;
         }
-        else
-        {
+        else {
             return (int) (Math.log10(num) + 1);
         }
     }

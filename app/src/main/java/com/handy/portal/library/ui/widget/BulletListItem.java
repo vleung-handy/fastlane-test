@@ -20,41 +20,35 @@ import butterknife.ButterKnife;
 /**
  * a simple list item with an icon on the left and text on the right
  */
-public class BulletListItem extends FrameLayout
-{
+public class BulletListItem extends FrameLayout {
     @BindView(R.id.list_item_bullet_image_view)
     ImageView mBulletImageView;
 
     @BindView(R.id.list_item_text)
     TextView mText;
 
-    public BulletListItem(final Context context)
-    {
+    public BulletListItem(final Context context) {
         super(context);
         init(null);
     }
 
-    public BulletListItem(final Context context, final AttributeSet attrs)
-    {
+    public BulletListItem(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init(attrs);
     }
 
-    public BulletListItem(final Context context, final AttributeSet attrs, final int defStyleAttr)
-    {
+    public BulletListItem(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(attrs);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public BulletListItem(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
-    {
+    public BulletListItem(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init(attrs);
     }
 
-    private void init(AttributeSet attrs)
-    {
+    private void init(AttributeSet attrs) {
         inflate(getContext(), R.layout.list_item_bullet, this);
         ButterKnife.bind(this);
 
@@ -63,46 +57,39 @@ public class BulletListItem extends FrameLayout
                 R.styleable.BulletListItem,
                 0, 0);
 
-        try
-        {
+        try {
             Drawable iconDrawable = a.getDrawable(R.styleable.BulletListItem_iconDrawable);
             String text = a.getString(R.styleable.BulletListItem_text);
 
             setBulletDrawable(iconDrawable);
             setText(text);
         }
-        finally
-        {
+        finally {
             a.recycle();
         }
     }
 
-    public BulletListItem setBulletDrawable(Drawable drawable)
-    {
+    public BulletListItem setBulletDrawable(Drawable drawable) {
         mBulletImageView.setBackground(drawable);
         return this;
     }
 
-    public BulletListItem setBulletDrawable(int drawableResourceId)
-    {
+    public BulletListItem setBulletDrawable(int drawableResourceId) {
         mBulletImageView.setBackgroundResource(drawableResourceId);
         return this;
     }
 
-    public BulletListItem setText(String text)
-    {
+    public BulletListItem setText(String text) {
         mText.setText(text);
         return this;
     }
 
-    public BulletListItem setText(int textResourceId)
-    {
+    public BulletListItem setText(int textResourceId) {
         mText.setText(textResourceId);
         return this;
     }
 
-    public BulletListItem setBulletColorTint(int colorResourceId)
-    {
+    public BulletListItem setBulletColorTint(int colorResourceId) {
         mBulletImageView.setColorFilter(
                 ContextCompat.getColor(getContext(), colorResourceId),
                 PorterDuff.Mode.SRC_ATOP);

@@ -11,19 +11,16 @@ import org.robolectric.RuntimeEnvironment;
 import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertFalse;
 
-public class PrefsManagerTest extends RobolectricGradleTestWrapper
-{
+public class PrefsManagerTest extends RobolectricGradleTestWrapper {
     PrefsManager mPrefsManager;
 
     @Before
-    public void setUp()
-    {
+    public void setUp() {
         mPrefsManager = new PrefsManager(RuntimeEnvironment.application.getApplicationContext());
     }
 
     @Test
-    public void installationIdShouldBeConsistent()
-    {
+    public void installationIdShouldBeConsistent() {
         String installationId = mPrefsManager.getInstallationId();
         // the id should never be empty
         assertFalse(TextUtils.isEmpty(installationId));

@@ -39,8 +39,7 @@ import javax.inject.Inject;
 /*
 TODO this manager needs refactoring
  */
-public class VersionManager
-{
+public class VersionManager {
     //TODO: parameterize these strings
     public static final String APK_MIME_TYPE = "application/vnd.android.package-archive";
     private static final String APK_FILE_NAME = "handy-pro-latest.apk";
@@ -64,8 +63,7 @@ public class VersionManager
     private long downloadReferenceId;
 
     @Inject
-    public VersionManager(final Context context, final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final BuildConfigWrapper buildConfigWrapper)
-    {
+    public VersionManager(final Context context, final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final BuildConfigWrapper buildConfigWrapper) {
         this.context = context;
         this.bus = bus;
         this.bus.register(this);
@@ -75,8 +73,7 @@ public class VersionManager
         this.downloadManager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
     }
 
-    public Uri getNewApkUri(@NonNull Context context)
-    {
+    public Uri getNewApkUri(@NonNull Context context) {
         File downloadsDirectory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         File file = new File(downloadsDirectory, APK_FILE_NAME);
 
@@ -84,30 +81,23 @@ public class VersionManager
     }
 
     @Subscribe
-    public void onUpdateCheckRequest(AppUpdateEvent.RequestUpdateCheck event)
-    {
-        if (CheckApplicationCapabilitiesUtils.isDownloadManagerEnabled(context))
-        {
+    public void onUpdateCheckRequest(AppUpdateEvent.RequestUpdateCheck event) {
+        if (CheckApplicationCapabilitiesUtils.isDownloadManagerEnabled(context)) {
             // prevent download prompts from showing continuously if download fails if download manager is already enabled
-            if (CheckApplicationCapabilitiesUtils.isExternalStorageWritable())
-            {
+            if (CheckApplicationCapabilitiesUtils.isExternalStorageWritable()) {
                 // TODO: Make request back-offs better
                 long now = new Date().getTime();
-                if (lastUpdateCheckTimeMillis > 0 && now - lastUpdateCheckTimeMillis < UPDATE_CHECK_BACKOFF_DURATION_MILLIS)
-                {
+                if (lastUpdateCheckTimeMillis > 0 && now - lastUpdateCheckTimeMillis < UPDATE_CHECK_BACKOFF_DURATION_MILLIS) {
                     return;
                 }
 
                 lastUpdateCheckTimeMillis = now;
 
                 PackageInfo pkgInfo = getPackageInfoFromActivity(event.sender);
-                dataManager.checkForUpdates(buildConfigWrapper.getFlavor(), pkgInfo.versionCode, new DataManager.Callback<UpdateDetails>()
-                        {
+                dataManager.checkForUpdates(buildConfigWrapper.getFlavor(), pkgInfo.versionCode, new DataManager.Callback<UpdateDetails>() {
                             @Override
-                            public void onSuccess(final UpdateDetails updateDetails)
-                            {
-                                if (updateDetails.getShouldUpdate())
-                                {
+                            public void onSuccess(final UpdateDetails updateDetails) {
+                                if (updateDetails.getShouldUpdate()) {
                                     /*
                                     TODO
                                     used to be mDownloadUrl = updateDetails.getDownloadUrl
@@ -116,13 +106,11 @@ public class VersionManager
                                     so simply caching the entire response object instead of just the download url
                                      */
                                     mUpdateDetails = updateDetails;
-                                    if (mUpdateDetails.isUpdateBlocking())
-                                    {
+                                    if (mUpdateDetails.isUpdateBlocking()) {
                                         //blocking update
                                         bus.post(new AppUpdateEvent.ReceiveUpdateAvailableSuccess(updateDetails));
                                     }
-                                    else
-                                    {
+                                    else {
                                         //non-blocking update
                                         long currentTimeMs = System.currentTimeMillis();
                                         long hideNonBlockingUpdateDurationMs = mUpdateDetails.getHideNonBlockingUpdateDurationMins() * DateUtils.MINUTE_IN_MILLIS;
@@ -137,22 +125,19 @@ public class VersionManager
                             }
 
                             @Override
-                            public void onError(final DataManager.DataManagerError error)
-                            {
+                            public void onError(final DataManager.DataManagerError error) {
                                 bus.post(new AppUpdateEvent.ReceiveUpdateAvailableError(error));
                             }
                         }
                 );
             }
-            else
-            {
+            else {
                 bus.post(new AppUpdateEvent.ReceiveUpdateAvailableError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.OTHER,
                         context.getString(R.string.error_update_failed_unwritable))));
             }
 
         }
-        else
-        {
+        else {
             bus.post(new HandyEvent.RequestEnableApplication(CheckApplicationCapabilitiesUtils.DOWNLOAD_MANAGER_PACKAGE_NAME, context.getString(R.string.error_update_failed_download_manager_disabled)));
         }
 
@@ -162,10 +147,8 @@ public class VersionManager
     /**
      * TODO don't like this. should be refactored
      */
-    public void downloadApk()
-    {
-        if (mUpdateDetails == null)
-        {
+    public void downloadApk() {
+        if (mUpdateDetails == null) {
             Crashlytics.logException(new Exception("Tried to download apk when update details is null"));
             return;
         }
@@ -174,8 +157,7 @@ public class VersionManager
         downloadsDirectory.mkdirs();
 
         File oldApkFile = new File(downloadsDirectory, APK_FILE_NAME);
-        if (oldApkFile.exists())
-        {
+        if (oldApkFile.exists()) {
             oldApkFile.delete();
         }
         DownloadManager.Request request = new DownloadManager.Request(Uri.parse(apkUrl))
@@ -191,34 +173,26 @@ public class VersionManager
         context.registerReceiver(downloadReceiver, new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE));
     }
 
-    public void cancelDownloadApk()
-    {
-        if (hasRequestedDownload())
-        {
+    public void cancelDownloadApk() {
+        if (hasRequestedDownload()) {
             downloadManager.remove(downloadReferenceId);
         }
     }
 
     @VisibleForTesting
-    protected BroadcastReceiver downloadReceiver = new BroadcastReceiver()
-    {
+    protected BroadcastReceiver downloadReceiver = new BroadcastReceiver() {
         @Override
-        public void onReceive(Context context, Intent intent)
-        {
+        public void onReceive(Context context, Intent intent) {
             long referenceId = intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID, -1);
-            if (downloadReferenceId == referenceId)
-            {
-                if (getDownloadStatus() == DownloadManager.STATUS_SUCCESSFUL)
-                {
+            if (downloadReferenceId == referenceId) {
+                if (getDownloadStatus() == DownloadManager.STATUS_SUCCESSFUL) {
                     bus.post(new AppUpdateEvent.DownloadUpdateSuccessful());
                 }
-                else
-                {
+                else {
                     bus.post(new AppUpdateEvent.DownloadUpdateFailed());
                 }
             }
-            else
-            {
+            else {
                 String exceptionString = "Download reference id (";
                 exceptionString += downloadReferenceId;
                 exceptionString += ") did not match the extra download id (";
@@ -229,15 +203,12 @@ public class VersionManager
         }
     };
 
-    private int getDownloadStatus()
-    {
-        if (CheckApplicationCapabilitiesUtils.isDownloadManagerEnabled(context))
-        {
+    private int getDownloadStatus() {
+        if (CheckApplicationCapabilitiesUtils.isDownloadManagerEnabled(context)) {
             DownloadManager.Query query = new DownloadManager.Query();
             query.setFilterById(downloadReferenceId);
             Cursor cursor = downloadManager.query(query);
-            if (cursor != null && cursor.moveToFirst())
-            {
+            if (cursor != null && cursor.moveToFirst()) {
                 return cursor.getInt(cursor.getColumnIndex(DownloadManager.COLUMN_STATUS));
             }
         }
@@ -248,22 +219,18 @@ public class VersionManager
     /*
     TODO this should be in a util
      */
-    private PackageInfo getPackageInfoFromActivity(Context context)
-    {
+    private PackageInfo getPackageInfoFromActivity(Context context) {
         PackageInfo pInfo;
-        try
-        {
+        try {
             pInfo = context.getPackageManager().getPackageInfo(context.getPackageName(), 0);
         }
-        catch (PackageManager.NameNotFoundException e)
-        {
+        catch (PackageManager.NameNotFoundException e) {
             throw new RuntimeException();
         }
         return pInfo;
     }
 
-    private HashMap<String, String> getVersionInfo()
-    {
+    private HashMap<String, String> getVersionInfo() {
         PackageInfo pInfo = getPackageInfoFromActivity(context);
         HashMap<String, String> info = new HashMap<>();
         info.put("user_id", prefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID));
@@ -286,13 +253,11 @@ public class VersionManager
      *
      * @return
      */
-    public UpdateDetails getUpdateDetails()
-    {
+    public UpdateDetails getUpdateDetails() {
         return mUpdateDetails;
     }
 
-    public boolean hasRequestedDownload()
-    {
+    public boolean hasRequestedDownload() {
         return downloadReferenceId != 0;
     }
 }

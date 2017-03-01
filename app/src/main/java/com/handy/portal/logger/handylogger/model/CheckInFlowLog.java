@@ -8,8 +8,7 @@ import com.handy.portal.core.model.LocationData;
 import com.handy.portal.library.util.LogUtils;
 import com.handy.portal.library.util.MathUtils;
 
-public class CheckInFlowLog extends EventLog
-{
+public class CheckInFlowLog extends EventLog {
     private static final String EVENT_CONTEXT = "scheduled_jobs";
 
     @SerializedName("booking_id")
@@ -29,8 +28,7 @@ public class CheckInFlowLog extends EventLog
 
     public CheckInFlowLog(final String eventType,
                           @NonNull final Booking booking,
-                          final LocationData location)
-    {
+                          final LocationData location) {
         super(eventType, EVENT_CONTEXT);
         mBookingId = booking.getId();
         mProLatitude = LogUtils.getLatitude(location);
@@ -41,67 +39,55 @@ public class CheckInFlowLog extends EventLog
         mDistance = MathUtils.getDistance(mProLatitude, mProLatitude, mBookingLatitude, mBookingLongitude);
     }
 
-    public static class OnMyWaySubmitted extends CheckInFlowLog
-    {
+    public static class OnMyWaySubmitted extends CheckInFlowLog {
         private static final String EVENT_TYPE = "on_my_way_submitted";
 
-        public OnMyWaySubmitted(final Booking booking, final LocationData location)
-        {
+        public OnMyWaySubmitted(final Booking booking, final LocationData location) {
             super(EVENT_TYPE, booking, location);
         }
     }
 
 
-    public static class OnMyWaySuccess extends CheckInFlowLog
-    {
+    public static class OnMyWaySuccess extends CheckInFlowLog {
         private static final String EVENT_TYPE = "on_my_way_success";
 
-        public OnMyWaySuccess(final Booking booking, final LocationData location)
-        {
+        public OnMyWaySuccess(final Booking booking, final LocationData location) {
             super(EVENT_TYPE, booking, location);
         }
     }
 
 
-    public static class OnMyWayFailure extends CheckInFlowLog
-    {
+    public static class OnMyWayFailure extends CheckInFlowLog {
         private static final String EVENT_TYPE = "on_my_way_failure";
 
-        public OnMyWayFailure(final Booking booking, final LocationData location)
-        {
+        public OnMyWayFailure(final Booking booking, final LocationData location) {
             super(EVENT_TYPE, booking, location);
         }
     }
 
 
-    public static class CheckInSubmitted extends CheckInFlowLog
-    {
+    public static class CheckInSubmitted extends CheckInFlowLog {
         private static final String EVENT_TYPE = "manual_checkin_submitted";
 
-        public CheckInSubmitted(final Booking booking, final LocationData location)
-        {
+        public CheckInSubmitted(final Booking booking, final LocationData location) {
             super(EVENT_TYPE, booking, location);
         }
     }
 
 
-    public static class CheckInSuccess extends CheckInFlowLog
-    {
+    public static class CheckInSuccess extends CheckInFlowLog {
         private static final String EVENT_TYPE = "manual_checkin_success";
 
-        public CheckInSuccess(final Booking booking, final LocationData location)
-        {
+        public CheckInSuccess(final Booking booking, final LocationData location) {
             super(EVENT_TYPE, booking, location);
         }
     }
 
 
-    public static class CheckInFailure extends CheckInFlowLog
-    {
+    public static class CheckInFailure extends CheckInFlowLog {
         private static final String EVENT_TYPE = "manual_checkin_failure";
 
-        public CheckInFailure(final Booking booking, final LocationData location)
-        {
+        public CheckInFailure(final Booking booking, final LocationData location) {
             super(EVENT_TYPE, booking, location);
         }
     }

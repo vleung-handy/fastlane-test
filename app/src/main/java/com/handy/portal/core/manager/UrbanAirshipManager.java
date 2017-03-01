@@ -21,16 +21,14 @@ import org.greenrobot.eventbus.Subscribe;
 /**
  * Created by cdavis on 8/10/15.
  */
-public class UrbanAirshipManager
-{
+public class UrbanAirshipManager {
     private final EventBus bus;
     private final DataManager dataManager;
     private final PrefsManager prefsManager;
     private final Application associatedApplication;
     private final CustomDeepLinkAction customDeepLinkAction;
 
-    public UrbanAirshipManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication, final CustomDeepLinkAction customDeepLinkAction)
-    {
+    public UrbanAirshipManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager, final Application associatedApplication, final CustomDeepLinkAction customDeepLinkAction) {
         this.bus = bus;
         this.bus.register(this);
         this.dataManager = dataManager;
@@ -40,15 +38,12 @@ public class UrbanAirshipManager
     }
 
     @Subscribe
-    public void onStartUrbanAirship(HandyEvent.StartUrbanAirship event)
-    {
+    public void onStartUrbanAirship(HandyEvent.StartUrbanAirship event) {
         startUrbanAirship();
     }
 
-    protected void startUrbanAirship()
-    {
-        if (UAirship.isTakingOff() || UAirship.isFlying())
-        {
+    protected void startUrbanAirship() {
+        if (UAirship.isTakingOff() || UAirship.isFlying()) {
             Crashlytics.log("startUrbanAirship : Alreadying taking off or flying, aborting subsequent startup");
             return;
         }
@@ -56,13 +51,10 @@ public class UrbanAirshipManager
         final AirshipConfigOptions options = AirshipConfigOptions.loadDefaultOptions(associatedApplication.getApplicationContext());
         options.inProduction = !BuildConfig.DEBUG;
 
-        try
-        {
-            UAirship.takeOff(associatedApplication, options, new UAirship.OnReadyCallback()
-            {
+        try {
+            UAirship.takeOff(associatedApplication, options, new UAirship.OnReadyCallback() {
                 @Override
-                public void onAirshipReady(final UAirship airship)
-                {
+                public void onAirshipReady(final UAirship airship) {
                     final DefaultNotificationFactory defaultNotificationFactory =
                             new DefaultNotificationFactory(associatedApplication.getApplicationContext());
 
@@ -84,29 +76,24 @@ public class UrbanAirshipManager
                 }
             });
         }
-        catch (IllegalStateException | IllegalArgumentException e)
-        {
+        catch (IllegalStateException | IllegalArgumentException e) {
             Crashlytics.logException(e);
         }
     }
 
     //Update our alias to match the provider id
     @Subscribe
-    public void onProviderIdUpdated(HandyEvent.ProviderIdUpdated event)
-    {
+    public void onProviderIdUpdated(HandyEvent.ProviderIdUpdated event) {
         setUniqueIdentifiers(event.providerId);
     }
 
     @Subscribe
-    public void onUserLoggedOut(final HandyEvent.UserLoggedOut event)
-    {
+    public void onUserLoggedOut(final HandyEvent.UserLoggedOut event) {
         setUniqueIdentifiers(null);
     }
 
-    private void setUniqueIdentifiers(String id)
-    {
-        if (UAirship.isFlying())
-        {
+    private void setUniqueIdentifiers(String id) {
+        if (UAirship.isFlying()) {
             //Keep alias around for backwards compatibility until
             //named user is backfilled by UrbanAirship
             UAirship.shared().getPushManager().setAlias(id);

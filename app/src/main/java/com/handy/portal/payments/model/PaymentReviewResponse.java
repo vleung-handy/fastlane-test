@@ -5,8 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * response to the payment review requests
  */
-public class PaymentReviewResponse
-{
+public class PaymentReviewResponse {
     @SerializedName("success")
     private boolean mSuccess;
     /**
@@ -15,13 +14,11 @@ public class PaymentReviewResponse
     @SerializedName("message")
     private String mMessage;
 
-    public String getMessage()
-    {
+    public String getMessage() {
         return mMessage;
     }
 
-    public boolean isSuccess()
-    {
+    public boolean isSuccess() {
         return mSuccess;
     }
 }

@@ -43,30 +43,24 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.List;
 
-public abstract class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallback
-{
+public abstract class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallback {
     protected static final Gson gsonBuilder = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ").create();
     protected T returnData;
 
-    TypedHandyRetrofitCallback(DataManager.Callback callback)
-    {
+    TypedHandyRetrofitCallback(DataManager.Callback callback) {
         super(callback);
     }
 
     @Override
-    public void success(final JSONObject response)
-    {
-        try
-        {
+    public void success(final JSONObject response) {
+        try {
             TypeToken<T> typeToken = new TypeToken<T>(getClass()) {};
             returnData = gsonBuilder.fromJson((response.toString()), typeToken.getType());
-            if (callback != null)
-            {
+            if (callback != null) {
                 callback.onSuccess(returnData);
             }
         }
-        catch (JsonSyntaxException e)
-        {
+        catch (JsonSyntaxException e) {
             Crashlytics.logException(e);
             callback.onError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.SERVER, e.getMessage()));
         }
@@ -75,359 +69,282 @@ public abstract class TypedHandyRetrofitCallback<T> extends HandyRetrofitCallbac
 
 
 //We need to trick the compiler into holding onto the generic type so we don't lose it to erasure
-class BookingHandyRetroFitCallback extends TypedHandyRetrofitCallback<Booking>
-{
-    BookingHandyRetroFitCallback(DataManager.Callback callback)
-    {
+class BookingHandyRetroFitCallback extends TypedHandyRetrofitCallback<Booking> {
+    BookingHandyRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class PostCheckoutInfoHandyRetrofitCallback extends TypedHandyRetrofitCallback<PostCheckoutInfo>
-{
-    PostCheckoutInfoHandyRetrofitCallback(DataManager.Callback callback)
-    {
+class PostCheckoutInfoHandyRetrofitCallback extends TypedHandyRetrofitCallback<PostCheckoutInfo> {
+    PostCheckoutInfoHandyRetrofitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class PaymentBatchesRetroFitCallback extends TypedHandyRetrofitCallback<PaymentBatches>
-{
-    PaymentBatchesRetroFitCallback(DataManager.Callback callback)
-    {
+class PaymentBatchesRetroFitCallback extends TypedHandyRetrofitCallback<PaymentBatches> {
+    PaymentBatchesRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class AnnualPaymentSummariesRetroFitCallback extends TypedHandyRetrofitCallback<AnnualPaymentSummaries>
-{
-    AnnualPaymentSummariesRetroFitCallback(DataManager.Callback callback)
-    {
+class AnnualPaymentSummariesRetroFitCallback extends TypedHandyRetrofitCallback<AnnualPaymentSummaries> {
+    AnnualPaymentSummariesRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class PaymentOutstandingFeesRetroFitCallback extends TypedHandyRetrofitCallback<PaymentOutstandingFees>
-{
-    PaymentOutstandingFeesRetroFitCallback(DataManager.Callback callback)
-    {
+class PaymentOutstandingFeesRetroFitCallback extends TypedHandyRetrofitCallback<PaymentOutstandingFees> {
+    PaymentOutstandingFeesRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class NeedsToUpdatePaymentInfoRetroFitCallback extends TypedHandyRetrofitCallback<RequiresPaymentInfoUpdate>
-{
-    NeedsToUpdatePaymentInfoRetroFitCallback(DataManager.Callback callback)
-    {
+class NeedsToUpdatePaymentInfoRetroFitCallback extends TypedHandyRetrofitCallback<RequiresPaymentInfoUpdate> {
+    NeedsToUpdatePaymentInfoRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class BookingTransactionsRetroFitCallback extends TypedHandyRetrofitCallback<BookingTransactions>
-{
-    BookingTransactionsRetroFitCallback(DataManager.Callback callback)
-    {
-        super(callback);
-    }
-}
-
-class PaymentReviewRequestRetroFitCallback extends TypedHandyRetrofitCallback<PaymentReviewResponse>
-{
-    PaymentReviewRequestRetroFitCallback(DataManager.Callback callback)
-    {
-        super(callback);
-    }
-}
-
-class BookingClaimHandyRetroFitCallback extends TypedHandyRetrofitCallback<BookingClaimDetails>
-{
-    BookingClaimHandyRetroFitCallback(DataManager.Callback callback)
-    {
+class BookingTransactionsRetroFitCallback extends TypedHandyRetrofitCallback<BookingTransactions> {
+    BookingTransactionsRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class BookingsClaimHandyRetroFitCallback extends TypedHandyRetrofitCallback<JobClaimResponse>
-{
-    BookingsClaimHandyRetroFitCallback(DataManager.Callback callback)
-    {
+class PaymentReviewRequestRetroFitCallback extends TypedHandyRetrofitCallback<PaymentReviewResponse> {
+    PaymentReviewRequestRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class BookingsListWrapperHandyRetroFitCallback extends TypedHandyRetrofitCallback<BookingsListWrapper>
-{
-    BookingsListWrapperHandyRetroFitCallback(DataManager.Callback callback)
-    {
+class BookingClaimHandyRetroFitCallback extends TypedHandyRetrofitCallback<BookingClaimDetails> {
+    BookingClaimHandyRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class BookingsWrapperRetroFitCallback extends TypedHandyRetrofitCallback<BookingsWrapper>
-{
-    public BookingsWrapperRetroFitCallback(DataManager.Callback<BookingsWrapper> callback)
-    {
+class BookingsClaimHandyRetroFitCallback extends TypedHandyRetrofitCallback<JobClaimResponse> {
+    BookingsClaimHandyRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class JobsCountHandyRetroFitCallback extends TypedHandyRetrofitCallback<HashMap<String, Object>>
-{
-    JobsCountHandyRetroFitCallback(DataManager.Callback callback)
-    {
+class BookingsListWrapperHandyRetroFitCallback extends TypedHandyRetrofitCallback<BookingsListWrapper> {
+    BookingsListWrapperHandyRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class LoginDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<LoginDetails>
-{
-    LoginDetailsResponseHandyRetroFitCallback(DataManager.Callback callback)
-    {
+class BookingsWrapperRetroFitCallback extends TypedHandyRetrofitCallback<BookingsWrapper> {
+    public BookingsWrapperRetroFitCallback(DataManager.Callback<BookingsWrapper> callback) {
         super(callback);
     }
 }
 
 
-class UpdateDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<UpdateDetails>
-{
-    UpdateDetailsResponseHandyRetroFitCallback(DataManager.Callback callback)
-    {
+class JobsCountHandyRetroFitCallback extends TypedHandyRetrofitCallback<HashMap<String, Object>> {
+    JobsCountHandyRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class EmptyHandyRetroFitCallback extends TypedHandyRetrofitCallback<Void>
-{
-    EmptyHandyRetroFitCallback(DataManager.Callback callback)
-    {
+class LoginDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<LoginDetails> {
+    LoginDetailsResponseHandyRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class SuccessWrapperRetroFitCallback extends TypedHandyRetrofitCallback<SuccessWrapper>
-{
-    SuccessWrapperRetroFitCallback(DataManager.Callback callback)
-    {
+class UpdateDetailsResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<UpdateDetails> {
+    UpdateDetailsResponseHandyRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class ProviderProfileRetrofitCallback extends TypedHandyRetrofitCallback<ProviderProfile>
-{
-    ProviderProfileRetrofitCallback(DataManager.Callback callback)
-    {
+class EmptyHandyRetroFitCallback extends TypedHandyRetrofitCallback<Void> {
+    EmptyHandyRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class ProviderPersonalInfoHandyRetroFitCallback extends TypedHandyRetrofitCallback<ProviderProfileResponse>
-{
-    ProviderPersonalInfoHandyRetroFitCallback(DataManager.Callback callback)
-    {
+class SuccessWrapperRetroFitCallback extends TypedHandyRetrofitCallback<SuccessWrapper> {
+    SuccessWrapperRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class GetProviderSettingsRetrofitCallback extends TypedHandyRetrofitCallback<ProviderSettings>
-{
-    GetProviderSettingsRetrofitCallback(final DataManager.Callback callback)
-    {
+class ProviderProfileRetrofitCallback extends TypedHandyRetrofitCallback<ProviderProfile> {
+    ProviderProfileRetrofitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class UpdateProviderSettingsRetroFitCallback extends TypedHandyRetrofitCallback<ProviderSettings>
-{
-
-    UpdateProviderSettingsRetroFitCallback(final DataManager.Callback callback)
-    {
+class ProviderPersonalInfoHandyRetroFitCallback extends TypedHandyRetrofitCallback<ProviderProfileResponse> {
+    ProviderPersonalInfoHandyRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class ResupplyInfoRetrofitCallback extends TypedHandyRetrofitCallback<ProviderProfile>
-{
-    ResupplyInfoRetrofitCallback(DataManager.Callback callback)
-    {
+class GetProviderSettingsRetrofitCallback extends TypedHandyRetrofitCallback<ProviderSettings> {
+    GetProviderSettingsRetrofitCallback(final DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class ProviderAvailabilityRetrofitCallback extends TypedHandyRetrofitCallback<ProviderAvailability>
-{
-    ProviderAvailabilityRetrofitCallback(DataManager.Callback callback)
-    {
-        super(callback);
-    }
-}
+class UpdateProviderSettingsRetroFitCallback extends TypedHandyRetrofitCallback<ProviderSettings> {
 
-class StripeTokenRetroFitCallback extends TypedHandyRetrofitCallback<StripeTokenResponse>
-{
-    StripeTokenRetroFitCallback(DataManager.Callback callback)
-    {
+    UpdateProviderSettingsRetroFitCallback(final DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class LogEventsRetroFitCallback extends TypedHandyRetrofitCallback<EventLogResponse>
-{
-    LogEventsRetroFitCallback(DataManager.Callback callback)
-    {
+class ResupplyInfoRetrofitCallback extends TypedHandyRetrofitCallback<ProviderProfile> {
+    ResupplyInfoRetrofitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class CreateBankAccountRetroFitCallback extends TypedHandyRetrofitCallback<SuccessWrapper>
-{
-    CreateBankAccountRetroFitCallback(DataManager.Callback callback)
-    {
+class ProviderAvailabilityRetrofitCallback extends TypedHandyRetrofitCallback<ProviderAvailability> {
+    ProviderAvailabilityRetrofitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class CreateDebitCardRecipientRetroFitCallback extends TypedHandyRetrofitCallback<SuccessWrapper>
-{
-    CreateDebitCardRecipientRetroFitCallback(DataManager.Callback callback)
-    {
+class StripeTokenRetroFitCallback extends TypedHandyRetrofitCallback<StripeTokenResponse> {
+    StripeTokenRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class CreateDebitCardRetroFitCallback extends TypedHandyRetrofitCallback<CreateDebitCardResponse>
-{
-    CreateDebitCardRetroFitCallback(DataManager.Callback callback)
-    {
+class LogEventsRetroFitCallback extends TypedHandyRetrofitCallback<EventLogResponse> {
+    LogEventsRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class GetPaymentFlowRetroFitCallback extends TypedHandyRetrofitCallback<PaymentFlow>
-{
-    GetPaymentFlowRetroFitCallback(DataManager.Callback callback)
-    {
+class CreateBankAccountRetroFitCallback extends TypedHandyRetrofitCallback<SuccessWrapper> {
+    CreateBankAccountRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class GetZipClusterPolygonRetroFitCallback extends TypedHandyRetrofitCallback<ZipClusterPolygons>
-{
-    GetZipClusterPolygonRetroFitCallback(DataManager.Callback callback)
-    {
+class CreateDebitCardRecipientRetroFitCallback extends TypedHandyRetrofitCallback<SuccessWrapper> {
+    CreateDebitCardRecipientRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class ConfigurationResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<ConfigurationResponse>
-{
-    ConfigurationResponseHandyRetroFitCallback(DataManager.Callback callback)
-    {
+class CreateDebitCardRetroFitCallback extends TypedHandyRetrofitCallback<CreateDebitCardResponse> {
+    CreateDebitCardRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class NotificationMessagesHandyRetroFitCallback extends TypedHandyRetrofitCallback<NotificationMessages>
-{
-    NotificationMessagesHandyRetroFitCallback(DataManager.Callback callback)
-    {
+class GetPaymentFlowRetroFitCallback extends TypedHandyRetrofitCallback<PaymentFlow> {
+    GetPaymentFlowRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class NotificationUnreadCountHandyRetroFitCallback extends TypedHandyRetrofitCallback<HashMap<String, Object>>
-{
-    NotificationUnreadCountHandyRetroFitCallback(DataManager.Callback callback)
-    {
+class GetZipClusterPolygonRetroFitCallback extends TypedHandyRetrofitCallback<ZipClusterPolygons> {
+    GetZipClusterPolygonRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class GetProviderEvaluationRetrofitCallback extends TypedHandyRetrofitCallback<ProviderEvaluation>
-{
-    GetProviderEvaluationRetrofitCallback(DataManager.Callback callback)
-    {
+class ConfigurationResponseHandyRetroFitCallback extends TypedHandyRetrofitCallback<ConfigurationResponse> {
+    ConfigurationResponseHandyRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class GetProviderFiveStarRatingsRetrofitCallback extends TypedHandyRetrofitCallback<HashMap<String, List<ProviderRating>>>
-{
-    GetProviderFiveStarRatingsRetrofitCallback(DataManager.Callback callback)
-    {
+class NotificationMessagesHandyRetroFitCallback extends TypedHandyRetrofitCallback<NotificationMessages> {
+    NotificationMessagesHandyRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class GetProviderFeedbackRetrofitCallback extends TypedHandyRetrofitCallback<ProviderFeedback>
-{
-    GetProviderFeedbackRetrofitCallback(DataManager.Callback callback)
-    {
+class NotificationUnreadCountHandyRetroFitCallback extends TypedHandyRetrofitCallback<HashMap<String, Object>> {
+    NotificationUnreadCountHandyRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class GetLocationScheduleRetrofitCallback extends TypedHandyRetrofitCallback<LocationScheduleStrategies>
-{
-    GetLocationScheduleRetrofitCallback(DataManager.Callback callback)
-    {
+class GetProviderEvaluationRetrofitCallback extends TypedHandyRetrofitCallback<ProviderEvaluation> {
+    GetProviderEvaluationRetrofitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class SetupDataRetrofitCallback extends TypedHandyRetrofitCallback<SetupData>
-{
-    SetupDataRetrofitCallback(DataManager.Callback callback)
-    {
+class GetProviderFiveStarRatingsRetrofitCallback extends TypedHandyRetrofitCallback<HashMap<String, List<ProviderRating>>> {
+    GetProviderFiveStarRatingsRetrofitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class FinishIDVerificationCallback extends TypedHandyRetrofitCallback<HashMap<String, String>>
-{
-    FinishIDVerificationCallback(final DataManager.Callback callback)
-    {
+class GetProviderFeedbackRetrofitCallback extends TypedHandyRetrofitCallback<ProviderFeedback> {
+    GetProviderFeedbackRetrofitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }
 
 
-class RequestPhotoUploadUrlCallback extends TypedHandyRetrofitCallback<HashMap<String, String>>
-{
-    RequestPhotoUploadUrlCallback(final DataManager.Callback callback)
-    {
+class GetLocationScheduleRetrofitCallback extends TypedHandyRetrofitCallback<LocationScheduleStrategies> {
+    GetLocationScheduleRetrofitCallback(DataManager.Callback callback) {
+        super(callback);
+    }
+}
+
+
+class SetupDataRetrofitCallback extends TypedHandyRetrofitCallback<SetupData> {
+    SetupDataRetrofitCallback(DataManager.Callback callback) {
+        super(callback);
+    }
+}
+
+
+class FinishIDVerificationCallback extends TypedHandyRetrofitCallback<HashMap<String, String>> {
+    FinishIDVerificationCallback(final DataManager.Callback callback) {
+        super(callback);
+    }
+}
+
+
+class RequestPhotoUploadUrlCallback extends TypedHandyRetrofitCallback<HashMap<String, String>> {
+    RequestPhotoUploadUrlCallback(final DataManager.Callback callback) {
         super(callback);
     }
 }

@@ -10,8 +10,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class ProviderEvaluation implements Serializable
-{
+public class ProviderEvaluation implements Serializable {
     @SerializedName("rolling")
     private Rating mRolling;
     @SerializedName("lifetime")
@@ -34,8 +33,7 @@ public class ProviderEvaluation implements Serializable
                               final double dangerRatingThreshold,
                               final List<ProviderRating> fiveStarRatings,
                               final List<ProviderFeedback> providerFeedback,
-                              final List<ProviderRating> fiveStarRatingsWithComments)
-    {
+                              final List<ProviderRating> fiveStarRatingsWithComments) {
         mRolling = rolling;
         mLifeTime = lifeTime;
         mWeeklyRating = weeklyRating;
@@ -46,50 +44,39 @@ public class ProviderEvaluation implements Serializable
         mFiveStarRatingsWithComments = fiveStarRatingsWithComments;
     }
 
-    public Rating getRolling()
-    {
+    public Rating getRolling() {
         return mRolling;
     }
 
-    public Rating getLifeTime()
-    {
+    public Rating getLifeTime() {
         return mLifeTime;
     }
 
-    public Rating getWeeklyRating()
-    {
+    public Rating getWeeklyRating() {
         return mWeeklyRating;
     }
 
-    public PayRates getPayRates()
-    {
+    public PayRates getPayRates() {
         return mPayRates;
     }
 
-    public double getDangerRatingThreshold()
-    {
+    public double getDangerRatingThreshold() {
         return mDangerRatingThreshold;
     }
 
-    public List<ProviderRating> getFiveStarRatings()
-    {
+    public List<ProviderRating> getFiveStarRatings() {
         return mFiveStarRatings;
     }
 
-    public List<ProviderFeedback> getProviderFeedback()
-    {
+    public List<ProviderFeedback> getProviderFeedback() {
         return mProviderFeedback;
     }
 
-    public List<ProviderRating> getFiveStarRatingsWithComments()
-    {
-        if (mFiveStarRatingsWithComments == null)
-        {
+    public List<ProviderRating> getFiveStarRatingsWithComments() {
+        if (mFiveStarRatingsWithComments == null) {
             mFiveStarRatingsWithComments = new ArrayList<>();
-            for (ProviderRating rating : mFiveStarRatings)
-            {
-                if (!TextUtils.isNullOrEmpty(rating.getComment()))
-                {
+            for (ProviderRating rating : mFiveStarRatings) {
+                if (!TextUtils.isNullOrEmpty(rating.getComment())) {
                     mFiveStarRatingsWithComments.add(rating);
                 }
             }
@@ -98,58 +85,49 @@ public class ProviderEvaluation implements Serializable
     }
 
 
-    public static class PayRates implements Serializable
-    {
+    public static class PayRates implements Serializable {
         @SerializedName("incentives")
         private List<Incentive> mIncentives;
         @SerializedName("service_descriptions")
         private List<TiersServiceDescription> mTiersServiceDescriptions;
 
-        public PayRates(final List<Incentive> incentives, final List<TiersServiceDescription> tiersServiceDescriptions)
-        {
+        public PayRates(final List<Incentive> incentives, final List<TiersServiceDescription> tiersServiceDescriptions) {
             mIncentives = incentives;
             mTiersServiceDescriptions = tiersServiceDescriptions;
         }
 
-        public List<Incentive> getIncentives()
-        {
+        public List<Incentive> getIncentives() {
             return mIncentives;
         }
 
-        public List<TiersServiceDescription> getTiersServiceDescriptions()
-        {
+        public List<TiersServiceDescription> getTiersServiceDescriptions() {
             return mTiersServiceDescriptions;
         }
     }
 
 
-    public static class TiersServiceDescription implements Serializable
-    {
+    public static class TiersServiceDescription implements Serializable {
         @SerializedName("title")
         private String mTitle;
         @SerializedName("body")
         private String mBody;
 
-        public TiersServiceDescription(final String title, final String body)
-        {
+        public TiersServiceDescription(final String title, final String body) {
             mTitle = title;
             mBody = body;
         }
 
-        public String getTitle()
-        {
+        public String getTitle() {
             return mTitle;
         }
 
-        public String getBody()
-        {
+        public String getBody() {
             return mBody;
         }
     }
 
 
-    public static class Rating implements Serializable
-    {
+    public static class Rating implements Serializable {
         private static final String POSITIVE = "positive";
         private static final String NEUTRAL = "neutral";
         private static final String NEGATIVE = "negative";
@@ -177,8 +155,7 @@ public class ProviderEvaluation implements Serializable
         public Rating(final int ratedBookingCount, final int totalBookingCount,
                       final int completedBookings, final int fiveStarRatedBookingCount,
                       final double proRating, final String status, final String ratingEvaluation,
-                      final Date startDate, final Date endDate)
-        {
+                      final Date startDate, final Date endDate) {
             mRatedBookingCount = ratedBookingCount;
             mTotalBookingCount = totalBookingCount;
             mCompletedBookings = completedBookings;
@@ -190,40 +167,32 @@ public class ProviderEvaluation implements Serializable
             mEndDate = endDate;
         }
 
-        public int getRatedBookingCount()
-        {
+        public int getRatedBookingCount() {
             return mRatedBookingCount;
         }
 
-        public int getTotalBookingCount()
-        {
+        public int getTotalBookingCount() {
             return mTotalBookingCount;
         }
 
-        public int getCompletedBookings()
-        {
+        public int getCompletedBookings() {
             return mCompletedBookings;
         }
 
-        public int getFiveStarRatedBookingCount()
-        {
+        public int getFiveStarRatedBookingCount() {
             return mFiveStarRatedBookingCount;
         }
 
-        public double getProRating()
-        {
+        public double getProRating() {
             return mProRating;
         }
 
-        public String getStatus()
-        {
+        public String getStatus() {
             return mStatus;
         }
 
-        public int getStatusColorId()
-        {
-            switch (mStatus)
-            {
+        public int getStatusColorId() {
+            switch (mStatus) {
                 case POSITIVE:
                     return R.color.cleaner_green;
                 case NEUTRAL:
@@ -236,25 +205,21 @@ public class ProviderEvaluation implements Serializable
             }
         }
 
-        public String getRatingEvaluation()
-        {
+        public String getRatingEvaluation() {
             return mRatingEvaluation;
         }
 
-        public Date getStartDate()
-        {
+        public Date getStartDate() {
             return mStartDate;
         }
 
-        public Date getEndDate()
-        {
+        public Date getEndDate() {
             return mEndDate;
         }
     }
 
 
-    public static class Incentive implements Serializable
-    {
+    public static class Incentive implements Serializable {
         @SerializedName("region_name")
         private String mRegionName;
         @SerializedName("service_name")
@@ -277,8 +242,7 @@ public class ProviderEvaluation implements Serializable
 
         public Incentive(final String regionName, final String serviceName, final List<Tier> tiers,
                          final int currentTier, final int jobsUntilNextTier,
-                         final String currencySymbol, final String type)
-        {
+                         final String currencySymbol, final String type) {
             mRegionName = regionName;
             mServiceName = serviceName;
             mTiers = tiers;
@@ -288,45 +252,37 @@ public class ProviderEvaluation implements Serializable
             mType = type;
         }
 
-        public String getRegionName()
-        {
+        public String getRegionName() {
             return mRegionName;
         }
 
-        public String getServiceName()
-        {
+        public String getServiceName() {
             return mServiceName;
         }
 
-        public List<Tier> getTiers()
-        {
+        public List<Tier> getTiers() {
             return mTiers;
         }
 
-        public int getCurrentTier()
-        {
+        public int getCurrentTier() {
             return mCurrentTier;
         }
 
-        public int getJobsUntilNextTier()
-        {
+        public int getJobsUntilNextTier() {
             return mJobsUntilNextTier;
         }
 
-        public String getCurrencySymbol()
-        {
+        public String getCurrencySymbol() {
             return mCurrencySymbol;
         }
 
-        public String getType()
-        {
+        public String getType() {
             return mType;
         }
     }
 
 
-    public static class Tier implements Serializable
-    {
+    public static class Tier implements Serializable {
         @SerializedName("name")
         private String mName;
         @SerializedName("job_requirement_range_minimum")
@@ -337,31 +293,26 @@ public class ProviderEvaluation implements Serializable
         private int mHourlyRateInCents;
 
         public Tier(final String name, final int jobRequirementRangeMinimum,
-                    final int jobRequirementRangeMaximum, final int hourlyRateInCents)
-        {
+                    final int jobRequirementRangeMaximum, final int hourlyRateInCents) {
             mName = name;
             mJobRequirementRangeMinimum = jobRequirementRangeMinimum;
             mJobRequirementRangeMaximum = jobRequirementRangeMaximum;
             mHourlyRateInCents = hourlyRateInCents;
         }
 
-        public String getName()
-        {
+        public String getName() {
             return mName;
         }
 
-        public int getJobRequirementRangeMinimum()
-        {
+        public int getJobRequirementRangeMinimum() {
             return mJobRequirementRangeMinimum;
         }
 
-        public int getJobRequirementRangeMaximum()
-        {
+        public int getJobRequirementRangeMaximum() {
             return mJobRequirementRangeMaximum;
         }
 
-        public int getHourlyRateInCents()
-        {
+        public int getHourlyRateInCents() {
             return mHourlyRateInCents;
         }
     }

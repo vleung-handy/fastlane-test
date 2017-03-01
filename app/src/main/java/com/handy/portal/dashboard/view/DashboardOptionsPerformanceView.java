@@ -33,8 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DashboardOptionsPerformanceView extends FrameLayout
-{
+public class DashboardOptionsPerformanceView extends FrameLayout {
     @Inject
     EventBus mBus;
 
@@ -56,69 +55,58 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     private ProviderEvaluation mProviderEvaluation;
     private String mTiersTitle;
 
-    public DashboardOptionsPerformanceView(final Context context)
-    {
+    public DashboardOptionsPerformanceView(final Context context) {
         super(context);
         init();
     }
 
-    public DashboardOptionsPerformanceView(final Context context, final AttributeSet attrs)
-    {
+    public DashboardOptionsPerformanceView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public DashboardOptionsPerformanceView(final Context context, final AttributeSet attrs, final int defStyleAttr)
-    {
+    public DashboardOptionsPerformanceView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public DashboardOptionsPerformanceView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
-    {
+    public DashboardOptionsPerformanceView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         Utils.inject(getContext(), this);
 
         inflate(getContext(), R.layout.view_dashboard_options_performance, this);
         ButterKnife.bind(this);
     }
 
-    public void setDisplay(ProviderEvaluation evaluation)
-    {
+    public void setDisplay(ProviderEvaluation evaluation) {
         mProviderEvaluation = evaluation;
 
         if (mProviderEvaluation.getPayRates() != null &&
-                mProviderEvaluation.getPayRates().getIncentives().size() > 0)
-        {
+                mProviderEvaluation.getPayRates().getIncentives().size() > 0) {
             ProviderEvaluation.Incentive mPrimaryIncentive =
                     mProviderEvaluation.getPayRates().getIncentives().get(0);
 
-            if (mPrimaryIncentive.getTiers() != null && mPrimaryIncentive.getTiers().size() > 0)
-            {
+            if (mPrimaryIncentive.getTiers() != null && mPrimaryIncentive.getTiers().size() > 0) {
                 List<ProviderEvaluation.Tier> mPrimaryRegionTiers = mPrimaryIncentive.getTiers();
 
-                if (!mPrimaryIncentive.getType().equals(ProviderEvaluation.Incentive.TIERED_TYPE))
-                {
+                if (!mPrimaryIncentive.getType().equals(ProviderEvaluation.Incentive.TIERED_TYPE)) {
                     mWeeklyTierText.setText(R.string.pay_rate);
                     mTiersTitle = getResources().getString(R.string.pay_rate);
 
                     ProviderEvaluation.Tier mTier = mPrimaryRegionTiers.get(0);
-                    if (mTier != null)
-                    {
+                    if (mTier != null) {
                         mTierHourlyRateText.setText(getResources().getString(
                                 R.string.tier_hourly_rate_formatted,
                                 mPrimaryIncentive.getCurrencySymbol(),
                                 mTier.getHourlyRateInCents() / 100));
                     }
                 }
-                else
-                {
+                else {
                     mWeeklyTierText.setText(getResources().getString(
                             R.string.weekly_tier_formatted, mPrimaryIncentive.getCurrentTier()));
                     mTiersTitle = getResources().getString(R.string.my_tier);
@@ -126,11 +114,9 @@ public class DashboardOptionsPerformanceView extends FrameLayout
                     int tierIndex = mPrimaryIncentive.getCurrentTier() == 0 ? 0 :
                             mPrimaryIncentive.getCurrentTier() - 1;
 
-                    if (tierIndex < mPrimaryRegionTiers.size())
-                    {
+                    if (tierIndex < mPrimaryRegionTiers.size()) {
                         ProviderEvaluation.Tier mTier = mPrimaryRegionTiers.get(tierIndex);
-                        if (mTier != null)
-                        {
+                        if (mTier != null) {
                             mTierHourlyRateText.setText(getResources().getString(
                                     R.string.tier_hourly_rate_formatted,
                                     mPrimaryIncentive.getCurrencySymbol(),
@@ -140,41 +126,35 @@ public class DashboardOptionsPerformanceView extends FrameLayout
                 }
             }
         }
-        else
-        {
+        else {
             mWeeklyTierText.setText(getResources().getString(R.string.tier));
         }
 
         List<ProviderFeedback> feedbackList = mProviderEvaluation.getProviderFeedback();
-        if (feedbackList != null && feedbackList.size() > 0)
-        {
+        if (feedbackList != null && feedbackList.size() > 0) {
             mFirstFeedbackTitleText.setText(feedbackList.get(0).getTitle());
             mFirstFeedbackTitleText.setTextColor(ContextCompat.getColor(getContext(), R.color.plumber_red));
         }
-        else
-        {
+        else {
             mFirstFeedbackTitleText.setText(getResources().getString(R.string.none));
             mFirstFeedbackTitleText.setTextColor(ContextCompat.getColor(getContext(), R.color.tertiary_gray));
         }
 
         List<ProviderRating> ratings = mProviderEvaluation.getFiveStarRatingsWithComments();
-        if (ratings != null && ratings.size() > 0)
-        {
+        if (ratings != null && ratings.size() > 0) {
             mFirstReview.setVisibility(View.VISIBLE);
             ProviderRating rating = ratings.get(0);
             mReviewText.setText(ratings.get(0).getComment());
             mReviewsCountText.setText(String.valueOf(ratings.size()));
             mReviewDate.setText(DateTimeUtils.getMonthAndYear(rating.getDateRating()));
         }
-        else
-        {
+        else {
             mFirstReview.setVisibility(View.GONE);
         }
     }
 
     @OnClick(R.id.tier_option)
-    public void switchToTiers()
-    {
+    public void switchToTiers() {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
         arguments.putSerializable(BundleKeys.TIERS_TITLE, mTiersTitle);
@@ -183,8 +163,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
     }
 
     @OnClick(R.id.feedback_option)
-    public void switchToFeedback()
-    {
+    public void switchToFeedback() {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
         mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.FeedbackSelected()));
@@ -193,8 +172,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout
 
 
     @OnClick(R.id.reviews_option)
-    public void switchToReviews()
-    {
+    public void switchToReviews() {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
         mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.FiveStarReviewsSelected()));

@@ -15,13 +15,11 @@ import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 
 import static org.junit.Assert.assertEquals;
 
-public class DashboardTiersFragmentTest extends RobolectricGradleTestWrapper
-{
+public class DashboardTiersFragmentTest extends RobolectricGradleTestWrapper {
     private DashboardTiersFragment mFragment;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         mFragment = new DashboardTiersFragment();
         Bundle args = new Bundle();
         args.putSerializable(BundleKeys.PROVIDER_EVALUATION, TestDataManager.createProviderEvaluation());
@@ -30,8 +28,7 @@ public class DashboardTiersFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldShowTitleAndReviews() throws Exception
-    {
+    public void shouldShowTitleAndReviews() throws Exception {
         assertEquals(mFragment.getString(R.string.tier),
                 ((AppCompatActivity) mFragment.getActivity()).getSupportActionBar().getTitle());
     }

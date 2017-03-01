@@ -19,8 +19,7 @@ import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class NewDateButton extends LinearLayout
-{
+public class NewDateButton extends LinearLayout {
     @BindView(R.id.month_text)
     TextView mMonthText;
     @BindView(R.id.day_of_month_holder)
@@ -45,15 +44,12 @@ public class NewDateButton extends LinearLayout
     private boolean mIsSelected = false;
     private boolean mIsEnabled;
     private SelectionChangedListener mSelectionChangedListener;
-    private OnLayoutChangeListener mLayoutChangeListener = new OnLayoutChangeListener()
-    {
+    private OnLayoutChangeListener mLayoutChangeListener = new OnLayoutChangeListener() {
         @Override
         public void onLayoutChange(final View view, final int left, final int top,
                                    final int right, final int bottom, final int oldLeft,
-                                   final int oldTop, final int oldRight, final int oldBottom)
-        {
-            if (mDayOfMonthHolder.getHeight() < mDayOfMonthHolder.getWidth())
-            {
+                                   final int oldTop, final int oldRight, final int oldBottom) {
+            if (mDayOfMonthHolder.getHeight() < mDayOfMonthHolder.getWidth()) {
                 // hacky way to make sure the background comes out as a circle
                 mDayOfMonthHolder.getLayoutParams().width = mDayOfMonthHolder.getHeight();
                 mDayOfMonthHolder.requestLayout();
@@ -61,8 +57,7 @@ public class NewDateButton extends LinearLayout
         }
     };
 
-    public NewDateButton(final Context context, final Date date)
-    {
+    public NewDateButton(final Context context, final Date date) {
         super(context);
         mDate = date;
         final Calendar calendar = Calendar.getInstance();
@@ -71,8 +66,7 @@ public class NewDateButton extends LinearLayout
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), R.layout.element_date_button_new, this);
         final LinearLayout.LayoutParams layoutParams =
                 new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -88,24 +82,19 @@ public class NewDateButton extends LinearLayout
         mDayOfMonthText.setText(String.valueOf(mDayOfMonth));
         final boolean isFirstOfTheMonth = mDayOfMonth == 1;
         mMonthText.setVisibility(isFirstOfTheMonth ? VISIBLE : INVISIBLE);
-        if (isFirstOfTheMonth)
-        {
+        if (isFirstOfTheMonth) {
             mMonthText.setText(DateTimeUtils.getMonthShortName(mDate));
         }
         refreshState();
-        if (DateTimeUtils.isDaysPast(mDate))
-        {
+        if (DateTimeUtils.isDaysPast(mDate)) {
             mMonthText.setTextColor(mGray);
             mDayOfMonthText.setTextColor(mGray);
             mIsEnabled = false;
         }
-        else
-        {
-            setOnClickListener(new OnClickListener()
-            {
+        else {
+            setOnClickListener(new OnClickListener() {
                 @Override
-                public void onClick(final View view)
-                {
+                public void onClick(final View view) {
                     setSelected(true);
                 }
             });
@@ -114,23 +103,19 @@ public class NewDateButton extends LinearLayout
     }
 
     @Override
-    protected void onAttachedToWindow()
-    {
+    protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         addOnLayoutChangeListener(mLayoutChangeListener);
     }
 
-    private void refreshState()
-    {
-        if (mIsSelected)
-        {
+    private void refreshState() {
+        if (mIsSelected) {
             mMonthText.setVisibility(INVISIBLE);
             mDayOfMonthText.setTextColor(mWhite);
             mScheduleIndicator.setImageResource(R.drawable.circle_white);
             mDayOfMonthHolder.setBackgroundResource(R.drawable.circle_handy_blue);
         }
-        else
-        {
+        else {
             mMonthText.setVisibility(mDayOfMonth == 1 ? VISIBLE : INVISIBLE);
             mDayOfMonthText.setTextColor(DateTimeUtils.isToday(mDate) ? mDarkBlue : mBlack);
             mScheduleIndicator.setImageResource(R.drawable.circle_handy_blue);
@@ -138,59 +123,48 @@ public class NewDateButton extends LinearLayout
         }
     }
 
-    public Date getDate()
-    {
+    public Date getDate() {
         return mDate;
     }
 
-    public void select()
-    {
+    public void select() {
         setSelected(true);
     }
 
-    public void setSelected(final boolean isSelected)
-    {
-        if (isSelected() == isSelected || !isEnabled())
-        {
+    public void setSelected(final boolean isSelected) {
+        if (isSelected() == isSelected || !isEnabled()) {
             return;
         }
         mIsSelected = isSelected;
         refreshState();
-        if (mSelectionChangedListener != null)
-        {
+        if (mSelectionChangedListener != null) {
             mSelectionChangedListener.onSelectionChanged(this);
         }
     }
 
     @Override
-    public boolean isSelected()
-    {
+    public boolean isSelected() {
         return mIsSelected;
     }
 
-    public boolean isEnabled()
-    {
+    public boolean isEnabled() {
         return mIsEnabled;
     }
 
-    public void setSelectionChangedListener(final SelectionChangedListener selectionChangedListener)
-    {
+    public void setSelectionChangedListener(final SelectionChangedListener selectionChangedListener) {
         mSelectionChangedListener = selectionChangedListener;
     }
 
-    public void showClaimIndicator()
-    {
+    public void showClaimIndicator() {
         mScheduleIndicator.setVisibility(VISIBLE);
     }
 
-    public interface SelectionChangedListener
-    {
+    public interface SelectionChangedListener {
         void onSelectionChanged(NewDateButton targetButton);
     }
 
     @Override
-    protected void onDetachedFromWindow()
-    {
+    protected void onDetachedFromWindow() {
         removeOnLayoutChangeListener(mLayoutChangeListener);
         super.onDetachedFromWindow();
     }

@@ -13,28 +13,22 @@ import com.handy.portal.R;
 /*
  * This class is used for giving an ID to Toolbar's title for the automation tests.
  */
-public class HandyToolbar extends Toolbar
-{
-    public HandyToolbar(Context context)
-    {
+public class HandyToolbar extends Toolbar {
+    public HandyToolbar(Context context) {
         super(context);
     }
 
-    public HandyToolbar(Context context, @Nullable AttributeSet attrs)
-    {
+    public HandyToolbar(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public HandyToolbar(Context context, @Nullable AttributeSet attrs, int defStyleAttr)
-    {
+    public HandyToolbar(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @Override
-    public void addView(View child, int index, ViewGroup.LayoutParams params)
-    {
-        if (child instanceof TextView)
-        {
+    public void addView(View child, int index, ViewGroup.LayoutParams params) {
+        if (child instanceof TextView) {
             child.setId(R.id.action_bar_title);
         }
         super.addView(child, index, params);

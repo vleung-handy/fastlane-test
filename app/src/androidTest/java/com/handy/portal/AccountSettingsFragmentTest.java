@@ -19,8 +19,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 @RunWith(AndroidJUnit4.class)
-public class AccountSettingsFragmentTest
-{
+public class AccountSettingsFragmentTest {
     @Rule
     public ActivityTestRule<MainActivity> mActivityRule = new ActivityTestRule<>(MainActivity.class);
 
@@ -32,8 +31,7 @@ public class AccountSettingsFragmentTest
     //TODO ignoring for now because we need to set up seed automation file for this to pass, but we need to set up tests to pass with AWS now
     @Ignore
     @Test
-    public void accountSettingsIsWorkingTest() throws InterruptedException
-    {
+    public void accountSettingsIsWorkingTest() throws InterruptedException {
         // Go to dashboard.
 //        onView(withId(R.id.button_more)).perform(click()); //TODO uncomment and fix reference
 //        onView(withId(R.id.button_more)).perform(click()); // prevent flakiness

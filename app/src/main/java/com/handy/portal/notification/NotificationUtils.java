@@ -9,8 +9,7 @@ import android.support.annotation.IntDef;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-public class NotificationUtils
-{
+public class NotificationUtils {
     public static final int NOTIFICATION_ENABLED = 1;
     public static final int NOTIFICATION_DISABLED = 2;
     public static final int NOTIFICATION_UNKNOWN = 3;
@@ -24,11 +23,9 @@ public class NotificationUtils
     private static final String OP_POST_NOTIFICATION = "OP_POST_NOTIFICATION";
 
     @NotificationStatus
-    public static int isNotificationEnabled(Context context)
-    {
+    public static int isNotificationEnabled(Context context) {
         Object service = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             service = context.getSystemService(Context.APP_OPS_SERVICE);
         }
 
@@ -41,8 +38,7 @@ public class NotificationUtils
 
         int uid = appInfo.uid;
 
-        try
-        {
+        try {
             // AppOpsManager.checkOpNoThrow(int, String, int) is a hidden method.
             // We'll have to use reflection magic to get round it.
             Class appOpsClass = Class.forName(AppOpsManager.class.getName());
@@ -56,8 +52,7 @@ public class NotificationUtils
             return ((int) checkOpNoThrowMethod.invoke(appOps, value, uid, pkg) == AppOpsManager.MODE_ALLOWED) ?
                     NOTIFICATION_ENABLED : NOTIFICATION_DISABLED;
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             e.printStackTrace();
             return NOTIFICATION_UNKNOWN;
         }

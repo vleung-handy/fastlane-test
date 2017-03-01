@@ -8,8 +8,7 @@ import retrofit.http.FieldMap;
 import retrofit.http.FormUrlEncoded;
 import retrofit.http.POST;
 
-public interface StripeRetrofitService
-{
+public interface StripeRetrofitService {
     @FormUrlEncoded
     @POST("/v1/tokens")
     void getStripeToken(@FieldMap Map<String, String> params, HandyRetrofitCallback cb);

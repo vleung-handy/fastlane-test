@@ -6,8 +6,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.List;
 
-public class ProviderFeedback implements Serializable
-{
+public class ProviderFeedback implements Serializable {
     @SerializedName("title")
     private String mTitle;
     @SerializedName("subtitle")
@@ -15,30 +14,25 @@ public class ProviderFeedback implements Serializable
     @SerializedName("feedback_tips")
     private List<FeedbackTip> mFeedbackTips;
 
-    public ProviderFeedback(final String title, final String subtitle, final List<FeedbackTip> feedbackTips)
-    {
+    public ProviderFeedback(final String title, final String subtitle, final List<FeedbackTip> feedbackTips) {
         mTitle = title;
         mSubtitle = subtitle;
         mFeedbackTips = feedbackTips;
     }
 
-    public String getTitle()
-    {
+    public String getTitle() {
         return mTitle;
     }
 
-    public String getSubtitle()
-    {
+    public String getSubtitle() {
         return mSubtitle;
     }
 
-    public List<FeedbackTip> getFeedbackTips()
-    {
+    public List<FeedbackTip> getFeedbackTips() {
         return mFeedbackTips;
     }
 
-    public static class FeedbackTip implements Serializable
-    {
+    public static class FeedbackTip implements Serializable {
         public static final String DATA_TYPE_TEXT = "text";
         public static final String DATA_TYPE_VIDEO_ID = "youtube_video_id";
 
@@ -47,19 +41,16 @@ public class ProviderFeedback implements Serializable
         @SerializedName("data")
         private String mData;
 
-        public FeedbackTip(final String dataType, final String data)
-        {
+        public FeedbackTip(final String dataType, final String data) {
             mDataType = dataType;
             mData = data;
         }
 
-        public String getDataType()
-        {
+        public String getDataType() {
             return mDataType;
         }
 
-        public String getData()
-        {
+        public String getData() {
             return mData;
         }
     }

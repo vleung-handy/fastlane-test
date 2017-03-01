@@ -7,24 +7,20 @@ import com.handy.portal.BuildConfig;
 
 import java.util.Properties;
 
-public final class PropertiesReader
-{
-    public static Properties getProperties(Context context, String fileName)
-    {
+public final class PropertiesReader {
+    public static Properties getProperties(Context context, String fileName) {
         final Properties properties = new Properties();
         final AssetManager am = context.getAssets();
-        try
-        {
+        try {
             properties.load(am.open(fileName));
-        } catch (Exception e)
-        {
+        }
+        catch (Exception e) {
             throw new RuntimeException("Error loading properties file: " + fileName);
         }
         return properties;
     }
 
-    public static Properties getConfigProperties(Context context)
-    {
+    public static Properties getConfigProperties(Context context) {
         return getProperties(context, "config." + BuildConfig.BUILD_TYPE + ".properties");
     }
 }

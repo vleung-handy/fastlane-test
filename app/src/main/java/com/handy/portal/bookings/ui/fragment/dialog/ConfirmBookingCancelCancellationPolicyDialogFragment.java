@@ -14,8 +14,7 @@ import org.greenrobot.eventbus.EventBus;
 import javax.inject.Inject;
 
 public class ConfirmBookingCancelCancellationPolicyDialogFragment
-        extends ConfirmBookingCancellationPolicyDialogFragment
-{
+        extends ConfirmBookingCancellationPolicyDialogFragment {
     public static final String FRAGMENT_TAG =
             ConfirmBookingCancelCancellationPolicyDialogFragment.class.getSimpleName();
 
@@ -24,8 +23,7 @@ public class ConfirmBookingCancelCancellationPolicyDialogFragment
 
     public static ConfirmBookingCancelCancellationPolicyDialogFragment newInstance(
             final Booking booking
-    )
-    {
+    ) {
         ConfirmBookingCancelCancellationPolicyDialogFragment fragment =
                 new ConfirmBookingCancelCancellationPolicyDialogFragment();
         Bundle arguments = new Bundle();
@@ -37,22 +35,18 @@ public class ConfirmBookingCancelCancellationPolicyDialogFragment
     }
 
     @Override
-    public void afterShowCancellationPolicyButtonClicked()
-    {
+    public void afterShowCancellationPolicyButtonClicked() {
         // do nothing
     }
 
     @Override
-    public void afterViewCreated()
-    {
+    public void afterViewCreated() {
         onShowCancellationPolicyButtonClicked();
     }
 
     @Override
-    protected void onConfirmActionButtonClicked()
-    {
-        if (mAction != null)
-        {
+    protected void onConfirmActionButtonClicked() {
+        if (mAction != null) {
             mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
                     mBooking,
                     ScheduledJobsLog.RemoveJobLog.CANCELLATION_POLICY,
@@ -62,22 +56,19 @@ public class ConfirmBookingCancelCancellationPolicyDialogFragment
                     mAction.getWarningText()
             )));
         }
-        if (getTargetFragment() != null)
-        {
+        if (getTargetFragment() != null) {
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
         }
         dismiss();
     }
 
     @Override
-    protected int getConfirmButtonBackgroundResourceId()
-    {
+    protected int getConfirmButtonBackgroundResourceId() {
         return R.drawable.button_red_round;
     }
 
     @Override
-    protected String getConfirmButtonText()
-    {
+    protected String getConfirmButtonText() {
         return getString(R.string.cancel_job);
     }
 }

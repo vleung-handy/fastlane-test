@@ -21,53 +21,42 @@ import com.handy.portal.library.util.UIUtils;
 
 import javax.inject.Inject;
 
-public abstract class ActionBarFragment extends InjectedFragment
-{
+public abstract class ActionBarFragment extends InjectedFragment {
     @Inject
     EnvironmentModifier environmentModifier;
     private Menu mMenu;
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         setActionBarVisible(true);
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         bus.post(new NavigationEvent.SelectPage(getAppPage()));
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
-        if (BuildConfig.DEBUG)
-        {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        if (BuildConfig.DEBUG) {
             inflater.inflate(R.menu.menu_main, menu);
         }
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
-    public void onPrepareOptionsMenu(Menu menu)
-    {
+    public void onPrepareOptionsMenu(Menu menu) {
         super.onPrepareOptionsMenu(menu);
         final MenuItem environmentModifierMenuItem = menu.findItem(R.id.action_settings);
-        if (environmentModifierMenuItem != null)
-        {
+        if (environmentModifierMenuItem != null) {
             setEnvironmentMenuItemTitle(environmentModifierMenuItem);
-            environmentModifierMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener()
-            {
+            environmentModifierMenuItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
-                public boolean onMenuItemClick(MenuItem item)
-                {
-                    EnvironmentUtils.showEnvironmentModifierDialog(environmentModifier, getActivity(), new EnvironmentModifier.OnEnvironmentChangedListener()
-                    {
+                public boolean onMenuItemClick(MenuItem item) {
+                    EnvironmentUtils.showEnvironmentModifierDialog(environmentModifier, getActivity(), new EnvironmentModifier.OnEnvironmentChangedListener() {
                         @Override
-                        public void onEnvironmentChanged(String newEnvironmentPrefix)
-                        {
+                        public void onEnvironmentChanged(String newEnvironmentPrefix) {
                             setEnvironmentMenuItemTitle(environmentModifierMenuItem);
                             bus.post(new HandyEvent.LogOutProvider());
                         }
@@ -79,82 +68,66 @@ public abstract class ActionBarFragment extends InjectedFragment
         mMenu = menu;
     }
 
-    public void setEnvironmentMenuItemTitle(final MenuItem environmentMenuItemTitle)
-    {
+    public void setEnvironmentMenuItemTitle(final MenuItem environmentMenuItemTitle) {
         String title;
         final EnvironmentModifier.Environment environment = environmentModifier.getEnvironment();
-        if (environment == EnvironmentModifier.Environment.Q)
-        {
+        if (environment == EnvironmentModifier.Environment.Q) {
             title = environmentModifier.getEnvironmentPrefix().toUpperCase();
         }
-        else
-        {
+        else {
             title = environment.name().toUpperCase();
         }
         environmentMenuItemTitle.setTitle(title);
     }
 
-    public void setActionBarVisible(boolean visible)
-    {
+    public void setActionBarVisible(boolean visible) {
         ActionBar actionBar = getActionBar();
-        if (actionBar != null)
-        {
+        if (actionBar != null) {
             if (visible) { actionBar.show(); }
             else { actionBar.hide(); }
         }
     }
 
-    protected ActionBar getActionBar()
-    {
+    protected ActionBar getActionBar() {
         return ((AppCompatActivity) getActivity()).getSupportActionBar();
     }
 
-    public void setBackButtonEnabled(boolean enabled)
-    {
+    public void setBackButtonEnabled(boolean enabled) {
         ActionBar actionBar = getActionBar();
-        if (actionBar != null)
-        {
+        if (actionBar != null) {
             actionBar.setDisplayShowHomeEnabled(enabled);
             actionBar.setDisplayHomeAsUpEnabled(enabled);
             actionBar.setHomeButtonEnabled(enabled);
         }
     }
 
-    public void onBackButtonPressed()
-    {
+    public void onBackButtonPressed() {
         Activity activity = getActivity();
         UIUtils.dismissKeyboard(activity);
         activity.onBackPressed();
     }
 
-    public void setActionBarTitle(int resourceId)
-    {
+    public void setActionBarTitle(int resourceId) {
         ActionBar actionBar = getActionBar();
-        if (actionBar != null)
-        { actionBar.setTitle(resourceId); }
+        if (actionBar != null) { actionBar.setTitle(resourceId); }
     }
 
-    public void setActionBarTitle(CharSequence charSequence)
-    {
+    public void setActionBarTitle(CharSequence charSequence) {
         ActionBar actionBar = getActionBar();
-        if (actionBar != null)
-        { actionBar.setTitle(charSequence); }
+        if (actionBar != null) { actionBar.setTitle(charSequence); }
     }
 
-    public void setActionBar(String titleString, boolean backButtonEnabled)
-    {
+    public void setActionBar(String titleString, boolean backButtonEnabled) {
         setActionBarTitle(titleString);
         setBackButtonEnabled(backButtonEnabled);
         setOptionsMenuEnabled(true);
     }
 
-    public void setActionBar(int titleStringId, boolean backButtonEnabled)
-    {
+    public void setActionBar(int titleStringId, boolean backButtonEnabled) {
         setActionBar(getResources().getString(titleStringId), backButtonEnabled);
     }
 
-    public void setOptionsMenuEnabled(boolean enabled)
-    {
+    public void setOptionsMenuEnabled(boolean enabled) {
         setHasOptionsMenu(enabled);
         setMenuVisibility(enabled);
     }
@@ -162,8 +135,7 @@ public abstract class ActionBarFragment extends InjectedFragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) //default support for back button
     {
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackButtonPressed();
                 return true;
@@ -174,8 +146,7 @@ public abstract class ActionBarFragment extends InjectedFragment
 
     protected MainViewPage getAppPage() { return null; }
 
-    protected Menu getMenu()
-    {
+    protected Menu getMenu() {
         return mMenu;
     }
 }

@@ -36,8 +36,7 @@ import javax.inject.Inject;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public abstract class BaseActivity extends AppCompatActivity implements AppUpdateFlowLauncher, SetupHandler.Callback
-{
+public abstract class BaseActivity extends AppCompatActivity implements AppUpdateFlowLauncher, SetupHandler.Callback {
     @Inject
     PrefsManager mPrefsManager;
     @Inject
@@ -58,8 +57,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
     private boolean mWasOpenBefore;
 
     // this is meant to be optionally overridden
-    protected boolean shouldTriggerSetup()
-    {
+    protected boolean shouldTriggerSetup() {
         return false;
     }
 
@@ -72,29 +70,24 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
     public void onSetupFailure() {}
 
     //Public Properties
-    public boolean getAllowCallbacks()
-    {
+    public boolean getAllowCallbacks() {
         return this.allowCallbacks;
     }
 
     @Override
-    public void startActivity(final Intent intent)
-    {
+    public void startActivity(final Intent intent) {
         final Bundle currentExtras = getIntent().getExtras();
-        if (currentExtras != null)
-        {
+        if (currentExtras != null) {
             final Bundle deeplinkData = currentExtras.getBundle(BundleKeys.DEEPLINK_DATA);
             // Pass deeplink data along if it exists
-            if (deeplinkData != null)
-            {
+            if (deeplinkData != null) {
                 intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkData);
 
                 // Since deeplink data gets passed along through activity launches, we want to
                 // avoid logging deeplink_opened event multiple times.
                 boolean deeplinkOpenedLogged =
                         intent.getBooleanExtra(BundleKeys.DEEPLINK_OPENED_LOGGED, false);
-                if (!deeplinkOpenedLogged)
-                {
+                if (!deeplinkOpenedLogged) {
                     final String deeplinkSource = intent.getStringExtra(BundleKeys.DEEPLINK_SOURCE);
                     bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Opened(
                             deeplinkSource,
@@ -108,8 +101,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
     }
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState)
-    {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utils.inject(this, this);
 
@@ -118,13 +110,11 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         LocationUtils.showLocationBlockersOrStartServiceIfNecessary(this, isLocationServiceEnabled());
         bus.post(new LogEvent.SendLogsEvent());
-        if (mWasOpenBefore)
-        {
+        if (mWasOpenBefore) {
             bus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(false, false)));
         }
 
@@ -145,46 +135,38 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
     }
 
     @Override
-    protected void onPostResume()
-    {
+    protected void onPostResume() {
         super.onPostResume();
-        if (!isFinishing() && shouldTriggerSetup())
-        {
+        if (!isFinishing() && shouldTriggerSetup()) {
             triggerSetup();
         }
     }
 
-    protected void triggerSetup()
-    {
-        if (mSetupHandler == null || !mSetupHandler.isOngoing())
-        {
+    protected void triggerSetup() {
+        if (mSetupHandler == null || !mSetupHandler.isOngoing()) {
             mSetupHandler = new SetupHandler(this, this);
             mSetupHandler.start();
         }
     }
 
     @VisibleForTesting
-    public AppUpdateEventListener getBusEventListener()
-    {
+    public AppUpdateEventListener getBusEventListener() {
         return mAppUpdateEventListener;
     }
 
     @Override
-    public void launchAppUpdater()
-    {
+    public void launchAppUpdater() {
         startActivity(new Intent(this, PleaseUpdateActivity.class));
     }
 
     @Override
-    public void launchEnableRequiredUpdateFlowApplicationIntent(@NonNull final String packageName, final String promptMessage)
-    {
+    public void launchEnableRequiredUpdateFlowApplicationIntent(@NonNull final String packageName, final String promptMessage) {
         Toast.makeText(this, promptMessage, Toast.LENGTH_LONG).show();
         Intent intent = new Intent(android.provider.Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
         intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         intent.setData(Uri.parse("package:" + packageName));
         boolean successfullyLaunchedIntent = Utils.safeLaunchIntent(intent, this);
-        if (!successfullyLaunchedIntent)
-        {
+        if (!successfullyLaunchedIntent) {
             /*
             unable to launch the application detail settings intent,
             so try launching the manage application settings intent
@@ -195,55 +177,46 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
     }
 
     @Override
-    public void showAppUpdateFlowError(@NonNull final String message)
-    {
+    public void showAppUpdateFlowError(@NonNull final String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
     @Override
-    protected void onStart()
-    {
+    protected void onStart() {
         super.onStart();
         allowCallbacks = true;
     }
 
     @Override
-    protected void onStop()
-    {
+    protected void onStop() {
         super.onStop();
         allowCallbacks = false;
     }
 
     @Override
-    public void onResumeFragments()
-    {
+    public void onResumeFragments() {
         super.onResumeFragments();
         this.bus.register(mAppUpdateEventListener);
         checkForUpdates();
     }
 
     @Override
-    protected void attachBaseContext(Context newBase)
-    {
+    protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override
-    public void onBackPressed()
-    {
-        if (!onBackPressedListenerStack.isEmpty())
-        {
+    public void onBackPressed() {
+        if (!onBackPressedListenerStack.isEmpty()) {
             onBackPressedListenerStack.pop().onBackPressed();
         }
-        else
-        {
+        else {
             super.onBackPressed();
         }
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         bus.post(new LogEvent.SaveLogsEvent());
         bus.unregister(mAppUpdateEventListener);
         mWasOpenBefore = true;
@@ -251,38 +224,31 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
     }
 
     @Override
-    protected void onDestroy()
-    {
+    protected void onDestroy() {
         super.onDestroy();
     }
 
-    public void addOnBackPressedListener(final OnBackPressedListener onBackPressedListener)
-    {
+    public void addOnBackPressedListener(final OnBackPressedListener onBackPressedListener) {
         this.onBackPressedListenerStack.push(onBackPressedListener);
     }
 
-    public void clearOnBackPressedListenerStack()
-    {
+    public void clearOnBackPressedListenerStack() {
         onBackPressedListenerStack.clear();
     }
 
-    public interface OnBackPressedListener
-    {
+    public interface OnBackPressedListener {
         void onBackPressed();
     }
 
-    public void checkForUpdates()
-    {
+    public void checkForUpdates() {
         bus.post(new AppUpdateEvent.RequestUpdateCheck(this));
     }
 
-    public void onReceiveUpdateAvailableError(AppUpdateEvent.ReceiveUpdateAvailableError event)
-    {
+    public void onReceiveUpdateAvailableError(AppUpdateEvent.ReceiveUpdateAvailableError event) {
         //TODO: Handle receive update available error, do we need to block?
     }
 
-    private boolean isLocationServiceEnabled()
-    {
+    private boolean isLocationServiceEnabled() {
         ConfigurationResponse configurationResponse = mConfigManager.getConfigurationResponse();
         return configurationResponse != null
                 && configurationResponse.isLocationServiceEnabled();
@@ -295,8 +261,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
      * @param event
      */
     @Subscribe
-    public void onReceiveConfigurationResponse(HandyEvent.ReceiveConfigurationSuccess event)
-    {
+    public void onReceiveConfigurationResponse(HandyEvent.ReceiveConfigurationSuccess event) {
         LocationUtils.showLocationBlockersOrStartServiceIfNecessary(this, isLocationServiceEnabled());
     }
 }

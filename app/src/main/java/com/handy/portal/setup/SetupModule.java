@@ -15,6 +15,5 @@ import dagger.Module;
                 AcceptTermsStep.class,
                 SetupHandler.class,
         })
-public class SetupModule
-{
+public class SetupModule {
 }

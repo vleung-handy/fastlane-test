@@ -10,12 +10,10 @@ import com.handy.portal.core.constant.MainViewPage;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DeeplinkMapper
-{
+public class DeeplinkMapper {
     private static final ImmutableMap<String, MainViewPage> DEEPLINK_MAP;
 
-    static
-    {
+    static {
         final Map<String, MainViewPage> deeplinkMap = new HashMap<>();
 
         deeplinkMap.put("booking_details", MainViewPage.JOB_DETAILS);
@@ -45,14 +43,12 @@ public class DeeplinkMapper
     }
 
     @VisibleForTesting
-    public static ImmutableMap<String, MainViewPage> getDeeplinkMap()
-    {
+    public static ImmutableMap<String, MainViewPage> getDeeplinkMap() {
         return DEEPLINK_MAP;
     }
 
     @Nullable
-    public static MainViewPage getPageForDeeplink(@NonNull final String deeplink)
-    {
+    public static MainViewPage getPageForDeeplink(@NonNull final String deeplink) {
         return DEEPLINK_MAP.get(deeplink);
     }
 }

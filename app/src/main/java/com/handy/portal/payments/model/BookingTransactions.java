@@ -5,8 +5,7 @@ import com.handy.portal.bookings.model.Booking;
 
 import java.io.Serializable;
 
-public class BookingTransactions implements Serializable
-{
+public class BookingTransactions implements Serializable {
     @SerializedName("booking")
     private Booking mBooking;
     @SerializedName("transactions")
@@ -18,39 +17,33 @@ public class BookingTransactions implements Serializable
     @SerializedName("payment_support_items")
     private PaymentSupportItem mPaymentSupportItems[];
 
-    public PaymentSupportItem[] getPaymentSupportItems()
-    {
+    public PaymentSupportItem[] getPaymentSupportItems() {
         return mPaymentSupportItems;
     }
 
     public BookingTransactions() { }
 
     public BookingTransactions(final Booking booking, final Transaction[] transactions,
-                               final int netEarnings, final String currencySymbol)
-    {
+                               final int netEarnings, final String currencySymbol) {
         mBooking = booking;
         mTransactions = transactions;
         mNetEarnings = netEarnings;
         mCurrencySymbol = currencySymbol;
     }
 
-    public Booking getBooking()
-    {
+    public Booking getBooking() {
         return mBooking;
     }
 
-    public Transaction[] getTransactions()
-    {
+    public Transaction[] getTransactions() {
         return mTransactions;
     }
 
-    public int getNetEarnings()
-    {
+    public int getNetEarnings() {
         return mNetEarnings;
     }
 
-    public String getCurrencySymbol()
-    {
+    public String getCurrencySymbol() {
         return mCurrencySymbol;
     }
 }

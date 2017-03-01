@@ -14,14 +14,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class AvailableTimeSlotView extends FrameLayout
-{
+public class AvailableTimeSlotView extends FrameLayout {
     @BindView(R.id.timeline)
     TextView mTimeline;
 
     @OnClick(R.id.remove)
-    public void onRemoveClicked()
-    {
+    public void onRemoveClicked() {
         mRemoveTimeSlotListener.onRemoveClicked(mDate, mInterval);
     }
 
@@ -32,8 +30,7 @@ public class AvailableTimeSlotView extends FrameLayout
     public AvailableTimeSlotView(final Context context,
                                  final Date date,
                                  final AvailabilityInterval interval,
-                                 final RemoveTimeSlotListener removeTimeSlotListener)
-    {
+                                 final RemoveTimeSlotListener removeTimeSlotListener) {
         super(context);
         mDate = date;
         mInterval = interval;
@@ -41,8 +38,7 @@ public class AvailableTimeSlotView extends FrameLayout
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), R.layout.element_available_time_slot, this);
         ButterKnife.bind(this);
         final String startTimeFormatted =
@@ -52,8 +48,7 @@ public class AvailableTimeSlotView extends FrameLayout
         mTimeline.setText(startTimeFormatted + " - " + endTimeFormatted);
     }
 
-    public interface RemoveTimeSlotListener
-    {
+    public interface RemoveTimeSlotListener {
         void onRemoveClicked(final Date date, final AvailabilityInterval interval);
     }
 }

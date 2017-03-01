@@ -41,8 +41,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.robolectric.Shadows.shadowOf;
 
-public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
-{
+public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
 
     private static final String VALID_PHONE_NUMBER = "1231231234";
 
@@ -61,8 +60,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     private View fragmentView;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         ActivityController<LoginActivity> activityController = Robolectric.buildActivity(LoginActivity.class).create();
         activityController.start().resume().visible();
 
@@ -76,8 +74,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenValidPhoneNumber_whenRequestPinButtonClicked_thenRequestPinCode() throws Exception
-    {
+    public void givenValidPhoneNumber_whenRequestPinButtonClicked_thenRequestPinCode() throws Exception {
         makePinRequest("1111111111");
 
         final HandyEvent.RequestPinCode event = TestUtils.getFirstMatchingBusEvent(bus, HandyEvent.RequestPinCode.class);
@@ -86,8 +83,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenValidPinCode_whenLogInButtonClicked_thenRequestLogin() throws Exception
-    {
+    public void givenValidPinCode_whenLogInButtonClicked_thenRequestLogin() throws Exception {
         makeLoginRequest("535353");
 
         final HandyEvent.RequestLogin event = TestUtils.getFirstMatchingBusEvent(bus, HandyEvent.RequestLogin.class);
@@ -97,8 +93,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenValidPinCode_whenLoginRequestDetailsReceived_thenGoToSplashActivity() throws Exception
-    {
+    public void givenValidPinCode_whenLoginRequestDetailsReceived_thenGoToSplashActivity() throws Exception {
         makeLoginRequest("535353");
         receiveLoginRequest(true, null);
 
@@ -108,8 +103,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenInvalidPinCode_whenLogInButtonClicked_thenNoRequestLogin() throws Exception
-    {
+    public void givenInvalidPinCode_whenLogInButtonClicked_thenNoRequestLogin() throws Exception {
         makeLoginRequest("123");
 
         final HandyEvent.RequestLogin event = TestUtils.getFirstMatchingBusEvent(bus, HandyEvent.RequestLogin.class);
@@ -117,8 +111,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenUnrecognizedPhoneNumber_whenPinCodeRequestDetailsReceived_thenDisplayErrorToast() throws Exception
-    {
+    public void givenUnrecognizedPhoneNumber_whenPinCodeRequestDetailsReceived_thenDisplayErrorToast() throws Exception {
         makePinRequest("7777777777"); // triggers state change
         receivePinCodeRequest(false);
 
@@ -126,8 +119,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenWrongPinCode_whenLoginRequestDetailsReceived_thenDisplayErrorToast() throws Exception
-    {
+    public void givenWrongPinCode_whenLoginRequestDetailsReceived_thenDisplayErrorToast() throws Exception {
         makeLoginRequest("777777");
         receiveLoginRequest(false, null);
 
@@ -135,8 +127,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenInputtingPinCode_whenBackButtonClicked_thenGoBackToInputtingPhoneNumber() throws Exception
-    {
+    public void givenInputtingPinCode_whenBackButtonClicked_thenGoBackToInputtingPhoneNumber() throws Exception {
         makePinRequest(VALID_PHONE_NUMBER);
         receivePinCodeRequest(true);
 
@@ -146,8 +137,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Ignore //TODO: re-enable when we can mock intent.resolveActivity(context.getPackageManager())
-    public void whenLoginHelpClicked_thenSendViewIntentToHelpCenterUrl() throws Exception
-    {
+    public void whenLoginHelpClicked_thenSendViewIntentToHelpCenterUrl() throws Exception {
         fragmentView.findViewById(R.id.login_help_button).performClick();
         fragmentView.findViewById(R.id.login_help).performClick();
 
@@ -157,8 +147,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenDebugBuildType_whenLogoClicked_thenShowDialogForSwitchingEnvironments() throws Exception
-    {
+    public void givenDebugBuildType_whenLogoClicked_thenShowDialogForSwitchingEnvironments() throws Exception {
         when(buildConfigWrapper.isDebug()).thenReturn(true);
 
         fragmentView.findViewById(R.id.logo).performClick();
@@ -167,8 +156,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenNotDebugBuildType_whenLogoClicked_thenDoNotShowDialogForSwitchingEnvironments() throws Exception
-    {
+    public void givenNotDebugBuildType_whenLogoClicked_thenDoNotShowDialogForSwitchingEnvironments() throws Exception {
         when(buildConfigWrapper.isDebug()).thenReturn(false);
 
         fragmentView.findViewById(R.id.logo).performClick();
@@ -176,8 +164,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
         assertNull(ShadowAlertDialog.getLatestAlertDialog());
     }
 
-    private void makeLoginRequest(String pinCode)
-    {
+    private void makeLoginRequest(String pinCode) {
         makePinRequest(VALID_PHONE_NUMBER); // assumes valid pin request
         reset(bus);
 
@@ -187,22 +174,19 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper
         fragmentView.findViewById(R.id.login_button).performClick();
     }
 
-    private void makePinRequest(String phoneNumber)
-    {
+    private void makePinRequest(String phoneNumber) {
         ((InputTextField) fragmentView.findViewById(R.id.phone_number_edit_text)).setText(phoneNumber);
         fragmentView.findViewById(R.id.login_button).performClick();
     }
 
-    private void receivePinCodeRequest(boolean isValid)
-    {
+    private void receivePinCodeRequest(boolean isValid) {
         HandyEvent.ReceivePinCodeSuccess event = mock(HandyEvent.ReceivePinCodeSuccess.class);
         event.pinRequestDetails = mock(SuccessWrapper.class);
         when(event.pinRequestDetails.getSuccess()).thenReturn(isValid);
         fragment.onPinCodeRequestReceived(event);
     }
 
-    private void receiveLoginRequest(boolean isValid, String credentials)
-    {
+    private void receiveLoginRequest(boolean isValid, String credentials) {
         HandyEvent.ReceiveLoginSuccess event = mock(HandyEvent.ReceiveLoginSuccess.class);
         event.loginDetails = mock(LoginDetails.class);
         when(event.loginDetails.getSuccess()).thenReturn(isValid);

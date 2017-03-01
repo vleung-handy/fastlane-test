@@ -30,8 +30,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DashboardFeedbackView extends FrameLayout implements View.OnClickListener
-{
+public class DashboardFeedbackView extends FrameLayout implements View.OnClickListener {
     @Inject
     EventBus mBus;
 
@@ -42,42 +41,36 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
     @BindView(R.id.dashboard_feedback_tips)
     LinearLayout mTips;
 
-    public DashboardFeedbackView(final Context context, @NonNull final ProviderFeedback providerFeedback)
-    {
+    public DashboardFeedbackView(final Context context, @NonNull final ProviderFeedback providerFeedback) {
         super(context);
         init();
         setDisplay(providerFeedback);
     }
 
-    public DashboardFeedbackView(final Context context, final AttributeSet attrs)
-    {
+    public DashboardFeedbackView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public DashboardFeedbackView(final Context context, final AttributeSet attrs, final int defStyleAttr)
-    {
+    public DashboardFeedbackView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public DashboardFeedbackView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
-    {
+    public DashboardFeedbackView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), R.layout.element_dashboard_feedback, this);
         ButterKnife.bind(this);
 
         Utils.inject(getContext(), this);
     }
 
-    public void setDisplay(@NonNull final ProviderFeedback feedback)
-    {
+    public void setDisplay(@NonNull final ProviderFeedback feedback) {
         String sectionTitle = feedback.getTitle();
 
         mTitle.setText(sectionTitle);
@@ -85,16 +78,12 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
 
         if (feedback.getFeedbackTips() == null) { return; }
 
-        for (final ProviderFeedback.FeedbackTip tip : feedback.getFeedbackTips())
-        {
-            if (ProviderFeedback.FeedbackTip.DATA_TYPE_TEXT.equalsIgnoreCase(tip.getDataType()))
-            {
+        for (final ProviderFeedback.FeedbackTip tip : feedback.getFeedbackTips()) {
+            if (ProviderFeedback.FeedbackTip.DATA_TYPE_TEXT.equalsIgnoreCase(tip.getDataType())) {
                 mTips.addView(new BulletTextView(getContext(), tip.getData()));
             }
-            else if (ProviderFeedback.FeedbackTip.DATA_TYPE_VIDEO_ID.equalsIgnoreCase(tip.getDataType()))
-            {
-                if (!TextUtils.isNullOrEmpty(tip.getData()))
-                {
+            else if (ProviderFeedback.FeedbackTip.DATA_TYPE_VIDEO_ID.equalsIgnoreCase(tip.getDataType())) {
+                if (!TextUtils.isNullOrEmpty(tip.getData())) {
                     YoutubeImagePlaceholderView youtubeImagePlaceholderView =
                             new YoutubeImagePlaceholderView(getContext());
                     youtubeImagePlaceholderView.setID(tip.getData());
@@ -109,8 +98,7 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
     }
 
     @Override
-    public void onClick(final View v)
-    {
+    public void onClick(final View v) {
         YoutubeImagePlaceholderView view = (YoutubeImagePlaceholderView) v;
         Bundle bundle = new Bundle();
         bundle.putString(BundleKeys.YOUTUBE_VIDEO_ID, view.getID());

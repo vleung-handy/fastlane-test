@@ -23,8 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DashboardFeedbackFragment extends ActionBarFragment
-{
+public class DashboardFeedbackFragment extends ActionBarFragment {
     @BindView(R.id.layout_dashboard_feedback)
     LinearLayout mFeedbackLayout;
     @BindView(R.id.no_result_view)
@@ -35,22 +34,19 @@ public class DashboardFeedbackFragment extends ActionBarFragment
     private ProviderEvaluation mEvaluation;
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mEvaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.PROVIDER_EVALUATION);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         return LayoutInflater.from(getContext()).inflate(R.layout.fragment_dashboard_feedback, container, false);
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
@@ -59,36 +55,30 @@ public class DashboardFeedbackFragment extends ActionBarFragment
         setActionBarTitle(R.string.feedback);
         setActionBarVisible(true);
 
-        if (mEvaluation == null || mEvaluation.getProviderFeedback() == null)
-        {
+        if (mEvaluation == null || mEvaluation.getProviderFeedback() == null) {
             Crashlytics.log("feedback not found in: " + getClass().getSimpleName());
             return;
         }
 
-        if (mEvaluation.getProviderFeedback().size() > 0)
-        {
+        if (mEvaluation.getProviderFeedback().size() > 0) {
             mNoResultView.setVisibility(View.GONE);
-            for (ProviderFeedback feedback : mEvaluation.getProviderFeedback())
-            {
+            for (ProviderFeedback feedback : mEvaluation.getProviderFeedback()) {
                 mFeedbackLayout.addView(new DashboardFeedbackView(getContext(), feedback));
             }
         }
-        else
-        {
+        else {
             mNoResultView.setVisibility(View.VISIBLE);
             mNoResultText.setText(R.string.no_feedback);
         }
     }
 
     @OnClick(R.id.video_library)
-    public void switchToVideoLibrary()
-    {
+    public void switchToVideoLibrary() {
         bus.post(new LogEvent.AddLogEvent(new FeedbackLog.VideoLibrarySelected()));
         bus.post(new NavigationEvent.NavigateToPage(MainViewPage.DASHBOARD_VIDEO_LIBRARY, true));
     }
 
-    public void swapToVideo(String youtubeId)
-    {
+    public void swapToVideo(String youtubeId) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(BundleKeys.YOUTUBE_VIDEO_ID, youtubeId);
         bus.post(new NavigationEvent.NavigateToPage(MainViewPage.YOUTUBE_PLAYER, bundle));

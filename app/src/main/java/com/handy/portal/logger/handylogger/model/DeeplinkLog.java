@@ -17,10 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class DeeplinkLog extends EventLog
-{
-    public static abstract class Source
-    {
+public class DeeplinkLog extends EventLog {
+    public static abstract class Source {
         public static final String PUSH_NOTIFICATION = "push_notification";
         public static final String LINK = "link";
         public static final String WEBVIEW = "webview";
@@ -55,8 +53,7 @@ public class DeeplinkLog extends EventLog
             @NonNull final String eventType,
             @NonNull String source,
             @NonNull final Uri data
-    )
-    {
+    ) {
         super(eventType, EVENT_CONTEXT);
         mUrl = data.toString();
         mPath = data.getPath();
@@ -71,51 +68,42 @@ public class DeeplinkLog extends EventLog
             @NonNull final String eventType,
             @NonNull String source,
             @NonNull final Bundle extras
-    )
-    {
+    ) {
         super(eventType, EVENT_CONTEXT);
         mSource = source;
         mPath = extras.getString(BundleKeys.DEEPLINK);
         mExtras = extractExtrasMap(extras);
     }
 
-    public static class Opened extends DeeplinkLog
-    {
+    public static class Opened extends DeeplinkLog {
         private static final String EVENT_TYPE = "opened";
 
-        public Opened(@DeeplinkSource final String source, final Uri data)
-        {
+        public Opened(@DeeplinkSource final String source, final Uri data) {
             super(EVENT_TYPE, source, data);
         }
 
-        public Opened(@DeeplinkSource final String source, final Bundle extras)
-        {
+        public Opened(@DeeplinkSource final String source, final Bundle extras) {
             super(EVENT_TYPE, source, extras);
         }
     }
 
 
-    public static class Processed extends DeeplinkLog
-    {
+    public static class Processed extends DeeplinkLog {
         private static final String EVENT_TYPE = "processed";
 
-        public Processed(@DeeplinkSource final String source, final Uri data)
-        {
+        public Processed(@DeeplinkSource final String source, final Uri data) {
             super(EVENT_TYPE, source, data);
         }
 
-        public Processed(@DeeplinkSource final String source, final Bundle extras)
-        {
+        public Processed(@DeeplinkSource final String source, final Bundle extras) {
             super(EVENT_TYPE, source, extras);
         }
 
     }
 
 
-    public static class Ignored extends DeeplinkLog
-    {
-        public static class Reason
-        {
+    public static class Ignored extends DeeplinkLog {
+        public static class Reason {
             public static final String UNRECOGNIZED = "unrecognized";
             public static final String MISSING_PARAMETERS = "missing_parameters";
 
@@ -135,8 +123,7 @@ public class DeeplinkLog extends EventLog
                 @DeeplinkSource final String source,
                 @DeeplinkIgnoredReason final String reason,
                 final Uri data
-        )
-        {
+        ) {
             super(EVENT_TYPE, source, data);
             mReason = reason;
         }
@@ -145,16 +132,14 @@ public class DeeplinkLog extends EventLog
                 @DeeplinkSource final String source,
                 @DeeplinkIgnoredReason final String reason,
                 final Bundle extras
-        )
-        {
+        ) {
             super(EVENT_TYPE, source, extras);
             mReason = reason;
         }
     }
 
     @Nullable
-    private static Map<String, Object> extractExtrasMap(@NonNull final Uri data)
-    {
+    private static Map<String, Object> extractExtrasMap(@NonNull final Uri data) {
         if (!data.isHierarchical()) //Uri.getQueryParameterNames() will throw exception if uri is NOT hierarchical
         {
             return null;
@@ -162,19 +147,16 @@ public class DeeplinkLog extends EventLog
 
         final Map<String, Object> parameters = new HashMap<>();
         final Set<String> queryParameterNames = data.getQueryParameterNames();
-        for (final String queryParameterName : queryParameterNames)
-        {
+        for (final String queryParameterName : queryParameterNames) {
             final String queryParameterValue = data.getQueryParameter(queryParameterName);
             parameters.put(queryParameterName, queryParameterValue);
         }
         return parameters;
     }
 
-    private static Map<String, Object> extractExtrasMap(@NonNull final Bundle extras)
-    {
+    private static Map<String, Object> extractExtrasMap(@NonNull final Bundle extras) {
         final HashMap<String, Object> extrasMap = new HashMap<>(extras.size());
-        for (String key : extras.keySet())
-        {
+        for (String key : extras.keySet()) {
             extrasMap.put(key, extras.get(key));
         }
         return extrasMap;

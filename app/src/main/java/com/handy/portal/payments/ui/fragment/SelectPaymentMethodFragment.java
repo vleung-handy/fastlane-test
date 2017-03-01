@@ -25,8 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SelectPaymentMethodFragment extends ActionBarFragment
-{
+public class SelectPaymentMethodFragment extends ActionBarFragment {
     @Inject
     ProviderManager providerManager;
 
@@ -52,34 +51,29 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     View pendingIndicator;
 
     @OnClick(R.id.debit_card_option)
-    public void onDebitCardOptionClicked()
-    {
+    public void onDebitCardOptionClicked() {
         bus.post(new NavigationEvent.NavigateToPage(MainViewPage.UPDATE_DEBIT_CARD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
     @OnClick(R.id.bank_account_option)
-    public void onBankAccountOptionClicked()
-    {
+    public void onBankAccountOptionClicked() {
         bus.post(new NavigationEvent.NavigateToPage(MainViewPage.UPDATE_BANK_ACCOUNT, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setOptionsMenuEnabled(true);
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setActionBar(R.string.select_payment_method, false);
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         setBackButtonEnabled(true);
 
@@ -91,15 +85,13 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         bus.unregister(this);
         super.onPause();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_select_payment_method, container, false);
@@ -108,8 +100,7 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
         final ProviderProfile providerProfile = providerManager.getCachedProviderProfile();
         if (providerProfile != null
                 && providerProfile.getProviderPersonalInfo() != null
-                && !providerProfile.getProviderPersonalInfo().isUS())
-        {
+                && !providerProfile.getProviderPersonalInfo().isUS()) {
             debitCardOption.setVisibility(View.GONE);
         }
 
@@ -117,19 +108,15 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onGetPaymentFlowSuccess(PaymentEvent.ReceivePaymentFlowSuccess event)
-    {
+    public void onGetPaymentFlowSuccess(PaymentEvent.ReceivePaymentFlowSuccess event) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
         String accountDetails = event.paymentFlow.getAccountDetails();
-        if (accountDetails != null)
-        {
-            if (event.paymentFlow.isDebitCard())
-            {
+        if (accountDetails != null) {
+            if (event.paymentFlow.isDebitCard()) {
                 debitCardDetails.setText(accountDetails);
             }
-            else if (event.paymentFlow.isBankAccount())
-            {
+            else if (event.paymentFlow.isBankAccount()) {
                 bankAccountDetails.setText(accountDetails);
                 showBankAccountStatus(event.paymentFlow.getStatus());
             }
@@ -137,12 +124,9 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
         paymentMethodContainer.setVisibility(View.VISIBLE);
     }
 
-    private void showBankAccountStatus(String status)
-    {
-        if (status != null)
-        {
-            switch (status)
-            {
+    private void showBankAccountStatus(String status) {
+        if (status != null) {
+            switch (status) {
                 case PaymentFlow.STATUS_NEW:
                     pendingIndicator.setVisibility(View.VISIBLE);
                     break;
@@ -159,8 +143,7 @@ public class SelectPaymentMethodFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onGetPaymentFlowError(PaymentEvent.ReceivePaymentFlowError event)
-    {
+    public void onGetPaymentFlowError(PaymentEvent.ReceivePaymentFlowError event) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         showToast(R.string.payment_flow_error);
     }

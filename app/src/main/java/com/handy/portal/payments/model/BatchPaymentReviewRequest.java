@@ -7,8 +7,7 @@ import java.util.Date;
 /**
  * a payment review request for a batch payment
  */
-public class BatchPaymentReviewRequest
-{
+public class BatchPaymentReviewRequest {
     /**
      * the id of the batch payment to review
      */
@@ -43,8 +42,7 @@ public class BatchPaymentReviewRequest
                                      final Date batchStartDate,
                                      final Date batchEndDate,
                                      final String paymentSupportItemMachineName,
-                                     final String otherInfo)
-    {
+                                     final String otherInfo) {
         mBatchId = batchId;
         mBatchStartDate = batchStartDate;
         mBatchEndDate = batchEndDate;

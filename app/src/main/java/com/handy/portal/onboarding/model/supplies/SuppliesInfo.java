@@ -5,8 +5,7 @@ import com.handy.portal.core.model.Designation;
 
 import java.io.Serializable;
 
-public class SuppliesInfo implements Serializable
-{
+public class SuppliesInfo implements Serializable {
     @SerializedName("cost")
     private String mCost;
     @SerializedName("charge_notice")
@@ -24,43 +23,35 @@ public class SuppliesInfo implements Serializable
     @SerializedName("fees_help_link")
     private String mFeesHelpLink;
 
-    public String getCost()
-    {
+    public String getCost() {
         return mCost;
     }
 
-    public String getChargeNotice()
-    {
+    public String getChargeNotice() {
         return mChargeNotice;
     }
 
-    public SuppliesSection getCostSection()
-    {
+    public SuppliesSection getCostSection() {
         return mCostSection;
     }
 
-    public SuppliesSection getDeliverySection()
-    {
+    public SuppliesSection getDeliverySection() {
         return mDeliverySection;
     }
 
-    public SuppliesSection getProductsSection()
-    {
+    public SuppliesSection getProductsSection() {
         return mProductsSection;
     }
 
-    public Designation getDesignation()
-    {
+    public Designation getDesignation() {
         return mDesignation;
     }
 
-    public boolean isCardRequired()
-    {
+    public boolean isCardRequired() {
         return isCardRequired;
     }
 
-    public String getFeesHelpLink()
-    {
+    public String getFeesHelpLink() {
         return mFeesHelpLink;
     }
 }

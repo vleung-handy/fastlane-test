@@ -16,25 +16,21 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ProRequestedJobsListGroupView extends FrameLayout
-{
+public class ProRequestedJobsListGroupView extends FrameLayout {
     @BindView(R.id.pro_requested_jobs_list_group_title_text)
     protected TextView titleText;
 
-    public ProRequestedJobsListGroupView(Context context)
-    {
+    public ProRequestedJobsListGroupView(Context context) {
         super(context);
         init();
     }
 
-    public ProRequestedJobsListGroupView(Context context, AttributeSet attributeSet)
-    {
+    public ProRequestedJobsListGroupView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         View view = inflater.inflate(R.layout.element_pro_requested_jobs_list_group_header,
                 this, false);
@@ -43,8 +39,7 @@ public class ProRequestedJobsListGroupView extends FrameLayout
         ButterKnife.bind(this);
     }
 
-    public void updateDisplay(@NonNull Date date, @NonNull Context context)
-    {
+    public void updateDisplay(@NonNull Date date, @NonNull Context context) {
         String formattedDate = DateTimeUtils.getTodayTomorrowStringByStartDate(date, context)
                 + DateTimeUtils.formatDayOfWeekMonthDate(date);
         titleText.setText(formattedDate);

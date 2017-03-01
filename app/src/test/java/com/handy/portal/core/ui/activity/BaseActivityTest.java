@@ -24,21 +24,18 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.robolectric.Shadows.shadowOf;
 
-public class BaseActivityTest extends RobolectricGradleTestWrapper
-{
+public class BaseActivityTest extends RobolectricGradleTestWrapper {
     private ActivityController<TestActivity> activityController;
     private BaseActivity activity;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         activityController = Robolectric.buildActivity(TestActivity.class).create();
         activity = activityController.get();
     }
 
     @Test
-    public void onResume_shouldPostUpdateCheckEvent() throws Exception
-    {
+    public void onResume_shouldPostUpdateCheckEvent() throws Exception {
         activityController.resume();
         ArgumentCaptor<Object> argument = ArgumentCaptor.forClass(Object.class);
         verify(activity.bus, atLeastOnce()).post(argument.capture());
@@ -46,8 +43,7 @@ public class BaseActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenAppShouldUpdate_whenUpdateCheckReceived_thenStartUpdateActivity() throws Exception
-    {
+    public void givenAppShouldUpdate_whenUpdateCheckReceived_thenStartUpdateActivity() throws Exception {
         UpdateDetails details = mock(UpdateDetails.class);
         when(details.getShouldUpdate()).thenReturn(true);
         when(details.getSuccess()).thenReturn(true);
@@ -62,8 +58,7 @@ public class BaseActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenAppShouldNotUpdate_whenUpdateCheckReceived_thenDoNotStartUpdateActivity() throws Exception
-    {
+    public void givenAppShouldNotUpdate_whenUpdateCheckReceived_thenDoNotStartUpdateActivity() throws Exception {
         UpdateDetails details = mock(UpdateDetails.class);
         when(details.getShouldUpdate()).thenReturn(false);
         AppUpdateEvent.ReceiveUpdateAvailableSuccess event = new AppUpdateEvent.ReceiveUpdateAvailableSuccess(details);
@@ -74,8 +69,7 @@ public class BaseActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenUpdateCheckFailed_whenUpdateCheckReceived_thenDoNotStartUpdateActivity() throws Exception
-    {
+    public void givenUpdateCheckFailed_whenUpdateCheckReceived_thenDoNotStartUpdateActivity() throws Exception {
         AppUpdateEvent.ReceiveUpdateAvailableError event = new AppUpdateEvent.ReceiveUpdateAvailableError(null);
 
         activity.onReceiveUpdateAvailableError(event);

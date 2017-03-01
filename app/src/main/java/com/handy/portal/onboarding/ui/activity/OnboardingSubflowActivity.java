@@ -27,8 +27,7 @@ import com.handy.portal.onboarding.ui.fragment.SchedulePreferencesFragment;
 
 import java.util.ArrayList;
 
-public class OnboardingSubflowActivity extends BaseActivity
-{
+public class OnboardingSubflowActivity extends BaseActivity {
     private static final String EXTRA_INITIAL_LOAD = "initial_load";
     @VisibleForTesting
     static final String EXTRA_LAUNCHED_TIME_MILLIS = "extra_launched_time_millis";
@@ -40,14 +39,12 @@ public class OnboardingSubflowActivity extends BaseActivity
     private int mPercentRange;
     private int mSubflowStepCount;
 
-    public OnboardingDetails getOnboardingDetails()
-    {
+    public OnboardingDetails getOnboardingDetails() {
         return mOnboardingDetails;
     }
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState)
-    {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mOnboardingDetails = (OnboardingDetails) getIntent()
                 .getSerializableExtra(BundleKeys.ONBOARDING_DETAILS);
@@ -58,63 +55,51 @@ public class OnboardingSubflowActivity extends BaseActivity
         setContentView(R.layout.activity_onboarding_subflow);
         setSupportActionBar((Toolbar) findViewById(R.id.toolbar));
         initLaunchedTimeMillis(savedInstanceState);
-        if (savedInstanceState == null || savedInstanceState.getBoolean(EXTRA_INITIAL_LOAD, true))
-        {
+        if (savedInstanceState == null || savedInstanceState.getBoolean(EXTRA_INITIAL_LOAD, true)) {
             startSubflow();
         }
     }
 
-    private void initLaunchedTimeMillis(final Bundle savedInstanceState)
-    {
+    private void initLaunchedTimeMillis(final Bundle savedInstanceState) {
         if (savedInstanceState == null
-                || savedInstanceState.getLong(EXTRA_LAUNCHED_TIME_MILLIS, 0) == 0)
-        {
+                || savedInstanceState.getLong(EXTRA_LAUNCHED_TIME_MILLIS, 0) == 0) {
             mLaunchedTimeMillis = System.currentTimeMillis();
         }
-        else
-        {
+        else {
             mLaunchedTimeMillis = savedInstanceState.getLong(EXTRA_LAUNCHED_TIME_MILLIS);
         }
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState)
-    {
-        if (outState == null)
-        {
+    protected void onSaveInstanceState(Bundle outState) {
+        if (outState == null) {
             outState = new Bundle();
         }
         outState.putBoolean(EXTRA_INITIAL_LOAD, false);
         outState.putLong(EXTRA_LAUNCHED_TIME_MILLIS, mLaunchedTimeMillis);
-        try
-        {
+        try {
             super.onSaveInstanceState(outState);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             // Non fatal
             Crashlytics.logException(e);
         }
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         final int onboardingTtlMillis =
                 getResources().getInteger(R.integer.onboarding_ttl_mins) * 60 * 1000;
-        if (System.currentTimeMillis() - mLaunchedTimeMillis >= onboardingTtlMillis)
-        {
+        if (System.currentTimeMillis() - mLaunchedTimeMillis >= onboardingTtlMillis) {
             cancel(new Intent());
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void startSubflow()
-    {
+    private void startSubflow() {
         OnboardingSubflowFragment fragment = null;
-        switch (mSubflowType)
-        {
+        switch (mSubflowType) {
             case STATUS:
                 fragment = OnboardingStatusFragment.newInstance();
                 Bundle arguments = getFragmentArguments(fragment);
@@ -144,19 +129,16 @@ public class OnboardingSubflowActivity extends BaseActivity
             default:
                 break;
         }
-        if (fragment != null)
-        {
+        if (fragment != null) {
             next(fragment, false);
         }
     }
 
     public void next(@NonNull final OnboardingSubflowFragment fragment,
-                     final boolean allowBackNavigation)
-    {
+                     final boolean allowBackNavigation) {
         final FragmentTransaction fragmentTransaction =
                 getSupportFragmentManager().beginTransaction();
-        if (allowBackNavigation)
-        {
+        if (allowBackNavigation) {
             Bundle arguments = getFragmentArguments(fragment);
             arguments.putBoolean(BundleKeys.ALLOW_BACK_NAVIGATION, true);
             fragment.setArguments(arguments);
@@ -182,54 +164,44 @@ public class OnboardingSubflowActivity extends BaseActivity
         mSubflowStepCount++;
     }
 
-    public void terminate(@NonNull Intent data)
-    {
-        if (!isFinishing())
-        {
+    public void terminate(@NonNull Intent data) {
+        if (!isFinishing()) {
             setResult(Activity.RESULT_OK, data);
             finish();
         }
     }
 
     @NonNull
-    private Bundle getFragmentArguments(final OnboardingSubflowFragment fragment)
-    {
+    private Bundle getFragmentArguments(final OnboardingSubflowFragment fragment) {
         Bundle arguments = fragment.getArguments();
-        if (arguments == null)
-        {
+        if (arguments == null) {
             arguments = new Bundle();
         }
         return arguments;
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         mSubflowStepCount--;
-        if (mSubflowType == SubflowType.STATUS)
-        {
+        if (mSubflowType == SubflowType.STATUS) {
             final Intent data = new Intent();
             data.putExtra(BundleKeys.FORCE_FINISH, true);
             cancel(data);
         }
-        else
-        {
+        else {
             super.onBackPressed();
         }
     }
 
-    public void cancel(@NonNull final Intent data)
-    {
-        if (!isFinishing())
-        {
+    public void cancel(@NonNull final Intent data) {
+        if (!isFinishing()) {
             setResult(Activity.RESULT_CANCELED, data);
             finish();
         }
     }
 
     // This will use number of screens within the subflow to calculate percent complete.
-    public int calculatePercentComplete()
-    {
+    public int calculatePercentComplete() {
         final int miniPercentJump = mPercentRange / (mSubflowType.getNumberOfSteps() + 1); // + 1 to exaggerate transition between subflows
         return mPercentComplete + (mSubflowStepCount * miniPercentJump);
     }

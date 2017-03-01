@@ -10,8 +10,7 @@ import com.handy.portal.core.model.ProBookingFeedback;
 
 import java.util.List;
 
-public class CheckoutRequest
-{
+public class CheckoutRequest {
     //The server is expecting location data at the top level of the object, otherwise would just pass location data object
     @SerializedName("latitude")
     private String mLatitude;
@@ -29,8 +28,7 @@ public class CheckoutRequest
 
     public CheckoutRequest(@NonNull LocationData locationData, ProBookingFeedback feedback,
                            @Nullable String noteToCustomer,
-                           @Nullable List<Booking.BookingInstructionUpdateRequest> customerPreferences)
-    {
+                           @Nullable List<Booking.BookingInstructionUpdateRequest> customerPreferences) {
         mLatitude = locationData.getLocationMap().get(LocationKey.LATITUDE);
         mLongitude = locationData.getLocationMap().get(LocationKey.LONGITUDE);
         mAccuracy = locationData.getLocationMap().get(LocationKey.ACCURACY);

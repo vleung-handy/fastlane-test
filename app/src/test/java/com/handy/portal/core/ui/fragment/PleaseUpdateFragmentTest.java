@@ -23,8 +23,7 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import static org.robolectric.Shadows.shadowOf;
 
 @Ignore //TODO: re-enable when we can mock intent.resolveActivity(context.getPackageManager())
-public class PleaseUpdateFragmentTest extends RobolectricGradleTestWrapper
-{
+public class PleaseUpdateFragmentTest extends RobolectricGradleTestWrapper {
     @Mock
     private VersionManager versionManager;
 
@@ -32,8 +31,7 @@ public class PleaseUpdateFragmentTest extends RobolectricGradleTestWrapper
     private PleaseUpdateFragment fragment;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         fragment = new PleaseUpdateFragment();
         SupportFragmentTestUtil.startFragment(fragment);
 
@@ -41,13 +39,11 @@ public class PleaseUpdateFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void whenDownloadButtonClicked_thenSendInstallIntent() throws Exception
-    {
+    public void whenDownloadButtonClicked_thenSendInstallIntent() throws Exception {
         Uri mockUri = mock(Uri.class);
         when(versionManager.getNewApkUri(fragment.getContext())).thenReturn(mockUri);
 
-        if (fragment.getView() != null)
-        {
+        if (fragment.getView() != null) {
             fragment.getView().findViewById(R.id.update_button).performClick();
         }
 

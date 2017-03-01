@@ -22,8 +22,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 //note that animations should be disabled on the device running these tests
 @RunWith(AndroidJUnit4.class)
-public class LoginTest
-{
+public class LoginTest {
 //    private UiDevice mDevice; //TODO use this to test for system dialogs
 
     private static final TestUser TEST_USER = TestUsers.FIRST_TIME_NY_PROVIDER;
@@ -33,8 +32,7 @@ public class LoginTest
             new ActivityTestRule<>(LoginActivity.class);
 
     @After
-    public void tearDown()
-    {
+    public void tearDown() {
         AppInteractionUtil.logOut();
     }
 
@@ -52,8 +50,7 @@ public class LoginTest
      * - there are no popup modals (for example, promos)
      */
     @Test
-    public void testLogin()
-    {
+    public void testLogin() {
         //TODO: for proof of concept. we should make this more readable/reusable
         ViewUtil.waitForViewVisible(R.id.phone_number_edit_text, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         TextViewUtil.updateEditTextView(R.id.phone_number_edit_text, TEST_USER.getPhoneNumber());

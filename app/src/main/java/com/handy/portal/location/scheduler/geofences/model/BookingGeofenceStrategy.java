@@ -9,11 +9,10 @@ import java.util.Date;
 
 /**
  * part of the LocationScheduleStrategies model received from the server
- *
+ * <p>
  * this model defines the parameters of a geofence, and time range during which it should be active
  */
-public class BookingGeofenceStrategy extends ScheduleStrategy
-{
+public class BookingGeofenceStrategy extends ScheduleStrategy {
     @SerializedName("booking_id")
     private String mBookingId; //booking id this geofence is associated with
     @SerializedName("start_date")
@@ -27,8 +26,7 @@ public class BookingGeofenceStrategy extends ScheduleStrategy
     @SerializedName("radius")
     private float mRadius; //radius of the geofence, in meters
 
-    protected BookingGeofenceStrategy(Parcel in)
-    {
+    protected BookingGeofenceStrategy(Parcel in) {
         mStartDate = new Date(in.readLong());
         mEndDate = new Date(in.readLong());
         mBookingId = in.readString();
@@ -37,60 +35,49 @@ public class BookingGeofenceStrategy extends ScheduleStrategy
         mRadius = in.readFloat();
     }
 
-    public static final Creator<BookingGeofenceStrategy> CREATOR = new Creator<BookingGeofenceStrategy>()
-    {
+    public static final Creator<BookingGeofenceStrategy> CREATOR = new Creator<BookingGeofenceStrategy>() {
         @Override
-        public BookingGeofenceStrategy createFromParcel(Parcel in)
-        {
+        public BookingGeofenceStrategy createFromParcel(Parcel in) {
             return new BookingGeofenceStrategy(in);
         }
 
         @Override
-        public BookingGeofenceStrategy[] newArray(int size)
-        {
+        public BookingGeofenceStrategy[] newArray(int size) {
             return new BookingGeofenceStrategy[size];
         }
     };
 
-    public String getBookingId()
-    {
+    public String getBookingId() {
         return mBookingId;
     }
 
-    public Date getStartDate()
-    {
+    public Date getStartDate() {
         return mStartDate;
     }
 
-    public Date getEndDate()
-    {
+    public Date getEndDate() {
         return mEndDate;
     }
 
-    public double getLongitude()
-    {
+    public double getLongitude() {
         return mLongitude;
     }
 
-    public double getLatitude()
-    {
+    public double getLatitude() {
         return mLatitude;
     }
 
-    public float getRadius()
-    {
+    public float getRadius() {
         return mRadius;
     }
 
     @Override
-    public int describeContents()
-    {
+    public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(final Parcel dest, final int flags)
-    {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeLong(getStartDate().getTime());
         dest.writeLong(getEndDate().getTime());
         dest.writeString(mBookingId);
@@ -100,8 +87,7 @@ public class BookingGeofenceStrategy extends ScheduleStrategy
     }
 
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "start date: " + mStartDate.toString()
                 + "\nend date: " + mEndDate.toString()
                 + "\nlatitude: " + mLatitude

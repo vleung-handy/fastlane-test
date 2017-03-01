@@ -41,8 +41,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
  * Simple, hard-coded activity to show content of suggestions on what to do on the first day
  * of work.
  */
-public class FirstDayActivity extends AppCompatActivity
-{
+public class FirstDayActivity extends AppCompatActivity {
     private static final String LOG_ARTICLE_NAME = "Your First Day";
 
     @BindView(R.id.first_day_first_job_message)
@@ -75,8 +74,7 @@ public class FirstDayActivity extends AppCompatActivity
     private SubflowData mStatusData;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_first_day);
         ButterKnife.bind(this);
@@ -94,24 +92,19 @@ public class FirstDayActivity extends AppCompatActivity
         initLearningLinksView();
     }
 
-    private void initLearningLinksView()
-    {
-        if (mStatusData == null)
-        {
+    private void initLearningLinksView() {
+        if (mStatusData == null) {
             return;
         }
 
         final LearningLinkDetails learningLinkDetails = mStatusData.getLearningLinkDetails();
         if (learningLinkDetails != null
                 && learningLinkDetails.getLearningLinks() != null
-                && !learningLinkDetails.getLearningLinks().isEmpty())
-        {
+                && !learningLinkDetails.getLearningLinks().isEmpty()) {
             mLinksContainer.setVisibility(View.VISIBLE);
-            mLinksContainer.bindLearningLinks(learningLinkDetails.getLearningLinks(), new View.OnClickListener()
-            {
+            mLinksContainer.bindLearningLinks(learningLinkDetails.getLearningLinks(), new View.OnClickListener() {
                 @Override
-                public void onClick(final View v)
-                {
+                public void onClick(final View v) {
                     String url = (String) v.getTag();
                     mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.HelpLinkSelected(url)));
                     final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
@@ -119,8 +112,7 @@ public class FirstDayActivity extends AppCompatActivity
                 }
             });
         }
-        else
-        {
+        else {
             mLinksContainer.setVisibility(View.GONE);
         }
     }
@@ -129,8 +121,7 @@ public class FirstDayActivity extends AppCompatActivity
      * Sets up the card that displays "Be prepared". The trick here is that the image is left aligned
      * with the text flowing beneath it.
      */
-    private void setupPreparedMessage()
-    {
+    private void setupPreparedMessage() {
         int leftMargin = mVacuumDrawable.getIntrinsicWidth() + mDefaultMargin;
         SpannableString ss = new SpannableString(getString(R.string.be_prepared_message));
         int lines = getTextLines(mPreparedMessage, mVacuumDrawable) + 1;
@@ -145,8 +136,7 @@ public class FirstDayActivity extends AppCompatActivity
      *
      * @return
      */
-    private int getTextLines(TextView textView, Drawable drawable)
-    {
+    private int getTextLines(TextView textView, Drawable drawable) {
         float textLineHeight = textView.getPaint().getTextSize() * textView.getLineSpacingMultiplier();
         //minus 1 at the end to account for the title line
         return (int) Math.floor(drawable.getIntrinsicHeight() / textLineHeight) - 1;
@@ -157,8 +147,7 @@ public class FirstDayActivity extends AppCompatActivity
      * with the text flowing beneath it. The technique used here is different than where the image is
      * left aligned.
      */
-    private void setupDoneMessage()
-    {
+    private void setupDoneMessage() {
         String text = getString(R.string.done_message);
 
         int lines = getTextLines(mDoneMessage, mSuccessDrawable);
@@ -177,18 +166,15 @@ public class FirstDayActivity extends AppCompatActivity
      * @param lines        The numbers of lines of text that can fit to the left of the image
      * @return
      */
-    private String insertLineBreaks(String text, int maxTextWidth, int lines)
-    {
+    private String insertLineBreaks(String text, int maxTextWidth, int lines) {
         int spaceIndex = 0;
         int breaksInserted = 0;
 
         //Loop this until the number of new lines have been reached.
-        while (text.indexOf(" ", spaceIndex) > 0 && breaksInserted < lines)
-        {
+        while (text.indexOf(" ", spaceIndex) > 0 && breaksInserted < lines) {
             String currentLine = "";
             String nextWord = getNextWord(text, spaceIndex);
-            while (nextWord != null && getWordLength(currentLine + nextWord) < maxTextWidth)
-            {
+            while (nextWord != null && getWordLength(currentLine + nextWord) < maxTextWidth) {
                 currentLine += nextWord;
                 spaceIndex = text.indexOf(" ", spaceIndex) + 1; //advances the index to the next word
                 nextWord = getNextWord(text, spaceIndex);
@@ -201,23 +187,19 @@ public class FirstDayActivity extends AppCompatActivity
         return text;
     }
 
-    private int getWordLength(String word)
-    {
+    private int getWordLength(String word) {
         Rect bounds = new Rect();
         mDoneMessage.getPaint().getTextBounds(word, 0, word.length(), bounds);
         return bounds.width();
     }
 
-    private String getNextWord(String text, int start)
-    {
+    private String getNextWord(String text, int start) {
         int end = text.indexOf(" ", start);
 
-        if (end > 0)
-        {
+        if (end > 0) {
             return text.substring(start, end);
         }
-        else
-        {
+        else {
             return null;
         }
     }
@@ -225,8 +207,7 @@ public class FirstDayActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) //default support for back button
     {
-        switch (item.getItemId())
-        {
+        switch (item.getItemId()) {
             case android.R.id.home:
                 onBackPressed();
                 return true;
@@ -236,21 +217,18 @@ public class FirstDayActivity extends AppCompatActivity
     }
 
     @Override
-    protected void attachBaseContext(Context newBase)
-    {
+    protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.HelpArticleOpened(LOG_ARTICLE_NAME)));
     }
 
     @Override
-    protected void onPause()
-    {
+    protected void onPause() {
         super.onPause();
         mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.HelpArticleClosed(LOG_ARTICLE_NAME)));
     }

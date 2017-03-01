@@ -11,8 +11,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.List;
 
-public class ShareUtils
-{
+public class ShareUtils {
     public static final String CHANNEL_EMAIL = "email";
     public static final String CHANNEL_GMAIL = "gmail";
     public static final String CHANNEL_GPLUS = "gplus";
@@ -43,35 +42,27 @@ public class ShareUtils
     public @interface Channel {}
 
     @Channel
-    public static String getChannelFromIntent(final Context context, final Intent intent)
-    {
+    public static String getChannelFromIntent(final Context context, final Intent intent) {
         final String targetPackage = intent.getComponent().getPackageName();
-        if (targetPackage.contains(PACKAGE_IDENTIFIER_GMAIL))
-        {
+        if (targetPackage.contains(PACKAGE_IDENTIFIER_GMAIL)) {
             return CHANNEL_GMAIL;
         }
-        else if (targetPackage.contains(PACKAGE_IDENTIFIER_GPLUS))
-        {
+        else if (targetPackage.contains(PACKAGE_IDENTIFIER_GPLUS)) {
             return CHANNEL_GPLUS;
         }
-        else if (targetPackage.contains(PACKAGE_IDENTIFIER_FACEBOOK))
-        {
+        else if (targetPackage.contains(PACKAGE_IDENTIFIER_FACEBOOK)) {
             return CHANNEL_FACEBOOK;
         }
-        else if (targetPackage.contains(PACKAGE_IDENTIFIER_TWITTER))
-        {
+        else if (targetPackage.contains(PACKAGE_IDENTIFIER_TWITTER)) {
             return CHANNEL_TWITTER;
         }
-        else if (canPackageHandleScheme(context, targetPackage, SCHEME_SMS))
-        {
+        else if (canPackageHandleScheme(context, targetPackage, SCHEME_SMS)) {
             return CHANNEL_SMS;
         }
-        else if (canPackageHandleScheme(context, targetPackage, SCHEME_MAIL))
-        {
+        else if (canPackageHandleScheme(context, targetPackage, SCHEME_MAIL)) {
             return CHANNEL_EMAIL;
         }
-        else
-        {
+        else {
             return CHANNEL_OTHER;
         }
     }
@@ -80,19 +71,16 @@ public class ShareUtils
             @NonNull final Context context,
             @NonNull final String targetPackage,
             @NonNull final String scheme
-    )
-    {
+    ) {
         final Intent dummyIntent = new Intent();
         dummyIntent.setAction(Intent.ACTION_SEND);
         dummyIntent.setData(Uri.parse(scheme));
         dummyIntent.setType(MIME_TYPE_PLAIN_TEXT);
         List<ResolveInfo> resolveInfos =
                 context.getPackageManager().queryIntentActivities(dummyIntent, 0);
-        for (final ResolveInfo resolveInfo : resolveInfos)
-        {
+        for (final ResolveInfo resolveInfo : resolveInfos) {
             final String potentialHandlerPackage = resolveInfo.activityInfo.packageName;
-            if (potentialHandlerPackage.equalsIgnoreCase(targetPackage))
-            {
+            if (potentialHandlerPackage.equalsIgnoreCase(targetPackage)) {
                 return true;
             }
         }

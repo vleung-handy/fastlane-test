@@ -4,20 +4,17 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class LearningLink implements Serializable
-{
+public class LearningLink implements Serializable {
     @SerializedName("title")
     private String mTitle;
     @SerializedName("url")
     private String mUrl;
 
-    public String getTitle()
-    {
+    public String getTitle() {
         return mTitle;
     }
 
-    public String getUrl()
-    {
+    public String getUrl() {
         return mUrl;
     }
 }

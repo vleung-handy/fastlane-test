@@ -16,8 +16,7 @@ import com.handy.portal.library.util.UIUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AvailableBookingElementView extends BookingElementView
-{
+public class AvailableBookingElementView extends BookingElementView {
     @BindView(R.id.booking_entry_payment)
     TextView mPayment;
 
@@ -45,11 +44,9 @@ public class AvailableBookingElementView extends BookingElementView
     @BindView(R.id.booking_list_entry_left_strip_indicator)
     ImageView mLeftStripIndicator;
 
-    public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent)
-    {
+    public View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent) {
         // Check if an existing view is being reused, otherwise inflate the view
-        if (convertView == null)
-        {
+        if (convertView == null) {
             convertView = LayoutInflater.from(parentContext)
                     .inflate(R.layout.element_available_booking_list_entry, parent, false);
         }
@@ -64,15 +61,12 @@ public class AvailableBookingElementView extends BookingElementView
                 parentContext.getString(R.string.bonus_payment_value));
 
         //Area
-        if (booking.isProxy())
-        {
+        if (booking.isProxy()) {
             mBookingAreaTextView.setText(booking.getLocationName());
         }
-        else
-        {
+        else {
             Address address = booking.getAddress();
-            if (address != null)
-            {
+            if (address != null) {
                 mBookingAreaTextView.setText(booking.isUK() ?
                         parentContext.getString(R.string.comma_formatted,
                                 address.getShortRegion(), address.getZip()) :
@@ -85,8 +79,7 @@ public class AvailableBookingElementView extends BookingElementView
 
         //Distance
         String formattedDistance = booking.getFormattedDistance();
-        if (formattedDistance != null)
-        {
+        if (formattedDistance != null) {
             mFormattedDistanceText.setText(formattedDistance);
             mFormattedDistanceText.setVisibility(View.VISIBLE);
         }
@@ -100,8 +93,7 @@ public class AvailableBookingElementView extends BookingElementView
 
         if (isRequested
                 && proRequestDisplayAttributes != null
-                && proRequestDisplayAttributes.getListingTitle() != null)
-        {
+                && proRequestDisplayAttributes.getListingTitle() != null) {
             mBookingMessageTitleView
                     .setBodyText(proRequestDisplayAttributes.getListingTitle())
                     .setVisibility(View.VISIBLE); //the layout is GONE by default
@@ -111,13 +103,11 @@ public class AvailableBookingElementView extends BookingElementView
             mLeftStripIndicator.setVisibility(View.VISIBLE);
 
             // Schedule Conflict
-            if (booking.canSwap())
-            {
+            if (booking.canSwap()) {
                 mBookingMessageTitleView.showSwapIcon();
             }
         }
-        else
-        {
+        else {
             mLeftStripIndicator.setVisibility(View.GONE);
             mBookingMessageTitleView.setVisibility(View.GONE);
         }
@@ -136,23 +126,19 @@ public class AvailableBookingElementView extends BookingElementView
         return convertView;
     }
 
-    public BookingMessageTitleView getBookingMessageTitleView()
-    {
+    public BookingMessageTitleView getBookingMessageTitleView() {
         return mBookingMessageTitleView;
     }
 
-    private void setPartnerText(String partner)
-    {
-        if (partner != null && partner.equalsIgnoreCase(PartnerNames.AIRBNB))
-        {
+    private void setPartnerText(String partner) {
+        if (partner != null && partner.equalsIgnoreCase(PartnerNames.AIRBNB)) {
             mPartnerText.setText(partner);
             mPartnerText.setVisibility(View.VISIBLE);
 
             // if the partner text is present, "you're requested" should not show up
             mBookingMessageTitleView.setVisibility(View.GONE);
         }
-        else
-        {
+        else {
             mPartnerText.setVisibility(View.GONE);
         }
     }

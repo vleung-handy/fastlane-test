@@ -10,47 +10,38 @@ import com.crashlytics.android.core.CrashlyticsCore;
 import dagger.ObjectGraph;
 import io.fabric.sdk.android.Fabric;
 
-public class TestBaseApplication extends BaseApplication
-{
+public class TestBaseApplication extends BaseApplication {
     @SuppressWarnings("deprecation")
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         super.onCreate();
         // Enable location service
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             Settings.Secure.putInt(getContentResolver(), Settings.Secure.LOCATION_MODE, Settings.Secure.LOCATION_MODE_HIGH_ACCURACY);
         }
-        else
-        {
+        else {
             Settings.Secure.putString(getContentResolver(), Settings.Secure.LOCATION_PROVIDERS_ALLOWED, "some string");
         }
     }
 
     @Override
-    protected void attachBaseContext(Context base)
-    {
+    protected void attachBaseContext(Context base) {
         //This is needed to make the unit tests work with multidexing
-        try
-        {
+        try {
             super.attachBaseContext(base);
         }
-        catch (RuntimeException ignored)
-        {
+        catch (RuntimeException ignored) {
             //Multidex support doesn't play well with Robolectric yet
         }
     }
 
     @Override
-    protected void createObjectGraph()
-    {
+    protected void createObjectGraph() {
         mGraph = ObjectGraph.create(new TestApplicationModule(this));
     }
 
     @Override
-    protected void startCrashlytics()
-    {
+    protected void startCrashlytics() {
         /*
         initializing a disabled Crashlytics instance
         to prevent "java.lang.IllegalStateException: Must Initialize Fabric before using singleton()"

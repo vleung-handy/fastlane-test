@@ -2,27 +2,22 @@ package com.handy.portal.logger.handylogger.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class PaymentsLog extends EventLog
-{
+public class PaymentsLog extends EventLog {
     private static final String EVENT_CONTEXT = "payments";
 
-    private PaymentsLog(String eventType)
-    {
+    private PaymentsLog(String eventType) {
         super(eventType, EVENT_CONTEXT);
     }
 
     //TODO agree on contract
-    public static class BatchTransaction extends PaymentsLog
-    {
+    public static class BatchTransaction extends PaymentsLog {
         private static final String EVENT_SUB_CONTEXT = "batch";
 
-        private BatchTransaction(final String eventType)
-        {
+        private BatchTransaction(final String eventType) {
             super(EVENT_SUB_CONTEXT + "_" + eventType);
         }
 
-        public static class SupportDialogSubmitted extends BatchTransaction
-        {
+        public static class SupportDialogSubmitted extends BatchTransaction {
             private static final String EVENT_TYPE = "payment_support_submitted";
 
             @SerializedName("machine_name")
@@ -40,8 +35,7 @@ public class PaymentsLog extends EventLog
 
             public SupportDialogSubmitted(final String batchId,
                                           final String paymentSupportItemMachineName,
-                                          final String otherText)
-            {
+                                          final String otherText) {
                 super(EVENT_TYPE);
                 mBatchId = batchId;
                 mPaymentSupportItemMachineName = paymentSupportItemMachineName;
@@ -49,8 +43,8 @@ public class PaymentsLog extends EventLog
             }
         }
 
-        public static class RequestReviewSubmitted extends BatchTransaction
-        {
+
+        public static class RequestReviewSubmitted extends BatchTransaction {
             private static final String EVENT_TYPE = "request_review_submitted";
 
             @SerializedName("machine_name")
@@ -60,8 +54,7 @@ public class PaymentsLog extends EventLog
             private String mBatchId;
 
             public RequestReviewSubmitted(final String batchId,
-                                          final String paymentSupportItemMachineName)
-            {
+                                          final String paymentSupportItemMachineName) {
                 super(EVENT_TYPE);
                 mBatchId = batchId;
                 mPaymentSupportItemMachineName = paymentSupportItemMachineName;
@@ -69,17 +62,15 @@ public class PaymentsLog extends EventLog
         }
     }
 
-    public static class BookingTransaction extends PaymentsLog
-    {
+
+    public static class BookingTransaction extends PaymentsLog {
         private static final String EVENT_SUB_CONTEXT = "booking";
 
-        private BookingTransaction(final String eventType)
-        {
+        private BookingTransaction(final String eventType) {
             super(EVENT_SUB_CONTEXT + "_" + eventType);
         }
 
-        public static class SupportDialogSubmitButtonPressed extends BookingTransaction
-        {
+        public static class SupportDialogSubmitButtonPressed extends BookingTransaction {
             private static final String EVENT_TYPE = "payment_support_submitted";
 
             @SerializedName("machine_name")
@@ -97,8 +88,7 @@ public class PaymentsLog extends EventLog
 
             public SupportDialogSubmitButtonPressed(final String bookingId,
                                                     final String paymentSupportItemMachineName,
-                                                    final String otherText)
-            {
+                                                    final String otherText) {
                 super(EVENT_TYPE);
                 mBookingId = bookingId;
                 mPaymentSupportItemMachineName = paymentSupportItemMachineName;
@@ -107,9 +97,9 @@ public class PaymentsLog extends EventLog
         }
     }
 
+
     //in the context of the payment batches screen
-    public static class BatchSelected extends PaymentsLog
-    {
+    public static class BatchSelected extends PaymentsLog {
         private static final String EVENT_TYPE = "batch_selected";
 
         @SerializedName("current_week")
@@ -117,52 +107,46 @@ public class PaymentsLog extends EventLog
         @SerializedName("list_index")
         private int mListIndex;
 
-        public BatchSelected(boolean currentWeek, int listIndex)
-        {
+        public BatchSelected(boolean currentWeek, int listIndex) {
             super(EVENT_TYPE);
             mCurrentWeek = currentWeek;
             mListIndex = listIndex;
         }
     }
 
+
     /*
     in context of batch payment screen
     TODO may want to make this extend BatchTransaction log.
     need discussion on how this log is currently being used
      */
-    public static class DetailSelected extends PaymentsLog
-    {
+    public static class DetailSelected extends PaymentsLog {
         private static final String EVENT_TYPE = "detail_selected";
 
         @SerializedName("payment_type")
         private String mPaymentType;
 
-        public DetailSelected(String paymentType)
-        {
+        public DetailSelected(String paymentType) {
             super(EVENT_TYPE);
             mPaymentType = paymentType;
         }
     }
 
 
-    public static class HelpSelected extends PaymentsLog
-    {
+    public static class HelpSelected extends PaymentsLog {
         private static final String EVENT_TYPE = "help_selected";
 
-        public HelpSelected()
-        {
+        public HelpSelected() {
             super(EVENT_TYPE);
         }
     }
 
 
     //in the context of the payment batches screen
-    public static class FeeDetailSelected extends PaymentsLog
-    {
+    public static class FeeDetailSelected extends PaymentsLog {
         private static final String EVENT_TYPE = "fee_detail_selected";
 
-        public FeeDetailSelected()
-        {
+        public FeeDetailSelected() {
             super(EVENT_TYPE);
         }
     }

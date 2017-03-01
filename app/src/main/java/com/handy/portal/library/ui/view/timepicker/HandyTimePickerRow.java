@@ -13,8 +13,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-class HandyTimePickerRow extends FrameLayout
-{
+class HandyTimePickerRow extends FrameLayout {
     @BindView(R.id.gaps)
     ViewGroup mGapViews;
     @BindView(R.id.cells)
@@ -28,53 +27,42 @@ class HandyTimePickerRow extends FrameLayout
             final int startHour,
             final int endHour,
             @NonNull final HandyTimePickerCell.TimeClickListener timeClickListener
-    )
-    {
+    ) {
         super(context);
         mStartHour = startHour;
         mEndHour = endHour;
         init(timeClickListener);
     }
 
-    private void init(final HandyTimePickerCell.TimeClickListener timeClickListener)
-    {
+    private void init(final HandyTimePickerCell.TimeClickListener timeClickListener) {
         inflate(getContext(), R.layout.element_time_picker_row, this);
         ButterKnife.bind(this);
-        if (mEndHour < mStartHour)
-        {
+        if (mEndHour < mStartHour) {
             return;
         }
-        for (int hour = mStartHour; hour <= mEndHour; hour++)
-        {
+        for (int hour = mStartHour; hour <= mEndHour; hour++) {
             mTimePickerCellViews.addView(new HandyTimePickerCell(getContext(), hour,
                     timeClickListener));
-            if (hour < mEndHour)
-            {
+            if (hour < mEndHour) {
                 LayoutInflater.from(getContext())
                         .inflate(R.layout.element_time_picker_gap, mGapViews, true);
             }
         }
     }
 
-    public void setGapVisibility(final int position, final boolean isVisible)
-    {
-        if (position >= 0 && position < mGapViews.getChildCount())
-        {
+    public void setGapVisibility(final int position, final boolean isVisible) {
+        if (position >= 0 && position < mGapViews.getChildCount()) {
             mGapViews.getChildAt(position).setVisibility(isVisible ? VISIBLE : INVISIBLE);
         }
     }
 
     @Nullable
-    public HandyTimePickerCell getCellForHour(final int hour)
-    {
-        if (covers(hour))
-        {
-            for (int i = 0; i < mTimePickerCellViews.getChildCount(); i++)
-            {
+    public HandyTimePickerCell getCellForHour(final int hour) {
+        if (covers(hour)) {
+            for (int i = 0; i < mTimePickerCellViews.getChildCount(); i++) {
                 final HandyTimePickerCell timePickerCell =
                         (HandyTimePickerCell) mTimePickerCellViews.getChildAt(i);
-                if (timePickerCell.getHour() == hour)
-                {
+                if (timePickerCell.getHour() == hour) {
                     return timePickerCell;
                 }
             }
@@ -82,8 +70,7 @@ class HandyTimePickerRow extends FrameLayout
         return null;
     }
 
-    private boolean covers(final int hour)
-    {
+    private boolean covers(final int hour) {
         return hour >= mStartHour && hour <= mEndHour;
     }
 }

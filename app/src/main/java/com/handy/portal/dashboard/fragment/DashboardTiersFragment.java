@@ -30,8 +30,7 @@ import com.handy.portal.logger.handylogger.model.DashboardTiersLog;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DashboardTiersFragment extends ActionBarFragment implements DashboardViewPagerListener
-{
+public class DashboardTiersFragment extends ActionBarFragment implements DashboardViewPagerListener {
     @BindView(R.id.dashboard_tiers_header_view)
     DashboardTiersHeaderView mDashboardTiersHeaderView;
     @BindView(R.id.region_tiers_view_pager)
@@ -48,8 +47,7 @@ public class DashboardTiersFragment extends ActionBarFragment implements Dashboa
     private int mCurrentPage = 0;
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mEvaluation = (ProviderEvaluation) getArguments().getSerializable(BundleKeys.PROVIDER_EVALUATION);
         mTiersTitle = getArguments().getString(BundleKeys.TIERS_TITLE);
@@ -57,8 +55,7 @@ public class DashboardTiersFragment extends ActionBarFragment implements Dashboa
 
     @Nullable
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
-    {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_dashboard_tiers, container, false);
@@ -69,17 +66,14 @@ public class DashboardTiersFragment extends ActionBarFragment implements Dashboa
 
     @SuppressWarnings("deprecation")
     @Override
-    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setOptionsMenuEnabled(true);
         setBackButtonEnabled(true);
         setViewPager(mRegionTiersViewPager);
 
-        if (TextUtils.isNullOrEmpty(mTiersTitle))
-        { setActionBarTitle(R.string.tier); }
-        else
-        { setActionBarTitle(mTiersTitle); }
+        if (TextUtils.isNullOrEmpty(mTiersTitle)) { setActionBarTitle(R.string.tier); }
+        else { setActionBarTitle(mTiersTitle); }
 
         if (mEvaluation == null || mEvaluation.getPayRates() == null) { return; }
 
@@ -90,45 +84,38 @@ public class DashboardTiersFragment extends ActionBarFragment implements Dashboa
         mRegionTiersViewPager.setPageMargin((int) getResources().getDimension(R.dimen.ratings_view_pager_margin));
         mRegionTiersIndicatorView.setViewPager(mRegionTiersViewPager);
 
-        for (ProviderEvaluation.TiersServiceDescription tiersServiceDescription : mEvaluation.getPayRates().getTiersServiceDescriptions())
-        {
+        for (ProviderEvaluation.TiersServiceDescription tiersServiceDescription : mEvaluation.getPayRates().getTiersServiceDescriptions()) {
             DashboardTiersHelp dashboardTiersHelpView = new DashboardTiersHelp(getContext());
             dashboardTiersHelpView.setDisplay(tiersServiceDescription.getTitle(), tiersServiceDescription.getBody());
             mTiersHelpLayout.addView(dashboardTiersHelpView);
         }
 
         // Doesn't work when setting to textview, works programmatically
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             mTiersLegalText.setText(Html.fromHtml(getString(R.string.tiers_legal_text_html),
                     Html.FROM_HTML_MODE_LEGACY));
         }
-        else
-        {
+        else {
             mTiersLegalText.setText(Html.fromHtml(getString(R.string.tiers_legal_text_html)));
         }
     }
 
     @Override
-    public void setViewPager(final ViewPager view)
-    {
+    public void setViewPager(final ViewPager view) {
         mRegionTiersViewPager.addOnPageChangeListener(this);
     }
 
     @Override
-    public void setCurrentItem(final int item)
-    {
+    public void setCurrentItem(final int item) {
         mCurrentPage = item;
     }
 
     @Override
     public void onPageScrolled(final int position, final float positionOffset,
-                               final int positionOffsetPixels)
-    { }
+                               final int positionOffsetPixels) { }
 
     @Override
-    public void onPageSelected(final int position)
-    {
+    public void onPageSelected(final int position) {
         mCurrentPage = position;
         updateHeader();
     }
@@ -136,19 +123,15 @@ public class DashboardTiersFragment extends ActionBarFragment implements Dashboa
     @Override
     public void onPageScrollStateChanged(final int state) { }
 
-    private void updateHeader()
-    {
+    private void updateHeader() {
         if (mEvaluation != null && mEvaluation.getPayRates() != null &&
                 mEvaluation.getPayRates().getIncentives() != null &&
-                !mEvaluation.getPayRates().getIncentives().isEmpty())
-        {
+                !mEvaluation.getPayRates().getIncentives().isEmpty()) {
             ProviderEvaluation.Incentive currentIncentive =
                     mEvaluation.getPayRates().getIncentives().get(mCurrentPage);
 
-            if (!Strings.isNullOrEmpty(currentIncentive.getType()))
-            {
-                switch (currentIncentive.getType())
-                {
+            if (!Strings.isNullOrEmpty(currentIncentive.getType())) {
+                switch (currentIncentive.getType()) {
                     case ProviderEvaluation.Incentive.TIERED_TYPE:
                     case ProviderEvaluation.Incentive.HANDYMEN_TIERED_TYPE:
                         ProviderEvaluation.Rating weeklyRating = mEvaluation.getWeeklyRating();
@@ -172,8 +155,7 @@ public class DashboardTiersFragment extends ActionBarFragment implements Dashboa
             bus.post(new LogEvent.AddLogEvent(new DashboardTiersLog.TiersCardViewedLog(
                     currentIncentive.getRegionName(), currentIncentive.getServiceName())));
         }
-        else
-        {
+        else {
             Crashlytics.logException(new NullPointerException("Evaluation or incentives was" +
                     "null/empty"));
         }

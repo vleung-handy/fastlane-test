@@ -25,8 +25,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-public class TestDataManager extends DataManager
-{
+public class TestDataManager extends DataManager {
     public static final String BOOKING_ERROR_ID = "111";
     public static final String BOOKING_UNCLAIMED_ID = "222";
     public static final String BOOKING_IN_PROGRESS_ID = "333";
@@ -35,47 +34,38 @@ public class TestDataManager extends DataManager
                            final HandyRetrofitEndpoint endpoint,
                            final StripeRetrofitService stripeService,
                            final DynamicEndpoint dynamicEndpoint,
-                           final DynamicEndpointService dynamicEndpointService)
-    {
+                           final DynamicEndpointService dynamicEndpointService) {
         super(service, endpoint, stripeService, dynamicEndpoint, dynamicEndpointService);
     }
 
-    public void getSetupData(final Callback<SetupData> cb)
-    {
+    public void getSetupData(final Callback<SetupData> cb) {
         cb.onSuccess(new SetupData());
     }
 
     @Override
-    public void getConfiguration(final Callback<ConfigurationResponse> cb)
-    {
+    public void getConfiguration(final Callback<ConfigurationResponse> cb) {
         ConfigurationResponse configurationResponse = spy(new ConfigurationResponse());
         cb.onSuccess(configurationResponse);
     }
 
     @Override
-    public void getProviderEvaluation(final String providerId, final Callback<ProviderEvaluation> cb)
-    {
+    public void getProviderEvaluation(final String providerId, final Callback<ProviderEvaluation> cb) {
         ProviderEvaluation evaluation = createProviderEvaluation();
         cb.onSuccess(evaluation);
     }
 
     @Override
-    public void getBookingDetails(final String bookingId, final Booking.BookingType type, final Callback<Booking> cb)
-    {
-        switch (bookingId)
-        {
-            case BOOKING_ERROR_ID:
-            {
+    public void getBookingDetails(final String bookingId, final Booking.BookingType type, final Callback<Booking> cb) {
+        switch (bookingId) {
+            case BOOKING_ERROR_ID: {
                 cb.onError(new DataManagerError(DataManagerError.Type.OTHER, "error"));
                 break;
             }
-            case BOOKING_UNCLAIMED_ID:
-            {
+            case BOOKING_UNCLAIMED_ID: {
                 cb.onSuccess(createMockBooking(BOOKING_UNCLAIMED_ID, BookingProgress.READY_FOR_CLAIM));
                 break;
             }
-            case BOOKING_IN_PROGRESS_ID:
-            {
+            case BOOKING_IN_PROGRESS_ID: {
                 cb.onSuccess(createMockBooking(BOOKING_IN_PROGRESS_ID, BookingProgress.READY_FOR_CHECK_OUT));
                 break;
             }
@@ -83,20 +73,17 @@ public class TestDataManager extends DataManager
     }
 
     @Override
-    public void requestSlt(final String phoneNumber, final Callback<SuccessWrapper> cb)
-    {
+    public void requestSlt(final String phoneNumber, final Callback<SuccessWrapper> cb) {
         cb.onSuccess(new SuccessWrapper(true));
     }
 
     @Override
-    public void requestLoginWithSlt(final String n, final String sig, final String slt, final Callback<LoginDetails> cb)
-    {
+    public void requestLoginWithSlt(final String n, final String sig, final String slt, final Callback<LoginDetails> cb) {
         cb.onSuccess(new LoginDetails(true, "x", "x"));
     }
 
     // Factory Methods
-    public static ProviderEvaluation createProviderEvaluation()
-    {
+    public static ProviderEvaluation createProviderEvaluation() {
         ProviderEvaluation.Rating lifeRating = new ProviderEvaluation.Rating(40, 44, 42, 30, 3.6,
                 "positive", "", new Date(System.currentTimeMillis() - DateUtils.YEAR_IN_MILLIS), new Date());
         ProviderEvaluation.Rating rollingRating = new ProviderEvaluation.Rating(16, 17, 15, 10, 4.0,
@@ -115,8 +102,7 @@ public class TestDataManager extends DataManager
         return spy(new ProviderEvaluation(rollingRating, lifeRating, weekRating, payRates, 4.2, ratings, feedback, ratings));
     }
 
-    private static ProviderFeedback createProviderFeedback()
-    {
+    private static ProviderFeedback createProviderFeedback() {
         ProviderFeedback.FeedbackTip textTip = new ProviderFeedback.FeedbackTip(ProviderFeedback.FeedbackTip.DATA_TYPE_TEXT, "Do a better job next time :P");
         ProviderFeedback.FeedbackTip videoTip = new ProviderFeedback.FeedbackTip(ProviderFeedback.FeedbackTip.DATA_TYPE_VIDEO_ID, "fake_id");
         List<ProviderFeedback.FeedbackTip> tips = new ArrayList<>();
@@ -125,8 +111,7 @@ public class TestDataManager extends DataManager
         return new ProviderFeedback("Feedback", "Tips", tips);
     }
 
-    private static ProviderEvaluation.PayRates createPayRates()
-    {
+    private static ProviderEvaluation.PayRates createPayRates() {
         List<ProviderEvaluation.Incentive> incentives = new ArrayList<>();
         incentives.add(new ProviderEvaluation.Incentive(
                 "Region Name", "Cleaning", new ArrayList<ProviderEvaluation.Tier>(), 0, 1, "$",
@@ -137,8 +122,7 @@ public class TestDataManager extends DataManager
         return new ProviderEvaluation.PayRates(incentives, descriptions);
     }
 
-    private static Booking createMockBooking(String bookingId, @BookingProgress.Progress int bookingProgress)
-    {
+    private static Booking createMockBooking(String bookingId, @BookingProgress.Progress int bookingProgress) {
         Booking booking = mock(Booking.class);
         when(booking.getId()).thenReturn(bookingId);
         when(booking.getStartDate()).thenReturn(new Date(System.currentTimeMillis()));
@@ -150,8 +134,7 @@ public class TestDataManager extends DataManager
         return booking;
     }
 
-    private static List<Booking.BookingInstructionUpdateRequest> createCustomerPreferences()
-    {
+    private static List<Booking.BookingInstructionUpdateRequest> createCustomerPreferences() {
         List<Booking.BookingInstructionUpdateRequest> customerPreferences = new ArrayList<>();
 
         customerPreferences.add(new Booking.BookingInstructionUpdateRequest());

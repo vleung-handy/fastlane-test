@@ -29,17 +29,14 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
-public class CancelTest
-{
+public class CancelTest {
     private static final TestUser TEST_USER = TestUsers.CANCEL_BOOKING_TEST_PROVIDER;
 
     @Rule
     public ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<SplashActivity>(
-            SplashActivity.class)
-    {
+            SplashActivity.class) {
         @Override
-        protected Intent getActivityIntent()
-        {
+        protected Intent getActivityIntent() {
             Intent intent = super.getActivityIntent();
             intent.putExtra(PrefsKey.AUTH_TOKEN, TEST_USER.getPersistenceToken());
             return intent;
@@ -47,14 +44,12 @@ public class CancelTest
     };
 
     @After
-    public void tearDown()
-    {
+    public void tearDown() {
         AppInteractionUtil.logOut();
     }
 
     @Test
-    public void testBookingCancel()
-    {
+    public void testBookingCancel() {
         ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         ViewUtil.waitForViewNotVisible(R.id.loading_overlay, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
 

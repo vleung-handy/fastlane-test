@@ -18,8 +18,7 @@ import butterknife.ButterKnife;
 /**
  * The banner view that is located at the top of the bookings list
  */
-public class BookingsBannerView extends LinearLayout
-{
+public class BookingsBannerView extends LinearLayout {
     @BindView(R.id.layout_bookings_banner_title)
     TextView mBannerTitleText;
 
@@ -32,62 +31,54 @@ public class BookingsBannerView extends LinearLayout
     @BindView(R.id.layout_bookings_banner_content)
     View mBannerContent;
 
-    public BookingsBannerView(final Context context)
-    {
+    public BookingsBannerView(final Context context) {
         super(context);
         init();
     }
 
-    public BookingsBannerView(final Context context, final AttributeSet attrs)
-    {
+    public BookingsBannerView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public BookingsBannerView(final Context context, final AttributeSet attrs, final int defStyleAttr)
-    {
+    public BookingsBannerView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public BookingsBannerView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
-    {
+    public BookingsBannerView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), R.layout.layout_bookings_banner, this);
         ButterKnife.bind(this);
     }
 
-    public BookingsBannerView setTitleText(String titleText)
-    {
+    public BookingsBannerView setTitleText(String titleText) {
         mBannerTitleText.setText(titleText);
         return this;
     }
 
-    public BookingsBannerView setDescriptionText(String descriptionText)
-    {
+    public BookingsBannerView setDescriptionText(String descriptionText) {
         mBannerDescriptionText.setText(descriptionText);
         return this;
     }
 
-    public BookingsBannerView setLeftDrawable(Drawable drawable)
-    {
+    public BookingsBannerView setLeftDrawable(Drawable drawable) {
         mBannerLeftImage.setImageDrawable(drawable);
         return this;
     }
 
     /**
      * need this for a hack to make this banner scroll with a listview
+     *
      * @param visible
      * @return
      */
-    public BookingsBannerView setContentVisible(boolean visible)
-    {
+    public BookingsBannerView setContentVisible(boolean visible) {
         mBannerContent.setVisibility(visible ? VISIBLE : GONE);
         return this;
     }

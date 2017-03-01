@@ -58,8 +58,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSuccess> extends ActionBarFragment
-{
+public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSuccess> extends ActionBarFragment {
     private static int SNACK_BAR_DURATION = 500;
 
     @Inject
@@ -82,11 +81,9 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     @DrawableRes
     protected int mMessageIconRes = Integer.MIN_VALUE;
-    private Runnable mRefreshRunnable = new Runnable()
-    {
+    private Runnable mRefreshRunnable = new Runnable() {
         @Override
-        public void run()
-        {
+        public void run() {
             setRefreshing(true);
         }
     };
@@ -112,10 +109,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     protected abstract void beforeRequestBookings();
 
-    protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
-    {
-        if (mMessage != null)
-        {
+    protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings) {
+        if (mMessage != null) {
             final Snackbar snackbar = Snackbar.make(
                     mBookingsContent,
                     mMessage, Snackbar.LENGTH_LONG
@@ -124,23 +119,19 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             snackbar.getView().setBackgroundColor(ContextCompat.getColor(getContext(), R.color.snack_bar_gray));
 
             //set the snack bar image
-            if (mMessageIconRes > Integer.MIN_VALUE)
-            {
+            if (mMessageIconRes > Integer.MIN_VALUE) {
                 int padding = getResources().getDimensionPixelOffset(R.dimen.default_padding);
                 UIUtils.setSnackbarImage(snackbar, mMessageIconRes, padding);
             }
 
-            new Handler().postDelayed(new Runnable()
-            {
+            new Handler().postDelayed(new Runnable() {
                 @Override
-                public void run()
-                {
+                public void run() {
                     snackbar.show();
                 }
             }, SNACK_BAR_DURATION);
 
-            if (mMessage.equals(getString(R.string.job_no_longer_available)))
-            {
+            if (mMessage.equals(getString(R.string.job_no_longer_available))) {
                 final Bundle extras = getArguments().getBundle(BundleKeys.EXTRAS);
                 bus.post(new LogEvent.AddLogEvent(
                         new AvailableJobsLog.UnavailableJobNoticeShown(extras)));
@@ -166,8 +157,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     protected ProviderSettings mProviderSettings;
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mMessage = getArguments().getString(BundleKeys.MESSAGE);
@@ -176,28 +166,23 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
+                             Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(getFragmentResourceId(), null);
         ButterKnife.bind(this, view);
 
         //Optional param, needs to be validated
-        if (getArguments() != null)
-        {
+        if (getArguments() != null) {
             long targetDateTime = getArguments().getLong(BundleKeys.DATE_EPOCH_TIME);
-            if (targetDateTime > 0)
-            {
+            if (targetDateTime > 0) {
                 mSelectedDay = DateTimeUtils.getDateWithoutTime(new Date(targetDateTime));
             }
         }
 
         final SwipeRefreshLayout.OnRefreshListener refreshListener =
-                new SwipeRefreshLayout.OnRefreshListener()
-                {
+                new SwipeRefreshLayout.OnRefreshListener() {
                     @Override
-                    public void onRefresh()
-                    {
+                    public void onRefresh() {
                         requestBookingsForSelectedDay(false, false);
                     }
                 };
@@ -211,24 +196,20 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
 
-        if (!MainActivity.clearingBackStack)
-        {
+        if (!MainActivity.clearingBackStack) {
             bus.post(new ProviderSettingsEvent.RequestProviderSettings());
 
             initDateButtons();
 
             if (mSelectedDay == null || (mDateDateButtonViewMap != null
-                    && !mDateDateButtonViewMap.containsKey(mSelectedDay)))
-            {
+                    && !mDateDateButtonViewMap.containsKey(mSelectedDay))) {
                 mSelectedDay = DateTimeUtils.getDateWithoutTime(new Date());
             }
 
-            if (mDateDateButtonViewMap != null && mDateDateButtonViewMap.containsKey(mSelectedDay))
-            {
+            if (mDateDateButtonViewMap != null && mDateDateButtonViewMap.containsKey(mSelectedDay)) {
                 mDateDateButtonViewMap.get(mSelectedDay).setChecked(true);
             }
 
@@ -237,61 +218,50 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     }
 
     @OnClick(R.id.try_again_button)
-    public void doRequestBookingsAgain()
-    {
+    public void doRequestBookingsAgain() {
         requestBookingsForSelectedDay(true, true);
     }
 
-    private void requestAllBookings()
-    {
+    private void requestAllBookings() {
         // if we're using the dates pager, this will be triggered after calling
         // NewDateButton.select() on the initial date
-        if (getDatesPagerAdapter() == null)
-        {
+        if (getDatesPagerAdapter() == null) {
             requestBookingsForSelectedDay(true, true);
         }
 
         requestBookingsForOtherDays(mSelectedDay);
     }
 
-    private void requestBookingsForSelectedDay(boolean refreshing, boolean useCachedIfPresent)
-    {
-        if (mSelectedDay != null)
-        {
+    private void requestBookingsForSelectedDay(boolean refreshing, boolean useCachedIfPresent) {
+        if (mSelectedDay != null) {
             requestBookings(Lists.newArrayList(mSelectedDay), refreshing, useCachedIfPresent);
         }
     }
 
-    private void requestBookingsForOtherDays(Date dayToExclude)
-    {
+    private void requestBookingsForOtherDays(Date dayToExclude) {
         List<Date> dates = Lists.newArrayList();
-        for (int i = 0; i < numberOfDaysToDisplay(); i++)
-        {
+        for (int i = 0; i < numberOfDaysToDisplay(); i++) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
             calendar.add(Calendar.DATE, i);
             Date day = DateTimeUtils.getDateWithoutTime(calendar.getTime());
 
-            if (!day.equals(dayToExclude))
-            {
+            if (!day.equals(dayToExclude)) {
                 dates.add(day);
             }
         }
         requestBookings(dates, false, true);
     }
 
-    private void requestBookings(List<Date> dates, boolean refreshing, boolean useCachedIfPresent)
-    {
+    private void requestBookings(List<Date> dates, boolean refreshing, boolean useCachedIfPresent) {
         Crashlytics.log("Requesting bookings for the following dates" + dates.toString());
-        if (mFetchErrorView == null)
-        {
+        if (mFetchErrorView == null) {
             Crashlytics.logException(
                     new NullPointerException("All views are null due to ButterKnife unbind."));
             return;
         }
         mFetchErrorView.setVisibility(View.GONE);
-        if (refreshing)
-        {
+        if (refreshing) {
             getBookingListView().setAdapter(null);
             getNoBookingsSwipeRefreshLayout().setVisibility(View.GONE);
             // this delay will prevent the refreshing icon to flicker when loading cached data
@@ -300,11 +270,9 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         requestBookings(dates, useCachedIfPresent);
     }
 
-    protected void handleBookingsRetrieved(T event)
-    {
+    protected void handleBookingsRetrieved(T event) {
         BookingsWrapper bookingsWrapper = event.bookingsWrapper;
-        if (bookingsWrapper == null || event.day == null)
-        {
+        if (bookingsWrapper == null || event.day == null) {
             Crashlytics.logException(new Exception("on receive bookings success bookings wrapper or day is null"));
             return;
         }
@@ -313,59 +281,47 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         List<Booking> bookings = event.bookingsWrapper.getBookings();
         Collections.sort(bookings);
 
-        for (Booking b : bookings)
-        {
-            if (b.getZipClusterId() != null)
-            {
+        for (Booking b : bookings) {
+            if (b.getZipClusterId() != null) {
                 bus.post(new BookingEvent.RequestZipClusterPolygons(b.getZipClusterId()));
             }
         }
 
-        if (mDateDateButtonViewMap != null)
-        {
+        if (mDateDateButtonViewMap != null) {
             DateButtonView dateButtonView = mDateDateButtonViewMap.get(event.day);
-            if (dateButtonView != null)
-            {
+            if (dateButtonView != null) {
                 dateButtonView.showRequestedIndicator(shouldShowRequestedIndicator(bookings));
                 dateButtonView.showClaimedIndicator(shouldShowClaimedIndicator(bookings));
             }
-            else
-            {
+            else {
                 Crashlytics.logException(new RuntimeException("Date button for " + event.day + " not found"));
             }
         }
 
-        if (getDatesPagerAdapter() != null && shouldShowClaimedIndicator(bookings))
-        {
+        if (getDatesPagerAdapter() != null && shouldShowClaimedIndicator(bookings)) {
             getDatesPagerAdapter().showClaimIndicatorForDate(event.day);
         }
 
-        if (mSelectedDay != null && mSelectedDay.equals(event.day))
-        {
+        if (mSelectedDay != null && mSelectedDay.equals(event.day)) {
             setRefreshing(false);
             displayBookings(bookingsWrapper, mSelectedDay);
         }
     }
 
-    protected void handleBookingsRetrievalError(HandyEvent.ReceiveBookingsError event, int errorStateStringId)
-    {
-        if (event.days.contains(mSelectedDay))
-        {
+    protected void handleBookingsRetrievalError(HandyEvent.ReceiveBookingsError event, int errorStateStringId) {
+        if (event.days.contains(mSelectedDay)) {
             setRefreshing(false);
-            if (event.error != null && event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
-            {
+            if (event.error != null && event.error.getType() == DataManager.DataManagerError.Type.NETWORK) {
                 mErrorText.setText(R.string.error_fetching_connectivity_issue);
             }
-            else
-            {
+            else {
                 mErrorText.setText(errorStateStringId);
             }
             mFetchErrorView.setVisibility(View.VISIBLE);
         }
     }
 
-    protected void initDateButtons()
-    {
+    protected void initDateButtons() {
         LinearLayout datesLayout = getDatesLayout();
         datesLayout.removeAllViews();
 
@@ -373,8 +329,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
         Context context = getActivity();
 
-        for (int i = 0; i < numberOfDaysToDisplay(); i++)
-        {
+        for (int i = 0; i < numberOfDaysToDisplay(); i++) {
             LayoutInflater.from(context).inflate(R.layout.element_date_button, datesLayout);
             final DateButtonView dateButtonView = (DateButtonView) datesLayout.getChildAt(datesLayout.getChildCount() - 1);
 
@@ -384,10 +339,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             final Date day = DateTimeUtils.getDateWithoutTime(calendar.getTime());
 
             dateButtonView.init(day);
-            dateButtonView.setOnClickListener(new View.OnClickListener()
-            {
-                public void onClick(View v)
-                {
+            dateButtonView.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View v) {
                     onDateClicked(day);
                 }
             });
@@ -396,21 +349,17 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         }
     }
 
-    protected void onDateClicked(final Date day)
-    {
+    protected void onDateClicked(final Date day) {
         bus.post(new HandyEvent.DateClicked(getTrackingType(), day));
         selectDay(day);
         beforeRequestBookings();
         requestBookings(Lists.newArrayList(day), true, true);
     }
 
-    private void selectDay(Date day)
-    {
-        if (mDateDateButtonViewMap != null)
-        {
+    private void selectDay(Date day) {
+        if (mDateDateButtonViewMap != null) {
             DateButtonView selectedDateButtonView = mDateDateButtonViewMap.get(mSelectedDay);
-            if (selectedDateButtonView != null)
-            {
+            if (selectedDateButtonView != null) {
                 selectedDateButtonView.setChecked(false);
             }
             mDateDateButtonViewMap.get(day).setChecked(true);
@@ -421,8 +370,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     /**
      * updates the bookings view with the given list of bookings for the given date
      */
-    protected void displayBookings(@NonNull BookingsWrapper bookingsWrapper, @NonNull Date dateOfBookings)
-    {
+    protected void displayBookings(@NonNull BookingsWrapper bookingsWrapper, @NonNull Date dateOfBookings) {
         List<Booking> bookings = bookingsWrapper.getBookings();
         mBookingsForSelectedDay = bookings;
         getBookingListView().populateList(bookings, getBookingElementViewClass());
@@ -431,23 +379,17 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         afterDisplayBookings(bookings, dateOfBookings);
     }
 
-    private void initListClickListener()
-    {
-        getBookingListView().setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+    private void initListClickListener() {
+        getBookingListView().setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> adapter, View view, int position, long id)
-            {
+            public void onItemClick(AdapterView<?> adapter, View view, int position, long id) {
                 Booking booking = (Booking) adapter.getItemAtPosition(position);
-                if (booking != null)
-                {
+                if (booking != null) {
                     int oneBasedIndex = position + 1;
-                    if (getTrackingType().equalsIgnoreCase(getString(R.string.available_job)))
-                    {
+                    if (getTrackingType().equalsIgnoreCase(getString(R.string.available_job))) {
                         bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.Clicked(booking, oneBasedIndex)));
                     }
-                    else if (getTrackingType().equalsIgnoreCase(getString(R.string.scheduled_job)))
-                    {
+                    else if (getTrackingType().equalsIgnoreCase(getString(R.string.scheduled_job))) {
                         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.Clicked(booking, oneBasedIndex)));
                     }
                     bus.post(new HandyEvent.BookingSelected(getTrackingType(), booking.getId()));
@@ -457,8 +399,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         });
     }
 
-    private void showBookingDetails(Booking booking)
-    {
+    private void showBookingDetails(Booking booking) {
         Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
         arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
@@ -469,8 +410,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 TransitionStyle.JOB_LIST_TO_DETAILS, true));
     }
 
-    private void setRefreshing(final boolean refreshing)
-    {
+    private void setRefreshing(final boolean refreshing) {
         mRefreshLayout.setRefreshing(refreshing);
         getNoBookingsSwipeRefreshLayout().setRefreshing(refreshing);
     }

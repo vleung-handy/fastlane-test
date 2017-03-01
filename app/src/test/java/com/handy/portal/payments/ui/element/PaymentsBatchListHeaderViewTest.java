@@ -17,8 +17,7 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class PaymentsBatchListHeaderViewTest extends RobolectricGradleTestWrapper
-{
+public class PaymentsBatchListHeaderViewTest extends RobolectricGradleTestWrapper {
 
     private PaymentsBatchListHeaderView batchListHeaderView;
     private View remainingRow;
@@ -26,8 +25,7 @@ public class PaymentsBatchListHeaderViewTest extends RobolectricGradleTestWrappe
     private PaymentBatches paymentBatches;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         batchListHeaderView = (PaymentsBatchListHeaderView) LayoutInflater
                 .from(Robolectric.setupActivity(TestActivity.class)).inflate(R.layout.element_payments_batch_list_current_week_header, null);
         remainingRow = batchListHeaderView.findViewById(R.id.payments_current_week_remaining_fees_row);
@@ -39,8 +37,7 @@ public class PaymentsBatchListHeaderViewTest extends RobolectricGradleTestWrappe
     }
 
     @Test
-    public void shouldNotDisplayRemainingIfItIsZero()
-    {
+    public void shouldNotDisplayRemainingIfItIsZero() {
         when(neoPaymentBatch.getRemainingFeeAmount()).thenReturn(0);
         batchListHeaderView.updateDisplay(paymentBatches.getNeoPaymentBatches()[0]);
 
@@ -48,8 +45,7 @@ public class PaymentsBatchListHeaderViewTest extends RobolectricGradleTestWrappe
     }
 
     @Test
-    public void shouldDisplayRemainingIfItIsNotZero()
-    {
+    public void shouldDisplayRemainingIfItIsNotZero() {
         when(neoPaymentBatch.getRemainingFeeAmount()).thenReturn(100);
         batchListHeaderView.updateDisplay(paymentBatches.getNeoPaymentBatches()[0]);
 

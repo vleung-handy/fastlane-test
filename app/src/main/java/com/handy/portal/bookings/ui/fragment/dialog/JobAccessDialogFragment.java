@@ -21,11 +21,10 @@ import butterknife.OnClick;
 
 /**
  * parent of the early access and job access unlocked dialog fragments
- *
+ * <p>
  * has a header image, a title, a subtitle and an action button
  */
-public abstract class JobAccessDialogFragment extends PopupDialogFragment
-{
+public abstract class JobAccessDialogFragment extends PopupDialogFragment {
     @BindView(R.id.fragment_dialog_job_access_title)
     TextView mTitle;
     @BindView(R.id.fragment_dialog_job_access_description)
@@ -36,13 +35,14 @@ public abstract class JobAccessDialogFragment extends PopupDialogFragment
     Button mActionButton;
 
     protected abstract BookingsWrapper.PriorityAccessInfo getPriorityAccessFromBundle();
+
     protected abstract int getHeaderImageResourceId();
+
     protected abstract int getActionButtonTextResourceId();
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(final Bundle savedInstanceState)
-    {
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
         dialog.setCanceledOnTouchOutside(true);
         return dialog;
@@ -51,18 +51,15 @@ public abstract class JobAccessDialogFragment extends PopupDialogFragment
     @NonNull
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
+                             Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_dialog_job_access, container, false);
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         BookingsWrapper.PriorityAccessInfo priorityAccessInfo = getPriorityAccessFromBundle();
-        if(priorityAccessInfo == null)
-        {
+        if (priorityAccessInfo == null) {
             Crashlytics.logException(new Exception("Priority access is null in early access trial dialog fragment"));
             dismiss();
             return;
@@ -73,25 +70,21 @@ public abstract class JobAccessDialogFragment extends PopupDialogFragment
         updateDisplayWithPriorityAccess(priorityAccessInfo);
     }
 
-    private void updateActionButtonText()
-    {
+    private void updateActionButtonText() {
         mActionButton.setText(getActionButtonTextResourceId());
     }
 
-    private void updateHeaderImage()
-    {
+    private void updateHeaderImage() {
         mHeaderImage.setImageDrawable(ContextCompat.getDrawable(getContext(), getHeaderImageResourceId()));
     }
 
-    private void updateDisplayWithPriorityAccess(@NonNull BookingsWrapper.PriorityAccessInfo priorityAccessInfo)
-    {
+    private void updateDisplayWithPriorityAccess(@NonNull BookingsWrapper.PriorityAccessInfo priorityAccessInfo) {
         mTitle.setText(priorityAccessInfo.getMessageTitle());
         mDescription.setText(priorityAccessInfo.getMessageDescription());
     }
 
     @OnClick(R.id.fragment_dialog_job_access_action_button)
-    public void onActionButtonClicked()
-    {
+    public void onActionButtonClicked() {
         dismiss();
     }
 }

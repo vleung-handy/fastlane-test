@@ -13,8 +13,7 @@ import com.handy.portal.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DashboardRatingsView extends FrameLayout
-{
+public class DashboardRatingsView extends FrameLayout {
     @BindView(R.id.five_star_title)
     TextView mTitle;
     @BindView(R.id.five_star_ratings_view)
@@ -30,33 +29,28 @@ public class DashboardRatingsView extends FrameLayout
 
     private boolean mAnimated = false;
 
-    public DashboardRatingsView(final Context context)
-    {
+    public DashboardRatingsView(final Context context) {
         super(context);
         init();
     }
 
-    public DashboardRatingsView(final Context context, final AttributeSet attrs)
-    {
+    public DashboardRatingsView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public DashboardRatingsView(final Context context, final AttributeSet attrs, final int defStyleAttr)
-    {
+    public DashboardRatingsView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public DashboardRatingsView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
-    {
+    public DashboardRatingsView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), R.layout.element_ratings_pro_performance, this);
         ButterKnife.bind(this);
 
@@ -65,56 +59,46 @@ public class DashboardRatingsView extends FrameLayout
         mTotalJobsView.setDescription(getResources().getString(R.string.total_jobs));
     }
 
-    public void setJobRatings(int fiveStarRatings, int ratedJobs, int totalJobs)
-    {
+    public void setJobRatings(int fiveStarRatings, int ratedJobs, int totalJobs) {
         mFiveStarRatingsView.setNumber(Integer.toString(fiveStarRatings));
         mRatedJobsView.setNumber(Integer.toString(ratedJobs));
         mTotalJobsView.setNumber(Integer.toString(totalJobs));
     }
 
-    public void setDate(String date)
-    {
+    public void setDate(String date) {
         mDateText.setText(date);
     }
 
-    public void setTitle(final CharSequence text)
-    {
+    public void setTitle(final CharSequence text) {
         mTitle.setText(text);
     }
 
     /**
-     *
      * @param percentage percentage of five star reviews as a float between 0 and 1
      */
-    public void setFiveStarRatingPercentage(float percentage)
-    {
+    public void setFiveStarRatingPercentage(float percentage) {
         mFiveStarProgressPercentageRatingView.setupDecoView(Math.round(percentage * 100));
     }
 
-    public void setContentColor(int colorResourceId)
-    {
+    public void setContentColor(int colorResourceId) {
         mFiveStarProgressPercentageRatingView.setContentColor(colorResourceId);
     }
 
-    public void startAnimation()
-    {
+    public void startAnimation() {
         mFiveStarProgressPercentageRatingView.startAnimation();
     }
 
-    public void animateProgressBar()
-    {
+    public void animateProgressBar() {
         mAnimated = true;
         mFiveStarProgressPercentageRatingView.animateProgressBar();
     }
 
-    public void setOnResumeState()
-    {
+    public void setOnResumeState() {
         mAnimated = true;
         mFiveStarProgressPercentageRatingView.setOnResumeState();
     }
 
-    public boolean hasBeenAnimated()
-    {
+    public boolean hasBeenAnimated() {
         return mAnimated;
     }
 }

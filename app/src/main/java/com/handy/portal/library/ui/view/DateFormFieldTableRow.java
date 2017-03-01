@@ -13,8 +13,7 @@ import com.handy.portal.library.util.UIUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class DateFormFieldTableRow extends TableRow implements Errorable
-{
+public class DateFormFieldTableRow extends TableRow implements Errorable {
     @BindView(R.id.label_text_date)
     TextView mLabelText;
     @BindView(R.id.month_value_text)
@@ -24,49 +23,41 @@ public class DateFormFieldTableRow extends TableRow implements Errorable
     @BindView(R.id.error_indicator_date)
     View mErrorIndicatorDate;
 
-    public DateFormFieldTableRow(Context context)
-    {
+    public DateFormFieldTableRow(Context context) {
         super(context);
         init();
     }
 
-    public DateFormFieldTableRow(Context context, AttributeSet attrs)
-    {
+    public DateFormFieldTableRow(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), R.layout.element_date_form_field, this);
         ButterKnife.bind(this);
         mMonthValueText.addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(this));
         mYearValueText.addTextChangedListener(new UIUtils.FormFieldErrorStateRemover(this));
     }
 
-    public TextView getLabel()
-    {
+    public TextView getLabel() {
         return mLabelText;
     }
 
-    public TextView getMonthValue()
-    {
+    public TextView getMonthValue() {
         return mMonthValueText;
     }
 
-    public TextView getYearValue()
-    {
+    public TextView getYearValue() {
         return mYearValueText;
     }
 
-    public View getErrorIndicator()
-    {
+    public View getErrorIndicator() {
         return mErrorIndicatorDate;
     }
 
     @Override
-    public void setErrorState(boolean error)
-    {
+    public void setErrorState(boolean error) {
         int errorColor = ContextCompat.getColor(getContext(), R.color.plumber_red);
         int normalLabelColor = ContextCompat.getColor(getContext(), R.color.form_label);
         int normalValueColor = ContextCompat.getColor(getContext(), R.color.black);

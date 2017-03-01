@@ -18,19 +18,16 @@ import static junit.framework.Assert.assertEquals;
 import static junit.framework.Assert.assertNotNull;
 import static junit.framework.Assert.assertTrue;
 
-public class BookingDetailsWrapperFragmentTest extends RobolectricGradleTestWrapper
-{
+public class BookingDetailsWrapperFragmentTest extends RobolectricGradleTestWrapper {
     private BookingDetailsWrapperFragment mFragment;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         mFragment = new BookingDetailsWrapperFragment();
     }
 
     @Test
-    public void shouldShowErrorPageIfRequestBookingFailed() throws Exception
-    {
+    public void shouldShowErrorPageIfRequestBookingFailed() throws Exception {
         Bundle args = new Bundle();
         args.putString(BundleKeys.BOOKING_ID, TestDataManager.BOOKING_ERROR_ID);
         mFragment.setArguments(args);
@@ -41,8 +38,7 @@ public class BookingDetailsWrapperFragmentTest extends RobolectricGradleTestWrap
     }
 
     @Test
-    public void shouldShowBookingDetails() throws Exception
-    {
+    public void shouldShowBookingDetails() throws Exception {
         Bundle args = new Bundle();
         args.putString(BundleKeys.BOOKING_ID, TestDataManager.BOOKING_UNCLAIMED_ID);
         mFragment.setArguments(args);
@@ -57,8 +53,7 @@ public class BookingDetailsWrapperFragmentTest extends RobolectricGradleTestWrap
     }
 
     @Test
-    public void shouldShowInProgressBookingWithChecklist() throws Exception
-    {
+    public void shouldShowInProgressBookingWithChecklist() throws Exception {
         Bundle args = new Bundle();
         args.putString(BundleKeys.BOOKING_ID, TestDataManager.BOOKING_IN_PROGRESS_ID);
         mFragment.setArguments(args);

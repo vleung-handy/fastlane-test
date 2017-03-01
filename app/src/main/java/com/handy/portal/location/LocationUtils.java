@@ -20,11 +20,11 @@ import com.handy.portal.location.ui.LocationSettingsBlockerDialogFragment;
 /**
  * utility class for location-related stuff
  */
-public abstract class LocationUtils
-{
+public abstract class LocationUtils {
     private static final int ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE = 10;
 
     //TODO don't like some of these methods, refactor later
+
     /**
      * either shows the necessary location blockers,
      * or launches the location service
@@ -34,28 +34,25 @@ public abstract class LocationUtils
      */
     public static void showLocationBlockersOrStartServiceIfNecessary(
             @NonNull FragmentActivity fragmentActivity,
-            boolean isLocationServiceEnabled)
-    {
+            boolean isLocationServiceEnabled) {
         /*
         because this can be called each time this resumes,
         putting it in a try/catch block to be super safe to prevent crashes
          */
-        try
-        {
+        try {
             showNecessaryLocationSettingsAndPermissionsBlockers(fragmentActivity);
             startLocationServiceIfNecessary(fragmentActivity, isLocationServiceEnabled);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             Crashlytics.logException(e);
         }
     }
 
-    private static void showNecessaryLocationSettingsAndPermissionsBlockers(FragmentActivity fragmentActivity)
-    {
+    private static void showNecessaryLocationSettingsAndPermissionsBlockers(FragmentActivity fragmentActivity) {
         showLocationPermissionsBlockerIfNecessary(fragmentActivity);
         showLocationSettingsBlockerIfNecessary(fragmentActivity);
     }
+
     /**
      * called in onResume
      * <p/>
@@ -65,8 +62,7 @@ public abstract class LocationUtils
      * <p/>
      * if not, block them with a dialog until they do.
      */
-    private static void showLocationSettingsBlockerIfNecessary(FragmentActivity fragmentActivity)
-    {
+    private static void showLocationSettingsBlockerIfNecessary(FragmentActivity fragmentActivity) {
         //check whether location services setting is on
         if (!LocationUtils.hasRequiredLocationSettings(fragmentActivity) &&
                 fragmentActivity.getSupportFragmentManager().findFragmentByTag(LocationSettingsBlockerDialogFragment.FRAGMENT_TAG) == null)
@@ -82,19 +78,15 @@ public abstract class LocationUtils
     /**
      * shows the location permissions blocker (Android 6.0+) if user didn't grant permissions yet
      */
-    private static void showLocationPermissionsBlockerIfNecessary(FragmentActivity fragmentActivity)
-    {
+    private static void showLocationPermissionsBlockerIfNecessary(FragmentActivity fragmentActivity) {
         if (!LocationUtils.hasRequiredLocationPermissions(fragmentActivity) &&
-                fragmentActivity.getSupportFragmentManager().findFragmentByTag(LocationPermissionsBlockerDialogFragment.FRAGMENT_TAG) == null)
-        {
-            if (Utils.wereAnyPermissionsRequestedPreviously(fragmentActivity, LocationConstants.LOCATION_PERMISSIONS))
-            {
+                fragmentActivity.getSupportFragmentManager().findFragmentByTag(LocationPermissionsBlockerDialogFragment.FRAGMENT_TAG) == null) {
+            if (Utils.wereAnyPermissionsRequestedPreviously(fragmentActivity, LocationConstants.LOCATION_PERMISSIONS)) {
                 //this will be shown if the app requested this permission previously and the user denied the request or revoked it
                 FragmentUtils.safeLaunchDialogFragment(new LocationPermissionsBlockerDialogFragment(),
                         fragmentActivity, LocationPermissionsBlockerDialogFragment.FRAGMENT_TAG);
             }
-            else
-            {
+            else {
                 //otherwise show the default permission request dialog
                 ActivityCompat.requestPermissions(fragmentActivity, LocationConstants.LOCATION_PERMISSIONS, ACCESS_FINE_LOCATION_PERMISSION_REQUEST_CODE);
             }
@@ -108,22 +100,17 @@ public abstract class LocationUtils
      * TODO see if we can clean this up
      */
     public static void startLocationServiceIfNecessary(@NonNull FragmentActivity fragmentActivity,
-                                                boolean isLocationServiceEnabled)
-    {
+                                                       boolean isLocationServiceEnabled) {
         if (LocationUtils.hasRequiredLocationPermissions(fragmentActivity)
-                && LocationUtils.hasRequiredLocationSettings(fragmentActivity))
-        {
+                && LocationUtils.hasRequiredLocationSettings(fragmentActivity)) {
             Intent locationServiceIntent = new Intent(fragmentActivity, LocationScheduleService.class);
-            if (isLocationServiceEnabled)
-            {
+            if (isLocationServiceEnabled) {
                 //nothing will happen if it's already running
-                if (!SystemUtils.isServiceRunning(fragmentActivity, LocationScheduleService.class))
-                {
+                if (!SystemUtils.isServiceRunning(fragmentActivity, LocationScheduleService.class)) {
                     fragmentActivity.startService(locationServiceIntent);
                 }
             }
-            else
-            {
+            else {
                 //nothing will happen if it's not running
                 fragmentActivity.stopService(locationServiceIntent);
             }
@@ -132,25 +119,20 @@ public abstract class LocationUtils
     }
 
     @SuppressWarnings("deprecation")
-    public static boolean hasRequiredLocationSettings(@NonNull Context context)
-    {
+    public static boolean hasRequiredLocationSettings(@NonNull Context context) {
         boolean locationServicesEnabled;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             int locationMode = 0;
-            try
-            {
+            try {
                 locationMode = Settings.Secure.getInt(context.getContentResolver(), Settings.Secure.LOCATION_MODE);
             }
-            catch (Settings.SettingNotFoundException e)
-            {
+            catch (Settings.SettingNotFoundException e) {
                 e.printStackTrace();
                 Crashlytics.logException(e);
             }
             locationServicesEnabled = locationMode != Settings.Secure.LOCATION_MODE_OFF;
         }
-        else
-        {
+        else {
             //in versions before KitKat, must check for a different settings key
             String locationProviders =
                     Settings.Secure.getString(context.getContentResolver(),
@@ -166,8 +148,7 @@ public abstract class LocationUtils
      * @param context
      * @return
      */
-    public static boolean hasRequiredLocationPermissions(@NonNull Context context)
-    {
+    public static boolean hasRequiredLocationPermissions(@NonNull Context context) {
         return Utils.areAllPermissionsGranted(context, LocationConstants.LOCATION_PERMISSIONS);
     }
 }

@@ -10,8 +10,7 @@ import com.handy.portal.clients.ui.fragment.dialog.SwapBookingClaimDialogFragmen
 import com.handy.portal.core.constant.RequestCode;
 import com.handy.portal.library.util.FragmentUtils;
 
-public class ClaimUtils
-{
+public class ClaimUtils {
     /**
      * shows the confirm booking claim dialog if the cancellation policy data is there, based on the given booking
      *
@@ -20,14 +19,11 @@ public class ClaimUtils
     public static boolean showConfirmBookingClaimDialogIfNecessary(
             final Booking booking,
             final Fragment fragment,
-            final FragmentManager fragmentManager)
-    {
+            final FragmentManager fragmentManager) {
         final Booking.Action claimAction = booking.getAction(Booking.Action.ACTION_CLAIM);
-        if (booking.canSwap())
-        {
+        if (booking.canSwap()) {
             if (fragmentManager
-                    .findFragmentByTag(SwapBookingClaimDialogFragment.FRAGMENT_TAG) == null)
-            {
+                    .findFragmentByTag(SwapBookingClaimDialogFragment.FRAGMENT_TAG) == null) {
                 final SwapBookingClaimDialogFragment dialogFragment =
                         SwapBookingClaimDialogFragment.newInstance(booking);
                 dialogFragment.setTargetFragment(fragment, RequestCode.CONFIRM_SWAP);
@@ -36,16 +32,13 @@ public class ClaimUtils
             }
             return true;
         }
-        else if (claimAction != null && claimAction.getExtras() != null)
-        {
+        else if (claimAction != null && claimAction.getExtras() != null) {
             final Booking.Action.Extras.CancellationPolicy cancellationPolicy =
                     claimAction.getExtras().getCancellationPolicy();
-            if (cancellationPolicy != null)
-            {
+            if (cancellationPolicy != null) {
                 // Cancellation policy is accessed within ConfirmBookingCancellationPolicyDialogFragment
                 if (fragmentManager
-                        .findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null)
-                {
+                        .findFragmentByTag(ConfirmBookingClaimDialogFragment.FRAGMENT_TAG) == null) {
                     ConfirmBookingActionDialogFragment confirmBookingDialogFragment =
                             ConfirmBookingClaimDialogFragment.newInstance(booking);
                     confirmBookingDialogFragment

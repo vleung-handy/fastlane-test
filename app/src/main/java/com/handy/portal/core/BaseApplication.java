@@ -42,8 +42,7 @@ import io.fabric.sdk.android.Fabric;
 import retrofit.RestAdapter;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
-public class BaseApplication extends MultiDexApplication
-{
+public class BaseApplication extends MultiDexApplication {
     protected ObjectGraph mGraph;
 
     //We are injecting all of our event bus listening managers in BaseApplication to start them up for event listening
@@ -100,8 +99,7 @@ public class BaseApplication extends MultiDexApplication
     EventBus bus;
 
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         super.onCreate();
         createObjectGraph();
         inject(this);
@@ -117,19 +115,16 @@ public class BaseApplication extends MultiDexApplication
                 .build());
     }
 
-    protected void startCrashlytics()
-    {
+    protected void startCrashlytics() {
         Crashlytics crashlytics = new Crashlytics.Builder().core(new CrashlyticsCore.Builder().disabled(BuildConfig.DEBUG).build()).build();
         Fabric.with(this, crashlytics);
     }
 
-    protected void createObjectGraph()
-    {
+    protected void createObjectGraph() {
         mGraph = ObjectGraph.create(new ApplicationModule(this));
     }
 
-    public final void inject(final Object object)
-    {
+    public final void inject(final Object object) {
         mGraph.inject(object);
     }
 }

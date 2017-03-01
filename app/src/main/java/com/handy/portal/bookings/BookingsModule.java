@@ -45,13 +45,11 @@ import dagger.Provides;
                 CustomerNoShowDialogFragment.class,
                 PostCheckoutDialogFragment.class,
         })
-public final class BookingsModule
-{
+public final class BookingsModule {
     @Provides
     @Singleton
     final BookingManager provideBookingManager(final EventBus bus,
-                                               final DataManager dataManager)
-    {
+                                               final DataManager dataManager) {
         return new BookingManager(bus, dataManager);
     }
 }

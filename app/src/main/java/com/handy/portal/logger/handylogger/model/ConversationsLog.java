@@ -2,17 +2,14 @@ package com.handy.portal.logger.handylogger.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public abstract class ConversationsLog extends EventLog
-{
+public abstract class ConversationsLog extends EventLog {
     private static final String EVENT_CONTEXT = "conversations";
 
-    private ConversationsLog(final String eventType)
-    {
+    private ConversationsLog(final String eventType) {
         super(eventType, EVENT_CONTEXT);
     }
 
-    public static class ConversationsShown extends ConversationsLog
-    {
+    public static class ConversationsShown extends ConversationsLog {
         private static final String EVENT_TYPE = "conversations_shown";
 
         @SerializedName("unread_conversations_count")
@@ -21,16 +18,15 @@ public abstract class ConversationsLog extends EventLog
         private int mTotalConversationsCount;
 
         public ConversationsShown(final int unreadConversationsCount,
-                                  final int totalConversationsCount)
-        {
+                                  final int totalConversationsCount) {
             super(EVENT_TYPE);
             mUnreadConversationsCount = unreadConversationsCount;
             mTotalConversationsCount = totalConversationsCount;
         }
     }
 
-    public static class ConversationSelected extends ConversationsLog
-    {
+
+    public static class ConversationSelected extends ConversationsLog {
         private static final String EVENT_TYPE = "conversation_selected";
 
         @SerializedName("layer_user_id")
@@ -38,20 +34,18 @@ public abstract class ConversationsLog extends EventLog
         @SerializedName("layer_conversation_id")
         private String mLayerConversationId;
 
-        public ConversationSelected(final String layerUserId, final String layerConversationId)
-        {
+        public ConversationSelected(final String layerUserId, final String layerConversationId) {
             super(EVENT_TYPE);
             mLayerUserId = layerUserId;
             mLayerConversationId = layerConversationId;
         }
     }
 
-    public static class PushNotificationReceived extends ConversationsLog
-    {
+
+    public static class PushNotificationReceived extends ConversationsLog {
         private static final String EVENT_TYPE = "push_notification_received";
 
-        public PushNotificationReceived()
-        {
+        public PushNotificationReceived() {
             super(EVENT_TYPE);
         }
     }

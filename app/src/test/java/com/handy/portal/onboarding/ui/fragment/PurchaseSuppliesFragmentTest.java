@@ -37,8 +37,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class PurchaseSuppliesFragmentTest extends RobolectricGradleTestWrapper
-{
+public class PurchaseSuppliesFragmentTest extends RobolectricGradleTestWrapper {
     private PurchaseSuppliesFragment mFragment;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private OnboardingDetails mOnboardingDetails;
@@ -51,8 +50,7 @@ public class PurchaseSuppliesFragmentTest extends RobolectricGradleTestWrapper
     private ActivityController<OnboardingSubflowActivity> mActivityController;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         initMocks(this);
         when(mOnboardingDetails.getSubflowDataByType(SubflowType.SUPPLIES))
                 .thenReturn(mSubflowData);
@@ -62,8 +60,7 @@ public class PurchaseSuppliesFragmentTest extends RobolectricGradleTestWrapper
                 .thenReturn(SubflowType.SUPPLIES);
     }
 
-    private void startFragment()
-    {
+    private void startFragment() {
         mActivityController = Robolectric.buildActivity(OnboardingSubflowActivity.class, mIntent);
         mActivityController.create().resume().visible();
         mFragment = spy((PurchaseSuppliesFragment) mActivityController.get()
@@ -71,8 +68,7 @@ public class PurchaseSuppliesFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldGoToSuppliesConfirmationIfOptingIn() throws Exception
-    {
+    public void shouldGoToSuppliesConfirmationIfOptingIn() throws Exception {
         startFragment();
 
         mFragment.mGroupPrimaryButton.performClick();
@@ -85,8 +81,7 @@ public class PurchaseSuppliesFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldLaunchConfirmationDialogIfOptingOut() throws Exception
-    {
+    public void shouldLaunchConfirmationDialogIfOptingOut() throws Exception {
         startFragment();
 
         mFragment.mGroupSecondaryButton.performClick();
@@ -96,8 +91,7 @@ public class PurchaseSuppliesFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldTerminateWithProperDataAfterConfirmingOptOut() throws Exception
-    {
+    public void shouldTerminateWithProperDataAfterConfirmingOptOut() throws Exception {
         startFragment();
         mFragment.onActivityResult(RequestCode.DECLINE_SUPPLIES, Activity.RESULT_OK, null);
 
@@ -109,8 +103,7 @@ public class PurchaseSuppliesFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldNotifyServerAfterConfirmingOptOut() throws Exception
-    {
+    public void shouldNotifyServerAfterConfirmingOptOut() throws Exception {
         startFragment();
         mFragment.onActivityResult(RequestCode.DECLINE_SUPPLIES, Activity.RESULT_OK, null);
 

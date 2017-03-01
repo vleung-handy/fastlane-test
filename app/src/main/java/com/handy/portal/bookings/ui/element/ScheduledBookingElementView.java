@@ -20,8 +20,7 @@ import butterknife.ButterKnife;
 //Not setting up a clean UI hierarchy with AvailableBookingElement because ScheduledBookingElement is going to radically change soon to a google calendar style view
 
 
-public class ScheduledBookingElementView extends BookingElementView
-{
+public class ScheduledBookingElementView extends BookingElementView {
     @BindView(R.id.booking_entry_address_text)
     TextView mAddressTextView;
     @BindView(R.id.booking_entry_claimed_indicator)
@@ -35,11 +34,9 @@ public class ScheduledBookingElementView extends BookingElementView
     @BindView(R.id.booking_entry_date_text)
     TextView mTimeText;
 
-    public View initView(Context context, Booking booking, View convertView, ViewGroup parent)
-    {
+    public View initView(Context context, Booking booking, View convertView, ViewGroup parent) {
         // Check if an existing view is being reused, otherwise inflate the view
-        if (convertView == null)
-        {
+        if (convertView == null) {
             convertView = LayoutInflater.from(context).inflate(R.layout.element_scheduled_booking_list_entry, parent, false);
         }
 
@@ -67,12 +64,10 @@ public class ScheduledBookingElementView extends BookingElementView
         return convertView;
     }
 
-    private void setBookingStatusText(Context context, Booking booking)
-    {
+    private void setBookingStatusText(Context context, Booking booking) {
         mCompletedIndicator.setVisibility(View.GONE);
         mClaimedIndicator.setVisibility(View.GONE);
-        switch (booking.getBookingProgress())
-        {
+        switch (booking.getBookingProgress()) {
             case BookingProgress.READY_FOR_ON_MY_WAY:
                 mStatusText.setText(R.string.claimed);
                 mStatusText.setTextColor(ContextCompat.getColor(context, R.color.handyman_teal));

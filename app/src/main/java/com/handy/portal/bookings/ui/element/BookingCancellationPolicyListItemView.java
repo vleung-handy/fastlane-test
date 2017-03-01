@@ -16,8 +16,7 @@ import com.handy.portal.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BookingCancellationPolicyListItemView extends RelativeLayout
-{
+public class BookingCancellationPolicyListItemView extends RelativeLayout {
     @BindView(R.id.cancellation_policy_list_item_left_text)
     TextView mLeftText;
     @BindView(R.id.cancellation_policy_list_item_waived_fee_text)
@@ -29,74 +28,61 @@ public class BookingCancellationPolicyListItemView extends RelativeLayout
     @BindView(R.id.cancellation_policy_list_item_divider)
     View mDivider;
 
-    public BookingCancellationPolicyListItemView(final Context context)
-    {
+    public BookingCancellationPolicyListItemView(final Context context) {
         super(context);
         init();
     }
 
-    public BookingCancellationPolicyListItemView(final Context context, final AttributeSet attrs)
-    {
+    public BookingCancellationPolicyListItemView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public BookingCancellationPolicyListItemView(final Context context, final AttributeSet attrs, final int defStyleAttr)
-    {
+    public BookingCancellationPolicyListItemView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public BookingCancellationPolicyListItemView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
-    {
+    public BookingCancellationPolicyListItemView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), R.layout.element_cancellation_policy_list_item, this);
         ButterKnife.bind(this);
         mWaivedFeeText.setPaintFlags(mWaivedFeeText.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
     }
 
-    public BookingCancellationPolicyListItemView setLeftText(String leftText)
-    {
+    public BookingCancellationPolicyListItemView setLeftText(String leftText) {
         mLeftText.setText(leftText);
         return this;
     }
 
-    public BookingCancellationPolicyListItemView setWaivedFeeText(final String waivedFeeText)
-    {
-        if (waivedFeeText != null)
-        {
+    public BookingCancellationPolicyListItemView setWaivedFeeText(final String waivedFeeText) {
+        if (waivedFeeText != null) {
             mWaivedFeeText.setText(waivedFeeText);
             mWaivedFeeText.setVisibility(VISIBLE);
         }
-        else
-        {
+        else {
             mWaivedFeeText.setVisibility(GONE);
         }
         return this;
     }
 
-    public BookingCancellationPolicyListItemView setFeeText(String feeText)
-    {
+    public BookingCancellationPolicyListItemView setFeeText(String feeText) {
         mFeeText.setText(feeText);
         return this;
     }
 
-    public BookingCancellationPolicyListItemView setHighlighted(boolean highlighted)
-    {
+    public BookingCancellationPolicyListItemView setHighlighted(boolean highlighted) {
         int colorResourceId;
-        if (highlighted)
-        {
+        if (highlighted) {
             colorResourceId = R.color.handy_blue;
             mActiveItemIndicator.setVisibility(VISIBLE);
         }
-        else
-        {
+        else {
             colorResourceId = R.color.tertiary_gray;
             mActiveItemIndicator.setVisibility(GONE);
         }
@@ -106,8 +92,7 @@ public class BookingCancellationPolicyListItemView extends RelativeLayout
         return this;
     }
 
-    public BookingCancellationPolicyListItemView setDividerVisible(boolean visible)
-    {
+    public BookingCancellationPolicyListItemView setDividerVisible(boolean visible) {
         mDivider.setVisibility(visible ? VISIBLE : GONE);
         return this;
     }

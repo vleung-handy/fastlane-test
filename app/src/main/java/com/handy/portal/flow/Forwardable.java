@@ -1,6 +1,5 @@
 package com.handy.portal.flow;
 
-public interface Forwardable
-{
+public interface Forwardable {
     void goForward();
 }

@@ -2,8 +2,7 @@ package com.handy.portal.core.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public enum Designation
-{
+public enum Designation {
     @SerializedName("yes")
     YES,
     @SerializedName("no")
