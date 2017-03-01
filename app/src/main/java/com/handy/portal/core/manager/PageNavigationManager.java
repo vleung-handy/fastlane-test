@@ -13,7 +13,6 @@ import com.handy.portal.deeplink.DeeplinkMapper;
 import com.handy.portal.deeplink.DeeplinkUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
-import com.handy.portal.payments.PaymentsManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -22,18 +21,11 @@ import javax.inject.Inject;
 
 public class PageNavigationManager {
     private final EventBus mBus;
-    private final PaymentsManager mPaymentsManager;
-    private final ConfigManager mConfigManager;
 
     @Inject
-    public PageNavigationManager(final EventBus bus,
-                                 final PaymentsManager paymentsManager,
-                                 final ConfigManager configManager
-    ) {
+    public PageNavigationManager(final EventBus bus) {
         mBus = bus;
         mBus.register(this);
-        mPaymentsManager = paymentsManager;
-        mConfigManager = configManager;
     }
 
     /**
@@ -122,39 +114,11 @@ public class PageNavigationManager {
 
     @Subscribe
     public void onNavigateToPageEvent(NavigationEvent.NavigateToPage event) {
-        //Ordering is important for these checks, they have different priorities
-
         NavigationEvent.SwapFragmentEvent swapFragmentEvent = new NavigationEvent.SwapFragmentEvent(
                 event.targetPage, event.arguments, event.transitionStyle, event.addToBackStack);
-
-        //HACK : Magical hack to show a blocking fragment if the pro's payment info is out of date
-        if (doesCachedProviderNeedPaymentInformation() &&
-                configBlockingForPayment() &&
-                (event.targetPage == MainViewPage.AVAILABLE_JOBS ||
-                        event.targetPage == MainViewPage.SCHEDULED_JOBS ||
-                        event.targetPage == MainViewPage.BLOCK_PRO_WEBVIEW)) {
-            swapFragmentEvent.targetPage = MainViewPage.PAYMENT_BLOCKING;
-        }
-
-        //HACK : Magical hack to turn block pros available jobs into the webview block jobs
-        else if (isCachedProviderBlockPro() && event.targetPage == MainViewPage.AVAILABLE_JOBS) {
-            swapFragmentEvent.targetPage = MainViewPage.BLOCK_PRO_WEBVIEW;
-        }
 
         swapFragmentEvent.setReturnFragment(event.getReturnFragment(), event.getActivityRequestCode());
 
         mBus.post(swapFragmentEvent);
-    }
-
-    private boolean isCachedProviderBlockPro() {
-        return mConfigManager.getConfigurationResponse().isBlockCleaner();
-    }
-
-    private boolean doesCachedProviderNeedPaymentInformation() {
-        return mPaymentsManager.HACK_directAccessCacheNeedsPayment();
-    }
-
-    private boolean configBlockingForPayment() {
-        return mConfigManager.getConfigurationResponse().shouldBlockClaimsIfMissingAccountInformation();
     }
 }

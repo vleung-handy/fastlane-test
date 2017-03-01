@@ -6,14 +6,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class ConfigurationResponse {
-    @SerializedName("block_cleaner")
-    private boolean mIsBlockCleaner;
-
     @SerializedName("checkout_rating_flow")
     private boolean mCheckoutRatingFlowEnabled;
-
-    @SerializedName("block_payment_info")
-    private boolean mBlockClaimsIfMissingAccountInformation;
 
     @SerializedName("show_late_dispatch_opt_in")
     private boolean mShowLateDispatchOptIn;
@@ -93,16 +87,8 @@ public class ConfigurationResponse {
         return mBoxedSuppliesEnabled;
     }
 
-    public boolean isBlockCleaner() {
-        return mIsBlockCleaner;
-    }
-
     public boolean isCheckoutRatingFlowEnabled() {
         return mCheckoutRatingFlowEnabled;
-    }
-
-    public boolean shouldBlockClaimsIfMissingAccountInformation() {
-        return mBlockClaimsIfMissingAccountInformation;
     }
 
     public boolean shouldShowLateDispatchOptIn() {

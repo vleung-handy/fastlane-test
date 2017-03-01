@@ -59,7 +59,6 @@ import com.handy.portal.logger.handylogger.model.SideMenuLog;
 import com.handy.portal.notification.NotificationUtils;
 import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragment;
 import com.handy.portal.payments.PaymentEvent;
-import com.handy.portal.payments.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handybook.shared.layer.LayerHelper;
 import com.squareup.picasso.Picasso;
@@ -256,21 +255,11 @@ public class MainActivity extends BaseActivity
         //check if we need to show the payment bill blocker, we will have either soft and hard blocking (modal and blockingfragment) depending on config params
         if (event.shouldUserUpdatePaymentInfo) {
             FragmentManager fragmentManager = getSupportFragmentManager();
-            if (mConfigManager.getConfigurationResponse() != null &&
-                    mConfigManager.getConfigurationResponse().shouldBlockClaimsIfMissingAccountInformation()) {
-                //Page Navigation Manager should be handling this, but if we got this back too late force a move to blocking fragment
-                if (fragmentManager.findFragmentByTag(PaymentBlockingFragment.FRAGMENT_TAG) == null) //only show if there isn't an instance of the fragment showing already
-                {
-                    bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PAYMENT_BLOCKING, new Bundle()));
-                }
-            }
-            else {
-                //Non-blocking modal
-                if (fragmentManager.findFragmentByTag(PaymentBillBlockerDialogFragment.FRAGMENT_TAG) == null) //only show if there isn't an instance of the fragment showing already
-                {
-                    PaymentBillBlockerDialogFragment paymentBillBlockerDialogFragment = new PaymentBillBlockerDialogFragment();
-                    FragmentUtils.safeLaunchDialogFragment(paymentBillBlockerDialogFragment, this, PaymentBillBlockerDialogFragment.FRAGMENT_TAG);
-                }
+            //Non-blocking modal
+            if (fragmentManager.findFragmentByTag(PaymentBillBlockerDialogFragment.FRAGMENT_TAG) == null) //only show if there isn't an instance of the fragment showing already
+            {
+                PaymentBillBlockerDialogFragment paymentBillBlockerDialogFragment = new PaymentBillBlockerDialogFragment();
+                FragmentUtils.safeLaunchDialogFragment(paymentBillBlockerDialogFragment, this, PaymentBillBlockerDialogFragment.FRAGMENT_TAG);
             }
         }
         else {
@@ -480,8 +469,7 @@ public class MainActivity extends BaseActivity
     public void updateSelectedTabButton(NavigationEvent.SelectPage event) {
         if (event.page == null) { return; }
         switch (event.page) {
-            case AVAILABLE_JOBS:
-            case BLOCK_PRO_WEBVIEW: {
+            case AVAILABLE_JOBS: {
                 mJobsButton.toggle();
                 mNavTrayLinks.clearCheck();
             }

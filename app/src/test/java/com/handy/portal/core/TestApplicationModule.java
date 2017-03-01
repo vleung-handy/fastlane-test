@@ -33,7 +33,6 @@ import com.handy.portal.core.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.core.ui.fragment.LoginActivityFragment;
 import com.handy.portal.core.ui.fragment.LoginSltFragment;
 import com.handy.portal.core.ui.fragment.MainActivityTest;
-import com.handy.portal.core.ui.fragment.MainActivityTest2;
 import com.handy.portal.core.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.core.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.dashboard.fragment.DashboardFeedbackFragment;
@@ -65,7 +64,6 @@ import com.handy.portal.onboarding.ui.fragment.SchedulePreferencesFragmentTest;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.payments.ui.element.PaymentsBatchListView;
-import com.handy.portal.payments.ui.fragment.PaymentBlockingFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsDetailFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsFragmentTest;
@@ -82,7 +80,6 @@ import com.handy.portal.setup.step.SetProviderProfileStep;
 import com.handy.portal.terms.TermsManager;
 import com.handy.portal.updater.VersionManager;
 import com.handy.portal.updater.ui.PleaseUpdateFragment;
-import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.PortalWebViewClient;
 import com.handybook.shared.layer.LayerHelper;
 import com.securepreferences.SecurePreferences;
@@ -117,7 +114,6 @@ import static org.mockito.Mockito.when;
         SupportActionView.class,
         PaymentsFragmentTest.class,
         MainActivityTest.class,
-        MainActivityTest2.class,
         LocationSettingsBlockerDialogFragment.class,
         SendReceiptCheckoutFragment.class,
         SendReceiptCheckoutFragmentTest.class,
@@ -159,8 +155,6 @@ import static org.mockito.Mockito.when;
         SetConfigurationStep.class,
         SetProviderProfileStep.class,
         PortalWebViewClient.class,
-        BlockScheduleFragment.class,
-        PaymentBlockingFragment.class,
 
 }, library = true)
 public class TestApplicationModule {
@@ -233,11 +227,8 @@ public class TestApplicationModule {
 
     @Provides
     @Singleton
-    final PageNavigationManager providePageNavigationManager(final EventBus bus,
-                                                             final PaymentsManager paymentsManager,
-                                                             final ConfigManager configManager
-    ) {
-        return new PageNavigationManager(bus, paymentsManager, configManager);
+    final PageNavigationManager providePageNavigationManager(final EventBus bus) {
+        return new PageNavigationManager(bus);
     }
 
     @Provides

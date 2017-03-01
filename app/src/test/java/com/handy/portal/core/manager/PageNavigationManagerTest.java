@@ -46,7 +46,7 @@ public class PageNavigationManagerTest extends RobolectricGradleTestWrapper {
     public void setUp() throws Exception {
         initMocks(this);
 
-        pageNavigationManager = new PageNavigationManager(bus, mPaymentsManager, mConfigManager);
+        pageNavigationManager = new PageNavigationManager(bus);
     }
 
     /**

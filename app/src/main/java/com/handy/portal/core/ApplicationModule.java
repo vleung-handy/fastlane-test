@@ -61,7 +61,6 @@ import com.handy.portal.onboarding.ui.activity.ActivationWelcomeActivity;
 import com.handy.portal.onboarding.ui.activity.FirstDayActivity;
 import com.handy.portal.onboarding.ui.fragment.CameraPermissionsBlockerDialogFragment;
 import com.handy.portal.onboarding.ui.fragment.IDVerificationFragment;
-import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsModule;
 import com.handy.portal.proavailability.fragment.EditAvailableHoursFragment;
 import com.handy.portal.proavailability.fragment.EditWeeklyAvailableHoursFragment;
@@ -78,7 +77,6 @@ import com.handy.portal.setup.SetupManager;
 import com.handy.portal.setup.SetupModule;
 import com.handy.portal.terms.TermsModule;
 import com.handy.portal.updater.AppUpdaterModule;
-import com.handy.portal.webview.BlockScheduleFragment;
 import com.handy.portal.webview.PortalWebViewClient;
 import com.handy.portal.webview.PortalWebViewFragment;
 import com.handy.portal.webview.RequestSuppliesWebViewClient;
@@ -113,7 +111,6 @@ import retrofit.converter.GsonConverter;
         UrbanAirshipManager.class,
         DeepLinkService.class,
         PortalWebViewFragment.class,
-        BlockScheduleFragment.class,
         RequestSuppliesFragment.class,
         ProfileUpdateFragment.class,
         EditPhotoFragment.class,
@@ -438,11 +435,8 @@ public final class ApplicationModule {
 
     @Provides
     @Singleton
-    final PageNavigationManager providePageNavigationManager(final EventBus bus,
-                                                             final PaymentsManager paymentsManager,
-                                                             final ConfigManager configManager
-    ) {
-        return new PageNavigationManager(bus, paymentsManager, configManager);
+    final PageNavigationManager providePageNavigationManager(final EventBus bus) {
+        return new PageNavigationManager(bus);
     }
 
     @Provides
