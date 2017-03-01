@@ -20,16 +20,14 @@ import javax.inject.Inject;
 /**
  * keeps track of system events like network reconnected, battery level low
  */
-public class SystemManager extends BroadcastReceiver
-{
+public class SystemManager extends BroadcastReceiver {
     private final EventBus mBus;
     private final Context mContext;
 
     private boolean mPreviouslyHadNetworkConnectivity = true;
 
     @Inject
-    public SystemManager(@NonNull Context context, @NonNull final EventBus bus)
-    {
+    public SystemManager(@NonNull Context context, @NonNull final EventBus bus) {
         mBus = bus;
         mContext = context;
         IntentFilter intentFilter = new IntentFilter();
@@ -49,8 +47,7 @@ public class SystemManager extends BroadcastReceiver
      *
      * @param context
      */
-    private void onConnectivityChanged(@NonNull Context context)
-    {
+    private void onConnectivityChanged(@NonNull Context context) {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         boolean hasConnectivity = networkInfo != null
@@ -83,23 +80,19 @@ public class SystemManager extends BroadcastReceiver
         mPreviouslyHadNetworkConnectivity = hasConnectivity;
     }
 
-    private void onBatteryLevelLow()
-    {
+    private void onBatteryLevelLow() {
         //TODO do something
         Log.d(getClass().getName(), "battery level low");
     }
 
-    private void onBatteryLevelOkay()
-    {
+    private void onBatteryLevelOkay() {
         //TODO do something
         Log.d(getClass().getName(), "battery level okay");
     }
 
     @Override
-    public void onReceive(final Context context, final Intent intent)
-    {
-        switch (intent.getAction())
-        {
+    public void onReceive(final Context context, final Intent intent) {
+        switch (intent.getAction()) {
             case ConnectivityManager.CONNECTIVITY_ACTION:
                 onConnectivityChanged(context);
                 break;

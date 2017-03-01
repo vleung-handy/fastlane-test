@@ -23,8 +23,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class LoginManagerTest extends RobolectricGradleTestWrapper
-{
+public class LoginManagerTest extends RobolectricGradleTestWrapper {
     @Mock
     private EventBus bus;
     @Mock
@@ -48,16 +47,14 @@ public class LoginManagerTest extends RobolectricGradleTestWrapper
     private LoginManager loginManager;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         initMocks(this);
 
         loginManager = new LoginManager(bus, dataManager, prefsManager);
     }
 
     @Test
-    public void onSuccessfulRequestPinCode_shouldPostPinCodeRequestReceivedEventWithDetails() throws Exception
-    {
+    public void onSuccessfulRequestPinCode_shouldPostPinCodeRequestReceivedEventWithDetails() throws Exception {
         requestPinCodeAndCaptureCallback();
         SuccessWrapper pinRequestDetails = mock(SuccessWrapper.class);
         when(pinRequestDetails.getSuccess()).thenReturn(true);
@@ -68,8 +65,7 @@ public class LoginManagerTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void onUnsuccessfulRequestPinCode_shouldPostPinCodeRequestReceivedEventWithNullDetails() throws Exception
-    {
+    public void onUnsuccessfulRequestPinCode_shouldPostPinCodeRequestReceivedEventWithNullDetails() throws Exception {
         requestPinCodeAndCaptureCallback();
         pinCodeRequestCallbackCaptor.getValue().onError(mock(DataManager.DataManagerError.class));
         verify(bus).post(pinCodeErrorEventArgumentCaptor.capture());
@@ -77,8 +73,7 @@ public class LoginManagerTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void onSuccessfulRequestLogin_shouldPostLoginRequestReceivedEventWithDetails() throws Exception
-    {
+    public void onSuccessfulRequestLogin_shouldPostLoginRequestReceivedEventWithDetails() throws Exception {
         requestLoginAndCaptureCallback();
 
         LoginDetails loginDetails = mock(LoginDetails.class);
@@ -91,8 +86,7 @@ public class LoginManagerTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void onUnsuccessfulRequestLogin_shouldPostLoginRequestReceivedEventWithNullDetails() throws Exception
-    {
+    public void onUnsuccessfulRequestLogin_shouldPostLoginRequestReceivedEventWithNullDetails() throws Exception {
         requestLoginAndCaptureCallback();
 
         loginRequestCallbackCaptor.getValue().onError(mock(DataManager.DataManagerError.class));
@@ -101,14 +95,12 @@ public class LoginManagerTest extends RobolectricGradleTestWrapper
         assertNotNull(loginErrorEventArgumentCaptor.getValue().error);
     }
 
-    private void requestPinCodeAndCaptureCallback()
-    {
+    private void requestPinCodeAndCaptureCallback() {
         loginManager.onRequestPinCode(mock(HandyEvent.RequestPinCode.class));
         verify(dataManager).requestPinCode(anyString(), pinCodeRequestCallbackCaptor.capture());
     }
 
-    private void requestLoginAndCaptureCallback()
-    {
+    private void requestLoginAndCaptureCallback() {
         loginManager.onRequestLogin(mock(HandyEvent.RequestLogin.class));
         verify(dataManager).requestLogin(anyString(), anyString(), loginRequestCallbackCaptor.capture());
     }

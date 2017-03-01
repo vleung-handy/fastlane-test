@@ -11,35 +11,30 @@ import javax.inject.Inject;
 
 import retrofit.Endpoint;
 
-public class HandyRetrofitEndpoint implements Endpoint
-{
+public class HandyRetrofitEndpoint implements Endpoint {
     private static final String PROD_IDENTIFIER = "p";
 
     private final String apiEndpoint;
     private final String baseUrl;
 
     @Inject
-    public HandyRetrofitEndpoint(Context context)
-    {
+    public HandyRetrofitEndpoint(Context context) {
         final Properties config = PropertiesReader.getConfigProperties(context);
         apiEndpoint = config.getProperty(UrlName.API_URL);
         baseUrl = config.getProperty(UrlName.BASE_URL);
     }
 
     @Override
-    public String getUrl()
-    {
+    public String getUrl() {
         return apiEndpoint;
     }
 
     @Override
-    public String getName()
-    {
+    public String getName() {
         return PROD_IDENTIFIER;
     }
 
-    public String getBaseUrl()
-    {
+    public String getBaseUrl() {
         return baseUrl;
     }
 }

@@ -26,8 +26,7 @@ import java.util.Date;
 import javax.inject.Inject;
 
 public class LocationPingService extends Service implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
-{
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final long LOCATION_REQUEST_FASTEST_INTERVAL_MILLIS = 1000;
     private static final long LOCATION_REQUEST_INTERVAL_MILLIS = 5000;
     private static final long MAXIMUM_LOCATION_AGE_MILLIS = 5000;
@@ -39,8 +38,7 @@ public class LocationPingService extends Service implements
     private String mEventName;
 
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         super.onCreate();
         Utils.inject(this, this);
         mGoogleApiClient = new GoogleApiClient.Builder(this)
@@ -51,10 +49,8 @@ public class LocationPingService extends Service implements
     }
 
     @Override
-    public int onStartCommand(final Intent intent, final int flags, final int startId)
-    {
-        if (intent != null)
-        {
+    public int onStartCommand(final Intent intent, final int flags, final int startId) {
+        if (intent != null) {
             mEventName = intent.getStringExtra(BundleKeys.EVENT_NAME);
             mGoogleApiClient.connect();
         }
@@ -63,11 +59,9 @@ public class LocationPingService extends Service implements
 
     @SuppressWarnings({"ResourceType", "MissingPermission"})
     @Override
-    public void onConnected(@Nullable final Bundle bundle)
-    {
+    public void onConnected(@Nullable final Bundle bundle) {
         // Check for permissions
-        if (!LocationUtils.hasRequiredLocationPermissions(this))
-        {
+        if (!LocationUtils.hasRequiredLocationPermissions(this)) {
             return;
         }
 
@@ -82,8 +76,7 @@ public class LocationPingService extends Service implements
                 mLocationListener);
     }
 
-    private void sendLocationUpdate(final Location lastLocation)
-    {
+    private void sendLocationUpdate(final Location lastLocation) {
         final LocationUpdate locationUpdate = LocationUpdate.from(lastLocation);
         locationUpdate.setEventName(mEventName);
         locationUpdate.setBatteryLevelPercent(SystemUtils.getBatteryLevelPercent(this));
@@ -93,39 +86,31 @@ public class LocationPingService extends Service implements
     }
 
     @Override
-    public void onDestroy()
-    {
-        if (mGoogleApiClient != null)
-        {
+    public void onDestroy() {
+        if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
         }
         super.onDestroy();
     }
 
     @Override
-    public void onConnectionSuspended(final int i)
-    {
+    public void onConnectionSuspended(final int i) {
     }
 
     @Nullable
     @Override
-    public IBinder onBind(final Intent intent)
-    {
+    public IBinder onBind(final Intent intent) {
         return null;
     }
 
     @Override
-    public void onConnectionFailed(@NonNull final ConnectionResult connectionResult)
-    {
+    public void onConnectionFailed(@NonNull final ConnectionResult connectionResult) {
     }
 
-    private final LocationListener mLocationListener = new LocationListener()
-    {
+    private final LocationListener mLocationListener = new LocationListener() {
         @Override
-        public void onLocationChanged(final Location location)
-        {
-            if (isRecentLocation(location))
-            {
+        public void onLocationChanged(final Location location) {
+            if (isRecentLocation(location)) {
                 sendLocationUpdate(location);
 
                 // We only need one recent location update. After that, we can stop the location
@@ -136,8 +121,7 @@ public class LocationPingService extends Service implements
         }
     };
 
-    private boolean isRecentLocation(final Location location)
-    {
+    private boolean isRecentLocation(final Location location) {
         final long now = new Date().getTime();
         return now - location.getTime() <= MAXIMUM_LOCATION_AGE_MILLIS;
     }

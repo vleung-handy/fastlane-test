@@ -22,22 +22,19 @@ import javax.inject.Inject;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class MainActivityTest2 extends RobolectricGradleTestWrapper
-{
+public class MainActivityTest2 extends RobolectricGradleTestWrapper {
     @Inject
     ConfigManager mConfigManager;
     @Inject
     PaymentsManager mPaymentsManager;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         ((TestBaseApplication) RuntimeEnvironment.application.getApplicationContext()).inject(this);
     }
 
     @Test
-    public void shouldShowPaymentBlockingFragment()
-    {
+    public void shouldShowPaymentBlockingFragment() {
         ConfigurationResponse config = mock(ConfigurationResponse.class);
         when(config.shouldBlockClaimsIfMissingAccountInformation()).thenReturn(true);
         when(mConfigManager.getConfigurationResponse()).thenReturn(config);
@@ -51,8 +48,7 @@ public class MainActivityTest2 extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldShowScheduleBlockingFragment()
-    {
+    public void shouldShowScheduleBlockingFragment() {
         ConfigurationResponse config = mock(ConfigurationResponse.class);
         when(config.isBlockCleaner()).thenReturn(true);
         when(mConfigManager.getConfigurationResponse()).thenReturn(config);

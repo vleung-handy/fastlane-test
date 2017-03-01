@@ -1,7 +1,6 @@
 package com.handy.portal.core.constant;
 
-public class BundleKeys
-{
+public class BundleKeys {
     //TODO consider not having all these keys at this scope
     public static final String BOOKING = "booking";
     public static final String BOOKING_ID = "booking_id";

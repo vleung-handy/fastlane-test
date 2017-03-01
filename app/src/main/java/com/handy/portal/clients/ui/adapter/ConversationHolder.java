@@ -30,8 +30,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ConversationHolder extends RecyclerView.ViewHolder
-{
+public class ConversationHolder extends RecyclerView.ViewHolder {
     @Inject
     EventBus mBus;
 
@@ -47,8 +46,7 @@ public class ConversationHolder extends RecyclerView.ViewHolder
     private final Context mContext;
 
     @OnClick(R.id.conversation_list_item)
-    public void onConversationListItemClicked(final View view)
-    {
+    public void onConversationListItemClicked(final View view) {
         final Intent intent = new Intent(mContext, MessagesListActivity.class);
         intent.putExtra(LayerConstants.LAYER_CONVERSATION_KEY, mConversation.getId());
         intent.putExtra(LayerConstants.KEY_HIDE_ATTACHMENT_BUTTON, true);
@@ -65,8 +63,7 @@ public class ConversationHolder extends RecyclerView.ViewHolder
     @Nullable
     private final Identity mLayerIdentity;
 
-    public ConversationHolder(final View itemView, @Nullable final Identity layerIdentity)
-    {
+    public ConversationHolder(final View itemView, @Nullable final Identity layerIdentity) {
         super(itemView);
         mContext = itemView.getContext();
         Utils.inject(mContext, this);
@@ -75,8 +72,7 @@ public class ConversationHolder extends RecyclerView.ViewHolder
     }
 
     @SuppressLint("SetTextI18n")
-    public void bind(final Conversation conversation)
-    {
+    public void bind(final Conversation conversation) {
         mConversation = conversation;
 
         final Message lastMessage = conversation.getLastMessage();
@@ -85,15 +81,13 @@ public class ConversationHolder extends RecyclerView.ViewHolder
 
         final Identity opposingParticipant = LayerUtil.getOpposingParticipant(conversation);
         mTitle.setVisibility(View.INVISIBLE);
-        if (opposingParticipant != null)
-        {
+        if (opposingParticipant != null) {
             mTitle.setVisibility(View.VISIBLE);
             mTitle.setText(opposingParticipant.getDisplayName());
             mTitle.setTypeface(FontUtils.getFont(mContext, typeface));
         }
 
-        if (lastMessage != null)
-        {
+        if (lastMessage != null) {
             final String messagePrefix = wasSentByMe(lastMessage) ? "Me: " : "";
             final String message = LayerUtil.getLastMessageString(mContent.getContext(), lastMessage);
             mContent.setVisibility(View.VISIBLE);
@@ -102,29 +96,24 @@ public class ConversationHolder extends RecyclerView.ViewHolder
             mTimestampContainer.setVisibility(View.VISIBLE);
             mTimestamp.setText(DateTimeUtils.formatDateToRelativeAccuracy(lastMessage.getReceivedAt()));
         }
-        else
-        {
+        else {
             mContent.setVisibility(View.GONE);
             mTimestampContainer.setVisibility(View.GONE);
         }
     }
 
-    private boolean isUnreadByRecipient(final Message message)
-    {
+    private boolean isUnreadByRecipient(final Message message) {
         return message != null
                 && mLayerIdentity != null
                 && message.getRecipientStatus(mLayerIdentity) != Message.RecipientStatus.READ;
     }
 
-    private boolean wasSentByMe(final Message message)
-    {
-        if (message != null && mLayerIdentity != null)
-        {
+    private boolean wasSentByMe(final Message message) {
+        if (message != null && mLayerIdentity != null) {
             final Identity sender = message.getSender();
             return sender != null && mLayerIdentity.getUserId().equals(sender.getUserId());
         }
-        else
-        {
+        else {
             return false;
         }
     }

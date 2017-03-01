@@ -30,8 +30,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 
-public class RequestDismissalReasonsDialogFragment extends ConfirmBookingActionDialogFragment
-{
+public class RequestDismissalReasonsDialogFragment extends ConfirmBookingActionDialogFragment {
     @Inject
     EventBus mBus;
 
@@ -47,8 +46,7 @@ public class RequestDismissalReasonsDialogFragment extends ConfirmBookingActionD
 
     public static RequestDismissalReasonsDialogFragment newInstance(
             final Booking booking,
-            final ArrayList<RequestDismissal.Reason> reasons)
-    {
+            final ArrayList<RequestDismissal.Reason> reasons) {
         final RequestDismissalReasonsDialogFragment dialogFragment =
                 new RequestDismissalReasonsDialogFragment();
         final Bundle arguments = new Bundle();
@@ -59,47 +57,38 @@ public class RequestDismissalReasonsDialogFragment extends ConfirmBookingActionD
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mReasons = (ArrayList<RequestDismissal.Reason>) getArguments().getSerializable(KEY_REASONS);
     }
 
     @Override
-    protected View inflateConfirmActionContentView(final LayoutInflater inflater, final ViewGroup container)
-    {
+    protected View inflateConfirmActionContentView(final LayoutInflater inflater, final ViewGroup container) {
         return inflater.inflate(R.layout.fragment_dialog_request_dismissal_reasons, container, false);
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         hideDismissButton();
-        for (final RequestDismissal.Reason reason : mReasons)
-        {
+        for (final RequestDismissal.Reason reason : mReasons) {
             final RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext())
                     .inflate(R.layout.radio_button_dismissal_reason, mReasonsRadioGroup, false);
             radioButton.setText(reason.getDisplayName());
-            radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-            {
+            radioButton.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(final CompoundButton compoundButton,
-                                             final boolean isChecked)
-                {
-                    if (isChecked)
-                    {
+                                             final boolean isChecked) {
+                    if (isChecked) {
                         final String reasonMachineName = reason.getMachineName();
                         mSelectedReasonMachineName = reasonMachineName;
                         // Show keyboard if "other" option is selected, otherwise dismiss it
-                        if (RequestDismissal.Reason.MACHINE_NAME_OTHER.equals(reasonMachineName))
-                        {
+                        if (RequestDismissal.Reason.MACHINE_NAME_OTHER.equals(reasonMachineName)) {
                             mOtherEditText.setVisibility(View.VISIBLE);
                             mOtherEditText.requestFocus();
                             UIUtils.showKeyboard(mOtherEditText);
                         }
-                        else
-                        {
+                        else {
                             mOtherEditText.setVisibility(View.GONE);
                             UIUtils.dismissKeyboard(mOtherEditText);
                         }
@@ -112,20 +101,16 @@ public class RequestDismissalReasonsDialogFragment extends ConfirmBookingActionD
     }
 
     @Override
-    protected void onConfirmActionButtonClicked()
-    {
-        if (mSelectedReasonMachineName == null)
-        {
+    protected void onConfirmActionButtonClicked() {
+        if (mSelectedReasonMachineName == null) {
             UIUtils.showToast(getActivity(),
                     getString(R.string.request_dismissal_reason_not_selected), Toast.LENGTH_SHORT);
             return;
         }
         String reasonDescription = null;
-        if (RequestDismissal.Reason.MACHINE_NAME_OTHER.equals(mSelectedReasonMachineName))
-        {
+        if (RequestDismissal.Reason.MACHINE_NAME_OTHER.equals(mSelectedReasonMachineName)) {
             reasonDescription = mOtherEditText.getText().toString();
-            if (TextUtils.isEmpty(reasonDescription))
-            {
+            if (TextUtils.isEmpty(reasonDescription)) {
                 UIUtils.showToast(getActivity(),
                         getString(R.string.request_dismissal_reason_description_missing),
                         Toast.LENGTH_SHORT);
@@ -136,22 +121,19 @@ public class RequestDismissalReasonsDialogFragment extends ConfirmBookingActionD
         intent.putExtra(BundleKeys.BOOKING, mBooking);
         intent.putExtra(BundleKeys.REASON_MACHINE_NAME, mSelectedReasonMachineName);
         intent.putExtra(BundleKeys.REASON_DESCRIPTION, reasonDescription);
-        if (getTargetFragment() != null)
-        {
+        if (getTargetFragment() != null) {
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, intent);
         }
         dismiss();
     }
 
     @Override
-    protected int getConfirmButtonBackgroundResourceId()
-    {
+    protected int getConfirmButtonBackgroundResourceId() {
         return R.drawable.button_grey_round;
     }
 
     @Override
-    protected String getConfirmButtonText()
-    {
+    protected String getConfirmButtonText() {
         return getString(R.string.dismiss_request);
     }
 }

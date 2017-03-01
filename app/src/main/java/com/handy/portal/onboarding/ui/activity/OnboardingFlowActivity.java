@@ -20,8 +20,7 @@ import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
 
 import java.util.ArrayList;
 
-public class OnboardingFlowActivity extends BaseActivity implements SubflowLauncher
-{
+public class OnboardingFlowActivity extends BaseActivity implements SubflowLauncher {
     private OnboardingDetails mOnboardingDetails;
     private ArrayList<Booking> mPendingBookings;
     private SuppliesOrderInfo mSuppliesOrderInfo;
@@ -34,14 +33,12 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
     private int mPercentCompleteJump;
 
     @Override
-    protected boolean shouldTriggerSetup()
-    {
+    protected boolean shouldTriggerSetup() {
         return true;
     }
 
     @Override
-    protected void onCreate(final Bundle savedInstanceState)
-    {
+    protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mOnboardingDetails = (OnboardingDetails) getIntent()
                 .getSerializableExtra(BundleKeys.ONBOARDING_DETAILS);
@@ -53,22 +50,17 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
     }
 
     @SuppressWarnings("unchecked")
-    private void restoreOnboardingFlow(final Bundle savedInstanceState)
-    {
-        if (savedInstanceState != null)
-        {
+    private void restoreOnboardingFlow(final Bundle savedInstanceState) {
+        if (savedInstanceState != null) {
             mPercentCompleteAddend = savedInstanceState.getInt(BundleKeys.PERCENT_COMPLETE_ADDEND);
             mLastLaunchedSubflowType = (SubflowType) savedInstanceState
                     .getSerializable(BundleKeys.SUBFLOW_TYPE);
-            if (mLastLaunchedSubflowType != null)
-            {
+            if (mLastLaunchedSubflowType != null) {
                 removeLaunchedSubflows();
-                if (mIncompleteSubflows.isEmpty())
-                {
+                if (mIncompleteSubflows.isEmpty()) {
                     finishOnboardingFlow(mLastLaunchedSubflowType != SubflowType.STATUS);
                 }
-                else
-                {
+                else {
                     final Intent data = new Intent();
                     data.putExtras(savedInstanceState);
                     savePendingBookingsIfAvailable(data);
@@ -79,13 +71,10 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
         }
     }
 
-    private void removeLaunchedSubflows()
-    {
-        if (!mIncompleteSubflows.isEmpty())
-        {
+    private void removeLaunchedSubflows() {
+        if (!mIncompleteSubflows.isEmpty()) {
             OnboardingSubflowDetails removedSubflow;
-            do
-            {
+            do {
                 removedSubflow = mIncompleteSubflows.remove(0);
             }
             while (!mIncompleteSubflows.isEmpty()
@@ -94,27 +83,22 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
     }
 
     @Override
-    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data)
-    {
+    protected void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == RequestCode.ONBOARDING_SUBFLOW)
-        {
-            switch (resultCode)
-            {
+        if (requestCode == RequestCode.ONBOARDING_SUBFLOW) {
+            switch (resultCode) {
                 case RESULT_OK:
                     savePendingBookingsIfAvailable(data);
                     saveSuppliesOrderInfoIfAvailable(data);
                     mPercentCompleteAddend += mPercentCompleteJump;
                     mOnboardingFlow.goForward();
-                    if (mOnboardingFlow.isComplete())
-                    {
+                    if (mOnboardingFlow.isComplete()) {
                         finishOnboardingFlow(true);
                     }
                     break;
                 case RESULT_CANCELED:
                     boolean shouldLaunchSplash = true;
-                    if (data != null)
-                    {
+                    if (data != null) {
                         shouldLaunchSplash = !data.getBooleanExtra(BundleKeys.FORCE_FINISH, false);
                     }
                     finishOnboardingFlow(shouldLaunchSplash);
@@ -125,53 +109,43 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
         }
     }
 
-    private void finishOnboardingFlow(final boolean shouldLaunchSplash)
-    {
-        if (shouldLaunchSplash)
-        {
+    private void finishOnboardingFlow(final boolean shouldLaunchSplash) {
+        if (shouldLaunchSplash) {
             startActivity(new Intent(this, SplashActivity.class));
         }
         finish();
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
-        if (mOnboardingFlow == null)
-        {
+        if (mOnboardingFlow == null) {
             initOnboardingFlow();
             mOnboardingFlow.start();
         }
     }
 
-    private void initOnboardingFlow()
-    {
+    private void initOnboardingFlow() {
         mOnboardingFlow = new Flow();
-        for (final OnboardingSubflowDetails subflow : mIncompleteSubflows)
-        {
-            if (subflow.getType() != null)
-            {
+        for (final OnboardingSubflowDetails subflow : mIncompleteSubflows) {
+            if (subflow.getType() != null) {
                 mOnboardingFlow.addStep(new OnboardingFlowStep(this, subflow.getType()));
             }
         }
     }
 
     @Override
-    public void launchSubflow(final SubflowType subflowType)
-    {
+    public void launchSubflow(final SubflowType subflowType) {
         final Intent intent = new Intent(this, OnboardingSubflowActivity.class);
         intent.putExtra(BundleKeys.ONBOARDING_DETAILS, mOnboardingDetails);
         intent.putExtra(BundleKeys.SUBFLOW_TYPE, subflowType);
         intent.putExtra(BundleKeys.IS_SINGLE_STEP_MODE, mIsSingleStepMode);
         intent.putExtra(BundleKeys.PERCENT_COMPLETE, mBasePercentComplete + mPercentCompleteAddend);
         intent.putExtra(BundleKeys.PERCENT_RANGE, mPercentCompleteJump);
-        if (mPendingBookings != null)
-        {
+        if (mPendingBookings != null) {
             intent.putExtra(BundleKeys.BOOKINGS, mPendingBookings);
         }
-        if (mSuppliesOrderInfo != null)
-        {
+        if (mSuppliesOrderInfo != null) {
             intent.putExtra(BundleKeys.SUPPLIES_ORDER_INFO, mSuppliesOrderInfo);
         }
         mLastLaunchedSubflowType = subflowType;
@@ -180,44 +154,36 @@ public class OnboardingFlowActivity extends BaseActivity implements SubflowLaunc
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState)
-    {
-        if (outState == null)
-        {
+    protected void onSaveInstanceState(Bundle outState) {
+        if (outState == null) {
             outState = new Bundle();
         }
         outState.putSerializable(BundleKeys.SUBFLOW_TYPE, mLastLaunchedSubflowType);
         outState.putSerializable(BundleKeys.BOOKINGS, mPendingBookings);
         outState.putSerializable(BundleKeys.SUPPLIES_ORDER_INFO, mSuppliesOrderInfo);
         outState.putInt(BundleKeys.PERCENT_COMPLETE_ADDEND, mPercentCompleteAddend);
-        try
-        {
+        try {
             super.onSaveInstanceState(outState);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             // Non fatal
             Crashlytics.logException(e);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void savePendingBookingsIfAvailable(final Intent data)
-    {
+    private void savePendingBookingsIfAvailable(final Intent data) {
         final ArrayList<Booking> pendingBookings =
                 (ArrayList<Booking>) data.getSerializableExtra(BundleKeys.BOOKINGS);
-        if (pendingBookings != null)
-        {
+        if (pendingBookings != null) {
             mPendingBookings = pendingBookings;
         }
     }
 
-    private void saveSuppliesOrderInfoIfAvailable(final Intent data)
-    {
+    private void saveSuppliesOrderInfoIfAvailable(final Intent data) {
         final SuppliesOrderInfo suppliesOrderInfo =
                 (SuppliesOrderInfo) data.getSerializableExtra(BundleKeys.SUPPLIES_ORDER_INFO);
-        if (suppliesOrderInfo != null)
-        {
+        if (suppliesOrderInfo != null) {
             mSuppliesOrderInfo = suppliesOrderInfo;
         }
     }

@@ -33,8 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
-{
+public class PaymentsUpdateDebitCardFragment extends ActionBarFragment {
     @BindView(R.id.debit_card_number_field)
     FormFieldTableRow debitCardNumberField;
 
@@ -62,15 +61,13 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     private boolean receivedDebitCardForChargeSuccess;
 
     @Override
-    public void onCreate(Bundle savedInstance)
-    {
+    public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setOptionsMenuEnabled(true);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_payments_update_debit_card, container, false);
@@ -80,21 +77,18 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setActionBarTitle(R.string.add_debit_card);
     }
 
     @Override
-    protected MainViewPage getAppPage()
-    {
+    protected MainViewPage getAppPage() {
         return MainViewPage.PAYMENTS;
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         setBackButtonEnabled(true);
         resetStates();
@@ -102,8 +96,7 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
         bus.register(this);
 
         final ProviderProfile providerProfile = providerManager.getCachedProviderProfile();
-        if (providerProfile != null && providerProfile.getProviderPersonalInfo() != null)
-        {
+        if (providerProfile != null && providerProfile.getProviderPersonalInfo() != null) {
             bus.post(new RegionDefinitionEvent.RequestFormDefinitions(
                     providerProfile.getProviderPersonalInfo().getAddress().getCountry(),
                     this.getContext()));
@@ -111,18 +104,15 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         bus.unregister(this);
         super.onPause();
     }
 
-    public boolean validate()
-    {
+    public boolean validate() {
         boolean allFieldsValid = true;
         Map<String, FieldDefinition> fieldDefinitionMap = formDefinitionWrapper.getFieldDefinitionsForForm(FORM_KEY);
-        if (fieldDefinitionMap != null)
-        {
+        if (fieldDefinitionMap != null) {
             allFieldsValid = UIUtils.validateField(debitCardNumberField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.DEBIT_CARD_NUMBER));
             allFieldsValid &= UIUtils.validateField(expirationDateField,
                     fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.EXPIRATION_MONTH),
@@ -136,10 +126,8 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     }
 
     @OnClick(R.id.payments_update_info_debit_card_submit_button)
-    public void onSubmitForm()
-    {
-        if (validate())
-        {
+    public void onSubmitForm() {
+        if (validate()) {
             DebitCardInfo debitCardInfo = new DebitCardInfo();
             debitCardInfo.setCardNumber(debitCardNumberField.getValue().getText().toString());
             debitCardInfo.setCvc(securityCodeField.getValue().getText().toString());
@@ -147,8 +135,7 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
             debitCardInfo.setExpYear(expirationDateField.getYearValue().getText().toString());
 
             ProviderProfile providerProfile = providerManager.getCachedProviderProfile();
-            if (providerProfile != null && providerProfile.getProviderPersonalInfo() != null)
-            {
+            if (providerProfile != null && providerProfile.getProviderPersonalInfo() != null) {
                 debitCardInfo.setCurrencyCode(providerProfile.getProviderPersonalInfo()
                         .getCurrencyCode().toLowerCase());
             }
@@ -156,25 +143,21 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
             bus.post(new StripeEvent.RequestStripeTokenFromDebitCard(debitCardInfo, DEBIT_CARD_RECIPIENT_REQUEST_ID));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         }
-        else
-        {
+        else {
             onFailure(R.string.form_not_filled_out_correctly);
         }
     }
 
     @Subscribe
-    public void onReceiveFormDefinitionsSuccess(RegionDefinitionEvent.ReceiveFormDefinitionsSuccess event)
-    {
+    public void onReceiveFormDefinitionsSuccess(RegionDefinitionEvent.ReceiveFormDefinitionsSuccess event) {
         this.formDefinitionWrapper = event.formDefinitionWrapper;
         updateFormWithDefinitions(formDefinitionWrapper);
     }
 
-    private void updateFormWithDefinitions(FormDefinitionWrapper formDefinitionWrapper)
-    {
+    private void updateFormWithDefinitions(FormDefinitionWrapper formDefinitionWrapper) {
         Map<String, FieldDefinition> fieldDefinitionMap = formDefinitionWrapper.getFieldDefinitionsForForm(FORM_KEY);
 
-        if (fieldDefinitionMap != null)
-        {
+        if (fieldDefinitionMap != null) {
             UIUtils.setFieldsFromDefinition(debitCardNumberField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.DEBIT_CARD_NUMBER));
             UIUtils.setFieldsFromDefinition(securityCodeField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.SECURITY_CODE_NUMBER));
             UIUtils.setFieldsFromDefinition(taxIdField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
@@ -190,12 +173,10 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveStripeTokenFromDebitCardSuccess(StripeEvent.ReceiveStripeTokenFromDebitCardSuccess event)
-    {
+    public void onReceiveStripeTokenFromDebitCardSuccess(StripeEvent.ReceiveStripeTokenFromDebitCardSuccess event) {
         String token = event.stripeTokenResponse.getStripeToken();
 
-        if (event.requestIdentifier == DEBIT_CARD_RECIPIENT_REQUEST_ID)
-        {
+        if (event.requestIdentifier == DEBIT_CARD_RECIPIENT_REQUEST_ID) {
             String taxIdString = taxIdField.getValue().getText().toString();
             String expMonthString = expirationDateField.getMonthValue().getText().toString();
             String expYearString = expirationDateField.getYearValue().getText().toString();
@@ -203,69 +184,58 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment
             String cardNumberLast4Digits = cardNumberString.substring(cardNumberString.length() - 4);
             bus.post(new PaymentEvent.RequestCreateDebitCardRecipient(token, taxIdString, cardNumberLast4Digits, expMonthString, expYearString));
         }
-        else if (event.requestIdentifier == DEBIT_CARD_FOR_CHARGE_REQUEST_ID)
-        {
+        else if (event.requestIdentifier == DEBIT_CARD_FOR_CHARGE_REQUEST_ID) {
             bus.post(new PaymentEvent.RequestCreateDebitCardForCharge(token));
         }
     }
 
     @Subscribe
-    public void onReceiveStripeTokenFromDebitCardError(StripeEvent.ReceiveStripeTokenFromDebitCardError event)
-    {
+    public void onReceiveStripeTokenFromDebitCardError(StripeEvent.ReceiveStripeTokenFromDebitCardError event) {
         onFailure(R.string.update_debit_card_failed);
     }
 
-    private void onFailure(int errorStringId)
-    {
+    private void onFailure(int errorStringId) {
         resetStates();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         showToast(errorStringId, Toast.LENGTH_LONG);
     }
 
-    private void checkSuccess()
-    {
-        if (receivedDebitCardForChargeSuccess && receivedDebitCardRecipientSuccess)
-        {
+    private void checkSuccess() {
+        if (receivedDebitCardForChargeSuccess && receivedDebitCardRecipientSuccess) {
             onSuccess();
         }
     }
 
-    private void onSuccess()
-    {
+    private void onSuccess() {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         showToast(R.string.update_debit_card_success, Toast.LENGTH_LONG);
         UIUtils.dismissOnBackPressed(getActivity());
     }
 
-    private void resetStates()
-    {
+    private void resetStates() {
         receivedDebitCardRecipientSuccess = false;
         receivedDebitCardForChargeSuccess = false;
     }
 
     @Subscribe
-    public void onReceiveCreateDebitCardRecipientSuccess(PaymentEvent.ReceiveCreateDebitCardRecipientSuccess event)
-    {
+    public void onReceiveCreateDebitCardRecipientSuccess(PaymentEvent.ReceiveCreateDebitCardRecipientSuccess event) {
         receivedDebitCardRecipientSuccess = true;
         checkSuccess();
     }
 
     @Subscribe
-    public void onReceiveCreateDebitCardRecipientError(PaymentEvent.ReceiveCreateDebitCardRecipientError event)
-    {
+    public void onReceiveCreateDebitCardRecipientError(PaymentEvent.ReceiveCreateDebitCardRecipientError event) {
         onFailure(R.string.update_debit_card_failed);
     }
 
     @Subscribe
-    public void onReceiveCreateDebitCardForChargeSuccess(PaymentEvent.ReceiveCreateDebitCardForChargeSuccess event)
-    {
+    public void onReceiveCreateDebitCardForChargeSuccess(PaymentEvent.ReceiveCreateDebitCardForChargeSuccess event) {
         receivedDebitCardForChargeSuccess = true;
         checkSuccess();
     }
 
     @Subscribe
-    public void onReceiveCreateDebitCardForChargeError(PaymentEvent.ReceiveCreateDebitCardForChargeError event)
-    {
+    public void onReceiveCreateDebitCardForChargeError(PaymentEvent.ReceiveCreateDebitCardForChargeError event) {
         onFailure(R.string.update_debit_card_failed);
     }
 }

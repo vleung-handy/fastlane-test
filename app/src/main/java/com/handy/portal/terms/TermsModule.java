@@ -16,13 +16,11 @@ import dagger.Provides;
                 TermsActivity.class,
                 TermsFragment.class,
         })
-public final class TermsModule
-{
+public final class TermsModule {
     @Provides
     @Singleton
     final TermsManager provideTermsManager(final EventBus bus,
-                                           final DataManager dataManager)
-    {
+                                           final DataManager dataManager) {
         return new TermsManager(bus, dataManager);
     }
 }

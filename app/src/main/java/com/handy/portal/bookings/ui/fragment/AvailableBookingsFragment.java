@@ -50,8 +50,7 @@ import butterknife.BindView;
 
 import static com.handy.portal.bookings.manager.BookingModalsManager.BookingsForDaysAheadModalsManager.BookingsForDaysAheadModalType;
 
-public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.ReceiveAvailableBookingsSuccess>
-{
+public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.ReceiveAvailableBookingsSuccess> {
     public final static int DEFAULT_NUM_DAYS_FOR_AVAILABLE_JOBS = DateTimeUtils.DAYS_IN_A_WEEK; //includes Today
     private static final String SOURCE_AVAILABLE_JOBS_LIST = "available_jobs_list";
 
@@ -72,47 +71,39 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     BookingModalsManager mBookingModalsManager;
 
     @Override
-    protected MainViewPage getAppPage()
-    {
+    protected MainViewPage getAppPage() {
         return MainViewPage.AVAILABLE_JOBS;
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mJobAccessUnlockedBannerLayout = new BookingsBannerView(getContext()).setContentVisible(false);
         getBookingListView().addHeaderView(mJobAccessUnlockedBannerLayout);
         //hacky: need to add the banner as booking list header view so it will scroll with the bookings list
 
-        mJobAccessLockedLayout.setKeepRateInfoButtonClickListener(new View.OnClickListener()
-        {
+        mJobAccessLockedLayout.setKeepRateInfoButtonClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(final View v)
-            {
+            public void onClick(final View v) {
                 goToHelpCenter(HelpCenterUrl.KEEP_RATE_INFO_REDIRECT_URL);
             }
         });
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         bus.register(this);
         super.onResume();
         setActionBar(R.string.available_jobs, false);
 
-        if (!MainActivity.clearingBackStack)
-        {
-            if (shouldShowAvailableBookingsToggle())
-            {
+        if (!MainActivity.clearingBackStack) {
+            if (shouldShowAvailableBookingsToggle()) {
                 mToggleAvailableJobNotification.setVisibility(View.VISIBLE);
             }
             setLateDispatchOptInToggleListener();
@@ -120,80 +111,67 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         bus.unregister(this);
         super.onPause();
     }
 
     @Override
-    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
-    {
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_available_bookings, menu);
     }
 
-    protected BookingListView getBookingListView()
-    {
+    protected BookingListView getBookingListView() {
         return mAvailableJobsListView;
     }
 
     @Override
-    protected SwipeRefreshLayout getNoBookingsSwipeRefreshLayout()
-    {
+    protected SwipeRefreshLayout getNoBookingsSwipeRefreshLayout() {
         return mNoAvailableBookingsLayout;
     }
 
-    protected LinearLayout getDatesLayout()
-    {
+    protected LinearLayout getDatesLayout() {
         return mAvailableJobsDatesScrollViewLayout;
     }
 
     @Override
-    protected void requestBookings(List<Date> dates, boolean useCachedIfPresent)
-    {
+    protected void requestBookings(List<Date> dates, boolean useCachedIfPresent) {
         mBookingManager.requestAvailableBookings(dates, useCachedIfPresent);
     }
 
     @Override
-    protected int getFragmentResourceId()
-    {
+    protected int getFragmentResourceId() {
         return (R.layout.fragment_available_bookings);
     }
 
     @NonNull
     @Override
-    protected String getTrackingType()
-    {
+    protected String getTrackingType() {
         return getString(R.string.available_job);
     }
 
     @Override
-    protected boolean shouldShowRequestedIndicator(List<Booking> bookingsForDay)
-    {
+    protected boolean shouldShowRequestedIndicator(List<Booking> bookingsForDay) {
         //Bookings are sorted such that the requested bookings show up first so we just need to check the first one
         return bookingsForDay.size() > 0 && bookingsForDay.get(0).isRequested();
     }
 
-    private void goToHelpCenter(final String helpCenterRedirectPath)
-    {
+    private void goToHelpCenter(final String helpCenterRedirectPath) {
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, helpCenterRedirectPath);
         bus.post(new NavigationEvent.NavigateToPage(MainViewPage.HELP_WEBVIEW, arguments, true));
     }
 
     @Override
-    protected boolean shouldShowClaimedIndicator(List<Booking> bookingsForDay)
-    {
+    protected boolean shouldShowClaimedIndicator(List<Booking> bookingsForDay) {
         return false;
     }
 
     @Override
-    protected int numberOfDaysToDisplay()
-    {
+    protected int numberOfDaysToDisplay() {
         int daysSpanningAvailableBookings = DEFAULT_NUM_DAYS_FOR_AVAILABLE_JOBS;
-        if (configManager.getConfigurationResponse() != null)
-        {
+        if (configManager.getConfigurationResponse() != null) {
             daysSpanningAvailableBookings = configManager.getConfigurationResponse()
                     .getNumberOfDaysForAvailableJobs();
         }
@@ -201,39 +179,32 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected void beforeRequestBookings()
-    {
-        if (shouldShowAvailableBookingsToggle())
-        {
+    protected void beforeRequestBookings() {
+        if (shouldShowAvailableBookingsToggle()) {
             mToggleAvailableJobNotification.setVisibility(View.VISIBLE);
         }
-        else
-        {
+        else {
             mToggleAvailableJobNotification.setVisibility(View.GONE);
         }
     }
 
     @Override
-    protected Class<? extends BookingElementView> getBookingElementViewClass()
-    {
+    protected Class<? extends BookingElementView> getBookingElementViewClass() {
         return AvailableBookingElementView.class;
     }
 
     @Override
-    protected String getBookingSourceName()
-    {
+    protected String getBookingSourceName() {
         return SOURCE_AVAILABLE_JOBS_LIST;
     }
 
     @Nullable
     @Override
-    protected DatesPagerAdapter getDatesPagerAdapter()
-    {
+    protected DatesPagerAdapter getDatesPagerAdapter() {
         return null;
     }
 
-    protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
-    {
+    protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings) {
         super.afterDisplayBookings(bookingsForDay, dateOfBookings);
     }
 
@@ -245,8 +216,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
      * @param dateOfBookings
      */
     @Override
-    protected void displayBookings(@NonNull final BookingsWrapper bookingsWrapper, @NonNull final Date dateOfBookings)
-    {
+    protected void displayBookings(@NonNull final BookingsWrapper bookingsWrapper, @NonNull final Date dateOfBookings) {
         super.displayBookings(bookingsWrapper, dateOfBookings);
         showBookingsForDayModalsAndBannersIfNecessary(bookingsWrapper, dateOfBookings);
     }
@@ -264,13 +234,10 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         mJobAccessUnlockedBannerLayout.setContentVisible(false);
         mJobAccessLockedLayout.setVisibility(View.GONE);
         BookingsWrapper.PriorityAccessInfo priorityAccessInfo = bookingsWrapper.getPriorityAccessInfo();
-        if (priorityAccessInfo != null)
-        {
+        if (priorityAccessInfo != null) {
             BookingsWrapper.PriorityAccessInfo.BookingsForDayPriorityAccessStatus bookingsForDayPriorityAccessStatus = priorityAccessInfo.getBookingsForDayStatus();
-            if (bookingsForDayPriorityAccessStatus != null)
-            {
-                switch (bookingsForDayPriorityAccessStatus)
-                {
+            if (bookingsForDayPriorityAccessStatus != null) {
+                switch (bookingsForDayPriorityAccessStatus) {
                     case NEW_PRO:
                         showBookingsLayoutForEarlyAccessTrialPriorityAccess(priorityAccessInfo, dateOfBookings);
                         break;
@@ -286,8 +253,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     private void showBookingsLayoutForEarlyAccessTrialPriorityAccess(@NonNull BookingsWrapper.PriorityAccessInfo priorityAccessInfo,
-                                                                     @NonNull Date dateOfBookings)
-    {
+                                                                     @NonNull Date dateOfBookings) {
         BookingsForDaysAheadModalsManager bookingsForDaysAheadModalsManager
                 = mBookingModalsManager.getBookingsForDayModalsManager(BookingsForDaysAheadModalType.UNLOCKED_TRIAL_MODAL, dateOfBookings);
 
@@ -303,8 +269,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
         //only show the modal if it wasn't shown before
         if (!bookingsForDaysAheadModalsManager.bookingsForDayModalPreviouslyShown()
-                && getActivity().getSupportFragmentManager().findFragmentByTag(EarlyAccessTrialDialogFragment.FRAGMENT_TAG) == null)
-        {
+                && getActivity().getSupportFragmentManager().findFragmentByTag(EarlyAccessTrialDialogFragment.FRAGMENT_TAG) == null) {
             EarlyAccessTrialDialogFragment earlyAccessTrialDialogFragment =
                     EarlyAccessTrialDialogFragment.newInstance(priorityAccessInfo);
             FragmentUtils.safeLaunchDialogFragment(earlyAccessTrialDialogFragment, getActivity(), EarlyAccessTrialDialogFragment.FRAGMENT_TAG);
@@ -313,8 +278,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     private void showBookingsLayoutForUnlockedPriorityAccess(@NonNull BookingsWrapper.PriorityAccessInfo priorityAccessInfo,
-                                                             @NonNull Date dateOfBookings)
-    {
+                                                             @NonNull Date dateOfBookings) {
         BookingsForDaysAheadModalsManager bookingsForDaysAheadModalsManager
                 = mBookingModalsManager.getBookingsForDayModalsManager(BookingsForDaysAheadModalType.UNLOCKED_MODAL, dateOfBookings);
 
@@ -331,8 +295,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
         //only show the modal if it wasn't shown before
         if (!bookingsForDaysAheadModalsManager.bookingsForDayModalPreviouslyShown()
-                && getActivity().getSupportFragmentManager().findFragmentByTag(JobAccessUnlockedDialogFragment.FRAGMENT_TAG) == null)
-        {
+                && getActivity().getSupportFragmentManager().findFragmentByTag(JobAccessUnlockedDialogFragment.FRAGMENT_TAG) == null) {
             JobAccessUnlockedDialogFragment jobAccessUnlockedDialogFragment =
                     JobAccessUnlockedDialogFragment.newInstance(priorityAccessInfo);
             FragmentUtils.safeLaunchDialogFragment(jobAccessUnlockedDialogFragment, getActivity(), JobAccessUnlockedDialogFragment.FRAGMENT_TAG);
@@ -340,8 +303,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         }
     }
 
-    private void showBookingsLayoutForLockedPriorityAccess(@NonNull BookingsWrapper.PriorityAccessInfo priorityAccessInfo)
-    {
+    private void showBookingsLayoutForLockedPriorityAccess(@NonNull BookingsWrapper.PriorityAccessInfo priorityAccessInfo) {
         mJobAccessLockedLayout
                 .setTitleText(priorityAccessInfo.getMessageTitle())
                 .setDescriptionText(priorityAccessInfo.getMessageDescription());
@@ -351,41 +313,34 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Subscribe
-    public void onBookingsRetrieved(HandyEvent.ReceiveAvailableBookingsSuccess event)
-    {
+    public void onBookingsRetrieved(HandyEvent.ReceiveAvailableBookingsSuccess event) {
         handleBookingsRetrieved(event);
     }
 
     @Subscribe
-    public void onRequestBookingsError(HandyEvent.ReceiveAvailableBookingsError event)
-    {
+    public void onRequestBookingsError(HandyEvent.ReceiveAvailableBookingsError event) {
         handleBookingsRetrievalError(event, R.string.error_fetching_available_jobs);
     }
 
     @Subscribe
-    public void onReceiveProviderSettingsSuccess(ProviderSettingsEvent.ReceiveProviderSettingsSuccess event)
-    {
+    public void onReceiveProviderSettingsSuccess(ProviderSettingsEvent.ReceiveProviderSettingsSuccess event) {
         mProviderSettings = event.getProviderSettings().clone();
         mToggleAvailableJobNotification.setChecked(mProviderSettings.hasOptedInToLateDispatchNotifications());
-        if (shouldShowAvailableBookingsToggle())
-        {
+        if (shouldShowAvailableBookingsToggle()) {
             mToggleAvailableJobNotification.setVisibility(View.VISIBLE);
         }
     }
 
 
     @Subscribe
-    public void onReceiveProviderSettingsError(ProviderSettingsEvent.ReceiveProviderSettingsError event)
-    {
+    public void onReceiveProviderSettingsError(ProviderSettingsEvent.ReceiveProviderSettingsError event) {
     }
 
     @Subscribe
-    public void onReceiveProviderSettingsUpdateSuccess(ProviderSettingsEvent.ReceiveProviderSettingsUpdateSuccess event)
-    {
+    public void onReceiveProviderSettingsUpdateSuccess(ProviderSettingsEvent.ReceiveProviderSettingsUpdateSuccess event) {
         mProviderSettings = event.getProviderSettings().clone();
         if (!mPrefsManager.getSecureBoolean(PrefsKey.SAME_DAY_LATE_DISPATCH_AVAILABLE_JOB_NOTIFICATION_EXPLAINED, false) &&
-                mProviderSettings.hasOptedInToLateDispatchNotifications())
-        {
+                mProviderSettings.hasOptedInToLateDispatchNotifications()) {
             mPrefsManager.setSecureBoolean(PrefsKey.SAME_DAY_LATE_DISPATCH_AVAILABLE_JOB_NOTIFICATION_EXPLAINED, true);
             Snackbar snackbar = Snackbar
                     .make(mBookingsContent, R.string.notify_available_jobs_update_intro_success, Snackbar.LENGTH_LONG);
@@ -395,16 +350,13 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Subscribe
-    public void onReceiveProviderSettingsUpdateError(ProviderSettingsEvent.ReceiveProviderSettingsUpdateError event)
-    {
-        if (mProviderSettings != null)
-        {
+    public void onReceiveProviderSettingsUpdateError(ProviderSettingsEvent.ReceiveProviderSettingsUpdateError event) {
+        if (mProviderSettings != null) {
             boolean optedIn = !mProviderSettings.hasOptedInToLateDispatchNotifications();
             mProviderSettings.setLateDispatchOptIn(optedIn);
             mToggleAvailableJobNotification.setChecked(optedIn);
         }
-        else
-        {
+        else {
             bus.post(new ProviderSettingsEvent.RequestProviderSettings());
         }
 
@@ -414,8 +366,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         snackbar.show();
     }
 
-    private boolean shouldShowAvailableBookingsToggle()
-    {
+    private boolean shouldShowAvailableBookingsToggle() {
         return mSelectedDay != null &&
                 DateTimeUtils.isToday(mSelectedDay) &&
                 getConfigurationResponse() != null &&
@@ -424,24 +375,18 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     }
 
-    private ConfigurationResponse getConfigurationResponse()
-    {
+    private ConfigurationResponse getConfigurationResponse() {
         return mConfigManager.getConfigurationResponse();
     }
 
-    private void setLateDispatchOptInToggleListener()
-    {
-        mToggleAvailableJobNotification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener()
-        {
+    private void setLateDispatchOptInToggleListener() {
+        mToggleAvailableJobNotification.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked)
-            {
-                if (mProviderSettings == null)
-                {
+            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
+                if (mProviderSettings == null) {
                     bus.post(new ProviderSettingsEvent.RequestProviderSettings());
                 }
-                else if (mProviderSettings.hasOptedInToLateDispatchNotifications() != isChecked)
-                {
+                else if (mProviderSettings.hasOptedInToLateDispatchNotifications() != isChecked) {
                     mProviderSettings.setLateDispatchOptIn(isChecked);
                     bus.post(new ProviderSettingsEvent.RequestProviderSettingsUpdate(mProviderSettings));
                 }
@@ -450,12 +395,10 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected void handleBookingsRetrieved(final HandyEvent.ReceiveAvailableBookingsSuccess event)
-    {
+    protected void handleBookingsRetrieved(final HandyEvent.ReceiveAvailableBookingsSuccess event) {
         super.handleBookingsRetrieved(event);
 
-        if (event.bookingsWrapper == null || event.day == null)
-        {
+        if (event.bookingsWrapper == null || event.day == null) {
             Crashlytics.logException(new Exception("received available bookings event with null bookings wrapper or day"));
             return;
         }
@@ -470,14 +413,12 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
      * @param bookingsWrapper
      * @param date
      */
-    private void resetBookingsForDayUnlockedModalsShownIfNecessary(@NonNull BookingsWrapper bookingsWrapper, @NonNull Date date)
-    {
+    private void resetBookingsForDayUnlockedModalsShownIfNecessary(@NonNull BookingsWrapper bookingsWrapper, @NonNull Date date) {
         BookingsWrapper.PriorityAccessInfo priorityAccessInfo = bookingsWrapper.getPriorityAccessInfo();
         if (priorityAccessInfo == null
                 || priorityAccessInfo.getBookingsForDayStatus() == null
                 || priorityAccessInfo.getBookingsForDayStatus() ==
-                BookingsWrapper.PriorityAccessInfo.BookingsForDayPriorityAccessStatus.LOCKED)
-        {
+                BookingsWrapper.PriorityAccessInfo.BookingsForDayPriorityAccessStatus.LOCKED) {
             mBookingModalsManager
                     .getBookingsForDayModalsManager(BookingsForDaysAheadModalType.UNLOCKED_MODAL, date)
                     .resetModalShownStatus();

@@ -32,8 +32,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CustomerNoShowDialogFragment extends InjectedDialogFragment
-{
+public class CustomerNoShowDialogFragment extends InjectedDialogFragment {
     @BindView(R.id.fragment_dialog_customer_no_show_instructions_list)
     LinearLayout mInstructionsList;
     @BindView(R.id.fragment_dialog_customer_no_show_payment_info_text)
@@ -52,13 +51,11 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment
             R.string.customer_no_show_instructions_list_item_wait_for_customer
     };
 
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NORMAL, R.style.AppTheme);
         mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING); //should not be null
-        if (mBooking == null)
-        {
+        if (mBooking == null) {
             Crashlytics.logException(new Exception("Booking is null in customer no show dialog fragment"));
             Toast.makeText(getContext(), R.string.error_fetching_booking_details, Toast.LENGTH_LONG).show();
             dismiss();
@@ -67,8 +64,7 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment
         mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerNoShowModalShown(mBooking.getId())));
     }
 
-    public static CustomerNoShowDialogFragment newInstance(@NonNull Booking booking)
-    {
+    public static CustomerNoShowDialogFragment newInstance(@NonNull Booking booking) {
         CustomerNoShowDialogFragment fragment = new CustomerNoShowDialogFragment();
         Bundle args = new Bundle();
         args.putSerializable(BundleKeys.BOOKING, booking);
@@ -78,43 +74,36 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment
 
     @NonNull
     @Override
-    public Dialog onCreateDialog(final Bundle savedInstanceState)
-    {
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        if (dialog.getWindow() != null)
-        {
+        if (dialog.getWindow() != null) {
             dialog.getWindow().setWindowAnimations(R.style.dialog_animation_slide_up_down_from_bottom);
         }
         return dialog;
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dialog_customer_no_show, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
 
     @Override
-    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         if (mBooking == null) { return; }
         updateHeaderWithBookingPaymentInfo();
         populateInstructionsList(INSTRUCTION_LIST_STRING_RESOURCE_IDS);
     }
 
-    private void updateHeaderWithBookingPaymentInfo()
-    {
+    private void updateHeaderWithBookingPaymentInfo() {
         mPaymentInfoText.setText(R.string.customer_no_show_payment_info);
     }
 
-    private void populateInstructionsList(@NonNull final int[] instructionListStringResourceIds)
-    {
+    private void populateInstructionsList(@NonNull final int[] instructionListStringResourceIds) {
         mInstructionsList.removeAllViews();
-        for (int instructionListStringResourceId : instructionListStringResourceIds)
-        {
+        for (int instructionListStringResourceId : instructionListStringResourceIds) {
             BulletListItem instructionListItem = new BulletListItem(getContext())
                     .setBulletDrawable(R.drawable.circle_grey)
                     .setBulletColorTint(R.color.white_pressed)
@@ -125,31 +114,26 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment
     }
 
     @OnClick(R.id.fragment_dialog_customer_no_show_dismiss_button)
-    public void onDismissButtonClicked()
-    {
+    public void onDismissButtonClicked() {
         dismiss();
     }
 
     @OnClick(R.id.fragment_dialog_customer_no_show_view_policy_button)
-    public void onViewPolicyClicked()
-    {
+    public void onViewPolicyClicked() {
         showCustomerNoShowPolicyWebView();
     }
 
-    private void showCustomerNoShowPolicyWebView()
-    {
+    private void showCustomerNoShowPolicyWebView() {
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, HelpCenterUrl.CUSTOMER_NO_SHOW_POLICY_REDIRECT_URL);
         mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.HELP_WEBVIEW, arguments, true));
     }
 
     @OnClick(R.id.fragment_dialog_customer_no_show_complete_report_button)
-    public void onCompleteReportButtonClicked()
-    {
+    public void onCompleteReportButtonClicked() {
         if (isRemoving() || isDetached()) { return; }
         OnReportCustomerNoShowButtonClickedListener onReportCustomerNoShowButtonClickedListener;
-        try
-        {
+        try {
             /*
             NOTE: Google recommends the callback implementor to be an activity
             but not doing that here because our app currently isn't modularized by activities enough
@@ -177,8 +161,7 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment
         dismiss();
     }
 
-    public interface OnReportCustomerNoShowButtonClickedListener
-    {
+    public interface OnReportCustomerNoShowButtonClickedListener {
         void onReportCustomerNoShowButtonClicked();
     }
 }

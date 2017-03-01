@@ -1,25 +1,21 @@
 package com.handy.portal.flow;
 
-public abstract class FlowStep
-{
+public abstract class FlowStep {
     private Forwardable mForwardable;
 
     public abstract boolean shouldExecute();
 
     public abstract void execute();
 
-    void setFlow(final Forwardable forwardable)
-    {
+    void setFlow(final Forwardable forwardable) {
         mForwardable = forwardable;
     }
 
-    protected int getId()
-    {
+    protected int getId() {
         return System.identityHashCode(this);
     }
 
-    public void complete()
-    {
+    public void complete() {
         mForwardable.goForward();
     }
 }

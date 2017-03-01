@@ -38,8 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PleaseUpdateFragment extends InjectedFragment
-{
+public class PleaseUpdateFragment extends InjectedFragment {
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 0;
     private static final String ANDROID_PACKAGE_INSTALLER_PACKAGE_NAME = "com.android.packageinstaller";
     private static final String ANDROID_PACKAGE_INSTALLER_ACTIVITY_NAME = "com.android.packageinstaller.PackageInstallerActivity";
@@ -68,8 +67,7 @@ public class PleaseUpdateFragment extends InjectedFragment
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
+                             Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_please_update, container);
         ButterKnife.bind(this, view);
@@ -77,11 +75,9 @@ public class PleaseUpdateFragment extends InjectedFragment
         ((AnimationDrawable) mUpdateImage.getBackground()).start();
         checkPermissions();
 
-        mGrantAccessButton.setOnClickListener(new Button.OnClickListener()
-        {
+        mGrantAccessButton.setOnClickListener(new Button.OnClickListener() {
             @Override
-            public void onClick(final View v)
-            {
+            public void onClick(final View v) {
                 requestPermissions();
             }
         });
@@ -96,18 +92,15 @@ public class PleaseUpdateFragment extends InjectedFragment
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         bus.register(this);
-        if (!mVersionManager.hasRequestedDownload() && !shouldRequestPermissions())
-        {
+        if (!mVersionManager.hasRequestedDownload() && !shouldRequestPermissions()) {
             mGrantPermissionsSection.setVisibility(View.GONE);
             mInstallUpdateSection.setVisibility(View.VISIBLE);
             downloadApk();
         }
-        else if (mAlreadyAskedPermissions && mApkUri == null)
-        {
+        else if (mAlreadyAskedPermissions && mApkUri == null) {
             mInstallUpdateSection.setVisibility(View.GONE);
             mGrantPermissionsSection.setVisibility(View.VISIBLE);
         }
@@ -115,31 +108,26 @@ public class PleaseUpdateFragment extends InjectedFragment
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         bus.unregister(this);
         super.onPause();
     }
 
     @Subscribe
-    public void onReceiveUpdateAvailableSuccess(AppUpdateEvent.ReceiveUpdateAvailableSuccess event)
-    {
+    public void onReceiveUpdateAvailableSuccess(AppUpdateEvent.ReceiveUpdateAvailableSuccess event) {
         showUpdateLaterButtonForUpdateDetails();
         downloadApk();
     }
 
     @Subscribe
-    public void onDownloadUpdateSuccessful(AppUpdateEvent.DownloadUpdateSuccessful event)
-    {
+    public void onDownloadUpdateSuccessful(AppUpdateEvent.DownloadUpdateSuccessful event) {
         mUpdateLaterButton.setVisibility(View.GONE);
         mUpdateImage.setBackgroundResource(R.drawable.img_update_success);
         mUpdateButton.setEnabled(true);
         mUpdateText.setText(R.string.update_copy);
-        mUpdateButton.setOnClickListener(new View.OnClickListener()
-        {
+        mUpdateButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(final View v)
-            {
+            public void onClick(final View v) {
                 installApk();
             }
         });
@@ -147,16 +135,14 @@ public class PleaseUpdateFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onDownloadUpdateFailed(AppUpdateEvent.DownloadUpdateFailed event)
-    {
+    public void onDownloadUpdateFailed(AppUpdateEvent.DownloadUpdateFailed event) {
         bus.post(new LogEvent.AddLogEvent(new AppUpdateLog.Failed(getApkDownloadUrl())));
         showToast(R.string.update_failed);
         finishActivity();
     }
 
     @OnClick(R.id.update_button)
-    protected void installApk()
-    {
+    protected void installApk() {
         bus.post(new LogEvent.AddLogEvent(new AppUpdateLog.Started(getApkDownloadUrl())));
 
         final Intent installIntent = new Intent(Intent.ACTION_VIEW);
@@ -164,23 +150,21 @@ public class PleaseUpdateFragment extends InjectedFragment
 
         installIntent.addFlags(
                 Intent.FLAG_ACTIVITY_CLEAR_TOP
-                | Intent.FLAG_ACTIVITY_NEW_TASK
-                | Intent.FLAG_GRANT_READ_URI_PERMISSION
+                        | Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_GRANT_READ_URI_PERMISSION
                 //grant the package installer the permissions to read the given uri
         );
         Uri newApkUri = mVersionManager.getNewApkUri(getContext());
 
         installIntent.setDataAndType(newApkUri, VersionManager.APK_MIME_TYPE);
         boolean successfullyLaunchedInstallIntent = Utils.safeLaunchIntent(installIntent, getActivity());
-        if (!successfullyLaunchedInstallIntent)
-        {
+        if (!successfullyLaunchedInstallIntent) {
             bus.post(new LogEvent.AddLogEvent(new AppUpdateLog.Failed(getApkDownloadUrl())));
         }
     }
 
     @OnClick(R.id.app_update_fragment_update_later_button)
-    protected void onUpdateLaterButtonClicked()
-    {
+    protected void onUpdateLaterButtonClicked() {
         bus.post(new LogEvent.AddLogEvent(new AppUpdateLog.Skipped(getApkDownloadUrl())));
         mVersionManager.cancelDownloadApk();
         finishActivity();
@@ -192,65 +176,52 @@ public class PleaseUpdateFragment extends InjectedFragment
      *
      * @return
      */
-    private String getApkDownloadUrl()
-    {
+    private String getApkDownloadUrl() {
         return mVersionManager.getUpdateDetails() == null ? null : mVersionManager.getUpdateDetails().getDownloadUrl();
     }
 
-    private void finishActivity()
-    {
+    private void finishActivity() {
         getActivity().finish();
     }
 
-    private void setPackageInstallerComponent(final Intent installIntent)
-    {
+    private void setPackageInstallerComponent(final Intent installIntent) {
         final ComponentName packageInstallerComponentName =
                 new ComponentName(ANDROID_PACKAGE_INSTALLER_PACKAGE_NAME,
                         ANDROID_PACKAGE_INSTALLER_ACTIVITY_NAME);
-        try
-        {
+        try {
             final PackageManager packageManager = getActivity().getPackageManager();
             final ActivityInfo activityInfo =
                     packageManager.getActivityInfo(packageInstallerComponentName, 0);
-            if (activityInfo != null)
-            {
+            if (activityInfo != null) {
                 installIntent.setComponent(packageInstallerComponentName);
             }
-            else
-            {
+            else {
                 Crashlytics.logException(
                         new RuntimeException(
                                 "Unable to use " + ANDROID_PACKAGE_INSTALLER_PACKAGE_NAME));
             }
         }
-        catch (PackageManager.NameNotFoundException e)
-        {
+        catch (PackageManager.NameNotFoundException e) {
             Crashlytics.logException(e);
         }
     }
 
-    private void checkPermissions()
-    {
-        if (shouldRequestPermissions())
-        {
+    private void checkPermissions() {
+        if (shouldRequestPermissions()) {
             showExternalStorageRequestPermissionAlert();
         }
-        else
-        {
+        else {
             downloadApk();
         }
     }
 
-    private void showExternalStorageRequestPermissionAlert()
-    {
+    private void showExternalStorageRequestPermissionAlert() {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(getContext());
         alertDialogBuilder
                 .setTitle(R.string.allow_external_storage_write_title)
                 .setMessage(R.string.allow_external_storage_write_message)
-                .setPositiveButton(R.string.allow_external_storage_write_button, new DialogInterface.OnClickListener()
-                        {
-                            public void onClick(DialogInterface dialog, int id)
-                            {
+                .setPositiveButton(R.string.allow_external_storage_write_button, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
                                 mAlreadyAskedPermissions = true;
                                 requestPermissions();
                             }
@@ -260,26 +231,21 @@ public class PleaseUpdateFragment extends InjectedFragment
                 .show();
     }
 
-    private boolean shouldRequestPermissions()
-    {
+    private boolean shouldRequestPermissions() {
         return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED;
     }
 
-    private void requestPermissions()
-    {
+    private void requestPermissions() {
         ActivityCompat.requestPermissions(getActivity(), new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
     }
 
-    private void showUpdateLaterButtonForUpdateDetails()
-    {
+    private void showUpdateLaterButtonForUpdateDetails() {
         if (mVersionManager.getUpdateDetails() == null
                 || mVersionManager.getUpdateDetails().isUpdateBlocking()
-                || isReadyToInstallUpdate())
-        {
+                || isReadyToInstallUpdate()) {
             mUpdateLaterButton.setVisibility(View.GONE);
         }
-        else
-        {
+        else {
             mUpdateLaterButton.setVisibility(View.VISIBLE);
         }
     }
@@ -287,20 +253,16 @@ public class PleaseUpdateFragment extends InjectedFragment
     /*
     TODO don't like this and the assumptions being made
      */
-    private void downloadApk()
-    {
-        if (mVersionManager.getUpdateDetails() == null)
-        {
+    private void downloadApk() {
+        if (mVersionManager.getUpdateDetails() == null) {
             bus.post(new AppUpdateEvent.RequestUpdateCheck(getActivity()));
         }
-        else
-        {
+        else {
             mVersionManager.downloadApk();
         }
     }
 
-    private boolean isReadyToInstallUpdate()
-    {
+    private boolean isReadyToInstallUpdate() {
         return mApkUri != null;
     }
 }

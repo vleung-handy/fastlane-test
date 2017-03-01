@@ -34,8 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
-{
+public class PaymentsUpdateBankAccountFragment extends ActionBarFragment {
     @BindView(R.id.routing_number_field)
     FormFieldTableRow routingNumberField;
 
@@ -56,15 +55,13 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
     private static final String FORM_KEY = FormDefinitionKey.UPDATE_BANK_INFO;
 
     @Override
-    public void onCreate(Bundle savedInstance)
-    {
+    public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
         setOptionsMenuEnabled(true);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_payments_update_bank_account, container, false);
@@ -74,57 +71,48 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setActionBarTitle(R.string.add_bank_account);
     }
 
     @Override
-    protected MainViewPage getAppPage()
-    {
+    protected MainViewPage getAppPage() {
         return MainViewPage.PAYMENTS;
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         setBackButtonEnabled(true);
 
         bus.register(this);
 
         final ProviderProfile providerProfile = providerManager.getCachedProviderProfile();
-        if (providerProfile != null && providerProfile.getProviderPersonalInfo() != null)
-        {
+        if (providerProfile != null && providerProfile.getProviderPersonalInfo() != null) {
             final ProviderPersonalInfo providerPersonalInfo =
                     providerProfile.getProviderPersonalInfo();
             bus.post(new RegionDefinitionEvent.RequestFormDefinitions(
                     providerPersonalInfo.getAddress().getCountry(), this.getContext()));
-            if (!providerPersonalInfo.isUS())
-            {
+            if (!providerPersonalInfo.isUS()) {
                 bankAccountSetupHelper.setVisibility(View.GONE);
             }
         }
-        else
-        {
+        else {
             Crashlytics.log("PaymentsUpdateBankAccountFragment null cached provider on resume");
         }
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         bus.unregister(this);
         super.onPause();
     }
 
-    private boolean validate()
-    {
+    private boolean validate() {
         boolean allFieldsValid = true;
         Map<String, FieldDefinition> fieldDefinitionMap = formDefinitionWrapper.getFieldDefinitionsForForm(FORM_KEY);
-        if (fieldDefinitionMap != null)
-        {
+        if (fieldDefinitionMap != null) {
             allFieldsValid = UIUtils.validateField(routingNumberField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ROUTING_NUMBER));
             allFieldsValid &= UIUtils.validateField(accountNumberField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ACCOUNT_NUMBER));
             allFieldsValid &= UIUtils.validateField(taxIdField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
@@ -133,10 +121,8 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
     }
 
     @OnClick(R.id.payments_update_info_bank_account_submit_button)
-    public void onSubmitForm()
-    {
-        if (validate())
-        {
+    public void onSubmitForm() {
+        if (validate()) {
             String routingNumber = routingNumberField.getValue().getText().toString();
             String accountNumber = accountNumberField.getValue().getText().toString();
             BankAccountInfo bankAccountInfo = new BankAccountInfo();
@@ -144,8 +130,7 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
             bankAccountInfo.setRoutingNumber(routingNumber);
 
             ProviderProfile providerProfile = providerManager.getCachedProviderProfile();
-            if (providerProfile != null && providerProfile.getProviderPersonalInfo() != null)
-            {
+            if (providerProfile != null && providerProfile.getProviderPersonalInfo() != null) {
                 final ProviderPersonalInfo providerPersonalInfo =
                         providerProfile.getProviderPersonalInfo();
                 bankAccountInfo.setCurrency(providerPersonalInfo.getCurrencyCode());
@@ -154,24 +139,20 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
             bus.post(new StripeEvent.RequestStripeTokenFromBankAccount(bankAccountInfo));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         }
-        else
-        {
+        else {
             onFailure(R.string.form_not_filled_out_correctly);
         }
     }
 
     @Subscribe
-    public void onReceiveFormDefinitionsSuccess(RegionDefinitionEvent.ReceiveFormDefinitionsSuccess event)
-    {
+    public void onReceiveFormDefinitionsSuccess(RegionDefinitionEvent.ReceiveFormDefinitionsSuccess event) {
         this.formDefinitionWrapper = event.formDefinitionWrapper;
         updateFormWithDefinitions(formDefinitionWrapper);
     }
 
-    private void updateFormWithDefinitions(FormDefinitionWrapper formDefinitionWrapper)
-    {
+    private void updateFormWithDefinitions(FormDefinitionWrapper formDefinitionWrapper) {
         Map<String, FieldDefinition> fieldDefinitionMap = formDefinitionWrapper.getFieldDefinitionsForForm(FORM_KEY);
-        if (fieldDefinitionMap != null)
-        {
+        if (fieldDefinitionMap != null) {
             UIUtils.setFieldsFromDefinition(routingNumberField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ROUTING_NUMBER));
             UIUtils.setFieldsFromDefinition(accountNumberField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.ACCOUNT_NUMBER));
             UIUtils.setFieldsFromDefinition(taxIdField, fieldDefinitionMap.get(FormDefinitionKey.FieldDefinitionKey.TAX_ID_NUMBER));
@@ -181,8 +162,7 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveStripeTokenFromBankAccountSuccess(StripeEvent.ReceiveStripeTokenFromBankAccountSuccess event)
-    {
+    public void onReceiveStripeTokenFromBankAccountSuccess(StripeEvent.ReceiveStripeTokenFromBankAccountSuccess event) {
         String token = event.stripeTokenResponse.getStripeToken();
 
         String taxIdString = taxIdField.getValue().getText().toString();
@@ -191,36 +171,30 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment
         bus.post(new PaymentEvent.RequestCreateBankAccount(token, taxIdString, accountNumberLast4Digits));
     }
 
-    private void onFailure(int errorStringId)
-    {
+    private void onFailure(int errorStringId) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         showToast(errorStringId, Toast.LENGTH_LONG);
     }
 
     @Subscribe
-    public void onReceiveStripeTokenFromBankAccountError(StripeEvent.ReceiveStripeTokenFromBankAccountError event)
-    {
+    public void onReceiveStripeTokenFromBankAccountError(StripeEvent.ReceiveStripeTokenFromBankAccountError event) {
         onFailure(R.string.update_bank_account_failed);
     }
 
     @Subscribe
-    public void onReceiveCreateBankAccountSuccess(PaymentEvent.ReceiveCreateBankAccountSuccess event)
-    {
-        if (event.successfullyCreated)
-        {
+    public void onReceiveCreateBankAccountSuccess(PaymentEvent.ReceiveCreateBankAccountSuccess event) {
+        if (event.successfullyCreated) {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             showToast(R.string.update_bank_account_success, Toast.LENGTH_LONG);
             UIUtils.dismissOnBackPressed(getActivity());
         }
-        else
-        {
+        else {
             onFailure(R.string.update_bank_account_failed);
         }
     }
 
     @Subscribe
-    public void onReceiveCreateBankAccountError(PaymentEvent.ReceiveCreateBankAccountError event)
-    {
+    public void onReceiveCreateBankAccountError(PaymentEvent.ReceiveCreateBankAccountError event) {
         onFailure(R.string.update_bank_account_failed);
     }
 }

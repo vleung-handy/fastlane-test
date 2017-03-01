@@ -24,8 +24,7 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 
-public class ConfirmBookingCancelKeepRateDialogFragment extends ConfirmBookingActionDialogFragment
-{
+public class ConfirmBookingCancelKeepRateDialogFragment extends ConfirmBookingActionDialogFragment {
     public static final String FRAGMENT_TAG = ConfirmBookingCancelKeepRateDialogFragment.class.getSimpleName();
 
     @BindView(R.id.keep_rate)
@@ -44,8 +43,7 @@ public class ConfirmBookingCancelKeepRateDialogFragment extends ConfirmBookingAc
     @Inject
     EventBus mBus;
 
-    public static ConfirmBookingCancelKeepRateDialogFragment newInstance(@NonNull final Booking booking)
-    {
+    public static ConfirmBookingCancelKeepRateDialogFragment newInstance(@NonNull final Booking booking) {
         ConfirmBookingCancelKeepRateDialogFragment fragment = new ConfirmBookingCancelKeepRateDialogFragment();
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING, booking);
@@ -54,15 +52,13 @@ public class ConfirmBookingCancelKeepRateDialogFragment extends ConfirmBookingAc
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         displayWithholdingNotice();
         displayKeepRate();
 
         final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
-        if (removeAction != null)
-        {
+        if (removeAction != null) {
             mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
                     mBooking,
                     ScheduledJobsLog.RemoveJobLog.KEEP_RATE,
@@ -73,40 +69,32 @@ public class ConfirmBookingCancelKeepRateDialogFragment extends ConfirmBookingAc
         }
     }
 
-    private void displayWithholdingNotice()
-    {
+    private void displayWithholdingNotice() {
         final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
-        if (removeAction != null)
-        {
+        if (removeAction != null) {
             final int withholdingAmountCents = removeAction.getFeeAmount();
-            if (withholdingAmountCents > 0)
-            {
+            if (withholdingAmountCents > 0) {
                 final String currencySymbol = mBooking.getCurrencySymbol();
                 final String feeFormatted = CurrencyUtils.formatPriceWithCents(withholdingAmountCents, currencySymbol);
                 setWithholdingFee(feeFormatted);
                 mNoFeeNoticeView.setVisibility(View.GONE);
                 mWithholdingFeeNoticeText.setVisibility(View.VISIBLE);
             }
-            else
-            {
+            else {
                 mWithholdingFeeNoticeText.setVisibility(View.GONE);
                 mNoFeeNoticeView.setVisibility(View.VISIBLE);
             }
         }
     }
 
-    private void displayKeepRate()
-    {
+    private void displayKeepRate() {
         final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
-        if (removeAction != null)
-        {
+        if (removeAction != null) {
             final Booking.Action.Extras.KeepRate keepRate = removeAction.getKeepRate();
-            if (keepRate != null)
-            {
+            if (keepRate != null) {
                 final Float oldKeepRate = keepRate.getCurrent();
                 final Float newKeepRate = keepRate.getOnNextUnassign();
-                if (oldKeepRate != null && newKeepRate != null)
-                {
+                if (oldKeepRate != null && newKeepRate != null) {
                     final String oldKeepRateFormatted =
                             getString(R.string.keep_rate_percent_formatted, Math.round(oldKeepRate * 100));
                     final String newKeepRateFormatted =
@@ -116,8 +104,7 @@ public class ConfirmBookingCancelKeepRateDialogFragment extends ConfirmBookingAc
                     mKeepRateView.setVisibility(View.VISIBLE);
                     mNoKeepRateView.setVisibility(View.GONE);
                 }
-                else
-                {
+                else {
                     mKeepRateView.setVisibility(View.GONE);
                     mNoKeepRateView.setVisibility(View.VISIBLE);
                 }
@@ -126,18 +113,15 @@ public class ConfirmBookingCancelKeepRateDialogFragment extends ConfirmBookingAc
     }
 
     @Override
-    protected View inflateConfirmActionContentView(final LayoutInflater inflater, final ViewGroup container)
-    {
+    protected View inflateConfirmActionContentView(final LayoutInflater inflater, final ViewGroup container) {
         return inflater.inflate(R.layout.layout_confirm_booking_cancel, container, false);
     }
 
     @Override
-    protected void onConfirmActionButtonClicked()
-    {
+    protected void onConfirmActionButtonClicked() {
 
         final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
-        if (removeAction != null)
-        {
+        if (removeAction != null) {
             mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
                     mBooking,
                     ScheduledJobsLog.RemoveJobLog.KEEP_RATE,
@@ -147,37 +131,31 @@ public class ConfirmBookingCancelKeepRateDialogFragment extends ConfirmBookingAc
                     removeAction.getWarningText()
             )));
         }
-        if (getTargetFragment() != null)
-        {
+        if (getTargetFragment() != null) {
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);
         }
         dismiss();
     }
 
     @Override
-    public void dismiss()
-    {
-        if (getTargetFragment() != null)
-        {
+    public void dismiss() {
+        if (getTargetFragment() != null) {
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_CANCELED, null);
         }
         super.dismiss();
     }
 
     @Override
-    protected int getConfirmButtonBackgroundResourceId()
-    {
+    protected int getConfirmButtonBackgroundResourceId() {
         return R.drawable.button_red_round;
     }
 
     @Override
-    protected String getConfirmButtonText()
-    {
+    protected String getConfirmButtonText() {
         return getString(R.string.cancel_job);
     }
 
-    private void setWithholdingFee(@NonNull final String feeFormatted)
-    {
+    private void setWithholdingFee(@NonNull final String feeFormatted) {
         final String withholdingFeeMessageFormatted = getString(R.string.withholding_fee_simple_formatted, feeFormatted);
         mWithholdingFeeNoticeText.setText(withholdingFeeMessageFormatted, TextView.BufferType.SPANNABLE);
         final Spannable spannable = (Spannable) mWithholdingFeeNoticeText.getText();

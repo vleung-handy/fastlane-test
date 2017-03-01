@@ -16,25 +16,20 @@ import javax.inject.Inject;
 /**
  * Created by cdavis on 8/10/15.
  */
-public class CustomDeepLinkAction extends Action
-{
+public class CustomDeepLinkAction extends Action {
     @Inject
-    public CustomDeepLinkAction()
-    {
+    public CustomDeepLinkAction() {
     }
 
     @Override
-    public ActionResult perform(ActionArguments arguments)
-    {
+    public ActionResult perform(ActionArguments arguments) {
         //Let the activity handle this, we are just catching the deep link here to prevent the validation from failing with the default OpenExternalUrlAction
         //Only activate if they opened a push
         //TODO: We may want to allow for automatically opened push notifs which would be PUSH_RECEIVED
-        if (arguments.getSituation() == Situation.PUSH_OPENED)
-        {
+        if (arguments.getSituation() == Situation.PUSH_OPENED) {
             Uri uri = UriUtils.parse(arguments.getValue().getString());
 
-            if (uri == null)
-            {
+            if (uri == null) {
                 Crashlytics.log("Deep link had a malformed URI : " + arguments.getValue().getString() + " aborting processing of deep link");
                 return ActionResult.newEmptyResult();
             }
@@ -51,8 +46,7 @@ public class CustomDeepLinkAction extends Action
     @Override
     // Do any argument validation here.  The action will only
     // perform if acceptsArguments is true.
-    public boolean acceptsArguments(ActionArguments arguments)
-    {
+    public boolean acceptsArguments(ActionArguments arguments) {
         return super.acceptsArguments(arguments);
 
     }

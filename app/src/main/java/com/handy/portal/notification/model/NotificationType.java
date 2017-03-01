@@ -5,8 +5,7 @@ import android.support.annotation.DrawableRes;
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.R;
 
-public enum NotificationType
-{
+public enum NotificationType {
     @SerializedName("notification")
     ALERT(R.drawable.ic_notification_alert, R.drawable.ic_notification_alert_gray),
     @SerializedName("payment")
@@ -24,19 +23,16 @@ public enum NotificationType
     private int mActiveIconResId;
 
     NotificationType(@DrawableRes final int activeIconResId,
-                     @DrawableRes final int inactiveIconResId)
-    {
+                     @DrawableRes final int inactiveIconResId) {
         mActiveIconResId = activeIconResId;
         mInactiveIconResId = inactiveIconResId;
     }
 
-    public int getInactiveIconResId()
-    {
+    public int getInactiveIconResId() {
         return mInactiveIconResId;
     }
 
-    public int getActiveIconResId()
-    {
+    public int getActiveIconResId() {
         return mActiveIconResId;
     }
 }

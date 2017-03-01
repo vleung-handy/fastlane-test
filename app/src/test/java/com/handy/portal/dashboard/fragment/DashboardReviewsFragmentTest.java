@@ -18,19 +18,16 @@ import static org.hamcrest.number.OrderingComparison.greaterThan;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
-public class DashboardReviewsFragmentTest extends RobolectricGradleTestWrapper
-{
+public class DashboardReviewsFragmentTest extends RobolectricGradleTestWrapper {
     private DashboardReviewsFragment mFragment;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         mFragment = new DashboardReviewsFragment();
     }
 
     @Test
-    public void shouldShowTitleAndReviews() throws Exception
-    {
+    public void shouldShowTitleAndReviews() throws Exception {
         Bundle args = new Bundle();
         args.putSerializable(BundleKeys.PROVIDER_EVALUATION, TestDataManager.createProviderEvaluation());
         mFragment.setArguments(args);
@@ -43,8 +40,7 @@ public class DashboardReviewsFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldShowNoResultViewIfNoRating() throws Exception
-    {
+    public void shouldShowNoResultViewIfNoRating() throws Exception {
         Bundle args = new Bundle();
         args.putSerializable(BundleKeys.PROVIDER_EVALUATION, TestDataManager.createProviderEvaluation());
         mFragment.setArguments(args);

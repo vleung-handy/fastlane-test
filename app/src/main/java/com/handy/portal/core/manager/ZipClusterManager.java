@@ -14,8 +14,7 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 
-public class ZipClusterManager
-{
+public class ZipClusterManager {
     private final EventBus mBus;
     private final DataManager mDataManager;
 
@@ -25,8 +24,7 @@ public class ZipClusterManager
     private final HashSet<String> mRequestInProgressClusters;
 
     @Inject
-    public ZipClusterManager(final EventBus bus, final DataManager dataManager)
-    {
+    public ZipClusterManager(final EventBus bus, final DataManager dataManager) {
         mBus = bus;
         mBus.register(this);
         mDataManager = dataManager;
@@ -38,32 +36,26 @@ public class ZipClusterManager
     }
 
     @Subscribe
-    public void onRequestZipClusterPolygon(final BookingEvent.RequestZipClusterPolygons event)
-    {
+    public void onRequestZipClusterPolygon(final BookingEvent.RequestZipClusterPolygons event) {
         ZipClusterPolygons zipClusterPolygons = mZipClusterCache.getIfPresent(event.zipClusterId);
-        if (zipClusterPolygons != null)
-        {
+        if (zipClusterPolygons != null) {
             mBus.post(new BookingEvent.ReceiveZipClusterPolygonsSuccess(zipClusterPolygons));
             return;
         }
 
         //ignore cluster ids already being requested
-        if (!mRequestInProgressClusters.contains(event.zipClusterId))
-        {
+        if (!mRequestInProgressClusters.contains(event.zipClusterId)) {
             mRequestInProgressClusters.add(event.zipClusterId);
-            mDataManager.getZipClusterPolygons(event.zipClusterId, new DataManager.Callback<ZipClusterPolygons>()
-            {
+            mDataManager.getZipClusterPolygons(event.zipClusterId, new DataManager.Callback<ZipClusterPolygons>() {
                 @Override
-                public void onSuccess(ZipClusterPolygons response)
-                {
+                public void onSuccess(ZipClusterPolygons response) {
                     mRequestInProgressClusters.remove(event.zipClusterId);
                     mZipClusterCache.put(event.zipClusterId, response);
                     mBus.post(new BookingEvent.ReceiveZipClusterPolygonsSuccess(response));
                 }
 
                 @Override
-                public void onError(DataManager.DataManagerError error)
-                {
+                public void onError(DataManager.DataManagerError error) {
                     mRequestInProgressClusters.remove(event.zipClusterId);
                     mBus.post(new BookingEvent.ReceiveZipClusterPolygonsError(error));
                 }

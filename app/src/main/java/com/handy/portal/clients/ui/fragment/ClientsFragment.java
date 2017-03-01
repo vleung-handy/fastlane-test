@@ -33,8 +33,7 @@ import butterknife.ButterKnife;
 
 
 public class ClientsFragment extends ActionBarFragment
-        implements LayerHelper.UnreadConversationsCountChangedListener
-{
+        implements LayerHelper.UnreadConversationsCountChangedListener {
     public static final String CONVERSATIONS_DEEPLINK_SUFFIX = "conversations";
     @Inject
     BookingManager mBookingManager;
@@ -52,14 +51,12 @@ public class ClientsFragment extends ActionBarFragment
     private TabWithCountView mMessagesTab;
 
     @Override
-    protected MainViewPage getAppPage()
-    {
+    protected MainViewPage getAppPage() {
         return MainViewPage.CLIENTS;
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBus.register(this);
         mLayerHelper.registerUnreadConversationsCountChangedListener(this);
@@ -67,16 +64,14 @@ public class ClientsFragment extends ActionBarFragment
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                             final Bundle savedInstanceState)
-    {
+                             final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_clients, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         final TabAdapter tabAdapter = new TabAdapter(getChildFragmentManager());
         mViewPager.setAdapter(tabAdapter);
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
@@ -84,8 +79,7 @@ public class ClientsFragment extends ActionBarFragment
         initTabViews();
     }
 
-    private void initTabViews()
-    {
+    private void initTabViews() {
         mRequestsTab = new TabWithCountView(getActivity());
         mRequestsTab.setTitle(R.string.job_requests);
         mTabLayout.getTabAt(0).setCustomView(mRequestsTab);
@@ -97,25 +91,21 @@ public class ClientsFragment extends ActionBarFragment
 
         final Bundle deeplinkData =
                 getActivity().getIntent().getBundleExtra(BundleKeys.DEEPLINK_DATA);
-        if (deeplinkData != null)
-        {
+        if (deeplinkData != null) {
             final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
             if (!TextUtils.isEmpty(deeplink)
-                    && deeplink.endsWith(CONVERSATIONS_DEEPLINK_SUFFIX))
-            {
+                    && deeplink.endsWith(CONVERSATIONS_DEEPLINK_SUFFIX)) {
                 mViewPager.setCurrentItem(1);
             }
         }
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         setActionBar(R.string.your_clients, false);
         final Integer lastUnreadRequestsCount = mBookingManager.getLastUnreadRequestsCount();
-        if (lastUnreadRequestsCount != null)
-        {
+        if (lastUnreadRequestsCount != null) {
             mRequestsTab.setCount((long) lastUnreadRequestsCount);
         }
         mMessagesTab.setCount(mLayerHelper.getUnreadConversationsCount());
@@ -123,44 +113,37 @@ public class ClientsFragment extends ActionBarFragment
 
     @Subscribe
     public void onReceiveProRequestedJobsCountSuccess(
-            final BookingEvent.ReceiveProRequestedJobsCountSuccess event)
-    {
+            final BookingEvent.ReceiveProRequestedJobsCountSuccess event) {
         mRequestsTab.setCount((long) event.getCount());
     }
 
     @Override
-    public void onUnreadConversationsCountChanged(final long count)
-    {
+    public void onUnreadConversationsCountChanged(final long count) {
         mMessagesTab.setCount(count);
     }
 
-    private class TabAdapter extends FragmentPagerAdapter
-    {
+    private class TabAdapter extends FragmentPagerAdapter {
         private List<InjectedFragment> mFragments = new ArrayList<>();
 
-        public TabAdapter(final FragmentManager fragmentManager)
-        {
+        public TabAdapter(final FragmentManager fragmentManager) {
             super(fragmentManager);
             mFragments.add(ProRequestedJobsFragment.newInstance());
             mFragments.add(ClientConversationsFragment.newInstance());
         }
 
         @Override
-        public int getCount()
-        {
+        public int getCount() {
             return mFragments.size();
         }
 
         @Override
-        public InjectedFragment getItem(int position)
-        {
+        public InjectedFragment getItem(int position) {
             return mFragments.get(position);
         }
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         mLayerHelper.unregisterUnreadConversationsCountChangedListener(this);
         mBus.unregister(this);
         super.onDestroy();

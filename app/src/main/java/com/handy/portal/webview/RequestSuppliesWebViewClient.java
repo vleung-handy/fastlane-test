@@ -10,36 +10,30 @@ import com.handy.portal.logger.handylogger.model.ProfileLog;
 
 import org.greenrobot.eventbus.EventBus;
 
-public class RequestSuppliesWebViewClient extends PortalWebViewClient
-{
+public class RequestSuppliesWebViewClient extends PortalWebViewClient {
     private boolean loadFailedLogSent;
     private boolean loadStartedLogSent;
 
     public RequestSuppliesWebViewClient(final Fragment parentFragment, final WebView webView,
-                                        final EventBus bus, String deviceId)
-    {
+                                        final EventBus bus, String deviceId) {
         super(parentFragment, webView, bus, deviceId);
         loadFailedLogSent = false;
         loadStartedLogSent = false;
     }
 
     @Override
-    public void onReceivedError(final WebView view, final int errorCode, final String description, final String failingUrl)
-    {
+    public void onReceivedError(final WebView view, final int errorCode, final String description, final String failingUrl) {
         super.onReceivedError(view, errorCode, description, failingUrl);
-        if (!loadFailedLogSent)
-        {
+        if (!loadFailedLogSent) {
             loadFailedLogSent = true;
             bus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitSiteLoadFailed()));
         }
     }
 
     @Override
-    public void onPageStarted(final WebView view, final String url, final Bitmap favicon)
-    {
+    public void onPageStarted(final WebView view, final String url, final Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
-        if (!loadStartedLogSent)
-        {
+        if (!loadStartedLogSent) {
             loadStartedLogSent = true;
             bus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitSiteLoadStarted()));
         }

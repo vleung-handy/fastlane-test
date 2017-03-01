@@ -18,8 +18,7 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class AvailableHoursWithDateView extends FrameLayout
-{
+public class AvailableHoursWithDateView extends FrameLayout {
     @BindView(R.id.title)
     TextView mTitle;
     @BindView(R.id.timelines)
@@ -32,8 +31,7 @@ public class AvailableHoursWithDateView extends FrameLayout
     public AvailableHoursWithDateView(final Context context,
                                       final Date date,
                                       @Nullable final DailyAvailabilityTimeline availability,
-                                      final RemoveTimeSlotListener removeTimeSlotListener)
-    {
+                                      final RemoveTimeSlotListener removeTimeSlotListener) {
         super(context);
         mDate = date;
         mAvailability = availability;
@@ -41,13 +39,11 @@ public class AvailableHoursWithDateView extends FrameLayout
         init();
     }
 
-    public Date getDate()
-    {
+    public Date getDate() {
         return mDate;
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), R.layout.element_available_hours_with_date, this);
         ButterKnife.bind(this);
         setBackgroundResource(R.drawable.border_gray_bottom);
@@ -55,23 +51,18 @@ public class AvailableHoursWithDateView extends FrameLayout
         displayTimelines();
     }
 
-    public void updateTimelines(final DailyAvailabilityTimeline availability)
-    {
+    public void updateTimelines(final DailyAvailabilityTimeline availability) {
         mAvailability = availability;
         displayTimelines();
     }
 
-    private void displayTimelines()
-    {
+    private void displayTimelines() {
         mTimelines.removeAllViews();
-        if (mAvailability != null)
-        {
+        if (mAvailability != null) {
             final ArrayList<AvailabilityInterval> intervals =
                     mAvailability.getAvailabilityIntervals();
-            if (intervals != null && !intervals.isEmpty())
-            {
-                for (AvailabilityInterval interval : intervals)
-                {
+            if (intervals != null && !intervals.isEmpty()) {
+                for (AvailabilityInterval interval : intervals) {
                     mTimelines.addView(new AvailableTimeSlotView(getContext(),
                             mAvailability.getDate(), interval, mRemoveTimeSlotListener));
                 }

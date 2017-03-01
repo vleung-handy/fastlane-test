@@ -19,8 +19,7 @@ import com.handy.portal.bookings.model.Booking;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class InstructionCheckItemView extends FrameLayout
-{
+public class InstructionCheckItemView extends FrameLayout {
     @BindView(R.id.main_layout)
     ViewGroup mMainLayout;
     @BindView(R.id.checklist_item_check_box)
@@ -33,61 +32,50 @@ public class InstructionCheckItemView extends FrameLayout
     private final static float ALPHA_DISABLED = .2f;
 
 
-    public InstructionCheckItemView(final Context context)
-    {
+    public InstructionCheckItemView(final Context context) {
         super(context);
         init();
     }
 
-    public InstructionCheckItemView(final Context context, final AttributeSet attrs)
-    {
+    public InstructionCheckItemView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public InstructionCheckItemView(final Context context, final AttributeSet attrs, final int defStyleAttr)
-    {
+    public InstructionCheckItemView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public InstructionCheckItemView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
-    {
+    public InstructionCheckItemView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    public void refreshDisplay(@NonNull final Booking.BookingInstructionUpdateRequest instruction)
-    {
+    public void refreshDisplay(@NonNull final Booking.BookingInstructionUpdateRequest instruction) {
         mCheckBox.setChecked(instruction.isInstructionCompleted());
         setBackgroundAsNeeded();
 
-        if (instruction.getTitle() != null && !instruction.getTitle().isEmpty())
-        {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            {
+        if (instruction.getTitle() != null && !instruction.getTitle().isEmpty()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 mTitleDescriptionTextView.setText(
                         Html.fromHtml("<b>" + instruction.getTitle() + "</b> "
                                 + instruction.getDescription(), Html.FROM_HTML_MODE_LEGACY),
                         TextView.BufferType.SPANNABLE);
             }
-            else
-            {
+            else {
                 mTitleDescriptionTextView.setText(Html.fromHtml("<b>" + instruction.getTitle() +
                         "</b> " + instruction.getDescription()), TextView.BufferType.SPANNABLE);
             }
         }
-        else
-        {
+        else {
             mTitleDescriptionTextView.setText(instruction.getDescription());
         }
 
-        setOnClickListener(new OnClickListener()
-        {
+        setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(final View v)
-            {
+            public void onClick(final View v) {
                 mCheckBox.toggle();
                 instruction.setInstructionCompleted(mCheckBox.isChecked());
                 setBackgroundAsNeeded();
@@ -96,38 +84,30 @@ public class InstructionCheckItemView extends FrameLayout
     }
 
     @Override
-    public void setEnabled(final boolean enabled)
-    {
+    public void setEnabled(final boolean enabled) {
         super.setEnabled(enabled);
-        if (enabled)
-        {
+        if (enabled) {
             mCheckBox.setAlpha(ALPHA_ENABLED);
         }
-        else
-        {
+        else {
             mCheckBox.setAlpha(ALPHA_DISABLED);
         }
     }
 
-    public boolean isChecked()
-    {
+    public boolean isChecked() {
         return mCheckBox.isChecked();
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), R.layout.list_item_checkbox, this);
         ButterKnife.bind(this);
     }
 
-    private void setBackgroundAsNeeded()
-    {
-        if (isChecked())
-        {
+    private void setBackgroundAsNeeded() {
+        if (isChecked()) {
             mMainLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.border_green_bg_white));
         }
-        else
-        {
+        else {
             mMainLayout.setBackground(ContextCompat.getDrawable(getContext(), R.drawable.border_gray_bg_white));
         }
     }

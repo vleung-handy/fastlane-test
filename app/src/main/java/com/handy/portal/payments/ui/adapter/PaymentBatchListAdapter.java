@@ -39,31 +39,26 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
 
     //TODO: we don't need to keep track of oldest date when we can use new pagination API that allows us to get the N next batches
 
-    public PaymentBatchListAdapter(Context context)
-    {
+    public PaymentBatchListAdapter(Context context) {
         super(context, R.layout.element_payments_batch_list_entry, 0);
         Utils.inject(context, this);
         resetMetadata();
     }
 
-    private void resetMetadata()
-    {
+    private void resetMetadata() {
         nextRequestEndDate = new Date();
     }
 
-    public void clear()
-    {
+    public void clear() {
         resetMetadata();
         super.clear();
     }
 
-    public boolean shouldRequestMoreData()
-    {
+    public boolean shouldRequestMoreData() {
         return nextRequestEndDate != null;
     }
 
-    public Date getNextRequestEndDate()
-    {
+    public Date getNextRequestEndDate() {
         return nextRequestEndDate;
     }
 
@@ -79,10 +74,8 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
         return nextRequestEndDate != null && batchRequestEndDate.equals(nextRequestEndDate); //compares the exact time
     }
 
-    private void updateOldestDate(Date requestStartDate)
-    {
-        if (nextRequestEndDate != null)
-        {
+    private void updateOldestDate(Date requestStartDate) {
+        if (nextRequestEndDate != null) {
             final Calendar lowerBoundPaymentRequestDate = Calendar.getInstance();
             lowerBoundPaymentRequestDate.set(2013, 9, 23); // No payments precede Oct 23, 2013
 
@@ -111,61 +104,49 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
         return super.getCount();
     }
 
-    public PaymentBatch getDataItem(int position)
-    {
+    public PaymentBatch getDataItem(int position) {
         return super.getItem(position);
     }
 
     @Override
-    public boolean isEnabled(int position)
-    {
+    public boolean isEnabled(int position) {
         // Setting disabled state via setEnabled(false)
         return true;
     }
 
     @Override
-    public int getViewTypeCount()
-    {
+    public int getViewTypeCount() {
         return 2;
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent)
-    {
+    public View getView(int position, View convertView, ViewGroup parent) {
         View v;
         PaymentBatch paymentBatch = getItem(position);
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        if (position == 0 && paymentBatch instanceof NeoPaymentBatch)
-        {
-            if (convertView == null || !(convertView instanceof PaymentsBatchListHeaderView))
-            {
+        if (position == 0 && paymentBatch instanceof NeoPaymentBatch) {
+            if (convertView == null || !(convertView instanceof PaymentsBatchListHeaderView)) {
                 v = inflater.inflate(R.layout.element_payments_batch_list_current_week_header, parent, false);
-                v.findViewById(R.id.payments_current_week_remaining_fees_row).setOnClickListener(new View.OnClickListener()
-                {
+                v.findViewById(R.id.payments_current_week_remaining_fees_row).setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(final View v)
-                    {
+                    public void onClick(final View v) {
                         mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.OUTSTANDING_FEES, true));
                         mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.FeeDetailSelected()));
                     }
                 });
             }
-            else
-            {
+            else {
                 v = convertView;
             }
 
             ((PaymentsBatchListHeaderView) v).updateDisplay((NeoPaymentBatch) paymentBatch);
         }
-        else
-        {
-            if (convertView == null || !(convertView instanceof PaymentsBatchListItemView))
-            {
+        else {
+            if (convertView == null || !(convertView instanceof PaymentsBatchListItemView)) {
                 v = inflater.inflate(R.layout.element_payments_batch_list_entry, parent, false);
             }
-            else
-            {
+            else {
                 v = convertView;
             }
 
@@ -176,18 +157,15 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
     }
 
     @Override
-    public View getHeaderView(int position, View convertView, ViewGroup parent)
-    {
+    public View getHeaderView(int position, View convertView, ViewGroup parent) {
         View v;
         PaymentBatch paymentBatch = getItem(position);
         LayoutInflater inflater = LayoutInflater.from(getContext());
 
-        if (convertView == null)
-        {
+        if (convertView == null) {
             v = inflater.inflate(R.layout.element_payment_list_section_header, parent, false);
         }
-        else
-        {
+        else {
             v = convertView;
         }
 
@@ -198,8 +176,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
     }
 
     @Override
-    public long getHeaderId(int position)
-    {
+    public long getHeaderId(int position) {
         PaymentBatch paymentBatch = getItem(position);
         return DateTimeUtils.getYearInt(paymentBatch.getEffectiveDate());
     }

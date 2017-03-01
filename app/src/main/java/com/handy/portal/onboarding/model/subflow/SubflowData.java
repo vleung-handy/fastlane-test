@@ -13,14 +13,12 @@ import com.handy.portal.onboarding.model.supplies.SuppliesInfo;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class SubflowData implements Serializable
-{
+public class SubflowData implements Serializable {
     // Generic Subflow Data
     @SerializedName("supplies_info")
     private SuppliesInfo mSuppliesInfo; // belongs to Status and Supplies subflows
 
-    public SuppliesInfo getSuppliesInfo()
-    {
+    public SuppliesInfo getSuppliesInfo() {
         return mSuppliesInfo;
     }
 
@@ -54,29 +52,24 @@ public class SubflowData implements Serializable
     @SerializedName("first_job_content_enabled")
     private boolean mFirstJobContentEnabled;
 
-    public String getApplicationStatus()
-    {
+    public String getApplicationStatus() {
         return mApplicationStatus;
     }
 
-    public LearningLinkDetails getLearningLinkDetails()
-    {
+    public LearningLinkDetails getLearningLinkDetails() {
         return mLearningLinkDetails;
     }
 
-    public ArrayList<Booking> getClaims()
-    {
+    public ArrayList<Booking> getClaims() {
         return mClaims;
     }
 
     @Nullable
-    public StatusButton getButton()
-    {
+    public StatusButton getButton() {
         return mButton;
     }
 
-    public StatusHeader getHeader()
-    {
+    public StatusHeader getHeader() {
         return mHeader;
     }
 
@@ -86,53 +79,43 @@ public class SubflowData implements Serializable
     @SerializedName("locations")
     private ArrayList<Zipcluster> mZipclusters;
 
-    public StartDateRange getStartDateRange()
-    {
+    public StartDateRange getStartDateRange() {
         return mStartDateRange;
     }
 
-    public ArrayList<Zipcluster> getZipclusters()
-    {
+    public ArrayList<Zipcluster> getZipclusters() {
         return mZipclusters;
     }
 
-    public String getFullName()
-    {
+    public String getFullName() {
         return mFullName;
     }
 
-    public String getCandidateId()
-    {
+    public String getCandidateId() {
         return mCandidateId;
     }
 
-    public String getJumioToken()
-    {
+    public String getJumioToken() {
         return mJumioToken;
     }
 
-    public String getJumioSecret()
-    {
+    public String getJumioSecret() {
         return mJumioSecret;
     }
 
-    public String getJumioURL()
-    {
+    public String getJumioURL() {
         return mJumioUrl;
     }
 
-    public String getBeforeIdVerificationStartUrl()
-    {
+    public String getBeforeIdVerificationStartUrl() {
         return mBeforeIdVerificationStartUrl;
     }
 
-    public String getAfterIdVerificationFinishUrl()
-    {
+    public String getAfterIdVerificationFinishUrl() {
         return mAfterIdVerificationFinishUrl;
     }
 
-    public boolean isFirstJobContentEnabled()
-    {
+    public boolean isFirstJobContentEnabled() {
         return mFirstJobContentEnabled;
     }
 }

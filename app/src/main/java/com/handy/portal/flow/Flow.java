@@ -14,79 +14,64 @@ import java.util.List;
  *
  * @see SetupHandler
  */
-public class Flow implements Forwardable
-{
+public class Flow implements Forwardable {
     private boolean mIsComplete;
     private List<FlowStep> mSteps;
     private OnFlowCompleteListener mOnFlowCompleteListener;
     private Iterator<FlowStep> mStepsIterator;
 
-    public Flow()
-    {
+    public Flow() {
         mIsComplete = false;
         mSteps = new ArrayList<>();
     }
 
-    public Flow addStep(@NonNull final FlowStep step)
-    {
+    public Flow addStep(@NonNull final FlowStep step) {
         mSteps.add(step);
         step.setFlow(this);
         return this;
     }
 
     public Flow setOnFlowCompleteListener(
-            @NonNull final OnFlowCompleteListener onFlowCompleteListener)
-    {
+            @NonNull final OnFlowCompleteListener onFlowCompleteListener) {
         mOnFlowCompleteListener = onFlowCompleteListener;
         return this;
     }
 
-    public Flow start()
-    {
+    public Flow start() {
         mStepsIterator = mSteps.iterator();
         goForward();
         return this;
     }
 
-    public boolean isComplete()
-    {
+    public boolean isComplete() {
         return mIsComplete;
     }
 
     @Override
-    public void goForward()
-    {
-        if (mStepsIterator == null)
-        {
+    public void goForward() {
+        if (mStepsIterator == null) {
             start();
         }
-        else
-        {
-            if (mStepsIterator.hasNext())
-            {
+        else {
+            if (mStepsIterator.hasNext()) {
                 final FlowStep nextStep = mStepsIterator.next();
-                if (nextStep.shouldExecute())
-                {
+                if (nextStep.shouldExecute()) {
                     nextStep.execute();
                 }
-                else
-                {
+                else {
                     goForward();
                 }
             }
-            else
-            {
+            else {
                 mIsComplete = true;
-                if (mOnFlowCompleteListener != null)
-                {
+                if (mOnFlowCompleteListener != null) {
                     mOnFlowCompleteListener.onFlowComplete();
                 }
             }
         }
     }
 
-    public interface OnFlowCompleteListener
-    {
+    public interface OnFlowCompleteListener {
         void onFlowComplete();
     }
 }

@@ -20,8 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class SlideUpPanelLayout extends RelativeLayout
-{
+public class SlideUpPanelLayout extends RelativeLayout {
     private LinearLayout mPanel;
     private View mPanelOverlay;
 
@@ -33,36 +32,30 @@ public class SlideUpPanelLayout extends RelativeLayout
     View mIconX;
 
 
-    public SlideUpPanelLayout(Context context)
-    {
+    public SlideUpPanelLayout(Context context) {
         super(context);
         init();
     }
 
-    public SlideUpPanelLayout(Context context, AttributeSet attrs)
-    {
+    public SlideUpPanelLayout(Context context, AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public SlideUpPanelLayout(Context context, AttributeSet attrs, int defStyleAttr)
-    {
+    public SlideUpPanelLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public SlideUpPanelLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes)
-    {
+    public SlideUpPanelLayout(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
     // TODO: considering breaking this up to showPanel and SetPanel
-    public void showPanel(int titleStringId, View content)
-    {
-        if (!mPanel.isShown())
-        {
+    public void showPanel(int titleStringId, View content) {
+        if (!mPanel.isShown()) {
             mPanelTitle.setText(titleStringId);
             mPanelContent.removeAllViews();
             mPanelContent.addView(content);
@@ -75,10 +68,8 @@ public class SlideUpPanelLayout extends RelativeLayout
     }
 
     @OnClick(R.id.slide_up_panel_close)
-    public void hidePanel()
-    {
-        if (mPanel.isShown())
-        {
+    public void hidePanel() {
+        if (mPanel.isShown()) {
             hideElement(mPanel, R.anim.slide_down);
             hideElement(mPanelOverlay, R.anim.fade_out);
 
@@ -86,46 +77,38 @@ public class SlideUpPanelLayout extends RelativeLayout
         }
     }
 
-    private void init()
-    {
+    private void init() {
         mPanel = (LinearLayout) LayoutInflater.from(getContext()).inflate(
                 R.layout.layout_slide_up_panel, this, false);
         ButterKnife.bind(this, mPanel);
 
         mPanelOverlay = LayoutInflater.from(getContext()).inflate(
                 R.layout.layout_slide_up_panel_overlay, this, false);
-        mPanelOverlay.setOnClickListener(new OnClickListener()
-        {
+        mPanelOverlay.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View view)
-            {
+            public void onClick(View view) {
                 hidePanel();
             }
         });
     }
 
-    private void setOnBackPressedListener()
-    {
+    private void setOnBackPressedListener() {
         BaseActivity baseActivity = (BaseActivity) getContext();
-        baseActivity.addOnBackPressedListener(new BaseActivity.OnBackPressedListener()
-        {
+        baseActivity.addOnBackPressedListener(new BaseActivity.OnBackPressedListener() {
             @Override
-            public void onBackPressed()
-            {
+            public void onBackPressed() {
                 hidePanel();
             }
         });
     }
 
-    private void showElement(View view, int animId)
-    {
+    private void showElement(View view, int animId) {
         Animation animation = AnimationUtils.loadAnimation(getContext(), animId);
         view.setAnimation(animation);
         addView(view);
     }
 
-    private void hideElement(View view, int animId)
-    {
+    private void hideElement(View view, int animId) {
         Animation animation = AnimationUtils.loadAnimation(getContext(), animId);
         view.setAnimation(animation);
         removeView(view);

@@ -19,27 +19,23 @@ import org.greenrobot.eventbus.EventBus;
 import javax.inject.Inject;
 
 
-public class LayerPushReceiver extends PushNotificationReceiver
-{
+public class LayerPushReceiver extends PushNotificationReceiver {
     @Inject
     EventBus mBus;
 
     private static final String MESSAGES_DEEPLINK = "handypro://handy.com/hp/conversations";
 
     @Override
-    public void onReceive(final Context context, final Intent intent)
-    {
+    public void onReceive(final Context context, final Intent intent) {
 
-        if (LayerConstants.ACTION_PUSH.equals(intent.getAction()))
-        {
+        if (LayerConstants.ACTION_PUSH.equals(intent.getAction())) {
             Utils.inject(context, this);
             final Intent orderedBroadcastIntent = new Intent(LayerConstants.ACTION_SHOW_NOTIFICATION);
             orderedBroadcastIntent.putExtras(intent.getExtras());
             context.sendOrderedBroadcast(orderedBroadcastIntent, null);
             mBus.post(new LogEvent.AddLogEvent(new ConversationsLog.PushNotificationReceived()));
         }
-        else
-        {
+        else {
             super.onReceive(context, intent);
         }
     }
@@ -47,11 +43,9 @@ public class LayerPushReceiver extends PushNotificationReceiver
     @Nullable
     @Override
     protected PendingIntent createNotificationClickIntent(final Context context,
-                                                          @Nullable final Message message)
-    {
+                                                          @Nullable final Message message) {
         Intent intent;
-        if (message != null)
-        {
+        if (message != null) {
             intent = new Intent(context, MessagesListActivity.class)
                     .setPackage(context.getApplicationContext().getPackageName())
                     .putExtra(LayerConstants.LAYER_CONVERSATION_KEY, message.getConversation().getId())
@@ -59,8 +53,7 @@ public class LayerPushReceiver extends PushNotificationReceiver
                     .putExtra(LayerConstants.KEY_HIDE_ATTACHMENT_BUTTON, true)
                     .putExtra(LayerConstants.KEY_BACK_NAVIGATION_DEEPLINK, MESSAGES_DEEPLINK);
         }
-        else
-        {
+        else {
             intent = new Intent(Intent.ACTION_VIEW, Uri.parse(MESSAGES_DEEPLINK))
                     .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 

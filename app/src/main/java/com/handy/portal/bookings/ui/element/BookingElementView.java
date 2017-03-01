@@ -10,8 +10,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-public abstract class BookingElementView
-{
+public abstract class BookingElementView {
     protected static final DateFormat TIME_OF_DAY_FORMAT =
             new SimpleDateFormat("h:mma", Locale.getDefault());
 
@@ -19,8 +18,7 @@ public abstract class BookingElementView
 
     public abstract View initView(Context parentContext, Booking booking, View convertView, ViewGroup parent);
 
-    public View getAssociatedView()
-    {
+    public View getAssociatedView() {
         return mAssociatedView;
     }
 }

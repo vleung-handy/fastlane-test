@@ -19,59 +19,48 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class BookingDetailsJobInstructionsSectionView extends FrameLayout
-{
+public class BookingDetailsJobInstructionsSectionView extends FrameLayout {
     @BindView(R.id.booking_details_job_instructions_section_title_text)
     TextView mSectionTitleText;
     @BindView(R.id.booking_details_job_instructions_section_entries_layout)
     LinearLayout mEntriesLayout;
 
-    public BookingDetailsJobInstructionsSectionView(final Context context)
-    {
+    public BookingDetailsJobInstructionsSectionView(final Context context) {
         super(context);
         init();
     }
 
-    public BookingDetailsJobInstructionsSectionView(final Context context, final AttributeSet attrs)
-    {
+    public BookingDetailsJobInstructionsSectionView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public BookingDetailsJobInstructionsSectionView(final Context context, final AttributeSet attrs, final int defStyle)
-    {
+    public BookingDetailsJobInstructionsSectionView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public BookingDetailsJobInstructionsSectionView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
-    {
+    public BookingDetailsJobInstructionsSectionView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), R.layout.element_booking_details_job_instructions_section, this);
         ButterKnife.bind(this);
     }
 
-    public void setDisplay(String sectionTitle, List<?> entries)
-    {
-        if (entries != null && !entries.isEmpty())
-        {
+    public void setDisplay(String sectionTitle, List<?> entries) {
+        if (entries != null && !entries.isEmpty()) {
             mSectionTitleText.setText(sectionTitle);
 
-            for (Object entry : entries)
-            {
-                if (entry instanceof Booking.BookingInstruction)
-                {
+            for (Object entry : entries) {
+                if (entry instanceof Booking.BookingInstruction) {
                     Booking.BookingInstruction instruction = (Booking.BookingInstruction) entry;
                     setDisplay(sectionTitle, instruction.getDescription());
                 }
-                else if (entry instanceof String)
-                {
+                else if (entry instanceof String) {
                     setDisplay(sectionTitle, entry.toString());
 
                 }
@@ -79,8 +68,7 @@ public class BookingDetailsJobInstructionsSectionView extends FrameLayout
         }
     }
 
-    public void setDisplay(String sectionTitle, String entry)
-    {
+    public void setDisplay(String sectionTitle, String entry) {
         mSectionTitleText.setText(sectionTitle);
 
         int textSize = (int) getResources().getDimension(R.dimen.default_text_size);

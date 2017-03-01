@@ -12,58 +12,49 @@ import com.handy.portal.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class LabelAndValueView extends FrameLayout
-{
+public class LabelAndValueView extends FrameLayout {
     @BindView(R.id.label)
     TextView mLabel;
     @BindView(R.id.value)
     TextView mValue;
 
-    public LabelAndValueView(final Context context)
-    {
+    public LabelAndValueView(final Context context) {
         super(context);
         init();
     }
 
-    public LabelAndValueView(final Context context, final AttributeSet attrs)
-    {
+    public LabelAndValueView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public LabelAndValueView(final Context context, final AttributeSet attrs, final int defStyleAttr)
-    {
+    public LabelAndValueView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     public LabelAndValueView(final Context context, final AttributeSet attrs,
-                             final int defStyleAttr, final int defStyleRes)
-    {
+                             final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), R.layout.view_label_and_value, this);
         ButterKnife.bind(this);
     }
 
-    public void setContent(final String labelText, final String valueText)
-    {
+    public void setContent(final String labelText, final String valueText) {
         mLabel.setText(labelText);
         mValue.setText(valueText);
     }
 
-    public void setLabel(final String text)
-    {
+    public void setLabel(final String text) {
         mLabel.setText(text);
     }
 
-    public void setValue(final String text)
-    {
+    public void setValue(final String text) {
         mValue.setText(text);
     }
 }

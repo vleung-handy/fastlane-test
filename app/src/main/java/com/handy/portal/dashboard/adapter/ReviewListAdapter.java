@@ -15,31 +15,26 @@ import com.handy.portal.library.util.DateTimeUtils;
 import java.util.Date;
 import java.util.List;
 
-public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.ViewHolder>
-{
+public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.ViewHolder> {
     private List<ProviderRating> mRatings;
     private boolean mDoneLoading = false;
 
     public static final int VIEW_TYPE_LOADING = 0;
     public static final int VIEW_TYPE_ACTIVITY = 1;
 
-    public ReviewListAdapter(@NonNull final List<ProviderRating> ratings)
-    {
+    public ReviewListAdapter(@NonNull final List<ProviderRating> ratings) {
         mRatings = ratings;
     }
 
     @Override
-    public ReviewListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType)
-    {
-        if (viewType == VIEW_TYPE_ACTIVITY)
-        {
+    public ReviewListAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        if (viewType == VIEW_TYPE_ACTIVITY) {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.five_star_review, parent, false);
             return new ViewHolder(v, (TextView) v.findViewById(R.id.five_star_review_text),
                     (TextView) v.findViewById(R.id.review_date));
         }
-        else
-        {
+        else {
             View v = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.element_progress_bar, parent, false);
             return new ViewHolder(v, null, null);
@@ -47,74 +42,60 @@ public class ReviewListAdapter extends RecyclerView.Adapter<ReviewListAdapter.Vi
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position)
-    {
-        if (position < mRatings.size())
-        {
+    public void onBindViewHolder(ViewHolder holder, int position) {
+        if (position < mRatings.size()) {
             ProviderRating rating = mRatings.get(position);
             holder.bind(rating);
         }
     }
 
     @Override
-    public int getItemCount()
-    {
+    public int getItemCount() {
         int addedProgressBar = shouldAddProgressBar() ? 1 : 0;
         return mRatings.size() + addedProgressBar;
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder
-    {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         private TextView mReviewTextView;
         private TextView mDateTextView;
 
-        public ViewHolder(View parent, TextView review, TextView date)
-        {
+        public ViewHolder(View parent, TextView review, TextView date) {
             super(parent);
             mReviewTextView = review;
             mDateTextView = date;
         }
 
-        public void bind(ProviderRating rating)
-        {
+        public void bind(ProviderRating rating) {
             mReviewTextView.setText(rating.getComment());
             mDateTextView.setText(DateTimeUtils.getMonthAndYear(rating.getDateRating()));
         }
     }
 
     @Override
-    public int getItemViewType(int position)
-    {
-        if (position < mRatings.size())
-        {
+    public int getItemViewType(int position) {
+        if (position < mRatings.size()) {
             return VIEW_TYPE_ACTIVITY;
         }
-        else
-        {
+        else {
             return VIEW_TYPE_LOADING;
         }
     }
 
     @Nullable
-    public Date getToBookingDate()
-    {
-        if (mRatings.isEmpty())
-        {
+    public Date getToBookingDate() {
+        if (mRatings.isEmpty()) {
             return null;
         }
-        else
-        {
+        else {
             return mRatings.get(mRatings.size() - 1).getBookingDate();
         }
     }
 
-    public void setDoneLoading(boolean doneLoading)
-    {
+    public void setDoneLoading(boolean doneLoading) {
         mDoneLoading = doneLoading;
     }
 
-    private boolean shouldAddProgressBar()
-    {
+    private boolean shouldAddProgressBar() {
         return !mRatings.isEmpty() && !mDoneLoading;
     }
 }

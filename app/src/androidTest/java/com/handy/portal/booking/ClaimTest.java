@@ -35,17 +35,14 @@ import static org.hamcrest.Matchers.is;
 
 //note that animations should be disabled on the device running these tests
 @RunWith(AndroidJUnit4.class)
-public class ClaimTest
-{
+public class ClaimTest {
     private static final TestUser TEST_USER = TestUsers.BOOKINGS_NY_PROVIDER;
 
     @Rule
     public ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<SplashActivity>(
-            SplashActivity.class)
-    {
+            SplashActivity.class) {
         @Override
-        protected Intent getActivityIntent()
-        {
+        protected Intent getActivityIntent() {
             Intent intent = super.getActivityIntent();
             intent.putExtra(PrefsKey.AUTH_TOKEN, TEST_USER.getPersistenceToken());
             return intent;
@@ -53,8 +50,7 @@ public class ClaimTest
     };
 
     @After
-    public void tearDown()
-    {
+    public void tearDown() {
         AppInteractionUtil.logOut();
     }
 
@@ -62,8 +58,7 @@ public class ClaimTest
      * assumptions: this user hasn't claimed any bookings yet for 5 days out
      */
     @Test
-    public void testBookingClaim()
-    {
+    public void testBookingClaim() {
         ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         ViewUtil.waitForViewNotVisible(R.id.loading_overlay, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
 
@@ -75,8 +70,8 @@ public class ClaimTest
         //click the first available job
         ViewUtil.waitForViewVisible(R.id.available_jobs_list_view, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         onData(is(instanceOf(Booking.class)))
-            .atPosition(0)
-            .perform(click());
+                .atPosition(0)
+                .perform(click());
 
         //click claim
         Matcher<View> bookingActionButtonMatcher

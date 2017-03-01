@@ -12,41 +12,32 @@ import com.crashlytics.android.Crashlytics;
  * https://code.google.com/p/android/issues/detail?id=64553
  * https://code.google.com/p/android/issues/detail?id=163954
  */
-public class SafeSwipeRefreshLayout extends SwipeRefreshLayout
-{
-    public SafeSwipeRefreshLayout(final Context context)
-    {
+public class SafeSwipeRefreshLayout extends SwipeRefreshLayout {
+    public SafeSwipeRefreshLayout(final Context context) {
         super(context);
     }
 
-    public SafeSwipeRefreshLayout(final Context context, final AttributeSet attrs)
-    {
+    public SafeSwipeRefreshLayout(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
 
     @Override
-    public boolean onInterceptTouchEvent(final MotionEvent ev)
-    {
-        try
-        {
+    public boolean onInterceptTouchEvent(final MotionEvent ev) {
+        try {
             return super.onInterceptTouchEvent(ev);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             Crashlytics.log(e.getMessage());
         }
         return false;
     }
 
     @Override
-    public boolean onTouchEvent(final MotionEvent ev)
-    {
-        try
-        {
+    public boolean onTouchEvent(final MotionEvent ev) {
+        try {
             return super.onTouchEvent(ev);
         }
-        catch (IllegalArgumentException e)
-        {
+        catch (IllegalArgumentException e) {
             Crashlytics.log(e.getMessage());
         }
         return false;

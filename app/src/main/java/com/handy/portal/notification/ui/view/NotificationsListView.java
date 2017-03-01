@@ -14,37 +14,31 @@ import com.handy.portal.library.util.Utils;
 import com.handy.portal.notification.model.NotificationMessage;
 import com.handy.portal.notification.ui.adapter.NotificationsListAdapter;
 
-public final class NotificationsListView extends InfiniteScrollListView
-{
+public final class NotificationsListView extends InfiniteScrollListView {
     private TextView mFooterView;
 
-    public NotificationsListView(final Context context)
-    {
+    public NotificationsListView(final Context context) {
         super(context);
         Utils.inject(context, this);
     }
 
-    public NotificationsListView(final Context context, final AttributeSet attrs)
-    {
+    public NotificationsListView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         Utils.inject(context, this);
     }
 
-    public NotificationsListView(final Context context, final AttributeSet attrs, final int defStyle)
-    {
+    public NotificationsListView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         Utils.inject(context, this);
     }
 
     @Override
-    protected void onFinishInflate()
-    {
+    protected void onFinishInflate() {
         super.onFinishInflate();
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         NotificationsListAdapter notificationsListAdapter = new NotificationsListAdapter(getContext());
 
         mFooterView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.element_infinite_scrolling_list_footer, null);
@@ -56,61 +50,50 @@ public final class NotificationsListView extends InfiniteScrollListView
         getWrappedList().setDividerHeight(1);
     }
 
-    public void showFooter(int stringResourceId)
-    {
+    public void showFooter(int stringResourceId) {
         setFooterVisible(true);
         setFooterText(stringResourceId);
     }
 
-    public void setFooterText(int resourceId)
-    {
+    public void setFooterText(int resourceId) {
         mFooterView.setText(resourceId);
     }
 
-    public void setFooterVisible(boolean visible)
-    {
+    public void setFooterVisible(boolean visible) {
         mFooterView.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public NotificationsListAdapter getWrappedAdapter()
-    {
+    public NotificationsListAdapter getWrappedAdapter() {
         return (NotificationsListAdapter) getAdapter();
     }
 
-    public boolean shouldRequestMoreNotifications()
-    {
+    public boolean shouldRequestMoreNotifications() {
         return getWrappedAdapter().shouldRequestMoreNotifications();
     }
 
-    public void appendData(NotificationMessage[] notificationMessages)
-    {
+    public void appendData(NotificationMessage[] notificationMessages) {
         getWrappedAdapter().appendData(notificationMessages);
     }
 
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return getWrappedAdapter().isEmpty();
     }
 
     @Nullable
-    public Integer getFirstNotificationId()
-    {
+    public Integer getFirstNotificationId() {
         return getWrappedAdapter().getFirstNotificationId();
     }
 
     @Nullable
-    public Integer getLastNotificationId()
-    {
+    public Integer getLastNotificationId() {
         return getWrappedAdapter().getLastNotificationId();
     }
 
-    public void reset()
-    {
+    public void reset() {
         getWrappedAdapter().reset();
     }
 
-    public void stopRequestingNotifications()
-    {
+    public void stopRequestingNotifications() {
         getWrappedAdapter().stopRequestingNotifications();
     }
 }

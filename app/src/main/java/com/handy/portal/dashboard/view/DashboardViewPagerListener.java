@@ -2,8 +2,7 @@ package com.handy.portal.dashboard.view;
 
 import android.support.v4.view.ViewPager;
 
-public interface DashboardViewPagerListener extends ViewPager.OnPageChangeListener
-{
+public interface DashboardViewPagerListener extends ViewPager.OnPageChangeListener {
     /**
      * Bind the indicator to a ViewPager.
      *

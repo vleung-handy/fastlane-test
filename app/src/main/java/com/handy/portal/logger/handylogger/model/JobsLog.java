@@ -7,8 +7,7 @@ import com.handy.portal.payments.model.PaymentInfo;
 
 import java.util.Date;
 
-public abstract class JobsLog extends EventLog
-{
+public abstract class JobsLog extends EventLog {
     @SerializedName("booking_id")
     private String mBookingId;
     @SerializedName("booking_type")
@@ -44,8 +43,7 @@ public abstract class JobsLog extends EventLog
     @SerializedName("schedule_conflict_booking_type")
     private String mScheduleConflictBookingType;
 
-    public JobsLog(final String eventType, final String eventContext, final Booking booking)
-    {
+    public JobsLog(final String eventType, final String eventContext, final Booking booking) {
         super(eventType, eventContext);
         mBookingId = booking.getId();
         mBookingType = booking.getType().name().toLowerCase();
@@ -58,23 +56,19 @@ public abstract class JobsLog extends EventLog
         mHours = booking.getHours();
         mMinimumHours = booking.getMinimumHours();
         final PaymentInfo paymentToProvider = booking.getPaymentToProvider();
-        if (paymentToProvider != null)
-        {
+        if (paymentToProvider != null) {
             mPaymentToProvider = paymentToProvider.getAmount();
             mCurrencyCode = paymentToProvider.getCurrencyCode();
         }
         final PaymentInfo hourlyRate = booking.getHourlyRate();
-        if (hourlyRate != null)
-        {
+        if (hourlyRate != null) {
             mHourlyRate = hourlyRate.getAmount();
             mCurrencyCode = hourlyRate.getCurrencyCode(); // just to be safe
         }
-        if (booking.getBonusPaymentToProvider() != null)
-        {
+        if (booking.getBonusPaymentToProvider() != null) {
             mBonus = booking.getBonusPaymentToProvider().getAmount();
         }
-        if (booking.canSwap())
-        {
+        if (booking.canSwap()) {
             mIsScheduleSwap = true;
             final Booking swappableBooking = booking.getSwappableBooking();
             mScheduleConflictBookingId = swappableBooking.getId();
@@ -82,10 +76,8 @@ public abstract class JobsLog extends EventLog
         }
     }
 
-    private static String getZipCode(final Address address)
-    {
-        if (address != null)
-        {
+    private static String getZipCode(final Address address) {
+        if (address != null) {
             return address.getZip();
         }
         return null;

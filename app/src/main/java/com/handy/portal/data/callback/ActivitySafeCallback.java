@@ -13,8 +13,7 @@ import java.lang.ref.WeakReference;
  *
  * @param <T>
  */
-public abstract class ActivitySafeCallback<T> extends CancellableCallback<T>
-{
+public abstract class ActivitySafeCallback<T> extends CancellableCallback<T> {
     /**
      * NOTE: for the WeakReference to effectively avoid memory leaks,
      * this callback should be used as a static class;
@@ -22,14 +21,12 @@ public abstract class ActivitySafeCallback<T> extends CancellableCallback<T>
      */
     private WeakReference<Activity> mActivityWeakReference;
 
-    public ActivitySafeCallback(@NonNull Activity activity)
-    {
+    public ActivitySafeCallback(@NonNull Activity activity) {
         mActivityWeakReference = new WeakReference<>(activity);
     }
 
     @Override
-    protected boolean areCallbacksEnabled()
-    {
+    protected boolean areCallbacksEnabled() {
         return super.areCallbacksEnabled()
                 && mActivityWeakReference.get() != null
                 && !mActivityWeakReference.get().isFinishing()

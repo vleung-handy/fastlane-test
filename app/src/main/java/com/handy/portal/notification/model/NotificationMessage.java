@@ -9,8 +9,7 @@ import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
-public class NotificationMessage implements Serializable
-{
+public class NotificationMessage implements Serializable {
     @SerializedName("id")
     private int mId;
 
@@ -41,59 +40,48 @@ public class NotificationMessage implements Serializable
     @SerializedName("actions")
     private List<NotificationAction> mActions;
 
-    public int getId()
-    {
+    public int getId() {
         return mId;
     }
 
-    public String getBody()
-    {
+    public String getBody() {
         return mBody;
     }
 
-    public String getHtmlBody()
-    {
+    public String getHtmlBody() {
         return mHtmlBody;
     }
 
     @NonNull
-    public NotificationType getType()
-    {
+    public NotificationType getType() {
         return mType != null ? mType : NotificationType.ALERT;
     }
 
-    public Date getCreatedAt()
-    {
+    public Date getCreatedAt() {
         return mCreatedAt;
     }
 
-    public Date getExpiresAt()
-    {
+    public Date getExpiresAt() {
         return mExpiresAt;
     }
 
-    public boolean isAvailable()
-    {
+    public boolean isAvailable() {
         return mAvailable;
     }
 
-    public boolean isRead()
-    {
+    public boolean isRead() {
         return mIsRead;
     }
 
-    public boolean isInteracted()
-    {
+    public boolean isInteracted() {
         return mIsInteracted;
     }
 
-    public List<NotificationAction> getActions()
-    {
+    public List<NotificationAction> getActions() {
         return mActions;
     }
 
-    public String getFormattedTime()
-    {
+    public String getFormattedTime() {
         return DateTimeUtils.formatDateToNumberTimeUnit(getCreatedAt());
     }
 }

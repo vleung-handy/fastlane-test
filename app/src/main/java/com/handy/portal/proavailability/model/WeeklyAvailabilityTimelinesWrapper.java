@@ -10,8 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class WeeklyAvailabilityTimelinesWrapper implements Serializable
-{
+public class WeeklyAvailabilityTimelinesWrapper implements Serializable {
     @SerializedName("start_date")
     private String mStartDate;
     @SerializedName("end_date")
@@ -19,56 +18,45 @@ public class WeeklyAvailabilityTimelinesWrapper implements Serializable
     @SerializedName("timelines")
     private ArrayList<DailyAvailabilityTimeline> mDailyAvailabilityTimelines;
 
-    public String getStartDateString()
-    {
+    public String getStartDateString() {
         return mStartDate;
     }
 
-    public String getEndDateString()
-    {
+    public String getEndDateString() {
         return mEndDate;
     }
 
     @Nullable
-    public Date getStartDate()
-    {
+    public Date getStartDate() {
         return DateTimeUtils.parseDateString(mStartDate, DateTimeUtils.YEAR_MONTH_DAY_FORMATTER);
     }
 
     @Nullable
-    public Date getEndDate()
-    {
+    public Date getEndDate() {
         return DateTimeUtils.parseDateString(mEndDate, DateTimeUtils.YEAR_MONTH_DAY_FORMATTER);
     }
 
-    public ArrayList<DailyAvailabilityTimeline> getDailyAvailabilityTimelines()
-    {
+    public ArrayList<DailyAvailabilityTimeline> getDailyAvailabilityTimelines() {
         return mDailyAvailabilityTimelines;
     }
 
     @Nullable
-    public DailyAvailabilityTimeline getAvailabilityForDate(@NonNull final Date date)
-    {
-        for (DailyAvailabilityTimeline dailyAvailabilityTimeline : mDailyAvailabilityTimelines)
-        {
-            if (dailyAvailabilityTimeline.matchesDate(date))
-            {
+    public DailyAvailabilityTimeline getAvailabilityForDate(@NonNull final Date date) {
+        for (DailyAvailabilityTimeline dailyAvailabilityTimeline : mDailyAvailabilityTimelines) {
+            if (dailyAvailabilityTimeline.matchesDate(date)) {
                 return dailyAvailabilityTimeline;
             }
         }
         return null;
     }
 
-    public boolean covers(@NonNull final Date date)
-    {
+    public boolean covers(@NonNull final Date date) {
         final Date startDate = getStartDate();
         final Date endDate = getEndDate();
-        if (startDate == null || endDate == null)
-        {
+        if (startDate == null || endDate == null) {
             return false;
         }
-        else
-        {
+        else {
             return DateTimeUtils.daysBetween(date, startDate) <= 0
                     && DateTimeUtils.daysBetween(date, endDate) >= 0;
         }

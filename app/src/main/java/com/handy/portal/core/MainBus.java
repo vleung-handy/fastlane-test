@@ -4,29 +4,23 @@ import com.crashlytics.android.Crashlytics;
 
 import org.greenrobot.eventbus.EventBus;
 
-public final class MainBus extends EventBus
-{
-    public MainBus()
-    {
+public final class MainBus extends EventBus {
+    public MainBus() {
 
     }
 
     @Override
-    public void unregister(final Object object)
-    {
-        try
-        {
+    public void unregister(final Object object) {
+        try {
             super.unregister(object);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             Crashlytics.logException(e);
         }
     }
 
     @Override
-    public void post(final Object event)
-    {
+    public void post(final Object event) {
         super.post(event);
     }
 }

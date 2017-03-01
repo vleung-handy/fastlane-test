@@ -13,28 +13,23 @@ import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.library.ui.view.DialogBlockerView;
 import com.handy.portal.library.util.Utils;
 
-public class LocationPermissionsBlockerDialogFragment extends InjectedDialogFragment
-{
+public class LocationPermissionsBlockerDialogFragment extends InjectedDialogFragment {
     public static final String FRAGMENT_TAG = LocationPermissionsBlockerDialogFragment.class.getName();
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setCancelable(false);
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return new DialogBlockerView(getContext())
                 .setTitle(R.string.change_location_permissions_dialog_title)
                 .setMessage(R.string.change_location_permissions_dialog_message)
-                .setActionButton(R.string.change_location_permissions_dialog_action_button, new View.OnClickListener()
-                {
+                .setActionButton(R.string.change_location_permissions_dialog_action_button, new View.OnClickListener() {
                     @Override
-                    public void onClick(final View v)
-                    {
+                    public void onClick(final View v) {
                         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                         Uri uri = Uri.fromParts("package", getActivity().getPackageName(), null);
                         intent.setData(uri);

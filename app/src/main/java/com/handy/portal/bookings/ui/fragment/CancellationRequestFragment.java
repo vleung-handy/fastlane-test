@@ -37,8 +37,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CancellationRequestFragment extends ActionBarFragment
-{
+public class CancellationRequestFragment extends ActionBarFragment {
     @Inject
     PrefsManager mPrefsManager;
     @Inject
@@ -59,8 +58,7 @@ public class CancellationRequestFragment extends ActionBarFragment
     private Booking.Action mAction;
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setOptionsMenuEnabled(true);
         setActionBar(R.string.cancellation_request, false);
@@ -69,8 +67,7 @@ public class CancellationRequestFragment extends ActionBarFragment
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_cancellation_request, container, false);
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
                 mBooking,
@@ -83,38 +80,32 @@ public class CancellationRequestFragment extends ActionBarFragment
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
         init();
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         bus.register(this);
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         bus.unregister(this);
         super.onPause();
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_x_back, menu);
         super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.action_exit:
                 onBackButtonPressed();
                 return true;
@@ -124,15 +115,12 @@ public class CancellationRequestFragment extends ActionBarFragment
     }
 
     @OnClick(R.id.cancellation_confirm_button)
-    public void cancelBooking()
-    {
+    public void cancelBooking() {
         final String selectedReason = getSelectedReason();
-        if (selectedReason == null)
-        {
+        if (selectedReason == null) {
             showToast(R.string.select_a_reason);
         }
-        else
-        {
+        else {
             bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
                     mBooking,
                     ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
@@ -147,10 +135,8 @@ public class CancellationRequestFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveRemoveJobSuccess(final HandyEvent.ReceiveRemoveJobSuccess event)
-    {
-        if (event.booking.getId().equals(mBooking.getId()))
-        {
+    public void onReceiveRemoveJobSuccess(final HandyEvent.ReceiveRemoveJobSuccess event) {
+        if (event.booking.getId().equals(mBooking.getId())) {
             bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSuccess(
                     mBooking,
                     ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
@@ -169,11 +155,9 @@ public class CancellationRequestFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveRemoveJobError(final HandyEvent.ReceiveRemoveJobError event)
-    {
+    public void onReceiveRemoveJobError(final HandyEvent.ReceiveRemoveJobError event) {
         String errorMessage = event.error.getMessage();
-        if (errorMessage == null)
-        {
+        if (errorMessage == null) {
             errorMessage = getString(R.string.job_remove_error_generic);
         }
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobError(
@@ -189,8 +173,7 @@ public class CancellationRequestFragment extends ActionBarFragment
         showToast(errorMessage);
     }
 
-    private void init()
-    {
+    private void init() {
         String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
         Booking.BookingStatus bookingStatus = mBooking.inferBookingStatus(providerId);
         String address = mBooking.getFormattedLocation(bookingStatus);
@@ -206,8 +189,7 @@ public class CancellationRequestFragment extends ActionBarFragment
                 CurrencyUtils.formatPriceWithCents(mAction.getFeeAmount(),
                         mBooking.getCurrencySymbol())));
 
-        for (String reason : mAction.getRemoveReasons())
-        {
+        for (String reason : mAction.getRemoveReasons()) {
             RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext())
                     .inflate(R.layout.radio_button_cancel_reason, mReasonsRadioGroup, false);
             radioButton.setText(reason);
@@ -216,11 +198,9 @@ public class CancellationRequestFragment extends ActionBarFragment
     }
 
     @Nullable
-    public String getSelectedReason()
-    {
+    public String getSelectedReason() {
         final RadioButton reasonButton = UIUtils.getCheckedRadioButton(mReasonsRadioGroup);
-        if (reasonButton != null)
-        {
+        if (reasonButton != null) {
             return reasonButton.getText().toString();
         }
         return null;

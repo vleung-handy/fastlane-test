@@ -26,8 +26,7 @@ import butterknife.BindColor;
 import butterknife.BindDimen;
 import butterknife.BindView;
 
-public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFragment
-{
+public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFragment {
     @Inject
     EventBus mBus;
     @BindView(R.id.swappable_job_container)
@@ -43,8 +42,7 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
 
     public static final String FRAGMENT_TAG = SwapBookingClaimDialogFragment.class.getName();
 
-    public static SwapBookingClaimDialogFragment newInstance(final Booking booking)
-    {
+    public static SwapBookingClaimDialogFragment newInstance(final Booking booking) {
         final SwapBookingClaimDialogFragment dialogFragment = new SwapBookingClaimDialogFragment();
         Bundle bundle = new Bundle();
         bundle.putSerializable(BundleKeys.BOOKING, booking);
@@ -54,14 +52,12 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
 
     @Override
     protected View inflateConfirmActionContentView(final LayoutInflater inflater,
-                                                   final ViewGroup container)
-    {
+                                                   final ViewGroup container) {
         return inflater.inflate(R.layout.layout_confirm_booking_swap, container, false);
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         initSwappableJob();
         initClaimableJob();
@@ -69,8 +65,7 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
         mBus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ConfirmSwapShown(mBooking)));
     }
 
-    private void initSwappableJob()
-    {
+    private void initSwappableJob() {
         final AvailableBookingElementView bookingViewMediator = new AvailableBookingElementView();
         bookingViewMediator.initView(getActivity(), mBooking.getSwappableBooking(), null,
                 mSwappableJobContainer);
@@ -83,8 +78,7 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
         mSwappableJobContainer.addView(bookingView);
     }
 
-    private void initClaimableJob()
-    {
+    private void initClaimableJob() {
         final AvailableBookingElementView bookingViewMediator = new AvailableBookingElementView();
         bookingViewMediator.initView(getActivity(), mBooking, null, mClaimableJobContainer);
         final View bookingView = bookingViewMediator.getAssociatedView();
@@ -97,12 +91,10 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
     }
 
     @Override
-    protected void onConfirmActionButtonClicked()
-    {
+    protected void onConfirmActionButtonClicked() {
         final Intent intent = new Intent();
         intent.putExtra(BundleKeys.BOOKING, mBooking);
-        if (getTargetFragment() != null)
-        {
+        if (getTargetFragment() != null) {
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK,
                     intent);
         }
@@ -111,29 +103,24 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
     }
 
     @Override
-    protected int getConfirmButtonBackgroundResourceId()
-    {
+    protected int getConfirmButtonBackgroundResourceId() {
         return R.drawable.button_green_round;
     }
 
     @Override
-    protected String getConfirmButtonText()
-    {
+    protected String getConfirmButtonText() {
         return getString(R.string.confirm_upgrade);
     }
 
-    private void restyleBookingView(final View bookingView)
-    {
+    private void restyleBookingView(final View bookingView) {
         final View serviceText = bookingView.findViewById(R.id.booking_entry_service_text);
-        if (serviceText != null)
-        {
+        if (serviceText != null) {
             serviceText.setVisibility(View.GONE);
         }
 
         final View leftStrip =
                 bookingView.findViewById(R.id.booking_list_entry_left_strip_indicator);
-        if (leftStrip != null)
-        {
+        if (leftStrip != null) {
             leftStrip.setVisibility(View.GONE);
         }
 
@@ -141,26 +128,21 @@ public class SwapBookingClaimDialogFragment extends ConfirmBookingActionDialogFr
 
         final TextView bonusText = (TextView) bookingView
                 .findViewById(R.id.booking_entry_payment_bonus_text);
-        if (bonusText != null && bonusText.getVisibility() == View.VISIBLE)
-        {
+        if (bonusText != null && bonusText.getVisibility() == View.VISIBLE) {
             bonusText.setTypeface(FontUtils.getFont(getActivity(), FontUtils.CIRCULAR_BOOK));
             bonusText.setTextColor(mTertiaryGray);
             bonusText.setTextSize(TypedValue.COMPLEX_UNIT_PX, mXSmallTextSize);
         }
     }
 
-    private void restyleTextViews(final View view)
-    {
-        if (view instanceof ViewGroup)
-        {
+    private void restyleTextViews(final View view) {
+        if (view instanceof ViewGroup) {
             final ViewGroup group = (ViewGroup) view;
-            for (int i = 0; i < group.getChildCount(); i++)
-            {
+            for (int i = 0; i < group.getChildCount(); i++) {
                 restyleTextViews(group.getChildAt(i));
             }
         }
-        else if (view instanceof TextView)
-        {
+        else if (view instanceof TextView) {
             final TextView textView = (TextView) view;
             textView.setTextColor(mTertiaryGray);
             textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mSmallTextSize);

@@ -54,8 +54,7 @@ import butterknife.OnClick;
 
 import static com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapter.Event;
 
-public class ProRequestedJobsFragment extends InjectedFragment
-{
+public class ProRequestedJobsFragment extends InjectedFragment {
     @Inject
     BookingManager mBookingManager;
 
@@ -75,18 +74,15 @@ public class ProRequestedJobsFragment extends InjectedFragment
     private RecyclerView.LayoutManager mLayoutManager;
     private int mUnreadJobsCount;
 
-    private SwipeRefreshLayout.OnRefreshListener onProRequestedJobsListRefreshListener = new SwipeRefreshLayout.OnRefreshListener()
-    {
+    private SwipeRefreshLayout.OnRefreshListener onProRequestedJobsListRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
-        public void onRefresh()
-        {
+        public void onRefresh() {
             setRefreshingIndicator(true);
             requestProRequestedJobs(false);
         }
     };
 
-    public static ProRequestedJobsFragment newInstance()
-    {
+    public static ProRequestedJobsFragment newInstance() {
         return new ProRequestedJobsFragment();
     }
 
@@ -95,15 +91,12 @@ public class ProRequestedJobsFragment extends InjectedFragment
      *
      * @param jobList sorted by date
      */
-    private void updateJobListView(@NonNull List<BookingsWrapper> jobList)
-    {
+    private void updateJobListView(@NonNull List<BookingsWrapper> jobList) {
         mUnreadJobsCount = 0;
         List<BookingsWrapper> filteredJobList = new ArrayList<>(jobList.size());
-        for (BookingsWrapper bookingsWrapper : jobList)
-        {
+        for (BookingsWrapper bookingsWrapper : jobList) {
             final int unreadJobsCountForDate = bookingsWrapper.getUndismissedBookings().size();
-            if (unreadJobsCountForDate > 0)
-            {
+            if (unreadJobsCountForDate > 0) {
                 mUnreadJobsCount += unreadJobsCountForDate;
                 filteredJobList.add(bookingsWrapper);
             }
@@ -111,19 +104,16 @@ public class ProRequestedJobsFragment extends InjectedFragment
         bus.post(new BookingEvent.ReceiveProRequestedJobsCountSuccess(mUnreadJobsCount));
         mAdapter = new RequestedJobsRecyclerViewAdapter(getActivity(), filteredJobList);
         mRequestedJobsRecyclerView.setAdapter(mAdapter);
-        if (filteredJobList.isEmpty())
-        {
+        if (filteredJobList.isEmpty()) {
             showContentViewAndHideOthers(mEmptyJobsSwipeRefreshLayout);
         }
-        else
-        {
+        else {
             showContentViewAndHideOthers(mJobListSwipeRefreshLayout);
         }
         bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.RequestsShown(mUnreadJobsCount)));
     }
 
-    private void navigateToJobDetails(@NonNull Booking booking)
-    {
+    private void navigateToJobDetails(@NonNull Booking booking) {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING, booking);
         arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
@@ -136,19 +126,16 @@ public class ProRequestedJobsFragment extends InjectedFragment
 
     @NonNull
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
-    {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         //this saves the exact view state, including scroll position
-        if (mFragmentView == null)
-        {
+        if (mFragmentView == null) {
             mFragmentView = inflater.inflate(R.layout.fragment_pro_requested_jobs_inbox, container, false);
         }
         return mFragmentView;
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
@@ -163,14 +150,12 @@ public class ProRequestedJobsFragment extends InjectedFragment
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         bus.register(this);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         mJobListSwipeRefreshLayout.setRefreshing(false);
-        if (mAdapter == null)
-        {
+        if (mAdapter == null) {
             showContentViewAndHideOthers(mJobListSwipeRefreshLayout);
             mJobListSwipeRefreshLayout.setRefreshing(true);
             requestProRequestedJobs(true);
@@ -178,8 +163,7 @@ public class ProRequestedJobsFragment extends InjectedFragment
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         bus.unregister(this);
         super.onPause();
     }
@@ -188,8 +172,7 @@ public class ProRequestedJobsFragment extends InjectedFragment
      * hides all the content views in this fragment
      * except the given content view
      */
-    private void showContentViewAndHideOthers(@NonNull View contentView)
-    {
+    private void showContentViewAndHideOthers(@NonNull View contentView) {
         hideAllContentViews();
         contentView.setVisibility(View.VISIBLE);
     }
@@ -197,8 +180,7 @@ public class ProRequestedJobsFragment extends InjectedFragment
     /**
      * hides all the content views in this fragment
      */
-    private void hideAllContentViews()
-    {
+    private void hideAllContentViews() {
         mEmptyJobsSwipeRefreshLayout.setVisibility(View.GONE);
         mJobListSwipeRefreshLayout.setVisibility(View.GONE);
         mFetchErrorView.setVisibility(View.GONE);
@@ -207,21 +189,17 @@ public class ProRequestedJobsFragment extends InjectedFragment
     /**
      * requests jobs for which this pro was requested by customers for
      */
-    private void requestProRequestedJobs(boolean useCachedIfPresent)
-    {
+    private void requestProRequestedJobs(boolean useCachedIfPresent) {
         setRefreshingIndicator(true);
         List<Date> datesForBookings = getDatesForBookings();
         mBookingManager.requestProRequestedJobs(datesForBookings, useCachedIfPresent);
     }
 
-    private List<Date> getDatesForBookings()
-    {
-        if (configManager.getConfigurationResponse() != null)
-        {
+    private List<Date> getDatesForBookings() {
+        if (configManager.getConfigurationResponse() != null) {
             int numDaysForRequestedJobs = configManager.getConfigurationResponse()
                     .getNumberOfDaysForRequestedJobs();
-            if (numDaysForRequestedJobs != 0)
-            {
+            if (numDaysForRequestedJobs != 0) {
                 return DateTimeUtils.getDateWithoutTimeList(new Date(),
                         numDaysForRequestedJobs);
             }
@@ -230,55 +208,46 @@ public class ProRequestedJobsFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onReceiveProRequestedJobsSuccess(BookingEvent.ReceiveProRequestedJobsSuccess event)
-    {
+    public void onReceiveProRequestedJobsSuccess(BookingEvent.ReceiveProRequestedJobsSuccess event) {
         setRefreshingIndicator(false);
         List<BookingsWrapper> proRequestedJobsList = event.getProRequestedJobs();
-        if (proRequestedJobsList == null)
-        {
+        if (proRequestedJobsList == null) {
             Crashlytics.logException(new Exception("pro requested jobs list is null"));
             onError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.SERVER));
         }
-        else
-        {
+        else {
             updateJobListView(event.getProRequestedJobs());
         }
     }
 
     @Subscribe
-    public void onReceiveProRequestedJobsError(BookingEvent.ReceiveProRequestedJobsError event)
-    {
+    public void onReceiveProRequestedJobsError(BookingEvent.ReceiveProRequestedJobsError event) {
         onError(event.error);
     }
 
     @Subscribe
-    public void onRequestedJobClicked(final Event.RequestedJobClicked event)
-    {
+    public void onRequestedJobClicked(final Event.RequestedJobClicked event) {
         navigateToJobDetails(event.getBooking());
     }
 
     @Subscribe
-    public void onRequestedJobClaimClicked(final Event.RequestedJobClaimClicked event)
-    {
+    public void onRequestedJobClaimClicked(final Event.RequestedJobClaimClicked event) {
         boolean confirmClaimDialogShown =
                 ClaimUtils.showConfirmBookingClaimDialogIfNecessary(event.getBooking(), this,
                         getFragmentManager());
-        if (!confirmClaimDialogShown)
-        {
+        if (!confirmClaimDialogShown) {
             requestClaimJob(event.getBooking());
         }
     }
 
-    private void requestClaimJob(final Booking booking)
-    {
+    private void requestClaimJob(final Booking booking) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimSubmitted(booking)));
         mBookingManager.requestClaimJob(booking, null);
     }
 
     @Subscribe
-    public void onReceiveClaimJobSuccess(final HandyEvent.ReceiveClaimJobSuccess event)
-    {
+    public void onReceiveClaimJobSuccess(final HandyEvent.ReceiveClaimJobSuccess event) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         final Booking booking = event.originalBooking;
         bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimSuccess(booking)));
@@ -286,19 +255,16 @@ public class ProRequestedJobsFragment extends InjectedFragment
         mAdapter.remove(booking);
         Snackbar.make(mJobListSwipeRefreshLayout, R.string.job_claim_success,
                 Snackbar.LENGTH_LONG).show();
-        if (mAdapter.getItemCount() == 0)
-        {
+        if (mAdapter.getItemCount() == 0) {
             showContentViewAndHideOthers(mEmptyJobsSwipeRefreshLayout);
         }
     }
 
     @Subscribe
-    public void onReceiveClaimJobError(final HandyEvent.ReceiveClaimJobError event)
-    {
+    public void onReceiveClaimJobError(final HandyEvent.ReceiveClaimJobError event) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         String errorMessage = event.error.getMessage();
-        if (TextUtils.isEmpty(errorMessage))
-        {
+        if (TextUtils.isEmpty(errorMessage)) {
             errorMessage = getString(R.string.job_claim_error);
         }
         bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimError(event.getBooking(),
@@ -307,41 +273,33 @@ public class ProRequestedJobsFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onRequestedJobDismissClicked(final Event.RequestedJobDismissClicked event)
-    {
+    public void onRequestedJobDismissClicked(final Event.RequestedJobDismissClicked event) {
         final ConfigurationResponse configuration = configManager.getConfigurationResponse();
         final Booking booking = event.getBooking();
-        if (configuration == null)
-        {
+        if (configuration == null) {
             dismissJob(booking);
         }
-        else
-        {
+        else {
             final ArrayList<ConfigurationResponse.RequestDismissal.Reason> reasons =
                     configuration.getRequestDismissal().getReasons();
             // Display dialog for selecting a request dismissal reason
-            if (reasons != null && !reasons.isEmpty())
-            {
+            if (reasons != null && !reasons.isEmpty()) {
                 final RequestDismissalReasonsDialogFragment dialogFragment =
                         RequestDismissalReasonsDialogFragment.newInstance(booking, reasons);
                 dialogFragment.setTargetFragment(this, RequestCode.CONFIRM_DISMISS);
                 FragmentUtils.safeLaunchDialogFragment(dialogFragment, this, null);
             }
-            else
-            {
+            else {
                 dismissJob(booking);
             }
         }
     }
 
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
-    {
-        if (resultCode == Activity.RESULT_OK)
-        {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
             final Booking booking = (Booking) data.getSerializableExtra(BundleKeys.BOOKING);
-            switch (requestCode)
-            {
+            switch (requestCode) {
                 case RequestCode.CONFIRM_DISMISS:
                     final String reasonMachineName =
                             data.getStringExtra(BundleKeys.REASON_MACHINE_NAME);
@@ -357,15 +315,13 @@ public class ProRequestedJobsFragment extends InjectedFragment
         }
     }
 
-    private void dismissJob(final Booking booking)
-    {
+    private void dismissJob(final Booking booking) {
         dismissJob(booking, null, null);
     }
 
     private void dismissJob(@NonNull final Booking booking,
                             @Nullable final String reasonMachineName,
-                            @Nullable final String reasonDescription)
-    {
+                            @Nullable final String reasonDescription) {
         bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobSubmitted(booking,
                 reasonMachineName, reasonDescription)));
         mBookingManager.requestDismissJob(booking, reasonMachineName);
@@ -373,8 +329,7 @@ public class ProRequestedJobsFragment extends InjectedFragment
     }
 
     @Subscribe
-    public void onReceiveDismissJobSuccess(final HandyEvent.ReceiveDismissJobSuccess event)
-    {
+    public void onReceiveDismissJobSuccess(final HandyEvent.ReceiveDismissJobSuccess event) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         final Booking booking = event.getBooking();
         bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobSuccess(booking)));
@@ -382,19 +337,16 @@ public class ProRequestedJobsFragment extends InjectedFragment
         mAdapter.remove(booking);
         Snackbar.make(mJobListSwipeRefreshLayout, R.string.request_dismissal_success_message,
                 Snackbar.LENGTH_LONG).show();
-        if (mAdapter.getItemCount() == 0)
-        {
+        if (mAdapter.getItemCount() == 0) {
             showContentViewAndHideOthers(mEmptyJobsSwipeRefreshLayout);
         }
     }
 
     @Subscribe
-    public void onReceiveDismissJobError(final HandyEvent.ReceiveDismissJobError event)
-    {
+    public void onReceiveDismissJobError(final HandyEvent.ReceiveDismissJobError event) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         String errorMessage = event.error.getMessage();
-        if (TextUtils.isEmpty(errorMessage))
-        {
+        if (TextUtils.isEmpty(errorMessage)) {
             errorMessage = getString(R.string.request_dismissal_error);
         }
         bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobError(event.getBooking(),
@@ -407,31 +359,26 @@ public class ProRequestedJobsFragment extends InjectedFragment
      * and on error we don't know which refresh layout
      * triggered the request
      */
-    private void setRefreshingIndicator(boolean isRefreshing)
-    {
+    private void setRefreshingIndicator(boolean isRefreshing) {
         mEmptyJobsSwipeRefreshLayout.setRefreshing(isRefreshing);
         mJobListSwipeRefreshLayout.setRefreshing(isRefreshing);
     }
 
-    private void onError(DataManager.DataManagerError error)
-    {
+    private void onError(DataManager.DataManagerError error) {
         setRefreshingIndicator(false);
 
         //show the try again error screen
-        if (error != null && error.getType() == DataManager.DataManagerError.Type.NETWORK)
-        {
+        if (error != null && error.getType() == DataManager.DataManagerError.Type.NETWORK) {
             mFetchErrorText.setText(R.string.error_fetching_connectivity_issue);
         }
-        else
-        {
+        else {
             mFetchErrorText.setText(R.string.an_error_has_occurred);
         }
         showContentViewAndHideOthers(mFetchErrorView);
     }
 
     @OnClick(R.id.try_again_button)
-    public void onFetchErrorViewTryAgainButtonClicked()
-    {
+    public void onFetchErrorViewTryAgainButtonClicked() {
         showContentViewAndHideOthers(mJobListSwipeRefreshLayout);
         requestProRequestedJobs(false);
     }

@@ -39,8 +39,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.robolectric.Shadows.shadowOf;
 
-public class VersionManagerTest extends RobolectricGradleTestWrapper
-{
+public class VersionManagerTest extends RobolectricGradleTestWrapper {
     @Mock
     private EventBus bus;
     @Mock
@@ -66,8 +65,7 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
     private DataManager.Callback<UpdateDetails> updateDetailsCallBack;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         initMocks(this);
 
         Context applicationSpy = spy(RuntimeEnvironment.application);
@@ -90,8 +88,7 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenSuccessfulUpdateCheck_whenUpdateNeeded_thenRegisterApkDownloadBroadcastReceiver() throws Exception
-    {
+    public void givenSuccessfulUpdateCheck_whenUpdateNeeded_thenRegisterApkDownloadBroadcastReceiver() throws Exception {
         assertNull(versionManager.getUpdateDetails());
         when(updateDetails.getShouldUpdate()).thenReturn(true);
         updateDetailsCallBack.onSuccess(updateDetails);
@@ -99,8 +96,7 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenSuccessfulUpdateCheck_whenUpdateNeeded_thenPostUpdateAvailableEvent() throws Exception
-    {
+    public void givenSuccessfulUpdateCheck_whenUpdateNeeded_thenPostUpdateAvailableEvent() throws Exception {
         when(updateDetails.getShouldUpdate()).thenReturn(true);
 
         updateDetailsCallBack.onSuccess(updateDetails);
@@ -110,8 +106,7 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenSuccessfulUpdateCheck_whenUpdateNotNeeded_thenDoNotDownloadAnything() throws Exception
-    {
+    public void givenSuccessfulUpdateCheck_whenUpdateNotNeeded_thenDoNotDownloadAnything() throws Exception {
         when(updateDetails.getShouldUpdate()).thenReturn(false);
 
         updateDetailsCallBack.onSuccess(updateDetails);
@@ -120,8 +115,7 @@ public class VersionManagerTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void givenUnsuccessfulUpdateCheck_thenDoNotDownloadAnything() throws Exception
-    {
+    public void givenUnsuccessfulUpdateCheck_thenDoNotDownloadAnything() throws Exception {
         updateDetailsCallBack.onError(mock(DataManager.DataManagerError.class));
 
         assertThat(downloadManager.getRequestCount(), equalTo(0));

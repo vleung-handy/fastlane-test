@@ -33,17 +33,14 @@ import static org.hamcrest.Matchers.allOf;
 
 //note that animations should be disabled on the device running these tests
 @RunWith(AndroidJUnit4.class)
-public class CheckOutTest
-{
+public class CheckOutTest {
     private static final TestUser TEST_USER = TestUsers.CHECK_OUT_TEST_PROVIDER;
 
     @Rule
     public ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<SplashActivity>(
-            SplashActivity.class)
-    {
+            SplashActivity.class) {
         @Override
-        protected Intent getActivityIntent()
-        {
+        protected Intent getActivityIntent() {
             Intent intent = super.getActivityIntent();
             intent.putExtra(PrefsKey.AUTH_TOKEN, TEST_USER.getPersistenceToken());
             return intent;
@@ -51,22 +48,19 @@ public class CheckOutTest
     };
 
     @Before
-    public void setUp()
-    {
+    public void setUp() {
         mActivityRule.getActivity().getApplicationContext()
                 .getSharedPreferences(PrefsManager.BOOKING_INSTRUCTIONS_PREFS, Context.MODE_PRIVATE)
                 .edit().clear().commit();
     }
 
     @After
-    public void tearDown()
-    {
+    public void tearDown() {
         AppInteractionUtil.logOut();
     }
 
     @Test
-    public void testBookingCheckOut()
-    {
+    public void testBookingCheckOut() {
         ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         ViewUtil.waitForViewNotVisible(R.id.loading_overlay, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
 
@@ -74,8 +68,7 @@ public class CheckOutTest
         onView(allOf(withId(R.id.tab_title), withText(R.string.tab_schedule))).perform(click());
 
         // This dialog only shows up sometimes, don't fail if it does not show
-        try
-        {
+        try {
             ViewUtil.waitForViewVisible(R.id.confirm_action_button, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
             onView(withId(R.id.confirm_action_button)).perform(click());
         }
@@ -112,8 +105,7 @@ public class CheckOutTest
         onView(withId(R.id.rate_booking_submit_button)).perform(click());
 
         // If nearby jobs shows up, skip it
-        try
-        {
+        try {
             ViewUtil.waitForViewVisible(R.id.nearby_bookings_description, ViewUtil.LONG_MAX_WAIT_TIME_MS);
             onView(withId(R.id.action_exit)).perform(click());
         }

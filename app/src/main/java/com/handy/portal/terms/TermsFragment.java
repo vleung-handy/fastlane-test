@@ -23,8 +23,7 @@ import butterknife.ButterKnife;
 import butterknife.OnCheckedChanged;
 import butterknife.OnClick;
 
-public class TermsFragment extends InjectedFragment
-{
+public class TermsFragment extends InjectedFragment {
     @BindView(R.id.loading_overlay)
     protected View mLoadingOverlay;
     @BindView(R.id.terms_web_view)
@@ -38,8 +37,7 @@ public class TermsFragment extends InjectedFragment
 
     private TermsDetails mTerms;
 
-    public static TermsFragment newInstance(final TermsDetails termsDetails)
-    {
+    public static TermsFragment newInstance(final TermsDetails termsDetails) {
         final TermsFragment fragment = new TermsFragment();
         final Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.TERMS, termsDetails);
@@ -48,8 +46,7 @@ public class TermsFragment extends InjectedFragment
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mTerms = (TermsDetails) getArguments().getSerializable(BundleKeys.TERMS);
     }
@@ -58,8 +55,7 @@ public class TermsFragment extends InjectedFragment
     @Override
     public View onCreateView(final LayoutInflater inflater,
                              final ViewGroup container,
-                             final Bundle savedInstanceState)
-    {
+                             final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_terms, container, false);
         ButterKnife.bind(this, view);
         updateView(mTerms);
@@ -67,57 +63,47 @@ public class TermsFragment extends InjectedFragment
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         bus.register(this);
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         bus.unregister(this);
         super.onPause();
     }
 
     @OnClick(R.id.accept_button)
-    protected void acceptTerms()
-    {
-        if (mAcceptCheckbox.isChecked())
-        {
+    protected void acceptTerms() {
+        if (mAcceptCheckbox.isChecked()) {
             mLoadingOverlay.setVisibility(View.VISIBLE);
             bus.post(new TermsEvent.AcceptTerms(mTerms));
         }
-        else
-        {
+        else {
             mAcceptCheckbox.setTextColor(ContextCompat.getColor(getContext(), R.color.plumber_red));
         }
     }
 
     @OnCheckedChanged(R.id.accept_checkbox)
-    protected void onCheckboxChecked(boolean checked)
-    {
-        if (checked)
-        {
+    protected void onCheckboxChecked(boolean checked) {
+        if (checked) {
             mAcceptCheckbox.setTextColor(ContextCompat.getColor(getContext(), R.color.black));
         }
     }
 
     @Subscribe
-    public void onAcceptTermsSuccess(TermsEvent.AcceptTermsSuccess event)
-    {
+    public void onAcceptTermsSuccess(TermsEvent.AcceptTermsSuccess event) {
         ((TermsActivity) getActivity()).proceed();
     }
 
     @Subscribe
-    public void onAcceptTermsError(TermsEvent.AcceptTermsError event)
-    {
+    public void onAcceptTermsError(TermsEvent.AcceptTermsError event) {
         mLoadingOverlay.setVisibility(View.GONE);
         showToast(R.string.error_accepting_terms);
     }
 
-    private void updateView(@NonNull TermsDetails termsDetails)
-    {
+    private void updateView(@NonNull TermsDetails termsDetails) {
         mAcceptButton.setText(termsDetails.getAction());
         mInstructionsText.setText(termsDetails.getInstructions());
         mTermsWebView.loadHtml(termsDetails.getContent());

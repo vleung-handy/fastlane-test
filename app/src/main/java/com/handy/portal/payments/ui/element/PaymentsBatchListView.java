@@ -24,8 +24,7 @@ import java.util.Date;
 
 import javax.inject.Inject;
 
-public final class PaymentsBatchListView extends InfiniteScrollListView implements AdapterView.OnItemClickListener
-{
+public final class PaymentsBatchListView extends InfiniteScrollListView implements AdapterView.OnItemClickListener {
     @Inject
     EventBus mBus;
 
@@ -37,34 +36,29 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
     should set OnDataItemClickListener instead of OnItemClickListener
      */
 
-    public PaymentsBatchListView(final Context context)
-    {
+    public PaymentsBatchListView(final Context context) {
         super(context);
         Utils.inject(context, this);
 
     }
 
-    public PaymentsBatchListView(final Context context, final AttributeSet attrs)
-    {
+    public PaymentsBatchListView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         Utils.inject(context, this);
     }
 
-    public PaymentsBatchListView(final Context context, final AttributeSet attrs, final int defStyle)
-    {
+    public PaymentsBatchListView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         Utils.inject(context, this);
     }
 
     @Override
-    protected void onFinishInflate()
-    {
+    protected void onFinishInflate() {
         super.onFinishInflate();
         init();
     }
 
-    public void init()
-    {
+    public void init() {
         PaymentBatchListAdapter itemsAdapter = new PaymentBatchListAdapter(getContext());
 
         footerView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.element_infinite_scrolling_list_footer, null);
@@ -77,76 +71,62 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
         getWrappedList().setDividerHeight(1);
     }
 
-    public void clear()
-    {
+    public void clear() {
         getWrappedAdapter().clear();
     }
 
-    public interface OnDataItemClickListener
-    { //TODO: put this somewhere else and make type generic?
+    public interface OnDataItemClickListener { //TODO: put this somewhere else and make type generic?
         void onDataItemClicked(PaymentBatch paymentBatch);
     }
 
     @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id)
-    {
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final boolean isCurrentWeek = (position == 0);
         mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.BatchSelected(isCurrentWeek, position + 1))); // index needs to be one based
         PaymentBatch paymentBatch = getWrappedAdapter().getDataItem(position);
         notifyDataItemClickListener(paymentBatch);
     }
 
-    private void notifyDataItemClickListener(PaymentBatch paymentBatch)
-    {
-        if (onDataItemClickListener != null)
-        {
+    private void notifyDataItemClickListener(PaymentBatch paymentBatch) {
+        if (onDataItemClickListener != null) {
             onDataItemClickListener.onDataItemClicked(paymentBatch);
         }
     }
 
-    public void setOnDataItemClickListener(OnDataItemClickListener onDataItemClickListener)
-    {
+    public void setOnDataItemClickListener(OnDataItemClickListener onDataItemClickListener) {
         this.onDataItemClickListener = onDataItemClickListener;
     }
 
-    public void showFooter(int stringResourceId)
-    {
+    public void showFooter(int stringResourceId) {
         setFooterVisible(true);
         setFooterText(stringResourceId);
     }
 
-    public void setFooterText(int resourceId)
-    {
+    public void setFooterText(int resourceId) {
         footerView.setText(resourceId);
     }
 
-    public void setFooterVisible(boolean visible)
-    {
+    public void setFooterVisible(boolean visible) {
         footerView.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void appendData(PaymentBatches paymentBatches, Date requestStartDate)
-    {
+    public void appendData(PaymentBatches paymentBatches, Date requestStartDate) {
         getWrappedAdapter().appendData(paymentBatches, requestStartDate);
     }
 
-    public PaymentBatchListAdapter getWrappedAdapter()
-    {
+    public PaymentBatchListAdapter getWrappedAdapter() {
         return (PaymentBatchListAdapter) getAdapter();
     }
 
-    public boolean shouldRequestMoreData()
-    {
+    public boolean shouldRequestMoreData() {
         return getWrappedAdapter().shouldRequestMoreData();
     }
 
-    public boolean isDataEmpty()
-    {
+    public boolean isDataEmpty() {
         return getWrappedAdapter().isDataEmpty();
     }
 
-    public Date getNextRequestEndDate()
-    {
+    public Date getNextRequestEndDate() {
         return getWrappedAdapter().getNextRequestEndDate();
     }
 

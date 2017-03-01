@@ -2,8 +2,7 @@ package com.handy.portal.core.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class LoginDetails
-{
+public class LoginDetails {
     @SerializedName("success")
     private boolean success;
     @SerializedName("user_credentials")
@@ -11,8 +10,7 @@ public class LoginDetails
     @SerializedName("user_credentials_id")
     private String mUserCredentialsId;
 
-    public LoginDetails(final boolean success, final String userCredentials, final String userCredentialsId)
-    {
+    public LoginDetails(final boolean success, final String userCredentials, final String userCredentialsId) {
         this.success = success;
         mUserCredentials = userCredentials;
         mUserCredentialsId = userCredentialsId;

@@ -18,15 +18,13 @@ import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-public class PaymentsDetailListHeaderViewTest extends RobolectricGradleTestWrapper
-{
+public class PaymentsDetailListHeaderViewTest extends RobolectricGradleTestWrapper {
     private PaymentsDetailListHeaderView paymentsDetailListHeaderView;
     private View expectDepositLayout;
     private NeoPaymentBatch neoPaymentBatch;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         paymentsDetailListHeaderView = (PaymentsDetailListHeaderView) LayoutInflater
                 .from(Robolectric.setupActivity(TestActivity.class)).inflate(R.layout.element_payment_details_list_header, null);
         expectDepositLayout = paymentsDetailListHeaderView.findViewById(R.id.payments_detail_list_header_payment_status_expected_deposit_date);
@@ -38,8 +36,7 @@ public class PaymentsDetailListHeaderViewTest extends RobolectricGradleTestWrapp
     }
 
     @Test
-    public void shouldNotDisplayDepositDateIfFailedOrPaid()
-    {
+    public void shouldNotDisplayDepositDateIfFailedOrPaid() {
         when(neoPaymentBatch.getStatus()).thenReturn("Failed");
         paymentsDetailListHeaderView.updateDisplay(neoPaymentBatch);
 
@@ -52,8 +49,7 @@ public class PaymentsDetailListHeaderViewTest extends RobolectricGradleTestWrapp
     }
 
     @Test
-    public void shouldDisplayDepositDateIfInReviewOrPending()
-    {
+    public void shouldDisplayDepositDateIfInReviewOrPending() {
         when(neoPaymentBatch.getStatus()).thenReturn("Pending");
         paymentsDetailListHeaderView.updateDisplay(neoPaymentBatch);
 

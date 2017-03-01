@@ -29,10 +29,10 @@ import javax.inject.Inject;
 /**
  * listens to the location schedule updated event and
  * starts the schedule handler accordingly
- *
+ * <p>
  * note that it makes no direct requests for the location schedule,
  * because LocationScheduleUpdateManager is entirely responsible for that
- *
+ * <p>
  * <p/>
  * responsible for handling google api client
  */
@@ -40,8 +40,7 @@ public class LocationScheduleService extends Service
         implements
         GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,
-        Thread.UncaughtExceptionHandler
-{
+        Thread.UncaughtExceptionHandler {
     @Inject
     EventBus mBus;
     @Inject
@@ -52,8 +51,7 @@ public class LocationScheduleService extends Service
     Thread.UncaughtExceptionHandler mDefaultUncaughtExceptionHandler;
 
     @Override
-    public void onCreate()
-    {
+    public void onCreate() {
         mDefaultUncaughtExceptionHandler =
                 Thread.getDefaultUncaughtExceptionHandler();
         Thread.currentThread().setUncaughtExceptionHandler(this);
@@ -67,13 +65,11 @@ public class LocationScheduleService extends Service
     }
 
     @Override
-    public int onStartCommand(final Intent intent, final int flags, final int startId)
-    {
+    public int onStartCommand(final Intent intent, final int flags, final int startId) {
         Log.d(getClass().getName(), "started with flags: " + flags + ", startId: " + startId);
 
         super.onStartCommand(intent, flags, startId);
-        if (mGoogleApiClient == null)
-        {
+        if (mGoogleApiClient == null) {
             Log.e(getClass().getName(), "Google api client is null in service start!");
             return START_NOT_STICKY;
         }
@@ -86,22 +82,18 @@ public class LocationScheduleService extends Service
             subsequently request location schedules if necessary
          */
 
-
         return START_STICKY;
     }
 
     @Override
-    public void onDestroy()
-    {
+    public void onDestroy() {
         mBus.unregister(this);
 
-        if (mLocationScheduleStrategiesHandler != null)
-        {
+        if (mLocationScheduleStrategiesHandler != null) {
             mLocationScheduleStrategiesHandler.destroy();
         }
 
-        if (mGoogleApiClient != null)
-        {
+        if (mGoogleApiClient != null) {
             mGoogleApiClient.disconnect();
         }
         Log.d(getClass().getName(), "service destroyed");
@@ -109,20 +101,17 @@ public class LocationScheduleService extends Service
     }
 
     @Subscribe
-    public void onLocationQueryScheduleReceived(LocationEvent.ReceiveLocationScheduleSuccess event)
-    {
+    public void onLocationQueryScheduleReceived(LocationEvent.ReceiveLocationScheduleSuccess event) {
         Log.d(getClass().getName(), "got new location schedule event");
         LocationScheduleStrategies locationScheduleStrategies = event.getLocationScheduleStrategies();
-        if (!locationScheduleStrategies.isEmpty())
-        {
+        if (!locationScheduleStrategies.isEmpty()) {
             handleNewLocationStrategies(locationScheduleStrategies);
         }
         //TODO: optimize if the schedule did NOT change!!!!!
     }
 
     @Subscribe
-    public void OnRequestStopLocationService(LocationEvent.RequestStopLocationService event)
-    {
+    public void OnRequestStopLocationService(LocationEvent.RequestStopLocationService event) {
         stopSelf();
     }
 
@@ -133,10 +122,8 @@ public class LocationScheduleService extends Service
      * @param event
      */
     @Subscribe
-    public void onNetworkReconnected(SystemEvent.NetworkReconnected event)
-    {
-        if (mLocationScheduleStrategiesHandler != null)
-        {
+    public void onNetworkReconnected(SystemEvent.NetworkReconnected event) {
+        if (mLocationScheduleStrategiesHandler != null) {
             mLocationScheduleStrategiesHandler.onNetworkReconnected();
         }
     }
@@ -146,11 +133,9 @@ public class LocationScheduleService extends Service
      *
      * @param locationScheduleStrategies
      */
-    private void handleNewLocationStrategies(@NonNull LocationScheduleStrategies locationScheduleStrategies)
-    {
+    private void handleNewLocationStrategies(@NonNull LocationScheduleStrategies locationScheduleStrategies) {
         Log.d(getClass().getName(), "handling new schedule: " + locationScheduleStrategies.toString());
-        if (mLocationScheduleStrategiesHandler != null)
-        {
+        if (mLocationScheduleStrategiesHandler != null) {
             mLocationScheduleStrategiesHandler.destroy(); //TODO: don't want to do this if the schedule didn't change!
         }
         ConfigurationResponse configurationResponse = mConfigManager.getConfigurationResponse();
@@ -167,17 +152,14 @@ public class LocationScheduleService extends Service
         startLocationQueryingIfReady();
     }
 
-    private void startLocationQueryingIfReady()
-    {
-        if (isGoogleApiClientConnected() && mLocationScheduleStrategiesHandler != null)
-        {
+    private void startLocationQueryingIfReady() {
+        if (isGoogleApiClientConnected() && mLocationScheduleStrategiesHandler != null) {
             //the schedule handler will not start again if already started
             mLocationScheduleStrategiesHandler.startIfNotStarted();
         }
     }
 
-    private boolean isGoogleApiClientConnected()
-    {
+    private boolean isGoogleApiClientConnected() {
         return mGoogleApiClient != null && mGoogleApiClient.isConnected();
     }
 
@@ -193,42 +175,35 @@ public class LocationScheduleService extends Service
      * @param ex
      */
     @Override
-    public void uncaughtException(final Thread thread, final Throwable ex)
-    {
+    public void uncaughtException(final Thread thread, final Throwable ex) {
         //overriding this only prevents the error message dialog that shows
         Log.e(getClass().getName(), "got uncaught exception: " + ex.getMessage());
         stopSelf(); //looks like this makes the service not restart even if sticky!
-        if (mDefaultUncaughtExceptionHandler != null)
-        {
+        if (mDefaultUncaughtExceptionHandler != null) {
             mDefaultUncaughtExceptionHandler.uncaughtException(thread, ex);
             //default handler should log the exception to crashlytics
         }
     }
 
-    public class LocalBinder extends Binder
-    {
-        public LocationScheduleService getService()
-        {
+    public class LocalBinder extends Binder {
+        public LocationScheduleService getService() {
             return LocationScheduleService.this;
         }
     }
 
     @Nullable
     @Override
-    public IBinder onBind(final Intent intent)
-    {
+    public IBinder onBind(final Intent intent) {
         return mBinder;
     }
 
     @Override
-    public void onConnected(final Bundle bundle)
-    {
+    public void onConnected(final Bundle bundle) {
         startLocationQueryingIfReady();
     }
 
     @Override
-    public void onConnectionSuspended(final int i)
-    {
+    public void onConnectionSuspended(final int i) {
         Log.d(LocationScheduleService.class.getName(), "GoogleApiClient connection has been suspended");
 
         //the api client automatically reconnects itself. no need to call connect()
@@ -236,8 +211,7 @@ public class LocationScheduleService extends Service
     }
 
     @Override
-    public void onConnectionFailed(final ConnectionResult connectionResult)
-    {
+    public void onConnectionFailed(final ConnectionResult connectionResult) {
         Log.d(LocationScheduleService.class.getName(), "GoogleApiClient connection has failed");
 
     }

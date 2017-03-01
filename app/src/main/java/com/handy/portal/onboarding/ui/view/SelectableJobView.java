@@ -18,8 +18,7 @@ import com.handy.portal.onboarding.viewmodel.BookingViewModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class SelectableJobView extends FrameLayout implements CompoundButton.OnCheckedChangeListener
-{
+public class SelectableJobView extends FrameLayout implements CompoundButton.OnCheckedChangeListener {
     @BindView(R.id.check_box)
     CheckBox mCheckBox;
     @BindView(R.id.job_container)
@@ -32,27 +31,23 @@ public class SelectableJobView extends FrameLayout implements CompoundButton.OnC
 
     private BookingViewModel mBookingViewModel;
 
-    public SelectableJobView(final Context context)
-    {
+    public SelectableJobView(final Context context) {
         super(context);
         init();
     }
 
-    public SelectableJobView(final Context context, final AttributeSet attrs)
-    {
+    public SelectableJobView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
     public SelectableJobView(final Context context, final AttributeSet attrs,
-                             final int defStyleAttr)
-    {
+                             final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), R.layout.onboarding_job_check_box, this);
         ButterKnife.bind(this);
 
@@ -63,34 +58,28 @@ public class SelectableJobView extends FrameLayout implements CompoundButton.OnC
         mCheckBox.setOnCheckedChangeListener(this);
         setClickable(true);
 
-        setOnClickListener(new OnClickListener()
-        {
+        setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 mCheckBox.setChecked(!mBookingViewModel.isSelected());
             }
         });
     }
 
-    public void setOnCheckedChangeListener(final CompoundButton.OnCheckedChangeListener onCheckedChangeListener)
-    {
+    public void setOnCheckedChangeListener(final CompoundButton.OnCheckedChangeListener onCheckedChangeListener) {
         mOnCheckedChangeListener = onCheckedChangeListener;
     }
 
     public void bind(final BookingViewModel bookingViewModel,
-                     final Class<? extends BookingElementView> viewClass)
-    {
+                     final Class<? extends BookingElementView> viewClass) {
         mBookingViewModel = bookingViewModel;
 
         mJobContainer.removeAllViews();
         final BookingElementView elementView;
-        try
-        {
+        try {
             elementView = viewClass.newInstance();
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             // This should never happen!
             Crashlytics.logException(e);
             return;
@@ -102,19 +91,15 @@ public class SelectableJobView extends FrameLayout implements CompoundButton.OnC
     }
 
     @Override
-    public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked)
-    {
+    public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
         mBookingViewModel.setSelected(isChecked);
-        if (isChecked)
-        {
+        if (isChecked) {
             this.setBackground(mCheckedDrawable);
         }
-        else
-        {
+        else {
             this.setBackground(mUncheckedDrawable);
         }
-        if (mOnCheckedChangeListener != null)
-        {
+        if (mOnCheckedChangeListener != null) {
             mOnCheckedChangeListener.onCheckedChanged(buttonView, isChecked);
         }
     }

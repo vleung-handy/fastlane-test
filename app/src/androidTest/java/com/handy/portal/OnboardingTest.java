@@ -33,17 +33,14 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
 
 @RunWith(AndroidJUnit4.class)
-public class OnboardingTest
-{
+public class OnboardingTest {
     private static final TestUser TEST_USER = TestUsers.ONBOARDING_TEST_PROVIDER;
 
     @Rule
     public ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<SplashActivity>(
-            SplashActivity.class)
-    {
+            SplashActivity.class) {
         @Override
-        protected Intent getActivityIntent()
-        {
+        protected Intent getActivityIntent() {
             Intent intent = super.getActivityIntent();
             intent.putExtra(PrefsKey.AUTH_TOKEN, TEST_USER.getPersistenceToken());
             return intent;
@@ -51,10 +48,8 @@ public class OnboardingTest
     };
 
     @After
-    public void tearDown()
-    {
-        try
-        {
+    public void tearDown() {
+        try {
             AppInteractionUtil.logOut();
         }
         catch (Exception e) {}
@@ -69,8 +64,7 @@ public class OnboardingTest
     // Seed data for onboarding is broken. We'll need to fix that first
     @Test
     @Ignore
-    public void onboardingClaimTest()
-    {
+    public void onboardingClaimTest() {
         //wait for the main container
         ViewUtil.waitForViewVisible(R.id.main_content, ViewUtil.LONG_MAX_WAIT_TIME_MS);
 
@@ -97,13 +91,11 @@ public class OnboardingTest
         ViewUtil.waitForViewNotVisible(R.id.loading_overlay, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
 
         // If no jobs match the preferences, don't proceed further
-        try
-        {
+        try {
             ViewUtil.waitForViewVisible(R.string.no_jobs_matching_preferences,
                     ViewUtil.SHORT_MAX_WAIT_TIME_MS);
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             //wait for the jobs container
             ViewUtil.waitForViewVisible(R.id.jobs_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
 

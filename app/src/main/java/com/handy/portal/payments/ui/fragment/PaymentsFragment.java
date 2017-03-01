@@ -43,8 +43,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public final class PaymentsFragment extends ActionBarFragment
-{
+public final class PaymentsFragment extends ActionBarFragment {
     private static final String HELP_PAYMENTS_SECTION_REDIRECT_PATH = "/sections/203828247";
 
     @Inject
@@ -71,11 +70,9 @@ public final class PaymentsFragment extends ActionBarFragment
     private View fragmentView;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        if (fragmentView == null)
-        {
+        if (fragmentView == null) {
             fragmentView = inflater.inflate(R.layout.fragment_payments, container, false);
         }
 
@@ -85,14 +82,12 @@ public final class PaymentsFragment extends ActionBarFragment
     }
 
     @Override
-    protected MainViewPage getAppPage()
-    {
+    protected MainViewPage getAppPage() {
         return MainViewPage.PAYMENTS;
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         setActionBar(R.string.payments, false);
 
@@ -109,51 +104,42 @@ public final class PaymentsFragment extends ActionBarFragment
     }
 
     @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater)
-    {
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_payments, menu);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        paymentsBatchListView.setOnDataItemClickListener(new PaymentsBatchListView.OnDataItemClickListener()
-        {
+        paymentsBatchListView.setOnDataItemClickListener(new PaymentsBatchListView.OnDataItemClickListener() {
             @Override
-            public void onDataItemClicked(PaymentBatch paymentBatch)
-            {
+            public void onDataItemClicked(PaymentBatch paymentBatch) {
                 showPaymentDetailsForBatch(paymentBatch);
             }
         });
     }
 
     @OnClick(R.id.try_again_button)
-    public void doInitialRequestAgain()
-    {
+    public void doInitialRequestAgain() {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         requestInitialPaymentsInfo();
     }
 
-    public void setLoadingOverlayVisible(boolean visible)
-    {
+    public void setLoadingOverlayVisible(boolean visible) {
         scrollView.setVisibility(visible ? View.GONE : View.VISIBLE);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(visible));
     }
 
-    private void requestInitialPaymentsInfo()
-    {
+    private void requestInitialPaymentsInfo() {
         requestNextPaymentBatches(true);
         setLoadingOverlayVisible(true);
     }
 
-    private void requestNextPaymentBatches(boolean isInitialRequest)
-    {
+    private void requestNextPaymentBatches(boolean isInitialRequest) {
         Date endDate = paymentsBatchListView.getNextRequestEndDate();
 
-        if (endDate != null)
-        {
+        if (endDate != null) {
             Calendar c = Calendar.getInstance();
             c.setTime(endDate);
             c.add(Calendar.DATE, -PaymentBatchListAdapter.DAYS_TO_REQUEST_PER_BATCH);
@@ -162,15 +148,13 @@ public final class PaymentsFragment extends ActionBarFragment
 
             paymentsBatchListView.showFooter(R.string.loading_more_payments);
         }
-        else
-        {
+        else {
             paymentsBatchListView.showFooter(R.string.no_more_payments);
         }
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));//don't want overlay to persist when this fragment is paused
         bus.unregister(this);
         super.onPause();
@@ -185,8 +169,7 @@ public final class PaymentsFragment extends ActionBarFragment
     {
         //update with annual summary. assuming array is ordered from most to least recent
         AnnualPaymentSummaries.AnnualPaymentSummary paymentSummary = annualPaymentSummaries.getMostRecentYearSummary();
-        if (paymentSummary == null)
-        {
+        if (paymentSummary == null) {
             Crashlytics.logException(new Exception("Annual payment summaries is null or empty"));
         }
     }
@@ -204,11 +187,9 @@ public final class PaymentsFragment extends ActionBarFragment
             return;
         }
         paymentsBatchListView.appendData(paymentBatches, requestStartDate);
-        paymentsBatchListView.setOnScrollToBottomListener(new InfiniteScrollListView.OnScrollToBottomListener()
-        {
+        paymentsBatchListView.setOnScrollToBottomListener(new InfiniteScrollListView.OnScrollToBottomListener() {
             @Override
-            public void onScrollToBottom()
-            {
+            public void onScrollToBottom() {
                 if (paymentsBatchListView != null) //this is to handle case in which Butterknife.reset(this) makes paymentBatchListView null but this callback still gets called. TODO: need more general solution
                 {
                     requestNextPaymentBatches(false);
@@ -217,10 +198,8 @@ public final class PaymentsFragment extends ActionBarFragment
         });
     }
 
-    public void showPaymentDetailsForBatch(PaymentBatch paymentBatch)
-    {
-        if (paymentBatch instanceof NeoPaymentBatch)
-        {
+    public void showPaymentDetailsForBatch(PaymentBatch paymentBatch) {
+        if (paymentBatch instanceof NeoPaymentBatch) {
             Bundle arguments = new Bundle();
             arguments.putSerializable(BundleKeys.PAYMENT_BATCH, paymentBatch);
             bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PAYMENTS_DETAIL, arguments, true));
@@ -228,10 +207,8 @@ public final class PaymentsFragment extends ActionBarFragment
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item)
-    {
-        switch (item.getItemId())
-        {
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.action_help:
                 bus.post(new LogEvent.AddLogEvent(new PaymentsLog.HelpSelected()));
                 goToHelpCenterWebView();
@@ -241,70 +218,60 @@ public final class PaymentsFragment extends ActionBarFragment
         }
     }
 
-    private void goToHelpCenterWebView()
-    {
+    private void goToHelpCenterWebView() {
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, HELP_PAYMENTS_SECTION_REDIRECT_PATH);
         bus.post(new NavigationEvent.NavigateToPage(MainViewPage.HELP_WEBVIEW, arguments, true));
     }
 
     @Subscribe
-    public void onReceivePaymentBatchesSuccess(PaymentEvent.ReceivePaymentBatchesSuccess event)
-    {
+    public void onReceivePaymentBatchesSuccess(PaymentEvent.ReceivePaymentBatchesSuccess event) {
         fetchErrorView.setVisibility(View.GONE);
         if (Utils.getObjectIdentifier(this) != event.getCallerIdentifier()
-                || !paymentsBatchListView.getWrappedAdapter().canAppendBatch(event.getRequestEndDate()))
-        { return; }
+                || !paymentsBatchListView.getWrappedAdapter().canAppendBatch(event.getRequestEndDate())) {
+            return;
+        }
         PaymentBatches paymentBatches = event.getPaymentBatches();
         paymentsBatchListView.setFooterVisible(false);
         if (event.isFromInitialBatchRequest) //if it was previously empty
         {
             onInitialPaymentBatchReceived(paymentBatches, event.getRequestStartDate());
         }
-        else
-        {
+        else {
             paymentsBatchListView.appendData(paymentBatches, event.getRequestStartDate());
         }
 
         //only if the data returned is empty, determine whether we need to re-request
         //TODO: this is gross and we won't need to do this when new payments API comes out
-        if (paymentBatches.isEmpty())
-        {
-            if (paymentsBatchListView.shouldRequestMoreData())
-            {
+        if (paymentBatches.isEmpty()) {
+            if (paymentsBatchListView.shouldRequestMoreData()) {
                 requestNextPaymentBatches(false);
             }
-            else
-            {
+            else {
                 paymentsBatchListView.showFooter(R.string.no_more_payments);
             }
         }
     }
 
     @Subscribe
-    public void onReceivePaymentBatchesError(PaymentEvent.ReceivePaymentBatchesError event)
-    {
-        if (paymentsBatchListView.isDataEmpty())
-        {
+    public void onReceivePaymentBatchesError(PaymentEvent.ReceivePaymentBatchesError event) {
+        if (paymentsBatchListView.isDataEmpty()) {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             fetchErrorView.setVisibility(View.VISIBLE);
             fetchErrorText.setText(R.string.request_payments_batches_failed);
         }
-        else
-        {
+        else {
             paymentsBatchListView.showFooter(R.string.request_payments_batches_failed);
         }
     }
 
     @Subscribe
-    public void onReceiveAnnualPaymentSummariesSuccess(PaymentEvent.ReceiveAnnualPaymentSummariesSuccess event)
-    {
+    public void onReceiveAnnualPaymentSummariesSuccess(PaymentEvent.ReceiveAnnualPaymentSummariesSuccess event) {
         updateYearSummaryText(event.getAnnualPaymentSummaries());
     }
 
     @Subscribe
-    public void onReceiveAnnualPaymentSummariesError(PaymentEvent.ReceiveAnnualPaymentSummariesError event)
-    {
+    public void onReceiveAnnualPaymentSummariesError(PaymentEvent.ReceiveAnnualPaymentSummariesError event) {
         //TODO: handle annual payments summary error
     }
 }

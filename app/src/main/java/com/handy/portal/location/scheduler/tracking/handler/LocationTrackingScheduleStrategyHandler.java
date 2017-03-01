@@ -35,8 +35,7 @@ import java.util.Queue;
  * <p/>
  * TODO needs major cleanup
  */
-public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHandler
-{
+public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHandler {
     /**
      * any strategy that wants accuracy equal to or below this amount
      * will use the high accuracy mode in LocationApi
@@ -57,8 +56,7 @@ public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHan
     private LocationListener mLocationListener;
     private Handler mHandler;
 
-    public LocationListener getLocationListener()
-    {
+    public LocationListener getLocationListener() {
         return mLocationListener;
     }
 
@@ -66,21 +64,17 @@ public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHan
     public LocationTrackingScheduleStrategyHandler(@NonNull LocationTrackingScheduleStrategy locationTrackingStrategy,
                                                    @NonNull final LocationStrategyCallbacks locationStrategyCallbacks,
                                                    @NonNull Handler handler,
-                                                   @NonNull Context context)
-    {
+                                                   @NonNull Context context) {
         mLocationTrackingStrategy = locationTrackingStrategy;
         mLocationStrategyCallbacks = locationStrategyCallbacks;
         mContext = context;
         mHandler = handler;
         mTimestampLastUpdatePostedMs = System.currentTimeMillis(); //don't want to post immediately
-        mLocationListener = new LocationListener()
-        {
+        mLocationListener = new LocationListener() {
             @Override
-            public void onLocationChanged(final Location location)
-            {
+            public void onLocationChanged(final Location location) {
                 //TODO: use a util instead
-                if (location.getTime() > mLocationTrackingStrategy.getEndDate().getTime())
-                {
+                if (location.getTime() > mLocationTrackingStrategy.getEndDate().getTime()) {
                     Log.d(getClass().getName(), "location request expired but got location changed callback, not doing anything");
                     //would be messy if i unregistered this here, because no reference to required arguments
 
@@ -100,8 +94,7 @@ public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHan
      *
      * @return
      */
-    public boolean isStrategyExpired()
-    {
+    public boolean isStrategyExpired() {
         //TODO use a util instead
         return System.currentTimeMillis() > mLocationTrackingStrategy.getEndDate().getTime();
     }
@@ -111,15 +104,12 @@ public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHan
      *
      * @return
      */
-    private LocationRequest createLocationRequest()
-    {
+    private LocationRequest createLocationRequest() {
         int priority;
-        if (mLocationTrackingStrategy.getAccuracy() <= HIGH_ACCURACY_THRESHOLD_METERS)
-        {
+        if (mLocationTrackingStrategy.getAccuracy() <= HIGH_ACCURACY_THRESHOLD_METERS) {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY;
         }
-        else
-        {
+        else {
             priority = LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY;
         }
 
@@ -142,8 +132,7 @@ public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHan
      *
      * @return
      */
-    private LocationBatchUpdate buildLocationBatchUpdateAndClearQueue()
-    {
+    private LocationBatchUpdate buildLocationBatchUpdateAndClearQueue() {
         LocationUpdate locationUpdates[] = mLocationUpdateQueue
                 .toArray(new LocationUpdate[mLocationUpdateQueue.size()]);
         //.size() is constant time for linked lists
@@ -158,8 +147,7 @@ public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHan
      *
      * @return
      */
-    private boolean shouldPostUpdate()
-    {
+    private boolean shouldPostUpdate() {
         //TODO use a util instead
         long serverPollingIntervalMs = mLocationTrackingStrategy.getServerPollingIntervalSeconds() * DateUtils.SECOND_IN_MILLIS;
         return (System.currentTimeMillis() - mTimestampLastUpdatePostedMs >= serverPollingIntervalMs);
@@ -170,12 +158,10 @@ public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHan
      *
      * @param locationUpdate
      */
-    private void onNewLocationUpdate(@NonNull LocationUpdate locationUpdate)
-    {
+    private void onNewLocationUpdate(@NonNull LocationUpdate locationUpdate) {
         Log.d(getClass().getName(), "new location update: " + locationUpdate.toString());
         mLocationUpdateQueue.add(locationUpdate);
-        if (shouldPostUpdate())
-        {
+        if (shouldPostUpdate()) {
             buildStrategyBatchUpdatesAndNotifyReady();
         }
     }
@@ -183,12 +169,10 @@ public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHan
     /**
      * called when it's time to post the location updates to the server
      */
-    public void buildStrategyBatchUpdatesAndNotifyReady()
-    {
+    public void buildStrategyBatchUpdatesAndNotifyReady() {
         LocationBatchUpdate locationBatchUpdate = buildLocationBatchUpdateAndClearQueue();
         mTimestampLastUpdatePostedMs = System.currentTimeMillis();
-        if (!locationBatchUpdate.isEmpty())
-        {
+        if (!locationBatchUpdate.isEmpty()) {
             mLocationStrategyCallbacks.onLocationBatchUpdateReady(locationBatchUpdate);
         }
     }
@@ -198,14 +182,11 @@ public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHan
      **/
     @SuppressWarnings({"ResourceType", "MissingPermission"})
     @Override
-    protected void startStrategy()
-    {
-        try
-        {
+    protected void startStrategy() {
+        try {
             GoogleApiClient googleApiClient = mLocationStrategyCallbacks.getGoogleApiClient();
             //this handles the permission system in Android 6.0
-            if (!LocationUtils.hasRequiredLocationPermissions(mContext))
-            {
+            if (!LocationUtils.hasRequiredLocationPermissions(mContext)) {
                 return;
             }
 
@@ -220,15 +201,13 @@ public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHan
             mHandler.postAtTime(new Runnable() //callback for when strategy expires
             {
                 @Override
-                public void run()
-                {
+                public void run() {
                     mLocationStrategyCallbacks.onStrategyExpired(LocationTrackingScheduleStrategyHandler.this);
                 }
             }, expirationTimeMs);
             //let the callback know so that we can remove this strategy from the active strategies list and post all pending updates
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             Log.e(getClass().getName(), e.getMessage());
             Crashlytics.logException(e);
         }
@@ -236,22 +215,18 @@ public class LocationTrackingScheduleStrategyHandler extends ScheduleStrategyHan
     }
 
     @Override
-    protected void stopStrategy()
-    {
-        try
-        {
+    protected void stopStrategy() {
+        try {
             GoogleApiClient googleApiClient = mLocationStrategyCallbacks.getGoogleApiClient();
             LocationServices.FusedLocationApi.removeLocationUpdates(googleApiClient, getLocationListener());
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             Log.e(getClass().getName(), e.getMessage());
             Crashlytics.logException(e);
         }
     }
 
-    public interface LocationStrategyCallbacks extends ScheduleStrategyHandler.StrategyCallbacks<LocationTrackingScheduleStrategyHandler>
-    {
+    public interface LocationStrategyCallbacks extends ScheduleStrategyHandler.StrategyCallbacks<LocationTrackingScheduleStrategyHandler> {
         GoogleApiClient getGoogleApiClient();
 
         void onLocationBatchUpdateReady(LocationBatchUpdate locationBatchUpdate);

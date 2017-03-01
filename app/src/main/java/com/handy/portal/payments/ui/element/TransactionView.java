@@ -23,8 +23,7 @@ import com.handy.portal.payments.model.Transaction;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TransactionView extends FrameLayout
-{
+public class TransactionView extends FrameLayout {
     @BindView(R.id.transaction_title_text)
     TextView mTitleText;
     @BindView(R.id.transaction_amount_text)
@@ -36,46 +35,39 @@ public class TransactionView extends FrameLayout
     @BindView(R.id.transaction_outstanding_text)
     TextView mOutstandingText;
 
-    public TransactionView(final Context context)
-    {
+    public TransactionView(final Context context) {
         super(context);
         init();
     }
 
-    public TransactionView(final Context context, final AttributeSet attrs)
-    {
+    public TransactionView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public TransactionView(final Context context, final AttributeSet attrs, final int defStyle)
-    {
+    public TransactionView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public TransactionView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
-    {
+    public TransactionView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), R.layout.view_transaction, this);
         ButterKnife.bind(this);
     }
 
-    public void setDisplay(@NonNull Transaction transaction, @Nullable TextUtils.LaunchWebViewCallback launchWebViewCallback)
-    {
+    public void setDisplay(@NonNull Transaction transaction, @Nullable TextUtils.LaunchWebViewCallback launchWebViewCallback) {
         mTitleText.setText(transaction.getTitle());
         mAmountText.setText(CurrencyUtils.formatPriceWithCents(
                 transaction.getAmountInCents(), transaction.getCurrencySymbol()));
         mAmountText.setTextColor(ContextCompat.getColor(getContext(),
                 transaction.getAmountInCents() < 0 ? R.color.plumber_red : R.color.black));
-        for (Transaction.Batch batch : transaction.getPaymentBatches())
-        {
+        for (Transaction.Batch batch : transaction.getPaymentBatches()) {
             TextView textView = new TextView(getContext());
             String startDate = DateTimeUtils.formatDateMonthDay(batch.getDateStart());
             String endDate = DateTimeUtils.formatDateMonthDay(batch.getDateEnd());
@@ -86,13 +78,11 @@ public class TransactionView extends FrameLayout
             mBatchesLayout.addView(textView);
         }
 
-        if (transaction.getPaymentBatches().length == 0)
-        {
+        if (transaction.getPaymentBatches().length == 0) {
             mOutstandingText.setVisibility(VISIBLE);
         }
 
-        if (transaction.getPolicy() != null)
-        {
+        if (transaction.getPolicy() != null) {
             Transaction.Policy policy = transaction.getPolicy();
             mPolicyDescriptionText.setVisibility(VISIBLE);
             String description = getResources().getString(

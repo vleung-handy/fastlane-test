@@ -7,116 +7,101 @@ import com.handy.portal.payments.model.StripeTokenResponse;
 import com.stripe.android.model.Card;
 import com.stripe.android.model.Token;
 
-public abstract class StripeEvent extends HandyEvent
-{
-    public static class RequestStripeTokenFromBankAccount extends RequestEvent
-    {
+public abstract class StripeEvent extends HandyEvent {
+    public static class RequestStripeTokenFromBankAccount extends RequestEvent {
         public final BankAccountInfo bankAccountInfo;
 
-        public RequestStripeTokenFromBankAccount(BankAccountInfo bankAccountInfo)
-        {
+        public RequestStripeTokenFromBankAccount(BankAccountInfo bankAccountInfo) {
             this.bankAccountInfo = bankAccountInfo;
         }
     }
 
-    public static class ReceiveStripeTokenFromBankAccountSuccess extends ReceiveSuccessEvent
-    {
+
+    public static class ReceiveStripeTokenFromBankAccountSuccess extends ReceiveSuccessEvent {
         public final StripeTokenResponse stripeTokenResponse;
 
-        public ReceiveStripeTokenFromBankAccountSuccess(StripeTokenResponse stripeTokenResponse)
-        {
+        public ReceiveStripeTokenFromBankAccountSuccess(StripeTokenResponse stripeTokenResponse) {
             this.stripeTokenResponse = stripeTokenResponse;
         }
     }
 
-    public static class ReceiveStripeTokenFromBankAccountError extends ReceiveErrorEvent
-    {
-        public ReceiveStripeTokenFromBankAccountError(DataManager.DataManagerError error)
-        {
+
+    public static class ReceiveStripeTokenFromBankAccountError extends ReceiveErrorEvent {
+        public ReceiveStripeTokenFromBankAccountError(DataManager.DataManagerError error) {
             this.error = error;
         }
     }
 
-    public static class RequestStripeTokenFromDebitCard extends RequestEvent
-    {
+
+    public static class RequestStripeTokenFromDebitCard extends RequestEvent {
         public final int requestIdentifier;//TODO: refactor - might remove this later
         public final DebitCardInfo debitCardInfo;
 
-        public RequestStripeTokenFromDebitCard(DebitCardInfo debitCardInfo, int requestIdentifier)
-        {
+        public RequestStripeTokenFromDebitCard(DebitCardInfo debitCardInfo, int requestIdentifier) {
             this.debitCardInfo = debitCardInfo;
             this.requestIdentifier = requestIdentifier;
         }
     }
 
-    public static class ReceiveStripeTokenFromDebitCardSuccess extends ReceiveSuccessEvent
-    {
+
+    public static class ReceiveStripeTokenFromDebitCardSuccess extends ReceiveSuccessEvent {
         public final int requestIdentifier;
         public final StripeTokenResponse stripeTokenResponse;
 
-        public ReceiveStripeTokenFromDebitCardSuccess(StripeTokenResponse stripeTokenResponse, int requestIdentifier)
-        {
+        public ReceiveStripeTokenFromDebitCardSuccess(StripeTokenResponse stripeTokenResponse, int requestIdentifier) {
             this.stripeTokenResponse = stripeTokenResponse;
             this.requestIdentifier = requestIdentifier;
         }
     }
 
-    public static class ReceiveStripeTokenFromDebitCardError extends ReceiveErrorEvent
-    {
-        public ReceiveStripeTokenFromDebitCardError(DataManager.DataManagerError error)
-        {
+
+    public static class ReceiveStripeTokenFromDebitCardError extends ReceiveErrorEvent {
+        public ReceiveStripeTokenFromDebitCardError(DataManager.DataManagerError error) {
             this.error = error;
         }
     }
 
-    public static class RequestStripeChargeToken extends  RequestEvent
-    {
+
+    public static class RequestStripeChargeToken extends RequestEvent {
         private final Card mCard;
         private String mCountry;
 
-        public RequestStripeChargeToken(final Card card, final String country)
-        {
+        public RequestStripeChargeToken(final Card card, final String country) {
             mCard = card;
             mCountry = country;
         }
 
-        public Card getCard()
-        {
+        public Card getCard() {
             return mCard;
         }
 
-        public String getCountry()
-        {
+        public String getCountry() {
             return mCountry;
         }
     }
 
-    public static class ReceiveStripeChargeTokenSuccess extends ReceiveSuccessEvent
-    {
+
+    public static class ReceiveStripeChargeTokenSuccess extends ReceiveSuccessEvent {
         private final Token mToken;
 
-        public ReceiveStripeChargeTokenSuccess(final Token token)
-        {
+        public ReceiveStripeChargeTokenSuccess(final Token token) {
             mToken = token;
         }
 
-        public Token getToken()
-        {
+        public Token getToken() {
             return mToken;
         }
     }
 
-    public static class ReceiveStripeChargeTokenError
-    {
+
+    public static class ReceiveStripeChargeTokenError {
         private final Exception mError;
 
-        public ReceiveStripeChargeTokenError(final Exception error)
-        {
+        public ReceiveStripeChargeTokenError(final Exception error) {
             mError = error;
         }
 
-        public Exception getError()
-        {
+        public Exception getError() {
             return mError;
         }
     }

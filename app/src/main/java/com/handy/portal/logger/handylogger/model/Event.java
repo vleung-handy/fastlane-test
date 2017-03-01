@@ -4,8 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.UUID;
 
-public class Event
-{
+public class Event {
     @SerializedName("event_timestamp_ms")
     private long mTimestampMillis;
     @SerializedName("event_timestamp")
@@ -19,8 +18,7 @@ public class Event
     @SerializedName("properties")
     private EventLog mEventLog;
 
-    public Event(final EventLog eventLog, long sessionId, int sessionEventCount)
-    {
+    public Event(final EventLog eventLog, long sessionId, int sessionEventCount) {
         mTimestampMillis = System.currentTimeMillis();
         mTimestampSecs = mTimestampMillis / 1000;
         mId = UUID.randomUUID().toString();
@@ -31,53 +29,43 @@ public class Event
         mEventLog.setSessionEventCount(sessionEventCount);
     }
 
-    public String getEventType()
-    {
+    public String getEventType() {
         return mEventType;
     }
 
-    public String getEventContext()
-    {
+    public String getEventContext() {
         return mEventContext;
     }
 
-    public int getSessionEventCount()
-    {
+    public int getSessionEventCount() {
         return mEventLog.getSessionEventCount();
     }
 
-    public long getSessionId()
-    {
+    public long getSessionId() {
         return mEventLog.getSessionId();
     }
 
-    public void setEventType(String eventType)
-    {
+    public void setEventType(String eventType) {
         mEventType = eventType;
     }
 
-    public void setSessionEventCount(final int sessionEventCount)
-    {
+    public void setSessionEventCount(final int sessionEventCount) {
         mEventLog.setSessionEventCount(sessionEventCount);
     }
 
-    public void setSessionId(final long sessionId)
-    {
+    public void setSessionId(final long sessionId) {
         mEventLog.setSessionId(sessionId);
     }
 
-    public long getTimestampMillis()
-    {
+    public long getTimestampMillis() {
         return mTimestampMillis;
     }
 
-    public long getTimestampSecs()
-    {
+    public long getTimestampSecs() {
         return mTimestampSecs;
     }
 
-    public String getId()
-    {
+    public String getId() {
         return mId;
     }
 }

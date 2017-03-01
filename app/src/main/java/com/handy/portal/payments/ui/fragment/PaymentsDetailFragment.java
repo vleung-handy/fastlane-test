@@ -52,8 +52,7 @@ import butterknife.ButterKnife;
 public final class PaymentsDetailFragment extends ActionBarFragment
         implements ExpandableListView.OnChildClickListener,
         PaymentSupportReasonsDialogFragment.Callback,
-        PaymentSupportRequestReviewDialogFragment.Callback
-{
+        PaymentSupportRequestReviewDialogFragment.Callback {
     @BindView(R.id.payments_detail_list_view)
     PaymentDetailExpandableListView paymentDetailExpandableListView; //using ExpandableListView because it is the only ListView that offers group view support
     @BindView(R.id.fragment_payments_detail_content)
@@ -70,32 +69,26 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     EventBus mBus;
 
     @Override
-    protected MainViewPage getAppPage()
-    {
+    protected MainViewPage getAppPage() {
         return MainViewPage.PAYMENTS;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if (getArguments() != null)
-        {
+        if (getArguments() != null) {
             mNeoPaymentBatch = (NeoPaymentBatch) getArguments().getSerializable(BundleKeys.PAYMENT_BATCH);
         }
-        else
-        {
+        else {
             Crashlytics.logException(new Exception("Null arguments for class " + this.getClass().getName()));
         }
     }
 
     @Override
     public final View onCreateView(final LayoutInflater inflater, final ViewGroup container,
-                                   final Bundle savedInstanceState)
-    {
-        if (mFragmentView == null)
-        {
+                                   final Bundle savedInstanceState) {
+        if (mFragmentView == null) {
             mFragmentView = inflater
                     .inflate(R.layout.fragment_payments_detail, container, false);
         }
@@ -104,42 +97,34 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         paymentDetailExpandableListView.setOnChildClickListener(this);
         paymentDetailExpandableListView.updateData(mNeoPaymentBatch);
         paymentDetailExpandableListView.getPaymentSupportButton().setOnClickListener(
-                new View.OnClickListener()
-                {
+                new View.OnClickListener() {
                     @Override
-                    public void onClick(final View v)
-                    {
+                    public void onClick(final View v) {
                         PaymentsUtil.showPaymentSupportReasonsDialog(PaymentsDetailFragment.this, mNeoPaymentBatch.getPaymentSupportItems());
                     }
                 }
         );
-        for (int i = 0; i < mNeoPaymentBatch.getPaymentGroups().length; i++)
-        {
+        for (int i = 0; i < mNeoPaymentBatch.getPaymentGroups().length; i++) {
             paymentDetailExpandableListView.expandGroup(i);
         }
 
         //adding below in case this gets transformed into an updateDisplay(NeoPaymentBatch) method
         //not ideal but may be refactored later
         paymentDetailExpandableListView.getHeaderView().setPaymentStatusHelpButtonVisible(true);
-        if (NeoPaymentBatch.Status.FAILED.equalsIgnoreCase(mNeoPaymentBatch.getStatus()))
-        {
+        if (NeoPaymentBatch.Status.FAILED.equalsIgnoreCase(mNeoPaymentBatch.getStatus())) {
             //don't show the bottom payment support button if failed
             paymentDetailExpandableListView.getPaymentSupportButton().setVisibility(View.GONE);
             //show dialog on ? button click that suggests why payment failed and directs user to update payment method
-            paymentDetailExpandableListView.getHeaderView().setCallbackListener(new PaymentsDetailListHeaderView.Callback()
-            {
+            paymentDetailExpandableListView.getHeaderView().setCallbackListener(new PaymentsDetailListHeaderView.Callback() {
                 @Override
-                public void onRequestStatusSupportButtonClicked()
-                {
+                public void onRequestStatusSupportButtonClicked() {
                     if (PaymentsDetailFragment.this.getChildFragmentManager()
-                            .findFragmentByTag(PaymentFailedDialogFragment.FRAGMENT_TAG) == null)
-                    {
+                            .findFragmentByTag(PaymentFailedDialogFragment.FRAGMENT_TAG) == null) {
                         PaymentFailedDialogFragment paymentBillBlockerDialogFragment =
                                 PaymentFailedDialogFragment.newInstance();
                         FragmentUtils.safeLaunchDialogFragment(paymentBillBlockerDialogFragment,
@@ -151,22 +136,18 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         }
         else //if not failed
         {
-            if(mNeoPaymentBatch.getPaymentSupportItems() == null
-                    || mNeoPaymentBatch.getPaymentSupportItems().length == 0)
-            {
+            if (mNeoPaymentBatch.getPaymentSupportItems() == null
+                    || mNeoPaymentBatch.getPaymentSupportItems().length == 0) {
                 //don't show any payment supports that are based on the payment support items
                 paymentDetailExpandableListView.getPaymentSupportButton().setVisibility(View.GONE);
                 paymentDetailExpandableListView.getHeaderView().setPaymentStatusHelpButtonVisible(false);
             }
-            else
-            {
+            else {
                 paymentDetailExpandableListView.getPaymentSupportButton().setVisibility(View.VISIBLE);
                 //show payment support dialog on ? button click
-                paymentDetailExpandableListView.getHeaderView().setCallbackListener(new PaymentsDetailListHeaderView.Callback()
-                {
+                paymentDetailExpandableListView.getHeaderView().setCallbackListener(new PaymentsDetailListHeaderView.Callback() {
                     @Override
-                    public void onRequestStatusSupportButtonClicked()
-                    {
+                    public void onRequestStatusSupportButtonClicked() {
                         PaymentsUtil.showPaymentSupportReasonsDialog(
                                 PaymentsDetailFragment.this,
                                 mNeoPaymentBatch.getPaymentSupportItems()
@@ -179,15 +160,13 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         setActionBar(R.string.payments_details, true);
     }
 
     @Override
-    public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id)
-    {
+    public boolean onChildClick(ExpandableListView parent, View v, int groupPosition, int childPosition, long id) {
         final ExpandableListAdapter parentListAdapter = parent.getExpandableListAdapter();
 
         final PaymentGroup paymentGroup = (PaymentGroup) parentListAdapter.getGroup(groupPosition);
@@ -202,8 +181,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         return true;
     }
 
-    private void showBookingDetails(String bookingId, String bookingType)
-    {
+    private void showBookingDetails(String bookingId, String bookingType) {
         Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.BOOKING_ID, bookingId);
         arguments.putString(BundleKeys.BOOKING_TYPE, bookingType);
@@ -214,11 +192,11 @@ public final class PaymentsDetailFragment extends ActionBarFragment
 
     /**
      * show a new screen depending on which support item was submitted
+     *
      * @param paymentSupportItem
      */
     @Override
-    public void onPaymentSupportItemSubmitted(PaymentSupportItem paymentSupportItem)
-    {
+    public void onPaymentSupportItemSubmitted(PaymentSupportItem paymentSupportItem) {
         String itemMachineName = paymentSupportItem.getMachineName();
 
         mBus.post(new LogEvent.AddLogEvent(
@@ -228,8 +206,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
                         null
                 )));
 
-        switch (itemMachineName)
-        {
+        switch (itemMachineName) {
             case PaymentSupportItem.MachineName.MISSING_DEPOSIT:
             case PaymentSupportItem.MachineName.OTHER:
                 showRequestPaymentReviewDialogFragment(paymentSupportItem);
@@ -252,18 +229,16 @@ public final class PaymentsDetailFragment extends ActionBarFragment
 
     /**
      * shows a dialog to confirm that the user wants to request a payment review for this batch
+     *
      * @param paymentSupportItem
      */
-    private void showRequestPaymentReviewDialogFragment(PaymentSupportItem paymentSupportItem)
-    {
-        if (getChildFragmentManager().findFragmentByTag(PaymentSupportRequestReviewDialogFragment.FRAGMENT_TAG) == null)
-        {
+    private void showRequestPaymentReviewDialogFragment(PaymentSupportItem paymentSupportItem) {
+        if (getChildFragmentManager().findFragmentByTag(PaymentSupportRequestReviewDialogFragment.FRAGMENT_TAG) == null) {
             //handle case in which we're unable to get the provider email
             ProviderProfile profile = mProviderManager.getCachedProviderProfile();
             if (profile == null
                     || profile.getProviderPersonalInfo() == null
-                    || TextUtils.isNullOrEmpty(profile.getProviderPersonalInfo().getEmail()))
-            {
+                    || TextUtils.isNullOrEmpty(profile.getProviderPersonalInfo().getEmail())) {
                 //should never happen
                 Crashlytics.logException(new Exception("Unable to get provider email from cached provider profile"));
                 showToast(R.string.error_missing_server_data);
@@ -283,10 +258,8 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     /**
      * shows a dialog to prompt user to go to the booking transactions page
      */
-    private void showRedirectToBookingTransactionsDialogFragment(@NonNull String titleText, @NonNull String messageText)
-    {
-        if (getChildFragmentManager().findFragmentByTag(InfoDialogFragment.FRAGMENT_TAG) == null)
-        {
+    private void showRedirectToBookingTransactionsDialogFragment(@NonNull String titleText, @NonNull String messageText) {
+        if (getChildFragmentManager().findFragmentByTag(InfoDialogFragment.FRAGMENT_TAG) == null) {
             final DialogFragment fragment = InfoDialogFragment.newInstance(titleText, messageText);
             FragmentUtils.safeLaunchDialogFragment(fragment,
                     this,
@@ -298,8 +271,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
      * user requested a deposit review for this batch
      */
     @Override
-    public void onRequestDepositReviewButtonClicked(@NonNull PaymentSupportItem paymentSupportItem)
-    {
+    public void onRequestDepositReviewButtonClicked(@NonNull PaymentSupportItem paymentSupportItem) {
         BatchPaymentReviewRequest paymentReviewRequest
                 = new BatchPaymentReviewRequest(
                 String.valueOf(mNeoPaymentBatch.getBatchId()),
@@ -317,11 +289,9 @@ public final class PaymentsDetailFragment extends ActionBarFragment
 
         //TODO: THIS ENDPOINT IS NOT IN PRODUCTION YET
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        mPaymentsManager.submitBatchPaymentReviewRequest(paymentReviewRequest, new FragmentSafeCallback<PaymentReviewResponse>(this)
-        {
+        mPaymentsManager.submitBatchPaymentReviewRequest(paymentReviewRequest, new FragmentSafeCallback<PaymentReviewResponse>(this) {
             @Override
-            public void onCallbackSuccess(final PaymentReviewResponse response)
-            {
+            public void onCallbackSuccess(final PaymentReviewResponse response) {
                 bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                 int drawableResourceId = response.isSuccess() ?
                         R.drawable.ic_green_envelope : R.drawable.ic_exclaimation_red;
@@ -332,8 +302,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
             }
 
             @Override
-            public void onCallbackError(final DataManager.DataManagerError error)
-            {
+            public void onCallbackError(final DataManager.DataManagerError error) {
                 bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                 UIUtils.getDefaultSnackbarWithImage(getContext(),
                         mMainContentLayout,

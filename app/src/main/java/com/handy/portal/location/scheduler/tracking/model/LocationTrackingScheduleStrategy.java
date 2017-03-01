@@ -10,23 +10,19 @@ import java.util.Date;
 
 /**
  * part of the LocationScheduleStrategies model received from the server
- *
+ * <p>
  * this model defines the parameters of a LocationRequest, the time range during which it should be active,
  * and how often updates should be posted to the server
  */
-public class LocationTrackingScheduleStrategy extends ScheduleStrategy implements Parcelable
-{
-    public static final Creator<LocationTrackingScheduleStrategy> CREATOR = new Creator<LocationTrackingScheduleStrategy>()
-    {
+public class LocationTrackingScheduleStrategy extends ScheduleStrategy implements Parcelable {
+    public static final Creator<LocationTrackingScheduleStrategy> CREATOR = new Creator<LocationTrackingScheduleStrategy>() {
         @Override
-        public LocationTrackingScheduleStrategy createFromParcel(Parcel in)
-        {
+        public LocationTrackingScheduleStrategy createFromParcel(Parcel in) {
             return new LocationTrackingScheduleStrategy(in);
         }
 
         @Override
-        public LocationTrackingScheduleStrategy[] newArray(int size)
-        {
+        public LocationTrackingScheduleStrategy[] newArray(int size) {
             return new LocationTrackingScheduleStrategy[size];
         }
     };
@@ -39,17 +35,15 @@ public class LocationTrackingScheduleStrategy extends ScheduleStrategy implement
     @SerializedName("post_frequency")
     int mServerPollingIntervalSeconds; //every N seconds
     @SerializedName("accuracy") //how accurate we want the location updates to be
-    int mAccuracy;
+            int mAccuracy;
     @SerializedName("distance_filter")
     int mDistanceFilterMeters;
 
-    public int getDistanceFilterMeters()
-    {
+    public int getDistanceFilterMeters() {
         return mDistanceFilterMeters;
     }
 
-    protected LocationTrackingScheduleStrategy(Parcel in)
-    {
+    protected LocationTrackingScheduleStrategy(Parcel in) {
         mStartDate = new Date(in.readLong());
         mEndDate = new Date(in.readLong());
         mServerPollingIntervalSeconds = in.readInt();
@@ -58,40 +52,33 @@ public class LocationTrackingScheduleStrategy extends ScheduleStrategy implement
         mAccuracy = in.readInt();
     }
 
-    public int getServerPollingIntervalSeconds()
-    {
+    public int getServerPollingIntervalSeconds() {
         return mServerPollingIntervalSeconds;
     }
 
-    public int getAccuracy()
-    {
+    public int getAccuracy() {
         return mAccuracy;
     }
 
-    public int getLocationPollingIntervalSeconds()
-    {
+    public int getLocationPollingIntervalSeconds() {
         return mLocationPollingIntervalSeconds;
     }
 
-    public Date getEndDate()
-    {
+    public Date getEndDate() {
         return mEndDate;
     }
 
-    public Date getStartDate()
-    {
+    public Date getStartDate() {
         return mStartDate;
     }
 
     @Override
-    public int describeContents()
-    {
+    public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(final Parcel dest, final int flags)
-    {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeLong(mStartDate.getTime());
         dest.writeLong(mEndDate.getTime());
         dest.writeInt(mServerPollingIntervalSeconds);
@@ -106,8 +93,7 @@ public class LocationTrackingScheduleStrategy extends ScheduleStrategy implement
      * @return
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "start date: " + mStartDate.toString()
                 + "\nend date: " + mEndDate.toString()
                 + "\nserver posting frequency (s): " + mServerPollingIntervalSeconds

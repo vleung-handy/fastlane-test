@@ -7,13 +7,11 @@ import com.google.gson.annotations.SerializedName;
 /**
  * holds an array of location updates to send to the server
  */
-public class LocationBatchUpdate
-{
+public class LocationBatchUpdate {
     @SerializedName("geolocations")
     LocationUpdate[] mLocationUpdates;
 
-    public LocationBatchUpdate(@NonNull LocationUpdate... locationUpdates)
-    {
+    public LocationBatchUpdate(@NonNull LocationUpdate... locationUpdates) {
         mLocationUpdates = locationUpdates;
     }
 
@@ -23,18 +21,15 @@ public class LocationBatchUpdate
      * @return
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         String result = "";
-        for (LocationUpdate locationUpdate : mLocationUpdates)
-        {
+        for (LocationUpdate locationUpdate : mLocationUpdates) {
             result = result + "\n" + locationUpdate.toString();
         }
         return result;
     }
 
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return (mLocationUpdates == null || mLocationUpdates.length == 0);
     }
 }

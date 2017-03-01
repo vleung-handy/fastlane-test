@@ -14,35 +14,28 @@ import com.handy.portal.webview.PortalWebViewFragment;
 
 import javax.inject.Inject;
 
-public class HelpWebViewFragment extends PortalWebViewFragment
-{
+public class HelpWebViewFragment extends PortalWebViewFragment {
     @Inject
     ConfigManager mConfigManager;
 
     @Override
-    protected MainViewPage getAppPage()
-    {
+    protected MainViewPage getAppPage() {
         return MainViewPage.HELP_WEBVIEW;
     }
 
     @Override
-    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         setActionBarTitle(R.string.help);
 
         final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
-        if (configuration != null)
-        {
+        if (configuration != null) {
             String helpCenterUrl = configuration.getHelpCenterUrl();
-            if (helpCenterUrl == null)
-            {
+            if (helpCenterUrl == null) {
                 showToast(R.string.failed_to_open_help);
             }
-            else
-            {
+            else {
                 final String redirectPath = getArguments().getString(BundleKeys.HELP_REDIRECT_PATH);
-                if (redirectPath != null)
-                {
+                if (redirectPath != null) {
                     helpCenterUrl = Uri.parse(helpCenterUrl).buildUpon()
                             .appendQueryParameter("redirect_to", redirectPath)
                             .build().toString();

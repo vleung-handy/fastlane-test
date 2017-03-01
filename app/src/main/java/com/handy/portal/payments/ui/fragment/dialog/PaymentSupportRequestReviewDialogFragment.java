@@ -14,8 +14,7 @@ import com.handy.portal.payments.model.PaymentSupportItem;
 
 import butterknife.BindView;
 
-public class PaymentSupportRequestReviewDialogFragment extends ConfirmActionSlideUpDialogFragment
-{
+public class PaymentSupportRequestReviewDialogFragment extends ConfirmActionSlideUpDialogFragment {
     public static final String FRAGMENT_TAG = PaymentSupportRequestReviewDialogFragment.class.getName();
     private static final String BUNDLE_KEY_PRO_EMAIL = "BUNDLE_KEY_PRO_EMAIL";
     private static final String BUNDLE_KEY_EXPECTED_DEPOSIT_DATE
@@ -47,8 +46,7 @@ public class PaymentSupportRequestReviewDialogFragment extends ConfirmActionSlid
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         PaymentSupportItem paymentSupportItem =
                 (PaymentSupportItem) getArguments().getSerializable(BUNDLE_KEY_SELECTED_PAYMENT_SUPPORT_ITEM);
@@ -62,14 +60,12 @@ public class PaymentSupportRequestReviewDialogFragment extends ConfirmActionSlid
     }
 
     @Override
-    protected View inflateConfirmActionContentView(final LayoutInflater inflater, final ViewGroup container)
-    {
+    protected View inflateConfirmActionContentView(final LayoutInflater inflater, final ViewGroup container) {
         return inflater.inflate(R.layout.layout_payment_support_request_review, container, false);
     }
 
     @Override
-    protected void onConfirmActionButtonClicked()
-    {
+    protected void onConfirmActionButtonClicked() {
         PaymentSupportItem paymentSupportItem =
                 (PaymentSupportItem) getArguments().getSerializable(BUNDLE_KEY_SELECTED_PAYMENT_SUPPORT_ITEM);
         ((Callback) getParentFragment()).onRequestDepositReviewButtonClicked(paymentSupportItem);
@@ -77,19 +73,16 @@ public class PaymentSupportRequestReviewDialogFragment extends ConfirmActionSlid
     }
 
     @Override
-    protected int getConfirmButtonBackgroundResourceId()
-    {
+    protected int getConfirmButtonBackgroundResourceId() {
         return R.drawable.button_green_round;
     }
 
     @Override
-    protected String getConfirmButtonText()
-    {
+    protected String getConfirmButtonText() {
         return getString(R.string.payment_support_request_review_dialog_confirm_button);
     }
 
-    public interface Callback
-    {
+    public interface Callback {
         void onRequestDepositReviewButtonClicked(@NonNull PaymentSupportItem paymentSupportItem);
     }
 }

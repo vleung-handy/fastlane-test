@@ -6,65 +6,54 @@ import android.util.AttributeSet;
 
 import com.handy.portal.R;
 
-public final class BasicInputTextView extends InputTextField
-{
+public final class BasicInputTextView extends InputTextField {
     private int minLength;
 
-    public BasicInputTextView(final Context context, final int minLength)
-    {
+    public BasicInputTextView(final Context context, final int minLength) {
         super(context);
         init(minLength);
     }
 
-    public BasicInputTextView(final Context context, final AttributeSet attrs)
-    {
+    public BasicInputTextView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         readStyleAttributes(context, attrs);
     }
 
-    public BasicInputTextView(final Context context, final AttributeSet attrs, final int defStyle)
-    {
+    public BasicInputTextView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         readStyleAttributes(context, attrs);
     }
 
-    private void readStyleAttributes(final Context context, final AttributeSet attrs)
-    {
+    private void readStyleAttributes(final Context context, final AttributeSet attrs) {
         TypedArray ta = context.getTheme().obtainStyledAttributes(attrs, R.styleable.BasicInputTextView, 0, 0);
-        try
-        {
+        try {
             init(ta.getInteger(R.styleable.BasicInputTextView_minLength, 0));
-        } finally
-        {
+        }
+        finally {
             ta.recycle();
         }
     }
 
-    private void init(final int minLength)
-    {
+    private void init(final int minLength) {
         setMinLength(minLength);
     }
 
-    public final void setMinLength(final int minLength)
-    {
+    public final void setMinLength(final int minLength) {
         this.minLength = minLength;
     }
 
-    public final boolean validate()
-    {
-        if (getInput().length() < minLength)
-        {
+    public final boolean validate() {
+        if (getInput().length() < minLength) {
             highlight();
             return false;
-        } else
-        {
+        }
+        else {
             unHighlight();
             return true;
         }
     }
 
-    public final String getInput()
-    {
+    public final String getInput() {
         return this.getText().toString().trim();
     }
 }

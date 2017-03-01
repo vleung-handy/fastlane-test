@@ -36,8 +36,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class ScheduleBuilderFragmentTest extends RobolectricGradleTestWrapper
-{
+public class ScheduleBuilderFragmentTest extends RobolectricGradleTestWrapper {
     private ScheduleBuilderFragment mFragment;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private OnboardingDetails mOnboardingDetails;
@@ -52,8 +51,7 @@ public class ScheduleBuilderFragmentTest extends RobolectricGradleTestWrapper
     private ActivityController<OnboardingSubflowActivity> mActivityController;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         initMocks(this);
         when(mOnboardingDetails.getSubflowDataByType(SubflowType.CLAIM)).thenReturn(mSubflowData);
         when(mIntent.getSerializableExtra(BundleKeys.ONBOARDING_DETAILS))
@@ -63,8 +61,7 @@ public class ScheduleBuilderFragmentTest extends RobolectricGradleTestWrapper
         mActivityController.create().resume().visible();
     }
 
-    private void startFragment()
-    {
+    private void startFragment() {
         final HandyEvent.ReceiveOnboardingJobsSuccess event =
                 mock(HandyEvent.ReceiveOnboardingJobsSuccess.class,
                         Answers.RETURNS_DEEP_STUBS.get());
@@ -82,8 +79,7 @@ public class ScheduleBuilderFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void testJobSelection() throws Exception
-    {
+    public void testJobSelection() throws Exception {
         startFragment();
 
         assertThat(mFragment.mJobsContainer.getChildCount(), equalTo(1));
@@ -95,8 +91,7 @@ public class ScheduleBuilderFragmentTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void testSubmission() throws Exception
-    {
+    public void testSubmission() throws Exception {
         when(mBooking.getId()).thenReturn("15");
 
         testJobSelection();

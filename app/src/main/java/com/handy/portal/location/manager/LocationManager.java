@@ -44,8 +44,7 @@ import javax.inject.Inject;
  * - keeps track of last location (for legacy code)
  */
 public class LocationManager
-        implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
-{
+        implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private final EventBus mBus;
     private final DataManager mDataManager;
     private final ProviderManager mProviderManager;
@@ -65,8 +64,7 @@ public class LocationManager
             final Context context,
             final EventBus bus,
             final DataManager dataManager,
-            final ProviderManager providerManager)
-    {
+            final ProviderManager providerManager) {
         mContext = context;
         mBus = bus;
         mBus.register(this);
@@ -75,8 +73,7 @@ public class LocationManager
 
         GoogleApiAvailability gApi = GoogleApiAvailability.getInstance();
         int resultCode = gApi.isGooglePlayServicesAvailable(context);
-        if (resultCode == ConnectionResult.SUCCESS)
-        {
+        if (resultCode == ConnectionResult.SUCCESS) {
             mGoogleApiClient = new GoogleApiClient.Builder(context)
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
@@ -88,29 +85,23 @@ public class LocationManager
 
     @SuppressWarnings({"ResourceType", "MissingPermission"})
     @Nullable
-    public Location getLastLocation()
-    {
-        if (!LocationUtils.hasRequiredLocationPermissions(mContext) || mGoogleApiClient == null)
-        {
+    public Location getLastLocation() {
+        if (!LocationUtils.hasRequiredLocationPermissions(mContext) || mGoogleApiClient == null) {
             return null;
         }
-        else
-        {
+        else {
             return LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
         }
     }
 
     @NonNull
-    public LocationData getLastKnownLocationData()
-    {
+    public LocationData getLastKnownLocationData() {
         LocationData locationData;
         Location location = getLastLocation();
-        if (location != null)
-        {
+        if (location != null) {
             locationData = new LocationData(location);
         }
-        else
-        {
+        else {
             Crashlytics.log("Unable to get user location.");
             locationData = new LocationData();
         }
@@ -127,22 +118,18 @@ public class LocationManager
     public void onConnectionFailed(@NonNull final ConnectionResult connectionResult) {}
 
     @Subscribe
-    public void onRequestLocationSchedule(LocationEvent.RequestLocationSchedule event)
-    {
+    public void onRequestLocationSchedule(LocationEvent.RequestLocationSchedule event) {
         String providerId = mProviderManager.getLastProviderId();
         if (providerId == null) { return; }
-        mDataManager.getLocationStrategies(providerId, new DataManager.Callback<LocationScheduleStrategies>()
-        {
+        mDataManager.getLocationStrategies(providerId, new DataManager.Callback<LocationScheduleStrategies>() {
             @Override
-            public void onSuccess(final LocationScheduleStrategies response)
-            {
+            public void onSuccess(final LocationScheduleStrategies response) {
                 Crashlytics.log("Received location query schedule from server: " + response.toString());
                 mBus.post(new LocationEvent.ReceiveLocationScheduleSuccess(response));
             }
 
             @Override
-            public void onError(final DataManager.DataManagerError error)
-            {
+            public void onError(final DataManager.DataManagerError error) {
                 mBus.post(new LocationEvent.ReceiveLocationScheduleError(error));
             }
         });
@@ -154,8 +141,7 @@ public class LocationManager
      * @param event
      */
     @Subscribe
-    public void onReceiveLocationBatchUpdate(final LocationEvent.SendGeolocationRequest event)
-    {
+    public void onReceiveLocationBatchUpdate(final LocationEvent.SendGeolocationRequest event) {
         final LocationBatchUpdate locationBatchUpdate = event.getLocationBatchUpdate();
         sendLocationBatchUpdate(locationBatchUpdate, true);
     }
@@ -165,13 +151,11 @@ public class LocationManager
     /**
      * only retrying once, but this is called when network is reconnected or got a success response from server
      */
-    public void resendFailedLocationBatchUpdates()
-    {
+    public void resendFailedLocationBatchUpdates() {
         //TODO: if ordered, can send this at every LENGTH/SAMPLE LENGTH intervals to get a sampling
         Iterator<LocationBatchUpdate> setIterator = mFailedLocationBatchUpdates.iterator();
         int maxBatchesToRetryAtOnce = MAX_LOCATION_UPDATE_BATCHES_TO_RETRY_AT_ONCE;
-        while (setIterator.hasNext() && maxBatchesToRetryAtOnce > 0)
-        {
+        while (setIterator.hasNext() && maxBatchesToRetryAtOnce > 0) {
             LocationBatchUpdate failedLocationBatchUpdate = setIterator.next();
             sendLocationBatchUpdate(failedLocationBatchUpdate, false);
             Log.d(getClass().getName(), "resending failed location update: " + failedLocationBatchUpdate.toString());
@@ -186,8 +170,7 @@ public class LocationManager
      * @param event
      */
     @Subscribe
-    public void onNetworkReconnected(final SystemEvent.NetworkReconnected event)
-    {
+    public void onNetworkReconnected(final SystemEvent.NetworkReconnected event) {
         Log.d(getClass().getName(), "on network reconnected");
         resendFailedLocationBatchUpdates();
         //request immediate location updates?
@@ -199,34 +182,27 @@ public class LocationManager
      * @param locationBatchUpdate
      * @param retryUpdateIfFailed true if the request should be retried on network reconnect
      */
-    private void sendLocationBatchUpdate(final LocationBatchUpdate locationBatchUpdate, final boolean retryUpdateIfFailed)
-    {
+    private void sendLocationBatchUpdate(final LocationBatchUpdate locationBatchUpdate, final boolean retryUpdateIfFailed) {
         Log.d(getClass().getName(), "sending location batch update: " + locationBatchUpdate.toString());
         String providerId = mProviderManager.getLastProviderId();
         if (providerId == null) { return; }
-        mDataManager.sendGeolocation(providerId, locationBatchUpdate, new DataManager.Callback<SuccessWrapper>()
-        {
+        mDataManager.sendGeolocation(providerId, locationBatchUpdate, new DataManager.Callback<SuccessWrapper>() {
             @Override
-            public void onSuccess(final SuccessWrapper response)
-            {
-                if (response.getSuccess())
-                {
+            public void onSuccess(final SuccessWrapper response) {
+                if (response.getSuccess()) {
                     Log.d(getClass().getName(), "Successfully sent location to server");
                     resendFailedLocationBatchUpdates(); //now is probably a good time to retry
                     //calling here in addition to on network reconnected because we're retrying a limited number of batches at once
                 }
-                else
-                {
+                else {
                     Log.d(getClass().getName(), "Failed to send location to server but got Retrofit success callback");
                 }
             }
 
             @Override
-            public void onError(final DataManager.DataManagerError error)
-            {
+            public void onError(final DataManager.DataManagerError error) {
                 Log.d(getClass().getName(), "Failed to send location to server");
-                if (retryUpdateIfFailed && error.getType().equals(DataManager.DataManagerError.Type.NETWORK))
-                {
+                if (retryUpdateIfFailed && error.getType().equals(DataManager.DataManagerError.Type.NETWORK)) {
                     //only retry when network issue. don't want to retry if it's a server problem or our problem
                     addToLocationBatchUpdateFailedList(locationBatchUpdate);
                 }
@@ -239,17 +215,14 @@ public class LocationManager
      *
      * @param locationBatchUpdate
      */
-    private void addToLocationBatchUpdateFailedList(LocationBatchUpdate locationBatchUpdate)
-    {
-        if (mFailedLocationBatchUpdates.size() >= MAX_FAILED_LOCATION_BATCH_UPDATES_SIZE)
-        {
+    private void addToLocationBatchUpdateFailedList(LocationBatchUpdate locationBatchUpdate) {
+        if (mFailedLocationBatchUpdates.size() >= MAX_FAILED_LOCATION_BATCH_UPDATES_SIZE) {
             /**
              * if the size of the failed list is greater than max, remove the first one before adding another
              */
             //TODO: what is the price of this? should we remove more than one if costly? should we use a structure that doesn't require iterator?
             Iterator<LocationBatchUpdate> iterator = mFailedLocationBatchUpdates.iterator();
-            if (iterator.hasNext())
-            {
+            if (iterator.hasNext()) {
                 iterator.next();
                 iterator.remove();
             }
@@ -264,8 +237,7 @@ public class LocationManager
      * @param event
      */
     @Subscribe
-    public void onUserLoggedOut(HandyEvent.UserLoggedOut event)
-    {
+    public void onUserLoggedOut(HandyEvent.UserLoggedOut event) {
         mBus.post(new LocationEvent.RequestStopLocationService());
     }
 }

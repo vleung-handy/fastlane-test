@@ -11,59 +11,50 @@ import java.util.Date;
  * <p/>
  * https://handybook.atlassian.net/wiki/display/engineeringwiki/Portal+Analytics+Library#PortalAnalyticsLibrary-OnboardingJobEvents
  */
-public class NativeOnboardingLog extends EventLog
-{
+public class NativeOnboardingLog extends EventLog {
     private static final String EVENT_CONTEXT = "onboarding";
 
-    public NativeOnboardingLog(final String eventType)
-    {
+    public NativeOnboardingLog(final String eventType) {
         super(eventType, EVENT_CONTEXT);
     }
 
-    public static class StatusPageShown extends NativeOnboardingLog
-    {
+    public static class StatusPageShown extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "status_page_shown";
         @SerializedName("status")
         private String mStatus;
 
-        public StatusPageShown(final String status)
-        {
+        public StatusPageShown(final String status) {
             super(EVENT_TYPE);
             mStatus = status;
         }
     }
 
 
-    public static class StatusPageSubmitted extends NativeOnboardingLog
-    {
+    public static class StatusPageSubmitted extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "status_page_submitted";
         @SerializedName("status")
         private String mStatus;
 
-        public StatusPageSubmitted(final String status)
-        {
+        public StatusPageSubmitted(final String status) {
             super(EVENT_TYPE);
             mStatus = status;
         }
     }
 
 
-    public static class HelpLinkSelected extends NativeOnboardingLog
-    {
+    public static class HelpLinkSelected extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "help_link_selected";
         @SerializedName("help_link")
         private String mHelpLink;
 
-        public HelpLinkSelected(final String helpLink)
-        {
+        public HelpLinkSelected(final String helpLink) {
             super(EVENT_TYPE);
             mHelpLink = helpLink;
         }
     }
 
 
-    public static class Types
-    {
+    public static class Types {
         public static final String JOB_SEARCH_SHOWN = "job_search_shown";
         public static final String NO_JOBS_LOADED = "no_jobs_loaded";
         public static final String PURCHASE_SUPPLIES_SHOWN = "purchase_supplies_shown";
@@ -80,8 +71,7 @@ public class NativeOnboardingLog extends EventLog
     }
 
 
-    public enum ServerTypes
-    {
+    public enum ServerTypes {
         GET_STRIPE_TOKEN,
         UPDATE_CREDIT_CARD,
         UPDATE_ADDRESS,;
@@ -90,116 +80,97 @@ public class NativeOnboardingLog extends EventLog
         public static final String SUFFIX_SUCCESS = "_success";
         public static final String SUFFIX_ERROR = "_error";
 
-        public String submitted()
-        {
+        public String submitted() {
             return this.toString().toLowerCase() + SUFFIX_SUBMITTED;
         }
 
-        public String success()
-        {
+        public String success() {
             return this.toString().toLowerCase() + SUFFIX_SUCCESS;
         }
 
-        public String error()
-        {
+        public String error() {
             return this.toString().toLowerCase() + SUFFIX_ERROR;
         }
     }
 
 
-    public static class StartDateSelected extends NativeOnboardingLog
-    {
+    public static class StartDateSelected extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "start_date_selected";
         @SerializedName("start_date")
         private Date mDate;
 
-        public StartDateSelected(final Date date)
-        {
+        public StartDateSelected(final Date date) {
             super(EVENT_TYPE);
             mDate = date;
         }
     }
 
 
-    public static class LocationsSelected extends NativeOnboardingLog
-    {
+    public static class LocationsSelected extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "locations_selected";
         @SerializedName("locations")
         private ArrayList<String> mZipclusterIds;
 
-        public LocationsSelected(final ArrayList<String> zipclusterIds)
-        {
+        public LocationsSelected(final ArrayList<String> zipclusterIds) {
             super(EVENT_TYPE);
             mZipclusterIds = zipclusterIds;
         }
     }
 
 
-    public static class ScheduleJobsShown extends NativeOnboardingLog
-    {
+    public static class ScheduleJobsShown extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "schedule_jobs_shown";
         @SerializedName("jobs_shown")
         private int mJobsShown;
 
-        public ScheduleJobsShown(final int jobsShown)
-        {
+        public ScheduleJobsShown(final int jobsShown) {
             super(EVENT_TYPE);
             mJobsShown = jobsShown;
         }
     }
 
 
-    public static class ScheduleJobsSubmitted extends NativeOnboardingLog
-    {
+    public static class ScheduleJobsSubmitted extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "schedule_jobs_submitted";
         @SerializedName("jobs_to_claim")
         private int mJobsToClaim;
 
-        public ScheduleJobsSubmitted(final int jobsToClaim)
-        {
+        public ScheduleJobsSubmitted(final int jobsToClaim) {
             super(EVENT_TYPE);
             mJobsToClaim = jobsToClaim;
         }
     }
 
 
-    public static class RequestSupplies extends NativeOnboardingLog
-    {
+    public static class RequestSupplies extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "request_supplies";
 
         @SerializedName("requested")
         protected boolean mRequested;
 
-        public RequestSupplies(final String suffix)
-        {
+        public RequestSupplies(final String suffix) {
             super(EVENT_TYPE + suffix);
         }
 
-        public static class Submitted extends RequestSupplies
-        {
+        public static class Submitted extends RequestSupplies {
 
-            public Submitted(final boolean requested)
-            {
+            public Submitted(final boolean requested) {
                 super(ServerTypes.SUFFIX_SUBMITTED);
                 mRequested = requested;
             }
         }
 
 
-        public static class Success extends RequestSupplies
-        {
-            public Success(final boolean requested)
-            {
+        public static class Success extends RequestSupplies {
+            public Success(final boolean requested) {
                 super(ServerTypes.SUFFIX_SUCCESS);
                 mRequested = requested;
             }
         }
 
 
-        public static class Error extends RequestSupplies
-        {
-            public Error(final boolean requested)
-            {
+        public static class Error extends RequestSupplies {
+            public Error(final boolean requested) {
                 super(ServerTypes.SUFFIX_ERROR);
                 mRequested = requested;
             }
@@ -207,16 +178,14 @@ public class NativeOnboardingLog extends EventLog
     }
 
 
-    public static class ConfirmationPageSubmitted extends NativeOnboardingLog
-    {
+    public static class ConfirmationPageSubmitted extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "confirmation_page_submitted";
         @SerializedName("claimed_jobs")
         private final int mClaimedJobs;
         @SerializedName("supplies_requested")
         private final Boolean mSuppliesRequested;
 
-        public ConfirmationPageSubmitted(final int claimedJobs, final Boolean suppliesRequested)
-        {
+        public ConfirmationPageSubmitted(final int claimedJobs, final Boolean suppliesRequested) {
             super(EVENT_TYPE);
             mClaimedJobs = claimedJobs;
             mSuppliesRequested = suppliesRequested;
@@ -227,14 +196,12 @@ public class NativeOnboardingLog extends EventLog
     /**
      * User submits jobs to claim through the native onboarding funnel
      */
-    public static class ClaimBatchSubmitted extends NativeOnboardingLog
-    {
+    public static class ClaimBatchSubmitted extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "claim_batch_submitted";
         @SerializedName("booking_ids")
         private String[] mBookingsIds;
 
-        public ClaimBatchSubmitted(final ArrayList<Booking> bookings)
-        {
+        public ClaimBatchSubmitted(final ArrayList<Booking> bookings) {
             super(EVENT_TYPE);
             mBookingsIds = extractBookingIds(bookings);
         }
@@ -247,14 +214,12 @@ public class NativeOnboardingLog extends EventLog
      * This does NOT mean that the bookings were actually claimed–it indicates that there was not
      * an error response from the server
      */
-    public static class ClaimBatchSuccess extends NativeOnboardingLog
-    {
+    public static class ClaimBatchSuccess extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "claim_batch_success";
         @SerializedName("booking_ids")
         private String[] mBookingsIds;
 
-        public ClaimBatchSuccess(final ArrayList<Booking> bookings)
-        {
+        public ClaimBatchSuccess(final ArrayList<Booking> bookings) {
             super(EVENT_TYPE);
             mBookingsIds = extractBookingIds(bookings);
         }
@@ -264,8 +229,7 @@ public class NativeOnboardingLog extends EventLog
     /**
      * The onboarding jobs claim response was an error response
      */
-    public static class ClaimBatchError extends NativeOnboardingLog
-    {
+    public static class ClaimBatchError extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "claim_batch_error";
 
         @SerializedName("booking_ids")
@@ -273,19 +237,16 @@ public class NativeOnboardingLog extends EventLog
         @SerializedName("error_message")
         private String mErrorMessage;
 
-        public ClaimBatchError(final ArrayList<Booking> bookings, final String errorMessage)
-        {
+        public ClaimBatchError(final ArrayList<Booking> bookings, final String errorMessage) {
             super(EVENT_TYPE);
             mErrorMessage = errorMessage;
             mBookingsIds = extractBookingIds(bookings);
         }
     }
 
-    private static String[] extractBookingIds(final ArrayList<Booking> bookings)
-    {
+    private static String[] extractBookingIds(final ArrayList<Booking> bookings) {
         final String[] bookingsIds = new String[bookings.size()];
-        for (int i = 0; i < bookings.size(); i++)
-        {
+        for (int i = 0; i < bookings.size(); i++) {
             bookingsIds[i] = bookings.get(i).getId();
         }
         return bookingsIds;
@@ -295,12 +256,10 @@ public class NativeOnboardingLog extends EventLog
     /**
      * The specific job was successfully claimed through the onboarding funnel
      */
-    public static class ClaimSuccess extends JobsLog
-    {
+    public static class ClaimSuccess extends JobsLog {
         private static final String EVENT_TYPE = "claim_success";
 
-        public ClaimSuccess(final Booking booking)
-        {
+        public ClaimSuccess(final Booking booking) {
             super(EVENT_TYPE, EVENT_CONTEXT, booking);
         }
     }
@@ -309,12 +268,10 @@ public class NativeOnboardingLog extends EventLog
     /**
      * The onboarding jobs claim response was an error response
      */
-    public static class ClaimError extends JobsLog
-    {
+    public static class ClaimError extends JobsLog {
         private static final String EVENT_TYPE = "claim_error";
 
-        public ClaimError(final Booking booking)
-        {
+        public ClaimError(final Booking booking) {
             super(EVENT_TYPE, EVENT_CONTEXT, booking);
         }
     }
@@ -323,21 +280,19 @@ public class NativeOnboardingLog extends EventLog
     /**
      * Jumio ID verification
      */
-    public static class NativeIDVerificationStartedLog extends NativeOnboardingLog
-    {
+    public static class NativeIDVerificationStartedLog extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "native_id_verification_started";
 
-        public NativeIDVerificationStartedLog()
-        {
+        public NativeIDVerificationStartedLog() {
             super(EVENT_TYPE);
         }
     }
 
+
     /**
      * Jumio ID verification platform support status
      */
-    public static class NativeIDVerificationPlatformSupportStatusLog extends NativeOnboardingLog
-    {
+    public static class NativeIDVerificationPlatformSupportStatusLog extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "native_id_verification_platform_support_status";
 
         /**
@@ -346,24 +301,20 @@ public class NativeOnboardingLog extends EventLog
         @SerializedName("platform_supported")
         private final boolean mPlatformSupported;
 
-        public NativeIDVerificationPlatformSupportStatusLog(boolean platformSupported)
-        {
+        public NativeIDVerificationPlatformSupportStatusLog(boolean platformSupported) {
             super(EVENT_TYPE);
             mPlatformSupported = platformSupported;
         }
     }
 
 
-
     /**
      * Jumio ID verification in app flow completed
      */
-    public static class NativeIDVerificationCompletedLog extends NativeOnboardingLog
-    {
+    public static class NativeIDVerificationCompletedLog extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "native_id_verification_completed";
 
-        public NativeIDVerificationCompletedLog()
-        {
+        public NativeIDVerificationCompletedLog() {
             super(EVENT_TYPE);
         }
     }
@@ -372,12 +323,10 @@ public class NativeOnboardingLog extends EventLog
     /**
      * Jumio ID verification in app flow failed
      */
-    public static class NativeIDVerificationFailedLog extends NativeOnboardingLog
-    {
+    public static class NativeIDVerificationFailedLog extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "native_id_verification_failed";
 
-        public NativeIDVerificationFailedLog()
-        {
+        public NativeIDVerificationFailedLog() {
             super(EVENT_TYPE);
         }
     }
@@ -386,12 +335,10 @@ public class NativeOnboardingLog extends EventLog
     /**
      * Jumio ID verification in app flow failed
      */
-    public static class NativeIDVerificationCancelledLog extends NativeOnboardingLog
-    {
+    public static class NativeIDVerificationCancelledLog extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "native_id_verification_cancelled";
 
-        public NativeIDVerificationCancelledLog()
-        {
+        public NativeIDVerificationCancelledLog() {
             super(EVENT_TYPE);
         }
     }
@@ -400,12 +347,10 @@ public class NativeOnboardingLog extends EventLog
     /**
      * Jumio ID verification web flow
      */
-    public static class WebIDVerificationFlowStarted extends NativeOnboardingLog
-    {
+    public static class WebIDVerificationFlowStarted extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "web_id_verification_flow_started";
 
-        public WebIDVerificationFlowStarted()
-        {
+        public WebIDVerificationFlowStarted() {
             super(EVENT_TYPE);
         }
     }
@@ -414,12 +359,10 @@ public class NativeOnboardingLog extends EventLog
     /**
      * Camera permission granted for Jumio ID verification
      */
-    public static class CameraPermissionGrantedLog extends NativeOnboardingLog
-    {
+    public static class CameraPermissionGrantedLog extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "camera_permission_granted";
 
-        public CameraPermissionGrantedLog()
-        {
+        public CameraPermissionGrantedLog() {
             super(EVENT_TYPE);
         }
     }
@@ -428,12 +371,10 @@ public class NativeOnboardingLog extends EventLog
     /**
      * Camera permission denied for Jumio ID verification
      */
-    public static class CameraPermissionDeniedLog extends NativeOnboardingLog
-    {
+    public static class CameraPermissionDeniedLog extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "camera_permission_denied";
 
-        public CameraPermissionDeniedLog()
-        {
+        public CameraPermissionDeniedLog() {
             super(EVENT_TYPE);
         }
     }
@@ -442,12 +383,10 @@ public class NativeOnboardingLog extends EventLog
     /**
      * Camera settings opened for Jumio ID verification
      */
-    public static class CameraSettingsOpenedLog extends NativeOnboardingLog
-    {
+    public static class CameraSettingsOpenedLog extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "camera_settings_opened";
 
-        public CameraSettingsOpenedLog()
-        {
+        public CameraSettingsOpenedLog() {
             super(EVENT_TYPE);
         }
     }
@@ -456,14 +395,12 @@ public class NativeOnboardingLog extends EventLog
     /**
      * When FirstDayActivity opens
      */
-    public static class HelpArticleOpened extends NativeOnboardingLog
-    {
+    public static class HelpArticleOpened extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "help_article_opened";
         @SerializedName("article_name")
         private String mArticleName;
 
-        public HelpArticleOpened(final String articleName)
-        {
+        public HelpArticleOpened(final String articleName) {
             super(EVENT_TYPE);
             mArticleName = articleName;
         }
@@ -473,14 +410,12 @@ public class NativeOnboardingLog extends EventLog
     /**
      * When FirstDayActivity closes
      */
-    public static class HelpArticleClosed extends NativeOnboardingLog
-    {
+    public static class HelpArticleClosed extends NativeOnboardingLog {
         private static final String EVENT_TYPE = "help_article_closed";
         @SerializedName("article_name")
         private String mArticleName;
 
-        public HelpArticleClosed(final String articleName)
-        {
+        public HelpArticleClosed(final String articleName) {
             super(EVENT_TYPE);
             mArticleName = articleName;
         }

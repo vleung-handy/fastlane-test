@@ -11,7 +11,8 @@ import com.google.gson.annotations.SerializedName;
 import java.lang.reflect.Type;
 
 public final class BookingCompleteTransaction {
-    @SerializedName("user_info") private User user;
+    @SerializedName("user_info")
+    private User user;
 
     public final User getUser() {
         return user;
@@ -45,9 +46,12 @@ public final class BookingCompleteTransaction {
         }
     }
 
+
     public static final class User {
-        @SerializedName("auth_token") private String authToken;
-        @SerializedName("id") private String id;
+        @SerializedName("auth_token")
+        private String authToken;
+        @SerializedName("id")
+        private String id;
 
         public final String getAuthToken() {
             return authToken;

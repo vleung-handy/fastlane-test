@@ -38,14 +38,12 @@ public class PaymentBillBlockerDialogFragment extends PopupDialogFragment //TODO
     public static final String FRAGMENT_TAG = "fragment_dialog_payment_bill_blocker";
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_dialog_payment_bill_blocker, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         String coloredText = getString(R.string.payment_bill_blocker_content_colored);
         String content = getString(R.string.payments_bill_blocker_content_formatted, coloredText);
@@ -58,20 +56,16 @@ public class PaymentBillBlockerDialogFragment extends PopupDialogFragment //TODO
                 startIndex + coloredText.length(), 0);
         mPaymentBlockerContentText.setText(spannableString, TextView.BufferType.SPANNABLE);
 
-        updateNowButton.setOnClickListener(new View.OnClickListener()
-        {
+        updateNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.REFRESH_PAGE, true));
                 PaymentBillBlockerDialogFragment.this.dismiss();
             }
         });
-        laterButton.setOnClickListener(new View.OnClickListener()
-        {
+        laterButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 PaymentBillBlockerDialogFragment.this.dismiss();
             }
         });

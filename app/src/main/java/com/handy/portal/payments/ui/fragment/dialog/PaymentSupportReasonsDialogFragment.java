@@ -22,8 +22,7 @@ import butterknife.ButterKnife;
 /**
  * captures the reason for the user wanting payment support
  */
-public class PaymentSupportReasonsDialogFragment extends ConfirmActionSlideUpDialogFragment
-{
+public class PaymentSupportReasonsDialogFragment extends ConfirmActionSlideUpDialogFragment {
     public static final String FRAGMENT_TAG = PaymentSupportReasonsDialogFragment.class.getName();
     private static final String BUNDLE_KEY_PAYMENT_SUPPORT_ITEMS = "BUNDLE_KEY_PAYMENT_SUPPORT_ITEMS";
 
@@ -34,8 +33,7 @@ public class PaymentSupportReasonsDialogFragment extends ConfirmActionSlideUpDia
             = new HashMap<>();
 
     public static PaymentSupportReasonsDialogFragment newInstance(
-            @NonNull PaymentSupportItem paymentSupportItems[])
-    {
+            @NonNull PaymentSupportItem paymentSupportItems[]) {
         Bundle args = new Bundle();
         args.putSerializable(BUNDLE_KEY_PAYMENT_SUPPORT_ITEMS, paymentSupportItems);
         PaymentSupportReasonsDialogFragment fragment = new PaymentSupportReasonsDialogFragment();
@@ -44,8 +42,7 @@ public class PaymentSupportReasonsDialogFragment extends ConfirmActionSlideUpDia
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
         //don't enable confirm button until a radio button is clicked
@@ -53,8 +50,7 @@ public class PaymentSupportReasonsDialogFragment extends ConfirmActionSlideUpDia
         mConfirmActionButton.setEnabled(false);
         mSupportReasonsRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
-            public void onCheckedChanged(final RadioGroup group, final int checkedId)
-            {
+            public void onCheckedChanged(final RadioGroup group, final int checkedId) {
                 mConfirmActionButton.setEnabled(true);
             }
         });
@@ -62,17 +58,14 @@ public class PaymentSupportReasonsDialogFragment extends ConfirmActionSlideUpDia
     }
 
     @Override
-    protected View inflateConfirmActionContentView(final LayoutInflater inflater, final ViewGroup container)
-    {
+    protected View inflateConfirmActionContentView(final LayoutInflater inflater, final ViewGroup container) {
         return inflater.inflate(R.layout.layout_payment_support_reasons, container, false);
     }
 
     @Override
-    protected void onConfirmActionButtonClicked()
-    {
+    protected void onConfirmActionButtonClicked() {
         RadioButton checkedRadioButton = UIUtils.getCheckedRadioButton(mSupportReasonsRadioGroup);
-        if(checkedRadioButton == null)
-        {
+        if (checkedRadioButton == null) {
             /*
             should NEVER happen because confirm button is disabled until a radio button is checked
             and there's no way to clear a check for the radio group
@@ -86,25 +79,21 @@ public class PaymentSupportReasonsDialogFragment extends ConfirmActionSlideUpDia
     }
 
     @Override
-    protected int getConfirmButtonBackgroundResourceId()
-    {
+    protected int getConfirmButtonBackgroundResourceId() {
         return R.drawable.button_grey_round;
     }
 
     @Override
-    protected String getConfirmButtonText()
-    {
+    protected String getConfirmButtonText() {
         return getResources().getString(R.string.payment_support_reasons_dialog_submit_button);
     }
 
-    private void populateSupportItemsRadioGroup(PaymentSupportItem[] checkBoxListItems)
-    {
+    private void populateSupportItemsRadioGroup(PaymentSupportItem[] checkBoxListItems) {
         if (checkBoxListItems == null || checkBoxListItems.length == 0) { return; }
 
         mRadioButtonToPaymentSupportItemMap.clear();
         mSupportReasonsRadioGroup.removeAllViews();
-        for (PaymentSupportItem checkBoxListItem : checkBoxListItems)
-        {
+        for (PaymentSupportItem checkBoxListItem : checkBoxListItems) {
             RadioButton radioButton = (RadioButton) LayoutInflater.from(getContext())
                     .inflate(R.layout.radio_button_dismissal_reason, mSupportReasonsRadioGroup, false);
             radioButton.setText(checkBoxListItem.getDisplayName());
@@ -113,8 +102,7 @@ public class PaymentSupportReasonsDialogFragment extends ConfirmActionSlideUpDia
         }
     }
 
-    public interface Callback
-    {
+    public interface Callback {
         void onPaymentSupportItemSubmitted(PaymentSupportItem paymentSupportItem);
     }
 }

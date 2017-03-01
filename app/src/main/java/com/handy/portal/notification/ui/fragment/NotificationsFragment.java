@@ -36,8 +36,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public final class NotificationsFragment extends ActionBarFragment
-{
+public final class NotificationsFragment extends ActionBarFragment {
     private static final int NUMBER_OF_NOTIFICATIONS_PER_REQUEST = 20;
 
     @BindView(R.id.notifications_list_view)
@@ -62,36 +61,29 @@ public final class NotificationsFragment extends ActionBarFragment
     private boolean isRequestingNotifications = false;
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
-        if (mFragmentView == null)
-        {
+        if (mFragmentView == null) {
             mFragmentView = inflater.inflate(R.layout.fragment_notifications, container, false);
         }
 
         ButterKnife.bind(this, mFragmentView);
 
-        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-        {
+        mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onRefresh()
-            {
+            public void onRefresh() {
                 requestNotifications(true);
             }
         });
         mRefreshLayout.setColorSchemeResources(R.color.handy_blue);
 
-        mNotificationsListView.setOnItemClickListener(new AdapterView.OnItemClickListener()
-        {
+        mNotificationsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(final AdapterView<?> parent, final View view,
-                                    final int position, final long id)
-            {
+                                    final int position, final long id) {
                 final NotificationMessage message =
                         mNotificationsListView.getWrappedAdapter().getItem(position);
-                if (!message.isInteracted())
-                {
+                if (!message.isInteracted()) {
                     bus.post(new NotificationEvent.RequestMarkNotificationsAsInteracted(
                             Lists.newArrayList(message.getId())));
                 }
@@ -102,26 +94,20 @@ public final class NotificationsFragment extends ActionBarFragment
         return mFragmentView;
     }
 
-    private void triggerMessageActions(final List<NotificationAction> actions)
-    {
-        if (actions != null && !actions.isEmpty())
-        {
-            if (actions.size() == 1)
-            {
+    private void triggerMessageActions(final List<NotificationAction> actions) {
+        if (actions != null && !actions.isEmpty()) {
+            if (actions.size() == 1) {
                 triggerMessageAction(actions.get(0));
             }
-            else
-            {
+            else {
                 showMessageActionsDialog(actions);
             }
         }
     }
 
-    private void showMessageActionsDialog(final List<NotificationAction> actions)
-    {
+    private void showMessageActionsDialog(final List<NotificationAction> actions) {
         final List<String> actionNames = new ArrayList<>(actions.size());
-        for (final NotificationAction action : actions)
-        {
+        for (final NotificationAction action : actions) {
             actionNames.add(action.getText());
         }
         final TitleView titleView = new TitleView(getActivity());
@@ -130,11 +116,9 @@ public final class NotificationsFragment extends ActionBarFragment
                 .setCustomTitle(titleView)
                 .setAdapter(new ArrayAdapter<>(getActivity(), R.layout.view_selection_text,
                                 actionNames),
-                        new DialogInterface.OnClickListener()
-                        {
+                        new DialogInterface.OnClickListener() {
                             @Override
-                            public void onClick(final DialogInterface dialog, final int which)
-                            {
+                            public void onClick(final DialogInterface dialog, final int which) {
                                 triggerMessageAction(actions.get(which));
                             }
                         })
@@ -143,36 +127,30 @@ public final class NotificationsFragment extends ActionBarFragment
                 .show();
     }
 
-    private void triggerMessageAction(final NotificationAction notificationAction)
-    {
+    private void triggerMessageAction(final NotificationAction notificationAction) {
         final String deeplinkUriString = notificationAction.getDeeplink();
-        if (deeplinkUriString != null)
-        {
+        if (deeplinkUriString != null) {
             mPageNavigationManager.handleDeeplinkUrl(DeeplinkLog.Source.NOTIFICATION_FEED, deeplinkUriString);
         }
     }
 
     @Override
-    protected MainViewPage getAppPage()
-    {
+    protected MainViewPage getAppPage() {
         return MainViewPage.NOTIFICATIONS;
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         setActionBar(R.string.tab_notifications, false);
 
         bus.register(this);
 
-        if (mNotificationsListView.shouldRequestMoreNotifications())
-        {
+        if (mNotificationsListView.shouldRequestMoreNotifications()) {
             setLoadingOverlayVisible(true);
             requestNotifications(false);
         }
-        else
-        {
+        else {
             setLoadingOverlayVisible(false);
         }
 
@@ -180,27 +158,23 @@ public final class NotificationsFragment extends ActionBarFragment
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         setLoadingOverlayVisible(false); //don't want overlay to persist when this fragment is paused
         bus.unregister(this);
         super.onPause();
     }
 
     @OnClick(R.id.try_again_button)
-    public void doInitialRequestAgain()
-    {
+    public void doInitialRequestAgain() {
         setLoadingOverlayVisible(true);
         requestNotifications(true);
     }
 
     @Subscribe
-    public void onReceiveNotificationMessagesSuccess(NotificationEvent.ReceiveNotificationMessagesSuccess event)
-    {
+    public void onReceiveNotificationMessagesSuccess(NotificationEvent.ReceiveNotificationMessagesSuccess event) {
         NotificationMessage[] notificationMessages = event.getNotificationMessages();
         boolean isFirstRequest = mNotificationsListView.isEmpty();
-        if (isLoadingInitialNotifications(notificationMessages))
-        {
+        if (isLoadingInitialNotifications(notificationMessages)) {
             mNotificationsListView.reset();
         }
         mNotificationsListView.appendData(notificationMessages);
@@ -208,122 +182,96 @@ public final class NotificationsFragment extends ActionBarFragment
         markUnreadNotificationsAsRead(notificationMessages);
         markActionlessUninteractedNotificationsAsInteracted(notificationMessages);
 
-        if (isFirstRequest && mNotificationsListView.isEmpty())
-        {
+        if (isFirstRequest && mNotificationsListView.isEmpty()) {
             mNoNotificationsRefreshLayout.setVisibility(View.VISIBLE);
-            mNoNotificationsRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener()
-            {
+            mNoNotificationsRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
                 @Override
-                public void onRefresh()
-                {
+                public void onRefresh() {
                     requestNotifications(true);
                 }
             });
             mNoNotificationsRefreshLayout.setColorSchemeResources(R.color.handy_blue);
             mRefreshLayout.setVisibility(View.GONE);
         }
-        else
-        {
+        else {
             mNoNotificationsRefreshLayout.setVisibility(View.GONE);
             mRefreshLayout.setVisibility(View.VISIBLE);
 
-            if (mNotificationsListView.shouldRequestMoreNotifications())
-            {
+            if (mNotificationsListView.shouldRequestMoreNotifications()) {
                 mNotificationsListView.setFooterVisible(false);
-                if (isFirstRequest)
-                {
+                if (isFirstRequest) {
                     setNotificationsListViewOnScrollListener();
                 }
             }
-            else
-            {
+            else {
                 mNotificationsListView.setFooterText(R.string.no_more_notifications);
             }
         }
     }
 
     @Subscribe
-    public void onReceiveNotificationMessagesError(NotificationEvent.ReceiveNotificationMessagesError event)
-    {
+    public void onReceiveNotificationMessagesError(NotificationEvent.ReceiveNotificationMessagesError event) {
         cleanUpView();
-        if (mNotificationsListView.isEmpty())
-        {
+        if (mNotificationsListView.isEmpty()) {
             mFetchErrorView.setVisibility(View.VISIBLE);
             mFetchErrorTextView.setText(R.string.error_loading_notifications);
         }
-        else
-        {
+        else {
             mNotificationsListView.stopRequestingNotifications();
             mNotificationsListView.showFooter(R.string.error_loading_notifications);
         }
     }
 
-    public void setLoadingOverlayVisible(boolean visible)
-    {
+    public void setLoadingOverlayVisible(boolean visible) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(visible));
     }
 
-    private void markUnreadNotificationsAsRead(final NotificationMessage[] notificationMessages)
-    {
+    private void markUnreadNotificationsAsRead(final NotificationMessage[] notificationMessages) {
         ArrayList<Integer> unreadNotifications = new ArrayList<>();
-        for (NotificationMessage notificationMessage : notificationMessages)
-        {
-            if (!notificationMessage.isRead())
-            {
+        for (NotificationMessage notificationMessage : notificationMessages) {
+            if (!notificationMessage.isRead()) {
                 unreadNotifications.add(notificationMessage.getId());
             }
         }
 
-        if (!unreadNotifications.isEmpty())
-        {
+        if (!unreadNotifications.isEmpty()) {
             bus.post(new NotificationEvent.RequestMarkNotificationsAsRead(unreadNotifications));
         }
     }
 
     private void markActionlessUninteractedNotificationsAsInteracted(
-            final NotificationMessage[] notificationMessages)
-    {
+            final NotificationMessage[] notificationMessages) {
         ArrayList<Integer> notificationIds = new ArrayList<>();
-        for (final NotificationMessage notificationMessage : notificationMessages)
-        {
+        for (final NotificationMessage notificationMessage : notificationMessages) {
             final List<NotificationAction> actions = notificationMessage.getActions();
-            if (!notificationMessage.isInteracted() && actions != null && actions.isEmpty())
-            {
+            if (!notificationMessage.isInteracted() && actions != null && actions.isEmpty()) {
                 notificationIds.add(notificationMessage.getId());
             }
         }
 
-        if (!notificationIds.isEmpty())
-        {
+        if (!notificationIds.isEmpty()) {
             bus.post(new NotificationEvent.RequestMarkNotificationsAsInteracted(notificationIds));
         }
     }
 
-    private void setNotificationsListViewOnScrollListener()
-    {
-        mNotificationsListView.setOnScrollToBottomListener(new InfiniteScrollListView.OnScrollToBottomListener()
-        {
+    private void setNotificationsListViewOnScrollListener() {
+        mNotificationsListView.setOnScrollToBottomListener(new InfiniteScrollListView.OnScrollToBottomListener() {
             @Override
-            public void onScrollToBottom()
-            {
-                if (mNotificationsListView != null)
-                {
+            public void onScrollToBottom() {
+                if (mNotificationsListView != null) {
                     requestNotifications(false);
                 }
             }
         });
     }
 
-    private boolean isLoadingInitialNotifications(final NotificationMessage[] notificationMessages)
-    {
+    private boolean isLoadingInitialNotifications(final NotificationMessage[] notificationMessages) {
         Integer firstNotificationId = mNotificationsListView.getFirstNotificationId();
         return (firstNotificationId == null || notificationMessages[0].getId() >= firstNotificationId);
     }
 
-    private void requestNotifications(boolean refresh)
-    {
-        if ((mNotificationsListView.shouldRequestMoreNotifications() || refresh) && !isRequestingNotifications)
-        {
+    private void requestNotifications(boolean refresh) {
+        if ((mNotificationsListView.shouldRequestMoreNotifications() || refresh) && !isRequestingNotifications) {
             isRequestingNotifications = true;
             Integer untilId = refresh ? null : mNotificationsListView.getLastNotificationId();
             bus.post(new NotificationEvent.RequestNotificationMessages(null, untilId, NUMBER_OF_NOTIFICATIONS_PER_REQUEST));
@@ -331,8 +279,7 @@ public final class NotificationsFragment extends ActionBarFragment
         }
     }
 
-    private void cleanUpView()
-    {
+    private void cleanUpView() {
         mFetchErrorView.setVisibility(View.GONE);
         setLoadingOverlayVisible(false);
         mRefreshLayout.setRefreshing(false);

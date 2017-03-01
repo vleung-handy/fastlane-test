@@ -12,17 +12,14 @@ import java.util.List;
  * grouped by date. This is used in the onboarding work flow to claim initial jobs
  * <p/>
  */
-public class BookingsWrapperViewModel
-{
+public class BookingsWrapperViewModel {
     private final List<BookingViewModel> mBookingViewModels;
     private String mSanitizedDate;
 
-    public BookingsWrapperViewModel(BookingsWrapper bookings)
-    {
+    public BookingsWrapperViewModel(BookingsWrapper bookings) {
         mBookingViewModels = new ArrayList<>();
 
-        for (Booking b : bookings.getBookings())
-        {
+        for (Booking b : bookings.getBookings()) {
             mBookingViewModels.add(new BookingViewModel(b));
         }
 
@@ -30,25 +27,21 @@ public class BookingsWrapperViewModel
     }
 
     public BookingsWrapperViewModel(final List<Booking> bookings,
-                                    final boolean areBookingsSelectedByDefault)
-    {
+                                    final boolean areBookingsSelectedByDefault) {
         mBookingViewModels = new ArrayList<>();
 
-        for (Booking b : bookings)
-        {
+        for (Booking b : bookings) {
             final BookingViewModel bookingViewModel = new BookingViewModel(b);
             bookingViewModel.setSelected(areBookingsSelectedByDefault);
             mBookingViewModels.add(bookingViewModel);
         }
     }
 
-    public List<BookingViewModel> getBookingViewModels()
-    {
+    public List<BookingViewModel> getBookingViewModels() {
         return mBookingViewModels;
     }
 
-    public String getSanitizedDate()
-    {
+    public String getSanitizedDate() {
         return mSanitizedDate;
     }
 }

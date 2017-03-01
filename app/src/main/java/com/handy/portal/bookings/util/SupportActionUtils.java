@@ -8,8 +8,7 @@ import com.handy.portal.core.constant.SupportActionType;
 import java.util.Map;
 import java.util.Set;
 
-public class SupportActionUtils
-{
+public class SupportActionUtils {
     public static final Set<String> ETA_ACTION_NAMES = Sets.newHashSet(
             Action.ACTION_NOTIFY_EARLY,
             Action.ACTION_NOTIFY_LATE
@@ -29,8 +28,7 @@ public class SupportActionUtils
 
     private static Map<String, SupportActionType> supportActionTypeMap = Maps.newHashMap();
 
-    static
-    {
+    static {
         supportActionTypeMap.put(Action.ACTION_NOTIFY_EARLY, SupportActionType.NOTIFY_EARLY);
         supportActionTypeMap.put(Action.ACTION_NOTIFY_LATE, SupportActionType.NOTIFY_LATE);
 
@@ -45,8 +43,7 @@ public class SupportActionUtils
         supportActionTypeMap.put(Action.ACTION_ISSUE_OTHER, SupportActionType.ISSUE_OTHER);
     }
 
-    public static SupportActionType getSupportActionType(Action action)
-    {
+    public static SupportActionType getSupportActionType(Action action) {
         return supportActionTypeMap.get(action.getActionName());
     }
 }

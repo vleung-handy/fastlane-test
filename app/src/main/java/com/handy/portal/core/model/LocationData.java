@@ -4,28 +4,23 @@ import android.location.Location;
 
 import com.handy.portal.core.constant.LocationKey;
 
-public class LocationData
-{
+public class LocationData {
     private TypeSafeMap<LocationKey> locationMap;
 
-    public LocationData()
-    {
+    public LocationData() {
         locationMap = new TypeSafeMap<>();
     }
 
-    public LocationData(Location location)
-    {
+    public LocationData(Location location) {
         this();
-        if (location != null)
-        {
+        if (location != null) {
             locationMap.put(LocationKey.LATITUDE, Double.toString(location.getLatitude()));
             locationMap.put(LocationKey.LONGITUDE, Double.toString(location.getLongitude()));
             locationMap.put(LocationKey.ACCURACY, Float.toString(location.getAccuracy()));
         }
     }
 
-    public TypeSafeMap<LocationKey> getLocationMap()
-    {
+    public TypeSafeMap<LocationKey> getLocationMap() {
         return locationMap;
     }
 }

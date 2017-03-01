@@ -11,26 +11,22 @@ import com.handy.portal.core.ui.activity.SplashActivity;
 
 import java.util.Iterator;
 
-public class TermsActivity extends BaseActivity
-{
+public class TermsActivity extends BaseActivity {
     private Iterator<TermsDetails> mTermsIterator;
     private int mStepIdentifier;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_terms);
         final TermsDetailsGroup termsGroup =
                 (TermsDetailsGroup) getIntent().getSerializableExtra(BundleKeys.TERMS_GROUP);
-        if (termsGroup != null && termsGroup.hasTerms())
-        {
+        if (termsGroup != null && termsGroup.hasTerms()) {
             mTermsIterator = termsGroup.getTermsDetails().iterator();
             mStepIdentifier = getIntent().getIntExtra(BundleKeys.FLOW_STEP_ID, -1);
             proceed();
         }
-        else
-        {
+        else {
             Intent intent = new Intent(this, SplashActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK
                     | Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -38,22 +34,18 @@ public class TermsActivity extends BaseActivity
         }
     }
 
-    public void proceed()
-    {
-        if (mTermsIterator.hasNext())
-        {
+    public void proceed() {
+        if (mTermsIterator.hasNext()) {
             final TermsDetails termsDetails = mTermsIterator.next();
             displayTerms(termsDetails);
         }
-        else
-        {
+        else {
             bus.post(new HandyEvent.StepCompleted(mStepIdentifier));
             finish();
         }
     }
 
-    private void displayTerms(final TermsDetails termsDetails)
-    {
+    private void displayTerms(final TermsDetails termsDetails) {
         getSupportFragmentManager()
                 .beginTransaction()
                 .setCustomAnimations(
@@ -67,8 +59,7 @@ public class TermsActivity extends BaseActivity
     }
 
     @Override
-    public void onBackPressed()
-    {
+    public void onBackPressed() {
         moveTaskToBack(true);
     }
 }

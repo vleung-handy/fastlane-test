@@ -27,8 +27,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class ActivationWelcomeActivity extends AppCompatActivity
-{
+public class ActivationWelcomeActivity extends AppCompatActivity {
     public static final int COLORS = 12;
 
     private List<Integer> mDrawables;
@@ -55,8 +54,7 @@ public class ActivationWelcomeActivity extends AppCompatActivity
     private boolean mProfileLoaded = false;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState)
-    {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_activation_welcome);
         ButterKnife.bind(this);
@@ -82,13 +80,10 @@ public class ActivationWelcomeActivity extends AppCompatActivity
         //we only play the confetti after the anchors have been rendered, otherwise
         //the confetti will come out weird.
         ViewTreeObserver viewTreeObserver = mLeftCenterView.getViewTreeObserver();
-        if (viewTreeObserver.isAlive())
-        {
-            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener()
-            {
+        if (viewTreeObserver.isAlive()) {
+            viewTreeObserver.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
-                public void onGlobalLayout()
-                {
+                public void onGlobalLayout() {
                     mLeftCenterView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     mAnchorViewRendered = true;
                     shootingConfetti();
@@ -99,14 +94,12 @@ public class ActivationWelcomeActivity extends AppCompatActivity
     }
 
     @OnClick(R.id.btn_next)
-    public void getStarted()
-    {
+    public void getStarted() {
         finish();
     }
 
     @Override
-    protected void onResume()
-    {
+    protected void onResume() {
         super.onResume();
         mBus.register(this);
         mLoadingOverlay.setVisibility(View.VISIBLE);
@@ -114,28 +107,24 @@ public class ActivationWelcomeActivity extends AppCompatActivity
     }
 
     @Override
-    protected void attachBaseContext(Context newBase)
-    {
+    protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
 
     @Override
-    protected void onPause()
-    {
+    protected void onPause() {
         mBus.unregister(this);
         super.onPause();
     }
 
     @Subscribe
-    public void onReceiveProviderProfileSuccess(ProfileEvent.ReceiveProviderProfileSuccess event)
-    {
+    public void onReceiveProviderProfileSuccess(ProfileEvent.ReceiveProviderProfileSuccess event) {
         mLoadingOverlay.setVisibility(View.GONE);
         mProfileLoaded = true;
 
         if (event.providerProfile != null
                 && event.providerProfile.getProviderPersonalInfo() != null
-                && !TextUtils.isEmpty(event.providerProfile.getProviderPersonalInfo().getFirstName()))
-        {
+                && !TextUtils.isEmpty(event.providerProfile.getProviderPersonalInfo().getFirstName())) {
 
             mTvTitle.setText(String.format(getString(
                     R.string.congratulations_formatted),
@@ -147,8 +136,7 @@ public class ActivationWelcomeActivity extends AppCompatActivity
     }
 
     @Subscribe
-    public void onReceiveProviderProfileError(ProfileEvent.ReceiveProviderProfileError event)
-    {
+    public void onReceiveProviderProfileError(ProfileEvent.ReceiveProviderProfileError event) {
         //we couldn't load the user profile, so we'll just stick with the default message
         mLoadingOverlay.setVisibility(View.GONE);
         mProfileLoaded = true;
@@ -162,16 +150,14 @@ public class ActivationWelcomeActivity extends AppCompatActivity
      * -The anchor views where the confettis are started have rendered.
      * -confetti haven't been fired before.
      */
-    public void shootingConfetti()
-    {
+    public void shootingConfetti() {
         if (!mProfileLoaded || !mAnchorViewRendered) { return; }
 
         int partNumPerSecond = 2;
         int emitTime = 1000;
         int maxParticles = 100;
         int timeToLive = 10000;
-        for (int i = 0; i < COLORS; i++)
-        {
+        for (int i = 0; i < COLORS; i++) {
             new ParticleSystem(this, maxParticles, mDrawables.get(i), timeToLive)
                     .setSpeedModuleAndAngleRange(0.1f, 0.3f, 225, 315)
                     .setRotationSpeed(144)

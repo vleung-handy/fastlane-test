@@ -28,29 +28,25 @@ public class TransientOverlayDialogFragment extends DialogFragment //TODO: make 
     @BindView(R.id.transition_overlay_text)
     TextView display;
 
-    public static TransientOverlayDialogFragment newInstance(int animationId, int imageId, int textId)
-    {
+    public static TransientOverlayDialogFragment newInstance(int animationId, int imageId, int textId) {
         TransientOverlayDialogFragment transientOverlayDialogFragment = new TransientOverlayDialogFragment();
         transientOverlayDialogFragment.setResources(animationId, imageId, textId);
         return transientOverlayDialogFragment;
     }
 
-    private void setResources(int animationId, int imageId, int textId)
-    {
+    private void setResources(int animationId, int imageId, int textId) {
         this.animationId = animationId;
         this.imageId = imageId;
         this.textId = textId;
     }
 
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light);
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState)
-    {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = new Dialog(getActivity(), android.R.style.Theme_Translucent_NoTitleBar);
         dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
@@ -59,8 +55,7 @@ public class TransientOverlayDialogFragment extends DialogFragment //TODO: make 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_transition_overlay, container, false);
         ButterKnife.bind(this, view);
 
@@ -70,29 +65,24 @@ public class TransientOverlayDialogFragment extends DialogFragment //TODO: make 
         return view;
     }
 
-    protected void showThenDismiss()
-    {
+    protected void showThenDismiss() {
         View view = getView();
-        if (view != null)
-        {
+        if (view != null) {
             view.setVisibility(View.VISIBLE);
             Animation animation = AnimationUtils.loadAnimation(view.getContext(), animationId);
             view.startAnimation(animation);
-            animation.setAnimationListener(new Animation.AnimationListener()
-            {
+            animation.setAnimationListener(new Animation.AnimationListener() {
                 @Override
                 public void onAnimationStart(Animation animation) { }
 
                 @Override
-                public void onAnimationEnd(Animation animation)
-                {
+                public void onAnimationEnd(Animation animation) {
                     try
                     //handles IllegalStateException: Can not perform this action after onSaveInstanceState
                     {
                         TransientOverlayDialogFragment.this.dismiss();
                     }
-                    catch (Exception e)
-                    {
+                    catch (Exception e) {
                         //do nothing
                     }
                 }

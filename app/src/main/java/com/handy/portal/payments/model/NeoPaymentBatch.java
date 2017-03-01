@@ -4,8 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
 
-public class NeoPaymentBatch extends PaymentBatch
-{
+public class NeoPaymentBatch extends PaymentBatch {
     /**
      * assuming all amounts are passed in as cents
      */
@@ -54,11 +53,11 @@ public class NeoPaymentBatch extends PaymentBatch
     @SerializedName("last4")
     private String mPaymentMethodLast4Digits;
 
+
     /**
      * values that getStatus() should return
      */
-    public static class Status
-    {
+    public static class Status {
         public static final String FAILED = "Failed";
         public static final String PENDING = "Pending";
         public static final String IN_REVIEW = "In Review";
@@ -66,78 +65,63 @@ public class NeoPaymentBatch extends PaymentBatch
         public static final String PAID = "Paid";
     }
 
-    public String getPaymentMethodLast4Digits()
-    {
+    public String getPaymentMethodLast4Digits() {
         return mPaymentMethodLast4Digits;
     }
 
-    public PaymentSupportItem[] getPaymentSupportItems()
-    {
+    public PaymentSupportItem[] getPaymentSupportItems() {
         return mPaymentSupportItems;
     }
 
-    public int getNumFees()
-    {
+    public int getNumFees() {
         return numFees;
     }
 
-    public int getGrossEarningsTotalAmount()
-    {
+    public int getGrossEarningsTotalAmount() {
         return grossEarningsTotalAmount;
     }
 
-    public int getFeesTotalAmount()
-    {
+    public int getFeesTotalAmount() {
         return feesTotalAmount;
     }
 
-    public int getNumCompletedJobs()
-    {
+    public int getNumCompletedJobs() {
         return numCompletedJobs;
     }
 
-    public int getBatchId()
-    {
+    public int getBatchId() {
         return batchId;
     }
 
-    public Date getStartDate()
-    {
+    public Date getStartDate() {
         return startDate;
     }
 
-    public Date getEndDate()
-    {
+    public Date getEndDate() {
         return endDate;
     }
 
-    public Date getExpectedDepositDate()
-    {
+    public Date getExpectedDepositDate() {
         return expectedDepositDate;
     }
 
-    public String getStatus()
-    {
+    public String getStatus() {
         return status;
     }
 
-    public String getCurrencySymbol()
-    {
+    public String getCurrencySymbol() {
         return currencySymbol;
     }
 
-    public int getNetEarningsTotalAmount()
-    {
+    public int getNetEarningsTotalAmount() {
         return netEarningsTotalAmount;
     }
 
-    public int getRemainingFeeAmount()
-    {
+    public int getRemainingFeeAmount() {
         return remainingFeeAmount;
     }
 
-    public PaymentGroup[] getPaymentGroups()
-    {
+    public PaymentGroup[] getPaymentGroups() {
         return paymentGroups;
     }
 
@@ -149,8 +133,7 @@ public class NeoPaymentBatch extends PaymentBatch
     // Used to make calling of the date for both NeoPaymentBatch and LegacyPaymentBatch objects
     // easier.
     @Override
-    public Date getEffectiveDate()
-    {
+    public Date getEffectiveDate() {
         return getEndDate();
     }
 }

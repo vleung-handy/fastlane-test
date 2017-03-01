@@ -19,8 +19,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class JumioCameraDialogBlockerView extends RelativeLayout
-{
+public class JumioCameraDialogBlockerView extends RelativeLayout {
     @BindView(R.id.dialog_blocker_title)
     TextView mTitle;
     @BindView(R.id.dialog_blocker_message)
@@ -33,15 +32,13 @@ public class JumioCameraDialogBlockerView extends RelativeLayout
     private EventBus mBus;
     private String mUrl;
 
-    public JumioCameraDialogBlockerView(final Context context, final EventBus bus)
-    {
+    public JumioCameraDialogBlockerView(final Context context, final EventBus bus) {
         super(context);
         initView(context, bus);
     }
 
     @SuppressWarnings("deprecation")
-    private void initView(final Context context, final EventBus bus)
-    {
+    private void initView(final Context context, final EventBus bus) {
         LayoutInflater.from(context).inflate(R.layout.fragment_jumio_camera_dialog_blocker, this);
         ButterKnife.bind(this);
 
@@ -49,37 +46,33 @@ public class JumioCameraDialogBlockerView extends RelativeLayout
         mTitle.setText(R.string.allow_camera_title);
         mMessage.setText(R.string.camera_required_id_verification);
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-        {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             mCameraBrokenText.setText(
                     Html.fromHtml(getResources().getString(R.string.camera_broken_html),
                             Html.FROM_HTML_MODE_LEGACY));
         }
-        else
-        {
+        else {
             mCameraBrokenText.setText(
                     Html.fromHtml(getResources().getString(R.string.camera_broken_html)));
         }
     }
 
-    public JumioCameraDialogBlockerView setUrl(String url)
-    {
+    public JumioCameraDialogBlockerView setUrl(String url) {
         mUrl = url;
         return this;
     }
 
-    public JumioCameraDialogBlockerView setActionButton(int buttonTextResourceId, OnClickListener onClickListener)
-    {
+    public JumioCameraDialogBlockerView setActionButton(int buttonTextResourceId, OnClickListener onClickListener) {
         mActionButton.setText(buttonTextResourceId);
         mActionButton.setOnClickListener(onClickListener);
         return this;
     }
 
     @OnClick(R.id.camera_broken_text)
-    public void clickedCameraBroken()
-    {
-        if (mBus != null)
-        { mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.WebIDVerificationFlowStarted())); }
+    public void clickedCameraBroken() {
+        if (mBus != null) {
+            mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.WebIDVerificationFlowStarted()));
+        }
         IDVerificationUtils.initJumioWebFlow(getContext(), mUrl);
     }
 }

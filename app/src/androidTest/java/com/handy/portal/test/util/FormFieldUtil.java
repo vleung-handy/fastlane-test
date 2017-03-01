@@ -17,10 +17,8 @@ import static org.hamcrest.Matchers.allOf;
 /**
  * utility class containing non-specific methods to perform actions on FormFields
  */
-public class FormFieldUtil
-{
-    public static void inputDateFormFieldText(int formFieldResourceId, String monthText, String yearText)
-    {
+public class FormFieldUtil {
+    public static void inputDateFormFieldText(int formFieldResourceId, String monthText, String yearText) {
         Matcher<View> dateFieldInputMatcher = allOf(
                 withParent(withId(formFieldResourceId)),
                 withId(R.id.date_form_field_input_container));
@@ -32,8 +30,7 @@ public class FormFieldUtil
                 .perform(click(), replaceText(yearText), closeSoftKeyboard());
     }
 
-    public static void inputFormFieldText(int formFieldResourceId, String text)
-    {
+    public static void inputFormFieldText(int formFieldResourceId, String text) {
         onView(allOf(withId(R.id.value_text), withParent(withId(formFieldResourceId))))
                 .perform(click(), replaceText(text), closeSoftKeyboard());
     }

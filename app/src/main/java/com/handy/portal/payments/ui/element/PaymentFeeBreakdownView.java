@@ -18,8 +18,7 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PaymentFeeBreakdownView extends FrameLayout
-{
+public class PaymentFeeBreakdownView extends FrameLayout {
     @BindView(R.id.fee_breakdown_month_text)
     TextView mFeeBreakdownMonthText;
     @BindView(R.id.fee_breakdown_day_text)
@@ -31,39 +30,33 @@ public class PaymentFeeBreakdownView extends FrameLayout
     @BindView(R.id.fee_breakdown_amount_text)
     TextView mFeeBreakdownAmountText;
 
-    public PaymentFeeBreakdownView(final Context context)
-    {
+    public PaymentFeeBreakdownView(final Context context) {
         super(context);
         init();
     }
 
-    public PaymentFeeBreakdownView(final Context context, final AttributeSet attrs)
-    {
+    public PaymentFeeBreakdownView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public PaymentFeeBreakdownView(final Context context, final AttributeSet attrs, final int defStyleAttr)
-    {
+    public PaymentFeeBreakdownView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public PaymentFeeBreakdownView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
-    {
+    public PaymentFeeBreakdownView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         inflate(getContext(), R.layout.element_fee_breakdown, this);
         ButterKnife.bind(this);
     }
 
-    public void setDisplay(Payment payment)
-    {
+    public void setDisplay(Payment payment) {
         Date date = payment.getDate();
 
         mFeeBreakdownMonthText.setText(DateTimeUtils.getMonthShortName(date));

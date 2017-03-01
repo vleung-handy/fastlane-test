@@ -8,8 +8,7 @@ import android.support.annotation.NonNull;
  * <p/>
  * launches the UI stuff related to the app update flow
  */
-public interface AppUpdateFlowLauncher
-{
+public interface AppUpdateFlowLauncher {
     void launchAppUpdater();
 
     void showAppUpdateFlowError(@NonNull String message);

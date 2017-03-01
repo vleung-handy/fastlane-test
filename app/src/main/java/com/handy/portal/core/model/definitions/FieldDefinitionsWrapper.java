@@ -9,8 +9,7 @@ public class FieldDefinitionsWrapper //TODO: restructure this
     @SerializedName("field_definitions")
     Map<String, FieldDefinition> fieldDefinitionMap;
 
-    public Map<String, FieldDefinition> getFieldDefinitionMap()
-    {
+    public Map<String, FieldDefinition> getFieldDefinitionMap() {
         return fieldDefinitionMap;
     }
 }

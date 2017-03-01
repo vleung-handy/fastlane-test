@@ -18,8 +18,7 @@ import static android.widget.LinearLayout.HORIZONTAL;
 import static android.widget.LinearLayout.VERTICAL;
 
 
-public class CirclePageIndicatorView extends View implements DashboardViewPagerListener
-{
+public class CirclePageIndicatorView extends View implements DashboardViewPagerListener {
     private static final int STROKE_WIDTH_DP = 1;
     private static final float RADIUS_DP = 2.5f;
 
@@ -32,33 +31,28 @@ public class CirclePageIndicatorView extends View implements DashboardViewPagerL
     private boolean mCentered;
     private int mOrientation;
 
-    public CirclePageIndicatorView(final Context context)
-    {
+    public CirclePageIndicatorView(final Context context) {
         super(context);
         init();
     }
 
-    public CirclePageIndicatorView(final Context context, final AttributeSet attrs)
-    {
+    public CirclePageIndicatorView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public CirclePageIndicatorView(final Context context, final AttributeSet attrs, final int defStyleAttr)
-    {
+    public CirclePageIndicatorView(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init();
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public CirclePageIndicatorView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
-    {
+    public CirclePageIndicatorView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
         init();
     }
 
-    private void init()
-    {
+    private void init() {
         final int defaultPageColor = ContextCompat.getColor(getContext(), R.color.white);
         final int defaultFillColor = ContextCompat.getColor(getContext(), R.color.tertiary_gray);
         final int defaultStrokeColor = ContextCompat.getColor(getContext(), R.color.tertiary_gray);
@@ -82,22 +76,18 @@ public class CirclePageIndicatorView extends View implements DashboardViewPagerL
     }
 
     @Override
-    protected void onDraw(Canvas canvas)
-    {
+    protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if (mViewPager == null)
-        {
+        if (mViewPager == null) {
             return;
         }
         final int count = mViewPager.getAdapter().getCount();
-        if (count == 0)
-        {
+        if (count == 0) {
             return;
         }
 
-        if (mCurrentPage >= count)
-        {
+        if (mCurrentPage >= count) {
             setCurrentItem(count - 1);
             return;
         }
@@ -106,15 +96,13 @@ public class CirclePageIndicatorView extends View implements DashboardViewPagerL
         int longPaddingBefore;
         int longPaddingAfter;
         int shortPaddingBefore;
-        if (mOrientation == HORIZONTAL)
-        {
+        if (mOrientation == HORIZONTAL) {
             longSize = getWidth();
             longPaddingBefore = getPaddingLeft();
             longPaddingAfter = getPaddingRight();
             shortPaddingBefore = getPaddingTop();
         }
-        else
-        {
+        else {
             longSize = getHeight();
             longPaddingBefore = getPaddingTop();
             longPaddingAfter = getPaddingBottom();
@@ -124,8 +112,7 @@ public class CirclePageIndicatorView extends View implements DashboardViewPagerL
         final float nextCircleDrawOffset = mRadius * 4;
         final float shortOffset = shortPaddingBefore + mRadius;
         float longOffset = longPaddingBefore + mRadius;
-        if (mCentered)
-        {
+        if (mCentered) {
             longOffset += ((longSize - longPaddingBefore - longPaddingAfter) / 2.0f) - ((count * nextCircleDrawOffset) / 2.0f);
         }
 
@@ -133,34 +120,28 @@ public class CirclePageIndicatorView extends View implements DashboardViewPagerL
         float dY;
 
         float pageFillRadius = mRadius;
-        if (mPaintStroke.getStrokeWidth() > 0)
-        {
+        if (mPaintStroke.getStrokeWidth() > 0) {
             pageFillRadius -= mPaintStroke.getStrokeWidth() / 2.0f;
         }
 
         //Draw stroked circles
-        for (int iLoop = 0; iLoop < count; iLoop++)
-        {
+        for (int iLoop = 0; iLoop < count; iLoop++) {
             float drawLong = longOffset + (iLoop * nextCircleDrawOffset);
-            if (mOrientation == HORIZONTAL)
-            {
+            if (mOrientation == HORIZONTAL) {
                 dX = drawLong;
                 dY = shortOffset;
             }
-            else
-            {
+            else {
                 dX = shortOffset;
                 dY = drawLong;
             }
             // Only paint fill if not completely transparent
-            if (mPaintPageFill.getAlpha() > 0)
-            {
+            if (mPaintPageFill.getAlpha() > 0) {
                 canvas.drawCircle(dX, dY, pageFillRadius, mPaintPageFill);
             }
 
             // Only paint stroke if a stroke width was non-zero
-            if (pageFillRadius != mRadius)
-            {
+            if (pageFillRadius != mRadius) {
                 canvas.drawCircle(dX, dY, mRadius, mPaintStroke);
             }
         }
@@ -168,13 +149,11 @@ public class CirclePageIndicatorView extends View implements DashboardViewPagerL
         //Draw the filled circle
         float cx = mCurrentPage * nextCircleDrawOffset;
 
-        if (mOrientation == HORIZONTAL)
-        {
+        if (mOrientation == HORIZONTAL) {
             dX = longOffset + cx;
             dY = shortOffset;
         }
-        else
-        {
+        else {
             dX = shortOffset;
             dY = longOffset + cx;
         }
@@ -182,18 +161,14 @@ public class CirclePageIndicatorView extends View implements DashboardViewPagerL
     }
 
     @Override
-    public void setViewPager(ViewPager view)
-    {
-        if (mViewPager == view)
-        {
+    public void setViewPager(ViewPager view) {
+        if (mViewPager == view) {
             return;
         }
-        if (mViewPager != null)
-        {
+        if (mViewPager != null) {
             mViewPager.addOnPageChangeListener(null);
         }
-        if (view.getAdapter() == null)
-        {
+        if (view.getAdapter() == null) {
             throw new IllegalStateException("ViewPager does not have adapter instance.");
         }
         mViewPager = view;
@@ -202,10 +177,8 @@ public class CirclePageIndicatorView extends View implements DashboardViewPagerL
     }
 
     @Override
-    public void setCurrentItem(int item)
-    {
-        if (mViewPager == null)
-        {
+    public void setCurrentItem(int item) {
+        if (mViewPager == null) {
             throw new IllegalStateException("ViewPager has not been bound.");
         }
         mViewPager.setCurrentItem(item);
@@ -220,16 +193,13 @@ public class CirclePageIndicatorView extends View implements DashboardViewPagerL
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) { }
 
     @Override
-    public void onPageSelected(int position)
-    {
+    public void onPageSelected(int position) {
         mCurrentPage = position;
         invalidate();
     }
 
-    public void setOrientation(int orientation)
-    {
-        switch (orientation)
-        {
+    public void setOrientation(int orientation) {
+        switch (orientation) {
             case HORIZONTAL:
             case VERTICAL:
                 mOrientation = orientation;
@@ -240,8 +210,7 @@ public class CirclePageIndicatorView extends View implements DashboardViewPagerL
         }
     }
 
-    public int getOrientation()
-    {
+    public int getOrientation() {
         return mOrientation;
     }
 }

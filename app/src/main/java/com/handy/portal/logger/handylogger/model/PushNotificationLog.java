@@ -9,8 +9,7 @@ import com.urbanairship.push.PushMessage;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class PushNotificationLog extends EventLog
-{
+public abstract class PushNotificationLog extends EventLog {
     @SerializedName("handy_push_uuid")
     private String mHandyPushUuid;
     @SerializedName("handy_push_type")
@@ -20,47 +19,39 @@ public abstract class PushNotificationLog extends EventLog
 
     private static final String EVENT_CONTEXT = "push_notifications";
 
-    public PushNotificationLog(final String eventType, final PushMessage pushMessage)
-    {
+    public PushNotificationLog(final String eventType, final PushMessage pushMessage) {
         super(eventType, EVENT_CONTEXT);
         final Bundle pushBundle = pushMessage.getPushBundle();
         mHandyPushUuid = pushBundle.getString(BundleKeys.HANDY_PUSH_UUID);
         mHandyPushType = pushBundle.getString(BundleKeys.HANDY_PUSH_TYPE);
         mPushExtras = new HashMap<>(pushBundle.size());
-        for (final String key : pushBundle.keySet())
-        {
+        for (final String key : pushBundle.keySet()) {
             mPushExtras.put(key, pushBundle.get(key));
         }
     }
 
-    public static class Received extends PushNotificationLog
-    {
+    public static class Received extends PushNotificationLog {
         public static final String EVENT_TYPE = "received";
 
-        public Received(final PushMessage pushMessage)
-        {
+        public Received(final PushMessage pushMessage) {
             super(EVENT_TYPE, pushMessage);
         }
     }
 
 
-    public static class Opened extends PushNotificationLog
-    {
+    public static class Opened extends PushNotificationLog {
         public static final String EVENT_TYPE = "opened";
 
-        public Opened(final PushMessage pushMessage)
-        {
+        public Opened(final PushMessage pushMessage) {
             super(EVENT_TYPE, pushMessage);
         }
     }
 
 
-    public static class Dismissed extends PushNotificationLog
-    {
+    public static class Dismissed extends PushNotificationLog {
         public static final String EVENT_TYPE = "dismissed";
 
-        public Dismissed(final PushMessage pushMessage)
-        {
+        public Dismissed(final PushMessage pushMessage) {
             super(EVENT_TYPE, pushMessage);
         }
     }

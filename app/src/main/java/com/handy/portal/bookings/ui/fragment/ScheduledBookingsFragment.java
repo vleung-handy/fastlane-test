@@ -57,8 +57,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.ReceiveScheduledBookingsSuccess>
-        implements DatesPagerAdapter.DateSelectedListener
-{
+        implements DatesPagerAdapter.DateSelectedListener {
     private static final int NEXT_WEEK_AVAILABILITY_INDEX = 1;
     @Inject
     ProviderManager mProviderManager;
@@ -87,41 +86,34 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     private DatesPagerAdapter mDatesPagerAdapter;
     private int mLastDatesPosition;
     private ViewPager.OnPageChangeListener mDatesPageChangeListener =
-            new ViewPager.OnPageChangeListener()
-            {
+            new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(final int position, final float positionOffset,
-                                           final int positionOffsetPixels)
-                {
+                                           final int positionOffsetPixels) {
                     // do nothing
                 }
 
                 @Override
-                public void onPageSelected(final int position)
-                {
+                public void onPageSelected(final int position) {
                     final NewDateButtonGroup dateButtonGroup =
                             mDatesPagerAdapter.getItemAt(position);
                     final NewDateButton dateButton;
-                    if (mLastDatesPosition > position)
-                    {
+                    if (mLastDatesPosition > position) {
                         dateButton =
                                 dateButtonGroup.getLastEnabledDateButton();
                     }
-                    else
-                    {
+                    else {
                         dateButton =
                                 dateButtonGroup.getFirstEnabledDateButton();
                     }
-                    if (dateButton != null)
-                    {
+                    if (dateButton != null) {
                         dateButton.select();
                     }
                     mLastDatesPosition = position;
                 }
 
                 @Override
-                public void onPageScrollStateChanged(final int state)
-                {
+                public void onPageScrollStateChanged(final int state) {
                     // do nothing
                 }
             };
@@ -130,34 +122,28 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     private HashMap<Date, DailyAvailabilityTimeline> mUpdatedAvailabilityTimelines;
 
     @Override
-    protected MainViewPage getAppPage()
-    {
+    protected MainViewPage getAppPage() {
         return MainViewPage.SCHEDULED_JOBS;
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }
 
     @Override
-    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater)
-    {
+    public void onCreateOptionsMenu(final Menu menu, final MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
-        if (isAvailableHoursEnabled())
-        {
+        if (isAvailableHoursEnabled()) {
             inflater.inflate(R.menu.menu_scheduled_bookings, menu);
             updateAvailableHoursMenuItem();
         }
     }
 
     @Override
-    public boolean onOptionsItemSelected(final MenuItem item)
-    {
-        switch (item.getItemId())
-        {
+    public boolean onOptionsItemSelected(final MenuItem item) {
+        switch (item.getItemId()) {
             case R.id.action_available_hours:
                 navigateToEditWeeklyAvailableHours();
                 return true;
@@ -166,8 +152,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         }
     }
 
-    private void navigateToEditWeeklyAvailableHours()
-    {
+    private void navigateToEditWeeklyAvailableHours() {
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.SetWeekAvailabilitySelected(
                 DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(mSelectedDay))));
         final Bundle arguments = new Bundle();
@@ -184,24 +169,19 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         bus.register(this);
         super.onResume();
         setActionBar(R.string.scheduled_jobs, false);
-        if (!MainActivity.clearingBackStack)
-        {
-            if (mSelectedDay != null && mDatesPagerAdapter != null)
-            {
+        if (!MainActivity.clearingBackStack) {
+            if (mSelectedDay != null && mDatesPagerAdapter != null) {
                 final int position = mDatesPagerAdapter.getItemPositionWithDate(mSelectedDay);
-                if (position != DatesPagerAdapter.POSITION_NOT_FOUND)
-                {
+                if (position != DatesPagerAdapter.POSITION_NOT_FOUND) {
                     mDatesViewPager.setCurrentItem(position);
                 }
                 final NewDateButton dateButton =
                         mDatesPagerAdapter.getDateButtonForDate(mSelectedDay);
-                if (dateButton != null)
-                {
+                if (dateButton != null) {
                     dateButton.select();
                 }
             }
@@ -210,16 +190,12 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         }
     }
 
-    private void requestProviderAvailability()
-    {
-        if (mProviderAvailability == null && isAvailableHoursEnabled())
-        {
+    private void requestProviderAvailability() {
+        if (mProviderAvailability == null && isAvailableHoursEnabled()) {
             dataManager.getProviderAvailability(mProviderManager.getLastProviderId(),
-                    new FragmentSafeCallback<ProviderAvailability>(this)
-                    {
+                    new FragmentSafeCallback<ProviderAvailability>(this) {
                         @Override
-                        public void onCallbackSuccess(final ProviderAvailability providerAvailability)
-                        {
+                        public void onCallbackSuccess(final ProviderAvailability providerAvailability) {
                             mProviderAvailability = providerAvailability;
                             mUpdatedAvailabilityTimelines = null;
                             showAvailableHours();
@@ -227,32 +203,27 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
                         }
 
                         @Override
-                        public void onCallbackError(final DataManager.DataManagerError error)
-                        {
+                        public void onCallbackError(final DataManager.DataManagerError error) {
                             // do nothing
                         }
                     });
         }
     }
 
-    private void setAvailableHoursBannerVisibility()
-    {
+    private void setAvailableHoursBannerVisibility() {
         if (isAvailableHoursEnabled()
                 && mProviderAvailability != null
                 && !hasAvailableHoursForNextWeek()
-                && !hasDismissedAvailableHoursBannerThisWeek())
-        {
+                && !hasDismissedAvailableHoursBannerThisWeek()) {
             mSetAvailableHoursBanner.setVisibility(View.VISIBLE);
         }
-        else
-        {
+        else {
             mSetAvailableHoursBanner.setVisibility(View.GONE);
         }
         updateAvailableHoursMenuItem();
     }
 
-    private boolean hasDismissedAvailableHoursBannerThisWeek()
-    {
+    private boolean hasDismissedAvailableHoursBannerThisWeek() {
         final String dateString = mPrefsManager
                 .getString(PrefsKey.DISMISSED_AVAILABLE_HOURS_BANNER_WEEK_START_DATE, null);
         final WeeklyAvailabilityTimelinesWrapper nextWeekAvailability = getNextWeekAvailability();
@@ -260,22 +231,18 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 nextWeekAvailability.getStartDateString().equals(dateString);
     }
 
-    private boolean isAvailableHoursEnabled()
-    {
+    private boolean isAvailableHoursEnabled() {
         return mConfigManager.getConfigurationResponse() != null
                 && mConfigManager.getConfigurationResponse().isAvailableHoursEnabled();
     }
 
-    private void showAvailableHours()
-    {
+    private void showAvailableHours() {
         if (mProviderAvailability == null
                 || mSelectedDay == null
-                || !mProviderAvailability.covers(mSelectedDay))
-        {
+                || !mProviderAvailability.covers(mSelectedDay)) {
             mAvailableHoursView.setVisibility(View.GONE);
         }
-        else
-        {
+        else {
             mAvailableHoursView.setVisibility(View.VISIBLE);
             mAvailabilityForSelectedDay = getAvailabilityForDate(mSelectedDay);
             mAvailableHoursView.setAvailableHours(mAvailabilityForSelectedDay == null ? null
@@ -284,135 +251,113 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Nullable
-    private DailyAvailabilityTimeline getAvailabilityForDate(final Date date)
-    {
+    private DailyAvailabilityTimeline getAvailabilityForDate(final Date date) {
         DailyAvailabilityTimeline availability = null;
-        if (mUpdatedAvailabilityTimelines != null)
-        {
+        if (mUpdatedAvailabilityTimelines != null) {
             availability = mUpdatedAvailabilityTimelines.get(date);
         }
-        if (mProviderAvailability != null && availability == null)
-        {
+        if (mProviderAvailability != null && availability == null) {
             availability = mProviderAvailability.getAvailabilityForDate(date);
         }
         return availability;
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         bus.unregister(this);
         mDatesViewPager.removeOnPageChangeListener(mDatesPageChangeListener);
         super.onPause();
     }
 
-    protected LinearLayout getDatesLayout()
-    {
+    protected LinearLayout getDatesLayout() {
         return mScheduledJobsDatesScrollViewLayout;
     }
 
     @Override
-    protected void initDateButtons()
-    {
+    protected void initDateButtons() {
         final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
-        if (configuration != null && configuration.isNewDateScrollerEnabled())
-        {
+        if (configuration != null && configuration.isNewDateScrollerEnabled()) {
             mScheduledJobsDatesScrollView.setVisibility(View.GONE);
             mDatesPagerAdapter = new DatesPagerAdapter(getActivity(), this);
             mDatesViewPager.setAdapter(mDatesPagerAdapter);
             mDatesViewPager.addOnPageChangeListener(mDatesPageChangeListener);
         }
-        else
-        {
+        else {
             mDatesViewPagerHolder.setVisibility(View.GONE);
             super.initDateButtons();
         }
     }
 
-    protected int getFragmentResourceId()
-    {
+    protected int getFragmentResourceId() {
         return (R.layout.fragment_scheduled_bookings);
     }
 
     @Override
-    protected BookingListView getBookingListView()
-    {
+    protected BookingListView getBookingListView() {
         return mScheduledJobsListView;
     }
 
     @Override
-    protected SwipeRefreshLayout getNoBookingsSwipeRefreshLayout()
-    {
+    protected SwipeRefreshLayout getNoBookingsSwipeRefreshLayout() {
         return mNoScheduledBookingsLayout;
     }
 
     @Override
-    protected void requestBookings(List<Date> dates, boolean useCachedIfPresent)
-    {
+    protected void requestBookings(List<Date> dates, boolean useCachedIfPresent) {
         mBookingManager.requestScheduledBookings(dates, useCachedIfPresent);
         requestProviderAvailability();
     }
 
     @NonNull
     @Override
-    protected String getTrackingType()
-    {
+    protected String getTrackingType() {
         return "scheduled job";
     }
 
     @Subscribe
-    public void onBookingsRetrieved(HandyEvent.ReceiveScheduledBookingsSuccess event)
-    {
+    public void onBookingsRetrieved(HandyEvent.ReceiveScheduledBookingsSuccess event) {
         handleBookingsRetrieved(event);
     }
 
     @Override
-    protected void beforeRequestBookings()
-    {
+    protected void beforeRequestBookings() {
         // do nothing
     }
 
     @Override
-    protected Class<? extends BookingElementView> getBookingElementViewClass()
-    {
+    protected Class<? extends BookingElementView> getBookingElementViewClass() {
         return ScheduledBookingElementView.class;
     }
 
     @Override
-    protected String getBookingSourceName()
-    {
+    protected String getBookingSourceName() {
         return SOURCE_SCHEDULED_JOBS_LIST;
     }
 
     @Nullable
     @Override
-    protected DatesPagerAdapter getDatesPagerAdapter()
-    {
+    protected DatesPagerAdapter getDatesPagerAdapter() {
         return mDatesPagerAdapter;
     }
 
     @Override
-    protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings)
-    {
+    protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings) {
         super.afterDisplayBookings(bookingsForDay, dateOfBookings);
 
         //Show "Find Jobs" buttons only if we're inside of our available bookings length range and we have no jobs
 
         int numDaysForAvailableJobs = AvailableBookingsFragment.DEFAULT_NUM_DAYS_FOR_AVAILABLE_JOBS;
-        if (configManager.getConfigurationResponse() != null)
-        {
+        if (configManager.getConfigurationResponse() != null) {
             numDaysForAvailableJobs =
                     configManager.getConfigurationResponse().getNumberOfDaysForAvailableJobs();
         }
     }
 
     @OnClick(R.id.set_hours_dismiss_button)
-    public void onDismissSetHoursBannerClicked()
-    {
+    public void onDismissSetHoursBannerClicked() {
         mSetAvailableHoursBanner.setVisibility(View.GONE);
         final WeeklyAvailabilityTimelinesWrapper nextWeekAvailability = getNextWeekAvailability();
-        if (nextWeekAvailability != null)
-        {
+        if (nextWeekAvailability != null) {
             mPrefsManager.setString(PrefsKey.DISMISSED_AVAILABLE_HOURS_BANNER_WEEK_START_DATE,
                     nextWeekAvailability.getStartDateString());
         }
@@ -420,44 +365,35 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @OnClick(R.id.set_available_hours_banner)
-    public void onSetAvailableHoursBannerClicked()
-    {
+    public void onSetAvailableHoursBannerClicked() {
         navigateToEditWeeklyAvailableHours();
     }
 
-    private void updateAvailableHoursMenuItem()
-    {
-        if (getMenu() == null)
-        {
+    private void updateAvailableHoursMenuItem() {
+        if (getMenu() == null) {
             return;
         }
         final MenuItem item = getMenu().findItem(R.id.action_available_hours);
-        if (item != null)
-        {
+        if (item != null) {
             item.setIcon(hasAvailableHoursForNextWeek()
                     || mSetAvailableHoursBanner.getVisibility() == View.VISIBLE ?
                     mAvailableHoursIcon : mAvailableHoursPendingIcon);
         }
     }
 
-    private boolean hasAvailableHoursForNextWeek()
-    {
+    private boolean hasAvailableHoursForNextWeek() {
         final WeeklyAvailabilityTimelinesWrapper weekAvailability = getNextWeekAvailability();
-        if (weekAvailability != null)
-        {
+        if (weekAvailability != null) {
             boolean hasAvailableHours = false;
             final Calendar calendar = Calendar.getInstance(Locale.US);
             calendar.setTime(weekAvailability.getStartDate());
-            while (DateTimeUtils.daysBetween(calendar.getTime(), weekAvailability.getEndDate()) >= 0)
-            {
+            while (DateTimeUtils.daysBetween(calendar.getTime(), weekAvailability.getEndDate()) >= 0) {
                 final DailyAvailabilityTimeline availability =
                         getAvailabilityForDate(calendar.getTime());
-                if (availability != null)
-                {
+                if (availability != null) {
                     hasAvailableHours = availability.hasIntervals();
                 }
-                if (hasAvailableHours)
-                {
+                if (hasAvailableHours) {
                     break;
                 }
                 calendar.add(Calendar.DATE, 1);
@@ -468,10 +404,8 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Nullable
-    private WeeklyAvailabilityTimelinesWrapper getNextWeekAvailability()
-    {
-        if (mProviderAvailability != null)
-        {
+    private WeeklyAvailabilityTimelinesWrapper getNextWeekAvailability() {
+        if (mProviderAvailability != null) {
             return mProviderAvailability.getWeeklyAvailabilityTimelinesWrappers()
                     .get(NEXT_WEEK_AVAILABILITY_INDEX);
         }
@@ -479,8 +413,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @OnClick(R.id.available_hours_view)
-    public void onAvailableHoursClicked()
-    {
+    public void onAvailableHoursClicked() {
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.SetDayAvailabilitySelected(
                 mSelectedDay != null ? DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(mSelectedDay)
                         : null)));
@@ -494,17 +427,13 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
-    {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK && requestCode == RequestCode.EDIT_HOURS)
-        {
+        if (resultCode == Activity.RESULT_OK && requestCode == RequestCode.EDIT_HOURS) {
             final DailyAvailabilityTimeline availability = (DailyAvailabilityTimeline)
                     data.getSerializableExtra(BundleKeys.DAILY_AVAILABILITY_TIMELINE);
-            if (availability != null)
-            {
-                if (mUpdatedAvailabilityTimelines == null)
-                {
+            if (availability != null) {
+                if (mUpdatedAvailabilityTimelines == null) {
                     mUpdatedAvailabilityTimelines = new HashMap<>();
                 }
                 mUpdatedAvailabilityTimelines.put(availability.getDate(), availability);
@@ -514,19 +443,15 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected boolean shouldShowRequestedIndicator(List<Booking> bookingsForDay)
-    {
+    protected boolean shouldShowRequestedIndicator(List<Booking> bookingsForDay) {
         return false;
     }
 
     @Override
     //All bookings not in the past on this page should cause the claimed indicator to appear
-    protected boolean shouldShowClaimedIndicator(List<Booking> bookingsForDay)
-    {
-        for (Booking b : bookingsForDay)
-        {
-            if (!b.isEnded())
-            {
+    protected boolean shouldShowClaimedIndicator(List<Booking> bookingsForDay) {
+        for (Booking b : bookingsForDay) {
+            if (!b.isEnded()) {
                 return true;
             }
         }
@@ -534,20 +459,17 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     @Override
-    protected int numberOfDaysToDisplay()
-    {
+    protected int numberOfDaysToDisplay() {
         return 28;
     }
 
     @Subscribe
-    public void onRequestBookingsError(HandyEvent.ReceiveScheduledBookingsError event)
-    {
+    public void onRequestBookingsError(HandyEvent.ReceiveScheduledBookingsError event) {
         handleBookingsRetrievalError(event, R.string.error_fetching_scheduled_jobs);
     }
 
     @Override
-    public void onDateSelected(final Date date)
-    {
+    public void onDateSelected(final Date date) {
         onDateClicked(date);
         showAvailableHours();
     }

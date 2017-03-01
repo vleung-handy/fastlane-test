@@ -35,8 +35,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import static org.robolectric.Shadows.shadowOf;
 
-public class OnboardingFlowActivityTest extends RobolectricGradleTestWrapper
-{
+public class OnboardingFlowActivityTest extends RobolectricGradleTestWrapper {
     @Mock
     private OnboardingDetails mOnboardingDetails;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
@@ -54,8 +53,7 @@ public class OnboardingFlowActivityTest extends RobolectricGradleTestWrapper
     private ActivityController<OnboardingFlowActivity> mActivityController;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         initMocks(this);
         when(mStatusSubflowDetails.getStatus()).thenReturn(SubflowStatus.INCOMPLETE);
         when(mStatusSubflowDetails.getType()).thenReturn(SubflowType.STATUS);
@@ -73,8 +71,7 @@ public class OnboardingFlowActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldLaunchIncompleteStatusSubflow() throws Exception
-    {
+    public void shouldLaunchIncompleteStatusSubflow() throws Exception {
         mActivityController.create().resume();
 
         final Intent nextStartedActivity =
@@ -87,8 +84,7 @@ public class OnboardingFlowActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldLaunchAsSingleStepMode() throws Exception
-    {
+    public void shouldLaunchAsSingleStepMode() throws Exception {
         mActivityController.create().resume();
 
         final Intent nextStartedActivity =
@@ -98,8 +94,7 @@ public class OnboardingFlowActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldNotLaunchAsSingleStepMode() throws Exception
-    {
+    public void shouldNotLaunchAsSingleStepMode() throws Exception {
         when(mOnboardingDetails.getSubflowsByStatus(SubflowStatus.INCOMPLETE))
                 .thenReturn(mTwoSubflowSteps);
 
@@ -112,8 +107,7 @@ public class OnboardingFlowActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldLaunchNextSubflow() throws Exception
-    {
+    public void shouldLaunchNextSubflow() throws Exception {
         when(mOnboardingDetails.getSubflowsByStatus(SubflowStatus.INCOMPLETE))
                 .thenReturn(mTwoSubflowSteps);
 
@@ -132,8 +126,7 @@ public class OnboardingFlowActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldFinishOnboardingFlowByLaunchingSplash() throws Exception
-    {
+    public void shouldFinishOnboardingFlowByLaunchingSplash() throws Exception {
         mActivityController.create().resume();
 
         Intent nextStartedActivity = shadowOf(mActivityController.get()).getNextStartedActivity();
@@ -147,8 +140,7 @@ public class OnboardingFlowActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldFinishAndLaunchSplashOnCancelOnboardingFlow() throws Exception
-    {
+    public void shouldFinishAndLaunchSplashOnCancelOnboardingFlow() throws Exception {
         mActivityController.create().resume();
 
         Intent nextStartedActivity =
@@ -164,8 +156,7 @@ public class OnboardingFlowActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldFinishAndNotLaunchSplashOnForceCancelOnboardingFlow() throws Exception
-    {
+    public void shouldFinishAndNotLaunchSplashOnForceCancelOnboardingFlow() throws Exception {
         when(mOnboardingDetails.getSubflowsByStatus(SubflowStatus.INCOMPLETE))
                 .thenReturn(mTwoSubflowSteps);
 
@@ -183,8 +174,7 @@ public class OnboardingFlowActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldSaveAndForwardSuppliesAndClaimsInfo() throws Exception
-    {
+    public void shouldSaveAndForwardSuppliesAndClaimsInfo() throws Exception {
         when(mOnboardingDetails.getSubflowsByStatus(SubflowStatus.INCOMPLETE))
                 .thenReturn(mTwoSubflowSteps);
 
@@ -205,13 +195,12 @@ public class OnboardingFlowActivityTest extends RobolectricGradleTestWrapper
         assertThat(((ArrayList<Booking>) nextStartedActivity
                 .getSerializableExtra(BundleKeys.BOOKINGS)).get(0), equalTo(mockBooking));
         assertThat((SuppliesOrderInfo) nextStartedActivity
-                .getSerializableExtra(BundleKeys.SUPPLIES_ORDER_INFO),
+                        .getSerializableExtra(BundleKeys.SUPPLIES_ORDER_INFO),
                 equalTo(mockSuppliesOrderInfo));
     }
 
     @Test
-    public void shouldRetainState() throws Exception
-    {
+    public void shouldRetainState() throws Exception {
         when(mOnboardingDetails.getSubflowsByStatus(SubflowStatus.INCOMPLETE))
                 .thenReturn(mThreeSubflowSteps);
 

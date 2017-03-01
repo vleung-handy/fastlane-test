@@ -8,44 +8,36 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ProviderAvailability implements Serializable
-{
+public class ProviderAvailability implements Serializable {
     @SerializedName("weekly_timelines")
     private ArrayList<WeeklyAvailabilityTimelinesWrapper> mWeeklyAvailabilityTimelinesWrappers;
 
-    public ArrayList<WeeklyAvailabilityTimelinesWrapper> getWeeklyAvailabilityTimelinesWrappers()
-    {
+    public ArrayList<WeeklyAvailabilityTimelinesWrapper> getWeeklyAvailabilityTimelinesWrappers() {
         return mWeeklyAvailabilityTimelinesWrappers;
     }
 
     @Nullable
-    public DailyAvailabilityTimeline getAvailabilityForDate(final Date date)
-    {
+    public DailyAvailabilityTimeline getAvailabilityForDate(final Date date) {
         final WeeklyAvailabilityTimelinesWrapper weeklyAvailabilityTimelinesWrapper =
                 getWeeklyAvailabilityForDate(date);
-        if (weeklyAvailabilityTimelinesWrapper != null)
-        {
+        if (weeklyAvailabilityTimelinesWrapper != null) {
             return weeklyAvailabilityTimelinesWrapper.getAvailabilityForDate(date);
         }
         return null;
     }
 
     @Nullable
-    public WeeklyAvailabilityTimelinesWrapper getWeeklyAvailabilityForDate(final Date date)
-    {
+    public WeeklyAvailabilityTimelinesWrapper getWeeklyAvailabilityForDate(final Date date) {
         for (WeeklyAvailabilityTimelinesWrapper weeklyAvailabilityTimelinesWrapper :
-                mWeeklyAvailabilityTimelinesWrappers)
-        {
-            if (weeklyAvailabilityTimelinesWrapper.covers(date))
-            {
+                mWeeklyAvailabilityTimelinesWrappers) {
+            if (weeklyAvailabilityTimelinesWrapper.covers(date)) {
                 return weeklyAvailabilityTimelinesWrapper;
             }
         }
         return null;
     }
 
-    public boolean covers(final Date date)
-    {
+    public boolean covers(final Date date) {
         return getWeeklyAvailabilityForDate(date) != null;
     }
 }

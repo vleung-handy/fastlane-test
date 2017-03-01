@@ -20,14 +20,12 @@ import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
-public class HandyPushReceiver extends BaseIntentReceiver
-{
+public class HandyPushReceiver extends BaseIntentReceiver {
     @Inject
     EventBus mBus;
 
     @Override
-    public void onReceive(final Context context, final Intent intent)
-    {
+    public void onReceive(final Context context, final Intent intent) {
         Utils.inject(context, this);
         super.onReceive(context, intent);
     }
@@ -36,26 +34,22 @@ public class HandyPushReceiver extends BaseIntentReceiver
 
     @Override
     protected void onChannelRegistrationSucceeded(@NonNull Context context,
-                                                  @NonNull String s)
-    {
+                                                  @NonNull String s) {
     }
 
     @Override
-    protected void onChannelRegistrationFailed(@NonNull Context context)
-    {
+    protected void onChannelRegistrationFailed(@NonNull Context context) {
     }
 
     @Override
     protected void onPushReceived(@NonNull Context context,
                                   @NonNull PushMessage pushMessage,
-                                  int notificationId)
-    {
+                                  int notificationId) {
         final EventLog eventLog = new PushNotificationLog.Received(pushMessage);
         mBus.post(new LogEvent.AddLogEvent(eventLog));
         final Bundle pushBundle = pushMessage.getPushBundle();
         final String type = pushBundle.getString(BundleKeys.HANDY_PUSH_TYPE, "");
-        switch (type)
-        {
+        switch (type) {
             case TYPE_LOCATION_PING:
                 final Intent intent = new Intent(context, LocationPingService.class);
                 final String eventName = pushBundle.getString(BundleKeys.EVENT_NAME);
@@ -69,27 +63,23 @@ public class HandyPushReceiver extends BaseIntentReceiver
 
     @Override
     protected void onBackgroundPushReceived(@NonNull Context context,
-                                            @NonNull PushMessage pushMessage)
-    { }
+                                            @NonNull PushMessage pushMessage) { }
 
     @Override
     protected boolean onNotificationOpened(@NonNull Context context,
                                            @NonNull PushMessage pushMessage,
-                                           int notificationId)
-    {
+                                           int notificationId) {
         final EventLog eventLog = new PushNotificationLog.Opened(pushMessage);
         mBus.post(new LogEvent.AddLogEvent(eventLog));
 
         final Bundle pushBundle = pushMessage.getPushBundle();
         final String deeplink = pushBundle.getString(BundleKeys.DEEPLINK);
-        if (deeplink != null)
-        {
+        if (deeplink != null) {
             // BaseActivity will preserve the bundle through activity launches
             launchSplashActivityWithDeeplinkData(context, pushBundle);
             return true;
         }
-        else
-        {
+        else {
             return false;
         }
     }
@@ -99,22 +89,19 @@ public class HandyPushReceiver extends BaseIntentReceiver
                                                  @NonNull PushMessage pushMessage,
                                                  int notificationId,
                                                  @NonNull String buttonId,
-                                                 boolean isForeground)
-    { return false; }
+                                                 boolean isForeground) { return false; }
 
     @Override
     protected void onNotificationDismissed(
             @NonNull final Context context,
             @NonNull final PushMessage pushMessage,
-            final int notificationId)
-    {
+            final int notificationId) {
         final EventLog eventLog = new PushNotificationLog.Dismissed(pushMessage);
         mBus.post(new LogEvent.AddLogEvent(eventLog));
     }
 
     private static void launchSplashActivityWithDeeplinkData(@NonNull final Context context,
-                                                             @NonNull final Bundle deeplinkData)
-    {
+                                                             @NonNull final Bundle deeplinkData) {
         final Intent intent = new Intent(context, SplashActivity.class);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK |
                 Intent.FLAG_ACTIVITY_CLEAR_TOP);

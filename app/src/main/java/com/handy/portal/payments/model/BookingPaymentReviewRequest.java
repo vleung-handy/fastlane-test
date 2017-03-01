@@ -5,8 +5,7 @@ import com.google.gson.annotations.SerializedName;
 /**
  * a payment review request for a booking payment transaction
  */
-public class BookingPaymentReviewRequest
-{
+public class BookingPaymentReviewRequest {
     /**
      * the id of the booking payment transaction to review
      */
@@ -30,8 +29,7 @@ public class BookingPaymentReviewRequest
                                        final String bookingType,
                                        final String paymentSupportItemMachineName,
                                        final String otherInfo
-    )
-    {
+    ) {
         mBookingId = bookingId;
         mBookingType = bookingType;
         mPaymentSupportItemMachineName = paymentSupportItemMachineName;

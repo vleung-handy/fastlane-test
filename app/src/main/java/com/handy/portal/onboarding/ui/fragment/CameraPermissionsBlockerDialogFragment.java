@@ -22,8 +22,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
-public class CameraPermissionsBlockerDialogFragment extends InjectedDialogFragment
-{
+public class CameraPermissionsBlockerDialogFragment extends InjectedDialogFragment {
     @Inject
     EventBus mBus;
 
@@ -33,30 +32,24 @@ public class CameraPermissionsBlockerDialogFragment extends InjectedDialogFragme
 
 
     @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setCancelable(false);
 
         Bundle args = getArguments();
-        if (args != null && !args.isEmpty())
-        {
+        if (args != null && !args.isEmpty()) {
             mUrl = args.getString(BundleKeys.JUMIO_URL);
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return new JumioCameraDialogBlockerView(getContext(), mBus)
                 .setUrl(mUrl)
-                .setActionButton(R.string.open_settings_now, new View.OnClickListener()
-                {
+                .setActionButton(R.string.open_settings_now, new View.OnClickListener() {
                     @Override
-                    public void onClick(final View v)
-                    {
-                        if (mBus != null)
-                        {
+                    public void onClick(final View v) {
+                        if (mBus != null) {
                             mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.CameraSettingsOpenedLog()));
                         }
 
@@ -70,11 +63,9 @@ public class CameraPermissionsBlockerDialogFragment extends InjectedDialogFragme
     }
 
     @Override
-    public void onStart()
-    {
+    public void onStart() {
         super.onStart();
-        if (getDialog().getWindow() != null)
-        {
+        if (getDialog().getWindow() != null) {
             getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
     }

@@ -4,8 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class StatusHeader implements Serializable
-{
+public class StatusHeader implements Serializable {
     @SerializedName("title")
     private String mTitle;
     @SerializedName("description")
@@ -13,23 +12,19 @@ public class StatusHeader implements Serializable
     @SerializedName("image")
     private ImageType mImageType;
 
-    public String getTitle()
-    {
+    public String getTitle() {
         return mTitle;
     }
 
-    public String getDescription()
-    {
+    public String getDescription() {
         return mDescription;
     }
 
-    public ImageType getImageType()
-    {
+    public ImageType getImageType() {
         return mImageType;
     }
 
-    public enum ImageType
-    {
+    public enum ImageType {
         @SerializedName("avatar-welcome")
         WELCOME,
         @SerializedName("avatar-complete")

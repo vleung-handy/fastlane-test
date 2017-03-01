@@ -20,8 +20,7 @@ import com.handy.portal.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class TabButton extends FrameLayout
-{
+public class TabButton extends FrameLayout {
     @BindView(R.id.tab_icon)
     ImageView mTabIcon;
     @BindView(R.id.tab_title)
@@ -30,29 +29,24 @@ public class TabButton extends FrameLayout
     TextView mTabUnreadCount;
     private TabButtonGroup mGroup;
 
-    public TabButton(final Context context)
-    {
+    public TabButton(final Context context) {
         super(context);
     }
 
-    public TabButton(final Context context, final AttributeSet attrs)
-    {
+    public TabButton(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public TabButton(final Context context, final AttributeSet attrs, final int defStyleAttr)
-    {
+    public TabButton(final Context context, final AttributeSet attrs, final int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
     @TargetApi(Build.VERSION_CODES.LOLLIPOP)
-    public TabButton(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes)
-    {
+    public TabButton(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
 
-    public TabButton init(@StringRes final int titleResId, @DrawableRes final int iconResId)
-    {
+    public TabButton init(@StringRes final int titleResId, @DrawableRes final int iconResId) {
         removeAllViews();
         final View view = inflate(getContext(), R.layout.element_tab, this);
         ButterKnife.bind(this, view);
@@ -70,19 +64,16 @@ public class TabButton extends FrameLayout
         return this;
     }
 
-    public void setUnreadCount(final int unreadCount)
-    {
+    public void setUnreadCount(final int unreadCount) {
         mTabUnreadCount.setVisibility(unreadCount > 0 ? VISIBLE : GONE);
         String unreadCountText = String.valueOf(unreadCount);
-        if (unreadCount > 99)
-        {
+        if (unreadCount > 99) {
             unreadCountText = "99+";
         }
         mTabUnreadCount.setText(unreadCountText);
     }
 
-    private Drawable getSelectableItemBackgroundDrawable()
-    {
+    private Drawable getSelectableItemBackgroundDrawable() {
         int[] attrs = new int[]{R.attr.selectableItemBackground};
         final TypedArray typedArray = getContext().obtainStyledAttributes(attrs);
         final Drawable drawable = typedArray.getDrawable(0);
@@ -90,18 +81,15 @@ public class TabButton extends FrameLayout
         return drawable;
     }
 
-    public void setGroup(final TabButtonGroup group)
-    {
+    public void setGroup(final TabButtonGroup group) {
         mGroup = group;
     }
 
-    public void toggle()
-    {
+    public void toggle() {
         mGroup.toggle(this);
     }
 
-    public void dim(final float alpha)
-    {
+    public void dim(final float alpha) {
         mTabIcon.setAlpha(alpha);
         mTabTitle.setAlpha(alpha);
     }

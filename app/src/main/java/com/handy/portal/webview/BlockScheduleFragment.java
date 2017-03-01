@@ -10,22 +10,19 @@ import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 
 import javax.inject.Inject;
 
-public class BlockScheduleFragment extends PortalWebViewFragment
-{
+public class BlockScheduleFragment extends PortalWebViewFragment {
     @Inject
     ProviderManager mProviderManager;
     @Inject
     HandyRetrofitEndpoint mEndpoint;
 
     @Override
-    protected MainViewPage getAppPage()
-    {
+    protected MainViewPage getAppPage() {
         return MainViewPage.BLOCK_PRO_WEBVIEW;
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Bundle args = getArguments();
         String url = mEndpoint.getBaseUrl() + "providers/" + mProviderManager.getLastProviderId() + "/provider_schedules";
@@ -33,8 +30,7 @@ public class BlockScheduleFragment extends PortalWebViewFragment
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         setActionBar(R.string.block_jobs_schedule, false);
     }

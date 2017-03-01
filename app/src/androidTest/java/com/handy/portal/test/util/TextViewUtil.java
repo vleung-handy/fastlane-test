@@ -13,15 +13,12 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 /**
  * utility class containing non-app-specific methods to check for certain TextView states
  */
-public class TextViewUtil
-{
-    public static void updateEditTextView(int viewResourceId, String newText)
-    {
+public class TextViewUtil {
+    public static void updateEditTextView(int viewResourceId, String newText) {
         onView(withId(viewResourceId)).perform(click(), replaceText(newText), closeSoftKeyboard());
     }
 
-    public static void assertViewHasText(int viewResourceId, String expectedText)
-    {
+    public static void assertViewHasText(int viewResourceId, String expectedText) {
         onView(withId(viewResourceId)).check(matches(withText(expectedText)));
     }
 
@@ -32,10 +29,8 @@ public class TextViewUtil
      *
      * @param testFieldSet
      */
-    public static void updateFieldValues(TestField[] testFieldSet)
-    {
-        for (TestField testField : testFieldSet)
-        {
+    public static void updateFieldValues(TestField[] testFieldSet) {
+        for (TestField testField : testFieldSet) {
             TextViewUtil.updateEditTextView(testField.getViewResourceId(), testField.getValue());
         }
     }
@@ -47,10 +42,8 @@ public class TextViewUtil
      *
      * @param testFieldSet
      */
-    public static void assertFieldValues(TestField[] testFieldSet)
-    {
-        for (TestField testField : testFieldSet)
-        {
+    public static void assertFieldValues(TestField[] testFieldSet) {
+        for (TestField testField : testFieldSet) {
             TextViewUtil.assertViewHasText(testField.getViewResourceId(), testField.getValue());
         }
     }

@@ -13,8 +13,7 @@ import com.handy.portal.payments.model.PaymentGroup;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PaymentsDetailGroupView extends LinearLayout
-{
+public class PaymentsDetailGroupView extends LinearLayout {
 
     @BindView(R.id.payments_detail_group_title_text)
     protected TextView titleText;
@@ -22,25 +21,21 @@ public class PaymentsDetailGroupView extends LinearLayout
     @BindView(R.id.payments_detail_group_payments_text)
     protected TextView paymentsText;
 
-    public PaymentsDetailGroupView(Context context)
-    {
+    public PaymentsDetailGroupView(Context context) {
         super(context);
     }
 
-    public PaymentsDetailGroupView(Context context, AttributeSet attributeSet)
-    {
+    public PaymentsDetailGroupView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
 
     @Override
-    protected void onFinishInflate()
-    {
+    protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.bind(this);
     }
 
-    public void updateDisplay(PaymentGroup paymentGroup, NeoPaymentBatch paymentBatch)
-    {
+    public void updateDisplay(PaymentGroup paymentGroup, NeoPaymentBatch paymentBatch) {
         titleText.setText(getResources().getString(R.string.payment_detail_list_group_header, paymentGroup.getLabel(), paymentGroup.getPayments().length));
         paymentsText.setText(CurrencyUtils.formatPriceWithCents(paymentGroup.getAmount(), paymentBatch.getCurrencySymbol()));
     }

@@ -4,97 +4,79 @@ import com.handy.portal.core.model.ProviderSettings;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.library.util.IDVerificationUtils;
 
-public class ProviderSettingsEvent extends HandyEvent
-{
+public class ProviderSettingsEvent extends HandyEvent {
     public static class RequestProviderSettings extends RequestEvent {}
 
 
-    public static class ReceiveProviderSettingsSuccess extends ReceiveSuccessEvent
-    {
+    public static class ReceiveProviderSettingsSuccess extends ReceiveSuccessEvent {
         private ProviderSettings mProviderSettings;
 
-        public ReceiveProviderSettingsSuccess(ProviderSettings providerSettings)
-        {
+        public ReceiveProviderSettingsSuccess(ProviderSettings providerSettings) {
             mProviderSettings = providerSettings;
         }
 
-        public ProviderSettings getProviderSettings()
-        {
+        public ProviderSettings getProviderSettings() {
             return mProviderSettings;
         }
     }
 
 
-    public static class ReceiveProviderSettingsError extends ReceiveErrorEvent
-    {
-        public ReceiveProviderSettingsError(DataManager.DataManagerError error)
-        {
+    public static class ReceiveProviderSettingsError extends ReceiveErrorEvent {
+        public ReceiveProviderSettingsError(DataManager.DataManagerError error) {
             this.error = error;
         }
     }
 
 
-    public static class RequestProviderSettingsUpdate extends RequestEvent
-    {
+    public static class RequestProviderSettingsUpdate extends RequestEvent {
         private final ProviderSettings mProviderSettings;
 
-        public RequestProviderSettingsUpdate(ProviderSettings providerSettings)
-        {
+        public RequestProviderSettingsUpdate(ProviderSettings providerSettings) {
             mProviderSettings = providerSettings;
         }
 
-        public ProviderSettings getProviderSettings()
-        {
+        public ProviderSettings getProviderSettings() {
             return mProviderSettings;
         }
     }
 
 
-    public static class ReceiveProviderSettingsUpdateSuccess extends ReceiveSuccessEvent
-    {
+    public static class ReceiveProviderSettingsUpdateSuccess extends ReceiveSuccessEvent {
         private ProviderSettings mProviderSettings;
 
-        public ReceiveProviderSettingsUpdateSuccess(ProviderSettings providerSettings)
-        {
+        public ReceiveProviderSettingsUpdateSuccess(ProviderSettings providerSettings) {
             mProviderSettings = providerSettings;
         }
 
-        public ProviderSettings getProviderSettings()
-        {
+        public ProviderSettings getProviderSettings() {
             return mProviderSettings;
         }
     }
 
 
-    public static class ReceiveProviderSettingsUpdateError extends ReceiveErrorEvent
-    {
-        public ReceiveProviderSettingsUpdateError(DataManager.DataManagerError error)
-        {
+    public static class ReceiveProviderSettingsUpdateError extends ReceiveErrorEvent {
+        public ReceiveProviderSettingsUpdateError(DataManager.DataManagerError error) {
             this.error = error;
         }
     }
 
 
     // No success or error callbacks for now
-    public static class RequestIdVerificationStart extends RequestEvent
-    {
+    public static class RequestIdVerificationStart extends RequestEvent {
         private final String mBeforeIdVerificationStartUrl;
 
-        public RequestIdVerificationStart(final String beforeIdVerificationStartUrl)
-        {
+        public RequestIdVerificationStart(final String beforeIdVerificationStartUrl) {
             mBeforeIdVerificationStartUrl = beforeIdVerificationStartUrl;
         }
 
-        public String getBeforeIdVerificationStartUrl()
-        {
+        public String getBeforeIdVerificationStartUrl() {
             return mBeforeIdVerificationStartUrl;
         }
     }
 
 
     // No success or error callbacks for now
-    public static class RequestIdVerificationFinish extends RequestEvent
-    {
+    public static class RequestIdVerificationFinish extends RequestEvent {
         private final String mAfterIdVerificationFinishUrl;
         private final String mScanReference;
         @IDVerificationUtils.IdVerificationStatus
@@ -102,26 +84,22 @@ public class ProviderSettingsEvent extends HandyEvent
 
         public RequestIdVerificationFinish(final String afterIdVerificationFinishUrl,
                                            final String scanReference,
-                                           @IDVerificationUtils.IdVerificationStatus final String status)
-        {
+                                           @IDVerificationUtils.IdVerificationStatus final String status) {
             mAfterIdVerificationFinishUrl = afterIdVerificationFinishUrl;
             mScanReference = scanReference;
             mStatus = status;
         }
 
-        public String getAfterIdVerificationFinishUrl()
-        {
+        public String getAfterIdVerificationFinishUrl() {
             return mAfterIdVerificationFinishUrl;
         }
 
-        public String getScanReference()
-        {
+        public String getScanReference() {
             return mScanReference;
         }
 
         @IDVerificationUtils.IdVerificationStatus
-        public String getStatus()
-        {
+        public String getStatus() {
             return mStatus;
         }
     }

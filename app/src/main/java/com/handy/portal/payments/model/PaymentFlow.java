@@ -2,8 +2,7 @@ package com.handy.portal.payments.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class PaymentFlow
-{
+public class PaymentFlow {
     public static final String STATUS_NEW = "new";
     public static final String STATUS_VALIDATED = "validated";
     public static final String STATUS_VERIFIED = "verified";
@@ -24,24 +23,20 @@ public class PaymentFlow
     @SerializedName("status")
     private String status;
 
-    public String getAccountDetails()
-    {
+    public String getAccountDetails() {
         return accountDetails;
     }
 
-    public String getStatus()
-    {
+    public String getStatus() {
         return status;
     }
 
-    public boolean isBankAccount()
-    {
+    public boolean isBankAccount() {
         return processorName != null
                 && processorName.equalsIgnoreCase(PROCESSOR_STRIPE_CONNECT);
     }
 
-    public boolean isDebitCard()
-    {
+    public boolean isDebitCard() {
         return processorName != null
                 && processorName.equalsIgnoreCase(PROCESSOR_STRIPE_CONNECT_DEBIT);
     }

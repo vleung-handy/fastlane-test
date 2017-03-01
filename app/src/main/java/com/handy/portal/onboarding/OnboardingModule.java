@@ -28,6 +28,5 @@ import dagger.Module;
                 OnboardingStatusFragment.class,
                 NewPurchaseSuppliesFragment.class,
         })
-public class OnboardingModule
-{
+public class OnboardingModule {
 }

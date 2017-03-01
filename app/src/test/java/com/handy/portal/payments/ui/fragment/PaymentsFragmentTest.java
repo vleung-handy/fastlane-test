@@ -17,21 +17,18 @@ import org.robolectric.shadows.support.v4.SupportFragmentTestUtil;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
-{
+public class PaymentsFragmentTest extends RobolectricGradleTestWrapper {
     private PaymentsFragment mFragment;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         ((TestBaseApplication) ShadowApplication.getInstance().getApplicationContext()).inject(this);
         mFragment = new PaymentsFragment();
         SupportFragmentTestUtil.startFragment(mFragment, MainActivity.class);
     }
 
     @Test
-    public void shouldHaveCorrectTitleOnActionBar() throws Exception
-    {
+    public void shouldHaveCorrectTitleOnActionBar() throws Exception {
         ActionBar actionBar = ((AppCompatActivity) mFragment.getActivity()).getSupportActionBar();
         assertNotNull(actionBar);
         assertEquals(mFragment.getString(R.string.payments), actionBar.getTitle());
@@ -39,8 +36,7 @@ public class PaymentsFragmentTest extends RobolectricGradleTestWrapper
 
     @Test
     @Ignore
-    public void shouldRedirectToHelpCenterWhenHelpIconIsClicked() throws Exception
-    {
+    public void shouldRedirectToHelpCenterWhenHelpIconIsClicked() throws Exception {
         //TODO: Implement this
     }
 

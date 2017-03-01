@@ -23,8 +23,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
-public class PurchaseSuppliesFragment extends OnboardingSubflowUIFragment
-{
+public class PurchaseSuppliesFragment extends OnboardingSubflowUIFragment {
     @BindView(R.id.cost_summary)
     SimpleContentLayout mCostSummary;
     @BindView(R.id.delivery_summary)
@@ -34,8 +33,7 @@ public class PurchaseSuppliesFragment extends OnboardingSubflowUIFragment
 
     private SuppliesInfo mSuppliesInfo;
 
-    public static PurchaseSuppliesFragment newInstance()
-    {
+    public static PurchaseSuppliesFragment newInstance() {
         final PurchaseSuppliesFragment fragment = new PurchaseSuppliesFragment();
         final Bundle arguments = new Bundle();
         fragment.setArguments(arguments);
@@ -43,22 +41,19 @@ public class PurchaseSuppliesFragment extends OnboardingSubflowUIFragment
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSuppliesInfo = mSubflowData.getSuppliesInfo();
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         final SuppliesSection costSection = mSuppliesInfo.getCostSection();
         final SuppliesSection deliverySection = mSuppliesInfo.getDeliverySection();
         final SuppliesSection productsSection = mSuppliesInfo.getProductsSection();
 
-        if (costSection == null || deliverySection == null || productsSection == null)
-        {
+        if (costSection == null || deliverySection == null || productsSection == null) {
             Crashlytics.logException(new NullPointerException());
             return;
         }
@@ -68,21 +63,17 @@ public class PurchaseSuppliesFragment extends OnboardingSubflowUIFragment
 
         final StringBuilder productsStringBuilder = new StringBuilder();
         final List<String> products = productsSection.getList();
-        for (int i = 0; i < products.size(); i++)
-        {
+        for (int i = 0; i < products.size(); i++) {
             productsStringBuilder.append(" ⋅ ").append(products.get(i));
-            if (i < products.size() - 1)
-            {
+            if (i < products.size() - 1) {
                 productsStringBuilder.append("\n");
             }
         }
         mProductsSummary.setContent(productsSection.getTitle(), productsStringBuilder.toString())
-                .collapse(getString(R.string.see_products), new Runnable()
-                {
+                .collapse(getString(R.string.see_products), new Runnable() {
 
                     @Override
-                    public void run()
-                    {
+                    public void run() {
                         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                                 NativeOnboardingLog.Types.PRODUCTS_LIST_SHOWN)));
                     }
@@ -93,58 +84,49 @@ public class PurchaseSuppliesFragment extends OnboardingSubflowUIFragment
     }
 
     @Override
-    protected int getButtonType()
-    {
+    protected int getButtonType() {
         return ButtonTypes.DOUBLE;
     }
 
     @Override
-    protected int getLayoutResId()
-    {
+    protected int getLayoutResId() {
         return R.layout.view_purchase_supplies;
     }
 
     @Override
-    protected String getTitle()
-    {
+    protected String getTitle() {
         return getString(R.string.purchase_supplies);
     }
 
     @Override
-    protected String getHeaderText()
-    {
+    protected String getHeaderText() {
         return getString(R.string.do_you_want_supplies);
     }
 
     @Override
-    protected String getSubHeaderText()
-    {
+    protected String getSubHeaderText() {
         return null;
     }
 
     @Override
-    protected String getPrimaryButtonText()
-    {
+    protected String getPrimaryButtonText() {
         return getString(R.string.yes_supply_kit);
     }
 
     @Override
-    protected String getSecondaryButtonText()
-    {
+    protected String getSecondaryButtonText() {
         return getString(R.string.no_supply_kit);
     }
 
     @Override
-    protected void onPrimaryButtonClicked()
-    {
+    protected void onPrimaryButtonClicked() {
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                 NativeOnboardingLog.Types.PURCHASE_SUPPLIES_SELECTED)));
         next(PurchaseSuppliesConfirmationFragment.newInstance());
     }
 
     @Override
-    protected void onSecondaryButtonClicked()
-    {
+    protected void onSecondaryButtonClicked() {
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                 NativeOnboardingLog.Types.DECLINE_SUPPLIES_SELECTED)));
         final DeclineSuppliesDialogFragment fragment = DeclineSuppliesDialogFragment.newInstance();
@@ -154,12 +136,9 @@ public class PurchaseSuppliesFragment extends OnboardingSubflowUIFragment
     }
 
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
-    {
-        if (resultCode == Activity.RESULT_OK)
-        {
-            switch (requestCode)
-            {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            switch (requestCode) {
                 case RequestCode.DECLINE_SUPPLIES:
                     declineSupplies();
                     break;
@@ -167,8 +146,7 @@ public class PurchaseSuppliesFragment extends OnboardingSubflowUIFragment
         }
     }
 
-    private void declineSupplies()
-    {
+    private void declineSupplies() {
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                 NativeOnboardingLog.Types.DECLINE_SUPPLIES_CONFIRMED)));
         bus.post(new HandyEvent.RequestOnboardingSupplies(false));

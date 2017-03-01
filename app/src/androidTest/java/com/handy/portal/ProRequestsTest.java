@@ -28,17 +28,14 @@ import static org.hamcrest.Matchers.anything;
 
 //note that animations should be disabled on the device running these tests
 @RunWith(AndroidJUnit4.class)
-public class ProRequestsTest
-{
+public class ProRequestsTest {
     private static final TestUser TEST_USER = TestUsers.BOOKINGS_NY_PROVIDER;
 
     @Rule
     public ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<SplashActivity>(
-            SplashActivity.class)
-    {
+            SplashActivity.class) {
         @Override
-        protected Intent getActivityIntent()
-        {
+        protected Intent getActivityIntent() {
             Intent intent = super.getActivityIntent();
             intent.putExtra(PrefsKey.AUTH_TOKEN, TEST_USER.getPersistenceToken());
             return intent;
@@ -46,8 +43,7 @@ public class ProRequestsTest
     };
 
     @After
-    public void tearDown()
-    {
+    public void tearDown() {
         AppInteractionUtil.logOut();
     }
 
@@ -55,15 +51,14 @@ public class ProRequestsTest
      * - verifies that the pro requests inbox unread count is 3
      * - navigates to pro requests inbox
      * - for the 2nd element of the second day:
-     *      - clicks on it
-     *      - claims the job
+     * - clicks on it
+     * - claims the job
      * - verifies that the scheduled jobs screen shows
      * - verifies that the claimed job shows
      */
     @Ignore // TODO: Figure out how to test with RecyclerView
     @Test
-    public void testProRequestsInbox()
-    {
+    public void testProRequestsInbox() {
         ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
 
         ViewUtil.waitForViewNotVisible(R.id.loading_overlay, ViewUtil.LONG_MAX_WAIT_TIME_MS);
@@ -87,8 +82,8 @@ public class ProRequestsTest
         //click on the 2nd item of the 2nd day
         DataInteraction dataItemInteraction =
                 onData(anything()) //specifying a constraint doesn't work. why?
-                .inAdapterView(withId(R.id.fragment_pro_requested_jobs_recycler_view))
-                .atPosition(4); //actually data item #3 in the expandable list view, because there are 2 group headers
+                        .inAdapterView(withId(R.id.fragment_pro_requested_jobs_recycler_view))
+                        .atPosition(4); //actually data item #3 in the expandable list view, because there are 2 group headers
 
         dataItemInteraction.perform(click());
 
@@ -111,9 +106,9 @@ public class ProRequestsTest
 
         //confirm that a booking is there
         onData(anything())
-            .inAdapterView(withId(R.id.scheduled_jobs_list_view))
-            .atPosition(0)
-            .check(matches(isDisplayed()));
+                .inAdapterView(withId(R.id.scheduled_jobs_list_view))
+                .atPosition(0)
+                .check(matches(isDisplayed()));
 
     }
 }

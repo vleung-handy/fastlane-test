@@ -19,21 +19,18 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class SupportActionViewTest extends RobolectricGradleTestWrapper
-{
+public class SupportActionViewTest extends RobolectricGradleTestWrapper {
     SupportActionView mView;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         Booking.Action action = mock(Booking.Action.class);
         when(action.getActionName()).thenReturn(Booking.Action.ACTION_NOTIFY_EARLY);
         mView = new SupportActionView(RuntimeEnvironment.application, action);
     }
 
     @Test
-    public void shouldTriggerBusEventWhenClicked()
-    {
+    public void shouldTriggerBusEventWhenClicked() {
         View view = mView.findViewById(R.id.support_action);
         view.performClick();
 

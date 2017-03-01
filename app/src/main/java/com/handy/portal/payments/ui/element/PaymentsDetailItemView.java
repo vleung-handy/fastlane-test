@@ -15,8 +15,7 @@ import com.handy.portal.payments.model.Payment;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PaymentsDetailItemView extends LinearLayout
-{
+public class PaymentsDetailItemView extends LinearLayout {
 
     @BindView(R.id.payments_detail_month_text)
     protected TextView monthText;
@@ -33,25 +32,21 @@ public class PaymentsDetailItemView extends LinearLayout
     @BindView(R.id.payments_detail_payment_text)
     protected TextView paymentText;
 
-    public PaymentsDetailItemView(Context context)
-    {
+    public PaymentsDetailItemView(Context context) {
         super(context);
     }
 
-    public PaymentsDetailItemView(Context context, AttributeSet attributeSet)
-    {
+    public PaymentsDetailItemView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
 
     @Override
-    protected void onFinishInflate()
-    {
+    protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.bind(this);
     }
 
-    public void updateDisplay(Payment payment, NeoPaymentBatch parentBatch)
-    {
+    public void updateDisplay(Payment payment, NeoPaymentBatch parentBatch) {
         monthText.setText(DateTimeUtils.getMonthShortName(payment.getDate()));
         dateText.setText(Integer.toString(DateTimeUtils.getDayOfMonth(payment.getDate())));
         locationText.setText(payment.getTitle());

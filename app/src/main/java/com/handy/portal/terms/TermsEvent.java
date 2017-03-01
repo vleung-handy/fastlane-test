@@ -7,42 +7,34 @@ import com.handy.portal.core.event.HandyEvent;
 /**
  * events used by the bus
  */
-abstract class TermsEvent
-{
-    static class AcceptTerms extends HandyEvent.AnalyticsEvent
-    {
+abstract class TermsEvent {
+    static class AcceptTerms extends HandyEvent.AnalyticsEvent {
         private final String mTermsCode;
         private final TermsDetails mTermsDetails;
 
-        AcceptTerms(@NonNull TermsDetails termsDetails)
-        {
+        AcceptTerms(@NonNull TermsDetails termsDetails) {
             mTermsDetails = termsDetails;
             mTermsCode = termsDetails.getCode();
         }
 
-        TermsDetails getTermsDetails()
-        {
+        TermsDetails getTermsDetails() {
             return mTermsDetails;
         }
     }
 
 
-    static class AcceptTermsError extends HandyEvent.AnalyticsEvent
-    {
+    static class AcceptTermsError extends HandyEvent.AnalyticsEvent {
     }
 
 
-    static class AcceptTermsSuccess extends HandyEvent
-    {
+    static class AcceptTermsSuccess extends HandyEvent {
         private final String mTermsCode;
 
-        AcceptTermsSuccess(String termsCode)
-        {
+        AcceptTermsSuccess(String termsCode) {
             mTermsCode = termsCode;
         }
 
-        public String getTermsCode()
-        {
+        public String getTermsCode() {
             return mTermsCode;
         }
     }

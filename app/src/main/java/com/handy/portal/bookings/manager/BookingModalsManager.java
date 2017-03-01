@@ -16,31 +16,26 @@ import javax.inject.Inject;
  * <p>
  * i.e. bookings for day unlocked modal
  */
-public class BookingModalsManager
-{
+public class BookingModalsManager {
     private final EventBus mBus;
     private final PrefsManager mPrefsManager;
 
     @Inject
-    public BookingModalsManager(final EventBus bus, final PrefsManager prefsManager)
-    {
+    public BookingModalsManager(final EventBus bus, final PrefsManager prefsManager) {
         mBus = bus;
         mPrefsManager = prefsManager;
     }
 
     public BookingsForDaysAheadModalsManager getBookingsForDayModalsManager(
             @NonNull BookingsForDaysAheadModalsManager.BookingsForDaysAheadModalType modalType,
-            @NonNull Date bookingsDay)
-    {
+            @NonNull Date bookingsDay) {
         Date currentDate = new Date();
         int numDaysAhead = DateTimeUtils.daysBetween(currentDate, bookingsDay) + 1;
         return new BookingsForDaysAheadModalsManager(modalType, numDaysAhead, mPrefsManager);
     }
 
-    public static class BookingsForDaysAheadModalsManager
-    {
-        public enum BookingsForDaysAheadModalType
-        {
+    public static class BookingsForDaysAheadModalsManager {
+        public enum BookingsForDaysAheadModalType {
             UNLOCKED_MODAL,
             UNLOCKED_TRIAL_MODAL
         }
@@ -53,38 +48,32 @@ public class BookingModalsManager
         public BookingsForDaysAheadModalsManager(
                 @NonNull BookingsForDaysAheadModalType bookingsForDaysAheadModalType,
                 @NonNull int numDaysAhead,
-                @NonNull PrefsManager prefsManager)
-        {
+                @NonNull PrefsManager prefsManager) {
             mBookingsForDaysAheadModalType = bookingsForDaysAheadModalType;
             mNumDaysAhead = numDaysAhead;
             mPrefsManager = prefsManager;
         }
 
         @NonNull
-        public PrefsManager getPrefsManager()
-        {
+        public PrefsManager getPrefsManager() {
             return mPrefsManager;
         }
 
-        private String getModalShownPrefsKey()
-        {
+        private String getModalShownPrefsKey() {
             return mNumDaysAhead + "_DAYS_AHEAD_" + mBookingsForDaysAheadModalType + "_SHOWN";
         }
 
-        public boolean bookingsForDayModalPreviouslyShown()
-        {
+        public boolean bookingsForDayModalPreviouslyShown() {
             String prefsKey = getModalShownPrefsKey();
             return mPrefsManager.getSecureBoolean(prefsKey, false);
         }
 
-        public void onBookingsForDayModalShown()
-        {
+        public void onBookingsForDayModalShown() {
             String prefsKey = getModalShownPrefsKey();
             mPrefsManager.setSecureBoolean(prefsKey, true);
         }
 
-        public void resetModalShownStatus()
-        {
+        public void resetModalShownStatus() {
             String prefsKey = getModalShownPrefsKey();
             mPrefsManager.setSecureBoolean(prefsKey, false);
         }

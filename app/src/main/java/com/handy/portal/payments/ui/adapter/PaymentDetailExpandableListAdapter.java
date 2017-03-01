@@ -12,75 +12,62 @@ import com.handy.portal.payments.model.PaymentGroup;
 import com.handy.portal.payments.ui.element.PaymentsDetailGroupView;
 import com.handy.portal.payments.ui.element.PaymentsDetailItemView;
 
-public class PaymentDetailExpandableListAdapter extends BaseExpandableListAdapter
-{
+public class PaymentDetailExpandableListAdapter extends BaseExpandableListAdapter {
     private NeoPaymentBatch neoPaymentBatch;
 
-    public PaymentDetailExpandableListAdapter(NeoPaymentBatch neoPaymentBatch)
-    {
+    public PaymentDetailExpandableListAdapter(NeoPaymentBatch neoPaymentBatch) {
         this.neoPaymentBatch = neoPaymentBatch;
     }
 
     @Override
-    public boolean areAllItemsEnabled()
-    {
+    public boolean areAllItemsEnabled() {
         return true;
     }
 
-    public void setData(NeoPaymentBatch neoPaymentBatch)
-    {
+    public void setData(NeoPaymentBatch neoPaymentBatch) {
         this.neoPaymentBatch = neoPaymentBatch;
     }
 
     @Override
-    public int getGroupCount()
-    {
+    public int getGroupCount() {
         return neoPaymentBatch.getPaymentGroups().length;
     }
 
     @Override
-    public int getChildrenCount(int groupPosition)
-    {
+    public int getChildrenCount(int groupPosition) {
         return getGroup(groupPosition).getPayments().length;
     }
 
     @Override
-    public PaymentGroup getGroup(int groupPosition)
-    {
+    public PaymentGroup getGroup(int groupPosition) {
         return neoPaymentBatch.getPaymentGroups()[groupPosition];
     }
 
     @Override
-    public Payment getChild(int groupPosition, int childPosition)
-    {
+    public Payment getChild(int groupPosition, int childPosition) {
         return getGroup(groupPosition).getPayments()[childPosition];
     }
 
     @Override
-    public long getGroupId(int groupPosition)
-    {
+    public long getGroupId(int groupPosition) {
         return 0;
     }
 
     @Override
-    public long getChildId(int groupPosition, int childPosition)
-    {
+    public long getChildId(int groupPosition, int childPosition) {
         return 0;
     }
 
     @Override
-    public boolean hasStableIds()
-    {
+    public boolean hasStableIds() {
         return false;
     }
 
 
     @Override
-    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent)
-    {
+    public View getGroupView(int groupPosition, boolean isExpanded, View convertView, ViewGroup parent) {
         PaymentGroup paymentGroup = getGroup(groupPosition);
-        if (convertView == null)
-        {
+        if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.element_payments_detail_list_group_header,
                     parent, false);
@@ -96,11 +83,9 @@ public class PaymentDetailExpandableListAdapter extends BaseExpandableListAdapte
     }
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent)
-    {
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
         Payment payment = getChild(groupPosition, childPosition);
-        if (convertView == null)
-        {
+        if (convertView == null) {
             LayoutInflater inflater = LayoutInflater.from(parent.getContext());
             convertView = inflater.inflate(R.layout.element_payments_detail_list_entry,
                     parent, false);
@@ -111,8 +96,7 @@ public class PaymentDetailExpandableListAdapter extends BaseExpandableListAdapte
     }
 
     @Override
-    public boolean isChildSelectable(int groupPosition, int childPosition)
-    {
+    public boolean isChildSelectable(int groupPosition, int childPosition) {
         Payment payment = getChild(groupPosition, childPosition);
         return payment.getBookingId() != null;
     }

@@ -13,15 +13,13 @@ import com.handy.portal.library.util.Utils;
 /**
  * dialog fragment that slides up from the bottom.
  * has a dismiss button and a confirm button
- *
+ * <p>
  * shown when we want to confirm a booking action
  */
-public abstract class ConfirmBookingActionDialogFragment extends ConfirmActionSlideUpDialogFragment
-{
+public abstract class ConfirmBookingActionDialogFragment extends ConfirmActionSlideUpDialogFragment {
     protected Booking mBooking;
 
     /**
-     *
      * @param inflater
      * @param container
      * @return the view that will be stuffed inside confirm_booking_action_content of this fragment's view
@@ -29,15 +27,13 @@ public abstract class ConfirmBookingActionDialogFragment extends ConfirmActionSl
     protected abstract View inflateConfirmActionContentView(LayoutInflater inflater, ViewGroup container);
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Utils.inject(getActivity(), this);
         mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING); //should not be null
     }
 
-    public boolean cancelDialogOnTouchOutside()
-    {
+    public boolean cancelDialogOnTouchOutside() {
         return true;
     }
 }

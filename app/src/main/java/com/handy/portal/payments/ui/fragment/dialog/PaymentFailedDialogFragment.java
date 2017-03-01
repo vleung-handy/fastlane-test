@@ -22,8 +22,7 @@ import butterknife.BindView;
  * dialog that shows when payment status is failed
  * links to update payment method
  */
-public class PaymentFailedDialogFragment extends PopupDialogFragment
-{
+public class PaymentFailedDialogFragment extends PopupDialogFragment {
     public static final String FRAGMENT_TAG = PaymentFailedDialogFragment.class.getName();
 
     @BindView(R.id.fragment_dialog_payment_failed_update_payment_method_now_button)
@@ -35,26 +34,21 @@ public class PaymentFailedDialogFragment extends PopupDialogFragment
     @Inject
     EventBus mBus;
 
-    public static PaymentFailedDialogFragment newInstance()
-    {
+    public static PaymentFailedDialogFragment newInstance() {
         return new PaymentFailedDialogFragment();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_dialog_payment_failed, container, false);
     }
 
     @Override
-    public void onViewCreated(View view, Bundle savedInstanceState)
-    {
+    public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mUpdateNowButton.setOnClickListener(new View.OnClickListener()
-        {
+        mUpdateNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 mBus.post(
                         new NavigationEvent.NavigateToPage(
                                 MainViewPage.SELECT_PAYMENT_METHOD,
@@ -65,11 +59,9 @@ public class PaymentFailedDialogFragment extends PopupDialogFragment
                 PaymentFailedDialogFragment.this.dismiss();
             }
         });
-        mNotNowButton.setOnClickListener(new View.OnClickListener()
-        {
+        mNotNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 PaymentFailedDialogFragment.this.dismiss();
             }
         });

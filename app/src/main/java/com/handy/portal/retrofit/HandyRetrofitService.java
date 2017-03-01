@@ -29,8 +29,7 @@ import retrofit.http.Query;
 import retrofit.http.QueryMap;
 import retrofit.mime.TypedInput;
 
-public interface HandyRetrofitService
-{
+public interface HandyRetrofitService {
     String SESSIONS_PATH = "/sessions/";
     String BOOKINGS_PATH = "/bookings/";
     String JOBS_PATH = "/jobs/";
@@ -147,7 +146,7 @@ public interface HandyRetrofitService
     @POST(PAYMENTS_PATH + "booking_review")
     void submitBookingPaymentReviewRequest
             (@Body BookingPaymentReviewRequest bookingPaymentReviewRequest,
-                                         HandyRetrofitCallback cb);
+             HandyRetrofitCallback cb);
 
     @FormUrlEncoded
     @POST(STRIPE_PATH + "create_bank_account")

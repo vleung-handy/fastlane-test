@@ -9,31 +9,25 @@ import com.handy.portal.bookings.model.Booking;
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class AvailableJobsLog extends EventLog
-{
+public abstract class AvailableJobsLog extends EventLog {
     private static final String EVENT_CONTEXT = "available_jobs";
 
-    protected AvailableJobsLog(final String eventType)
-    {
+    protected AvailableJobsLog(final String eventType) {
         super(eventType, EVENT_CONTEXT);
     }
 
 
-    public static class UnavailableJobNoticeShown extends AvailableJobsLog
-    {
+    public static class UnavailableJobNoticeShown extends AvailableJobsLog {
         private static final String EVENT_TYPE = "unavailable_job_notice_shown";
 
         @SerializedName("extras")
         private Map<String, Object> mExtras;
 
-        public UnavailableJobNoticeShown(@Nullable final Bundle extras)
-        {
+        public UnavailableJobNoticeShown(@Nullable final Bundle extras) {
             super(EVENT_TYPE);
-            if (extras != null)
-            {
+            if (extras != null) {
                 mExtras = new HashMap<>(extras.size());
-                for (final String key : extras.keySet())
-                {
+                for (final String key : extras.keySet()) {
                     mExtras.put(key, extras.get(key));
                 }
             }
@@ -43,15 +37,13 @@ public abstract class AvailableJobsLog extends EventLog
     // Booking-specific events
 
 
-    public static class Clicked extends JobsLog
-    {
+    public static class Clicked extends JobsLog {
         private static final String EVENT_TYPE = "job_selected";
 
         @SerializedName("list_index")
         private int mListIndex;
 
-        public Clicked(final Booking booking, final int listIndex)
-        {
+        public Clicked(final Booking booking, final int listIndex) {
             super(EVENT_TYPE, EVENT_CONTEXT, booking);
             mListIndex = listIndex;
         }
@@ -59,38 +51,35 @@ public abstract class AvailableJobsLog extends EventLog
 
     // Job claim events
 
-    public static class ConfirmClaimShown extends AvailableJobsLog
-    {
+
+    public static class ConfirmClaimShown extends AvailableJobsLog {
         private static final String EVENT_TYPE = "confirm_claim_shown";
 
-        public ConfirmClaimShown()
-        {
+        public ConfirmClaimShown() {
             super(EVENT_TYPE);
         }
     }
 
-    public static class ConfirmClaimDetailsShown extends AvailableJobsLog
-    {
+
+    public static class ConfirmClaimDetailsShown extends AvailableJobsLog {
         private static final String EVENT_TYPE = "confirm_claim_details_shown";
 
-        public ConfirmClaimDetailsShown()
-        {
+        public ConfirmClaimDetailsShown() {
             super(EVENT_TYPE);
         }
     }
 
-    public static class ConfirmClaimConfirmed extends AvailableJobsLog
-    {
+
+    public static class ConfirmClaimConfirmed extends AvailableJobsLog {
         private static final String EVENT_TYPE = "confirm_claim_confirmed";
 
-        public ConfirmClaimConfirmed()
-        {
+        public ConfirmClaimConfirmed() {
             super(EVENT_TYPE);
         }
     }
 
-    public static abstract class AvailableJobsBookingClaimLog extends JobsLog
-    {
+
+    public static abstract class AvailableJobsBookingClaimLog extends JobsLog {
         @SerializedName("claim_source")
         private String mSource;
         @SerializedName("claim_source_extras")
@@ -102,15 +91,12 @@ public abstract class AvailableJobsLog extends EventLog
                                             final Booking booking,
                                             final String source,
                                             @Nullable final Bundle sourceExtras,
-                                            final double distanceToJobInMeters)
-        {
+                                            final double distanceToJobInMeters) {
             super(eventType, EVENT_CONTEXT, booking);
             mSource = source;
-            if (sourceExtras != null)
-            {
+            if (sourceExtras != null) {
                 mSourceExtras = new HashMap<>(sourceExtras.size());
-                for (final String key : sourceExtras.keySet())
-                {
+                for (final String key : sourceExtras.keySet()) {
                     mSourceExtras.put(key, sourceExtras.get(key));
                 }
             }
@@ -119,36 +105,31 @@ public abstract class AvailableJobsLog extends EventLog
     }
 
 
-    public static class ClaimSubmitted extends AvailableJobsBookingClaimLog
-    {
+    public static class ClaimSubmitted extends AvailableJobsBookingClaimLog {
         private static final String EVENT_TYPE = "claim_submitted";
 
         public ClaimSubmitted(final Booking booking,
                               final String source,
                               @Nullable final Bundle sourceExtras,
-                              final double distanceToJobInMeters)
-        {
+                              final double distanceToJobInMeters) {
             super(EVENT_TYPE, booking, source, sourceExtras, distanceToJobInMeters);
         }
     }
 
 
-    public static class ClaimSuccess extends AvailableJobsBookingClaimLog
-    {
+    public static class ClaimSuccess extends AvailableJobsBookingClaimLog {
         private static final String EVENT_TYPE = "claim_success";
 
         public ClaimSuccess(final Booking booking,
                             final String source,
                             @Nullable final Bundle sourceExtras,
-                            final double distanceToJobInMeters)
-        {
+                            final double distanceToJobInMeters) {
             super(EVENT_TYPE, booking, source, sourceExtras, distanceToJobInMeters);
         }
     }
 
 
-    public static class ClaimError extends AvailableJobsBookingClaimLog
-    {
+    public static class ClaimError extends AvailableJobsBookingClaimLog {
         private static final String EVENT_TYPE = "claim_error";
 
         @SerializedName("error_message")
@@ -158,8 +139,7 @@ public abstract class AvailableJobsLog extends EventLog
                           final String source,
                           @Nullable final Bundle sourceExtras,
                           final double distanceToJobInMeters,
-                          final String errorMessage)
-        {
+                          final String errorMessage) {
             super(EVENT_TYPE, booking, source, sourceExtras, distanceToJobInMeters);
             mErrorMessage = errorMessage;
         }

@@ -11,8 +11,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 
-public class IDVerificationUtils
-{
+public class IDVerificationUtils {
     public static final String ID_VERIFICATION_SUCCESS = "success";
     public static final String ID_VERIFICATION_CANCELLATION = "cancellation";
     public static final String ID_VERIFICATION_INIT_ERROR = "error";
@@ -22,10 +21,8 @@ public class IDVerificationUtils
     @Retention(RetentionPolicy.SOURCE)
     public @interface IdVerificationStatus {}
 
-    public static void initJumioWebFlow(Context context, String url)
-    {
-        if (!Strings.isNullOrEmpty(url))
-        {
+    public static void initJumioWebFlow(Context context, String url) {
+        if (!Strings.isNullOrEmpty(url)) {
             Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
             Utils.safeLaunchIntent(browserIntent, context);
         }

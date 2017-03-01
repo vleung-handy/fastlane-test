@@ -35,8 +35,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 
-public class BookingMapView extends MapView implements OnMapReadyCallback
-{
+public class BookingMapView extends MapView implements OnMapReadyCallback {
     private static final int ON_MY_WAY_DEFAULT_ZOOM_LEVEL = 15;
     private static final int CHECK_IN_DEFAULT_ZOOM_LEVEL = 12;
     private static final int DEFAULT_BOUND_PADDING = 15;
@@ -53,39 +52,32 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
     private GoogleMap mMap;
     private Location mUserLocation;
 
-    public BookingMapView(final Context context)
-    {
+    public BookingMapView(final Context context) {
         super(context);
     }
 
-    public BookingMapView(final Context context, final AttributeSet attrs)
-    {
+    public BookingMapView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public BookingMapView(final Context context, final AttributeSet attrs, final int defStyle)
-    {
+    public BookingMapView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
     }
 
-    public BookingMapView(final Context context, final GoogleMapOptions options)
-    {
+    public BookingMapView(final Context context, final GoogleMapOptions options) {
         super(context, options);
     }
 
     @Override
     @SuppressWarnings({"ResourceType", "MissingPermission"})
-    public void onMapReady(GoogleMap map)
-    {
+    public void onMapReady(GoogleMap map) {
         mMap = map;
-        if (mBooking == null)
-        {
+        if (mBooking == null) {
             Crashlytics.log("mBooking is null in onMapReady()");
             return;
         }
 
-        if (!LocationUtils.hasRequiredLocationPermissions(getContext()))
-        {
+        if (!LocationUtils.hasRequiredLocationPermissions(getContext())) {
             return;
         }
         map.setMyLocationEnabled(true);
@@ -94,25 +86,20 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
         List<LatLng> points = new LinkedList<>();
         LatLng center = getCenterPoint();
         points.add(center);
-        if (shouldShowMarker())
-        {
+        if (shouldShowMarker()) {
             MarkerOptions marker = new MarkerOptions().position(center).draggable(false);
             map.addMarker(marker);
         }
-        else if (shouldShowPolygons())
-        {
+        else if (shouldShowPolygons()) {
             showPolygon(map, mPolygons.getOutlines());
             points = mPolygons.getPoints();
         }
-        else
-        {
+        else {
             showRangeOverlay(map, center, getRadius());
         }
 
-        if (shouldIncludeCurrentLocation())
-        {
-            if (mUserLocation != null)
-            {
+        if (shouldIncludeCurrentLocation()) {
+            if (mUserLocation != null) {
                 points.add(new LatLng(mUserLocation.getLatitude(), mUserLocation.getLongitude()));
             }
         }
@@ -121,8 +108,7 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
     }
 
     public void setDisplay(@NonNull Booking booking, Booking.BookingStatus bookingStatus,
-                           @Nullable ZipClusterPolygons polygons, Location userLocation)
-    {
+                           @Nullable ZipClusterPolygons polygons, Location userLocation) {
         mBooking = booking;
         mStatus = bookingStatus;
         mPolygons = polygons;
@@ -130,39 +116,32 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
         getMapAsync(this);
     }
 
-    public void disableParentScrolling(ScrollView scrollView)
-    {
-        if (mTouchableWrapper == null)
-        {
+    public void disableParentScrolling(ScrollView scrollView) {
+        if (mTouchableWrapper == null) {
             mTouchableWrapper = new TouchableWrapper(getContext(), scrollView);
             mTouchableWrapper.setBackgroundColor(ContextCompat.getColor(getContext(), android.R.color.transparent));
             addView(mTouchableWrapper, UIUtils.MATCH_PARENT_PARAMS);
         }
     }
 
-    public void clear()
-    {
-        if (mMap != null)
-        {
+    public void clear() {
+        if (mMap != null) {
             mMap.clear();
         }
         removeView(mTouchableWrapper);
         mTouchableWrapper = null;
     }
 
-    private boolean shouldShowMarker()
-    {
+    private boolean shouldShowMarker() {
         return !mBooking.isProxy() &&
                 (mStatus == Booking.BookingStatus.CLAIMED || shouldIncludeCurrentLocation());
     }
 
-    private boolean shouldShowPolygons()
-    {
+    private boolean shouldShowPolygons() {
         return mBooking.isProxy() && mPolygons != null;
     }
 
-    private boolean shouldIncludeCurrentLocation()
-    {
+    private boolean shouldIncludeCurrentLocation() {
         return mBooking.getBookingProgress() == BookingProgress.READY_FOR_CHECK_IN;
     }
 
@@ -174,8 +153,7 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
      * To combat that, the camera zoom is checked after the bounding and forced to the default
      * zoom if the zoom is greater than the default.
      */
-    private void positionCamera(@NonNull final GoogleMap map, @NonNull List<LatLng> points)
-    {
+    private void positionCamera(@NonNull final GoogleMap map, @NonNull List<LatLng> points) {
         final CameraUpdate cameraUpdate = buildCameraUpdate(points);
 
         // Sometimes the google map is ready but fragment it's placed in has not performed layout.
@@ -184,20 +162,15 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
         //
         // To get around this, catch the exception, add a listener to the fragments layout callback,
         // and re-attempt to move once layout has occurred
-        try
-        {
+        try {
             moveCamera(map, cameraUpdate);
         }
-        catch (IllegalStateException e)
-        {
-            if (getViewTreeObserver().isAlive())
-            {
+        catch (IllegalStateException e) {
+            if (getViewTreeObserver().isAlive()) {
                 getViewTreeObserver().addOnGlobalLayoutListener(
-                        new ViewTreeObserver.OnGlobalLayoutListener()
-                        {
+                        new ViewTreeObserver.OnGlobalLayoutListener() {
                             @Override
-                            public void onGlobalLayout()
-                            {
+                            public void onGlobalLayout() {
                                 getViewTreeObserver().removeOnGlobalLayoutListener(this);
                                 moveCamera(map, cameraUpdate);
                             }
@@ -207,25 +180,20 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
         }
     }
 
-    private void moveCamera(final @NonNull GoogleMap map, final CameraUpdate cameraUpdate)
-    {
+    private void moveCamera(final @NonNull GoogleMap map, final CameraUpdate cameraUpdate) {
         map.moveCamera(cameraUpdate);
         if (mBooking.getAction(Booking.Action.ACTION_CHECK_IN) != null
-                && map.getCameraPosition().zoom > CHECK_IN_DEFAULT_ZOOM_LEVEL)
-        {
+                && map.getCameraPosition().zoom > CHECK_IN_DEFAULT_ZOOM_LEVEL) {
             map.moveCamera(CameraUpdateFactory.zoomTo(CHECK_IN_DEFAULT_ZOOM_LEVEL));
         }
-        else if (map.getCameraPosition().zoom > ON_MY_WAY_DEFAULT_ZOOM_LEVEL)
-        {
+        else if (map.getCameraPosition().zoom > ON_MY_WAY_DEFAULT_ZOOM_LEVEL) {
             map.moveCamera(CameraUpdateFactory.zoomTo(ON_MY_WAY_DEFAULT_ZOOM_LEVEL));
         }
     }
 
-    private CameraUpdate buildCameraUpdate(@NonNull List<LatLng> points)
-    {
+    private CameraUpdate buildCameraUpdate(@NonNull List<LatLng> points) {
         LatLngBounds.Builder boundsBuilder = LatLngBounds.builder();
-        for (LatLng point : points)
-        {
+        for (LatLng point : points) {
             boundsBuilder.include(point);
         }
         LatLngBounds bounds = boundsBuilder.build();
@@ -238,38 +206,30 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
      *
      * @return LatLng
      */
-    private LatLng getCenterPoint()
-    {
+    private LatLng getCenterPoint() {
         //Currently even for unclaimed booking we get full address information so we are going to use lat/lng on address regardless of status
-        if (!mBooking.isProxy())
-        {
+        if (!mBooking.isProxy()) {
             return new LatLng(mBooking.getAddress().getLatitude(), mBooking.getAddress().getLongitude());
         }
-        else if (mPolygons != null)
-        {
+        else if (mPolygons != null) {
             return new LatLng(mPolygons.getCenter().latitude, mPolygons.getCenter().longitude);
         }
-        else if (mBooking.getMidpoint() != null)
-        {
+        else if (mBooking.getMidpoint() != null) {
             return new LatLng(mBooking.getMidpoint().getLatitude(), mBooking.getMidpoint().getLongitude());
         }
-        else
-        {
+        else {
             //fallback so we don't crash
             Crashlytics.logException(new Exception("BookingMapView booking has no valid midpoint " + mBooking.getId()));
             return new LatLng(0.0f, 0.0f);
         }
     }
 
-    private float getRadius()
-    {
+    private float getRadius() {
         return mBooking.getRadius() > 0 ? mBooking.getRadius() : DEFAULT_RADIUS_METERS;
     }
 
-    private static void showPolygon(GoogleMap map, LatLng[][] polygons)
-    {
-        for (LatLng[] polygon : polygons)
-        {
+    private static void showPolygon(GoogleMap map, LatLng[][] polygons) {
+        for (LatLng[] polygon : polygons) {
             PolygonOptions polygonOptions = new PolygonOptions();
             polygonOptions.add(polygon);
             polygonOptions.strokeWidth(MAP_POLYGON_STROKE_WIDTH);
@@ -279,8 +239,7 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
         }
     }
 
-    private static void showRangeOverlay(GoogleMap map, LatLng target, float radius)
-    {
+    private static void showRangeOverlay(GoogleMap map, LatLng target, float radius) {
         GroundOverlayOptions groundOverlay = new GroundOverlayOptions()
                 .image(BitmapDescriptorFactory.fromResource(R.drawable.ic_map_radius))
                 .position(target, radius);
@@ -289,25 +248,20 @@ public class BookingMapView extends MapView implements OnMapReadyCallback
 
 
     // This is used to disable the scrolling of the scroll view so we can scroll our map
-    public static class TouchableWrapper extends FrameLayout
-    {
+    public static class TouchableWrapper extends FrameLayout {
         private ScrollView mScrollView;
 
-        public TouchableWrapper(Context context, ScrollView scrollView)
-        {
+        public TouchableWrapper(Context context, ScrollView scrollView) {
             super(context);
             mScrollView = scrollView;
         }
 
         @Override
-        public boolean dispatchTouchEvent(MotionEvent event)
-        {
-            if (mScrollView == null)
-            {
+        public boolean dispatchTouchEvent(MotionEvent event) {
+            if (mScrollView == null) {
                 return super.dispatchTouchEvent(event);
             }
-            switch (event.getAction())
-            {
+            switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
                 case MotionEvent.ACTION_UP:
                     mScrollView.requestDisallowInterceptTouchEvent(true);

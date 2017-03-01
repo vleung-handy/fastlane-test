@@ -35,19 +35,16 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
     @BindView(R.id.payments_current_week_remaining_fees_row)
     ViewGroup currentWeekRemainingFeesRow;
 
-    public PaymentsBatchListHeaderView(Context context)
-    {
+    public PaymentsBatchListHeaderView(Context context) {
         super(context);
     }
 
-    public PaymentsBatchListHeaderView(Context context, AttributeSet attributeSet)
-    {
+    public PaymentsBatchListHeaderView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
     }
 
     @Override
-    protected void onFinishInflate()
-    {
+    protected void onFinishInflate() {
         super.onFinishInflate();
         ButterKnife.bind(this);
     }
@@ -61,8 +58,7 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
         currentWeekTotalEarningsText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getGrossEarningsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
         currentWeekFeesText.setTextColor(ContextCompat.getColor(getContext(), neoPaymentBatch.getFeesTotalAmount() < 0 ? R.color.plumber_red : R.color.black));
 
-        if (neoPaymentBatch.getRemainingFeeAmount() == 0)
-        {
+        if (neoPaymentBatch.getRemainingFeeAmount() == 0) {
             currentWeekRemainingFeesRow.setVisibility(GONE);
         }
     }

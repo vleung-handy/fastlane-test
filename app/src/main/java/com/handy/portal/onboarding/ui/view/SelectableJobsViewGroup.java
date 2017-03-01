@@ -16,22 +16,19 @@ import com.handy.portal.onboarding.viewmodel.BookingViewModel;
 import com.handy.portal.onboarding.viewmodel.BookingsWrapperViewModel;
 
 public class SelectableJobsViewGroup extends LinearLayout
-        implements CompoundButton.OnCheckedChangeListener
-{
+        implements CompoundButton.OnCheckedChangeListener {
     private TextView mTitle;
     private int mMargin;
     private int mMarginHalf;
     private OnJobCheckedChangedListener mOnJobCheckedChangedListener;
 
-    public SelectableJobsViewGroup(Context context)
-    {
+    public SelectableJobsViewGroup(Context context) {
         super(context);
         init();
     }
 
     @SuppressWarnings("deprecation")
-    public void init()
-    {
+    public void init() {
         mMargin = getResources().getDimensionPixelSize(R.dimen.default_margin);
         mMarginHalf = getResources().getDimensionPixelSize(R.dimen.default_margin_half);
 
@@ -45,12 +42,10 @@ public class SelectableJobsViewGroup extends LinearLayout
         );
         layoutParams.setMargins(mMargin, 0, mMargin, 0);
         mTitle.setLayoutParams(layoutParams);
-        if (Build.VERSION.SDK_INT < 23)
-        {
+        if (Build.VERSION.SDK_INT < 23) {
             mTitle.setTextAppearance(getContext(), R.style.TextView_Small);
         }
-        else
-        {
+        else {
             mTitle.setTextAppearance(R.style.TextView_Small);
         }
         mTitle.setTypeface(FontUtils.getFont(getContext(), FontUtils.CIRCULAR_BOOK));
@@ -61,30 +56,24 @@ public class SelectableJobsViewGroup extends LinearLayout
 
     @SuppressWarnings("deprecation")
     public void bind(final BookingsWrapperViewModel model,
-                     final Class<? extends BookingElementView> viewClass)
-    {
+                     final Class<? extends BookingElementView> viewClass) {
         final String sanitizedDate = model.getSanitizedDate();
-        if (sanitizedDate != null)
-        {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            {
+        if (sanitizedDate != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 mTitle.setText(Html.fromHtml(
                         DateTimeUtils.getHtmlFormattedDateString(sanitizedDate),
                         Html.FROM_HTML_MODE_LEGACY));
             }
-            else
-            {
+            else {
                 mTitle.setText(Html.fromHtml(
                         DateTimeUtils.getHtmlFormattedDateString(sanitizedDate)));
             }
         }
-        else
-        {
+        else {
             mTitle.setVisibility(GONE);
         }
 
-        for (final BookingViewModel bookingViewModel : model.getBookingViewModels())
-        {
+        for (final BookingViewModel bookingViewModel : model.getBookingViewModels()) {
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
@@ -100,22 +89,18 @@ public class SelectableJobsViewGroup extends LinearLayout
     }
 
     public void setOnJobCheckedChangedListener(
-            final OnJobCheckedChangedListener onJobCheckedChangedListener)
-    {
+            final OnJobCheckedChangedListener onJobCheckedChangedListener) {
         mOnJobCheckedChangedListener = onJobCheckedChangedListener;
     }
 
     @Override
-    public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked)
-    {
-        if (mOnJobCheckedChangedListener != null)
-        {
+    public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
+        if (mOnJobCheckedChangedListener != null) {
             mOnJobCheckedChangedListener.onJobCheckedChanged();
         }
     }
 
-    public interface OnJobCheckedChangedListener
-    {
+    public interface OnJobCheckedChangedListener {
         void onJobCheckedChanged();
     }
 }

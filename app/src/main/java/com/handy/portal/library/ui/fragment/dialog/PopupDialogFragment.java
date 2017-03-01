@@ -15,14 +15,11 @@ import butterknife.ButterKnife;
 
 /**
  * dialog fragment that slides down from the top to the center
- *
  */
-public abstract class PopupDialogFragment extends InjectedDialogFragment
-{
+public abstract class PopupDialogFragment extends InjectedDialogFragment {
     @NonNull
     @Override
-    public Dialog onCreateDialog(final Bundle savedInstanceState)
-    {
+    public Dialog onCreateDialog(final Bundle savedInstanceState) {
         Dialog dialog = new Dialog(getContext());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -32,8 +29,7 @@ public abstract class PopupDialogFragment extends InjectedDialogFragment
     }
 
     @Override
-    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
     }

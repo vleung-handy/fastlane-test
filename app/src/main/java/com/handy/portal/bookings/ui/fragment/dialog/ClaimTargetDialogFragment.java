@@ -51,13 +51,11 @@ public class ClaimTargetDialogFragment extends DialogFragment //TODO: consolidat
 
     public static final String FRAGMENT_TAG = "fragment_dialog_claim_target";
 
-    public ClaimTargetDialogFragment()
-    {
+    public ClaimTargetDialogFragment() {
 
     }
 
-    public void setDisplayData(BookingClaimDetails.ClaimTargetInfo claimTargetInfo)
-    {
+    public void setDisplayData(BookingClaimDetails.ClaimTargetInfo claimTargetInfo) {
         this.claimTargetInfo = claimTargetInfo;
     }
 
@@ -68,13 +66,11 @@ public class ClaimTargetDialogFragment extends DialogFragment //TODO: consolidat
         int numClaims = claimTargetInfo.getNumJobsClaimed();
         int bookingsThreshold = claimTargetInfo.getNumBookingsThreshold();
 
-        if (numClaims >= bookingsThreshold)
-        {
+        if (numClaims >= bookingsThreshold) {
             claimTargetTitle.setText(getResources().getString(R.string.booking_details_claim_target_reached_title));
             textClaimTarget.setText(getResources().getString(R.string.booking_details_claim_target_reached_msg));
         }
-        else
-        {
+        else {
             claimTargetTitle.setText(getResources().getString(R.string.booking_details_claim_target_title));
             textClaimTarget.setText(getResources().getString(R.string.booking_details_claim_target_msg, bookingsThreshold));
         }
@@ -85,13 +81,11 @@ public class ClaimTargetDialogFragment extends DialogFragment //TODO: consolidat
 
     }
 
-    public void inflateProgressIcons()
-    {
+    public void inflateProgressIcons() {
         int numClaims = claimTargetInfo.getNumJobsClaimed();
         int totalNumIcons = claimTargetInfo.getNumBookingsThreshold();
         progressIconsContainer.removeAllViews();
-        for (int i = 0; i < totalNumIcons; i++)
-        {
+        for (int i = 0; i < totalNumIcons; i++) {
             ImageView view = (ImageView) LayoutInflater.from(this.getActivity()).inflate(R.layout.element_claim_target_progress_icon, null);
             view.setImageResource(i < numClaims ? R.drawable.icon_check_small : R.drawable.icon_empty_small);
             view.setLayoutParams(new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)); //the identical params in resource xml don't work
@@ -102,11 +96,9 @@ public class ClaimTargetDialogFragment extends DialogFragment //TODO: consolidat
     }
 
     @Override
-    public Dialog onCreateDialog(Bundle savedInstanceState)
-    {
+    public Dialog onCreateDialog(Bundle savedInstanceState) {
         Dialog dialog = super.onCreateDialog(savedInstanceState);
-        if (dialog.getWindow() != null)
-        {
+        if (dialog.getWindow() != null) {
             dialog.getWindow().requestFeature(Window.FEATURE_NO_TITLE);
             dialog.getWindow().getAttributes().windowAnimations = R.style.dialog_animation_slide_down_up_from_top; //TODO: see if we can use an Animation instead so we can listen for when it ends
         }
@@ -115,8 +107,7 @@ public class ClaimTargetDialogFragment extends DialogFragment //TODO: consolidat
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState)
-    {
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_dialog_claim_target, container, false);
         ButterKnife.bind(this, view);
         updateDisplay();
@@ -125,14 +116,11 @@ public class ClaimTargetDialogFragment extends DialogFragment //TODO: consolidat
 
     public void setDelayedDismiss() //TODO: see if we can use an Animation instead of setting a window animation so we can listen for when the animation ends, instead of using this gross logic
     {
-        final Runnable runnable = new Runnable()
-        {
+        final Runnable runnable = new Runnable() {
             @Override
-            public void run()
-            {
+            public void run() {
                 Dialog dialog = getDialog();
-                if (dialog != null && dialog.isShowing())
-                {
+                if (dialog != null && dialog.isShowing()) {
                     ClaimTargetDialogFragment.this.dismiss();
                 }
             }

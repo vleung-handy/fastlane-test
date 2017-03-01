@@ -4,8 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class StatusButton implements Serializable
-{
+public class StatusButton implements Serializable {
     @SerializedName("title")
     private String mTitle;
     @SerializedName("deeplink")
@@ -13,23 +12,19 @@ public class StatusButton implements Serializable
     @SerializedName("type")
     private Type mType;
 
-    public String getTitle()
-    {
+    public String getTitle() {
         return mTitle;
     }
 
-    public String getUrl()
-    {
+    public String getUrl() {
         return mUrl;
     }
 
-    public Type getType()
-    {
+    public Type getType() {
         return mType;
     }
 
-    public enum Type
-    {
+    public enum Type {
         @SerializedName("normal")
         NORMAL,
         @SerializedName("error")

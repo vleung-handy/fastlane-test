@@ -29,8 +29,7 @@ import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class DataManagerTest extends RobolectricGradleTestWrapper
-{
+public class DataManagerTest extends RobolectricGradleTestWrapper {
     // TODO: Refactor DataManager. The tests are way too redundant.
 
     @Mock
@@ -56,28 +55,23 @@ public class DataManagerTest extends RobolectricGradleTestWrapper
     ArgumentCaptor<HandyRetrofitCallback> callbackCaptor;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         initMocks(this);
 
         dataManager = new DataManager(service, endpoint, stripeService, dynamicEndpoint, dynamicEndpointService);
     }
 
     @Test
-    public void testSuccessfulCheckForUpdates() throws Exception
-    {
+    public void testSuccessfulCheckForUpdates() throws Exception {
         final Object[] responseCatcher = new Object[1];
-        dataManager.checkForUpdates("yummy flavor", 1, new DataManager.Callback<UpdateDetails>()
-        {
+        dataManager.checkForUpdates("yummy flavor", 1, new DataManager.Callback<UpdateDetails>() {
             @Override
-            public void onSuccess(UpdateDetails response)
-            {
+            public void onSuccess(UpdateDetails response) {
                 responseCatcher[0] = response;
             }
 
             @Override
-            public void onError(DataManager.DataManagerError error)
-            {
+            public void onError(DataManager.DataManagerError error) {
             }
         });
 
@@ -93,20 +87,16 @@ public class DataManagerTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void testSuccessfulPinCodeRequest() throws Exception
-    {
+    public void testSuccessfulPinCodeRequest() throws Exception {
         final Object[] responseCatcher = new Object[1];
-        dataManager.requestPinCode("1231231234", new DataManager.Callback<SuccessWrapper>()
-        {
+        dataManager.requestPinCode("1231231234", new DataManager.Callback<SuccessWrapper>() {
             @Override
-            public void onSuccess(SuccessWrapper response)
-            {
+            public void onSuccess(SuccessWrapper response) {
                 responseCatcher[0] = response;
             }
 
             @Override
-            public void onError(DataManager.DataManagerError error)
-            {
+            public void onError(DataManager.DataManagerError error) {
             }
         });
 
@@ -120,20 +110,16 @@ public class DataManagerTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void testSuccessfulLoginRequest() throws Exception
-    {
+    public void testSuccessfulLoginRequest() throws Exception {
         final Object[] responseCatcher = new Object[1];
-        dataManager.requestLogin("1231231234", "1234", new DataManager.Callback<LoginDetails>()
-        {
+        dataManager.requestLogin("1231231234", "1234", new DataManager.Callback<LoginDetails>() {
             @Override
-            public void onSuccess(LoginDetails response)
-            {
+            public void onSuccess(LoginDetails response) {
                 responseCatcher[0] = response;
             }
 
             @Override
-            public void onError(DataManager.DataManagerError error)
-            {
+            public void onError(DataManager.DataManagerError error) {
             }
         });
 

@@ -31,8 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ReferAFriendFragment extends ActionBarFragment
-{
+public class ReferAFriendFragment extends ActionBarFragment {
     @Inject
     EventBus mBus;
     @Inject
@@ -61,14 +60,12 @@ public class ReferAFriendFragment extends ActionBarFragment
     private ReferralInfo mReferralInfo;
 
     @Override
-    protected MainViewPage getAppPage()
-    {
+    protected MainViewPage getAppPage() {
         return MainViewPage.REFER_A_FRIEND;
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bus.post(new LogEvent.AddLogEvent(new ProfileLog.ReferralOpen()));
     }
@@ -78,11 +75,9 @@ public class ReferAFriendFragment extends ActionBarFragment
     public View onCreateView(
             final LayoutInflater inflater, final ViewGroup container,
             final Bundle savedInstanceState
-    )
-    {
+    ) {
         super.onCreateView(inflater, container, savedInstanceState);
-        if (fragmentView == null)
-        {
+        if (fragmentView == null) {
             fragmentView = inflater.inflate(R.layout.fragment_refer_a_friend, container, false);
         }
 
@@ -92,8 +87,7 @@ public class ReferAFriendFragment extends ActionBarFragment
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         bus.register(this);
 
@@ -102,21 +96,18 @@ public class ReferAFriendFragment extends ActionBarFragment
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         bus.unregister(this);
         super.onPause();
     }
 
     @OnClick(R.id.envelope)
-    public void onEnvelopeClicked()
-    {
+    public void onEnvelopeClicked() {
         mBling.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.sparkle_fade));
     }
 
     @OnClick(R.id.referral_code_layout)
-    public void createReferral()
-    {
+    public void createReferral() {
         mBus.post(new LogEvent.AddLogEvent(new ProfileLog.ReferralSelected()));
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
@@ -127,15 +118,13 @@ public class ReferAFriendFragment extends ActionBarFragment
     }
 
     @OnClick(R.id.try_again_button)
-    public void requestProviderProfile()
-    {
+    public void requestProviderProfile() {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new ProfileEvent.RequestProviderProfile(true));
     }
 
     @Subscribe
-    public void onReceiveProviderProfileSuccess(ProfileEvent.ReceiveProviderProfileSuccess event)
-    {
+    public void onReceiveProviderProfileSuccess(ProfileEvent.ReceiveProviderProfileSuccess event) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         mProviderProfile = event.providerProfile;
         mReferralInfo = mProviderProfile.getReferralInfo();
@@ -145,46 +134,37 @@ public class ReferAFriendFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveProviderProfileError(ProfileEvent.ReceiveProviderProfileError event)
-    {
+    public void onReceiveProviderProfileError(ProfileEvent.ReceiveProviderProfileError event) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         fetchErrorText.setText(R.string.error_loading_profile);
         fetchErrorLayout.setVisibility(View.VISIBLE);
     }
 
-    private void populateInfo()
-    {
+    private void populateInfo() {
         mProviderProfile = mProviderManager.getCachedProviderProfile();
-        if (mProviderProfile == null || mProviderProfile.getReferralInfo() == null)
-        {
+        if (mProviderProfile == null || mProviderProfile.getReferralInfo() == null) {
             requestProviderProfile();
         }
-        else
-        {
+        else {
             mReferralInfo = mProviderProfile.getReferralInfo();
             populateText();
             startAnimations();
         }
     }
 
-    private void populateText()
-    {
+    private void populateText() {
         mTitleText.setText(getContext().getString(R.string.earn_a_reward, mReferralInfo.getBonusAmount()));
         mReferralCodeText.setText(mReferralInfo.getReferralCode());
     }
 
-    private void startAnimations()
-    {
+    private void startAnimations() {
         mEnvelope.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.levitate));
         mEnvelopeShadow.startAnimation(
                 AnimationUtils.loadAnimation(getActivity(), R.anim.expand_contract));
-        mBling.postDelayed(new Runnable()
-        {
+        mBling.postDelayed(new Runnable() {
             @Override
-            public void run()
-            {
-                if (isVisible())
-                {
+            public void run() {
+                if (isVisible()) {
                     onEnvelopeClicked();
                 }
             }

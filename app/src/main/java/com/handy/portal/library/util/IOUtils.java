@@ -12,38 +12,29 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 
-public class IOUtils
-{
-    public static String loadJSONFromAsset(Context context, String filename) throws IOException
-    {
+public class IOUtils {
+    public static String loadJSONFromAsset(Context context, String filename) throws IOException {
         InputStream is = context.getAssets().open(filename);
         BufferedReader br = null;
         StringBuilder sb = new StringBuilder();
 
         String line;
-        try
-        {
+        try {
             br = new BufferedReader(new InputStreamReader(is));
-            while ((line = br.readLine()) != null)
-            {
+            while ((line = br.readLine()) != null) {
                 sb.append(line);
             }
 
         }
-        catch (IOException e)
-        {
+        catch (IOException e) {
             e.printStackTrace();
         }
-        finally
-        {
-            if (br != null)
-            {
-                try
-                {
+        finally {
+            if (br != null) {
+                try {
                     br.close();
                 }
-                catch (IOException e)
-                {
+                catch (IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -52,36 +43,28 @@ public class IOUtils
         return sb.toString();
     }
 
-    public static void copyFile(final InputStream from, final File to)
-    {
-        try
-        {
-            try
-            {
+    public static void copyFile(final InputStream from, final File to) {
+        try {
+            try {
                 final OutputStream output = new FileOutputStream(to);
-                try
-                {
+                try {
                     byte[] buffer = new byte[1024];
                     int read;
 
-                    while ((read = from.read(buffer)) != -1)
-                    {
+                    while ((read = from.read(buffer)) != -1) {
                         output.write(buffer, 0, read);
                     }
                     output.flush();
                 }
-                finally
-                {
+                finally {
                     output.close();
                 }
             }
-            finally
-            {
+            finally {
                 from.close();
             }
         }
-        catch (Exception e)
-        {
+        catch (Exception e) {
             Crashlytics.logException(e);
         }
 

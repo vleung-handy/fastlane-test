@@ -11,46 +11,37 @@ import com.handy.portal.onboarding.model.subflow.SubflowType;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class OnboardingDetails implements Serializable
-{
+public class OnboardingDetails implements Serializable {
     @SerializedName("steps")
     private ArrayList<OnboardingSubflowDetails> mSubflows;
     @SerializedName("percent_complete")
     private float mPercentComplete;
 
-    public ArrayList<OnboardingSubflowDetails> getSubflows()
-    {
+    public ArrayList<OnboardingSubflowDetails> getSubflows() {
         return mSubflows;
     }
 
     @Nullable
-    public SubflowData getSubflowDataByType(final SubflowType type)
-    {
-        for (final OnboardingSubflowDetails details : mSubflows)
-        {
-            if (details.getType() == type)
-            {
+    public SubflowData getSubflowDataByType(final SubflowType type) {
+        for (final OnboardingSubflowDetails details : mSubflows) {
+            if (details.getType() == type) {
                 return details.getData();
             }
         }
         return null;
     }
 
-    public ArrayList<OnboardingSubflowDetails> getSubflowsByStatus(final SubflowStatus status)
-    {
+    public ArrayList<OnboardingSubflowDetails> getSubflowsByStatus(final SubflowStatus status) {
         final ArrayList<OnboardingSubflowDetails> subflows = new ArrayList<>();
-        for (final OnboardingSubflowDetails subflow : mSubflows)
-        {
-            if (subflow.getStatus() == status)
-            {
+        for (final OnboardingSubflowDetails subflow : mSubflows) {
+            if (subflow.getStatus() == status) {
                 subflows.add(subflow);
             }
         }
         return subflows;
     }
 
-    public float getPercentComplete()
-    {
+    public float getPercentComplete() {
         return mPercentComplete;
     }
 }

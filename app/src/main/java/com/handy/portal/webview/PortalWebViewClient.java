@@ -20,8 +20,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
-public class PortalWebViewClient extends WebViewClient
-{
+public class PortalWebViewClient extends WebViewClient {
     private Fragment parentFragment;
     private WebView webView;
     private String mDeviceId;
@@ -32,8 +31,7 @@ public class PortalWebViewClient extends WebViewClient
 
     public PortalWebViewClient(Fragment parentFragment,
                                WebView webView,
-                               EventBus bus, String deviceId)
-    {
+                               EventBus bus, String deviceId) {
         this.parentFragment = parentFragment;
         this.webView = webView;
         this.bus = bus;
@@ -42,35 +40,29 @@ public class PortalWebViewClient extends WebViewClient
     }
 
     @Override
-    public boolean shouldOverrideUrlLoading(WebView view, String url)
-    {
+    public boolean shouldOverrideUrlLoading(WebView view, String url) {
         mPageNavigationManager.handleDeeplinkUrl(DeeplinkLog.Source.WEBVIEW, url);
-        
+
         // To prevent a bug in webkit where it redirects to a url ending with /undefined
-        if (url.substring(Math.max(0, url.length() - 10)).equals("/undefined"))
-        {
+        if (url.substring(Math.max(0, url.length() - 10)).equals("/undefined")) {
             return true; // don't load the url
         }
-        else if (url.startsWith("tel:"))
-        {
+        else if (url.startsWith("tel:")) {
             Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse(url));
             Utils.safeLaunchIntent(intent, parentFragment.getActivity());
             return true;
         }
-        else if (url.startsWith("sms:"))
-        {
+        else if (url.startsWith("sms:")) {
             Intent intent = new Intent(Intent.ACTION_SENDTO, Uri.parse(url));
             Utils.safeLaunchIntent(intent, parentFragment.getActivity());
             return true;
         }
 
         String fixedUrl;
-        if (url.contains("help"))
-        {
+        if (url.contains("help")) {
             fixedUrl = url;
         }
-        else
-        {
+        else {
             // changes #future to goto=future
             fixedUrl = url.replaceFirst("#(.*)(?:\\?|$)", "?goto=$1&");
         }
@@ -80,27 +72,23 @@ public class PortalWebViewClient extends WebViewClient
     }
 
     @Override
-    public void onPageStarted(WebView view, String url, Bitmap favicon)
-    {
+    public void onPageStarted(WebView view, String url, Bitmap favicon) {
         super.onPageStarted(view, url, favicon);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
     }
 
     @Override
-    public void onPageFinished(WebView view, String url)
-    {
+    public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl)
-    {
+    public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         // API level 5: WebViewClient.ERROR_HOST_LOOKUP
-        if (errorCode == -2)
-        {
+        if (errorCode == -2) {
             final String mimeType = "text/html";
             final String encoding = "utf-8";
             final String html = "<html style=\"background-color: #949493; color: white\"><body style=\"margin-top: 50px;\"><div style=\"text-align:center\"><img src=\"file:///android_asset/antenna.png\" /><h1>Connection Error</h1><h3>You're not connected to the Internet. Please check your cell signal and make sure you're not in airplane mode, then refresh.</h3></div></body></html>";
@@ -114,15 +102,13 @@ public class PortalWebViewClient extends WebViewClient
     @SuppressWarnings("deprecation")
     @TargetApi(android.os.Build.VERSION_CODES.M)
     @Override
-    public void onReceivedError(WebView view, WebResourceRequest req, WebResourceError rerr)
-    {
+    public void onReceivedError(WebView view, WebResourceRequest req, WebResourceError rerr) {
         // Redirect to deprecated method, so you can use it in all SDK versions
         onReceivedError(view, rerr.getErrorCode(), rerr.getDescription().toString(),
                 req.getUrl().toString());
     }
 
-    private void loadUrlWithFromAppParam(String url)
-    {
+    private void loadUrlWithFromAppParam(String url) {
         //TODO: This code seems to be duplicated in the PortalWebViewFragment
         String endOfUrl = "from_app=true&device_id=" + mDeviceId
                 + "&device_type=android&hide_nav=1"

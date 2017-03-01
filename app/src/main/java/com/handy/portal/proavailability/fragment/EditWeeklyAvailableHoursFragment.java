@@ -57,8 +57,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
-{
+public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     private static final int CURRENT_WEEK_INDEX = 0;
     private static final int NEXT_WEEK_INDEX = 1;
     @Inject
@@ -82,51 +81,41 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
     private ProviderAvailability mProviderAvailability;
     private TabAdapter mPagerAdapter;
     private ViewPager.OnPageChangeListener mWeekPageChangeListener =
-            new ViewPager.OnPageChangeListener()
-            {
+            new ViewPager.OnPageChangeListener() {
                 @Override
                 public void onPageScrolled(final int position, final float positionOffset,
-                                           final int positionOffsetPixels)
-                {
+                                           final int positionOffsetPixels) {
                     // do nothing
                 }
 
                 @Override
-                public void onPageSelected(final int position)
-                {
+                public void onPageSelected(final int position) {
                     mCopyHoursButton.setVisibility(position == NEXT_WEEK_INDEX ?
                             View.VISIBLE : View.GONE);
                 }
 
                 @Override
-                public void onPageScrollStateChanged(final int state)
-                {
+                public void onPageScrollStateChanged(final int state) {
                     // do nothing
                 }
             };
-    private RemoveTimeSlotListener mRemoveTimeSlotListener = new RemoveTimeSlotListener()
-    {
+    private RemoveTimeSlotListener mRemoveTimeSlotListener = new RemoveTimeSlotListener() {
         @Override
-        public void onRemoveClicked(final Date date, final AvailabilityInterval interval)
-        {
+        public void onRemoveClicked(final Date date, final AvailabilityInterval interval) {
             final AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                     .setCancelable(true)
                     .setMessage(R.string.time_slot_removal_prompt)
-                    .setPositiveButton(R.string.remove, new DialogInterface.OnClickListener()
-                    {
+                    .setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(final DialogInterface dialogInterface, final int i)
-                        {
+                        public void onClick(final DialogInterface dialogInterface, final int i) {
                             removeInterval(date, interval);
                         }
                     })
                     .setNegativeButton(R.string.keep, null)
                     .create();
-            alertDialog.setOnShowListener(new DialogInterface.OnShowListener()
-            {
+            alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
                 @Override
-                public void onShow(final DialogInterface dialogInterface)
-                {
+                public void onShow(final DialogInterface dialogInterface) {
                     alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(mRedColorValue);
                     alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(mBlackColorValue);
                 }
@@ -134,11 +123,9 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
             alertDialog.show();
         }
     };
-    private DateClickListener mDateClickListener = new DateClickListener()
-    {
+    private DateClickListener mDateClickListener = new DateClickListener() {
         @Override
-        public void onDateClicked(final Date date)
-        {
+        public void onDateClicked(final Date date) {
             bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.SetDayAvailabilitySelected(
                     DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
             final Bundle bundle = new Bundle();
@@ -156,28 +143,23 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
     private boolean mIsCurrentWeekAndNextWeekInSync;
     private int mDefaultSelectedTab;
 
-    private DailyAvailabilityTimeline getAvailablityForDate(final Date date)
-    {
+    private DailyAvailabilityTimeline getAvailablityForDate(final Date date) {
         DailyAvailabilityTimeline availabilityForDate = null;
-        if (mUpdatedAvailabilityTimelines != null)
-        {
+        if (mUpdatedAvailabilityTimelines != null) {
             availabilityForDate = mUpdatedAvailabilityTimelines.get(date);
         }
-        if (availabilityForDate == null)
-        {
+        if (availabilityForDate == null) {
             availabilityForDate = mProviderAvailability.getAvailabilityForDate(date);
         }
         return availabilityForDate;
     }
 
-    private void removeInterval(final Date date, final AvailabilityInterval interval)
-    {
+    private void removeInterval(final Date date, final AvailabilityInterval interval) {
         bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.RemoveHoursSubmitted(
                 DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
         final DailyAvailabilityTimeline availability = getAvailablityForDate(date);
         final ArrayList<AvailabilityInterval> intervals = new ArrayList<>();
-        if (availability != null && availability.getAvailabilityIntervals() != null)
-        {
+        if (availability != null && availability.getAvailabilityIntervals() != null) {
             intervals.addAll(availability.getAvailabilityIntervals());
             intervals.remove(interval);
         }
@@ -185,11 +167,9 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
         timelinesWrapper.addTimeline(date, intervals);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         dataManager.saveProviderAvailability(mProviderManager.getLastProviderId(), timelinesWrapper,
-                new FragmentSafeCallback<Void>(this)
-                {
+                new FragmentSafeCallback<Void>(this) {
                     @Override
-                    public void onCallbackSuccess(final Void response)
-                    {
+                    public void onCallbackSuccess(final Void response) {
                         bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.RemoveHoursSuccess(
                                 DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
@@ -200,14 +180,12 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
                     }
 
                     @Override
-                    public void onCallbackError(final DataManager.DataManagerError error)
-                    {
+                    public void onCallbackError(final DataManager.DataManagerError error) {
                         bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.RemoveHoursError(
                                 DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         String message = error.getMessage();
-                        if (TextUtils.isEmpty(message))
-                        {
+                        if (TextUtils.isEmpty(message)) {
                             message = getString(R.string.an_error_has_occurred);
                         }
                         showToast(message);
@@ -215,18 +193,15 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
                 });
     }
 
-    private void updateAvailability(final DailyAvailabilityTimeline timeline)
-    {
+    private void updateAvailability(final DailyAvailabilityTimeline timeline) {
         mUpdatedAvailabilityTimelines.put(timeline.getDate(), timeline);
         mPagerAdapter.updateViewWithTimeline(timeline);
         callTargetFragmentResult(timeline);
     }
 
     private void callTargetFragmentResult(
-            final DailyAvailabilityTimeline updatedAvailabilityTimeline)
-    {
-        if (getTargetFragment() != null)
-        {
+            final DailyAvailabilityTimeline updatedAvailabilityTimeline) {
+        if (getTargetFragment() != null) {
             final Intent data = new Intent();
             data.putExtra(BundleKeys.DAILY_AVAILABILITY_TIMELINE, updatedAvailabilityTimeline);
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
@@ -234,39 +209,32 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
     }
 
     @OnClick(R.id.try_again_button)
-    public void onRetryFetchAvailableHours()
-    {
+    public void onRetryFetchAvailableHours() {
         requestAvailableHours();
     }
 
     @OnClick(R.id.copy_hours_button)
-    public void onCopyHoursClicked()
-    {
+    public void onCopyHoursClicked() {
         bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.CopyCurrentWeekSelected()));
         final AvailabilityTimelinesWrapper timelinesWrapper =
                 createNextWeekTimelinesFromCurrentWeek();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         dataManager.saveProviderAvailability(mProviderManager.getLastProviderId(), timelinesWrapper,
-                new FragmentSafeCallback<Void>(this)
-                {
+                new FragmentSafeCallback<Void>(this) {
                     @Override
-                    public void onCallbackSuccess(final Void response)
-                    {
+                    public void onCallbackSuccess(final Void response) {
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                        for (DailyAvailabilityTimeline timeline : timelinesWrapper.getTimelines())
-                        {
+                        for (DailyAvailabilityTimeline timeline : timelinesWrapper.getTimelines()) {
                             updateAvailability(timeline);
                         }
                         setIsCurrentWeekAndNextWeekInSync(true);
                     }
 
                     @Override
-                    public void onCallbackError(final DataManager.DataManagerError error)
-                    {
+                    public void onCallbackError(final DataManager.DataManagerError error) {
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         String message = error.getMessage();
-                        if (TextUtils.isEmpty(message))
-                        {
+                        if (TextUtils.isEmpty(message)) {
                             message = getString(R.string.an_error_has_occurred);
                         }
                         showToast(message);
@@ -275,8 +243,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
     }
 
     @NonNull
-    private AvailabilityTimelinesWrapper createNextWeekTimelinesFromCurrentWeek()
-    {
+    private AvailabilityTimelinesWrapper createNextWeekTimelinesFromCurrentWeek() {
         final AvailabilityTimelinesWrapper timelinesWrapper = new AvailabilityTimelinesWrapper();
         final WeeklyAvailabilityTimelinesWrapper currentWeekTimelines =
                 mProviderAvailability.getWeeklyAvailabilityTimelinesWrappers()
@@ -285,8 +252,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
         final Date startDate = currentWeekTimelines.getStartDate();
         final Date endDate = currentWeekTimelines.getEndDate();
         currentWeekDate.setTime(startDate);
-        while (DateTimeUtils.daysBetween(currentWeekDate.getTime(), endDate) >= 0)
-        {
+        while (DateTimeUtils.daysBetween(currentWeekDate.getTime(), endDate) >= 0) {
             final Date date = currentWeekDate.getTime();
             final Calendar nextWeekDate = Calendar.getInstance(Locale.US);
             nextWeekDate.setTime(date);
@@ -294,8 +260,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
 
             final DailyAvailabilityTimeline availability = getAvailablityForDate(date);
             final ArrayList<AvailabilityInterval> intervals = Lists.newArrayList();
-            if (availability != null && availability.getAvailabilityIntervals() != null)
-            {
+            if (availability != null && availability.getAvailabilityIntervals() != null) {
                 intervals.addAll(availability.getAvailabilityIntervals());
             }
             timelinesWrapper.addTimeline(nextWeekDate.getTime(), intervals);
@@ -306,15 +271,13 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mProviderAvailability = (ProviderAvailability) getArguments()
                 .getSerializable(BundleKeys.PROVIDER_AVAILABILITY);
         mUpdatedAvailabilityTimelines = (HashMap<Date, DailyAvailabilityTimeline>) getArguments()
                 .getSerializable(BundleKeys.PROVIDER_AVAILABILITY_CACHE);
-        if (mUpdatedAvailabilityTimelines == null)
-        {
+        if (mUpdatedAvailabilityTimelines == null) {
             mUpdatedAvailabilityTimelines = new HashMap<>();
         }
         mDefaultSelectedTab = getArguments().getBoolean(BundleKeys.SHOULD_DEFAULT_TO_NEXT_WEEK,
@@ -325,8 +288,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
     @Override
     public View onCreateView(final LayoutInflater inflater,
                              @Nullable final ViewGroup container,
-                             @Nullable final Bundle savedInstanceState)
-    {
+                             @Nullable final Bundle savedInstanceState) {
         final View view =
                 inflater.inflate(R.layout.fragment_edit_weekly_available_hours, container, false);
         ButterKnife.bind(this, view);
@@ -334,68 +296,56 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mFetchErrorText.setText(R.string.error_fetching_available_hours);
-        if (mProviderAvailability != null)
-        {
+        if (mProviderAvailability != null) {
             displayAvailableHours();
             displayTabs();
             updateCopyHoursButton();
         }
     }
 
-    private void setIsCurrentWeekAndNextWeekInSync(final boolean value)
-    {
+    private void setIsCurrentWeekAndNextWeekInSync(final boolean value) {
         mIsCurrentWeekAndNextWeekInSync = value;
         updateCopyHoursButton();
     }
 
-    private void updateCopyHoursButton()
-    {
-        if (mIsCurrentWeekAndNextWeekInSync)
-        {
+    private void updateCopyHoursButton() {
+        if (mIsCurrentWeekAndNextWeekInSync) {
             mCopyHoursButton.setText(R.string.copied);
             mCopyHoursButton.setEnabled(false);
         }
-        else
-        {
+        else {
             mCopyHoursButton.setText(R.string.copy_hours_from_current_week);
             mCopyHoursButton.setEnabled(true);
         }
     }
 
     @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data)
-    {
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK && requestCode == RequestCode.EDIT_HOURS)
-        {
+        if (resultCode == Activity.RESULT_OK && requestCode == RequestCode.EDIT_HOURS) {
             final DailyAvailabilityTimeline timeline = (DailyAvailabilityTimeline)
                     data.getSerializableExtra(BundleKeys.DAILY_AVAILABILITY_TIMELINE);
-            if (timeline != null)
-            {
+            if (timeline != null) {
                 updateAvailability(timeline);
                 setIsCurrentWeekAndNextWeekInSync(false);
             }
         }
     }
 
-    private void displayAvailableHours()
-    {
+    private void displayAvailableHours() {
         mPagerAdapter = new TabAdapter(getActivity(), mProviderAvailability, mDateClickListener,
                 mRemoveTimeSlotListener);
-        for (DailyAvailabilityTimeline availability : mUpdatedAvailabilityTimelines.values())
-        {
+        for (DailyAvailabilityTimeline availability : mUpdatedAvailabilityTimelines.values()) {
             mPagerAdapter.updateViewWithTimeline(availability);
         }
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(mWeekPageChangeListener);
     }
 
-    private void displayTabs()
-    {
+    private void displayTabs() {
         final WeeklyAvailabilityTimelinesWrapper currentWeekTimelines =
                 mProviderAvailability.getWeeklyAvailabilityTimelinesWrappers()
                         .get(CURRENT_WEEK_INDEX);
@@ -413,30 +363,24 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         setActionBar(R.string.available_hours, true);
-        if (mProviderAvailability == null)
-        {
+        if (mProviderAvailability == null) {
             requestAvailableHours();
         }
-        else
-        {
+        else {
             // This is here to fix a UI duplication bug related to tabs
             displayTabs();
         }
     }
 
-    private void requestAvailableHours()
-    {
+    private void requestAvailableHours() {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         dataManager.getProviderAvailability(mProviderManager.getLastProviderId(),
-                new FragmentSafeCallback<ProviderAvailability>(this)
-                {
+                new FragmentSafeCallback<ProviderAvailability>(this) {
                     @Override
-                    public void onCallbackSuccess(final ProviderAvailability providerAvailability)
-                    {
+                    public void onCallbackSuccess(final ProviderAvailability providerAvailability) {
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         mFetchErrorView.setVisibility(View.GONE);
                         mProviderAvailability = providerAvailability;
@@ -446,87 +390,72 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment
                     }
 
                     @Override
-                    public void onCallbackError(final DataManager.DataManagerError error)
-                    {
+                    public void onCallbackError(final DataManager.DataManagerError error) {
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         mFetchErrorView.setVisibility(View.VISIBLE);
                     }
                 });
     }
 
-    private class TabAdapter extends PagerAdapter
-    {
+    private class TabAdapter extends PagerAdapter {
         public static final int POSITION_NOT_FOUND = -1;
         private List<WeeklyAvailableHoursView> mViews;
 
         TabAdapter(final Context context,
                    final ProviderAvailability providerAvailability,
                    final DateClickListener dateClickListener,
-                   final RemoveTimeSlotListener removeTimeSlotListener)
-        {
+                   final RemoveTimeSlotListener removeTimeSlotListener) {
             mViews = new ArrayList<>();
             for (WeeklyAvailabilityTimelinesWrapper weeklyAvailabilityTimelinesWrapper :
-                    providerAvailability.getWeeklyAvailabilityTimelinesWrappers())
-            {
+                    providerAvailability.getWeeklyAvailabilityTimelinesWrappers()) {
                 mViews.add(new WeeklyAvailableHoursView(context, weeklyAvailabilityTimelinesWrapper,
                         dateClickListener, removeTimeSlotListener));
             }
         }
 
-        public void updateViewWithTimeline(final DailyAvailabilityTimeline timeline)
-        {
-            for (WeeklyAvailableHoursView weekView : mViews)
-            {
+        public void updateViewWithTimeline(final DailyAvailabilityTimeline timeline) {
+            for (WeeklyAvailableHoursView weekView : mViews) {
                 final AvailableHoursWithDateView view = weekView.getViewForDate(timeline.getDate());
-                if (view != null)
-                {
+                if (view != null) {
                     view.updateTimelines(timeline);
                 }
             }
         }
 
         @Override
-        public int getItemPosition(final Object object)
-        {
+        public int getItemPosition(final Object object) {
             int index = mViews.indexOf(object);
-            if (index == POSITION_NOT_FOUND)
-            {
+            if (index == POSITION_NOT_FOUND) {
                 return POSITION_NONE;
             }
-            else
-            {
+            else {
                 return index;
             }
         }
 
         @Override
-        public Object instantiateItem(final ViewGroup container, final int position)
-        {
+        public Object instantiateItem(final ViewGroup container, final int position) {
             final View view = getItemAt(position);
             container.addView(view);
             return view;
         }
 
         @Override
-        public int getCount()
-        {
+        public int getCount() {
             return mViews.size();
         }
 
         @Override
-        public boolean isViewFromObject(final View view, final Object object)
-        {
+        public boolean isViewFromObject(final View view, final Object object) {
             return view == object;
         }
 
         @Override
-        public void destroyItem(ViewGroup container, int position, Object object)
-        {
+        public void destroyItem(ViewGroup container, int position, Object object) {
             container.removeView(getItemAt(position));
         }
 
-        private View getItemAt(final int position)
-        {
+        private View getItemAt(final int position) {
             return mViews.get(position);
         }
     }

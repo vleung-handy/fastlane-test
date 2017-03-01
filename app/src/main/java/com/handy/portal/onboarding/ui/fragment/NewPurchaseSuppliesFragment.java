@@ -9,17 +9,14 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 
 
-public class NewPurchaseSuppliesFragment extends OnboardingSubflowUIFragment
-{
+public class NewPurchaseSuppliesFragment extends OnboardingSubflowUIFragment {
 
-    public static NewPurchaseSuppliesFragment newInstance()
-    {
+    public static NewPurchaseSuppliesFragment newInstance() {
         return new NewPurchaseSuppliesFragment();
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                 NativeOnboardingLog.Types.SUPPLIES_SUGGESTION_SHOWN)));
@@ -27,48 +24,41 @@ public class NewPurchaseSuppliesFragment extends OnboardingSubflowUIFragment
     }
 
     @Override
-    protected int getButtonType()
-    {
+    protected int getButtonType() {
         return ButtonTypes.SINGLE_FIXED;
     }
 
     @Override
-    protected int getLayoutResId()
-    {
+    protected int getLayoutResId() {
         return R.layout.view_new_purchase_supplies;
     }
 
     @Override
-    protected String getTitle()
-    {
+    protected String getTitle() {
         return getString(R.string.supplies);
     }
 
     @Nullable
     @Override
-    protected String getHeaderText()
-    {
+    protected String getHeaderText() {
         return getString(R.string.do_you_have_supplies);
     }
 
     @Nullable
     @Override
-    protected String getSubHeaderText()
-    {
+    protected String getSubHeaderText() {
         return getString(R.string.supplies_description_standard_kit);
     }
 
     @Override
-    protected void onPrimaryButtonClicked()
-    {
+    protected void onPrimaryButtonClicked() {
         bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                 NativeOnboardingLog.Types.SUPPLIES_SUGGESTION_TAPPED)));
         terminate(new Intent());
     }
 
     @Override
-    protected String getPrimaryButtonText()
-    {
+    protected String getPrimaryButtonText() {
         return getString(R.string.continue_single_word);
     }
 }

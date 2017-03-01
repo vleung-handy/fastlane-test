@@ -24,12 +24,10 @@ import dagger.Provides;
                 NotificationBlockerDialogFragment.class,
 
         })
-public final class NotificationModule
-{
+public final class NotificationModule {
     @Provides
     @Singleton
-    final NotificationMessageManager provideNotificationMessageManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager)
-    {
+    final NotificationMessageManager provideNotificationMessageManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager) {
         return new NotificationMessageManager(bus, dataManager, prefsManager);
     }
 }

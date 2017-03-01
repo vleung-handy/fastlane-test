@@ -42,8 +42,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class PurchaseSuppliesConfirmationFragmentTest extends RobolectricGradleTestWrapper
-{
+public class PurchaseSuppliesConfirmationFragmentTest extends RobolectricGradleTestWrapper {
 
     private PurchaseSuppliesConfirmationFragment mFragment;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
@@ -63,8 +62,7 @@ public class PurchaseSuppliesConfirmationFragmentTest extends RobolectricGradleT
     private ActivityController<OnboardingSubflowActivity> mActivityController;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         initMocks(this);
         when(mOnboardingDetails.getSubflowDataByType(SubflowType.SUPPLIES))
                 .thenReturn(mSubflowData);
@@ -78,8 +76,7 @@ public class PurchaseSuppliesConfirmationFragmentTest extends RobolectricGradleT
         when(mProviderProfile.getProviderPersonalInfo()).thenReturn(mProviderPersonalInfo);
     }
 
-    private void startFragment()
-    {
+    private void startFragment() {
         mActivityController = Robolectric.buildActivity(OnboardingSubflowActivity.class, mIntent);
         mActivityController.create().resume().visible();
         ((PurchaseSuppliesFragment) mActivityController.get().getSupportFragmentManager()
@@ -89,8 +86,7 @@ public class PurchaseSuppliesConfirmationFragmentTest extends RobolectricGradleT
     }
 
     @Test
-    public void shouldNotShowOrderSummaryIfCardIsNotRequired() throws Exception
-    {
+    public void shouldNotShowOrderSummaryIfCardIsNotRequired() throws Exception {
         when(mSuppliesInfo.isCardRequired()).thenReturn(false);
 
         startFragment();
@@ -99,8 +95,7 @@ public class PurchaseSuppliesConfirmationFragmentTest extends RobolectricGradleT
     }
 
     @Test
-    public void shouldShowOrderSummaryWithOrderTotalIfCardIsRequired() throws Exception
-    {
+    public void shouldShowOrderSummaryWithOrderTotalIfCardIsRequired() throws Exception {
         when(mSuppliesInfo.isCardRequired()).thenReturn(true);
         when(mSuppliesInfo.getCost()).thenReturn("$67");
 
@@ -112,8 +107,7 @@ public class PurchaseSuppliesConfirmationFragmentTest extends RobolectricGradleT
     }
 
     @Test
-    public void shouldPopulateShippingSummaryIfAddressInfoIsAvailable() throws Exception
-    {
+    public void shouldPopulateShippingSummaryIfAddressInfoIsAvailable() throws Exception {
         startFragment();
         final ProfileEvent.ReceiveProviderProfileSuccess event =
                 new ProfileEvent.ReceiveProviderProfileSuccess(mProviderProfile);
@@ -126,8 +120,7 @@ public class PurchaseSuppliesConfirmationFragmentTest extends RobolectricGradleT
     }
 
     @Test
-    public void shouldShowEditAddressIfAddressInfoIsNotAvailable() throws Exception
-    {
+    public void shouldShowEditAddressIfAddressInfoIsNotAvailable() throws Exception {
         startFragment();
         final ProfileEvent.ReceiveProviderProfileError event =
                 new ProfileEvent.ReceiveProviderProfileError(null);
@@ -139,8 +132,7 @@ public class PurchaseSuppliesConfirmationFragmentTest extends RobolectricGradleT
     }
 
     @Test
-    public void shouldPopulatePaymentSummaryIfCardInfoIsAvailable() throws Exception
-    {
+    public void shouldPopulatePaymentSummaryIfCardInfoIsAvailable() throws Exception {
         when(mSuppliesInfo.isCardRequired()).thenReturn(true);
         when(mProviderPersonalInfo.getCardLast4()).thenReturn("7788");
         startFragment();
@@ -155,8 +147,7 @@ public class PurchaseSuppliesConfirmationFragmentTest extends RobolectricGradleT
     }
 
     @Test
-    public void shouldShowEditPaymentIfCardInfoIsNotAvailable() throws Exception
-    {
+    public void shouldShowEditPaymentIfCardInfoIsNotAvailable() throws Exception {
         when(mSuppliesInfo.isCardRequired()).thenReturn(true);
         when(mProviderPersonalInfo.getCardLast4()).thenReturn(null);
         startFragment();
@@ -170,8 +161,7 @@ public class PurchaseSuppliesConfirmationFragmentTest extends RobolectricGradleT
     }
 
     @Test
-    public void shouldDisplayNoticeThatSuppliesFeeWillBeCharged() throws Exception
-    {
+    public void shouldDisplayNoticeThatSuppliesFeeWillBeCharged() throws Exception {
         when(mSuppliesInfo.isCardRequired()).thenReturn(false);
         when(mSuppliesInfo.getCost()).thenReturn("$67");
         when(mProviderPersonalInfo.getCardLast4()).thenReturn(null);
@@ -187,8 +177,7 @@ public class PurchaseSuppliesConfirmationFragmentTest extends RobolectricGradleT
     }
 
     @Test
-    public void testCardSubmission() throws Exception
-    {
+    public void testCardSubmission() throws Exception {
         when(mSuppliesInfo.getCost()).thenReturn("$67");
         when(mProviderPersonalInfo.getAddress().getShippingAddress()).thenReturn("123 Handy St");
         when(mProviderPersonalInfo.getFullName()).thenReturn("John Doe");
@@ -241,8 +230,7 @@ public class PurchaseSuppliesConfirmationFragmentTest extends RobolectricGradleT
     }
 
     @Test
-    public void testAddressSubmission() throws Exception
-    {
+    public void testAddressSubmission() throws Exception {
         when(mSuppliesInfo.isCardRequired()).thenReturn(false);
         shouldShowEditAddressIfAddressInfoIsNotAvailable();
 

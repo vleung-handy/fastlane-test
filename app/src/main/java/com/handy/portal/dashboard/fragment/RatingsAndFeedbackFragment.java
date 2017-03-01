@@ -36,8 +36,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class RatingsAndFeedbackFragment extends ActionBarFragment
-{
+public class RatingsAndFeedbackFragment extends ActionBarFragment {
     @Inject
     ProviderManager mProviderManager;
 
@@ -64,15 +63,13 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
     private int mNumberOfGraphsAnimated = 0;
 
     @Override
-    protected MainViewPage getAppPage()
-    {
+    protected MainViewPage getAppPage() {
         return MainViewPage.DASHBOARD;
     }
 
     @Nullable
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
-    {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
 
         View view = inflater.inflate(R.layout.fragment_dashboard, container, false);
@@ -82,8 +79,7 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         bus.register(this);
         setActionBar(R.string.ratings_and_feedback, false);
@@ -91,23 +87,19 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         bus.unregister(this);
         super.onPause();
     }
 
-    private void createDashboardView(ProviderEvaluation evaluation)
-    {
+    private void createDashboardView(ProviderEvaluation evaluation) {
         String welcomeString;
         ProviderProfile providerProfile = mProviderManager.getCachedProviderProfile();
-        if (providerProfile != null && providerProfile.getProviderPersonalInfo() != null)
-        {
+        if (providerProfile != null && providerProfile.getProviderPersonalInfo() != null) {
             welcomeString = getString(R.string.welcome_back_formatted,
                     providerProfile.getProviderPersonalInfo().getFirstName());
         }
-        else
-        {
+        else {
             welcomeString = getString(R.string.welcome_back);
         }
 
@@ -120,17 +112,14 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
         mRatingsProPerformanceViewPager.setClipToPadding(false);
         mRatingsProPerformanceViewPager.setPageMargin((int) getResources().getDimension(R.dimen.ratings_view_pager_margin));
 
-        mRatingsProPerformanceViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener()
-        {
+        mRatingsProPerformanceViewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {}
 
             @Override
-            public void onPageSelected(final int position)
-            {
+            public void onPageSelected(final int position) {
                 bus.post(new ProviderDashboardEvent.AnimateFiveStarPercentageGraph());
-                switch (position)
-                {
+                switch (position) {
                     case DashboardRatingsPagerAdapter.LIFETIME_PAGE_POSITION:
                         bus.post(new LogEvent.AddLogEvent(new PerformanceLog.LifetimeRatingsShown()));
                         break;
@@ -154,73 +143,61 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onReceiveProviderEvaluationSuccess(ProviderDashboardEvent.ReceiveProviderEvaluationSuccess event)
-    {
+    public void onReceiveProviderEvaluationSuccess(ProviderDashboardEvent.ReceiveProviderEvaluationSuccess event) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
         mDashboardLayout.setVisibility(View.VISIBLE);
         mFetchErrorView.setVisibility(View.GONE);
 
-        if (event.providerEvaluation != null)
-        {
+        if (event.providerEvaluation != null) {
             mProviderEvaluation = event.providerEvaluation;
             createDashboardView(mProviderEvaluation);
         }
     }
 
     @Subscribe
-    public void onReceiveProviderEvaluationFailure(ProviderDashboardEvent.ReceiveProviderEvaluationError event)
-    {
+    public void onReceiveProviderEvaluationFailure(ProviderDashboardEvent.ReceiveProviderEvaluationError event) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
 
         mDashboardLayout.setVisibility(View.GONE);
         mFetchErrorView.setVisibility(View.VISIBLE);
 
-        if (event.error != null && event.error.getType() == DataManager.DataManagerError.Type.NETWORK)
-        {
+        if (event.error != null && event.error.getType() == DataManager.DataManagerError.Type.NETWORK) {
             mFetchErrorTextView.setText(R.string.error_fetching_connectivity_issue);
         }
-        else
-        {
+        else {
             mFetchErrorTextView.setText(R.string.error_dashboard);
         }
     }
 
     @Subscribe
-    public void onAnimateFiveStarPercentageGraph(ProviderDashboardEvent.AnimateFiveStarPercentageGraph event)
-    {
+    public void onAnimateFiveStarPercentageGraph(ProviderDashboardEvent.AnimateFiveStarPercentageGraph event) {
         int currentPageIndex = mRatingsProPerformanceViewPager.getCurrentItem();
         DashboardRatingsView dashboardRatingsView = (DashboardRatingsView) mRatingsProPerformanceViewPager.getChildAt(currentPageIndex);
 
-        if (dashboardRatingsView != null && !dashboardRatingsView.hasBeenAnimated())
-        {
+        if (dashboardRatingsView != null && !dashboardRatingsView.hasBeenAnimated()) {
             mNumberOfGraphsAnimated++;
             dashboardRatingsView.animateProgressBar();
         }
     }
 
-    private boolean shouldAnimateFiveStarPercentageGraphs()
-    {
+    private boolean shouldAnimateFiveStarPercentageGraphs() {
         return mNumberOfGraphsAnimated == 0;
     }
 
     @OnClick(R.id.try_again_button)
-    public void getProviderEvaluation()
-    {
-        if (mProviderEvaluation == null)
-        {
+    public void getProviderEvaluation() {
+        if (mProviderEvaluation == null) {
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new ProviderDashboardEvent.RequestProviderEvaluation());
         }
-        else
-        {
+        else {
             createDashboardView(mProviderEvaluation);
         }
     }
 
     @OnClick(R.id.feedback_option)
-    public void switchToFeedback()
-    {
+    public void switchToFeedback() {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
 

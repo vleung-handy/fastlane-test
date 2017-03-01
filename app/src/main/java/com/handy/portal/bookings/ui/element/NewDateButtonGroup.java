@@ -16,8 +16,7 @@ import java.util.Map;
 
 
 public class NewDateButtonGroup extends LinearLayout
-        implements NewDateButton.SelectionChangedListener
-{
+        implements NewDateButton.SelectionChangedListener {
     private final DatesPagerAdapter.DateSelectedListener mDateSelectedListener;
     private Map<Date, NewDateButton> mDateButtons;
 
@@ -25,21 +24,18 @@ public class NewDateButtonGroup extends LinearLayout
             final Context context,
             final List<Date> dates,
             final DatesPagerAdapter.DateSelectedListener dateSelectedListener
-    )
-    {
+    ) {
         super(context);
         mDateSelectedListener = dateSelectedListener;
         mDateButtons = new LinkedHashMap<>();
         init(dates);
     }
 
-    private void init(final List<Date> dates)
-    {
+    private void init(final List<Date> dates) {
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         setOrientation(LinearLayout.HORIZONTAL);
-        for (final Date date : dates)
-        {
+        for (final Date date : dates) {
             final NewDateButton dateButton = new NewDateButton(getContext(), date);
             dateButton.setSelectionChangedListener(this);
             mDateButtons.put(date, dateButton);
@@ -47,39 +43,30 @@ public class NewDateButtonGroup extends LinearLayout
         }
     }
 
-    public NewDateButton getDateButtonForDate(final Date date)
-    {
+    public NewDateButton getDateButtonForDate(final Date date) {
         return mDateButtons.get(date);
     }
 
-    public void clearSelection()
-    {
-        for (final NewDateButton button : mDateButtons.values())
-        {
+    public void clearSelection() {
+        for (final NewDateButton button : mDateButtons.values()) {
             button.setSelected(false);
         }
     }
 
-    public NewDateButton getFirstEnabledDateButton()
-    {
-        for (final NewDateButton button : mDateButtons.values())
-        {
-            if (button.isEnabled())
-            {
+    public NewDateButton getFirstEnabledDateButton() {
+        for (final NewDateButton button : mDateButtons.values()) {
+            if (button.isEnabled()) {
                 return button;
             }
         }
         return null;
     }
 
-    public NewDateButton getLastEnabledDateButton()
-    {
+    public NewDateButton getLastEnabledDateButton() {
         final ArrayList<NewDateButton> buttons = Lists.newArrayList(mDateButtons.values());
         Collections.reverse(buttons);
-        for (final NewDateButton button : buttons)
-        {
-            if (button.isEnabled())
-            {
+        for (final NewDateButton button : buttons) {
+            if (button.isEnabled()) {
                 return button;
             }
         }
@@ -87,21 +74,16 @@ public class NewDateButtonGroup extends LinearLayout
     }
 
     @Override
-    public void onSelectionChanged(final NewDateButton targetButton)
-    {
-        if (!targetButton.isSelected())
-        {
+    public void onSelectionChanged(final NewDateButton targetButton) {
+        if (!targetButton.isSelected()) {
             return;
         }
-        for (final NewDateButton button : mDateButtons.values())
-        {
-            if (button.isSelected() && !targetButton.equals(button))
-            {
+        for (final NewDateButton button : mDateButtons.values()) {
+            if (button.isSelected() && !targetButton.equals(button)) {
                 button.setSelected(false);
             }
         }
-        if (mDateSelectedListener != null)
-        {
+        if (mDateSelectedListener != null) {
             mDateSelectedListener.onDateSelected(targetButton.getDate());
         }
     }

@@ -2,35 +2,29 @@ package com.handy.portal.logger.handylogger.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ProfileLog extends EventLog
-{
+public class ProfileLog extends EventLog {
     private static final String EVENT_CONTEXT = "profile";
 
-    public ProfileLog(String eventType)
-    {
+    public ProfileLog(String eventType) {
         super(eventType, EVENT_CONTEXT);
     }
 
     // Referral logs
 
 
-    public static class ReferralOpen extends ProfileLog
-    {
+    public static class ReferralOpen extends ProfileLog {
         private static final String EVENT_TYPE = "referral_open";
 
-        public ReferralOpen()
-        {
+        public ReferralOpen() {
             super(EVENT_TYPE);
         }
     }
 
 
-    public static class ReferralSelected extends ProfileLog
-    {
+    public static class ReferralSelected extends ProfileLog {
         private static final String EVENT_TYPE = "referral_selected";
 
-        public ReferralSelected()
-        {
+        public ReferralSelected() {
             super(EVENT_TYPE);
         }
     }
@@ -38,34 +32,28 @@ public class ProfileLog extends EventLog
     // Resupply kit logs
 
 
-    public static class ResupplyKitSelected extends ProfileLog
-    {
+    public static class ResupplyKitSelected extends ProfileLog {
         private static final String EVENT_TYPE = "resupply_kit_selected";
 
-        public ResupplyKitSelected()
-        {
+        public ResupplyKitSelected() {
             super(EVENT_TYPE);
         }
     }
 
 
-    public static class ResupplyKitSiteLoadStarted extends ProfileLog
-    {
+    public static class ResupplyKitSiteLoadStarted extends ProfileLog {
         private static final String EVENT_TYPE = "resupply_kit_site_load_started";
 
-        public ResupplyKitSiteLoadStarted()
-        {
+        public ResupplyKitSiteLoadStarted() {
             super(EVENT_TYPE);
         }
     }
 
 
-    public static class ResupplyKitSiteLoadFailed extends ProfileLog
-    {
+    public static class ResupplyKitSiteLoadFailed extends ProfileLog {
         private static final String EVENT_TYPE = "resupply_kit_site_load_failed";
 
-        public ResupplyKitSiteLoadFailed()
-        {
+        public ResupplyKitSiteLoadFailed() {
             super(EVENT_TYPE);
         }
     }
@@ -73,80 +61,69 @@ public class ProfileLog extends EventLog
     // Edit profile logs
 
 
-    public static class EditProfileSelected extends ProfileLog
-    {
+    public static class EditProfileSelected extends ProfileLog {
         private static final String EVENT_TYPE = "edit_profile_selected";
 
-        public EditProfileSelected()
-        {
+        public EditProfileSelected() {
             super(EVENT_TYPE);
         }
     }
 
 
-    public static class EditProfileSubmitted extends ProfileLog
-    {
+    public static class EditProfileSubmitted extends ProfileLog {
         private static final String EVENT_TYPE = "edit_profile_submitted";
 
-        public EditProfileSubmitted()
-        {
+        public EditProfileSubmitted() {
             super(EVENT_TYPE);
         }
     }
 
 
-    public static class EditProfileConfirmed extends ProfileLog
-    {
+    public static class EditProfileConfirmed extends ProfileLog {
         private static final String EVENT_TYPE = "edit_profile_confirmed";
 
-        public EditProfileConfirmed()
-        {
+        public EditProfileConfirmed() {
             super(EVENT_TYPE);
         }
     }
 
 
-    public static class EditProfileValidationFailure extends ProfileLog
-    {
+    public static class EditProfileValidationFailure extends ProfileLog {
         private static final String EVENT_TYPE = "edit_profile_validation_failure";
 
         @SerializedName("error_message")
         private final String mErrorMessage;
 
-        public EditProfileValidationFailure(final String errorMessage)
-        {
+        public EditProfileValidationFailure(final String errorMessage) {
             super(EVENT_TYPE);
             mErrorMessage = errorMessage;
         }
     }
 
 
-    public static class EditProfileError extends ProfileLog
-    {
+    public static class EditProfileError extends ProfileLog {
         private static final String EVENT_TYPE = "edit_profile_error";
 
         @SerializedName("error_message")
         private final String mErrorMessage;
 
-        public EditProfileError(final String errorMessage)
-        {
+        public EditProfileError(final String errorMessage) {
             super(EVENT_TYPE);
             mErrorMessage = errorMessage;
         }
     }
 
-    public static class ProfileShareClicked extends ProfileLog
-    {
+
+    public static class ProfileShareClicked extends ProfileLog {
         private static final String EVENT_TYPE = "profile_share_clicked";
 
-        public ProfileShareClicked()
-        {
+        public ProfileShareClicked() {
             super(EVENT_TYPE);
         }
     }
 
-    public static class ProfileShareSubmitted extends ProfileLog
-    {
+
+    public static class ProfileShareSubmitted extends ProfileLog {
         private static final String EVENT_TYPE = "profile_share_submitted";
 
         @SerializedName("app_name")
@@ -154,8 +131,7 @@ public class ProfileLog extends EventLog
         @SerializedName("channel")
         private final String mChannel;
 
-        public ProfileShareSubmitted(final String appName, final String channel)
-        {
+        public ProfileShareSubmitted(final String appName, final String channel) {
             super(EVENT_TYPE);
             mAppName = appName;
             mChannel = channel;

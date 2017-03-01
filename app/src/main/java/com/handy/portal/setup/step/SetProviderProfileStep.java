@@ -9,28 +9,24 @@ import com.handy.portal.library.util.Utils;
 
 import javax.inject.Inject;
 
-public class SetProviderProfileStep extends FlowStep
-{
+public class SetProviderProfileStep extends FlowStep {
     @Inject
     ProviderManager mProviderManager;
     private ProviderProfile mProviderProfile;
 
     public SetProviderProfileStep(final Context context,
-                                  final ProviderProfile providerProfile)
-    {
+                                  final ProviderProfile providerProfile) {
         Utils.inject(context, this);
         mProviderProfile = providerProfile;
     }
 
     @Override
-    public boolean shouldExecute()
-    {
+    public boolean shouldExecute() {
         return mProviderProfile != null;
     }
 
     @Override
-    public void execute()
-    {
+    public void execute() {
         mProviderManager.setProviderProfile(mProviderProfile);
         complete();
     }

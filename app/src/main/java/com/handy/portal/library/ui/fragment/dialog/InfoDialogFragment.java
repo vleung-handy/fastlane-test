@@ -14,8 +14,7 @@ import butterknife.BindView;
 /**
  * a dismissible info dialog that accepts a title and message
  */
-public class InfoDialogFragment extends ConfirmActionSlideUpDialogFragment
-{
+public class InfoDialogFragment extends ConfirmActionSlideUpDialogFragment {
     public static final String FRAGMENT_TAG =
             InfoDialogFragment.class.getName();
 
@@ -32,8 +31,7 @@ public class InfoDialogFragment extends ConfirmActionSlideUpDialogFragment
     public static InfoDialogFragment newInstance(
             @NonNull String titleText,
             @NonNull String messageText
-    )
-    {
+    ) {
         Bundle args = new Bundle();
         args.putString(BUNDLE_KEY_TITLE_TEXT, titleText);
         args.putString(BUNDLE_KEY_MESSAGE_TEXT, messageText);
@@ -44,14 +42,12 @@ public class InfoDialogFragment extends ConfirmActionSlideUpDialogFragment
     }
 
     @Override
-    protected View inflateConfirmActionContentView(final LayoutInflater inflater, final ViewGroup container)
-    {
+    protected View inflateConfirmActionContentView(final LayoutInflater inflater, final ViewGroup container) {
         return inflater.inflate(R.layout.fragment_dialog_info, container, false);
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         String titleText =
                 getArguments().getString(BUNDLE_KEY_TITLE_TEXT);
@@ -62,20 +58,17 @@ public class InfoDialogFragment extends ConfirmActionSlideUpDialogFragment
     }
 
     @Override
-    protected void onConfirmActionButtonClicked()
-    {
+    protected void onConfirmActionButtonClicked() {
         dismiss();
     }
 
     @Override
-    protected int getConfirmButtonBackgroundResourceId()
-    {
+    protected int getConfirmButtonBackgroundResourceId() {
         return R.drawable.button_green_round;
     }
 
     @Override
-    protected String getConfirmButtonText()
-    {
+    protected String getConfirmButtonText() {
         return getString(R.string.info_dialog_confirm_button);
     }
 }

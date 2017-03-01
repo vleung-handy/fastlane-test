@@ -25,8 +25,7 @@ import static android.support.test.espresso.matcher.ViewMatchers.withId;
 
 //note that animations should be disabled on the device running these tests
 @RunWith(AndroidJUnit4.class)
-public class UpdatePersonalInfoTest
-{
+public class UpdatePersonalInfoTest {
     private static final TestUser TEST_USER = TestUsers.BOOKINGS_NY_PROVIDER;
     private static final TestField[] TEST_UPDATE_PERSONAL_INFO_FIELDS
             = new TestField[]{
@@ -41,11 +40,9 @@ public class UpdatePersonalInfoTest
 
     @Rule
     public ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<SplashActivity>(
-            SplashActivity.class)
-    {
+            SplashActivity.class) {
         @Override
-        protected Intent getActivityIntent()
-        {
+        protected Intent getActivityIntent() {
             Intent intent = super.getActivityIntent();
             intent.putExtra(PrefsKey.AUTH_TOKEN, TEST_USER.getPersistenceToken());
             return intent;
@@ -53,8 +50,7 @@ public class UpdatePersonalInfoTest
     };
 
     @After
-    public void tearDown()
-    {
+    public void tearDown() {
         AppInteractionUtil.logOut();
     }
 
@@ -73,8 +69,7 @@ public class UpdatePersonalInfoTest
      * - there are no popup modals
      */
     @Test
-    public void testPersonalInfo()
-    {
+    public void testPersonalInfo() {
         ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         ViewUtil.waitForViewNotVisible(R.id.loading_overlay, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
 

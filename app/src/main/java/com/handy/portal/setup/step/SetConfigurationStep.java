@@ -9,28 +9,24 @@ import com.handy.portal.library.util.Utils;
 
 import javax.inject.Inject;
 
-public class SetConfigurationStep extends FlowStep
-{
+public class SetConfigurationStep extends FlowStep {
     private final ConfigurationResponse mConfiguration;
     @Inject
     ConfigManager mConfigManager;
 
     public SetConfigurationStep(final Context context,
-                                final ConfigurationResponse configuration)
-    {
+                                final ConfigurationResponse configuration) {
         Utils.inject(context, this);
         mConfiguration = configuration;
     }
 
     @Override
-    public boolean shouldExecute()
-    {
+    public boolean shouldExecute() {
         return mConfiguration != null;
     }
 
     @Override
-    public void execute()
-    {
+    public void execute() {
         mConfigManager.setConfigurationResponse(mConfiguration);
         complete();
     }

@@ -25,11 +25,9 @@ import dagger.Provides;
                 ClientConversationsFragment.class,
                 ConversationHolder.class,
         })
-public final class ClientsModule
-{
+public final class ClientsModule {
     @Provides
-    final LayerHelper provideLayerHelper()
-    {
+    final LayerHelper provideLayerHelper() {
         return HandyLibrary.getInstance().getLayerHelper();
     }
 }

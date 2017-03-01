@@ -10,8 +10,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class ProviderPersonalInfo implements Serializable
-{
+public class ProviderPersonalInfo implements Serializable {
     @SerializedName("first_name")
     private String mFirstName;
     @SerializedName("last_name")
@@ -35,80 +34,63 @@ public class ProviderPersonalInfo implements Serializable
     @SerializedName("profile_images")
     private ArrayList<ProfileImage> mProfileImages;
 
-    public String getLastName()
-    {
+    public String getLastName() {
         return mLastName;
     }
 
-    public String getFirstName()
-    {
+    public String getFirstName() {
         return mFirstName;
     }
 
-    public String getFullName()
-    {
+    public String getFullName() {
         return mFirstName + " " + mLastName;
     }
 
-    public String getEmail()
-    {
+    public String getEmail() {
         return mEmail;
     }
 
-    public String getPhone()
-    {
+    public String getPhone() {
         return mPhone;
     }
 
-    public Address getAddress()
-    {
+    public Address getAddress() {
         return mAddress;
     }
 
-    public Date getActivationDate()
-    {
+    public Date getActivationDate() {
         return mActivationDate;
     }
 
-    public String getLocalPhone()
-    {
+    public String getLocalPhone() {
         return mLocalPhone;
     }
 
-    public String getCardLast4()
-    {
+    public String getCardLast4() {
         return mCardLast4;
     }
 
-    public String getOperatingRegion()
-    {
+    public String getOperatingRegion() {
         return mOperatingRegion;
     }
 
-    public String getCurrencyCode()
-    {
+    public String getCurrencyCode() {
         return mCurrencyCode;
     }
 
-    public boolean isUK()
-    {
+    public boolean isUK() {
         return Country.GB.equalsIgnoreCase(getAddress().getCountry());
     }
 
-    public boolean isUS()
-    {
+    public boolean isUS() {
         return Country.US.equalsIgnoreCase(getAddress().getCountry());
     }
 
     @Nullable
-    public ProfileImage getProfileImage(@NonNull final ProfileImage.Type type)
-    {
-        if (mProfileImages != null)
-        {
-            for (ProfileImage profileImage : mProfileImages)
-            {
-                if (profileImage.getType() == type)
-                {
+    public ProfileImage getProfileImage(@NonNull final ProfileImage.Type type) {
+        if (mProfileImages != null) {
+            for (ProfileImage profileImage : mProfileImages) {
+                if (profileImage.getType() == type) {
                     return profileImage;
                 }
             }
@@ -116,10 +98,8 @@ public class ProviderPersonalInfo implements Serializable
         return null;
     }
 
-    public static class ProfileImage implements Serializable
-    {
-        public enum Type
-        {
+    public static class ProfileImage implements Serializable {
+        public enum Type {
             @SerializedName("original")
             ORIGINAL,
             @SerializedName("thumbnail")
@@ -138,13 +118,11 @@ public class ProviderPersonalInfo implements Serializable
         @SerializedName("type")
         private Type mType;
 
-        public Type getType()
-        {
+        public Type getType() {
             return mType;
         }
 
-        public String getUrl()
-        {
+        public String getUrl() {
             return mUrl;
         }
     }

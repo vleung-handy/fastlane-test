@@ -10,46 +10,37 @@ import java.util.Date;
 /**
  *
  */
-public class LocationUpdate
-{
+public class LocationUpdate {
 
-    public double getLatitude()
-    {
+    public double getLatitude() {
         return mLatitude;
     }
 
-    public double getLongitude()
-    {
+    public double getLongitude() {
         return mLongitude;
     }
 
-    public float getAccuracyMeters()
-    {
+    public float getAccuracyMeters() {
         return mAccuracyMeters;
     }
 
-    public double getAltitudeMeters()
-    {
+    public double getAltitudeMeters() {
         return mAltitudeMeters;
     }
 
-    public float getSpeed()
-    {
+    public float getSpeed() {
         return mSpeed;
     }
 
-    public float getBearingDegrees()
-    {
+    public float getBearingDegrees() {
         return mBearingDegrees;
     }
 
-    public Date getCapturedTimestamp()
-    {
+    public Date getCapturedTimestamp() {
         return mCapturedTimestamp;
     }
 
-    public float getBatteryLevelPercent()
-    {
+    public float getBatteryLevelPercent() {
         return mBatteryLevelPercent;
     }
 
@@ -77,8 +68,7 @@ public class LocationUpdate
     String mBookingId;
 
 
-    public static class EventName
-    {
+    public static class EventName {
         public static final String BOOKING_GEOFENCE_ENTERED = "booking_geofence_entered";
         public static final String BOOKING_GEOFENCE_EXITED = "booking_geofence_exited";
     }
@@ -89,8 +79,7 @@ public class LocationUpdate
                           double altitudeMeters,
                           float speed,
                           float bearingDegrees,
-                          Date capturedTimestamp)
-    {
+                          Date capturedTimestamp) {
         mLatitude = latitude;
         mLongitude = longitude;
         mAccuracyMeters = accuracyMeters;
@@ -101,8 +90,7 @@ public class LocationUpdate
     }
 
     //TODO: move this?
-    public static LocationUpdate from(@NonNull Location location)
-    {
+    public static LocationUpdate from(@NonNull Location location) {
         return new LocationUpdate(
                 location.getLatitude(),
                 location.getLongitude(),
@@ -114,8 +102,7 @@ public class LocationUpdate
         );
     }
 
-    public void setBookingId(final String bookingId)
-    {
+    public void setBookingId(final String bookingId) {
         mBookingId = bookingId;
     }
 
@@ -124,18 +111,15 @@ public class LocationUpdate
      *
      * @param batteryLevelPercent
      */
-    public void setBatteryLevelPercent(final float batteryLevelPercent)
-    {
+    public void setBatteryLevelPercent(final float batteryLevelPercent) {
         mBatteryLevelPercent = batteryLevelPercent;
     }
 
-    public void setActiveNetworkType(final String activeNetworkType)
-    {
+    public void setActiveNetworkType(final String activeNetworkType) {
         mActiveNetworkType = activeNetworkType;
     }
 
-    public void setEventName(final String eventName)
-    {
+    public void setEventName(final String eventName) {
         mEventName = eventName;
     }
 
@@ -145,8 +129,7 @@ public class LocationUpdate
      * @return
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         return "booking id (optional): " + mBookingId
                 + "\nevent name (optional): " + mEventName
                 + "\nlat: " + mLatitude

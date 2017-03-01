@@ -37,8 +37,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class OnboardingSubflowActivityTest extends RobolectricGradleTestWrapper
-{
+public class OnboardingSubflowActivityTest extends RobolectricGradleTestWrapper {
     private ActivityController<OnboardingSubflowActivity> mActivityController;
 
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
@@ -47,8 +46,7 @@ public class OnboardingSubflowActivityTest extends RobolectricGradleTestWrapper
     private Intent mIntent;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         initMocks(this);
         when(mIntent.getSerializableExtra(BundleKeys.ONBOARDING_DETAILS))
                 .thenReturn(mOnboardingDetails);
@@ -57,8 +55,7 @@ public class OnboardingSubflowActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldLaunchStatusSubflowFragment() throws Exception
-    {
+    public void shouldLaunchStatusSubflowFragment() throws Exception {
         mActivityController.create().resume();
 
         final Fragment subflowFragment =
@@ -68,8 +65,7 @@ public class OnboardingSubflowActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldLaunchClaimSubflowFragment() throws Exception
-    {
+    public void shouldLaunchClaimSubflowFragment() throws Exception {
         when(mIntent.getSerializableExtra(BundleKeys.SUBFLOW_TYPE)).thenReturn(SubflowType.CLAIM);
 
         mActivityController.create().resume();
@@ -81,8 +77,7 @@ public class OnboardingSubflowActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldLaunchSuppliesSubflowFragment() throws Exception
-    {
+    public void shouldLaunchSuppliesSubflowFragment() throws Exception {
         when(mIntent.getSerializableExtra(BundleKeys.SUBFLOW_TYPE))
                 .thenReturn(SubflowType.SUPPLIES);
 
@@ -95,8 +90,7 @@ public class OnboardingSubflowActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldLaunchNewSuppliesSubflowFragment() throws Exception
-    {
+    public void shouldLaunchNewSuppliesSubflowFragment() throws Exception {
         when(mIntent.getSerializableExtra(BundleKeys.SUBFLOW_TYPE))
                 .thenReturn(SubflowType.NEW_SUPPLIES);
 
@@ -109,8 +103,7 @@ public class OnboardingSubflowActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldLaunchConfirmationSubflowFragment() throws Exception
-    {
+    public void shouldLaunchConfirmationSubflowFragment() throws Exception {
         when(mIntent.getSerializableExtra(BundleKeys.SUBFLOW_TYPE))
                 .thenReturn(SubflowType.CONFIRMATION);
         final ArrayList<Booking> bookings = Lists.newArrayList();
@@ -132,8 +125,7 @@ public class OnboardingSubflowActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldAddToFragmentBackStackOnNext() throws Exception
-    {
+    public void shouldAddToFragmentBackStackOnNext() throws Exception {
         mActivityController.create().resume();
 
         final OnboardingSubflowActivity activity = mActivityController.get();
@@ -149,8 +141,7 @@ public class OnboardingSubflowActivityTest extends RobolectricGradleTestWrapper
 
     @Test
     @Ignore
-    public void shouldPopFragmentBackStackOnBackPressed() throws Exception
-    {
+    public void shouldPopFragmentBackStackOnBackPressed() throws Exception {
         when(mIntent.getSerializableExtra(BundleKeys.SUBFLOW_TYPE))
                 .thenReturn(SubflowType.SUPPLIES);
         mActivityController.create().resume();
@@ -169,8 +160,7 @@ public class OnboardingSubflowActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldFinishStatusSubflowOnBackPressed() throws Exception
-    {
+    public void shouldFinishStatusSubflowOnBackPressed() throws Exception {
         mActivityController.create().resume();
 
         mActivityController.get().onBackPressed();
@@ -179,8 +169,7 @@ public class OnboardingSubflowActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldFinishSubflowOnTerminate() throws Exception
-    {
+    public void shouldFinishSubflowOnTerminate() throws Exception {
         mActivityController.create().resume();
 
         mActivityController.get().terminate(new Intent());
@@ -189,8 +178,7 @@ public class OnboardingSubflowActivityTest extends RobolectricGradleTestWrapper
     }
 
     @Test
-    public void shouldCancelAfterReachingTtl() throws Exception
-    {
+    public void shouldCancelAfterReachingTtl() throws Exception {
         final int ttlMillis = ShadowApplication.getInstance().getApplicationContext().getResources()
                 .getInteger(R.integer.onboarding_ttl_mins) * 60 * 1000;
         final Bundle state = new Bundle();

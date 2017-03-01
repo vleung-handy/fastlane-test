@@ -2,8 +2,7 @@ package com.handy.portal.logger.handylogger.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class EventSuperPropertiesBase
-{
+public class EventSuperPropertiesBase {
     private static final String ANDROID = "android";
     private static final String PROVIDER = "pro";
 
@@ -23,8 +22,7 @@ public class EventSuperPropertiesBase
     private String mInstallationId;
 
     public EventSuperPropertiesBase(String osVersion, String appVersion, String deviceId,
-                                    String deviceModel, String installationId)
-    {
+                                    String deviceModel, String installationId) {
         mProduct = PROVIDER;
         mPlatform = ANDROID;
         mOsVersion = osVersion;

@@ -37,8 +37,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 
-public class SendReceiptCheckoutFragmentTest extends RobolectricGradleTestWrapper
-{
+public class SendReceiptCheckoutFragmentTest extends RobolectricGradleTestWrapper {
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private Booking booking;
     @Captor
@@ -47,8 +46,7 @@ public class SendReceiptCheckoutFragmentTest extends RobolectricGradleTestWrappe
     private SendReceiptCheckoutFragment fragment;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         initMocks(this);
         ((TestBaseApplication) ShadowApplication.getInstance().getApplicationContext()).inject(this);
 
@@ -78,16 +76,14 @@ public class SendReceiptCheckoutFragmentTest extends RobolectricGradleTestWrappe
     }
 
     @Test
-    public void onCheckOutSuccess_switchToScheduleTabAndDisplayToast() throws Exception
-    {
+    public void onCheckOutSuccess_switchToScheduleTabAndDisplayToast() throws Exception {
         fragment.onReceiveNotifyJobCheckOutSuccess(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(null));
 
         assertThat(getBusCaptorValue(NavigationEvent.NavigateToPage.class).targetPage, equalTo(MainViewPage.SCHEDULED_JOBS));
         assertThat(ShadowToast.getTextOfLatestToast(), equalTo(fragment.getString(R.string.check_out_success)));
     }
 
-    private <T> T getBusCaptorValue(Class<T> classType)
-    {
+    private <T> T getBusCaptorValue(Class<T> classType) {
         verify(fragment.getBus(), atLeastOnce()).post(captor.capture());
         return TestUtils.getBusCaptorValue(captor, classType);
     }

@@ -25,17 +25,14 @@ import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
 //note that animations should be disabled on the device running these tests
 @RunWith(AndroidJUnit4.class)
-public class ViewPaymentsTest
-{
+public class ViewPaymentsTest {
     private static final TestUser TEST_USER = TestUsers.BOOKINGS_NY_PROVIDER;
 
     @Rule
     public ActivityTestRule<SplashActivity> mActivityRule = new ActivityTestRule<SplashActivity>(
-            SplashActivity.class)
-    {
+            SplashActivity.class) {
         @Override
-        protected Intent getActivityIntent()
-        {
+        protected Intent getActivityIntent() {
             Intent intent = super.getActivityIntent();
             intent.putExtra(PrefsKey.AUTH_TOKEN, TEST_USER.getPersistenceToken());
             return intent;
@@ -43,8 +40,7 @@ public class ViewPaymentsTest
     };
 
     @After
-    public void tearDown()
-    {
+    public void tearDown() {
         AppInteractionUtil.logOut();
     }
 
@@ -53,8 +49,7 @@ public class ViewPaymentsTest
      * FIXME: need better seed data so this can be tested more thoroughly
      */
     @Test
-    public void testViewPayments()
-    {
+    public void testViewPayments() {
         ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         ViewUtil.waitForViewNotVisible(R.id.loading_overlay, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
 

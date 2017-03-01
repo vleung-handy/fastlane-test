@@ -4,34 +4,27 @@ import com.handy.portal.core.model.ProviderPersonalInfo;
 import com.handy.portal.core.model.ProviderProfile;
 import com.handy.portal.data.DataManager;
 
-public abstract class ProfileEvent extends HandyEvent
-{
-    public static class RequestProviderProfile extends RequestEvent
-    {
+public abstract class ProfileEvent extends HandyEvent {
+    public static class RequestProviderProfile extends RequestEvent {
         public final boolean useCache;
 
-        public RequestProviderProfile(final boolean useCache)
-        {
+        public RequestProviderProfile(final boolean useCache) {
             this.useCache = useCache;
         }
     }
 
 
-    public static class ReceiveProviderProfileSuccess extends ReceiveSuccessEvent
-    {
+    public static class ReceiveProviderProfileSuccess extends ReceiveSuccessEvent {
         public ProviderProfile providerProfile;
 
-        public ReceiveProviderProfileSuccess(ProviderProfile providerProfile)
-        {
+        public ReceiveProviderProfileSuccess(ProviderProfile providerProfile) {
             this.providerProfile = providerProfile;
         }
     }
 
 
-    public static class ReceiveProviderProfileError extends ReceiveErrorEvent
-    {
-        public ReceiveProviderProfileError(DataManager.DataManagerError error)
-        {
+    public static class ReceiveProviderProfileError extends ReceiveErrorEvent {
+        public ReceiveProviderProfileError(DataManager.DataManagerError error) {
             this.error = error;
         }
     }
@@ -40,28 +33,23 @@ public abstract class ProfileEvent extends HandyEvent
     public static class RequestSendResupplyKit extends RequestEvent {}
 
 
-    public static class ReceiveSendResupplyKitSuccess extends ReceiveSuccessEvent
-    {
+    public static class ReceiveSendResupplyKitSuccess extends ReceiveSuccessEvent {
         public final ProviderProfile providerProfile;
 
-        public ReceiveSendResupplyKitSuccess(ProviderProfile providerProfile)
-        {
+        public ReceiveSendResupplyKitSuccess(ProviderProfile providerProfile) {
             this.providerProfile = providerProfile;
         }
     }
 
 
-    public static class ReceiveSendResupplyKitError extends ReceiveErrorEvent
-    {
-        public ReceiveSendResupplyKitError(DataManager.DataManagerError error)
-        {
+    public static class ReceiveSendResupplyKitError extends ReceiveErrorEvent {
+        public ReceiveSendResupplyKitError(DataManager.DataManagerError error) {
             this.error = error;
         }
     }
 
 
-    public static class RequestProfileUpdate extends RequestEvent
-    {
+    public static class RequestProfileUpdate extends RequestEvent {
         public String email;
         public String phone;
         public String address1;
@@ -70,8 +58,7 @@ public abstract class ProfileEvent extends HandyEvent
         public String state;
         public String zipCode;
 
-        public RequestProfileUpdate(CharSequence email, CharSequence phone, CharSequence address1, CharSequence address2, CharSequence city, CharSequence state, CharSequence zipCode)
-        {
+        public RequestProfileUpdate(CharSequence email, CharSequence phone, CharSequence address1, CharSequence address2, CharSequence city, CharSequence state, CharSequence zipCode) {
             this.email = email.toString();
             this.phone = phone.toString();
             this.address1 = address1.toString();
@@ -83,21 +70,17 @@ public abstract class ProfileEvent extends HandyEvent
     }
 
 
-    public static class ReceiveProfileUpdateSuccess extends ReceiveSuccessEvent
-    {
+    public static class ReceiveProfileUpdateSuccess extends ReceiveSuccessEvent {
         public ProviderPersonalInfo providerPersonalInfo;
 
-        public ReceiveProfileUpdateSuccess(ProviderPersonalInfo providerPersonalInfo)
-        {
+        public ReceiveProfileUpdateSuccess(ProviderPersonalInfo providerPersonalInfo) {
             this.providerPersonalInfo = providerPersonalInfo;
         }
     }
 
 
-    public static class ReceiveProfileUpdateError extends ReceiveErrorEvent
-    {
-        public ReceiveProfileUpdateError(DataManager.DataManagerError error)
-        {
+    public static class ReceiveProfileUpdateError extends ReceiveErrorEvent {
+        public ReceiveProfileUpdateError(DataManager.DataManagerError error) {
             this.error = error;
         }
     }
@@ -106,43 +89,35 @@ public abstract class ProfileEvent extends HandyEvent
     public static class SubmittedProfileUpdate extends HandyEvent {}
 
 
-    public static class RequestPhotoUploadUrl extends RequestEvent
-    {
+    public static class RequestPhotoUploadUrl extends RequestEvent {
         private String mImageMimeType;
 
-        public RequestPhotoUploadUrl(final String imageMimeType)
-        {
+        public RequestPhotoUploadUrl(final String imageMimeType) {
             mImageMimeType = imageMimeType;
         }
 
-        public String getImageMimeType()
-        {
+        public String getImageMimeType() {
             return mImageMimeType;
         }
     }
 
 
-    public static class ReceivePhotoUploadUrlSuccess extends ReceiveSuccessEvent
-    {
+    public static class ReceivePhotoUploadUrlSuccess extends ReceiveSuccessEvent {
         private String mUploadUrl;
 
-        public ReceivePhotoUploadUrlSuccess(final String uploadUrl)
-        {
+        public ReceivePhotoUploadUrlSuccess(final String uploadUrl) {
 
             mUploadUrl = uploadUrl;
         }
 
-        public String getUploadUrl()
-        {
+        public String getUploadUrl() {
             return mUploadUrl;
         }
     }
 
 
-    public static class ReceivePhotoUploadUrlError extends ReceiveErrorEvent
-    {
-        public ReceivePhotoUploadUrlError(final DataManager.DataManagerError error)
-        {
+    public static class ReceivePhotoUploadUrlError extends ReceiveErrorEvent {
+        public ReceivePhotoUploadUrlError(final DataManager.DataManagerError error) {
             this.error = error;
         }
     }

@@ -35,8 +35,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-public class ProviderManager
-{
+public class ProviderManager {
     private final EventBus mBus;
     private final DataManager mDataManager;
     private final PrefsManager mPrefsManager;
@@ -46,8 +45,7 @@ public class ProviderManager
     private static final String PROVIDER_SETTINGS_CACHE_KEY = "provider_settings";
     private static final String RATINGS_KEY = "ratings";
 
-    public ProviderManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager)
-    {
+    public ProviderManager(final EventBus bus, final DataManager dataManager, final PrefsManager prefsManager) {
         mBus = bus;
         mDataManager = dataManager;
         mPrefsManager = prefsManager;
@@ -62,8 +60,7 @@ public class ProviderManager
         bus.register(this);
     }
 
-    public void setProviderProfile(@NonNull final ProviderProfile providerProfile)
-    {
+    public void setProviderProfile(@NonNull final ProviderProfile providerProfile) {
         /*
             although redundant, below is needed because provider id is accessed directly from prefs everywhere
          */
@@ -71,8 +68,7 @@ public class ProviderManager
         mProviderProfileCache.put(PROVIDER_PROFILE_CACHE_KEY, providerProfile);
     }
 
-    public void setProviderId(final String providerId)
-    {
+    public void setProviderId(final String providerId) {
         mPrefsManager.setSecureString(PrefsKey.LAST_PROVIDER_ID, providerId);
         mBus.post(new HandyEvent.ProviderIdUpdated(providerId));
         Crashlytics.setUserIdentifier(providerId);
@@ -80,14 +76,11 @@ public class ProviderManager
     }
 
     @Subscribe
-    public void onUpdateProviderProfile(ProfileEvent.RequestProfileUpdate event)
-    {
+    public void onUpdateProviderProfile(ProfileEvent.RequestProfileUpdate event) {
         String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
-        mDataManager.updateProviderProfile(providerId, getProfileParams(event), new DataManager.Callback<ProviderProfileResponse>()
-        {
+        mDataManager.updateProviderProfile(providerId, getProfileParams(event), new DataManager.Callback<ProviderProfileResponse>() {
             @Override
-            public void onSuccess(ProviderProfileResponse response)
-            {
+            public void onSuccess(ProviderProfileResponse response) {
                 ProviderProfile providerProfile = response.getProviderProfile();
                 mProviderProfileCache.put(PROVIDER_PROFILE_CACHE_KEY, providerProfile);
                 mBus.post(new ProfileEvent.ReceiveProfileUpdateSuccess(
@@ -95,63 +88,51 @@ public class ProviderManager
             }
 
             @Override
-            public void onError(DataManager.DataManagerError error)
-            {
+            public void onError(DataManager.DataManagerError error) {
                 mBus.post(new ProfileEvent.ReceiveProfileUpdateError(error));
             }
         });
     }
 
     @Subscribe
-    public void onRequestProviderSettings(ProviderSettingsEvent.RequestProviderSettings event)
-    {
+    public void onRequestProviderSettings(ProviderSettingsEvent.RequestProviderSettings event) {
         ProviderSettings cachedProviderSettings = getCachedProviderSettings();
-        if (cachedProviderSettings != null)
-        {
+        if (cachedProviderSettings != null) {
             mBus.post(new ProviderSettingsEvent.ReceiveProviderSettingsSuccess(cachedProviderSettings));
         }
-        else
-        {
+        else {
             requestProviderSettings();
         }
     }
 
     @Subscribe
-    public void onUpdateProviderSettings(ProviderSettingsEvent.RequestProviderSettingsUpdate event)
-    {
+    public void onUpdateProviderSettings(ProviderSettingsEvent.RequestProviderSettingsUpdate event) {
         String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
-        mDataManager.putUpdateProviderSettings(providerId, event.getProviderSettings(), new DataManager.Callback<ProviderSettings>()
-        {
+        mDataManager.putUpdateProviderSettings(providerId, event.getProviderSettings(), new DataManager.Callback<ProviderSettings>() {
             @Override
-            public void onSuccess(ProviderSettings providerSettings)
-            {
+            public void onSuccess(ProviderSettings providerSettings) {
                 mProviderSettingsCache.put(PROVIDER_SETTINGS_CACHE_KEY, providerSettings);
                 mBus.post(new ProviderSettingsEvent.ReceiveProviderSettingsUpdateSuccess(providerSettings));
             }
 
             @Override
-            public void onError(DataManager.DataManagerError error)
-            {
+            public void onError(DataManager.DataManagerError error) {
                 mBus.post(new ProviderSettingsEvent.ReceiveProviderSettingsUpdateError(error));
             }
         });
     }
 
     @Subscribe
-    public void onRequestPaymentFlow(PaymentEvent.RequestPaymentFlow event)
-    {
+    public void onRequestPaymentFlow(PaymentEvent.RequestPaymentFlow event) {
         String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
-        mDataManager.getPaymentFlow(providerId, new DataManager.Callback<PaymentFlow>()
-        {
+        mDataManager.getPaymentFlow(providerId, new DataManager.Callback<PaymentFlow>() {
             @Override
-            public void onSuccess(PaymentFlow response)
-            {
+            public void onSuccess(PaymentFlow response) {
                 mBus.post(new PaymentEvent.ReceivePaymentFlowSuccess(response));
             }
 
             @Override
-            public void onError(DataManager.DataManagerError error)
-            {
+            public void onError(DataManager.DataManagerError error) {
                 mBus.post(new PaymentEvent.ReceivePaymentFlowError(error));
 
             }
@@ -159,91 +140,73 @@ public class ProviderManager
     }
 
     @Subscribe
-    public void onSendIncomeVerification(HandyEvent.RequestSendIncomeVerification event)
-    {
+    public void onSendIncomeVerification(HandyEvent.RequestSendIncomeVerification event) {
         String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
 
-        mDataManager.sendIncomeVerification(providerId, new DataManager.Callback<SuccessWrapper>()
-        {
+        mDataManager.sendIncomeVerification(providerId, new DataManager.Callback<SuccessWrapper>() {
             @Override
-            public void onSuccess(SuccessWrapper response)
-            {
-                if (response.getSuccess())
-                {
+            public void onSuccess(SuccessWrapper response) {
+                if (response.getSuccess()) {
                     mBus.post(new HandyEvent.ReceiveSendIncomeVerificationSuccess());
                 }
-                else
-                {
+                else {
                     mBus.post(new HandyEvent.ReceiveSendIncomeVerificationError());
                 }
             }
 
             @Override
-            public void onError(DataManager.DataManagerError error)
-            {
+            public void onError(DataManager.DataManagerError error) {
                 mBus.post(new HandyEvent.ReceiveSendIncomeVerificationError());
             }
         });
     }
 
     @Subscribe
-    public void onRequestProviderProfile(ProfileEvent.RequestProviderProfile event)
-    {
+    public void onRequestProviderProfile(ProfileEvent.RequestProviderProfile event) {
         ProviderProfile cachedProviderProfile = null;
 
-        if (event.useCache)
-        {
+        if (event.useCache) {
             cachedProviderProfile = getCachedProviderProfile();
         }
 
-        if (cachedProviderProfile != null)
-        {
+        if (cachedProviderProfile != null) {
             mBus.post(new ProfileEvent.ReceiveProviderProfileSuccess(cachedProviderProfile));
         }
-        else
-        {
+        else {
             requestProviderProfile();
         }
     }
 
     @Subscribe
-    public void onRequestResupplyKit(ProfileEvent.RequestSendResupplyKit event)
-    {
+    public void onRequestResupplyKit(ProfileEvent.RequestSendResupplyKit event) {
         String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
 
-        mDataManager.getResupplyKit(providerId, new DataManager.Callback<ProviderProfile>()
-        {
+        mDataManager.getResupplyKit(providerId, new DataManager.Callback<ProviderProfile>() {
             @Override
-            public void onSuccess(ProviderProfile providerProfile)
-            {
+            public void onSuccess(ProviderProfile providerProfile) {
                 mProviderProfileCache.put(PROVIDER_PROFILE_CACHE_KEY, providerProfile);
                 mBus.post(new ProfileEvent.ReceiveSendResupplyKitSuccess(providerProfile));
             }
 
             @Override
-            public void onError(DataManager.DataManagerError error)
-            {
+            public void onError(DataManager.DataManagerError error) {
                 mBus.post(new ProfileEvent.ReceiveSendResupplyKitError(error));
             }
         });
     }
 
     @Subscribe
-    public void onRequestProviderEvaluation(ProviderDashboardEvent.RequestProviderEvaluation event)
-    {
+    public void onRequestProviderEvaluation(ProviderDashboardEvent.RequestProviderEvaluation event) {
         String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
 
-        mDataManager.getProviderEvaluation(providerId, new DataManager.Callback<ProviderEvaluation>()
-        {
+        mDataManager.getProviderEvaluation(providerId, new DataManager.Callback<ProviderEvaluation>() {
             @Override
-            public void onSuccess(final ProviderEvaluation providerEvaluation)
-            {
+            public void onSuccess(final ProviderEvaluation providerEvaluation) {
                 mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationSuccess(providerEvaluation));
             }
 
             @Override
-            public void onError(final DataManager.DataManagerError error)
-            {
+            public void onError(final DataManager.DataManagerError error) {
                 mBus.post(new ProviderDashboardEvent.ReceiveProviderEvaluationError(error));
             }
         });
@@ -251,25 +214,20 @@ public class ProviderManager
     }
 
     @Subscribe
-    public void onRequestProviderFiveStarRatings(ProviderDashboardEvent.RequestProviderFiveStarRatings event)
-    {
+    public void onRequestProviderFiveStarRatings(ProviderDashboardEvent.RequestProviderFiveStarRatings event) {
         String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
 
-        mDataManager.getProviderFiveStarRatings(providerId, event.getMinStar(), event.getUntilBookingDate(), event.getSinceBookingDate(), new DataManager.Callback<HashMap<String, List<ProviderRating>>>()
-        {
+        mDataManager.getProviderFiveStarRatings(providerId, event.getMinStar(), event.getUntilBookingDate(), event.getSinceBookingDate(), new DataManager.Callback<HashMap<String, List<ProviderRating>>>() {
             @Override
-            public void onSuccess(final HashMap<String, List<ProviderRating>> responseHash)
-            {
+            public void onSuccess(final HashMap<String, List<ProviderRating>> responseHash) {
                 List<ProviderRating> providerRatings = responseHash.get(RATINGS_KEY);
-                if (providerRatings != null)
-                {
+                if (providerRatings != null) {
                     mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsSuccess(providerRatings));
                 }
             }
 
             @Override
-            public void onError(final DataManager.DataManagerError error)
-            {
+            public void onError(final DataManager.DataManagerError error) {
                 mBus.post(new ProviderDashboardEvent.ReceiveProviderFiveStarRatingsError(error));
             }
         });
@@ -277,8 +235,7 @@ public class ProviderManager
     }
 
     @Subscribe
-    public void onRequestProviderFeedback(ProviderDashboardEvent.RequestProviderFeedback event)
-    {
+    public void onRequestProviderFeedback(ProviderDashboardEvent.RequestProviderFeedback event) {
 //        String providerId = "";
 
         // TODO: replace with real api call before merge into develop
@@ -309,151 +266,120 @@ public class ProviderManager
     }
 
     @Subscribe
-    public void onRequestOnboardingSupplies(final HandyEvent.RequestOnboardingSupplies event)
-    {
+    public void onRequestOnboardingSupplies(final HandyEvent.RequestOnboardingSupplies event) {
         mDataManager.requestOnboardingSupplies(getLastProviderId(), event.getOptIn(),
-                new DataManager.Callback<SuccessWrapper>()
-                {
+                new DataManager.Callback<SuccessWrapper>() {
                     @Override
-                    public void onSuccess(final SuccessWrapper response)
-                    {
+                    public void onSuccess(final SuccessWrapper response) {
                         mBus.post(new HandyEvent.ReceiveOnboardingSuppliesSuccess());
                     }
 
                     @Override
-                    public void onError(final DataManager.DataManagerError error)
-                    {
+                    public void onError(final DataManager.DataManagerError error) {
                         mBus.post(new HandyEvent.ReceiveOnboardingSuppliesError(error));
                     }
                 });
     }
 
     @Subscribe
-    public void onRequestIdVerificationStart(final ProviderSettingsEvent.RequestIdVerificationStart event)
-    {
+    public void onRequestIdVerificationStart(final ProviderSettingsEvent.RequestIdVerificationStart event) {
         mDataManager.beforeStartIdVerification(event.getBeforeIdVerificationStartUrl(),
-                new DataManager.Callback<HashMap<String, String>>()
-                {
+                new DataManager.Callback<HashMap<String, String>>() {
                     @Override
-                    public void onSuccess(final HashMap<String, String> response)
-                    { }
+                    public void onSuccess(final HashMap<String, String> response) { }
 
                     @Override
-                    public void onError(final DataManager.DataManagerError error)
-                    { }
+                    public void onError(final DataManager.DataManagerError error) { }
                 });
     }
 
     @Subscribe
-    public void onRequestIdVerificationFinish(final ProviderSettingsEvent.RequestIdVerificationFinish event)
-    {
+    public void onRequestIdVerificationFinish(final ProviderSettingsEvent.RequestIdVerificationFinish event) {
         mDataManager.finishIdVerification(event.getAfterIdVerificationFinishUrl(),
-                event.getScanReference(), event.getStatus(), new DataManager.Callback<HashMap<String, String>>()
-                {
+                event.getScanReference(), event.getStatus(), new DataManager.Callback<HashMap<String, String>>() {
                     @Override
-                    public void onSuccess(final HashMap<String, String> response)
-                    { }
+                    public void onSuccess(final HashMap<String, String> response) { }
 
                     @Override
-                    public void onError(final DataManager.DataManagerError error)
-                    { }
+                    public void onError(final DataManager.DataManagerError error) { }
                 });
     }
 
     @Subscribe
-    public void onRequestPhotoUploadUrl(final ProfileEvent.RequestPhotoUploadUrl event)
-    {
+    public void onRequestPhotoUploadUrl(final ProfileEvent.RequestPhotoUploadUrl event) {
         mDataManager.requestPhotoUploadUrl(getLastProviderId(), event.getImageMimeType(),
-                new DataManager.Callback<HashMap<String, String>>()
-                {
+                new DataManager.Callback<HashMap<String, String>>() {
                     @Override
-                    public void onSuccess(final HashMap<String, String> response)
-                    {
+                    public void onSuccess(final HashMap<String, String> response) {
                         final String uploadUrl = response.get("upload_url");
                         mBus.post(new ProfileEvent.ReceivePhotoUploadUrlSuccess(uploadUrl));
                     }
 
                     @Override
-                    public void onError(final DataManager.DataManagerError error)
-                    {
+                    public void onError(final DataManager.DataManagerError error) {
                         mBus.post(new ProfileEvent.ReceivePhotoUploadUrlError(error));
                     }
                 });
     }
 
-    public void requestProviderProfile()
-    {
+    public void requestProviderProfile() {
         String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
 
-        mDataManager.getProviderProfile(providerId, new DataManager.Callback<ProviderProfile>()
-        {
+        mDataManager.getProviderProfile(providerId, new DataManager.Callback<ProviderProfile>() {
             @Override
-            public void onSuccess(ProviderProfile providerProfile)
-            {
+            public void onSuccess(ProviderProfile providerProfile) {
                 mProviderProfileCache.put(PROVIDER_PROFILE_CACHE_KEY, providerProfile);
                 mBus.post(new ProfileEvent.ReceiveProviderProfileSuccess(providerProfile));
             }
 
             @Override
-            public void onError(DataManager.DataManagerError error)
-            {
+            public void onError(DataManager.DataManagerError error) {
                 mBus.post(new ProfileEvent.ReceiveProviderProfileError(error));
             }
         });
     }
 
-    private void requestProviderSettings()
-    {
+    private void requestProviderSettings() {
         String providerId = mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
-        mDataManager.getProviderSettings(providerId, new DataManager.Callback<ProviderSettings>()
-        {
+        mDataManager.getProviderSettings(providerId, new DataManager.Callback<ProviderSettings>() {
             @Override
-            public void onSuccess(ProviderSettings providerSettings)
-            {
+            public void onSuccess(ProviderSettings providerSettings) {
                 mProviderSettingsCache.put(PROVIDER_SETTINGS_CACHE_KEY, providerSettings);
                 mBus.post(new ProviderSettingsEvent.ReceiveProviderSettingsSuccess(providerSettings));
             }
 
             @Override
-            public void onError(DataManager.DataManagerError error)
-            {
+            public void onError(DataManager.DataManagerError error) {
                 mBus.post(new ProviderSettingsEvent.ReceiveProviderSettingsError(error));
             }
         });
     }
 
     @Nullable
-    public String getLastProviderId()
-    {
+    public String getLastProviderId() {
         return mPrefsManager.getSecureString(PrefsKey.LAST_PROVIDER_ID);
     }
 
     @Nullable
-    public ProviderProfile getCachedProviderProfile()
-    {
+    public ProviderProfile getCachedProviderProfile() {
         return mProviderProfileCache.getIfPresent(PROVIDER_PROFILE_CACHE_KEY);
     }
 
     @Nullable
-    public String getCachedProfileImageUrl(@NonNull final Type imageType)
-    {
+    public String getCachedProfileImageUrl(@NonNull final Type imageType) {
         final ProviderProfile profile = getCachedProviderProfile();
-        if (profile != null && profile.getProviderPersonalInfo() != null)
-        {
+        if (profile != null && profile.getProviderPersonalInfo() != null) {
             final ProviderPersonalInfo providerPersonalInfo = profile.getProviderPersonalInfo();
             final ProviderPersonalInfo.ProfileImage profileImage =
                     providerPersonalInfo.getProfileImage(imageType);
-            if (profileImage != null)
-            {
+            if (profileImage != null) {
                 return profileImage.getUrl();
             }
-            else
-            {
+            else {
                 // Fall back to original size
                 final ProviderPersonalInfo.ProfileImage originalProfileImage =
                         providerPersonalInfo.getProfileImage(Type.ORIGINAL);
-                if (originalProfileImage != null)
-                {
+                if (originalProfileImage != null) {
                     return originalProfileImage.getUrl();
                 }
             }
@@ -462,13 +388,11 @@ public class ProviderManager
     }
 
     @Nullable
-    public ProviderSettings getCachedProviderSettings()
-    {
+    public ProviderSettings getCachedProviderSettings() {
         return mProviderSettingsCache.getIfPresent(PROVIDER_SETTINGS_CACHE_KEY);
     }
 
-    private static TypeSafeMap<ProviderKey> getProfileParams(ProfileEvent.RequestProfileUpdate info)
-    {
+    private static TypeSafeMap<ProviderKey> getProfileParams(ProfileEvent.RequestProfileUpdate info) {
         TypeSafeMap<ProviderKey> params = new TypeSafeMap<>();
 
         putIfNonEmpty(params, ProviderKey.EMAIL, info.email);
@@ -484,10 +408,8 @@ public class ProviderManager
 
     private static void putIfNonEmpty(final TypeSafeMap<ProviderKey> params,
                                       final ProviderKey key,
-                                      final String value)
-    {
-        if (!TextUtils.isNullOrEmpty(value))
-        {
+                                      final String value) {
+        if (!TextUtils.isNullOrEmpty(value)) {
             params.put(key, value);
         }
     }

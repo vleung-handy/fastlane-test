@@ -12,8 +12,7 @@ import java.util.LinkedList;
 /**
  * model received from the server. contains location schedules that should be sorted by start date
  */
-public class LocationScheduleStrategies implements Parcelable
-{
+public class LocationScheduleStrategies implements Parcelable {
     @SerializedName("location_schedules")
     private LinkedList<LocationTrackingScheduleStrategy> mLocationTrackingStrategies;
 
@@ -23,8 +22,7 @@ public class LocationScheduleStrategies implements Parcelable
     @SerializedName("success")
     private boolean mSuccess;
 
-    protected LocationScheduleStrategies(Parcel in)
-    {
+    protected LocationScheduleStrategies(Parcel in) {
         mLocationTrackingStrategies = new LinkedList<>();
         in.readTypedList(mLocationTrackingStrategies, LocationTrackingScheduleStrategy.CREATOR);
 
@@ -33,51 +31,42 @@ public class LocationScheduleStrategies implements Parcelable
 
     }
 
-    public LinkedList<BookingGeofenceStrategy> getBookingGeofenceStrategies()
-    {
+    public LinkedList<BookingGeofenceStrategy> getBookingGeofenceStrategies() {
         return mBookingGeofenceStrategies;
     }
 
-    public LinkedList<LocationTrackingScheduleStrategy> getLocationTrackingStrategies()
-    {
+    public LinkedList<LocationTrackingScheduleStrategy> getLocationTrackingStrategies() {
         return mLocationTrackingStrategies;
     }
 
     @Override
-    public int describeContents()
-    {
+    public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(final Parcel dest, final int flags)
-    {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeTypedList(mLocationTrackingStrategies);
         dest.writeTypedList(mBookingGeofenceStrategies);
     }
 
-    public static final Creator<LocationScheduleStrategies> CREATOR = new Creator<LocationScheduleStrategies>()
-    {
+    public static final Creator<LocationScheduleStrategies> CREATOR = new Creator<LocationScheduleStrategies>() {
         @Override
-        public LocationScheduleStrategies createFromParcel(Parcel in)
-        {
+        public LocationScheduleStrategies createFromParcel(Parcel in) {
             return new LocationScheduleStrategies(in);
         }
 
         @Override
-        public LocationScheduleStrategies[] newArray(int size)
-        {
+        public LocationScheduleStrategies[] newArray(int size) {
             return new LocationScheduleStrategies[size];
         }
     };
 
-    public boolean getSuccess()
-    {
+    public boolean getSuccess() {
         return mSuccess;
     }
 
-    public boolean isEmpty()
-    {
+    public boolean isEmpty() {
         return (mLocationTrackingStrategies == null || mLocationTrackingStrategies.isEmpty())
                 && (mBookingGeofenceStrategies == null || mBookingGeofenceStrategies.isEmpty());
     }
@@ -88,16 +77,13 @@ public class LocationScheduleStrategies implements Parcelable
      * @return
      */
     @Override
-    public String toString()
-    {
+    public String toString() {
         String result = "Location tracker schedules:\n";
-        for (LocationTrackingScheduleStrategy locationTrackerStrategy : mLocationTrackingStrategies)
-        {
+        for (LocationTrackingScheduleStrategy locationTrackerStrategy : mLocationTrackingStrategies) {
             result = result + locationTrackerStrategy.toString() + "\n";
         }
         result = result + "Booking geofence schedules:\n";
-        for (BookingGeofenceStrategy bookingGeofenceStrategy : mBookingGeofenceStrategies)
-        {
+        for (BookingGeofenceStrategy bookingGeofenceStrategy : mBookingGeofenceStrategies) {
             result = result + bookingGeofenceStrategy.toString() + "\n";
         }
         return result;

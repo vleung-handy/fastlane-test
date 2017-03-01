@@ -12,8 +12,7 @@ import com.handy.portal.R;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.ui.adapter.PaymentDetailExpandableListAdapter;
 
-public class PaymentDetailExpandableListView extends ExpandableListView
-{
+public class PaymentDetailExpandableListView extends ExpandableListView {
     /**
      * to be initialized here and added as the header view so it can scroll along
      */
@@ -24,26 +23,22 @@ public class PaymentDetailExpandableListView extends ExpandableListView
      */
     private Button mPaymentSupportButton;
 
-    public PaymentDetailExpandableListView(final Context context)
-    {
+    public PaymentDetailExpandableListView(final Context context) {
         super(context);
         init();
     }
 
-    public PaymentDetailExpandableListView(final Context context, final AttributeSet attrs)
-    {
+    public PaymentDetailExpandableListView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         init();
     }
 
-    public PaymentDetailExpandableListView(final Context context, final AttributeSet attrs, final int defStyle)
-    {
+    public PaymentDetailExpandableListView(final Context context, final AttributeSet attrs, final int defStyle) {
         super(context, attrs, defStyle);
         init();
     }
 
-    public void init()
-    {
+    public void init() {
         mPaymentsDetailListHeaderView = (PaymentsDetailListHeaderView)
                 inflate(getContext(), R.layout.element_payment_details_list_header, null);
         addHeaderView(mPaymentsDetailListHeaderView);
@@ -62,19 +57,16 @@ public class PaymentDetailExpandableListView extends ExpandableListView
     }
 
     @NonNull
-    public PaymentsDetailListHeaderView getHeaderView()
-    {
+    public PaymentsDetailListHeaderView getHeaderView() {
         return mPaymentsDetailListHeaderView;
     }
 
     @NonNull
-    public Button getPaymentSupportButton()
-    {
+    public Button getPaymentSupportButton() {
         return mPaymentSupportButton;
     }
 
-    public void updateData(@NonNull NeoPaymentBatch neoPaymentBatch)
-    {
+    public void updateData(@NonNull NeoPaymentBatch neoPaymentBatch) {
         PaymentDetailExpandableListAdapter itemsAdapter = new PaymentDetailExpandableListAdapter(
                 neoPaymentBatch);
         setAdapter(itemsAdapter);

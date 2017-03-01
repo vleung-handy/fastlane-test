@@ -7,10 +7,8 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 
-public class AppInteractionUtil
-{
-    public static void logOut()
-    {
+public class AppInteractionUtil {
+    public static void logOut() {
         ViewUtil.waitForViewVisible(R.id.tab_nav_item_more, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         onView(withId(R.id.tab_nav_item_more)).perform(click());
 

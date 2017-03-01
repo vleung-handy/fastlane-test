@@ -18,8 +18,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 
-public class SwapBookingClaimDialogFragmentTest extends RobolectricGradleTestWrapper
-{
+public class SwapBookingClaimDialogFragmentTest extends RobolectricGradleTestWrapper {
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
     private Booking booking;
     @Mock(answer = Answers.RETURNS_DEEP_STUBS)
@@ -27,8 +26,7 @@ public class SwapBookingClaimDialogFragmentTest extends RobolectricGradleTestWra
     private SwapBookingClaimDialogFragment dialog;
 
     @Before
-    public void setUp() throws Exception
-    {
+    public void setUp() throws Exception {
         initMocks(this);
         when(booking.getSwappableBooking()).thenReturn(swappableBooking);
         when(booking.getLocationName()).thenReturn("Manhattan");
@@ -43,8 +41,7 @@ public class SwapBookingClaimDialogFragmentTest extends RobolectricGradleTestWra
     }
 
     @Test
-    public void shouldDisplayLocationsOfConflictingBookings() throws Exception
-    {
+    public void shouldDisplayLocationsOfConflictingBookings() throws Exception {
         final TextView swappableBookingLocationText = (TextView) dialog.mSwappableJobContainer
                 .findViewById(R.id.booking_entry_area_text);
         assertNotNull(swappableBookingLocationText);

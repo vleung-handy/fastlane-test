@@ -4,8 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class OnboardingSubflowDetails implements Serializable
-{
+public class OnboardingSubflowDetails implements Serializable {
     @SerializedName("type")
     private SubflowType mType;
     @SerializedName("status")
@@ -13,18 +12,15 @@ public class OnboardingSubflowDetails implements Serializable
     @SerializedName("data")
     private SubflowData mData;
 
-    public SubflowType getType()
-    {
+    public SubflowType getType() {
         return mType;
     }
 
-    public SubflowStatus getStatus()
-    {
+    public SubflowStatus getStatus() {
         return mStatus;
     }
 
-    public SubflowData getData()
-    {
+    public SubflowData getData() {
         return mData;
     }
 }

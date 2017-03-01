@@ -51,8 +51,7 @@ import butterknife.OnClick;
 import butterknife.OnFocusChange;
 
 
-public class SendReceiptCheckoutFragment extends ActionBarFragment implements View.OnFocusChangeListener, SignaturePad.OnSignedListener
-{
+public class SendReceiptCheckoutFragment extends ActionBarFragment implements View.OnFocusChangeListener, SignaturePad.OnSignedListener {
     @Inject
     ConfigManager mConfigManager;
     @Inject
@@ -87,43 +86,36 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     private int mHiddenTasksCount;
 
     @Override
-    protected MainViewPage getAppPage()
-    {
+    protected MainViewPage getAppPage() {
         return MainViewPage.SEND_RECEIPT_CHECKOUT;
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         mHiddenTasksCount = 0;
-        mTimeBroadcastReceiver = new BroadcastReceiver()
-        {
+        mTimeBroadcastReceiver = new BroadcastReceiver() {
             @Override
-            public void onReceive(final Context context, final Intent intent)
-            {
+            public void onReceive(final Context context, final Intent intent) {
                 mEndTimeText.setText(DateTimeUtils.getTimeWithoutDate(Calendar.getInstance().getTime()));
             }
         };
 
         Bundle args = getArguments();
-        if (args != null)
-        {
+        if (args != null) {
             mBooking = (Booking) args.getSerializable(BundleKeys.BOOKING);
         }
     }
 
     @Nullable
     @Override
-    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState)
-    {
+    public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
         return LayoutInflater.from(getContext()).inflate(R.layout.fragment_send_receipt_checkout, container, false);
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
@@ -136,30 +128,26 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         bus.register(this);
         getContext().registerReceiver(mTimeBroadcastReceiver, mTimeIntentFilter);
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         super.onPause();
         bus.unregister(this);
         getContext().unregisterReceiver(mTimeBroadcastReceiver);
     }
 
     @OnClick(R.id.clear_signature_button)
-    public void clearSignature()
-    {
+    public void clearSignature() {
         mSignaturePad.clear();
     }
 
     @OnClick(R.id.complete_checkout_button)
-    public void completeCheckout()
-    {
+    public void completeCheckout() {
         LocationData locationData = getLocationData();
         String noteToCustomer = mSendNoteEditText.getText().toString();
         CheckoutRequest checkoutRequest = new CheckoutRequest(locationData,
@@ -168,15 +156,12 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     }
 
     @OnFocusChange(R.id.send_note_edit_text)
-    public void onFocusChange(final View v, final boolean hasFocus)
-    {
-        if (!hasFocus)
-        { UIUtils.dismissKeyboard(getActivity()); }
+    public void onFocusChange(final View v, final boolean hasFocus) {
+        if (!hasFocus) { UIUtils.dismissKeyboard(getActivity()); }
     }
 
     @Subscribe
-    public void onReceiveNotifyJobCheckOutSuccess(final HandyEvent.ReceiveNotifyJobCheckOutSuccess event)
-    {
+    public void onReceiveNotifyJobCheckOutSuccess(final HandyEvent.ReceiveNotifyJobCheckOutSuccess event) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         bus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.CheckOutSuccess(
                 mBooking, getLocationData())));
@@ -192,20 +177,17 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     }
 
     @Subscribe
-    public void onReceiveNotifyJobCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
-    {
+    public void onReceiveNotifyJobCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         bus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.CheckOutFailure(
                 mBooking, getLocationData())));
         handleNotifyCheckOutError(event);
     }
 
-    private void initialize()
-    {
+    private void initialize() {
         mSignaturePad.setOnSignedListener(this);
 
-        if (mBooking != null)
-        {
+        if (mBooking != null) {
             String startTime = DateTimeUtils.getTimeWithoutDate(mBooking.getCheckInSummary().getCheckInTime());
             String endTime = DateTimeUtils.getTimeWithoutDate(Calendar.getInstance().getTime());
             List<Booking.BookingInstructionUpdateRequest> completedTasks = mBooking.getCustomerPreferences();
@@ -217,46 +199,38 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
             mSendNoteText.setText(getResources().getString(
                     R.string.send_note_to_customer_formatted, firstName));
 
-            if (completedTasks.size() == 0)
-            {
+            if (completedTasks.size() == 0) {
                 mCompletedTasksHeader.setVisibility(View.GONE);
             }
-            else
-            {
-                for (Booking.BookingInstructionUpdateRequest completedTask : completedTasks)
-                {
-                    if (completedTask.isInstructionCompleted())
-                    { addTaskItem(completedTask.getTitle()); }
+            else {
+                for (Booking.BookingInstructionUpdateRequest completedTask : completedTasks) {
+                    if (completedTask.isInstructionCompleted()) {
+                        addTaskItem(completedTask.getTitle());
+                    }
                 }
             }
         }
     }
 
-    private void addTaskItem(String taskText)
-    {
+    private void addTaskItem(String taskText) {
         // 6 total items, 3 on the left and 3 on the right. Anytime there are more, we replace the
         // last item in the second column with a string of the number of items that aren't being
         // shown
         CheckoutCompletedTaskView checkoutCompletedTaskView = new CheckoutCompletedTaskView(getContext());
         checkoutCompletedTaskView.setTaskText(taskText);
 
-        if (mChecklistFirstColumn.getChildCount() < 3)
-        {
+        if (mChecklistFirstColumn.getChildCount() < 3) {
             mChecklistFirstColumn.addView(checkoutCompletedTaskView);
         }
-        else if (mChecklistSecondColumn.getChildCount() < 2)
-        {
+        else if (mChecklistSecondColumn.getChildCount() < 2) {
             // If more than two, then the third item will be a number of hidden tasks
             mChecklistSecondColumn.addView(checkoutCompletedTaskView);
         }
-        else
-        {
+        else {
             ++mHiddenTasksCount;
-            if (mHiddenTasksCount != 1)
-            {
+            if (mHiddenTasksCount != 1) {
                 checkoutCompletedTaskView.setTaskText(getResources().getString(R.string.more_tasks_formatted, mHiddenTasksCount));
-                if (mChecklistSecondColumn.getChildCount() == 3)
-                {
+                if (mChecklistSecondColumn.getChildCount() == 3) {
                     mChecklistSecondColumn.removeViewAt(2); // Remove 3rd item(replaced with count below)
                 }
             }
@@ -265,48 +239,39 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
         }
     }
 
-    private void requestNotifyCheckOutJob(String bookingId, CheckoutRequest checkoutRequest, LocationData locationData)
-    {
+    private void requestNotifyCheckOutJob(String bookingId, CheckoutRequest checkoutRequest, LocationData locationData) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.CheckOutSubmitted(mBooking, locationData)));
         mBookingManager.requestNotifyCheckOut(bookingId, checkoutRequest);
     }
 
-    private void showCheckoutRatingFlowIfNeeded()
-    {
+    private void showCheckoutRatingFlowIfNeeded() {
         if (mConfigManager.getConfigurationResponse() != null &&
-                mConfigManager.getConfigurationResponse().isCheckoutRatingFlowEnabled())
-        {
+                mConfigManager.getConfigurationResponse().isCheckoutRatingFlowEnabled()) {
             RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
             Bundle arguments = new Bundle();
             arguments.putSerializable(BundleKeys.BOOKING, mBooking);
             rateBookingDialogFragment.setArguments(arguments);
-            try
-            {
+            try {
                 rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
             }
-            catch (IllegalStateException e)
-            {
+            catch (IllegalStateException e) {
                 Crashlytics.logException(e);
             }
         }
     }
 
-    private void handleNotifyCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event)
-    {
+    private void handleNotifyCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event) {
         String errorMessage = event.error.getMessage();
-        if (errorMessage != null)
-        {
+        if (errorMessage != null) {
             showToast(errorMessage);
         }
-        else
-        {
+        else {
             showToast(R.string.error_connectivity, Toast.LENGTH_LONG);
         }
     }
 
-    private void returnToPage(MainViewPage targetPage, long epochTime, TransitionStyle transitionStyle)
-    {
+    private void returnToPage(MainViewPage targetPage, long epochTime, TransitionStyle transitionStyle) {
         //Return to available jobs with success
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
@@ -314,14 +279,12 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
         bus.post(new NavigationEvent.NavigateToPage(targetPage, arguments, transitionStyle));
     }
 
-    private LocationData getLocationData()
-    {
+    private LocationData getLocationData() {
         return mLocationManager.getLastKnownLocationData();
     }
 
     @Override
-    public void onStartSigning()
-    {
+    public void onStartSigning() {
         mCompleteCheckoutButton.setAlpha(1.0f);
         mCompleteCheckoutButton.setEnabled(true);
         mCompleteCheckoutButton.setClickable(true);
@@ -331,8 +294,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     public void onSigned() { }
 
     @Override
-    public void onClear()
-    {
+    public void onClear() {
         mCompleteCheckoutButton.setAlpha(0.5f);
         mCompleteCheckoutButton.setEnabled(false);
         mCompleteCheckoutButton.setClickable(false);

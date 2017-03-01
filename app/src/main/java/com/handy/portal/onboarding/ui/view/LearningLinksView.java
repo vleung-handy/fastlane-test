@@ -17,31 +17,25 @@ import butterknife.ButterKnife;
 /**
  * A vertical linear layout with links to help pages.
  */
-public class LearningLinksView extends LinearLayout
-{
-    public LearningLinksView(final Context context, final AttributeSet attrs)
-    {
+public class LearningLinksView extends LinearLayout {
+    public LearningLinksView(final Context context, final AttributeSet attrs) {
         super(context, attrs);
         inflate(getContext(), R.layout.learning_links_view, this);
         ButterKnife.bind(this);
     }
 
-    public void bindLearningLinks(ArrayList<LearningLink> learningLinks, OnClickListener onClickListener)
-    {
-        if (learningLinks == null)
-        {
+    public void bindLearningLinks(ArrayList<LearningLink> learningLinks, OnClickListener onClickListener) {
+        if (learningLinks == null) {
             return;
         }
 
         //remove everything it has, except for the title
-        while (getChildCount() > 1)
-        {
+        while (getChildCount() > 1) {
             removeViewAt(getChildCount() - 1);
         }
 
         //add the links
-        for (final LearningLink learningLink : learningLinks)
-        {
+        for (final LearningLink learningLink : learningLinks) {
             addLinkTextView(learningLink.getTitle(), learningLink.getUrl(), onClickListener);
         }
     }
@@ -50,8 +44,7 @@ public class LearningLinksView extends LinearLayout
             final String text,
             @NonNull final String url,
             final OnClickListener onClickListener
-    )
-    {
+    ) {
         final TextView view = (TextView) LayoutInflater.from(getContext())
                 .inflate(R.layout.view_link_text, this, false);
         view.setText(text);

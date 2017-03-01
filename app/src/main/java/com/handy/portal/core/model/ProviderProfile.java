@@ -6,8 +6,7 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
-public class ProviderProfile implements Serializable
-{
+public class ProviderProfile implements Serializable {
     @SerializedName("provider_id")
     private String mProviderId;
     @SerializedName("personal_info")
@@ -20,37 +19,31 @@ public class ProviderProfile implements Serializable
     private ResupplyInfo mResupplyInfo;
 
     @Nullable
-    public String getProviderId()
-    {
+    public String getProviderId() {
         return mProviderId;
     }
 
     @Nullable
-    public ProviderPersonalInfo getProviderPersonalInfo()
-    {
+    public ProviderPersonalInfo getProviderPersonalInfo() {
         return mProviderPersonalInfo;
     }
 
     @Nullable
-    public ReferralInfo getReferralInfo()
-    {
+    public ReferralInfo getReferralInfo() {
         return mReferralInfo;
     }
 
     @Nullable
-    public PerformanceInfo getPerformanceInfo()
-    {
+    public PerformanceInfo getPerformanceInfo() {
         return mPerformanceInfo;
     }
 
     @Nullable
-    public ResupplyInfo getResupplyInfo()
-    {
+    public ResupplyInfo getResupplyInfo() {
         return mResupplyInfo;
     }
 
-    public void setResupplyInfo(ResupplyInfo resupplyInfo)
-    {
+    public void setResupplyInfo(ResupplyInfo resupplyInfo) {
         mResupplyInfo = resupplyInfo;
     }
 }

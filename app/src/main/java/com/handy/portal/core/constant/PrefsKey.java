@@ -2,8 +2,7 @@ package com.handy.portal.core.constant;
 
 import android.support.annotation.StringDef;
 
-public interface PrefsKey
-{
+public interface PrefsKey {
     String LAST_PROVIDER_ID = "user_credentials_id";
     String AUTH_TOKEN = "user_credentials";
     String ENVIRONMENT = "environment";

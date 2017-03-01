@@ -34,8 +34,7 @@ import javax.inject.Inject;
 import butterknife.BindView;
 import butterknife.OnClick;
 
-public class SchedulePreferencesFragment extends OnboardingSubflowUIFragment
-{
+public class SchedulePreferencesFragment extends OnboardingSubflowUIFragment {
     @Inject
     BookingManager mBookingManager;
 
@@ -51,8 +50,7 @@ public class SchedulePreferencesFragment extends OnboardingSubflowUIFragment
     private CheckBoxListAdapter.CheckBoxListItem[] mLocationViewModels;
 
     @OnClick(R.id.date_field)
-    public void onDateFieldClicked()
-    {
+    public void onDateFieldClicked() {
         final StartDateRange startDateRange = mSubflowData.getStartDateRange();
         final Date startDate = startDateRange.getStartDate();
         final Date endDate = startDateRange.getEndDate();
@@ -61,15 +59,13 @@ public class SchedulePreferencesFragment extends OnboardingSubflowUIFragment
         dayAfterStartDate.setTime(startDate);
         dayAfterStartDate.add(Calendar.DATE, 1);
         final DatePickerDialog datePickerDialog =
-                new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener()
-                {
+                new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(
                             final DatePicker view,
                             final int year,
                             final int monthOfYear,
-                            final int dayOfMonth)
-                    {
+                            final int dayOfMonth) {
                         final Calendar c = Calendar.getInstance();
                         c.set(year, monthOfYear, dayOfMonth);
                         updateSelectedStartedDate(c.getTime());
@@ -84,8 +80,7 @@ public class SchedulePreferencesFragment extends OnboardingSubflowUIFragment
     }
 
     @OnClick(R.id.location_field)
-    public void onLocationFieldClicked()
-    {
+    public void onLocationFieldClicked() {
         final CheckBoxListAdapter adapter = new CheckBoxListAdapter(getActivity(),
                 Arrays.copyOf(mLocationViewModels, mLocationViewModels.length));
         final ListView listView = new ListView(getActivity());
@@ -95,11 +90,9 @@ public class SchedulePreferencesFragment extends OnboardingSubflowUIFragment
         final AlertDialog.Builder dialogBuilder = UIUtils.createDialogBuilderWithTitle(getActivity(),
                 R.string.choose_locations);
         dialogBuilder.setPositiveButton(R.string.ok,
-                new DialogInterface.OnClickListener()
-                {
+                new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(final DialogInterface dialog, final int which)
-                    {
+                    public void onClick(final DialogInterface dialog, final int which) {
                         updateSelectedLocations(adapter.getItems());
                     }
                 })
@@ -109,25 +102,21 @@ public class SchedulePreferencesFragment extends OnboardingSubflowUIFragment
                 .show();
     }
 
-    public static SchedulePreferencesFragment newInstance()
-    {
+    public static SchedulePreferencesFragment newInstance() {
         return new SchedulePreferencesFragment();
     }
 
     @Override
-    public void onCreate(final Bundle savedInstanceState)
-    {
+    public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mSelectedZipclusterIds = new ArrayList<>();
         initLocationViewModels();
     }
 
-    private void initLocationViewModels()
-    {
+    private void initLocationViewModels() {
         final ArrayList<Zipcluster> zipclusters = mSubflowData.getZipclusters();
         mLocationViewModels = new CheckBoxListAdapter.CheckBoxListItem[zipclusters.size()];
-        for (int i = 0; i < mLocationViewModels.length; i++)
-        {
+        for (int i = 0; i < mLocationViewModels.length; i++) {
             final Zipcluster zipcluster = zipclusters.get(i);
             mLocationViewModels[i] =
                     new CheckBoxListAdapter.CheckBoxListItem(zipcluster.getName(),
@@ -136,18 +125,15 @@ public class SchedulePreferencesFragment extends OnboardingSubflowUIFragment
     }
 
     @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState)
-    {
+    public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mDateField.setLabel(R.string.date);
         mLocationField.setLabel(R.string.locations);
         displaySelectedStartDate();
-        if (shouldDisplayLocationField())
-        {
+        if (shouldDisplayLocationField()) {
             displaySelectedLocations();
         }
-        else
-        {
+        else {
             mLocationField.setVisibility(View.GONE);
             mSchedulePreferencesNotice.setVisibility(View.GONE);
         }
@@ -156,56 +142,47 @@ public class SchedulePreferencesFragment extends OnboardingSubflowUIFragment
     }
 
     @Override
-    public void onResume()
-    {
+    public void onResume() {
         super.onResume();
         bus.register(this);
     }
 
     @Override
-    public void onPause()
-    {
+    public void onPause() {
         bus.unregister(this);
         super.onPause();
     }
 
     @Override
-    protected int getButtonType()
-    {
+    protected int getButtonType() {
         return ButtonTypes.SINGLE_FIXED;
     }
 
     @Override
-    protected int getLayoutResId()
-    {
+    protected int getLayoutResId() {
         return R.layout.view_schedule_preferences;
     }
 
     @Override
-    protected String getTitle()
-    {
+    protected String getTitle() {
         return getString(R.string.claim_jobs);
     }
 
     @Nullable
     @Override
-    protected String getHeaderText()
-    {
+    protected String getHeaderText() {
         return getString(R.string.set_your_preferences);
     }
 
     @Nullable
     @Override
-    protected String getSubHeaderText()
-    {
+    protected String getSubHeaderText() {
         return getString(R.string.start_as_early_as_next_week);
     }
 
     @Override
-    protected void onPrimaryButtonClicked()
-    {
-        if (!validate())
-        {
+    protected void onPrimaryButtonClicked() {
+        if (!validate()) {
             return;
         }
         showLoadingOverlay();
@@ -213,17 +190,14 @@ public class SchedulePreferencesFragment extends OnboardingSubflowUIFragment
     }
 
     @Subscribe
-    public void onReceiveOnboardingJobsSuccess(HandyEvent.ReceiveOnboardingJobsSuccess event)
-    {
+    public void onReceiveOnboardingJobsSuccess(HandyEvent.ReceiveOnboardingJobsSuccess event) {
         hideLoadingOverlay();
         final BookingsListWrapper bookingsListWrapper = event.getBookingsListWrapper();
-        if (bookingsListWrapper.hasBookings())
-        {
+        if (bookingsListWrapper.hasBookings()) {
             next(ScheduleBuilderFragment.newInstance(bookingsListWrapper.getBookingsWrappers(),
                     bookingsListWrapper.getMessage()));
         }
-        else
-        {
+        else {
             showError(getString(R.string.no_jobs_matching_preferences), true);
             bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
                     NativeOnboardingLog.Types.NO_JOBS_LOADED)));
@@ -231,56 +205,45 @@ public class SchedulePreferencesFragment extends OnboardingSubflowUIFragment
     }
 
     @Subscribe
-    public void onReceiveOnboardingJobsError(HandyEvent.ReceiveOnboardingJobsError event)
-    {
+    public void onReceiveOnboardingJobsError(HandyEvent.ReceiveOnboardingJobsError event) {
         hideLoadingOverlay();
         showError(event.error.getMessage(), true);
     }
 
-    private boolean validate()
-    {
+    private boolean validate() {
         boolean allFieldsValid = true;
-        if (mSelectedStartDate == null)
-        {
+        if (mSelectedStartDate == null) {
             mDateField.setErrorState(true);
             allFieldsValid = false;
         }
-        if (shouldDisplayLocationField() && mSelectedZipclusterIds.isEmpty())
-        {
+        if (shouldDisplayLocationField() && mSelectedZipclusterIds.isEmpty()) {
             mLocationField.setErrorState(true);
             allFieldsValid = false;
         }
         return allFieldsValid;
     }
 
-    public void updateSelectedStartedDate(final Date date)
-    {
+    public void updateSelectedStartedDate(final Date date) {
         mSelectedStartDate = date;
         bus.post(new LogEvent.AddLogEvent(
                 new NativeOnboardingLog.StartDateSelected(mSelectedStartDate)));
         displaySelectedStartDate();
     }
 
-    private void displaySelectedStartDate()
-    {
-        if (mSelectedStartDate != null)
-        {
+    private void displaySelectedStartDate() {
+        if (mSelectedStartDate != null) {
             mDateField.setValue(DateTimeUtils.formatDayOfWeekMonthDate(mSelectedStartDate));
         }
-        else
-        {
+        else {
             mDateField.setValue(null).setHint(R.string.choose_date);
         }
     }
 
-    public void updateSelectedLocations(final CheckBoxListAdapter.CheckBoxListItem[] items)
-    {
+    public void updateSelectedLocations(final CheckBoxListAdapter.CheckBoxListItem[] items) {
         mSelectedZipclusterIds.clear();
         mLocationViewModels = items;
-        for (CheckBoxListAdapter.CheckBoxListItem item : mLocationViewModels)
-        {
-            if (item.isChecked())
-            {
+        for (CheckBoxListAdapter.CheckBoxListItem item : mLocationViewModels) {
+            if (item.isChecked()) {
                 mSelectedZipclusterIds.add(item.getId());
             }
         }
@@ -290,22 +253,18 @@ public class SchedulePreferencesFragment extends OnboardingSubflowUIFragment
         displaySelectedLocations();
     }
 
-    private void displaySelectedLocations()
-    {
+    private void displaySelectedLocations() {
         final int count = mSelectedZipclusterIds.size();
-        if (count > 0)
-        {
+        if (count > 0) {
             mLocationField.setValue(getResources().getQuantityString(
                     R.plurals.locations_selected_count_formatted, count, count));
         }
-        else
-        {
+        else {
             mLocationField.setValue(null).setHint(R.string.choose_locations);
         }
     }
 
-    private boolean shouldDisplayLocationField()
-    {
+    private boolean shouldDisplayLocationField() {
         return mLocationViewModels != null && mLocationViewModels.length > 0;
     }
 }

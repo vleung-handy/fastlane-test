@@ -5,8 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Payment implements Serializable
-{
+public class Payment implements Serializable {
     @SerializedName("date")
     private Date date;
 
@@ -28,33 +27,27 @@ public class Payment implements Serializable
     @SerializedName("currency_symbol")
     private String mCurrencySymbol;
 
-    public Date getDate()
-    {
+    public Date getDate() {
         return date;
     }
 
-    public int getAmount()
-    {
+    public int getAmount() {
         return amount;
     }
 
-    public String getTitle()
-    {
+    public String getTitle() {
         return title;
     }
 
-    public String getSubTitle()
-    {
+    public String getSubTitle() {
         return subTitle;
     }
 
-    public String getBookingId()
-    {
+    public String getBookingId() {
         return bookingId;
     }
 
-    public String getBookingType()
-    {
+    public String getBookingType() {
         return bookingType;
     }
 

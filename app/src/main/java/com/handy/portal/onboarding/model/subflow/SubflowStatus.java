@@ -2,8 +2,7 @@ package com.handy.portal.onboarding.model.subflow;
 
 import com.google.gson.annotations.SerializedName;
 
-public enum SubflowStatus
-{
+public enum SubflowStatus {
     @SerializedName("complete")
     COMPLETE,
     @SerializedName("incomplete")

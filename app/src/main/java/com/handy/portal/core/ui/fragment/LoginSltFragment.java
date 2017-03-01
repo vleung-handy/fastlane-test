@@ -33,8 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LoginSltFragment extends InjectedFragment
-{
+public class LoginSltFragment extends InjectedFragment {
     @Inject
     LoginManager mLoginManager;
 
@@ -51,8 +50,7 @@ public class LoginSltFragment extends InjectedFragment
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
-    {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View view = inflater.inflate(R.layout.fragment_login_slt, container);
 
@@ -64,50 +62,41 @@ public class LoginSltFragment extends InjectedFragment
     }
 
     @OnClick(R.id.login_button)
-    public void login()
-    {
+    public void login() {
         if (!mPhoneNumberEditText.validate()) { return; }
 
         bus.post(new LogEvent.AddLogEvent(new LoginLog.LoginSubmitted(LoginLog.TYPE_PHONE_TOKEN)));
-        mLoginManager.requestSlt(mPhoneNumberEditText.getPhoneNumber(), new FragmentSafeCallback<SuccessWrapper>(this)
-        {
+        mLoginManager.requestSlt(mPhoneNumberEditText.getPhoneNumber(), new FragmentSafeCallback<SuccessWrapper>(this) {
             @Override
-            public void onCallbackSuccess(SuccessWrapper response)
-            {
+            public void onCallbackSuccess(SuccessWrapper response) {
                 onRequestSltSuccess(response);
             }
 
             @Override
-            public void onCallbackError(final DataManager.DataManagerError error)
-            {
+            public void onCallbackError(final DataManager.DataManagerError error) {
                 onRequestSltError(error);
             }
         });
     }
 
-    private void onRequestSltSuccess(SuccessWrapper response)
-    {
-        if (response.getSuccess())
-        {
+    private void onRequestSltSuccess(SuccessWrapper response) {
+        if (response.getSuccess()) {
             bus.post(new LogEvent.AddLogEvent(new LoginLog.Success(LoginLog.TYPE_PHONE_TOKEN)));
 
             mInstructionsText.setText(getString(R.string.login_instructions_slt2, mPhoneNumberEditText.getPhoneNumber()));
             mLoginButton.setText(R.string.request_slt_again);
         }
-        else
-        {
+        else {
             bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(LoginLog.TYPE_PHONE_TOKEN)));
             showToast(R.string.login_error_bad_phone);
             mPhoneNumberEditText.highlight();
         }
     }
 
-    private void onRequestSltError(DataManager.DataManagerError error)
-    {
+    private void onRequestSltError(DataManager.DataManagerError error) {
         bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(LoginLog.TYPE_PHONE_TOKEN)));
 
-        if (error != null && !TextUtils.isNullOrEmpty(error.getMessage()))
-        {
+        if (error != null && !TextUtils.isNullOrEmpty(error.getMessage())) {
             new AlertDialog.Builder(getActivity())
                     .setMessage(error.getMessage())
                     .setCancelable(true)
@@ -115,29 +104,24 @@ public class LoginSltFragment extends InjectedFragment
                     .create()
                     .show();
         }
-        else
-        {
+        else {
             showToast(R.string.login_error_connectivity);
         }
         mPhoneNumberEditText.highlight();
     }
 
     @OnClick(R.id.login_help_button)
-    public void showLoginInstructions()
-    {
-        if (getView() != null)
-        {
+    public void showLoginInstructions() {
+        if (getView() != null) {
             InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             inputMethodManager.hideSoftInputFromWindow(getView().getWindowToken(), 0);
         }
 
         View instructionView =
                 LayoutInflater.from(getActivity()).inflate(R.layout.element_login_instructions, null);
-        instructionView.setOnClickListener(new View.OnClickListener()
-        {
+        instructionView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(final View v)
-            {
+            public void onClick(final View v) {
 
                 goToUrl(HelpCenterUrl.LOGIN_HELP_ABSOLUTE_URL);
             }
@@ -145,8 +129,7 @@ public class LoginSltFragment extends InjectedFragment
         mSlideUpPanelLayout.showPanel(R.string.instructions, instructionView);
     }
 
-    private void goToUrl(String url)
-    {
+    private void goToUrl(String url) {
         Uri uriUrl = Uri.parse(url);
         Intent launchBrowser = new Intent(Intent.ACTION_VIEW, uriUrl);
         Utils.safeLaunchIntent(launchBrowser, this.getActivity());

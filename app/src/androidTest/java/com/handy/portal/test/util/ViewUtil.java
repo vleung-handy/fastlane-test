@@ -20,39 +20,32 @@ import static org.hamcrest.Matchers.not;
 /**
  * utility class containing non-app-specific methods to check for certain view states
  */
-public class ViewUtil
-{
+public class ViewUtil {
     private static final long VIEW_STATE_QUERY_INTERVAL_MS = 50;
     public static final long LONG_MAX_WAIT_TIME_MS = 15000;
     public static final long SHORT_MAX_WAIT_TIME_MS = 5000;
 
-    private ViewUtil()
-    {
+    private ViewUtil() {
         //don't want this instantiated. should use static methods only
     }
 
-    public static void waitForViewVisible(int viewId, long maxWaitingTimeMs)
-    {
+    public static void waitForViewVisible(int viewId, long maxWaitingTimeMs) {
         waitForViewVisibility(withId(viewId), true, maxWaitingTimeMs);
     }
 
-    public static void waitForViewNotVisible(int viewId, long maxWaitingTimeMs)
-    {
+    public static void waitForViewNotVisible(int viewId, long maxWaitingTimeMs) {
         waitForViewVisibility(withId(viewId), false, maxWaitingTimeMs);
     }
 
-    public static void waitForTextVisible(int stringResourceId, long maxWaitingTimeMs)
-    {
+    public static void waitForTextVisible(int stringResourceId, long maxWaitingTimeMs) {
         waitForViewVisibility(withText(stringResourceId), true, maxWaitingTimeMs);
     }
 
-    public static void waitForTextNotVisible(int stringResourceId, long maxWaitingTimeMs)
-    {
+    public static void waitForTextNotVisible(int stringResourceId, long maxWaitingTimeMs) {
         waitForViewVisibility(withText(stringResourceId), false, maxWaitingTimeMs);
     }
 
-    public static void checkToastDisplayed(int toastStringResourceId, Activity activity)
-    {
+    public static void checkToastDisplayed(int toastStringResourceId, Activity activity) {
         onView(withText(toastStringResourceId)).
                 inRoot(withDecorView(not(activity.getWindow().getDecorView()))).
                 check(matches(isDisplayed()));
@@ -66,14 +59,11 @@ public class ViewUtil
      */
     public static void waitForViewVisibility(@NonNull Matcher<View> viewMatcher,
                                              final boolean visible,
-                                             final long maxWaitingTimeMs)
-    {
+                                             final long maxWaitingTimeMs) {
         final long startTime = System.currentTimeMillis();
         final long endTime = startTime + maxWaitingTimeMs;
-        while (System.currentTimeMillis() < endTime)
-        {
-            if (visible == isViewDisplayed(viewMatcher))
-            {
+        while (System.currentTimeMillis() < endTime) {
+            if (visible == isViewDisplayed(viewMatcher)) {
                 return;
             }
 
@@ -89,35 +79,28 @@ public class ViewUtil
     /**
      * checks to see if a view is displayed without throwing an exception if it isn't displayed
      */
-    public static boolean isViewDisplayed(int viewId)
-    {
+    public static boolean isViewDisplayed(int viewId) {
         return isViewDisplayed(withId(viewId));
     }
 
     /**
      * checks to see if a view is displayed without throwing an exception if it isn't displayed
      */
-    public static boolean isViewDisplayed(@NonNull Matcher<View> viewMatcher)
-    {
-        try
-        {
+    public static boolean isViewDisplayed(@NonNull Matcher<View> viewMatcher) {
+        try {
             onView(viewMatcher).check(matches(isDisplayed()));
             return true;
         }
-        catch (Throwable e)
-        {
+        catch (Throwable e) {
             return false;
         }
     }
 
-    private static void sleep(final long timeMs)
-    {
-        try
-        {
+    private static void sleep(final long timeMs) {
+        try {
             Thread.sleep(timeMs);
         }
-        catch (InterruptedException e)
-        {
+        catch (InterruptedException e) {
             e.printStackTrace();
         }
     }

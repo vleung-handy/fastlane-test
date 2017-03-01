@@ -21,8 +21,7 @@ import java.util.LinkedList;
  */
 public class LocationTrackingScheduleHandler
         extends ScheduleHandler<LocationTrackingScheduleStrategyHandler, LocationTrackingScheduleStrategy>
-        implements LocationTrackingScheduleStrategyHandler.LocationStrategyCallbacks
-{
+        implements LocationTrackingScheduleStrategyHandler.LocationStrategyCallbacks {
     private Handler mHandler = new Handler();
     private static final int ALARM_REQUEST_CODE = 1;
     private static final String LOCATION_TRACKING_ALARM_BROADCAST_ACTION = "LOCATION_TRACKING_ALARM_BROADCAST_ACTION";
@@ -30,72 +29,62 @@ public class LocationTrackingScheduleHandler
 
     private GoogleApiClient mGoogleApiClient;
 
-    public LocationTrackingScheduleHandler(@NonNull final LinkedList<LocationTrackingScheduleStrategy> locationQuerySchedule, @NonNull final GoogleApiClient googleApiClient, @NonNull final Context context)
-    {
+    public LocationTrackingScheduleHandler(@NonNull final LinkedList<LocationTrackingScheduleStrategy> locationQuerySchedule, @NonNull final GoogleApiClient googleApiClient, @NonNull final Context context) {
         super(locationQuerySchedule, context);
         mGoogleApiClient = googleApiClient;
     }
 
     @Override
-    protected int getWakeupAlarmRequestCode()
-    {
+    protected int getWakeupAlarmRequestCode() {
         return ALARM_REQUEST_CODE;
     }
 
     @Override
-    protected String getWakeupAlarmBroadcastAction()
-    {
+    protected String getWakeupAlarmBroadcastAction() {
         return LOCATION_TRACKING_ALARM_BROADCAST_ACTION;
     }
 
     @Override
-    public LocationTrackingScheduleStrategyHandler createStrategyHandler(final LocationTrackingScheduleStrategy locationTrackerStrategy)
-    {
+    public LocationTrackingScheduleStrategyHandler createStrategyHandler(final LocationTrackingScheduleStrategy locationTrackerStrategy) {
         return new LocationTrackingScheduleStrategyHandler(
-                        locationTrackerStrategy,
-                        this,
-                        mHandler,
-                        mContext);
+                locationTrackerStrategy,
+                this,
+                mHandler,
+                mContext);
     }
 
     @Override
-    protected Parcelable.Creator<LocationTrackingScheduleStrategy> getStrategyCreator()
-    {
+    protected Parcelable.Creator<LocationTrackingScheduleStrategy> getStrategyCreator() {
         return LocationTrackingScheduleStrategy.CREATOR;
     }
 
     @Override
-    public GoogleApiClient getGoogleApiClient()
-    {
+    public GoogleApiClient getGoogleApiClient() {
         return mGoogleApiClient;
     }
 
     @Override
-    protected String getStrategyBundleExtraKey()
-    {
+    protected String getStrategyBundleExtraKey() {
         return BUNDLE_EXTRA_LOCATION_TRACKING_STRATEGY;
     }
 
     /**
      * called by location service when network reconnected event is broadcast
-     *
+     * <p>
      * don't want to subscribe to event here, because this object does not have a strict lifecycle
      * unlike the location service, so it is harder to guarantee that the bus will be unregistered
      * when we no longer care about this object (ex. what if this object loses its reference?)
      */
-    public void onNetworkReconnected()
-    {
+    public void onNetworkReconnected() {
         super.onNetworkReconnected();
         restartActiveStrategies();
     }
 
-    public void onLocationUpdate(final Location location)
-    {
+    public void onLocationUpdate(final Location location) {
         mBus.post(new LocationEvent.LocationUpdated(location));
     }
 
-    public void onLocationBatchUpdateReady(final LocationBatchUpdate locationBatchUpdate)
-    {
+    public void onLocationBatchUpdateReady(final LocationBatchUpdate locationBatchUpdate) {
         mBus.post(new LocationEvent.SendGeolocationRequest(locationBatchUpdate));
     }
 }
