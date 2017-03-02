@@ -1,4 +1,4 @@
-package com.handy.portal.test.model;
+package com.handy.portal.tool.model;
 
 /**
  * represents a set of login credentials

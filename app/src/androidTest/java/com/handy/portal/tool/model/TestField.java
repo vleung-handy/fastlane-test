@@ -1,4 +1,4 @@
-package com.handy.portal.test.model;
+package com.handy.portal.tool.model;
 
 /**
  * associates a view resource id with a value

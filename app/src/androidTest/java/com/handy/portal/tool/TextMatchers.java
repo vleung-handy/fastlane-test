@@ -1,4 +1,4 @@
-package com.handy.portal.test;
+package com.handy.portal.tool;
 
 import android.support.annotation.NonNull;
 import android.support.test.espresso.matcher.BoundedMatcher;

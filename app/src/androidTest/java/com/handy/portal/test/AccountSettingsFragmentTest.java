@@ -1,9 +1,10 @@
-package com.handy.portal;
+package com.handy.portal.test;
 
 
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.handy.portal.R;
 import com.handy.portal.core.ui.activity.MainActivity;
 
 import org.junit.Ignore;
