@@ -120,6 +120,7 @@ public class BaseApplication extends MultiDexApplication {
         Fabric.with(this, crashlytics);
     }
 
+    // TODO: mGraph doesn't need to be protected.
     protected void createObjectGraph() {
         mGraph = ObjectGraph.create(new ApplicationModule(this));
     }

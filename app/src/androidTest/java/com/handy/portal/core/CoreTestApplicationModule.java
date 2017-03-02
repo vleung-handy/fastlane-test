@@ -69,8 +69,7 @@ import retrofit.converter.GsonConverter;
 
 @Module(
         injects = {
-                BaseApplication.class,
-                // Do not add new class here. Put it into InjectionModule instead.
+                CoreTestApplication.class,
         },
         includes = {
                 InjectionModule.class,
@@ -86,12 +85,12 @@ import retrofit.converter.GsonConverter;
                 AppUpdaterModule.class,
         }
 )
-public final class ApplicationModule {
+public class CoreTestApplicationModule {
     private final Application application;
     private final Context context;
     private final Properties configs;
 
-    public ApplicationModule(final Application application) {
+    public CoreTestApplicationModule(final Application application) {
         this.application = application;
         this.context = this.application.getApplicationContext();
         configs = PropertiesReader.getConfigProperties(context);
@@ -310,7 +309,7 @@ public final class ApplicationModule {
     @Provides
     @Singleton
     final ConfigManager provideConfigManager(final DataManager dataManager, final EventBus bus) {
-        return new ConfigManager(dataManager, bus);
+        return new CoreTestConfigManager(dataManager, bus);
     }
 
     @Provides

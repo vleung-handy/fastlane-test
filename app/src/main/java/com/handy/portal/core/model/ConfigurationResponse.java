@@ -63,6 +63,7 @@ public class ConfigurationResponse {
     @SerializedName("portal_profile_share_enabled")
     private boolean mProfileShareEnabled;
 
+    // Getters
     public boolean isAppseeAnalyticsEnabled() {
         return mAppseeAnalyticsEnabled;
     }
@@ -145,6 +146,16 @@ public class ConfigurationResponse {
         return mProfileShareEnabled;
     }
 
+    // Setters
+    public void setProfilePictureUploadEnabled(final boolean profilePictureUploadEnabled) {
+        mProfilePictureUploadEnabled = profilePictureUploadEnabled;
+    }
+
+    public void setProfilePictureEnabled(final boolean profilePictureEnabled) {
+        mProfilePictureEnabled = profilePictureEnabled;
+    }
+
+    // Static classes
     public static class HelpCenterInfo {
         @SerializedName("should_use_help_center_web_view")
         private boolean mShouldUseHelpCenterWebView;
