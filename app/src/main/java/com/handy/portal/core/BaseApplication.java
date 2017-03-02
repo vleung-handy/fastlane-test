@@ -43,7 +43,7 @@ import retrofit.RestAdapter;
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 
 public class BaseApplication extends MultiDexApplication {
-    protected ObjectGraph mGraph;
+    private ObjectGraph mGraph;
 
     //We are injecting all of our event bus listening managers in BaseApplication to start them up for event listening
     @Inject
@@ -101,7 +101,7 @@ public class BaseApplication extends MultiDexApplication {
     @Override
     public void onCreate() {
         super.onCreate();
-        createObjectGraph();
+        mGraph = createObjectGraph();
         inject(this);
         HandyLibrary.init(mRestAdapter, this, !BuildConfig.DEBUG);
 
@@ -120,9 +120,8 @@ public class BaseApplication extends MultiDexApplication {
         Fabric.with(this, crashlytics);
     }
 
-    // TODO: mGraph doesn't need to be protected.
-    protected void createObjectGraph() {
-        mGraph = ObjectGraph.create(new ApplicationModule(this));
+    protected ObjectGraph createObjectGraph() {
+        return ObjectGraph.create(new ApplicationModule(this));
     }
 
     public final void inject(final Object object) {
