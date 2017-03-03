@@ -12,6 +12,7 @@ import com.handy.portal.tool.data.TestUsers;
 import com.handy.portal.tool.model.TestField;
 import com.handy.portal.tool.model.TestUser;
 import com.handy.portal.tool.util.AppInteractionUtil;
+import com.handy.portal.tool.util.TermsPageUtil;
 import com.handy.portal.tool.util.TextViewUtil;
 import com.handy.portal.tool.util.ViewUtil;
 
@@ -71,6 +72,8 @@ public class UpdatePersonalInfoTest {
      */
     @Test
     public void testPersonalInfo() {
+        TermsPageUtil.acceptAllTermsIfPresent();
+
         ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         ViewUtil.waitForViewNotVisible(R.id.loading_overlay, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
 
@@ -89,7 +92,7 @@ public class UpdatePersonalInfoTest {
         TextViewUtil.updateFieldValues(TEST_UPDATE_PERSONAL_INFO_FIELDS);
         onView(withId(R.id.profile_update_provider_button)).perform(click());
 
-        ViewUtil.waitForViewVisible(R.id.contact_info_layout, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
+        ViewUtil.waitForViewVisible(R.id.contact_info_layout, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         onView(withId(R.id.contact_info_layout)).perform(click());
 
         ViewUtil.waitForViewVisible(R.id.provider_address_edit_text, ViewUtil.LONG_MAX_WAIT_TIME_MS);

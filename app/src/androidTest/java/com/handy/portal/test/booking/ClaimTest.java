@@ -13,6 +13,7 @@ import com.handy.portal.tool.ViewMatchers;
 import com.handy.portal.tool.data.TestUsers;
 import com.handy.portal.tool.model.TestUser;
 import com.handy.portal.tool.util.AppInteractionUtil;
+import com.handy.portal.tool.util.TermsPageUtil;
 import com.handy.portal.tool.util.ViewUtil;
 
 import org.hamcrest.Matcher;
@@ -59,6 +60,8 @@ public class ClaimTest {
      */
     @Test
     public void testBookingClaim() {
+        TermsPageUtil.acceptAllTermsIfPresent();
+
         ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         ViewUtil.waitForViewNotVisible(R.id.loading_overlay, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
 

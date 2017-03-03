@@ -153,7 +153,7 @@ public class ProfileUpdateFragment extends ActionBarFragment {
     public void onSubmitForm() {
         if (validate()) {
             bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileSubmitted()));
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new ProfileEvent.RequestProfileUpdate(mEmailText.getText(), mPhoneText.getText(), mAddressText.getText(),
                     mAddress2Text.getText(), mCityText.getText(), mStateText.getText(), mZipCodeText.getText()));
             bus.post(new ProfileEvent.SubmittedProfileUpdate());

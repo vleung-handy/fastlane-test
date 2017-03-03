@@ -22,7 +22,7 @@ import static org.hamcrest.Matchers.not;
  */
 public class ViewUtil {
     private static final long VIEW_STATE_QUERY_INTERVAL_MS = 50;
-    public static final long LONG_MAX_WAIT_TIME_MS = 15000;
+    public static final long LONG_MAX_WAIT_TIME_MS = 50000;
     public static final long SHORT_MAX_WAIT_TIME_MS = 5000;
 
     private ViewUtil() {
