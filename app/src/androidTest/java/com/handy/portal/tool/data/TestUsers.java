@@ -1,6 +1,6 @@
-package com.handy.portal.test.data;
+package com.handy.portal.tool.data;
 
-import com.handy.portal.test.model.TestUser;
+import com.handy.portal.tool.model.TestUser;
 
 public class TestUsers {
     //disable pin request by setting disable_pin_request=true in override.properties

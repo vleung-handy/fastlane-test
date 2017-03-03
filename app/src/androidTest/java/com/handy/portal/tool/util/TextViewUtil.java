@@ -1,6 +1,6 @@
-package com.handy.portal.test.util;
+package com.handy.portal.tool.util;
 
-import com.handy.portal.test.model.TestField;
+import com.handy.portal.tool.model.TestField;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;

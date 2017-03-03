@@ -36,8 +36,8 @@ public class TestBaseApplication extends BaseApplication {
     }
 
     @Override
-    protected void createObjectGraph() {
-        mGraph = ObjectGraph.create(new TestApplicationModule(this));
+    protected ObjectGraph createObjectGraph() {
+        return ObjectGraph.create(new TestApplicationModule(this));
     }
 
     @Override

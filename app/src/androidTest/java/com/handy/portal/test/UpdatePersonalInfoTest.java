@@ -1,18 +1,19 @@
-package com.handy.portal;
+package com.handy.portal.test;
 
 import android.content.Intent;
 import android.os.Build;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
+import com.handy.portal.R;
 import com.handy.portal.core.constant.PrefsKey;
 import com.handy.portal.core.ui.activity.SplashActivity;
-import com.handy.portal.test.data.TestUsers;
-import com.handy.portal.test.model.TestField;
-import com.handy.portal.test.model.TestUser;
-import com.handy.portal.test.util.AppInteractionUtil;
-import com.handy.portal.test.util.TextViewUtil;
-import com.handy.portal.test.util.ViewUtil;
+import com.handy.portal.tool.data.TestUsers;
+import com.handy.portal.tool.model.TestField;
+import com.handy.portal.tool.model.TestUser;
+import com.handy.portal.tool.util.AppInteractionUtil;
+import com.handy.portal.tool.util.TextViewUtil;
+import com.handy.portal.tool.util.ViewUtil;
 
 import org.junit.After;
 import org.junit.Rule;

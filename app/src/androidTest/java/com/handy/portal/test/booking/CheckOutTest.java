@@ -1,4 +1,4 @@
-package com.handy.portal.booking;
+package com.handy.portal.test.booking;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,11 +11,11 @@ import com.handy.portal.R;
 import com.handy.portal.core.constant.PrefsKey;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.core.ui.activity.SplashActivity;
-import com.handy.portal.test.ViewMatchers;
-import com.handy.portal.test.data.TestUsers;
-import com.handy.portal.test.model.TestUser;
-import com.handy.portal.test.util.AppInteractionUtil;
-import com.handy.portal.test.util.ViewUtil;
+import com.handy.portal.tool.ViewMatchers;
+import com.handy.portal.tool.data.TestUsers;
+import com.handy.portal.tool.model.TestUser;
+import com.handy.portal.tool.util.AppInteractionUtil;
+import com.handy.portal.tool.util.ViewUtil;
 
 import org.hamcrest.Matcher;
 import org.junit.After;

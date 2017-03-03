@@ -1,4 +1,4 @@
-package com.handy.portal.test.util;
+package com.handy.portal.tool.util;
 
 import com.handy.portal.R;
 
