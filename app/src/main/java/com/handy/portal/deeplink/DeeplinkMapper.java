@@ -12,12 +12,16 @@ import java.util.Map;
 
 public class DeeplinkMapper {
     private static final ImmutableMap<String, MainViewPage> DEEPLINK_MAP;
+    public static final String SCHEDULE_AVAILABILITY = "scheduled_jobs/availability";
+    public static final String AVAILABLE_JOBS = "available_jobs";
 
     static {
         final Map<String, MainViewPage> deeplinkMap = new HashMap<>();
 
         deeplinkMap.put("booking_details", MainViewPage.JOB_DETAILS);
-        deeplinkMap.put("available_jobs", MainViewPage.AVAILABLE_JOBS);
+        deeplinkMap.put("more", MainViewPage.AVAILABLE_JOBS);
+        deeplinkMap.put(AVAILABLE_JOBS, MainViewPage.AVAILABLE_JOBS);
+        deeplinkMap.put(SCHEDULE_AVAILABILITY, MainViewPage.EDIT_WEEKLY_AVAILABLE_HOURS);
         deeplinkMap.put("scheduled_jobs", MainViewPage.SCHEDULED_JOBS);
         deeplinkMap.put("requested_jobs", MainViewPage.CLIENTS);
         deeplinkMap.put("clients", MainViewPage.CLIENTS);

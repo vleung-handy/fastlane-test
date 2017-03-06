@@ -2,6 +2,7 @@ package com.handy.portal.deeplink;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 
 import com.handy.portal.core.constant.BundleKeys;
 
@@ -10,6 +11,12 @@ import java.util.List;
 public class DeeplinkUtils {
     public static final String HANDY_PRO_PATH_PREFIX = "hp";
 
+    /**
+     * This is the parameter we accept for /hp/scheduled_jobs?day=0
+     */
+    public static final String DEEP_LINK_PARAM_DAY = "day";
+
+    @Nullable
     public static Bundle createDeeplinkBundleFromUri(final Uri uri) {
         if (uri != null) {
             final Bundle deeplinkBundle = new Bundle();
