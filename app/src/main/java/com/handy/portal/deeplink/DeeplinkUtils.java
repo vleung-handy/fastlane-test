@@ -15,6 +15,7 @@ public class DeeplinkUtils {
      * This is the parameter we accept for /hp/scheduled_jobs?day=0
      */
     public static final String DEEP_LINK_PARAM_DAY = "day";
+    public static final String DEEP_LINK_PARAM_FIRST_AVAILABLE = "first_available";
 
     @Nullable
     public static Bundle createDeeplinkBundleFromUri(final Uri uri) {

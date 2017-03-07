@@ -39,6 +39,7 @@ import com.handy.portal.core.ui.activity.MainActivity;
 import com.handy.portal.core.ui.element.DateButtonView;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.deeplink.DeeplinkUtils;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
@@ -172,12 +173,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         ButterKnife.bind(this, view);
 
         //Optional param, needs to be validated
-        if (getArguments() != null) {
-            long targetDateTime = getArguments().getLong(BundleKeys.DATE_EPOCH_TIME);
-            if (targetDateTime > 0) {
-                mSelectedDay = DateTimeUtils.getDateWithoutTime(new Date(targetDateTime));
-            }
-        }
+        initializeSelectedDate();
 
         final SwipeRefreshLayout.OnRefreshListener refreshListener =
                 new SwipeRefreshLayout.OnRefreshListener() {
@@ -193,6 +189,34 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         noBookingsSwipeRefreshLayout.setColorSchemeResources(R.color.handy_blue);
 
         return view;
+    }
+
+    /**
+     * Arguments can be passed in to aid which day we want to be "selected".
+     */
+    private void initializeSelectedDate() {
+        if (getArguments() != null) {
+            long targetDateTime = getArguments().getLong(BundleKeys.DATE_EPOCH_TIME);
+            if (targetDateTime > 0) {
+                mSelectedDay = DateTimeUtils.getDateWithoutTime(new Date(targetDateTime));
+            }
+
+            //the BundleKeys.DATE_EPOCH_TIME will never collide with DeeplinkUtils.DEEP_LINK_PARAM_DAY
+            //so we don't have to worry about things getting overriden.
+            String daysToAdd = getArguments().getString(DeeplinkUtils.DEEP_LINK_PARAM_DAY, null);
+            if (daysToAdd != null) {
+                try {
+                    int dta = Integer.parseInt(daysToAdd);
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(new Date());
+                    calendar.add(Calendar.DATE, dta);
+                    mSelectedDay = DateTimeUtils.getDateWithoutTime(calendar.getTime());
+                }
+                catch (Exception e) {
+                    //anything that goes wrong here, we just ignore and move on.
+                }
+            }
+        }
     }
 
     @Override
