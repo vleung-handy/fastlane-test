@@ -200,6 +200,8 @@ public class MainActivity extends BaseActivity
             switchToPage(MainViewPage.AVAILABLE_JOBS);
         }
         handleDeeplinkIfNecessary();
+
+        handleDrawerOpen();
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
 
         AppseeManager.markViewsAsSensitive(mNavigationHeaderProName, mProImage);
@@ -321,6 +323,17 @@ public class MainActivity extends BaseActivity
         }
         else {
             mNavigationHeaderCtaButton.setText(R.string.edit_profile);
+        }
+    }
+
+    /**
+     * For the time being, since the "more" menu is still in the form of a drawer menu,
+     * it is possible that coming from a deeplink, we want the drawer to be opened. Detect and
+     * handle that here.
+     */
+    private void handleDrawerOpen() {
+        if (mDeeplinkData != null && mDeeplinkData.getBoolean(BundleKeys.DRAWER_OPEN)) {
+            mDrawerLayout.openDrawer(mNavigationDrawer);
         }
     }
 

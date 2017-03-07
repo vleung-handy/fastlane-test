@@ -24,6 +24,7 @@ import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.core.manager.LoginManager;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.deeplink.DeeplinkMapper;
 import com.handy.portal.deeplink.DeeplinkUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
@@ -276,18 +277,64 @@ public class SplashActivity extends BaseActivity {
         return intent;
     }
 
+    /**
+     * Looks for deep link data and attach it to the intent. However, it will only attach if it
+     * is in compliant with config parameters. i.e..., if the deep link is to a page where config
+     * disallows, the deep link is not attached.
+     *
+     * @param intent
+     * @param data
+     * @param source
+     * @return
+     */
     private boolean attachDeeplinkDataIfAvailable(
             @NonNull final Intent intent,
             @Nullable final Uri data,
             @NonNull @DeeplinkLog.Source.DeeplinkSource final String source) {
-        final Bundle deeplinkBundle = DeeplinkUtils.createDeeplinkBundleFromUri(data);
+
+        Uri constaintedUri = applyConfigParamConstraints(data);
+        final Bundle deeplinkBundle = DeeplinkUtils.createDeeplinkBundleFromUri(constaintedUri);
         if (deeplinkBundle != null) {
+            handleDrawerOpenRequest(constaintedUri, deeplinkBundle);
             intent.putExtra(BundleKeys.DEEPLINK_DATA, deeplinkBundle);
             intent.putExtra(BundleKeys.DEEPLINK_SOURCE, source);
             return true;
         }
         else {
             return false;
+        }
+    }
+
+    /**
+     * Takes an incoming URI and apply the constraints of the config parameter to it. So far,
+     * the only time we need to "restrict" access is the case where URI is to a pro's schedule
+     * availability page, but the configuration for that is disabled.
+     *
+     * @param uri
+     * @return null when user is not allowed to go to uri
+     */
+    @Nullable
+    private Uri applyConfigParamConstraints(@Nullable final Uri uri) {
+        if (uri != null
+                && uri.getPath().contains(DeeplinkMapper.SCHEDULE_AVAILABILITY)
+                && !mConfigManager.getConfigurationResponse().isAvailableHoursEnabled()) {
+            //user wants to go to a page that is disabled.
+            return null;
+        }
+        else {
+            return uri;
+        }
+    }
+
+    /**
+     * This is a temporary method, for indicating that the drawer menu be opened. The deep link
+     * /hp/more eventually will point to a stand-alone page. But for now, we point to available_jobs
+     * page with a flag to open the drawer.
+     */
+    private void handleDrawerOpenRequest(@NonNull final Uri uri,
+                                         @NonNull Bundle deepLinkBundle) {
+        if (uri.getPath().endsWith("more")) {
+            deepLinkBundle.putBoolean(BundleKeys.DRAWER_OPEN, true);
         }
     }
 

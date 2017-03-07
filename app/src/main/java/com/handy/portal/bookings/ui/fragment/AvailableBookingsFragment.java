@@ -35,6 +35,7 @@ import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.event.ProviderSettingsEvent;
 import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.core.ui.activity.MainActivity;
+import com.handy.portal.deeplink.DeeplinkUtils;
 import com.handy.portal.helpcenter.constants.HelpCenterUrl;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FragmentUtils;
@@ -70,6 +71,9 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     @Inject
     BookingModalsManager mBookingModalsManager;
 
+    private boolean mFastForwardToFirst;
+    private Date mFirstAvailableDate;
+
     @Override
     protected MainViewPage getAppPage() {
         return MainViewPage.AVAILABLE_JOBS;
@@ -94,6 +98,18 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 goToHelpCenter(HelpCenterUrl.KEEP_RATE_INFO_REDIRECT_URL);
             }
         });
+
+        //check to see if there is a deep link flag for specifying fast forwarding to the first
+        //available job
+        if (getArguments() != null) {
+            String firstAvailString = getArguments().getString(DeeplinkUtils.DEEP_LINK_PARAM_FIRST_AVAILABLE, null);
+            try {
+                mFastForwardToFirst = Boolean.parseBoolean(firstAvailString);
+            }
+            catch (Exception e) {
+                //no need to do anything on error.
+            }
+        }
     }
 
     @Override
@@ -314,6 +330,25 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     @Subscribe
     public void onBookingsRetrieved(HandyEvent.ReceiveAvailableBookingsSuccess event) {
+
+        /*
+            If we get a date that is smaller than what we've seen so far, then navigate to that
+            page via onDateClicked method. Since this booking is already loaded, it'll fetch
+            from cache, no extra service call.
+         */
+        if (mFastForwardToFirst
+                && event.bookingsWrapper.getBookings() != null
+                && !event.bookingsWrapper.getBookings().isEmpty()) {
+            if (mFirstAvailableDate == null) {
+                mFirstAvailableDate = event.bookingsWrapper.getDate();
+                onDateClicked(mFirstAvailableDate);
+            }
+            else if (mFirstAvailableDate.compareTo(event.bookingsWrapper.getDate()) > 0) {
+                mFirstAvailableDate = event.bookingsWrapper.getDate();
+                onDateClicked(mFirstAvailableDate);
+            }
+        }
+
         handleBookingsRetrieved(event);
     }
 

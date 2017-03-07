@@ -164,7 +164,7 @@ public abstract class HandyEvent {
 
 
     public static class ReceiveAvailableBookingsSuccess extends ReceiveBookingsSuccess {
-        public ReceiveAvailableBookingsSuccess(BookingsWrapper bookingsWrapper, Date day) {
+        public ReceiveAvailableBookingsSuccess(@NonNull BookingsWrapper bookingsWrapper, Date day) {
             this.bookingsWrapper = bookingsWrapper;
             this.day = day;
         }

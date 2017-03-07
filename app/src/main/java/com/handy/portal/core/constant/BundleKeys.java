@@ -24,6 +24,8 @@ public class BundleKeys {
     public static final String NAVIGATION_SOURCE = "navigation_source";
     public static final String DATE = "date";
 
+    public static final String DRAWER_OPEN = "drawer_open";
+
     // Terms
     public static final String TERMS_GROUP = "terms_group";
     public static final String TERMS = "terms";
