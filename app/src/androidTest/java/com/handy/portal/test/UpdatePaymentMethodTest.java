@@ -24,7 +24,6 @@ import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static org.junit.Assert.assertEquals;
 
 //note that animations should be disabled on the device running these tests
 @RunWith(AndroidJUnit4.class)
@@ -62,8 +61,6 @@ public class UpdatePaymentMethodTest {
      */
     @Test
     public void testUpdateBankAccount() {
-        assertEquals("CoreTestApplication", mActivityRule.getActivity().getApplication().getClass().getSimpleName());
-
         TermsPageUtil.acceptAllTermsIfPresent();
 
         ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
