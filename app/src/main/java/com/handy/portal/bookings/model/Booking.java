@@ -286,7 +286,7 @@ public class Booking implements Comparable<Booking>, Serializable {
     }
 
     public ChatOptions getChatOptions() {
-        return mChatOptions;
+        return null;
     }
 
     @NonNull
