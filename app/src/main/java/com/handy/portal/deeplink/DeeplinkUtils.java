@@ -2,6 +2,7 @@ package com.handy.portal.deeplink;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.handy.portal.core.constant.BundleKeys;
@@ -15,7 +16,9 @@ public class DeeplinkUtils {
      * This is the parameter we accept for /hp/scheduled_jobs?day=0
      */
     public static final String DEEP_LINK_PARAM_DAY = "day";
+
     public static final String DEEP_LINK_PARAM_FIRST_AVAILABLE = "first_available";
+    public static final String DEEP_LINK_AVAILABLE_HOURS = "available_hours";
 
     @Nullable
     public static Bundle createDeeplinkBundleFromUri(final Uri uri) {
@@ -23,6 +26,7 @@ public class DeeplinkUtils {
             final Bundle deeplinkBundle = new Bundle();
             final String path = sanitizeUriPath(uri);
             if (DeeplinkMapper.getPageForDeeplink(path) != null) {
+                handleScheduledJobsAvailabilityDeepLink(deeplinkBundle, path);
                 deeplinkBundle.putString(BundleKeys.DEEPLINK, path);
                 for (String key : uri.getQueryParameterNames()) {
                     deeplinkBundle.putString(key, uri.getQueryParameter(key));
@@ -35,6 +39,21 @@ public class DeeplinkUtils {
             }
         }
         return null;
+    }
+
+    /**
+     * "availability" is a sub page of scheduled-jobs, so we handle that by navigating to the
+     * scheduled jobs page and enter
+     *
+     * @param deeplinkBundle
+     * @param path
+     */
+    private static void handleScheduledJobsAvailabilityDeepLink(
+            @NonNull Bundle deeplinkBundle,
+            @NonNull final String path) {
+        if (path.contains(DeeplinkMapper.SCHEDULE_AVAILABILITY)) {
+            deeplinkBundle.putBoolean(DEEP_LINK_AVAILABLE_HOURS, true);
+        }
     }
 
     // This removes "/hp" from the beginning of the URI.
