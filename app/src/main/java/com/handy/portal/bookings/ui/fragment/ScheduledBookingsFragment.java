@@ -34,6 +34,7 @@ import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.core.ui.activity.MainActivity;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
+import com.handy.portal.deeplink.DeeplinkUtils;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
@@ -130,6 +131,11 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        if (getArguments() != null
+                && getArguments().getBoolean(DeeplinkUtils.DEEP_LINK_AVAILABLE_HOURS, false)) {
+            navigateToEditWeeklyAvailableHours();
+        }
     }
 
     @Override
@@ -153,6 +159,11 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     private void navigateToEditWeeklyAvailableHours() {
+        if (mSelectedDay == null) {
+            //it'll only be null if we're coming in here directly from a deeplink, then we can
+            //use today as our selected day.
+            mSelectedDay = DateTimeUtils.getDateWithoutTime(new Date());
+        }
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.SetWeekAvailabilitySelected(
                 DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(mSelectedDay))));
         final Bundle arguments = new Bundle();
