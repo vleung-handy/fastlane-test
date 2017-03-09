@@ -17,9 +17,8 @@ public class EnvironmentModifier {
 
 
     public enum Environment {
-        Q(R.string.q),
-        L(R.string.local),
-        S(R.string.staging),;
+        NAMESAPCE(R.string.namespace),
+        LOCAL(R.string.local),;
         // TODO: Support pointing to production
         // P(R.string.production),;
 
@@ -35,27 +34,29 @@ public class EnvironmentModifier {
     }
 
 
-    private static final String DEFAULT_ENVIRONMENT = Environment.S.name();
+    private static final String DEFAULT_ENVIRONMENT = Environment.NAMESAPCE.name();
+    private static final String DEFAULT_ENVIRONMENT_PREFIX = "s";
     private final PrefsManager mPrefsManager;
     private boolean mIsPinRequestEnabled = true;
 
     public EnvironmentModifier(Context context, PrefsManager prefsManager) {
         mPrefsManager = prefsManager;
         try {
+            // Handling override.properties. Doesn't do anything if override.properties doesn't exist.
             Properties properties = PropertiesReader.getProperties(context, "override.properties");
             boolean disablePinRequest = Boolean.parseBoolean(properties.getProperty("disable_pin_request", "false"));
             mIsPinRequestEnabled = !disablePinRequest;
             String environmentPrefix = properties.getProperty("environment", null);
             environmentPrefix = prefsManager.getSecureString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix); // whatever is stored in prefs is higher priority
 
-            if (!TextUtils.isNullOrEmpty(environmentPrefix)) // this means it's an override to point to a Q/L environment
+            if (!TextUtils.isNullOrEmpty(environmentPrefix)) // this means it's an override to point to a NAMESPACE/LOCAL environment
             {
                 if (environmentPrefix.matches(IP_ADDRESS_REGEX)) {
-                    prefsManager.setSecureString(PrefsKey.ENVIRONMENT, Environment.L.name());
+                    prefsManager.setSecureString(PrefsKey.ENVIRONMENT, Environment.LOCAL.name());
                     prefsManager.setSecureString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix);
                 }
                 else {
-                    prefsManager.setSecureString(PrefsKey.ENVIRONMENT, Environment.Q.name());
+                    prefsManager.setSecureString(PrefsKey.ENVIRONMENT, Environment.NAMESAPCE.name());
                     prefsManager.setSecureString(PrefsKey.ENVIRONMENT_PREFIX, environmentPrefix);
                 }
             }
@@ -66,7 +67,7 @@ public class EnvironmentModifier {
     }
 
     public String getEnvironmentPrefix() {
-        return mPrefsManager.getSecureString(PrefsKey.ENVIRONMENT_PREFIX, null);
+        return mPrefsManager.getSecureString(PrefsKey.ENVIRONMENT_PREFIX, DEFAULT_ENVIRONMENT_PREFIX);
     }
 
     public Environment getEnvironment() {
