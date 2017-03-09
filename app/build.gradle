@@ -3,7 +3,7 @@ buildscript {
         flatDir {
             dirs 'libs'
             dirs 'aars'
-        }
+        })\.(\
         mavenCentral()
         maven { url 'https://maven.fabric.io/public' }
     }
