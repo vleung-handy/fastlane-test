@@ -1,5 +1,7 @@
 package com.handy.portal.logger.handylogger.model;
 
+import android.support.annotation.StringDef;
+
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.Booking;
 
@@ -212,4 +214,27 @@ public class ScheduledJobsLog extends EventLog {
             mDate = date;
         }
     }
+
+
+    public static class ContactCustomerLog extends ScheduledJobsLog {
+        @StringDef({
+                EventType.CALL_CUSTOMER_SELECTED,
+                EventType.CALL_CUSTOMER_FAILED,
+                EventType.TEXT_CUSTOMER_SELECTED,
+                EventType.TEXT_CUSTOMER_FAILED,
+                EventType.IN_APP_CHAT_WITH_CUSTOMER_SELECTED,
+                EventType.IN_APP_CHAT_WITH_CUSTOMER_FAILED
+        })
+        public @interface ContactEventType {}
+
+
+        @SerializedName("user_id")
+        private String mUserId;
+
+        public ContactCustomerLog(@ContactEventType String eventType, String userId) {
+            super(eventType);
+            mUserId = userId;
+        }
+    }
+
 }

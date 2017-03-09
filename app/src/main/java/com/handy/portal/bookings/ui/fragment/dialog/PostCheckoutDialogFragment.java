@@ -16,6 +16,7 @@ import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
+import com.handy.portal.bookings.model.User;
 import com.handy.portal.bookings.ui.element.PostCheckoutRequestedBookingElementView;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
@@ -100,7 +101,7 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
 
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
-        final Booking.User customer = mPostCheckoutInfo.getCustomer();
+        final User customer = mPostCheckoutInfo.getCustomer();
         mClaimPromptText.setText(getString(R.string.post_checkout_claim_prompt_formatted,
                 customer.getFirstName()));
         mClaimSubtitleText.setText(getString(R.string.post_checkout_claim_subtitle_formatted,

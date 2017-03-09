@@ -32,6 +32,7 @@ import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.ChatOptions;
+import com.handy.portal.bookings.model.User;
 import com.handy.portal.bookings.ui.element.BookingDetailsJobInstructionsSectionView;
 import com.handy.portal.bookings.ui.element.BookingDetailsProRequestInfoView;
 import com.handy.portal.bookings.ui.element.BookingMapView;
@@ -59,7 +60,9 @@ import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
+import com.handy.portal.logger.handylogger.model.EventType;
 import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
+import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handybook.shared.core.HandyLibrary;
 import com.handybook.shared.layer.LayerConstants;
@@ -458,22 +461,20 @@ public class BookingFragment extends TimerActionBarFragment {
     @OnClick(R.id.booking_call_customer_view)
     public void callCustomer() {
         bus.post(new HandyEvent.CallCustomerClicked());
+        User user = mBooking.getUser();
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
+                EventType.CALL_CUSTOMER_SELECTED, user == null ? null : user.getId())));
 
         String phoneNumber = mBooking.getBookingPhone();
         if (phoneNumber == null) {
+            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
+                    EventType.CALL_CUSTOMER_FAILED, user == null ? null : user.getId())));
             showInvalidPhoneNumberToast();
             Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
             return;
         }
 
-        try {
-            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), getContext());
-        }
-        catch (Exception e) {
-            Toast.makeText(getContext(),
-                    getString(R.string.unable_to_call_customer), Toast.LENGTH_SHORT).show();
-            Crashlytics.logException(new RuntimeException("Calling a Phone Number failed", e));
-        }
+        Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), getContext());
     }
 
     @OnClick(R.id.booking_message_customer_view)
@@ -481,11 +482,14 @@ public class BookingFragment extends TimerActionBarFragment {
         bus.post(new HandyEvent.TextCustomerClicked());
 
         ChatOptions chatOptions = mBooking.getChatOptions();
-        Address address = mBooking.getAddress();
-        if (chatOptions != null && chatOptions.isDirectToInAppChat() && address != null
-                && !android.text.TextUtils.isEmpty(address.getUserId())) {
+        final User user = mBooking.getUser();
+        if (chatOptions != null && chatOptions.isDirectToInAppChat() && user != null
+                && !android.text.TextUtils.isEmpty(user.getId())) {
+            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
+                    EventType.IN_APP_CHAT_WITH_CUSTOMER_SELECTED, user.getId())));
+
             HandyLibrary.getInstance().getHandyService().createConversationForPro(
-                    mBooking.getAddress().getUserId(), "", new Callback<CreateConversationResponse>() {
+                    user.getId(), "", new Callback<CreateConversationResponse>() {
                         @Override
                         public void success(
                                 final CreateConversationResponse conversationResponse,
@@ -499,13 +503,19 @@ public class BookingFragment extends TimerActionBarFragment {
 
                         @Override
                         public void failure(final RetrofitError error) {
+                            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
+                                    EventType.IN_APP_CHAT_WITH_CUSTOMER_FAILED, user.getId())));
                             showToast(R.string.an_error_has_occurred);
                         }
                     });
         }
         else {
+            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
+                    EventType.TEXT_CUSTOMER_SELECTED, user == null ? null : user.getId())));
             String phoneNumber = mBooking.getBookingPhone();
             if (phoneNumber == null) {
+                bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
+                        EventType.TEXT_CUSTOMER_FAILED, user == null ? null : user.getId())));
                 showInvalidPhoneNumberToast();
                 Crashlytics.logException(
                         new Exception("Phone number is null for booking " + mBooking.getId()));
