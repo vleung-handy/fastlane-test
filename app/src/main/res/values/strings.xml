@@ -35,13 +35,12 @@
 
     <!-- Environment -->
     <string name="select_environment">Select Environment</string>
-    <string name="q">Q Environment</string>
     <string name="local">Local</string>
-    <string name="staging">Staging</string>
-    <string name="enter_domain">Enter Domain or IP Address</string>
-    <string name="enter_q_environment_number">Enter Q Environment Number</string>
-    <string name="q_environment_number_hint">e.g. q123</string>
-    <string name="local_hint">e.g. localhost or 127.0.0.1</string>
+    <string name="namespace">Namespace</string>
+    <string name="env_modifier_dialog_title_namespace">Enter Namespace</string>
+    <string name="env_modifier_dialog_title_domain">Enter Domain or IP Address</string>
+    <string name="env_modifier_dialog_input_hint_namespace">e.g. test01</string>
+    <string name="env_modifier_dialog_input_hint_domain">e.g. localhost or 127.0.0.1</string>
 
     <!-- Navigation Drawer -->
     <string name="navigation_drawer_open">Navigation drawer opened</string>

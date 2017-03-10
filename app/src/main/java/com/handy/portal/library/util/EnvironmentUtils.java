@@ -12,7 +12,6 @@ import com.handy.portal.R;
 import com.handy.portal.core.EnvironmentModifier;
 
 public class EnvironmentUtils {
-    private static final String Q_SUBDOMAIN_SUFFIX = "-handy";
 
     public static void showEnvironmentModifierDialog(
             final EnvironmentModifier environmentModifier,
@@ -28,8 +27,8 @@ public class EnvironmentUtils {
                                 final EnvironmentModifier.Environment selectedEnvironment =
                                         EnvironmentModifier.Environment.values()[which];
                                 switch (selectedEnvironment) {
-                                    case Q:
-                                    case L:
+                                    case NAMESAPCE:
+                                    case LOCAL:
                                         showEnvironmentPrefixDialog(context, environmentModifier,
                                                 selectedEnvironment, callback);
                                         break;
@@ -51,17 +50,18 @@ public class EnvironmentUtils {
             final EnvironmentModifier.Environment environment,
             final EnvironmentModifier.OnEnvironmentChangedListener callback) {
         final EditText input = new EditText(context);
+        input.setSingleLine();
         input.setTypeface(FontUtils.getFont(context, FontUtils.CIRCULAR_BOOK));
         input.setGravity(Gravity.CENTER);
         int titleTextResId;
         switch (environment) {
-            case Q:
-                titleTextResId = R.string.enter_q_environment_number;
-                input.setHint(R.string.q_environment_number_hint);
+            case NAMESAPCE:
+                titleTextResId = R.string.env_modifier_dialog_title_namespace;
+                input.setHint(R.string.env_modifier_dialog_input_hint_namespace);
                 break;
-            case L:
-                titleTextResId = R.string.enter_domain;
-                input.setHint(R.string.local_hint);
+            case LOCAL:
+                titleTextResId = R.string.env_modifier_dialog_title_domain;
+                input.setHint(R.string.env_modifier_dialog_input_hint_domain);
                 break;
             default:
                 return;
@@ -74,9 +74,6 @@ public class EnvironmentUtils {
                     public void onClick(final DialogInterface dialog, final int which) {
                         String value = input.getText().toString().trim().toLowerCase();
                         if (!TextUtils.isNullOrEmpty(value)) {
-                            if (environment == EnvironmentModifier.Environment.Q) {
-                                value += Q_SUBDOMAIN_SUFFIX;
-                            }
                             environmentModifier.setEnvironment(environment, value, callback);
                         }
                     }
@@ -90,11 +87,11 @@ public class EnvironmentUtils {
                                                 final EnvironmentModifier environmentModifier) {
         final EnvironmentModifier.Environment currentEnvironment =
                 environmentModifier.getEnvironment();
-        final String currentEnvironmentPrefix =
-                environmentModifier.getEnvironmentPrefix();
+        final String currentEnvironmentPrefix = environmentModifier.getEnvironmentPrefix();
         final EnvironmentModifier.Environment[] environments =
                 EnvironmentModifier.Environment.values();
         final String[] environmentNames = new String[environments.length];
+
         for (int i = 0; i < environments.length; i++) {
             final EnvironmentModifier.Environment environment = environments[i];
             environmentNames[i] = context.getString(environment.getDisplayNameResId());

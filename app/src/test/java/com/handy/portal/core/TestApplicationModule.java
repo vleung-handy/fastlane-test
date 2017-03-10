@@ -183,7 +183,7 @@ public class TestApplicationModule {
     final EnvironmentModifier provideEnvironmentModifier() {
         EnvironmentModifier environmentModifier = mock(EnvironmentModifier.class);
         when(environmentModifier.getEnvironmentPrefix()).thenReturn("ms");
-        when(environmentModifier.getEnvironment()).thenReturn(EnvironmentModifier.Environment.S);
+        when(environmentModifier.getEnvironment()).thenReturn(EnvironmentModifier.Environment.NAMESAPCE);
         return environmentModifier;
     }
 

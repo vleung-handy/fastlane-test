@@ -71,7 +71,7 @@ public abstract class ActionBarFragment extends InjectedFragment {
     public void setEnvironmentMenuItemTitle(final MenuItem environmentMenuItemTitle) {
         String title;
         final EnvironmentModifier.Environment environment = environmentModifier.getEnvironment();
-        if (environment == EnvironmentModifier.Environment.Q) {
+        if (environment == EnvironmentModifier.Environment.NAMESAPCE) {
             title = environmentModifier.getEnvironmentPrefix().toUpperCase();
         }
         else {
