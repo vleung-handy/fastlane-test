@@ -400,13 +400,22 @@ public class MainActivity extends BaseActivity
                 && resultCode == Activity.RESULT_OK
                 && intent != null) {
             final ProviderProfile providerProfile = mProviderManager.getCachedProviderProfile();
-            intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.book_my_service));
-            intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.profile_share_text_formatted,
-                    providerProfile.getProviderPersonalInfo().getFirstName(),
-                    providerProfile.getReferralInfo().getProfileUrl()));
-            Utils.safeLaunchIntent(intent, this);
 
             final String channel = ShareUtils.getChannelFromIntent(this, intent);
+            if (channel.equalsIgnoreCase(ShareUtils.CHANNEL_TWITTER)) {
+                intent.putExtra(Intent.EXTRA_TEXT, getString(
+                        R.string.profile_share_twitter_text_formatted,
+                        providerProfile.getReferralInfo().getProfileUrl())
+                );
+            }
+            else {
+                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.book_my_service));
+                intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.profile_share_text_formatted,
+                        providerProfile.getProviderPersonalInfo().getFirstName(),
+                        providerProfile.getReferralInfo().getProfileUrl()));
+            }
+            Utils.safeLaunchIntent(intent, this);
+
             final String appName = SystemUtils.getAppNameFromIntent(this, intent);
             bus.post(new LogEvent.AddLogEvent(new ProfileLog.ProfileShareSubmitted(
                     appName, channel)));
