@@ -23,8 +23,6 @@ public class Address implements Serializable {
     private float mLongitude;
     @SerializedName("short_region")
     private String mShortRegion;
-    @SerializedName("user_id")
-    private String mUserId;
 
     public String getAddress1() {
         return mAddress1;
@@ -60,10 +58,6 @@ public class Address implements Serializable {
 
     public String getShortRegion() {
         return mShortRegion;
-    }
-
-    public String getUserId() {
-        return mUserId;
     }
 
     public String getStreetAddress() {

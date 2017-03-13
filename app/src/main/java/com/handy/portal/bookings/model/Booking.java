@@ -784,36 +784,6 @@ public class Booking implements Comparable<Booking>, Serializable {
     }
 
 
-    public static class User implements Serializable {
-        @SerializedName("email")
-        private String mEmail;
-        @SerializedName("first_name")
-        private String mFirstName;
-        @SerializedName("last_name")
-        private String mLastName;
-
-        public String getEmail() {
-            return mEmail;
-        }
-
-        public String getFirstName() {
-            return mFirstName;
-        }
-
-        public String getLastName() {
-            return mLastName;
-        }
-
-        public String getAbbreviatedName() {
-            return mFirstName + (mLastName.isEmpty() ? "" : " " + mLastName.charAt(0) + ".");
-        }
-
-        public String getFullName() {
-            return mFirstName + " " + mLastName;
-        }
-    }
-
-
     public static class BookingInstruction implements Serializable {
         @SerializedName("id")
         protected String mId;

@@ -7,6 +7,7 @@ import com.handy.portal.R;
 import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.TestUtils;
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.model.User;
 import com.handy.portal.core.TestBaseApplication;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
@@ -53,7 +54,7 @@ public class SendReceiptCheckoutFragmentTest extends RobolectricGradleTestWrappe
         ActivityController<MainActivity> activityController = Robolectric.buildActivity(MainActivity.class).create();
         activityController.start().resume().visible();
 
-        Booking.User user = mock(Booking.User.class);
+        User user = mock(User.class);
         when(user.getFirstName()).thenReturn("Mike");
 
         List<Booking.BookingInstructionUpdateRequest> list = new ArrayList<>();

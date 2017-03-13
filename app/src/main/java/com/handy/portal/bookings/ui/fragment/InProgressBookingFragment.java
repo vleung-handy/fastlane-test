@@ -22,17 +22,20 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.constant.BookingActionButtonType;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.ChatOptions;
+import com.handy.portal.bookings.model.User;
 import com.handy.portal.bookings.ui.element.CustomerRequestsView;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.PrefsManager;
-import com.handy.portal.core.model.Address;
 import com.handy.portal.core.ui.fragment.TimerActionBarFragment;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.EventType;
+import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handybook.shared.core.HandyLibrary;
 import com.handybook.shared.layer.LayerConstants;
 import com.handybook.shared.layer.model.CreateConversationResponse;
@@ -141,7 +144,7 @@ public class InProgressBookingFragment extends TimerActionBarFragment {
             enableActionsIfNeeded(action);
         }
 
-        Booking.User user = mBooking.getUser();
+        User user = mBooking.getUser();
         if (user != null) {
             mCustomerNameText.setText(user.getFullName());
         }
@@ -231,22 +234,20 @@ public class InProgressBookingFragment extends TimerActionBarFragment {
     @OnClick(R.id.in_progress_booking_call_customer_view)
     public void callCustomer() {
         bus.post(new HandyEvent.CallCustomerClicked());
+        User user = mBooking.getUser();
+        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
+                EventType.CALL_CUSTOMER_SELECTED, user == null ? null : user.getId())));
 
         String phoneNumber = mBooking.getBookingPhone();
         if (phoneNumber == null) {
+            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
+                    EventType.CALL_CUSTOMER_FAILED, user == null ? null : user.getId())));
             showInvalidPhoneNumberToast();
             Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
             return;
         }
 
-        try {
-            Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), getContext());
-        }
-        catch (Exception e) {
-            Toast.makeText(getContext(),
-                    getString(R.string.unable_to_call_customer), Toast.LENGTH_SHORT).show();
-            Crashlytics.logException(new RuntimeException("Calling a Phone Number failed", e));
-        }
+        Utils.safeLaunchIntent(new Intent(Intent.ACTION_VIEW, Uri.fromParts("tel", phoneNumber, null)), getContext());
     }
 
     @OnClick(R.id.in_progress_booking_message_customer_view)
@@ -254,11 +255,13 @@ public class InProgressBookingFragment extends TimerActionBarFragment {
         bus.post(new HandyEvent.TextCustomerClicked());
 
         ChatOptions chatOptions = mBooking.getChatOptions();
-        Address address = mBooking.getAddress();
-        if (chatOptions != null && chatOptions.isDirectToInAppChat() && address != null
-                && !android.text.TextUtils.isEmpty(address.getUserId())) {
+        final User user = mBooking.getUser();
+        if (chatOptions != null && chatOptions.isDirectToInAppChat() && user != null
+                && !android.text.TextUtils.isEmpty(user.getId())) {
+            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
+                    EventType.IN_APP_CHAT_WITH_CUSTOMER_SELECTED, user.getId())));
             HandyLibrary.getInstance().getHandyService().createConversationForPro(
-                    mBooking.getAddress().getUserId(), "", new Callback<CreateConversationResponse>() {
+                    user.getId(), "", new Callback<CreateConversationResponse>() {
                         @Override
                         public void success(
                                 final CreateConversationResponse conversationResponse,
@@ -272,13 +275,19 @@ public class InProgressBookingFragment extends TimerActionBarFragment {
 
                         @Override
                         public void failure(final RetrofitError error) {
+                            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
+                                    EventType.IN_APP_CHAT_WITH_CUSTOMER_FAILED, user.getId())));
                             showToast(R.string.an_error_has_occurred);
                         }
                     });
         }
         else {
+            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
+                    EventType.TEXT_CUSTOMER_SELECTED, user == null ? null : user.getId())));
             String phoneNumber = mBooking.getBookingPhone();
             if (phoneNumber == null) {
+                bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
+                        EventType.TEXT_CUSTOMER_FAILED, user == null ? null : user.getId())));
                 showInvalidPhoneNumberToast();
                 Crashlytics.logException(
                         new Exception("Phone number is null for booking " + mBooking.getId()));

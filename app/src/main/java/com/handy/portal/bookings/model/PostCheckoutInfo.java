@@ -7,11 +7,11 @@ import java.util.List;
 
 public class PostCheckoutInfo implements Serializable {
     @SerializedName("customer")
-    private Booking.User mCustomer;
+    private User mCustomer;
     @SerializedName("suggested_jobs")
     private List<Booking> mSuggestedJobs;
 
-    public Booking.User getCustomer() {
+    public User getCustomer() {
         return mCustomer;
     }
 
