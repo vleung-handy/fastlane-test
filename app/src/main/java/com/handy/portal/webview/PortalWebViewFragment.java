@@ -3,6 +3,7 @@ package com.handy.portal.webview;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +27,15 @@ import butterknife.ButterKnife;
 public class PortalWebViewFragment extends ActionBarFragment {
     @BindView(R.id.portal_web_view)
     WebView webView;
+
+    public static PortalWebViewFragment newInstance(String url, String title) {
+        Bundle args = new Bundle();
+        args.putString(BundleKeys.TARGET_URL, url);
+        args.putString(BundleKeys.TITLE, title);
+        PortalWebViewFragment fragment = new PortalWebViewFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,6 +104,9 @@ public class PortalWebViewFragment extends ActionBarFragment {
     @Override
     public void onResume() {
         webView.onResume();
+        if (!TextUtils.isEmpty(getArguments().getString(BundleKeys.TITLE))) {
+            setActionBarTitle(getArguments().getString(BundleKeys.TITLE));
+        }
         super.onResume();
     }
 

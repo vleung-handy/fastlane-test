@@ -698,11 +698,13 @@
     <string name="payment_support_button">Payment Support</string>
 
     <!-- View & Share Profile -->
-    <string name="view_share_Profile">View &amp; Share Profile</string>
+    <string name="view_and_share_Profile">View &amp; Share Profile</string>
     <string name="pro_team_star">Star</string>
     <plurals name="number_jobs_formatted">
         <item quantity="one">%1$d job</item>
         <item quantity="other">%1$d jobs</item>
     </plurals>
-
+    <string name="promote_your_business">Promote Your Business</string>
+    <string name="book_directly">New customers can book you directly from your profile page.</string>
+    <string name="your_public_profile">Your Public Profile</string>
 </resources>

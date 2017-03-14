@@ -143,7 +143,7 @@ public class ConfigurationResponse {
     }
 
     public boolean isMoreFullTabEnabled() {
-        return false;
+        return mMoreTabEnabled;
     }
 
     // Setters

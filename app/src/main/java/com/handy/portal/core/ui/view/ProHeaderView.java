@@ -1,4 +1,4 @@
-package com.handy.portal.core.ui.element;
+package com.handy.portal.core.ui.view;
 
 
 import android.annotation.TargetApi;

@@ -185,8 +185,11 @@
 
     <dimen name="list_item_bullet_size">8dp</dimen>
 
-    <!-- Pro Images -->
+    <!-- Pro Header -->
     <dimen name="pro_image_default_size">80dp</dimen>
+    <dimen name="pro_average_rating_star_margin">5dp</dimen>
+    <dimen name="pro_average_rating_star_margin_small">2dp</dimen>
+    <dimen name="pro_star_size_small">12dp</dimen>
 
     <!-- Request Dismissal -->
     <dimen name="request_dismissal_other_edit_text_offset">42dp</dimen>
@@ -204,8 +207,4 @@
 
     <!-- Pro Availability -->
     <dimen name="time_range_reset_button_size">26dp</dimen>
-
-    <dimen name="pro_team_average_rating_star_margin">5dp</dimen>
-    <dimen name="pro_team_average_rating_star_margin_small">2dp</dimen>
-    <dimen name="mini_pro_profile_star_size_small">12dp</dimen>
 </resources>
