@@ -21,7 +21,6 @@ public class CoreTestConfigManager extends ConfigManager {
         // Overriding the config params
         if (config != null) {
             config.setProfilePictureUploadEnabled(false);
-            config.setProfilePictureEnabled(false);
         }
 
         return config;

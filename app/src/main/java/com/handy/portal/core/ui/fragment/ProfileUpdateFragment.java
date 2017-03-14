@@ -168,7 +168,7 @@ public class ProfileUpdateFragment extends ActionBarFragment {
     @OnClick({R.id.provider_image, R.id.provider_image_edit_button})
     public void onEditImageClicked() {
         final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
-        if (configuration != null && configuration.isProfilePictureEnabled()) {
+        if (configuration != null && configuration.isProfilePictureUploadEnabled()) {
             mEditingProImage = true;
             final Bundle bundle = new Bundle();
             bundle.putSerializable(BundleKeys.NAVIGATION_SOURCE, EditPhotoFragment.Source.PROFILE);
@@ -237,26 +237,21 @@ public class ProfileUpdateFragment extends ActionBarFragment {
 
     private void initProImage() {
         final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
-        if (configuration != null && configuration.isProfilePictureEnabled()) {
-            mImageHolder.setVisibility(View.VISIBLE);
-            final String imageUrl = mProviderManager.getCachedProfileImageUrl(THUMBNAIL);
-            if (imageUrl != null) {
-                Picasso.with(getActivity())
-                        .load(imageUrl)
-                        .placeholder(R.drawable.img_pro_placeholder)
-                        .noFade()
-                        .into(mImage);
-            }
-            else {
-                mImage.setImageResource(R.drawable.img_pro_placeholder);
-            }
-
-            if (!configuration.isProfilePictureUploadEnabled()) {
-                mEditImageButton.setVisibility(View.GONE);
-            }
+        mImageHolder.setVisibility(View.VISIBLE);
+        final String imageUrl = mProviderManager.getCachedProfileImageUrl(THUMBNAIL);
+        if (imageUrl != null) {
+            Picasso.with(getActivity())
+                    .load(imageUrl)
+                    .placeholder(R.drawable.img_pro_placeholder)
+                    .noFade()
+                    .into(mImage);
         }
         else {
-            mImageHolder.setVisibility(View.GONE);
+            mImage.setImageResource(R.drawable.img_pro_placeholder);
+        }
+
+        if (!configuration.isProfilePictureUploadEnabled()) {
+            mEditImageButton.setVisibility(View.GONE);
         }
     }
 
