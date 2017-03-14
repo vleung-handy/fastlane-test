@@ -272,7 +272,7 @@ public class MainActivity extends BaseActivity
     private void showUploadProfilePictureBlockerIfNecessary() {
         final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
         if (configuration != null
-                && configuration.isProfilePictureEnabled()
+                && configuration.isProfilePictureUploadEnabled()
                 && mProviderManager.getCachedProfileImageUrl(THUMBNAIL) == null
                 && !mUploadProfilePictureBlockerShown) {
             final Bundle arguments = new Bundle();
@@ -297,23 +297,17 @@ public class MainActivity extends BaseActivity
 
     @Subscribe
     public void initProImage(final ProfileEvent.ProfilePhotoUpdated event) {
-        final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
-        if (configuration != null && configuration.isProfilePictureEnabled()) {
-            mProImage.setVisibility(View.VISIBLE);
-            final String profilePhotoUrl = mProviderManager.getCachedProfileImageUrl(THUMBNAIL);
-            if (profilePhotoUrl != null) {
-                Picasso.with(this)
-                        .load(profilePhotoUrl)
-                        .placeholder(R.drawable.img_pro_placeholder)
-                        .noFade()
-                        .into(mProImage);
-            }
-            else {
-                mProImage.setImageResource(R.drawable.img_pro_placeholder);
-            }
+        mProImage.setVisibility(View.VISIBLE);
+        final String profilePhotoUrl = mProviderManager.getCachedProfileImageUrl(THUMBNAIL);
+        if (profilePhotoUrl != null) {
+            Picasso.with(this)
+                    .load(profilePhotoUrl)
+                    .placeholder(R.drawable.img_pro_placeholder)
+                    .noFade()
+                    .into(mProImage);
         }
         else {
-            mProImage.setVisibility(View.GONE);
+            mProImage.setImageResource(R.drawable.img_pro_placeholder);
         }
     }
 
