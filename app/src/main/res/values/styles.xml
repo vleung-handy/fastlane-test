@@ -163,7 +163,21 @@
         <item name="android:drawablePadding">@dimen/default_padding</item>
         <item name="android:textColor">@color/dark_gray</item>
         <item name="android:textSize">@dimen/medium_text_size</item>
-        <item name="android:background">@drawable/button_white</item>
+    </style>
+
+    <style name="ListItem">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">@dimen/default_padding</item>
+        <item name="android:paddingRight">@dimen/default_padding</item>
+        <item name="android:paddingTop">@dimen/default_padding</item>
+        <item name="android:paddingBottom">@dimen/default_padding</item>
+        <item name="android:drawablePadding">@dimen/default_padding</item>
+        <item name="android:textColor">@color/dark_gray</item>
+        <item name="android:textSize">@dimen/medium_text_size</item>
+        <item name="android:background">@drawable/background_list_entry</item>
+        <item name="android:clickable">true</item>
     </style>
 
     <style name="Button">

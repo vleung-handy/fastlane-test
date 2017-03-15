@@ -60,6 +60,9 @@ public class ConfigurationResponse {
     @SerializedName("portal_profile_share_enabled")
     private boolean mProfileShareEnabled;
 
+    @SerializedName("more_tab_enabled")
+    private boolean mMoreTabEnabled;
+
     // Getters
     public boolean isAppseeAnalyticsEnabled() {
         return mAppseeAnalyticsEnabled;
@@ -137,6 +140,10 @@ public class ConfigurationResponse {
 
     public boolean isProfileShareEnabled() {
         return mProfileShareEnabled;
+    }
+
+    public boolean isMoreFullTabEnabled() {
+        return false;
     }
 
     // Setters

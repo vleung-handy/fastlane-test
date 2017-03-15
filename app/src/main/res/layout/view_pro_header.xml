@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context="com.handy.portal.core.ui.activity.MainActivity"
+    >
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/pro_header_image"
+        android:layout_width="@dimen/pro_image_default_size"
+        android:layout_height="@dimen/pro_image_default_size"
+        android:layout_alignParentLeft="true"
+        app:civ_border_color="@color/border_gray"
+        app:civ_border_width="1dp"
+        tools:src="@drawable/img_pro_placeholder"
+        tools:visibility="visible"
+        />
+
+    <TextView
+        android:id="@+id/pro_header_name"
+        style="@style/TextView.XLarge.Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_toRightOf="@id/pro_header_image"
+        tools:text="John Doe"
+        />
+
+    <LinearLayout
+        android:id="@+id/pro_header_job_rating_and_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/pro_header_name"
+        android:layout_marginLeft="@dimen/default_margin"
+        android:layout_marginTop="@dimen/default_margin_quarter"
+        android:layout_toRightOf="@id/pro_header_image"
+        android:background="@drawable/pill_transparent"
+        android:gravity="end"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/pro_team_average_rating_star_margin"
+        android:paddingLeft="@dimen/pro_team_average_rating_star_margin"
+        android:paddingRight="@dimen/pro_team_average_rating_star_margin"
+        android:paddingStart="@dimen/pro_team_average_rating_star_margin"
+        android:visibility="gone"
+        tools:visibility="visible"
+        >
+
+        <ImageView
+            android:layout_width="@dimen/mini_pro_profile_star_size_small"
+            android:layout_height="@dimen/mini_pro_profile_star_size_small"
+            android:layout_gravity="center"
+            android:layout_marginBottom="@dimen/pro_team_average_rating_star_margin_small"
+            android:layout_marginLeft="1dp"
+            android:layout_marginStart="1dp"
+            android:layout_marginTop="@dimen/pro_team_average_rating_star_margin_small"
+            android:contentDescription="@string/pro_team_star"
+            android:src="@drawable/ic_star"
+            />
+
+        <TextView
+            android:id="@+id/pro_header_job_rating"
+            style="@style/TextView.XSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/pro_team_average_rating_star_margin_small"
+            android:layout_marginLeft="@dimen/pro_team_average_rating_star_margin_small"
+            android:layout_marginStart="@dimen/pro_team_average_rating_star_margin_small"
+            android:layout_marginTop="@dimen/pro_team_average_rating_star_margin_small"
+            android:gravity="center"
+            android:paddingEnd="@dimen/default_margin_quarter"
+            android:paddingRight="@dimen/default_margin_quarter"
+            android:textColor="@color/handy_tertiary_gray"
+            tools:text="4.5"
+            />
+
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/handy_dark_divider_line"
+            />
+
+        <TextView
+            android:id="@+id/pro_header_job_count"
+            style="@style/TextView.XSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/pro_team_average_rating_star_margin_small"
+            android:layout_marginEnd="1dp"
+            android:layout_marginLeft="@dimen/pro_team_average_rating_star_margin_small"
+            android:layout_marginRight="1dp"
+            android:layout_marginStart="@dimen/pro_team_average_rating_star_margin_small"
+            android:layout_marginTop="@dimen/pro_team_average_rating_star_margin_small"
+            android:gravity="center"
+            android:paddingLeft="@dimen/default_margin_quarter"
+            android:paddingStart="@dimen/default_margin_quarter"
+            android:textColor="@color/handy_tertiary_gray"
+            tools:text="1,234 jobs"
+            />
+
+    </LinearLayout>
+</RelativeLayout>

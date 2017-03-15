@@ -11,6 +11,7 @@ import com.handy.portal.core.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.core.ui.fragment.EditPhotoFragment;
 import com.handy.portal.core.ui.fragment.LoginActivityFragment;
 import com.handy.portal.core.ui.fragment.LoginSltFragment;
+import com.handy.portal.core.ui.fragment.MoreNavItemsFragment;
 import com.handy.portal.core.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.core.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.core.ui.fragment.RequestSuppliesFragment;
@@ -79,5 +80,6 @@ import dagger.Module;
                 RequestSuppliesWebViewClient.class,
                 EditAvailableHoursFragment.class,
                 EditWeeklyAvailableHoursFragment.class,
+                MoreNavItemsFragment.class,
         })
 public final class InjectionModule {}

@@ -204,4 +204,8 @@
 
     <!-- Pro Availability -->
     <dimen name="time_range_reset_button_size">26dp</dimen>
+
+    <dimen name="pro_team_average_rating_star_margin">5dp</dimen>
+    <dimen name="pro_team_average_rating_star_margin_small">2dp</dimen>
+    <dimen name="mini_pro_profile_star_size_small">12dp</dimen>
 </resources>

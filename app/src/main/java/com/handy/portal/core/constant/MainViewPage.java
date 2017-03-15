@@ -10,6 +10,7 @@ import com.handy.portal.bookings.ui.fragment.SoftwareLicensesFragment;
 import com.handy.portal.clients.ui.fragment.ClientsFragment;
 import com.handy.portal.core.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.core.ui.fragment.EditPhotoFragment;
+import com.handy.portal.core.ui.fragment.MoreNavItemsFragment;
 import com.handy.portal.core.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.core.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.core.ui.fragment.RequestSuppliesFragment;
@@ -52,6 +53,8 @@ public enum MainViewPage implements Serializable {
     SOFTWARE_LICENSES(SoftwareLicensesFragment.class),
 
     NOTIFICATIONS(NotificationsFragment.class),
+
+    MORE_ITEMS(MoreNavItemsFragment.class),
 
     PAYMENTS(PaymentsFragment.class),
     OUTSTANDING_FEES(OutstandingFeesFragment.class),

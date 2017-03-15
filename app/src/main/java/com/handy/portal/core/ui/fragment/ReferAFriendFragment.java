@@ -91,7 +91,9 @@ public class ReferAFriendFragment extends ActionBarFragment {
         super.onResume();
         bus.register(this);
 
-        setActionBar(R.string.earn_more_money, false);
+        boolean enableBack = configManager.getConfigurationResponse() != null &&
+                configManager.getConfigurationResponse().isMoreFullTabEnabled();
+        setActionBar(R.string.earn_more_money, enableBack);
         populateInfo();
     }
 
