@@ -297,6 +297,7 @@
     <string name="update_profile_failed">Failed to update profile information</string>
     <string name="failed_to_open_help">Failed to open help center!</string>
     <string name="profile_share_text_formatted">Hi this is %1$s. You can book my service directly from Handy: %2$s</string>
+    <string name="profile_share_twitter_text_formatted">Check out my profile and book directly from @Handy %1$s</string>
     <string name="book_my_service">Book my service directly from Handy</string>
 
     <!-- Performance Dashboard -->
