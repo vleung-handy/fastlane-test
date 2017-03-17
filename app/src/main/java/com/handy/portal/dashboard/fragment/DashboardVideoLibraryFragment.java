@@ -18,6 +18,12 @@ public class DashboardVideoLibraryFragment extends PortalWebViewFragment {
 
     private static final String VIDEO_URL = "http://www.handy.com/pro/resources?native=1";
 
+    public static DashboardVideoLibraryFragment newInstance() {
+        DashboardVideoLibraryFragment fragment = new DashboardVideoLibraryFragment();
+        fragment.setArguments(new Bundle());
+        return fragment;
+    }
+
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

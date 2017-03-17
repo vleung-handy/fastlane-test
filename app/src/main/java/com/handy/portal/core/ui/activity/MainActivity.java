@@ -14,13 +14,13 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -95,7 +95,7 @@ public class MainActivity extends BaseActivity
     private TabButton mClientsButton;
     private TabButton mScheduleButton;
     private TabButton mAlertsButton;
-    private TabButton mButtonMore;
+    private TabButton mMoreButton;
 
     @BindView(R.id.loading_overlay)
     View mLoadingOverlayView;
@@ -114,7 +114,7 @@ public class MainActivity extends BaseActivity
     @BindView(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
     @BindView(R.id.navigation_drawer)
-    RelativeLayout mNavigationDrawer;
+    ViewGroup mNavigationDrawer;
     @BindView(R.id.nav_tray_links)
     RadioGroup mNavTrayLinks;
     @BindView(R.id.navigation_header_pro_name)
@@ -507,42 +507,42 @@ public class MainActivity extends BaseActivity
             }
             break;
             case PAYMENTS: {
-                mButtonMore.toggle();
+                mMoreButton.toggle();
                 mNavLinkPayments.toggle();
             }
             break;
             case YOUTUBE_PLAYER:
             case DASHBOARD: {
-                mButtonMore.toggle();
+                mMoreButton.toggle();
                 mNavLinkRatingsAndFeedback.toggle();
             }
             break;
             case REFER_A_FRIEND: {
-                mButtonMore.toggle();
+                mMoreButton.toggle();
                 mNavLinkReferAFriend.toggle();
             }
             break;
             case ACCOUNT_SETTINGS: {
-                mButtonMore.toggle();
+                mMoreButton.toggle();
                 mNavAccountSettings.toggle();
             }
             break;
             case DASHBOARD_VIDEO_LIBRARY: {
-                mButtonMore.toggle();
+                mMoreButton.toggle();
                 mNavLinkVideoLibrary.toggle();
             }
             case PROFILE_UPDATE: {
-                mButtonMore.toggle();
+                mMoreButton.toggle();
                 mNavAccountSettings.toggle();
             }
             break;
             case PROFILE_PICTURE: {
-                mButtonMore.toggle();
+                mMoreButton.toggle();
                 mNavAccountSettings.toggle();
             }
             break;
             case HELP_WEBVIEW: {
-                mButtonMore.toggle();
+                mMoreButton.toggle();
                 mNavLinkHelp.toggle();
             }
             break;
@@ -589,10 +589,10 @@ public class MainActivity extends BaseActivity
         mAlertsButton = new TabButton(this)
                 .init(R.string.tab_alerts, R.drawable.ic_menu_alerts);
         mAlertsButton.setId(R.id.tab_nav_alert);
-        mButtonMore = new TabButton(this)
+        mMoreButton = new TabButton(this)
                 .init(R.string.tab_more, R.drawable.ic_menu_more);
-        mButtonMore.setId(R.id.tab_nav_item_more);
-        mTabs.setTabs(mJobsButton, mScheduleButton, mClientsButton, mAlertsButton, mButtonMore);
+        mMoreButton.setId(R.id.tab_nav_item_more);
+        mTabs.setTabs(mJobsButton, mScheduleButton, mClientsButton, mAlertsButton, mMoreButton);
 
         mJobsButton.setOnClickListener(
                 new TabOnClickListener(mJobsButton, MainViewPage.AVAILABLE_JOBS));
@@ -602,7 +602,14 @@ public class MainActivity extends BaseActivity
                 new TabOnClickListener(mClientsButton, MainViewPage.CLIENTS));
         mAlertsButton.setOnClickListener(
                 new TabOnClickListener(mAlertsButton, MainViewPage.NOTIFICATIONS));
-        mButtonMore.setOnClickListener(new MoreButtonOnClickListener());
+
+        ConfigurationResponse config = mConfigManager.getConfigurationResponse();
+        if (config != null && config.isMoreFullTabEnabled()) {
+            mMoreButton.setOnClickListener(new TabOnClickListener(mMoreButton, MainViewPage.MORE_ITEMS));
+        }
+        else {
+            mMoreButton.setOnClickListener(new MoreButtonOnClickListener());
+        }
     }
 
     private void registerNavDrawerListeners() {
@@ -760,7 +767,7 @@ public class MainActivity extends BaseActivity
         @Override
         public void onClick(View view) {
             bus.post(new LogEvent.AddLogEvent(new SideMenuLog.ItemSelected(mPage.name().toLowerCase())));
-            mButtonMore.toggle();
+            mMoreButton.toggle();
             if (mTransitionStyle != null) {
                 switchToPage(mPage, new Bundle(), mTransitionStyle);
             }

@@ -32,6 +32,7 @@
     <string name="continue_single_word">Continue</string>
     <string name="remove">Remove</string>
     <string name="keep">Keep</string>
+    <string name="profile">Profile</string>
 
     <!-- Environment -->
     <string name="select_environment">Select Environment</string>
@@ -695,5 +696,13 @@
     <string name="payment_failed_dialog_title">Payment Failed</string>
     <string name="payment_failed_dialog_message">We attempted to send your deposit to the account you have on file but it failed. You need to update your bank details so that we can send your direct deposit to the right account.</string>
     <string name="payment_support_button">Payment Support</string>
+
+    <!-- View & Share Profile -->
+    <string name="view_share_Profile">View &amp; Share Profile</string>
+    <string name="pro_team_star">Star</string>
+    <plurals name="number_jobs_formatted">
+        <item quantity="one">%1$d job</item>
+        <item quantity="other">%1$d jobs</item>
+    </plurals>
 
 </resources>

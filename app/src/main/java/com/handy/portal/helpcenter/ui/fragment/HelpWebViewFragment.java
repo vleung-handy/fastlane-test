@@ -18,6 +18,12 @@ public class HelpWebViewFragment extends PortalWebViewFragment {
     @Inject
     ConfigManager mConfigManager;
 
+    public static HelpWebViewFragment newInstance() {
+        HelpWebViewFragment fragment = new HelpWebViewFragment();
+        fragment.setArguments(new Bundle());
+        return fragment;
+    }
+
     @Override
     protected MainViewPage getAppPage() {
         return MainViewPage.HELP_WEBVIEW;

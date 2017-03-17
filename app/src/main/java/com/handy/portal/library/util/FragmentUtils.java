@@ -5,8 +5,10 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 
 import com.crashlytics.android.Crashlytics;
+import com.handy.portal.R;
 
 /**
  * utility class for fragments
@@ -62,5 +64,17 @@ public class FragmentUtils {
             Crashlytics.logException(e);
         }
         return false;
+    }
+
+    public static void switchToFragment(
+            Fragment currentFragment, Fragment newFragment, boolean addToBackStack) {
+        FragmentTransaction transaction = currentFragment.getFragmentManager().beginTransaction();
+
+        if (addToBackStack) {
+            transaction.replace(R.id.main_container, newFragment).addToBackStack(null).commit();
+        }
+        else {
+            transaction.replace(R.id.main_container, newFragment).commit();
+        }
     }
 }

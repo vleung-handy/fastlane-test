@@ -89,7 +89,10 @@ public final class PaymentsFragment extends ActionBarFragment {
     @Override
     public void onResume() {
         super.onResume();
-        setActionBar(R.string.payments, false);
+
+        boolean enableBack = mConfigManager.getConfigurationResponse() != null &&
+                mConfigManager.getConfigurationResponse().isMoreFullTabEnabled();
+        setActionBar(R.string.payments, enableBack);
 
         bus.register(this);
 
