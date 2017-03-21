@@ -248,9 +248,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
     }
 
     private void showAvailableHours() {
-        if (mProviderAvailability == null
-                || mSelectedDay == null
-                || !mProviderAvailability.covers(mSelectedDay)) {
+        if (mProviderAvailability == null || mSelectedDay == null) {
             mAvailableHoursView.setVisibility(View.GONE);
         }
         else {
@@ -258,6 +256,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
             mAvailabilityForSelectedDay = getAvailabilityForDate(mSelectedDay);
             mAvailableHoursView.setAvailableHours(mAvailabilityForSelectedDay == null ? null
                     : mAvailabilityForSelectedDay.getAvailabilityIntervals());
+            mAvailableHoursView.setEnabled(mProviderAvailability.covers(mSelectedDay));
         }
     }
 

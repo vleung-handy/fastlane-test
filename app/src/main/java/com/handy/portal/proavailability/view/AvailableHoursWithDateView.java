@@ -27,15 +27,18 @@ public class AvailableHoursWithDateView extends FrameLayout {
     private final Date mDate;
     private DailyAvailabilityTimeline mAvailability;
     private RemoveTimeSlotListener mRemoveTimeSlotListener;
+    private final boolean mEnabled;
 
     public AvailableHoursWithDateView(final Context context,
                                       final Date date,
                                       @Nullable final DailyAvailabilityTimeline availability,
-                                      final RemoveTimeSlotListener removeTimeSlotListener) {
+                                      final RemoveTimeSlotListener removeTimeSlotListener,
+                                      final boolean enabled) {
         super(context);
         mDate = date;
         mAvailability = availability;
         mRemoveTimeSlotListener = removeTimeSlotListener;
+        mEnabled = enabled;
         init();
     }
 
@@ -49,6 +52,11 @@ public class AvailableHoursWithDateView extends FrameLayout {
         setBackgroundResource(R.drawable.border_gray_bottom);
         mTitle.setText(DateTimeUtils.formatDayOfWeekMonthDate(mDate));
         displayTimelines();
+        setEnabled(mEnabled);
+        if (!mEnabled) {
+            mTitle.setAlpha(0.3f);
+            mTimelines.setAlpha(0.3f);
+        }
     }
 
     public void updateTimelines(final DailyAvailabilityTimeline availability) {

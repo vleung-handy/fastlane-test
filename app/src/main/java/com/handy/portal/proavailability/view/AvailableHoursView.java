@@ -27,7 +27,7 @@ public class AvailableHoursView extends FrameLayout {
     @BindView(R.id.timelines)
     ViewGroup mTimelines;
     @BindColor(R.color.tertiary_gray)
-    int mTertiaryGray;
+    int mGrayColor;
 
     public AvailableHoursView(final Context context) {
         super(context);
@@ -61,7 +61,7 @@ public class AvailableHoursView extends FrameLayout {
             mTitle.setText(R.string.no_available_hours);
             final TextView textView = new TextView(getContext());
             textView.setText(R.string.set_hours);
-            textView.setTextColor(mTertiaryGray);
+            textView.setTextColor(mGrayColor);
             textView.setTypeface(FontUtils.getFont(getContext(), FontUtils.CIRCULAR_BOOK));
             mTimelines.addView(textView);
         }
@@ -74,11 +74,23 @@ public class AvailableHoursView extends FrameLayout {
                 final String endTimeFormatted =
                         DateTimeUtils.formatDateTo12HourClock(availability.getEndTime());
                 timeline.setText(startTimeFormatted + " - " + endTimeFormatted);
-                timeline.setTextColor(mTertiaryGray);
+                timeline.setTextColor(mGrayColor);
                 timeline.setTypeface(FontUtils.getFont(getContext(), FontUtils.CIRCULAR_BOOK));
                 timeline.setGravity(Gravity.END);
                 mTimelines.addView(timeline);
             }
         }
+    }
+
+    @Override
+    public void setEnabled(final boolean enabled) {
+        super.setEnabled(enabled);
+        updateAlpha();
+    }
+
+    private void updateAlpha() {
+        float alpha = isEnabled() ? 1.0f : 0.3f;
+        mTitle.setAlpha(alpha);
+        mTimelines.setAlpha(alpha);
     }
 }
