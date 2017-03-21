@@ -300,6 +300,15 @@
     <string name="profile_share_text_formatted">Hi this is %1$s. You can book my service directly from Handy: %2$s</string>
     <string name="profile_share_twitter_text_formatted">Check out my profile and book directly from @Handy %1$s</string>
     <string name="book_my_service">Book my service directly from Handy</string>
+    <string name="profile.view_and_share_Profile">View &amp; Share Profile</string>
+    <string name="profile.pro_team_star">Star</string>
+    <plurals name="profile.number_jobs_formatted">
+        <item quantity="one">%1$d job</item>
+        <item quantity="other">%1$d jobs</item>
+    </plurals>
+    <string name="profile.promote_your_business">Promote Your Business</string>
+    <string name="profile.book_directly">New customers can book you directly from your profile page.</string>
+    <string name="profile.your_public_profile">Your Public Profile</string>
 
     <!-- Performance Dashboard -->
     <string name="ratings_and_feedback">Ratings &amp; Feedback</string>
@@ -696,13 +705,5 @@
     <string name="payment_failed_dialog_title">Payment Failed</string>
     <string name="payment_failed_dialog_message">We attempted to send your deposit to the account you have on file but it failed. You need to update your bank details so that we can send your direct deposit to the right account.</string>
     <string name="payment_support_button">Payment Support</string>
-
-    <!-- View & Share Profile -->
-    <string name="view_share_Profile">View &amp; Share Profile</string>
-    <string name="pro_team_star">Star</string>
-    <plurals name="number_jobs_formatted">
-        <item quantity="one">%1$d job</item>
-        <item quantity="other">%1$d jobs</item>
-    </plurals>
 
 </resources>

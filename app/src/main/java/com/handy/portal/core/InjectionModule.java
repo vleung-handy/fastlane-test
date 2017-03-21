@@ -5,6 +5,7 @@ import com.handy.portal.core.manager.UrbanAirshipManager;
 import com.handy.portal.core.ui.activity.BaseActivity;
 import com.handy.portal.core.ui.activity.LoginActivity;
 import com.handy.portal.core.ui.activity.MainActivity;
+import com.handy.portal.core.ui.activity.ProShareActivity;
 import com.handy.portal.core.ui.activity.SplashActivity;
 import com.handy.portal.core.ui.element.SupportActionView;
 import com.handy.portal.core.ui.fragment.AccountSettingsFragment;
@@ -36,6 +37,7 @@ import com.handy.portal.receiver.LayerPushReceiver;
 import com.handy.portal.webview.PortalWebViewClient;
 import com.handy.portal.webview.PortalWebViewFragment;
 import com.handy.portal.webview.RequestSuppliesWebViewClient;
+import com.handy.portal.webview.ShareProviderWebViewFragment;
 
 import dagger.Module;
 
@@ -81,5 +83,7 @@ import dagger.Module;
                 EditAvailableHoursFragment.class,
                 EditWeeklyAvailableHoursFragment.class,
                 MoreNavItemsFragment.class,
+                ShareProviderWebViewFragment.class,
+                ProShareActivity.class,
         })
 public final class InjectionModule {}

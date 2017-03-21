@@ -13,8 +13,6 @@ public class PerformanceInfo implements Serializable {
     private int trailing28DayJobsCount;
     @SerializedName("trailing_28_day_rating")
     private float trailing28DayRating;
-    @SerializedName("rate")
-    private String rate;
     @SerializedName("tier")
     private int tier;
 
@@ -32,10 +30,6 @@ public class PerformanceInfo implements Serializable {
 
     public float getTrailing28DayRating() {
         return trailing28DayRating;
-    }
-
-    public String getRate() {
-        return rate;
     }
 
     public int getTier() {

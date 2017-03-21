@@ -9,6 +9,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
@@ -299,16 +300,11 @@ public class MainActivity extends BaseActivity
     public void initProImage(final ProfileEvent.ProfilePhotoUpdated event) {
         mProImage.setVisibility(View.VISIBLE);
         final String profilePhotoUrl = mProviderManager.getCachedProfileImageUrl(THUMBNAIL);
-        if (profilePhotoUrl != null) {
-            Picasso.with(this)
-                    .load(profilePhotoUrl)
-                    .placeholder(R.drawable.img_pro_placeholder)
-                    .noFade()
-                    .into(mProImage);
-        }
-        else {
-            mProImage.setImageResource(R.drawable.img_pro_placeholder);
-        }
+        Picasso.with(this)
+                .load(profilePhotoUrl)
+                .placeholder(R.drawable.img_pro_placeholder)
+                .noFade()
+                .into(mProImage);
     }
 
     private void initNavigationHeaderCtaButton() {
@@ -467,7 +463,12 @@ public class MainActivity extends BaseActivity
     @Override
     public void onBackPressed() {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        super.onBackPressed();
+        if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
+            mDrawerLayout.closeDrawers();
+        }
+        else {
+            super.onBackPressed();
+        }
     }
 
     @Subscribe

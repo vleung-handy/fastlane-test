@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -12,11 +13,33 @@
         android:orientation="vertical"
         >
 
-        <com.handy.portal.core.ui.element.ProHeaderView
+        <com.handy.portal.core.ui.view.ProHeaderView
             android:id="@+id/more_pro_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:padding="@dimen/default_padding"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:background="@color/list_divider"
+            />
+
+        <TextView
+            android:id="@+id/more_view_and_share"
+            style="@style/ListItem"
+            android:drawableLeft="@drawable/ic_profile"
+            android:drawableStart="@drawable/ic_profile"
+            android:text="@string/profile.view_and_share_Profile"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@color/list_divider"
             />
 
         <TextView

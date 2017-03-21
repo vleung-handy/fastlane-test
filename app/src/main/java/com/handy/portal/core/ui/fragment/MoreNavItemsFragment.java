@@ -1,6 +1,7 @@
 package com.handy.portal.core.ui.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -13,7 +14,8 @@ import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.core.manager.ProviderManager;
-import com.handy.portal.core.ui.element.ProHeaderView;
+import com.handy.portal.core.ui.activity.ProShareActivity;
+import com.handy.portal.core.ui.view.ProHeaderView;
 import com.handy.portal.dashboard.fragment.DashboardVideoLibraryFragment;
 import com.handy.portal.dashboard.fragment.RatingsAndFeedbackFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
@@ -83,6 +85,11 @@ public class MoreNavItemsFragment extends ActionBarFragment {
     @OnClick(R.id.more_pro_header)
     public void launchProfile() {
         FragmentUtils.switchToFragment(this, new ProfileUpdateFragment(), true);
+    }
+
+    @OnClick(R.id.more_view_and_share)
+    public void launchViewAndShare() {
+        startActivity(new Intent(getContext(), ProShareActivity.class));
     }
 
     @OnClick(R.id.more_ratings_and_feedback)

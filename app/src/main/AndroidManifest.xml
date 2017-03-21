@@ -97,7 +97,7 @@
         <!-- </intent-filter> -->
         <!-- </receiver> -->
         <activity
-            android:name="com.handy.portal.core.ui.activity.SplashActivity"
+            android:name=".core.ui.activity.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Translucent"
@@ -154,7 +154,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.handy.portal.core.ui.activity.MainActivity"
+            android:name=".core.ui.activity.MainActivity"
             android:configChanges="orientation|screenSize"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
@@ -162,14 +162,14 @@
             >
         </activity>
         <activity
-            android:name="com.handy.portal.core.ui.activity.LoginActivity"
+            android:name=".core.ui.activity.LoginActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/LoginTheme"
             >
         </activity>
         <activity
-            android:name="com.handy.portal.terms.TermsActivity"
+            android:name=".terms.TermsActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
             android:theme="@style/TermsTheme"
@@ -279,10 +279,16 @@
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
+
         <activity
             android:name="com.yalantis.ucrop.UCropActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"
+            />
+
+        <activity
+            android:name=".core.ui.activity.ProShareActivity"
+            android:screenOrientation="portrait"
             />
 
         <!-- REQUIRED for Urban Airship -->

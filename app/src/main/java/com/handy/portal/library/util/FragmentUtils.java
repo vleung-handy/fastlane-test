@@ -68,8 +68,12 @@ public class FragmentUtils {
 
     public static void switchToFragment(
             Fragment currentFragment, Fragment newFragment, boolean addToBackStack) {
-        FragmentTransaction transaction = currentFragment.getFragmentManager().beginTransaction();
+        switchToFragment(currentFragment.getFragmentManager(), newFragment, addToBackStack);
+    }
 
+    public static void switchToFragment(
+            FragmentManager fragmentManager, Fragment newFragment, boolean addToBackStack) {
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
         if (addToBackStack) {
             transaction.replace(R.id.main_container, newFragment).addToBackStack(null).commit();
         }
