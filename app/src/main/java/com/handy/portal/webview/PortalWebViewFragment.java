@@ -104,9 +104,12 @@ public class PortalWebViewFragment extends ActionBarFragment {
     @Override
     public void onResume() {
         webView.onResume();
-        if (!TextUtils.isEmpty(getArguments().getString(BundleKeys.TITLE))) {
-            setActionBarTitle(getArguments().getString(BundleKeys.TITLE));
+
+        String title = getArguments().getString(BundleKeys.TITLE);
+        if (!TextUtils.isEmpty(title)) {
+            setActionBarTitle(title);
         }
+
         super.onResume();
     }
 

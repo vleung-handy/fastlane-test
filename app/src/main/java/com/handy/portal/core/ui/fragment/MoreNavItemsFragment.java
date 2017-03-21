@@ -14,7 +14,6 @@ import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.core.manager.ProviderManager;
-import com.handy.portal.core.model.ProviderProfile;
 import com.handy.portal.core.ui.activity.ProShareActivity;
 import com.handy.portal.core.ui.view.ProHeaderView;
 import com.handy.portal.dashboard.fragment.DashboardVideoLibraryFragment;
@@ -90,7 +89,6 @@ public class MoreNavItemsFragment extends ActionBarFragment {
 
     @OnClick(R.id.more_view_and_share)
     public void launchViewAndShare() {
-        ProviderProfile profile = mProviderManager.getCachedProviderProfile();
         startActivity(new Intent(getContext(), ProShareActivity.class));
     }
 

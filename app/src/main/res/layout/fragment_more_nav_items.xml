@@ -33,7 +33,7 @@
             style="@style/ListItem"
             android:drawableLeft="@drawable/ic_profile"
             android:drawableStart="@drawable/ic_profile"
-            android:text="@string/view_and_share_Profile"
+            android:text="@string/profile.view_and_share_Profile"
             />
 
         <View

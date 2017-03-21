@@ -27,7 +27,7 @@
         android:layout_marginLeft="@dimen/default_margin"
         android:layout_marginRight="@dimen/default_margin"
         android:layout_marginTop="@dimen/default_margin"
-        android:text="@string/promote_your_business"
+        android:text="@string/profile.promote_your_business"
         />
 
     <TextView
@@ -38,7 +38,7 @@
         android:layout_below="@+id/pro_share_footer_title"
         android:layout_marginLeft="@dimen/default_margin"
         android:layout_marginRight="@dimen/default_margin"
-        android:text="@string/book_directly"
+        android:text="@string/profile.book_directly"
         />
 
     <TextView

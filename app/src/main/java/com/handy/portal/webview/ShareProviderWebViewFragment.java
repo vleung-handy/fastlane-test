@@ -40,9 +40,10 @@ public class ShareProviderWebViewFragment extends PortalWebViewFragment {
         super.onCreate(savedInstanceState);
         ProviderProfile profile = mProviderManager.getCachedProviderProfile();
 
+        // This will be used by PortalWebViewFragment to populate the web view and title
         Bundle args = getArguments();
         args.putString(BundleKeys.TARGET_URL, profile.getReferralInfo().getProfileUrl() + "?hide_header=1");
-        args.putString(BundleKeys.TITLE, getString(R.string.your_public_profile));
+        args.putString(BundleKeys.TITLE, getString(R.string.profile_your_public_profile));
     }
 
     @Override

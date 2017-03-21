@@ -69,7 +69,7 @@ public class ProHeaderView extends FrameLayout {
             mJobRatingText.setText(String.valueOf(profile.getPerformanceInfo().getTotalRating()));
             int jobs = profile.getPerformanceInfo().getTotalJobsCount();
             mJobCountText.setText(
-                    getResources().getQuantityString(R.plurals.number_jobs_formatted, jobs, jobs));
+                    getResources().getQuantityString(R.plurals.profile_number_jobs_formatted, jobs, jobs));
         }
         else {
             mJobRatingAandCountLayout.setVisibility(GONE);
