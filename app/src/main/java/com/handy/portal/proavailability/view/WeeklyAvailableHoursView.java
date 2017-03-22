@@ -45,8 +45,9 @@ public class WeeklyAvailableHoursView extends LinearLayout {
             final Date date = calendar.getTime();
             final DailyAvailabilityTimeline availability =
                     mWeeklyAvailability.getAvailabilityForDate(date);
+            boolean enabled = !DateTimeUtils.isDaysPast(date);
             final AvailableHoursWithDateView view = new AvailableHoursWithDateView(getContext(),
-                    date, availability, mRemoveTimeSlotListener);
+                    date, availability, mRemoveTimeSlotListener, enabled);
             view.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(final View view) {

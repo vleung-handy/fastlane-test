@@ -74,9 +74,9 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     @BindView(R.id.copy_hours_button)
     Button mCopyHoursButton;
     @BindColor(R.color.black)
-    int mBlackColorValue;
+    int mBlackColor;
     @BindColor(R.color.error_red)
-    int mRedColorValue;
+    int mRedColor;
 
     private ProviderAvailability mProviderAvailability;
     private TabAdapter mPagerAdapter;
@@ -102,6 +102,9 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     private RemoveTimeSlotListener mRemoveTimeSlotListener = new RemoveTimeSlotListener() {
         @Override
         public void onRemoveClicked(final Date date, final AvailabilityInterval interval) {
+            if (DateTimeUtils.isDaysPast(date)) {
+                return;
+            }
             final AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                     .setCancelable(true)
                     .setMessage(R.string.time_slot_removal_prompt)
@@ -116,8 +119,8 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
             alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
                 @Override
                 public void onShow(final DialogInterface dialogInterface) {
-                    alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(mRedColorValue);
-                    alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(mBlackColorValue);
+                    alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(mRedColor);
+                    alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(mBlackColor);
                 }
             });
             alertDialog.show();
@@ -131,7 +134,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
             final Bundle bundle = new Bundle();
             bundle.putSerializable(BundleKeys.DATE, date);
             bundle.putSerializable(BundleKeys.DAILY_AVAILABILITY_TIMELINE,
-                    getAvailablityForDate(date));
+                    getAvailabilityForDate(date));
             final NavigationEvent.NavigateToPage navigationEvent =
                     new NavigationEvent.NavigateToPage(MainViewPage.EDIT_AVAILABLE_HOURS, bundle, true);
             navigationEvent.setReturnFragment(EditWeeklyAvailableHoursFragment.this,
@@ -143,7 +146,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     private boolean mIsCurrentWeekAndNextWeekInSync;
     private int mDefaultSelectedTab;
 
-    private DailyAvailabilityTimeline getAvailablityForDate(final Date date) {
+    private DailyAvailabilityTimeline getAvailabilityForDate(final Date date) {
         DailyAvailabilityTimeline availabilityForDate = null;
         if (mUpdatedAvailabilityTimelines != null) {
             availabilityForDate = mUpdatedAvailabilityTimelines.get(date);
@@ -157,7 +160,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     private void removeInterval(final Date date, final AvailabilityInterval interval) {
         bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.RemoveHoursSubmitted(
                 DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
-        final DailyAvailabilityTimeline availability = getAvailablityForDate(date);
+        final DailyAvailabilityTimeline availability = getAvailabilityForDate(date);
         final ArrayList<AvailabilityInterval> intervals = new ArrayList<>();
         if (availability != null && availability.getAvailabilityIntervals() != null) {
             intervals.addAll(availability.getAvailabilityIntervals());
@@ -258,7 +261,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
             nextWeekDate.setTime(date);
             nextWeekDate.add(Calendar.DATE, DateTimeUtils.DAYS_IN_A_WEEK);
 
-            final DailyAvailabilityTimeline availability = getAvailablityForDate(date);
+            final DailyAvailabilityTimeline availability = getAvailabilityForDate(date);
             final ArrayList<AvailabilityInterval> intervals = Lists.newArrayList();
             if (availability != null && availability.getAvailabilityIntervals() != null) {
                 intervals.addAll(availability.getAvailabilityIntervals());
@@ -314,10 +317,12 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     private void updateCopyHoursButton() {
         if (mIsCurrentWeekAndNextWeekInSync) {
             mCopyHoursButton.setText(R.string.copied);
+            mCopyHoursButton.setAlpha(0.3f);
             mCopyHoursButton.setEnabled(false);
         }
         else {
             mCopyHoursButton.setText(R.string.copy_hours_from_current_week);
+            mCopyHoursButton.setAlpha(1.0f);
             mCopyHoursButton.setEnabled(true);
         }
     }
