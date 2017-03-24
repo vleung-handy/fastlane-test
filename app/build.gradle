@@ -54,7 +54,7 @@ def computeVersionCode(versionName) {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '24.0.3'
+    buildToolsVersion '25.0.2'
     useLibrary 'org.apache.http.legacy'
     testBuildType "debug"
 
