@@ -706,4 +706,7 @@
     <string name="payment_failed_dialog_message">We attempted to send your deposit to the account you have on file but it failed. You need to update your bank details so that we can send your direct deposit to the right account.</string>
     <string name="payment_support_button">Payment Support</string>
 
+    <!-- Announcements -->
+    <string name="announcements_next_button">Next</string>
+    <string name="announcements_dismiss_button">Got It</string>
 </resources>

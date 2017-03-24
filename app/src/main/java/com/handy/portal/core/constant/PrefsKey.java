@@ -14,6 +14,7 @@ public interface PrefsKey {
     String APP_FIRST_LAUNCH = "app_first_launch";
     String INSTALLATION_ID = "installation_id";
     String DISMISSED_AVAILABLE_HOURS_BANNER_WEEK_START_DATE = "dismissed_available_hours_banner_week_start_date";
+    String ANNOUNCEMENT_RECORDS = "announcement_records";
 
 
     @StringDef({
@@ -25,6 +26,7 @@ public interface PrefsKey {
             SAME_DAY_LATE_DISPATCH_AVAILABLE_JOB_NOTIFICATION_EXPLAINED,
             LOG_SESSION,
             INSTALLATION_ID,
+            ANNOUNCEMENT_RECORDS,
     })
     @interface Key {}
 }

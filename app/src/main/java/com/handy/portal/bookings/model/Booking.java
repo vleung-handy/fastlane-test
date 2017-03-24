@@ -127,6 +127,9 @@ public class Booking implements Comparable<Booking>, Serializable {
     @SerializedName("chat_options")
     private ChatOptions mChatOptions;
 
+    @SerializedName("repeat_customer")
+    private Boolean mIsCustomerRepeat;
+
     private List<BookingInstructionUpdateRequest> mCustomerPreferences;
 
     public DisplayAttributes getProviderRequestDisplayAttributes() {
@@ -211,6 +214,11 @@ public class Booking implements Comparable<Booking>, Serializable {
 
     public String getPartner() {
         return mPartner;
+    }
+
+    @Nullable
+    public Boolean isCustomerRepeat() {
+        return mIsCustomerRepeat;
     }
 
     @NonNull

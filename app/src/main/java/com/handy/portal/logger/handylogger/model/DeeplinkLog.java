@@ -24,9 +24,10 @@ public class DeeplinkLog extends EventLog {
         public static final String WEBVIEW = "webview";
         public static final String STARTUP = "startup";
         public static final String NOTIFICATION_FEED = "notification_feed";
+        public static final String ANNOUNCEMENT = "announcement";
 
 
-        @StringDef({PUSH_NOTIFICATION, LINK, WEBVIEW, STARTUP, NOTIFICATION_FEED})
+        @StringDef({PUSH_NOTIFICATION, LINK, WEBVIEW, STARTUP, NOTIFICATION_FEED, ANNOUNCEMENT})
         @Retention(RetentionPolicy.SOURCE)
         public @interface DeeplinkSource {}
     }

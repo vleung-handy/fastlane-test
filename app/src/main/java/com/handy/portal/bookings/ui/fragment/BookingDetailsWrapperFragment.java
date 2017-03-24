@@ -20,6 +20,8 @@ import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.google.gson.Gson;
 import com.handy.portal.R;
+import com.handy.portal.announcements.model.Announcement;
+import com.handy.portal.announcements.AnnouncementEvent;
 import com.handy.portal.bookings.constant.BookingActionButtonType;
 import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.manager.BookingManager;
@@ -245,6 +247,8 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         //refresh the page with the new booking
         mBooking = event.booking;
         updateDisplay();
+
+        bus.post(new AnnouncementEvent.ShowAnnouncementForTrigger(Announcement.TriggerContext.ON_MY_WAY));
     }
 
     @Subscribe
@@ -272,6 +276,13 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         //refresh the page with the new booking
         mBooking = event.booking;
         updateDisplay();
+
+        if(mBooking != null
+                && mBooking.isCustomerRepeat() != null
+                && !mBooking.isCustomerRepeat())
+        {
+            bus.post(new AnnouncementEvent.ShowAnnouncementForTrigger(Announcement.TriggerContext.CHECK_IN_NON_REPEAT_CUSTOMER));
+        }
     }
 
     @Subscribe

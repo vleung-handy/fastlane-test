@@ -5,6 +5,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.handy.portal.announcements.model.AnnouncementsWrapper;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.BookingsListWrapper;
@@ -331,6 +332,13 @@ class GetLocationScheduleRetrofitCallback extends TypedHandyRetrofitCallback<Loc
 
 class SetupDataRetrofitCallback extends TypedHandyRetrofitCallback<SetupData> {
     SetupDataRetrofitCallback(DataManager.Callback callback) {
+        super(callback);
+    }
+}
+
+
+class CurrentAnnouncementsRetrofitCallback extends TypedHandyRetrofitCallback<AnnouncementsWrapper> {
+    CurrentAnnouncementsRetrofitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }

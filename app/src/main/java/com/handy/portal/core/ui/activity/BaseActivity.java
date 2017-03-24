@@ -5,16 +5,26 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.handy.portal.announcements.model.Announcement;
+import com.handy.portal.announcements.ui.AnnouncementCarouselDialogFragment;
+import com.handy.portal.announcements.AnnouncementEvent;
+import com.handy.portal.announcements.AnnouncementEventListener;
+import com.handy.portal.announcements.AnnouncementsLauncher;
+import com.handy.portal.announcements.AnnouncementsManager;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.manager.AppseeManager;
 import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.core.model.ConfigurationResponse;
+import com.handy.portal.data.DataManager;
+import com.handy.portal.data.callback.ActivitySafeCallback;
+import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.location.LocationUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
@@ -30,13 +40,14 @@ import com.handy.portal.updater.ui.PleaseUpdateActivity;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.List;
 import java.util.Stack;
 
 import javax.inject.Inject;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public abstract class BaseActivity extends AppCompatActivity implements AppUpdateFlowLauncher, SetupHandler.Callback {
+public abstract class BaseActivity extends AppCompatActivity implements AppUpdateFlowLauncher, SetupHandler.Callback, AnnouncementsLauncher {
     @Inject
     PrefsManager mPrefsManager;
     @Inject
@@ -47,6 +58,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
     AppseeManager mAppseeManager;
 
     private AppUpdateEventListener mAppUpdateEventListener;
+    private AnnouncementEventListener mAnnouncementEventListener;
     protected boolean allowCallbacks;
     private Stack<OnBackPressedListener> onBackPressedListenerStack;
 
@@ -106,12 +118,17 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
         Utils.inject(this, this);
 
         mAppUpdateEventListener = new AppUpdateEventListener(this);
+        mAnnouncementEventListener = new AnnouncementEventListener(this);
         onBackPressedListenerStack = new Stack<>();
     }
+
+    @Inject
+    AnnouncementsManager mAnnouncementsManager;
 
     @Override
     protected void onResume() {
         super.onResume();
+
         LocationUtils.showLocationBlockersOrStartServiceIfNecessary(this, isLocationServiceEnabled());
         bus.post(new LogEvent.SendLogsEvent());
         if (mWasOpenBefore) {
@@ -196,8 +213,20 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
     @Override
     public void onResumeFragments() {
         super.onResumeFragments();
-        this.bus.register(mAppUpdateEventListener);
+        bus.register(mAppUpdateEventListener);
+        bus.register(mAnnouncementEventListener);
         checkForUpdates();
+
+        if(!(this instanceof SplashActivity))
+        {
+            /*
+            SplashActivity is only a transitional activity, so we don't want to show anything on that screen
+
+            this assumes that BaseActivity is extended by all the main activities in the app
+            (ex. login, bookings, onboarding, etc)
+             */
+            bus.post(new AnnouncementEvent.ShowAnnouncementForTrigger(Announcement.TriggerContext.APP_OPEN));
+        }
     }
 
     @Override
@@ -218,6 +247,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
     @Override
     public void onPause() {
         bus.post(new LogEvent.SaveLogsEvent());
+        bus.unregister(mAnnouncementEventListener);
         bus.unregister(mAppUpdateEventListener);
         mWasOpenBefore = true;
         super.onPause();
@@ -263,5 +293,31 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
     @Subscribe
     public void onReceiveConfigurationResponse(HandyEvent.ReceiveConfigurationSuccess event) {
         LocationUtils.showLocationBlockersOrStartServiceIfNecessary(this, isLocationServiceEnabled());
+    }
+
+    @Override
+    public void launchAnnouncementForTrigger(@Nullable final Announcement.TriggerContext triggerContext) {
+
+        if (getSupportFragmentManager().findFragmentByTag(AnnouncementCarouselDialogFragment.TAG) != null) {
+            //don't need to request if already showing announcement
+            return;
+        }
+        mAnnouncementsManager.getAnnouncementsForTriggerContext(triggerContext, new ActivitySafeCallback<List<Announcement>>(this) {
+            @Override
+            public void onCallbackSuccess(final List<Announcement> response) {
+                if (response == null || getSupportFragmentManager().findFragmentByTag(AnnouncementCarouselDialogFragment.TAG) != null) { return; }
+
+                AnnouncementCarouselDialogFragment announcementsDialogFragment =
+                        AnnouncementCarouselDialogFragment.newInstance(response);
+                FragmentUtils.safeLaunchDialogFragment(announcementsDialogFragment,
+                        BaseActivity.this,
+                        AnnouncementCarouselDialogFragment.TAG);
+            }
+
+            @Override
+            public void onCallbackError(final DataManager.DataManagerError error) {
+
+            }
+        });
     }
 }

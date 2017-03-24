@@ -6,6 +6,7 @@ import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.core.CrashlyticsCore;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.R;
+import com.handy.portal.announcements.AnnouncementsManager;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.manager.BookingModalsManager;
 import com.handy.portal.core.event.HandyEvent;
@@ -94,6 +95,8 @@ public class BaseApplication extends MultiDexApplication {
     LocationScheduleUpdateManager mLocationScheduleUpdateManager;
     @Inject
     RestAdapter mRestAdapter;
+    @Inject
+    AnnouncementsManager mAnnouncementsManager;
 
     @Inject
     EventBus bus;

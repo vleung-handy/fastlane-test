@@ -194,6 +194,9 @@ dependencies {
 
     compile 'org.greenrobot:eventbus:3.0.0'
 
+    //view pager indicator
+    compile 'com.github.JakeWharton:ViewPagerIndicator:2.4.1'
+
     // Signature for checkout
     compile 'com.github.gcacace:signature-pad:1.1.0'
 

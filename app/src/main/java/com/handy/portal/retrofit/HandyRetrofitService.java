@@ -1,6 +1,7 @@
 package com.handy.portal.retrofit;
 
 import com.google.gson.JsonObject;
+import com.handy.portal.announcements.model.CurrentAnnouncementsRequest;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.core.model.ProviderSettings;
 import com.handy.portal.location.model.LocationBatchUpdate;
@@ -47,6 +48,11 @@ public interface HandyRetrofitService {
             @Path("id") String providerId,
             @Body LocationBatchUpdate locationBatchUpdate,
             HandyRetrofitCallback cb);
+
+    @POST("/announcements/current")
+    void getCurrentAnnouncements
+            (@Body CurrentAnnouncementsRequest currentAnnouncementsRequest,
+             HandyRetrofitCallback cb);
 
     @GET("/setup")
     void getSetupData(HandyRetrofitCallback cb);

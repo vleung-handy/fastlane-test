@@ -63,7 +63,15 @@ public class ConfigurationResponse {
     @SerializedName("more_tab_enabled")
     private boolean mMoreTabEnabled;
 
+    @SerializedName("pro_announcements_enabled")
+    private boolean mAnnouncementsEnabled;
+
     // Getters
+
+    public boolean areAnnouncementsEnabled() {
+        return mAnnouncementsEnabled;
+    }
+
     public boolean isAppseeAnalyticsEnabled() {
         return mAppseeAnalyticsEnabled;
     }
