@@ -27,6 +27,8 @@ import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
+import com.handy.portal.announcements.AnnouncementEvent;
+import com.handy.portal.announcements.model.Announcement;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.ui.element.BookingMapView;
@@ -180,9 +182,13 @@ public class MainActivity extends BaseActivity
         mLayerHelper.registerUnreadConversationsCountChangedListener(this);
     }
 
+    /**
+     * similar to onResume() but ensures that fragments are resumed to prevent IllegalStateException
+     * see https://developer.android.com/reference/android/support/v4/app/FragmentActivity.html#onResumeFragments()
+     */
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onResumeFragments() {
+        super.onResumeFragments();
         bus.register(this);
         //Check config params every time we resume mainactivity, may have changes which result in flow changes on open
         mConfigManager.prefetch();
@@ -211,6 +217,8 @@ public class MainActivity extends BaseActivity
         initProName();
         initProImage(null);
         initNavigationHeaderCtaButton();
+
+        bus.post(new AnnouncementEvent.ShowAnnouncementForTrigger(Announcement.TriggerContext.MAIN_FLOW_OPEN));
     }
 
     @Override

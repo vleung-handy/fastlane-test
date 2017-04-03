@@ -217,18 +217,6 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
         bus.register(mAppUpdateEventListener);
         bus.register(mAnnouncementEventListener);
         checkForUpdates();
-
-        //TODO check with PM when this should trigger; whether it includes login/onboarding
-        if(!(this instanceof SplashActivity))
-        {
-            /*
-            SplashActivity is only a transitional activity, so we don't want to show anything on that screen
-
-            this assumes that BaseActivity is extended by all the main activities in the app
-            (ex. login, bookings, onboarding, etc)
-             */
-            bus.post(new AnnouncementEvent.ShowAnnouncementForTrigger(Announcement.TriggerContext.APP_OPEN));
-        }
     }
 
     @Override

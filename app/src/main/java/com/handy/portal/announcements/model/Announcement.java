@@ -54,7 +54,11 @@ public class Announcement implements Serializable {
     }
 
     public enum TriggerContext {
-        APP_OPEN("app_open"),
+        /**
+         * this is triggered specifically when the main flow (with the navigation tabs)
+         * is opened, and not when on login or onboarding
+         */
+        MAIN_FLOW_OPEN("app_open"),
         CHECK_IN_NON_REPEAT_CUSTOMER("check_in_non_repeat_customer"),
         ON_MY_WAY("on_my_way"),
         CHECK_IN_REPEAT_CUSTOMER("check_in_repeat_customer");
