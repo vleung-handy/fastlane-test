@@ -55,7 +55,7 @@ public class Announcement implements Serializable {
 
     public enum TriggerContext {
         APP_OPEN("app_open"),
-        CHECK_IN_NON_REPEAT_CUSTOMER("check_in"), //TODO ask about the actual key name
+        CHECK_IN_NON_REPEAT_CUSTOMER("check_in_non_repeat_customer"),
         ON_MY_WAY("on_my_way"),
         CHECK_IN_REPEAT_CUSTOMER("check_in_repeat_customer");
 

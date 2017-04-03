@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.handy.portal.announcements.model.Announcement;
 import com.handy.portal.announcements.model.AnnouncementShownRecord;
@@ -15,9 +16,11 @@ import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.library.util.IOUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -279,6 +282,19 @@ public class AnnouncementsManager {
         HashMap<String, AnnouncementShownRecord> idToRecordMap = getInternalAnnouncementShownRecords();
         if (idToRecordMap == null) { return new CurrentAnnouncementsRequest(null); }
         return new CurrentAnnouncementsRequest(new LinkedList<>(idToRecordMap.values()));
+    }
+
+
+    /**
+     * logged-in user may have different announcements
+     */
+    @Subscribe
+    public void onUserLoggedIn(HandyEvent.ReceiveLoginSuccess event)
+    {
+        invalidateCachedAnnouncements();
+
+        //prefetch the announcements so we can show them without delay when needed
+        updateCachedAnnouncements(null);
     }
 
     /**

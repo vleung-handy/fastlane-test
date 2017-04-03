@@ -10,6 +10,7 @@ import android.support.annotation.VisibleForTesting;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.announcements.model.Announcement;
 import com.handy.portal.announcements.ui.AnnouncementCarouselDialogFragment;
 import com.handy.portal.announcements.AnnouncementEvent;
@@ -217,6 +218,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
         bus.register(mAnnouncementEventListener);
         checkForUpdates();
 
+        //TODO check with PM when this should trigger; whether it includes login/onboarding
         if(!(this instanceof SplashActivity))
         {
             /*
@@ -316,7 +318,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
 
             @Override
             public void onCallbackError(final DataManager.DataManagerError error) {
-
+                Crashlytics.logException(new Exception(error.getMessage()));
             }
         });
     }

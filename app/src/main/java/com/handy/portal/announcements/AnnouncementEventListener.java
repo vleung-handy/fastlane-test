@@ -9,7 +9,7 @@ import org.greenrobot.eventbus.Subscribe;
  * because it is abstract and cannot be registered to the bus
  */
 public class AnnouncementEventListener {
-    private AnnouncementsLauncher mAnnouncementsLauncher;
+    private final AnnouncementsLauncher mAnnouncementsLauncher;
 
     public AnnouncementEventListener(@NonNull AnnouncementsLauncher announcementsLauncher) {
         mAnnouncementsLauncher = announcementsLauncher;

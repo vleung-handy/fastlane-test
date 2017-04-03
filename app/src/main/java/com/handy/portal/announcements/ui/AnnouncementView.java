@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.announcements.model.Announcement;
+import com.handy.portal.library.util.TextUtils;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
@@ -53,7 +54,16 @@ public class AnnouncementView extends FrameLayout {
     protected void update(@NonNull final Announcement announcement,
                           @Nullable final OnAnnouncementActionButtonClickedListener announcementActionButtonClickedListener,
                           @NonNull String actionButtonText) {
-        mTitleText.setText(announcement.getTitle());
+        if(TextUtils.isNullOrEmpty(announcement.getTitle()))
+        {
+            //the title text will not necessarily be sent back from the server
+            mTitleText.setVisibility(GONE);
+        }
+        else
+        {
+            mTitleText.setVisibility(VISIBLE);
+            mTitleText.setText(announcement.getTitle());
+        }
         mBodyText.setText(announcement.getSubtitle());
         mActionButton.setText(actionButtonText);
         loadHeaderImage(announcement.getImageUrl());
