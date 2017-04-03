@@ -66,7 +66,8 @@ android {
         versionName '1.19.0'
         versionCode computeVersionCode(versionName)
         proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
-        testInstrumentationRunner 'com.handy.portal.core.CoreTestRunner'
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        //can't use CoreTestRunner for now because it prevents animations from being disabled on AWS
     }
 
     signingConfigs {
