@@ -54,7 +54,7 @@ def computeVersionCode(versionName) {
 
 android {
     compileSdkVersion 25
-    buildToolsVersion '24.0.3'
+    buildToolsVersion '25.0.2'
     useLibrary 'org.apache.http.legacy'
     testBuildType "debug"
 
@@ -114,7 +114,12 @@ android {
             versionName defaultConfig.versionName + "p"
             signingConfig signingConfigs.playstore
         }
-
+        stage {
+            applicationId "com.handy.portal.stage"
+            manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal.stage"]
+            versionName defaultConfig.versionName
+            signingConfig signingConfigs.debug
+        }
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
                 def buildType = variant.buildType.name == 'release' ? '' : '-' + variant.buildType.name;

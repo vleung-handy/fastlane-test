@@ -230,9 +230,10 @@
             android:name="com.crashlytics.ApiKey"
             android:value="688486cdd4f0b095424122ad0a42e5e3473e83be"
             />
+        <!-- For google maps -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyCKCHTy6QgYdpLXtEpoDs22MI0JnqP8_mc"
+            android:value="@string/google_api_key"
             />
 
         <!-- URBAN AIRSHIP -->

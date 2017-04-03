@@ -21,6 +21,6 @@ public final class PropertiesReader {
     }
 
     public static Properties getConfigProperties(Context context) {
-        return getProperties(context, "config." + BuildConfig.BUILD_TYPE + ".properties");
+        return getProperties(context, "config." + BuildConfig.FLAVOR + ".properties");
     }
 }
