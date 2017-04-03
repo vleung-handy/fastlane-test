@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.crashlytics.android.Crashlytics;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import com.handy.portal.announcements.model.Announcement;
 import com.handy.portal.announcements.model.AnnouncementShownRecord;
@@ -16,11 +15,9 @@ import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.library.util.IOUtils;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -94,19 +91,7 @@ public class AnnouncementsManager {
      * gets announcements from the server
      */
     private void getAnnouncements(@NonNull CurrentAnnouncementsRequest currentAnnouncementsRequest, DataManager.Callback<AnnouncementsWrapper> callback) {
-        //todo revert
         mDataManager.getCurrentAnnouncements(currentAnnouncementsRequest, callback);
-//        try {
-//            String json = IOUtils.loadJSONFromAsset(mContext, "test_announcements.json");
-//            AnnouncementsWrapper announcementsWrapper = new GsonBuilder().create().fromJson(json, AnnouncementsWrapper.class);
-//            callback.onSuccess(announcementsWrapper);
-//            return;
-//        }
-//        catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        callback.onError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.CLIENT));
-
     }
 
     /**
@@ -286,7 +271,8 @@ public class AnnouncementsManager {
 
 
     /**
-     * logged-in user may have different announcements
+     * note that we do not currently get announcements for logged-out users.
+     * refresh the announcements for when we do, as logged-in users may have different announcements.
      */
     @Subscribe
     public void onUserLoggedIn(HandyEvent.ReceiveLoginSuccess event)
