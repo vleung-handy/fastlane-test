@@ -114,7 +114,12 @@ android {
             versionName defaultConfig.versionName + "p"
             signingConfig signingConfigs.playstore
         }
-
+        stage {
+            applicationId "com.handy.portal.stage"
+            manifestPlaceholders = [PACKAGE_NAME: "com.handy.portal.stage"]
+            versionName defaultConfig.versionName
+            signingConfig signingConfigs.debug
+        }
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
                 def buildType = variant.buildType.name == 'release' ? '' : '-' + variant.buildType.name;
