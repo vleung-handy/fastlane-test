@@ -72,7 +72,8 @@ public class AnnouncementView extends FrameLayout {
             mActionButton.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(final View v) {
-                    announcementActionButtonClickedListener.onAnnouncementActionButtonClicked(announcement);
+                    announcementActionButtonClickedListener
+                            .onAnnouncementActionButtonClicked(announcement);
                 }
             });
         }

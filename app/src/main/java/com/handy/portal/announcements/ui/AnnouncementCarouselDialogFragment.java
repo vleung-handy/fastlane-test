@@ -59,6 +59,17 @@ public class AnnouncementCarouselDialogFragment extends InjectedDialogFragment i
     @Inject
     EventBus mEventBus;
 
+    /**
+     * epoch timestamp representing when the current announcement was shown
+     * for logging purposes only
+     */
+    private long mCurrentTrackedAnnouncementTimestampShownMs;
+    /**
+     * refers to the current announcement in view (only one can be shown at a time)
+     * for tracking/logging purposes only
+     */
+    private Announcement mCurrentTrackedAnnouncement;
+
     public static AnnouncementCarouselDialogFragment newInstance(
             @NonNull List<Announcement> announcements) {
 
@@ -131,6 +142,24 @@ public class AnnouncementCarouselDialogFragment extends InjectedDialogFragment i
     }
 
     private void onPageShown(final int position) {
+
+        if(mCurrentTrackedAnnouncement != null)
+        {
+            /*
+            if there is a ref to mCurrentTrackedAnnouncement, that means that
+            at this point, mCurrentTrackedAnnouncement was dismissed
+            (swiped away or "next" button pressed)
+             */
+            final long timeElapsedSinceTrackedAnnouncementShownMs =
+                    System.currentTimeMillis() - mCurrentTrackedAnnouncementTimestampShownMs;
+
+            mEventBus.post(new LogEvent.AddLogEvent(new AnnouncementsLog.Dismissed(
+                    mCurrentTrackedAnnouncement.getId(),
+                    timeElapsedSinceTrackedAnnouncementShownMs
+            )));
+        }
+
+
         final Announcement announcement = getAnnouncementAtPosition(position);
 
         //only show dismiss button if we are on last item
@@ -145,6 +174,11 @@ public class AnnouncementCarouselDialogFragment extends InjectedDialogFragment i
         mEventBus.post(new LogEvent.AddLogEvent(new AnnouncementsLog.Shown(
                 announcement.getId()
         )));
+
+        //update the current tracked announcement reference for logging purposes
+        mCurrentTrackedAnnouncement = announcement;
+        //update the current tracked announcement shown timestamp for logging purposes
+        mCurrentTrackedAnnouncementTimestampShownMs = System.currentTimeMillis();
     }
 
     @Override
@@ -173,10 +207,6 @@ public class AnnouncementCarouselDialogFragment extends InjectedDialogFragment i
 
             //this triggers the onPageChangeListener and eventually the onPageShown() method
             mViewPager.setCurrentItem(mViewPager.getCurrentItem() + 1);
-
-            mEventBus.post(new LogEvent.AddLogEvent(new AnnouncementsLog.SkipTapped(
-                    announcement.getId()
-            )));
         }
     }
 

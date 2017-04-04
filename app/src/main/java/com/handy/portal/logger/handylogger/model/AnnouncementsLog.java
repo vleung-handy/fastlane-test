@@ -21,11 +21,15 @@ public abstract class AnnouncementsLog extends EventLog {
         }
     }
 
-    public static class SkipTapped extends AnnouncementsLog {
-        private static final String EVENT_TYPE = "action_tapped";
+    public static class Dismissed extends AnnouncementsLog {
+        private static final String EVENT_TYPE = "dismissed";
 
-        public SkipTapped(final String announcementId) {
+        @SerializedName("time_seen_milliseconds")
+        private final long mDurationAnnouncementShownMs;
+
+        public Dismissed(final String announcementId, final long durationAnnouncementShownMs) {
             super(EVENT_TYPE, announcementId);
+            mDurationAnnouncementShownMs = durationAnnouncementShownMs;
         }
     }
 
