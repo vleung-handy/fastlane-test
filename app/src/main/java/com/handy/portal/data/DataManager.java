@@ -1,6 +1,10 @@
 package com.handy.portal.data;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.JsonObject;
+import com.handy.portal.announcements.model.AnnouncementsWrapper;
+import com.handy.portal.announcements.model.CurrentAnnouncementsRequest;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.Booking.BookingType;
 import com.handy.portal.bookings.model.BookingClaimDetails;
@@ -81,6 +85,10 @@ public class DataManager {
         mStripeService = stripeService;
         mDynamicEndpoint = dynamicEndpoint;
         mDynamicEndpointService = dynamicEndpointService;
+    }
+
+    public void getCurrentAnnouncements(@NonNull CurrentAnnouncementsRequest currentAnnouncementsRequest, final Callback<AnnouncementsWrapper> cb) {
+        mService.getCurrentAnnouncements(currentAnnouncementsRequest, new CurrentAnnouncementsRetrofitCallback(cb));
     }
 
     public void getSetupData(final Callback<SetupData> cb) {

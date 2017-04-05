@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_weight="1"
+        >
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/fragment_announcement_carousel_viewpager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
+        <ImageView
+            android:id="@+id/fragment_announcement_carousel_dismiss_button"
+            android:layout_width="@dimen/default_icon_size"
+            android:layout_height="@dimen/default_icon_size"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_margin="@dimen/default_margin"
+            android:padding="@dimen/icon_padding"
+            android:src="@drawable/ic_x_white"
+            android:tint="@color/light_grey_trans"
+            />
+    </RelativeLayout>
+
+
+    <com.viewpagerindicator.CirclePageIndicator
+        android:id="@+id/fragment_announcement_carousel_page_indicator"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin"
+        app:fillColor="@color/light_grey"
+        app:pageColor="@color/light_grey_trans"
+        app:strokeColor="@color/light_grey_trans"
+        />
+</LinearLayout>
