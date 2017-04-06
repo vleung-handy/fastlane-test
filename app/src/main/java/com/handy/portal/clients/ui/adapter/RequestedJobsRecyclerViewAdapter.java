@@ -219,6 +219,11 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                 subtitle.setVisibility(View.VISIBLE);
                 subtitle.setText(booking.getRegionName());
             }
+
+            final View favoriteIndicator = associatedView.findViewById(R.id.favorite_indicator);
+            if (favoriteIndicator != null && booking.getRequestAttributes().isFavorite()) {
+                favoriteIndicator.setVisibility(View.VISIBLE);
+            }
         }
 
         private void initActionListeners(final View associatedView, final Booking booking) {

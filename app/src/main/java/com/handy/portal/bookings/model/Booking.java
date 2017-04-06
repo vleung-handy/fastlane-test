@@ -452,6 +452,8 @@ public class Booking implements Comparable<Booking>, Serializable {
         private String mCustomerId;
         @SerializedName("customer_name")
         private String mCustomerName;
+        @SerializedName("is_favorite")
+        private boolean mIsFavorite;
 
 
         public String getListingTitle() {
@@ -480,6 +482,10 @@ public class Booking implements Comparable<Booking>, Serializable {
 
         public boolean hasCustomer() {
             return TextUtils.isEmpty(mCustomerId);
+        }
+
+        public boolean isFavorite() {
+            return mIsFavorite;
         }
     }
 

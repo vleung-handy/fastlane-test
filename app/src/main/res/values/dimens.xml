@@ -75,6 +75,7 @@
     <dimen name="medium_elevation">4dp</dimen>
     <dimen name="green_checkbox_width_height">32dp</dimen>
     <dimen name="progress_bar_height">12dp</dimen>
+    <dimen name="small_icon_size">10dp</dimen>
 
     <!-- Generic -->
     <dimen name="negative_complete_button_height_half">-32dp</dimen>
