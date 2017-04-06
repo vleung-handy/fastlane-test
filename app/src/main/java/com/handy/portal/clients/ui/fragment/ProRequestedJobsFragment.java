@@ -324,10 +324,31 @@ public class ProRequestedJobsFragment extends InjectedFragment {
         bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobSuccess(booking)));
         bus.post(new BookingEvent.ReceiveProRequestedJobsCountSuccess(--mUnreadJobsCount));
         mAdapter.remove(booking);
+        if (BookingManager.DISMISSAL_REASON_BLOCK_CUSTOMER.equals(event.getDismissalReason())) {
+            removeBookingsForCustomer(booking.getRequestAttributes().getCustomerId());
+        }
         Snackbar.make(mJobListSwipeRefreshLayout, R.string.request_dismissal_success_message,
                 Snackbar.LENGTH_LONG).show();
         if (mAdapter.getItemCount() == 0) {
             showContentViewAndHideOthers(mEmptyJobsSwipeRefreshLayout);
+        }
+    }
+
+    private void removeBookingsForCustomer(final String customerId) {
+        final List<Booking> bookingsToRemove = new ArrayList<>();
+        for (Object item : mAdapter.getItems()) {
+            if (item instanceof Booking) {
+                final Booking booking = (Booking) item;
+                if (booking.getRequestAttributes() != null
+                        && booking.getRequestAttributes().hasCustomer()
+                        && booking.getRequestAttributes().getCustomerId().equals(customerId))
+                {
+                    bookingsToRemove.add(booking);
+                }
+            }
+        }
+        for (Booking booking : bookingsToRemove) {
+            mAdapter.remove(booking);
         }
     }
 

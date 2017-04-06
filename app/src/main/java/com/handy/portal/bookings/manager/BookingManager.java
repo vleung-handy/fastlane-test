@@ -390,7 +390,7 @@ public class BookingManager {
                 new DataManager.Callback<Void>() {
                     @Override
                     public void onSuccess(final Void response) {
-                        mBus.post(new HandyEvent.ReceiveDismissJobSuccess(booking));
+                        mBus.post(new HandyEvent.ReceiveDismissJobSuccess(booking, dismissalReason));
                         requestedBookingsCache.invalidateAll();
                     }
 

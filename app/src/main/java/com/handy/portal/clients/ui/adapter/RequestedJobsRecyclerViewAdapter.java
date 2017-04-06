@@ -92,6 +92,10 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
         return mItems.size();
     }
 
+    public List<Object> getItems() {
+        return mItems;
+    }
+
     public void remove(final Booking booking) {
         for (int i = 0; i < mItems.size(); i++) {
             if (booking.equals(mItems.get(i))) {
