@@ -94,15 +94,11 @@ public abstract class RequestedJobsLog extends EventLog {
         private static final String EVENT_TYPE = "dismiss_job_submitted";
         @SerializedName("reason_machine_name")
         private final String mReasonMachineName;
-        @SerializedName("reason_description")
-        private final String mReasonDescription;
 
         public DismissJobSubmitted(final Booking booking,
-                                   final String reasonMachineName,
-                                   final String reasonDescription) {
+                                   final String reasonMachineName) {
             super(EVENT_TYPE, EVENT_CONTEXT, booking);
             mReasonMachineName = reasonMachineName;
-            mReasonDescription = reasonDescription;
         }
     }
 

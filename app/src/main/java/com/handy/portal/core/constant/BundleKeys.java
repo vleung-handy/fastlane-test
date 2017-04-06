@@ -74,8 +74,7 @@ public class BundleKeys {
     public static final String JUMIO_URL = "jumio_url";
 
     // Request Dismissal
-    public static final String REASON_MACHINE_NAME = "reason_machine_name";
-    public static final String REASON_DESCRIPTION = "reason_description";
+    public static final String DISMISSAL_REASON = "dismissal_reason";
 
     // Pro Availability
     public static final String DAILY_AVAILABILITY_TIMELINE = "daily_availability_timeline";

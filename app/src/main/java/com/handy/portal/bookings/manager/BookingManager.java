@@ -2,6 +2,7 @@ package com.handy.portal.bookings.manager;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringDef;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
@@ -39,6 +40,11 @@ import javax.inject.Inject;
 public class BookingManager {
     public static final int REQUESTED_JOBS_NUM_DAYS_IN_ADVANCE = 14; // TODO: Make this a config param
     public static final String UNREAD_JOB_REQUESTS_COUNT = "unread_requests_count";
+
+    public static final String DISMISSAL_REASON_UNSPECIFIED = "unspecified";
+    public static final String DISMISSAL_REASON_BLOCK_CUSTOMER = "do_not_want_this_customer";
+    @StringDef({DISMISSAL_REASON_UNSPECIFIED, DISMISSAL_REASON_BLOCK_CUSTOMER})
+    public @interface DismissalReason {}
 
     private final EventBus mBus;
     private final DataManager mDataManager;
@@ -378,8 +384,9 @@ public class BookingManager {
         });
     }
 
-    public void requestDismissJob(@NonNull final Booking booking, final String reasonMachineName) {
-        mDataManager.dismissJob(booking.getId(), booking.getType(), reasonMachineName,
+    public void requestDismissJob(@NonNull final Booking booking,
+                                  @DismissalReason final String dismissalReason) {
+        mDataManager.dismissJob(booking.getId(), booking.getType(), dismissalReason,
                 new DataManager.Callback<Void>() {
                     @Override
                     public void onSuccess(final Void response) {

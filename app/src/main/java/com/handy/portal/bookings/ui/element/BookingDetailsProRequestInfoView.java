@@ -55,13 +55,13 @@ public class BookingDetailsProRequestInfoView extends FrameLayout {
     /**
      * sets the view's message title and body based on the given display model
      *
-     * @param displayAttributes
+     * @param requestAttributes
      */
-    public void setDisplayModel(Booking.DisplayAttributes displayAttributes) {
+    public void setDisplayModel(Booking.RequestAttributes requestAttributes) {
         //set message title
-        if (displayAttributes.getDetailsTitle() != null) {
+        if (requestAttributes.getDetailsTitle() != null) {
             mBookingMessageTitleView
-                    .setBodyText(displayAttributes.getDetailsTitle())
+                    .setBodyText(requestAttributes.getDetailsTitle())
                     .setVisibility(VISIBLE);
         }
         else {
@@ -69,8 +69,8 @@ public class BookingDetailsProRequestInfoView extends FrameLayout {
         }
 
         //set message body
-        if (displayAttributes.getDetailsBody() != null) {
-            mMessageBodyText.setText(displayAttributes.getDetailsBody());
+        if (requestAttributes.getDetailsBody() != null) {
+            mMessageBodyText.setText(requestAttributes.getDetailsBody());
             mMessageBodyText.setVisibility(VISIBLE);
         }
         else {
