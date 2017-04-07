@@ -221,7 +221,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
             }
 
             final View favoriteIndicator = associatedView.findViewById(R.id.favorite_indicator);
-            if (favoriteIndicator != null && booking.getRequestAttributes().isFavorite()) {
+            if (favoriteIndicator != null && booking.isFavorite()) {
                 favoriteIndicator.setVisibility(View.VISIBLE);
             }
         }

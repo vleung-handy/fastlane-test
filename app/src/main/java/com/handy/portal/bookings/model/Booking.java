@@ -431,6 +431,11 @@ public class Booking implements Comparable<Booking>, Serializable {
                 && getRequestAttributes().isDismissed();
     }
 
+    public boolean isFavorite() {
+        return getRequestAttributes() != null
+                && getRequestAttributes().isFavorite();
+    }
+
     //Basic booking statuses inferrable from mProviderId
     public enum BookingStatus {
         AVAILABLE,
