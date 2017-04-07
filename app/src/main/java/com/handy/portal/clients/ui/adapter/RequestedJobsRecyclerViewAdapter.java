@@ -43,7 +43,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
         mItems = new ArrayList<>();
         for (BookingsWrapper bookingsWrapper : jobList) {
             mItems.add(bookingsWrapper.getDate());
-            for (Booking booking : bookingsWrapper.getBookings()) {
+            for (Booking booking : bookingsWrapper.getUndismissedBookings()) {
                 mItems.add(booking);
             }
         }
