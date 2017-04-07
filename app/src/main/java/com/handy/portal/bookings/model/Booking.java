@@ -481,7 +481,7 @@ public class Booking implements Comparable<Booking>, Serializable {
         }
 
         public boolean hasCustomer() {
-            return TextUtils.isEmpty(mCustomerId);
+            return !TextUtils.isEmpty(mCustomerId);
         }
 
         public boolean isFavorite() {
