@@ -53,9 +53,8 @@
             android:layout_gravity="center_vertical"
             android:layout_marginEnd="@dimen/extra_margin"
             android:layout_marginRight="@dimen/extra_margin"
-            android:tint="@color/tertiary_gray"
+            android:src="@drawable/ic_swap"
             android:visibility="gone"
-            tools:src="@drawable/ic_swap"
             tools:visibility="visible"
             />
 
@@ -64,8 +63,6 @@
             style="@style/TextView.Large.Bold"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/extra_margin"
-            android:layout_marginStart="@dimen/extra_margin"
             android:ellipsize="end"
             android:maxLines="1"
             tools:text="James D. requested you!"
