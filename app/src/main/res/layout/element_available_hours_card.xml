@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/default_margin_double"
+    android:layout_marginLeft="@dimen/default_margin_double"
+    android:layout_marginRight="@dimen/default_margin_double"
+    android:layout_marginStart="@dimen/default_margin_double"
+    android:background="@drawable/bg_bordered_white_round"
+    android:padding="@dimen/default_padding"
+    >
+
+    <TextView
+        android:id="@+id/date_range"
+        style="@style/TextView.Medium.Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Dec 5 - Dec 11"
+        />
+
+    <TextView
+        android:id="@+id/week_title"
+        style="@style/TextView.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/date_range"
+        android:layout_marginTop="@dimen/extra_margin"
+        android:textColor="@color/tertiary_gray"
+        tools:text="Current week"
+        />
+
+    <TextView
+        android:id="@+id/edit_button"
+        style="@style/TextView.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:paddingBottom="@dimen/default_padding"
+        android:paddingLeft="@dimen/default_padding"
+        android:paddingStart="@dimen/default_padding"
+        android:paddingTop="@dimen/default_padding_quarter"
+        android:text="@string/edit"
+        android:textColor="@color/handy_blue"
+        />
+
+    <LinearLayout
+        android:id="@+id/timelines"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/week_title"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:layout_marginTop="@dimen/default_margin_half"
+        android:orientation="vertical"
+        />
+
+    <View
+        android:id="@+id/border"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_below="@+id/timelines"
+        android:background="@color/border_gray"
+        />
+
+    <TextView
+        android:id="@+id/cancellation_notice"
+        style="@style/TextView.Small"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/border"
+        android:layout_marginTop="@dimen/default_margin"
+        android:gravity="center"
+        android:text="@string/send_available_hours_cancellation_notice"
+        android:textColor="@color/tertiary_gray"
+        />
+
+</RelativeLayout>

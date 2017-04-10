@@ -1,6 +1,8 @@
 package com.handy.portal.proavailability.view;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -17,10 +19,14 @@ import butterknife.OnClick;
 public class AvailableTimeSlotView extends FrameLayout {
     @BindView(R.id.timeline)
     TextView mTimeline;
+    @BindView(R.id.remove)
+    View mRemoveButton;
 
     @OnClick(R.id.remove)
     public void onRemoveClicked() {
-        mRemoveTimeSlotListener.onRemoveClicked(mDate, mInterval);
+        if (mRemoveTimeSlotListener != null) {
+            mRemoveTimeSlotListener.onRemoveClicked(mDate, mInterval);
+        }
     }
 
     private Date mDate;
@@ -30,7 +36,7 @@ public class AvailableTimeSlotView extends FrameLayout {
     public AvailableTimeSlotView(final Context context,
                                  final Date date,
                                  final AvailabilityInterval interval,
-                                 final RemoveTimeSlotListener removeTimeSlotListener) {
+                                 @Nullable final RemoveTimeSlotListener removeTimeSlotListener) {
         super(context);
         mDate = date;
         mInterval = interval;
@@ -46,6 +52,9 @@ public class AvailableTimeSlotView extends FrameLayout {
         final String endTimeFormatted =
                 DateTimeUtils.formatDateTo12HourClock(mInterval.getEndTime());
         mTimeline.setText(startTimeFormatted + " - " + endTimeFormatted);
+        if (mRemoveTimeSlotListener == null) {
+            mRemoveButton.setVisibility(GONE);
+        }
     }
 
     public interface RemoveTimeSlotListener {

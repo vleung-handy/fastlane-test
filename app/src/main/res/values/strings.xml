@@ -33,6 +33,7 @@
     <string name="remove">Remove</string>
     <string name="keep">Keep</string>
     <string name="profile">Profile</string>
+    <string name="send">Send</string>
 
     <!-- Environment -->
     <string name="select_environment">Select Environment</string>
@@ -688,6 +689,7 @@
     <string name="error_fetching_available_hours">There was an error fetching your available hours.</string>
     <string name="set_hours_prompt">Set your available hours</string>
     <string name="info_dialog_confirm_button">Got It</string>
+    <string name="hours_not_set">Hours not set</string>
 
     <!-- Payments -->
     <string name="payment_status_formatted">Status: %1$s</string>
@@ -709,4 +711,12 @@
     <!-- Announcements -->
     <string name="announcements_next_button">Next</string>
     <string name="announcements_dismiss_button">Got It</string>
+
+    <!-- Send Availability  -->
+    <string name="send_alternate_times">Send Alternate Times</string>
+    <string name="original_time_formatted">Original Time: %1$s, %2$s - %3$s</string>
+    <string name="send_available_hours_content_title">Let clients book directly into your schedule!</string>
+    <string name="send_available_hours_content_subtitle">Keep more jobs by sharing your availability with clients who have made you their Favorite Pro.</string>
+    <string name="send_available_hours_cancellation_notice">Cancellation rules apply so make sure your availability is accurate.</string>
+
 </resources>

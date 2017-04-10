@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import com.handy.portal.R;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
 import com.handy.portal.proavailability.model.WeeklyAvailabilityTimelinesWrapper;
@@ -15,10 +16,16 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 
+import butterknife.BindDimen;
+import butterknife.ButterKnife;
+
 public class WeeklyAvailableHoursView extends LinearLayout {
     private final WeeklyAvailabilityTimelinesWrapper mWeeklyAvailability;
     private final DateClickListener mDateClickListener;
     private RemoveTimeSlotListener mRemoveTimeSlotListener;
+
+    @BindDimen(R.dimen.default_padding)
+    int mDefaultPadding;
 
     public WeeklyAvailableHoursView(
             final Context context,
@@ -33,6 +40,7 @@ public class WeeklyAvailableHoursView extends LinearLayout {
     }
 
     private void init() {
+        ButterKnife.bind(this);
         setOrientation(VERTICAL);
         setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -48,6 +56,8 @@ public class WeeklyAvailableHoursView extends LinearLayout {
             boolean enabled = !DateTimeUtils.isDaysPast(date);
             final AvailableHoursWithDateView view = new AvailableHoursWithDateView(getContext(),
                     date, availability, mRemoveTimeSlotListener, enabled);
+            view.setRowPadding(mDefaultPadding, mDefaultPadding);
+            view.setBackgroundResource(R.drawable.border_gray_bottom);
             view.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(final View view) {
