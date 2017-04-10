@@ -36,7 +36,7 @@
                 android:layout_marginLeft="@dimen/default_margin"
                 android:layout_marginRight="@dimen/default_margin"
                 android:layout_marginTop="@dimen/default_margin"
-                android:gravity="center"
+                android:gravity="start"
                 tools:text="Title tile title"
                 />
 
@@ -48,7 +48,7 @@
                 android:layout_marginLeft="@dimen/default_margin"
                 android:layout_marginRight="@dimen/default_margin"
                 android:layout_marginTop="@dimen/default_margin"
-                android:gravity="center"
+                android:gravity="start"
                 tools:text="Blah blah blah blah blah blah blah blah blah blah blah blah"
                 />
 
