@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
@@ -42,7 +43,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
         mItems = new ArrayList<>();
         for (BookingsWrapper bookingsWrapper : jobList) {
             mItems.add(bookingsWrapper.getDate());
-            for (Booking booking : bookingsWrapper.getBookings()) {
+            for (Booking booking : bookingsWrapper.getUndismissedBookings()) {
                 mItems.add(booking);
             }
         }
@@ -90,6 +91,10 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
     @Override
     public int getItemCount() {
         return mItems.size();
+    }
+
+    public List<Object> getItems() {
+        return mItems;
     }
 
     public void remove(final Booking booking) {
@@ -178,15 +183,51 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
             bookingElementView.initView(parentView.getContext(), booking, convertView, parentView);
             final View associatedView = bookingElementView.getAssociatedView();
             initActionListeners(associatedView, booking);
-            // Hide requested pro indicator because this is a list view that displays only pro requests.
+
+            customizeView(associatedView, booking);
+
+            if (parentView.getChildCount() == 0) {
+                parentView.addView(associatedView);
+            }
+        }
+
+        private void customizeView(final View associatedView, final Booking booking) {
             final View requestedIndicator =
                     associatedView.findViewById(R.id.booking_list_entry_left_strip_indicator);
             if (requestedIndicator != null) {
                 requestedIndicator.setVisibility(View.INVISIBLE);
             }
 
-            if (parentView.getChildCount() == 0) {
-                parentView.addView(associatedView);
+            final View requestedText =
+                    associatedView.findViewById(R.id.booking_entry_listing_message_title_view);
+            if (requestedIndicator != null) {
+                requestedText.setVisibility(View.GONE);
+            }
+
+            final TextView title =
+                    (TextView) associatedView.findViewById(R.id.booking_entry_area_text);
+            if (title != null) {
+                final Booking.RequestAttributes requestAttributes = booking.getRequestAttributes();
+                final String customerInfo = requestAttributes.hasCustomer() ?
+                        requestAttributes.getCustomerName() : requestAttributes.getDetailsTitle();
+                title.setText(customerInfo);
+            }
+
+            final TextView subtitle =
+                    (TextView) associatedView.findViewById(R.id.booking_entry_area_subtext);
+            if (subtitle != null) {
+                subtitle.setVisibility(View.VISIBLE);
+                subtitle.setText(booking.getRegionName());
+            }
+
+            final View favoriteIndicator = associatedView.findViewById(R.id.favorite_indicator);
+            if (favoriteIndicator != null) {
+                favoriteIndicator.setVisibility(booking.isFavorite() ? View.VISIBLE : View.GONE);
+            }
+
+            final View swapIndicator = associatedView.findViewById(R.id.booking_swap_indicator);
+            if (swapIndicator != null) {
+                swapIndicator.setVisibility(booking.canSwap() ? View.VISIBLE : View.GONE);
             }
         }
 

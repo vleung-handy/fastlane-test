@@ -221,14 +221,17 @@ public class BookingFragment extends TimerActionBarFragment {
     private void updateDisplayWithBookingProRequestDisplayAttributes() {
         if (mBooking.isRequested()) //ideally should be decoupled
         {
-            Booking.DisplayAttributes displayAttributes = mBooking.getProviderRequestDisplayAttributes();
-            if (displayAttributes != null
-                    && (displayAttributes.getDetailsBody() != null
-                    || displayAttributes.getDetailsTitle() != null)) {
+            Booking.RequestAttributes requestAttributes = mBooking.getRequestAttributes();
+            if (requestAttributes != null
+                    && (requestAttributes.getDetailsBody() != null
+                    || requestAttributes.getDetailsTitle() != null)) {
                 mBookingDetailsProRequestInfoView.setVisibility(View.VISIBLE); //GONE by default
-                mBookingDetailsProRequestInfoView.setDisplayModel(displayAttributes);
+                mBookingDetailsProRequestInfoView.setDisplayModel(requestAttributes);
                 if (mBooking.canSwap()) {
-                    mBookingDetailsProRequestInfoView.showSwapIcon();
+                    mBookingDetailsProRequestInfoView.showSwapIndicator();
+                }
+                if (mBooking.isFavorite()) {
+                    mBookingDetailsProRequestInfoView.showFavoriteIndicator();
                 }
             }
         }

@@ -123,7 +123,7 @@ public interface HandyRetrofitService {
     @POST(JOBS_PATH + "{id}/dismiss")
     void dismissJob(@Path("id") String bookingId,
                     @Field("type") String bookingType,
-                    @Field("dismissal_reason_machine_name") String reasonMachineName,
+                    @Field("dismissal_reason_machine_name") String dismissalReason,
                     HandyRetrofitCallback cb);
 
     @GET(PAYMENTS_PATH)

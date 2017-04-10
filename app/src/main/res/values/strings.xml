@@ -151,6 +151,7 @@
     <string name="full_details_and_more_available_on_date_flex"><![CDATA[Depending on the specific customer details you receive, this job may be a minimum of <b>%1$s</b> hours up to a maximum of <b>%2$s</b> hours. The job will not start prior to <b>%3$s</b> and will not end after <b>%4$s</b>. Exact customer and booking details will be sent by 1 hour before job start.<br/><br/>Job payment depends on the number of hours of the booking you receive. It will be minimum <b>%5$s</b> for a <b>%6$s</b> hour booking and maximum <b>%7$s</b> for a <b>%8$s</b> hour booking.]]></string>
     <string name="no_available_jobs">Sorry, there aren\'t any available jobs left for this day.</string>
     <string name="no_pro_requested_jobs">You don\'t have any new job requests.</string>
+    <string name="customer_favorite_pro">You\'re this customer\'s Favorite Pro</string>
     <string name="error_fetching_available_jobs">There was an error fetching your available jobs</string>
     <string name="error_fetching_scheduled_jobs">There was an error fetching your scheduled jobs</string>
     <string name="error_fetching_matching_jobs">There was an error searching for matching jobs</string>
@@ -635,14 +636,13 @@
     <string name="upload_photo_donts_4">Work angles</string>
 
     <!-- Request Dismissal -->
-    <string name="dismiss">Dismiss</string>
-    <string name="dismiss_request">Dismiss Request</string>
-    <string name="request_dismissal_dialog_title">Help us understand why this request doesn\'t work for you</string>
-    <string name="request_dismissal_other_edit_text_hint">Please specify</string>
-    <string name="request_dismissal_reason_not_selected">Please select an option from the list</string>
-    <string name="request_dismissal_error">Error dismissing request</string>
-    <string name="request_dismissal_success_message">Request dismissed</string>
-    <string name="request_dismissal_reason_description_missing">Please tell us why you\'re dismissing this request</string>
+    <string name="dismiss">Decline</string>
+    <string name="dismiss_request">Decline Request</string>
+    <string name="request_dismissal_dialog_title_formatted">Would you like to continue receiving requests from %1$s?</string>
+    <string name="request_dismissal_reason_not_selected">Please select an option</string>
+    <string name="request_dismissal_error">Error declining request</string>
+    <string name="request_dismissal_success_message">Request declined</string>
+    <string name="request_dismissal_block_client">No, block this client</string>
 
     <!--Your first job -->
     <string name="first_job_title">Your very first job</string>

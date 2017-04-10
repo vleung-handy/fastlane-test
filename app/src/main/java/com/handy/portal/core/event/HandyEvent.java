@@ -269,13 +269,19 @@ public abstract class HandyEvent {
 
     public static class ReceiveDismissJobSuccess extends ReceiveSuccessEvent {
         private Booking mBooking;
+        private String mDismissalReason;
 
-        public ReceiveDismissJobSuccess(final Booking booking) {
+        public ReceiveDismissJobSuccess(final Booking booking, final String dismissalReason) {
             mBooking = booking;
+            mDismissalReason = dismissalReason;
         }
 
         public Booking getBooking() {
             return mBooking;
+        }
+
+        public String getDismissalReason() {
+            return mDismissalReason;
         }
     }
 

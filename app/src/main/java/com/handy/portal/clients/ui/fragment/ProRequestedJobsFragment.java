@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -20,6 +19,7 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
+import com.handy.portal.bookings.manager.BookingManager.DismissalReason;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.util.ClaimUtils;
@@ -31,7 +31,6 @@ import com.handy.portal.core.constant.RequestCode;
 import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
-import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout;
@@ -274,24 +273,17 @@ public class ProRequestedJobsFragment extends InjectedFragment {
 
     @Subscribe
     public void onRequestedJobDismissClicked(final Event.RequestedJobDismissClicked event) {
-        final ConfigurationResponse configuration = configManager.getConfigurationResponse();
         final Booking booking = event.getBooking();
-        if (configuration == null) {
-            dismissJob(booking);
+        if (booking.getRequestAttributes() != null
+                && booking.getRequestAttributes().hasCustomer()) {
+            // Display dialog for selecting a request dismissal reason
+            final RequestDismissalReasonsDialogFragment dialogFragment =
+                    RequestDismissalReasonsDialogFragment.newInstance(booking);
+            dialogFragment.setTargetFragment(this, RequestCode.CONFIRM_DISMISS);
+            FragmentUtils.safeLaunchDialogFragment(dialogFragment, this, null);
         }
         else {
-            final ArrayList<ConfigurationResponse.RequestDismissal.Reason> reasons =
-                    configuration.getRequestDismissal().getReasons();
-            // Display dialog for selecting a request dismissal reason
-            if (reasons != null && !reasons.isEmpty()) {
-                final RequestDismissalReasonsDialogFragment dialogFragment =
-                        RequestDismissalReasonsDialogFragment.newInstance(booking, reasons);
-                dialogFragment.setTargetFragment(this, RequestCode.CONFIRM_DISMISS);
-                FragmentUtils.safeLaunchDialogFragment(dialogFragment, this, null);
-            }
-            else {
-                dismissJob(booking);
-            }
+            dismissJob(booking);
         }
     }
 
@@ -301,11 +293,9 @@ public class ProRequestedJobsFragment extends InjectedFragment {
             final Booking booking = (Booking) data.getSerializableExtra(BundleKeys.BOOKING);
             switch (requestCode) {
                 case RequestCode.CONFIRM_DISMISS:
-                    final String reasonMachineName =
-                            data.getStringExtra(BundleKeys.REASON_MACHINE_NAME);
-                    final String reasonDescription =
-                            data.getStringExtra(BundleKeys.REASON_DESCRIPTION);
-                    dismissJob(booking, reasonMachineName, reasonDescription);
+                    final String dismissalReason =
+                            data.getStringExtra(BundleKeys.DISMISSAL_REASON);
+                    dismissJob(booking, dismissalReason);
                     break;
                 case RequestCode.CONFIRM_SWAP:
                 case RequestCode.CONFIRM_REQUEST:
@@ -316,15 +306,14 @@ public class ProRequestedJobsFragment extends InjectedFragment {
     }
 
     private void dismissJob(final Booking booking) {
-        dismissJob(booking, null, null);
+        dismissJob(booking, BookingManager.DISMISSAL_REASON_UNSPECIFIED);
     }
 
     private void dismissJob(@NonNull final Booking booking,
-                            @Nullable final String reasonMachineName,
-                            @Nullable final String reasonDescription) {
+                            @NonNull @DismissalReason final String dismissalReason) {
         bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobSubmitted(booking,
-                reasonMachineName, reasonDescription)));
-        mBookingManager.requestDismissJob(booking, reasonMachineName);
+                dismissalReason)));
+        mBookingManager.requestDismissJob(booking, dismissalReason);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
     }
 
@@ -335,10 +324,31 @@ public class ProRequestedJobsFragment extends InjectedFragment {
         bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobSuccess(booking)));
         bus.post(new BookingEvent.ReceiveProRequestedJobsCountSuccess(--mUnreadJobsCount));
         mAdapter.remove(booking);
+        if (BookingManager.DISMISSAL_REASON_BLOCK_CUSTOMER.equals(event.getDismissalReason())) {
+            removeBookingsForCustomer(booking.getRequestAttributes().getCustomerId());
+        }
         Snackbar.make(mJobListSwipeRefreshLayout, R.string.request_dismissal_success_message,
                 Snackbar.LENGTH_LONG).show();
         if (mAdapter.getItemCount() == 0) {
             showContentViewAndHideOthers(mEmptyJobsSwipeRefreshLayout);
+        }
+    }
+
+    private void removeBookingsForCustomer(final String customerId) {
+        final List<Booking> bookingsToRemove = new ArrayList<>();
+        for (Object item : mAdapter.getItems()) {
+            if (item instanceof Booking) {
+                final Booking booking = (Booking) item;
+                if (booking.getRequestAttributes() != null
+                        && booking.getRequestAttributes().hasCustomer()
+                        && booking.getRequestAttributes().getCustomerId().equals(customerId))
+                {
+                    bookingsToRemove.add(booking);
+                }
+            }
+        }
+        for (Booking booking : bookingsToRemove) {
+            mAdapter.remove(booking);
         }
     }
 

@@ -2,9 +2,6 @@ package com.handy.portal.core.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.io.Serializable;
-import java.util.ArrayList;
-
 public class ConfigurationResponse {
     @SerializedName("checkout_rating_flow")
     private boolean mCheckoutRatingFlowEnabled;
@@ -182,32 +179,8 @@ public class ConfigurationResponse {
         @SerializedName("enabled")
         private boolean mIsEnabled;
 
-        @SerializedName("reasons")
-        private ArrayList<Reason> mReasons;
-
         public boolean isEnabled() {
             return mIsEnabled;
-        }
-
-        public ArrayList<Reason> getReasons() {
-            return mReasons;
-        }
-
-        public static class Reason implements Serializable {
-            public static final String MACHINE_NAME_OTHER = "other";
-
-            @SerializedName("machine_name")
-            private String mMachineName;
-            @SerializedName("display_name")
-            private String mDisplayName;
-
-            public String getMachineName() {
-                return mMachineName;
-            }
-
-            public String getDisplayName() {
-                return mDisplayName;
-            }
         }
     }
 }

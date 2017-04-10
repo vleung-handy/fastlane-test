@@ -88,14 +88,14 @@ public class AvailableBookingElementView extends BookingElementView {
         //TODO ugly! would be nice if the display attributes were generic but
         //since there's not enough time to fully generalize this
         //we're making it specific to pro request for now
-        Booking.DisplayAttributes proRequestDisplayAttributes = booking.getProviderRequestDisplayAttributes();
+        Booking.RequestAttributes requestAttributes = booking.getRequestAttributes();
         boolean isRequested = booking.isRequested();
 
         if (isRequested
-                && proRequestDisplayAttributes != null
-                && proRequestDisplayAttributes.getListingTitle() != null) {
+                && requestAttributes != null
+                && requestAttributes.getListingTitle() != null) {
             mBookingMessageTitleView
-                    .setBodyText(proRequestDisplayAttributes.getListingTitle())
+                    .setBodyText(requestAttributes.getListingTitle())
                     .setVisibility(View.VISIBLE); //the layout is GONE by default
 
             //show the green strip indicator on the left of this entry.

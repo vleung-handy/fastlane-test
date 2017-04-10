@@ -2,25 +2,79 @@
 <LinearLayout
     android:id="@+id/booking_details_display_message_layout"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/default_margin"
     android:orientation="vertical"
-    xmlns:tools="http://schemas.android.com/tools"
     >
 
-    <com.handy.portal.bookings.ui.element.BookingMessageTitleView
+    <LinearLayout
+        android:id="@+id/booking_details_display_message_favorite_indicator"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/booking_details_display_message_title_layout"
-        />
+        android:paddingBottom="@dimen/default_padding_half"
+        android:paddingTop="@dimen/default_padding_half"
+        android:visibility="gone"
+        tools:visibility="visible"
+        >
+
+        <ImageView
+            android:layout_width="@dimen/small_icon_size"
+            android:layout_height="@dimen/small_icon_size"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/ic_heart_small"
+            />
+
+        <TextView
+            style="@style/TextView.Small"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_marginLeft="@dimen/default_margin_half"
+            android:layout_marginStart="@dimen/default_margin_half"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/customer_favorite_pro"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        >
+
+        <ImageView
+            android:id="@+id/booking_details_display_message_swap_indicator"
+            android:layout_width="@dimen/job_cell_icon_size_half"
+            android:layout_height="@dimen/job_cell_icon_size_half"
+            android:layout_gravity="center_vertical"
+            android:layout_marginEnd="@dimen/extra_margin"
+            android:layout_marginRight="@dimen/extra_margin"
+            android:src="@drawable/ic_swap"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
+
+        <TextView
+            android:id="@+id/booking_details_display_message_title"
+            style="@style/TextView.Large.Bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:text="James D. requested you!"
+            />
+    </LinearLayout>
 
     <TextView
+        android:id="@+id/booking_details_display_message_body_text"
+        style="@style/TextView.Medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/default_margin_half"
-        android:id="@+id/booking_details_display_message_body_text"
-        style="@style/TextView.Medium"
         tools:text="One of your past customers requested you for this job. If the match fails for any reason, we'll try to replace it with a similar job."
         />
 

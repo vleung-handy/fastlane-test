@@ -3,6 +3,7 @@ package com.handy.portal.bookings.model;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.VisibleForTesting;
+import android.text.TextUtils;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.Collections2;
@@ -109,7 +110,7 @@ public class Booking implements Comparable<Booking>, Serializable {
 
     //TODO ugly, would rather have this be more generic
     @SerializedName("provider_request_attributes")
-    private DisplayAttributes mProviderRequestDisplayAttributes;
+    private RequestAttributes mRequestAttributes;
 
     // Payment booking
     @SerializedName("check_in_time")
@@ -132,8 +133,8 @@ public class Booking implements Comparable<Booking>, Serializable {
 
     private List<BookingInstructionUpdateRequest> mCustomerPreferences;
 
-    public DisplayAttributes getProviderRequestDisplayAttributes() {
-        return mProviderRequestDisplayAttributes;
+    public RequestAttributes getRequestAttributes() {
+        return mRequestAttributes;
     }
 
     public Booking() { }
@@ -434,8 +435,13 @@ public class Booking implements Comparable<Booking>, Serializable {
     }
 
     public boolean isDismissed() {
-        return getProviderRequestDisplayAttributes() != null
-                && getProviderRequestDisplayAttributes().isDismissed();
+        return getRequestAttributes() != null
+                && getRequestAttributes().isDismissed();
+    }
+
+    public boolean isFavorite() {
+        return getRequestAttributes() != null
+                && getRequestAttributes().isFavorite();
     }
 
     //Basic booking statuses inferrable from mProviderId
@@ -446,7 +452,7 @@ public class Booking implements Comparable<Booking>, Serializable {
     }
 
 
-    public static class DisplayAttributes implements Serializable {
+    public static class RequestAttributes implements Serializable {
         @SerializedName("listing_title")
         private String mListingTitle;
         @SerializedName("details_title")
@@ -455,6 +461,12 @@ public class Booking implements Comparable<Booking>, Serializable {
         private String mDetailsBody;
         @SerializedName("is_dismissed")
         private boolean mIsDismissed;
+        @SerializedName("customer_id")
+        private String mCustomerId;
+        @SerializedName("customer_name")
+        private String mCustomerName;
+        @SerializedName("is_favorite")
+        private boolean mIsFavorite;
 
 
         public String getListingTitle() {
@@ -471,6 +483,22 @@ public class Booking implements Comparable<Booking>, Serializable {
 
         public boolean isDismissed() {
             return mIsDismissed;
+        }
+
+        public String getCustomerName() {
+            return mCustomerName;
+        }
+
+        public String getCustomerId() {
+            return mCustomerId;
+        }
+
+        public boolean hasCustomer() {
+            return !TextUtils.isEmpty(mCustomerId);
+        }
+
+        public boolean isFavorite() {
+            return mIsFavorite;
         }
     }
 

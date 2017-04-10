@@ -154,9 +154,9 @@ public class DataManager {
 
     public void dismissJob(final String bookingId,
                            final BookingType bookingType,
-                           final String reasonMachineName,
+                           final String dismissalReason,
                            final Callback<Void> cb) {
-        mService.dismissJob(bookingId, bookingType.toString().toLowerCase(), reasonMachineName,
+        mService.dismissJob(bookingId, bookingType.toString().toLowerCase(), dismissalReason,
                 new EmptyHandyRetroFitCallback(cb));
     }
 

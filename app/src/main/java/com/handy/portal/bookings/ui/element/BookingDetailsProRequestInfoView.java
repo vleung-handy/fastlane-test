@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
 import android.util.AttributeSet;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -18,8 +19,12 @@ import butterknife.ButterKnife;
  * a message title/body using the booking's pro request display attributes model
  */
 public class BookingDetailsProRequestInfoView extends FrameLayout {
-    @BindView(R.id.booking_details_display_message_title_layout)
-    BookingMessageTitleView mBookingMessageTitleView;
+    @BindView(R.id.booking_details_display_message_favorite_indicator)
+    View mMessageFavoriteIndicator;
+    @BindView(R.id.booking_details_display_message_swap_indicator)
+    View mMessageSwapIndicator;
+    @BindView(R.id.booking_details_display_message_title)
+    TextView mMessageTitleText;
     @BindView(R.id.booking_details_display_message_body_text)
     TextView mMessageBodyText;
 
@@ -49,28 +54,26 @@ public class BookingDetailsProRequestInfoView extends FrameLayout {
     private void init() {
         inflate(getContext(), R.layout.element_booking_details_display_message, this);
         ButterKnife.bind(this);
-        mBookingMessageTitleView.setTextSize(R.dimen.medium_text_size);
     }
 
     /**
      * sets the view's message title and body based on the given display model
      *
-     * @param displayAttributes
+     * @param requestAttributes
      */
-    public void setDisplayModel(Booking.DisplayAttributes displayAttributes) {
+    public void setDisplayModel(Booking.RequestAttributes requestAttributes) {
         //set message title
-        if (displayAttributes.getDetailsTitle() != null) {
-            mBookingMessageTitleView
-                    .setBodyText(displayAttributes.getDetailsTitle())
-                    .setVisibility(VISIBLE);
+        if (requestAttributes.getDetailsTitle() != null) {
+            mMessageTitleText.setText(requestAttributes.getDetailsTitle());
+            mMessageTitleText.setVisibility(VISIBLE);
         }
         else {
-            mBookingMessageTitleView.setVisibility(GONE);
+            mMessageTitleText.setVisibility(GONE);
         }
 
         //set message body
-        if (displayAttributes.getDetailsBody() != null) {
-            mMessageBodyText.setText(displayAttributes.getDetailsBody());
+        if (requestAttributes.getDetailsBody() != null) {
+            mMessageBodyText.setText(requestAttributes.getDetailsBody());
             mMessageBodyText.setVisibility(VISIBLE);
         }
         else {
@@ -78,7 +81,11 @@ public class BookingDetailsProRequestInfoView extends FrameLayout {
         }
     }
 
-    public void showSwapIcon() {
-        mBookingMessageTitleView.showSwapIcon();
+    public void showSwapIndicator() {
+        mMessageSwapIndicator.setVisibility(VISIBLE);
+    }
+
+    public void showFavoriteIndicator() {
+        mMessageFavoriteIndicator.setVisibility(VISIBLE);
     }
 }
