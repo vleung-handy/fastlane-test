@@ -1,6 +1,7 @@
 package com.handy.portal.clients.ui.adapter;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,6 +15,9 @@ import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.DismissableBookingElementView;
 import com.handy.portal.clients.ui.element.ProRequestedJobsListGroupView;
+import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.library.util.UIUtils;
@@ -228,6 +232,28 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
             final View swapIndicator = associatedView.findViewById(R.id.booking_swap_indicator);
             if (swapIndicator != null) {
                 swapIndicator.setVisibility(booking.canSwap() ? View.VISIBLE : View.GONE);
+            }
+
+            final View sendAlternateTimesButton =
+                    associatedView.findViewById(R.id.send_alternate_times_button);
+            if (sendAlternateTimesButton != null) {
+                final Booking.Action sendTimesAction =
+                        booking.getAction(Booking.Action.ACTION_SEND_TIMES);
+                if (sendTimesAction != null) {
+                    sendAlternateTimesButton.setVisibility(View.VISIBLE);
+                    sendAlternateTimesButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View v) {
+                            final Bundle arguments = new Bundle();
+                            arguments.putSerializable(BundleKeys.BOOKING, booking);
+                            mBus.post(new NavigationEvent.NavigateToPage(
+                                    MainViewPage.SEND_AVAILABLE_HOURS, arguments, true));
+                        }
+                    });
+                }
+                else {
+                    sendAlternateTimesButton.setVisibility(View.GONE);
+                }
             }
         }
 
