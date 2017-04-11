@@ -45,11 +45,9 @@ import com.handy.portal.proavailability.view.AvailableHoursView;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -393,24 +391,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     private boolean hasAvailableHoursForNextWeek() {
         final WeeklyAvailabilityTimelinesWrapper weekAvailability = getNextWeekAvailability();
-        if (weekAvailability != null) {
-            boolean hasAvailableHours = false;
-            final Calendar calendar = Calendar.getInstance(Locale.US);
-            calendar.setTime(weekAvailability.getStartDate());
-            while (DateTimeUtils.daysBetween(calendar.getTime(), weekAvailability.getEndDate()) >= 0) {
-                final DailyAvailabilityTimeline availability =
-                        getAvailabilityForDate(calendar.getTime());
-                if (availability != null) {
-                    hasAvailableHours = availability.hasIntervals();
-                }
-                if (hasAvailableHours) {
-                    break;
-                }
-                calendar.add(Calendar.DATE, 1);
-            }
-            return hasAvailableHours;
-        }
-        return false;
+        return weekAvailability != null && weekAvailability.hasAvailableHours();
     }
 
     @Nullable

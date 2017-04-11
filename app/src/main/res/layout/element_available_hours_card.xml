@@ -41,7 +41,6 @@
         android:paddingBottom="@dimen/default_padding"
         android:paddingLeft="@dimen/default_padding"
         android:paddingStart="@dimen/default_padding"
-        android:paddingTop="@dimen/default_padding_quarter"
         android:text="@string/edit"
         android:textColor="@color/handy_blue"
         />

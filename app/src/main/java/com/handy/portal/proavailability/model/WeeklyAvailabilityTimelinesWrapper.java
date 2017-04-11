@@ -8,7 +8,9 @@ import com.handy.portal.library.util.DateTimeUtils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 public class WeeklyAvailabilityTimelinesWrapper implements Serializable {
     @SerializedName("start_date")
@@ -60,5 +62,23 @@ public class WeeklyAvailabilityTimelinesWrapper implements Serializable {
             return DateTimeUtils.daysBetween(date, startDate) <= 0
                     && DateTimeUtils.daysBetween(date, endDate) >= 0;
         }
+    }
+
+    public boolean hasAvailableHours() {
+        boolean hasAvailableHours = false;
+        final Calendar calendar = Calendar.getInstance(Locale.US);
+        calendar.setTime(getStartDate());
+        while (DateTimeUtils.daysBetween(calendar.getTime(), getEndDate()) >= 0) {
+            final DailyAvailabilityTimeline availability =
+                    getAvailabilityForDate(calendar.getTime());
+            if (availability != null) {
+                hasAvailableHours = availability.hasIntervals();
+            }
+            if (hasAvailableHours) {
+                break;
+            }
+            calendar.add(Calendar.DATE, 1);
+        }
+        return hasAvailableHours;
     }
 }

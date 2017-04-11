@@ -1,7 +1,9 @@
 package com.handy.portal.proavailability.fragment;
 
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.view.PagerAdapter;
@@ -9,12 +11,16 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.constant.RequestCode;
 import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.data.DataManager;
@@ -23,30 +29,40 @@ import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
 import com.handy.portal.proavailability.model.ProviderAvailability;
 import com.handy.portal.proavailability.model.WeeklyAvailabilityTimelinesWrapper;
+import com.handy.portal.proavailability.view.AvailableHoursWithDateStaticView;
 import com.handy.portal.proavailability.view.WeeklyAvailableHoursCardView;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.inject.Inject;
 
 import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class SendAvailableHoursFragment extends ActionBarFragment {
 
     @Inject
     ProviderManager mProviderManager;
 
+    @BindView(R.id.no_availability_view)
+    View mNoAvailabilityView;
+    @BindView(R.id.send_availability_view)
+    View mSendAvailabilityView;
     @BindView(R.id.header_title)
     TextView mHeaderTitle;
     @BindView(R.id.header_subtitle)
     TextView mHeaderSubtitle;
     @BindView(R.id.availability_pager)
     ViewPager mAvailabilityPager;
+    @BindView(R.id.send_availability_button)
+    Button mSendButton;
     @BindDimen(R.dimen.default_margin_half)
     int mGapMargin;
     @BindDimen(R.dimen.default_margin_double)
@@ -55,11 +71,38 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
     private Booking mBooking;
     private ProviderAvailability mAvailability;
     private HashMap<Date, DailyAvailabilityTimeline> mUpdatedAvailabilityTimelines;
+    private View.OnClickListener mEditHoursClickListener;
+    private WeeklyAvailableHoursPagerAdapter mAvailabilityPagerAdapter;
+    private Set<Date> mDatesWithoutHours;
+
+    {
+        mEditHoursClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                navigateToEditWeeklyAvailableHours();
+            }
+        };
+    }
+
+    @OnClick(R.id.update_availability_button)
+    void navigateToEditWeeklyAvailableHours() {
+        final Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY, mAvailability);
+        arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY_CACHE,
+                mUpdatedAvailabilityTimelines);
+        final NavigationEvent.NavigateToPage navigationEvent =
+                new NavigationEvent.NavigateToPage(MainViewPage.EDIT_WEEKLY_AVAILABLE_HOURS,
+                        arguments, true);
+        navigationEvent.setReturnFragment(this, RequestCode.EDIT_HOURS);
+        bus.post(navigationEvent);
+    }
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
+        mUpdatedAvailabilityTimelines = new HashMap<>();
+        mDatesWithoutHours = new HashSet<>();
     }
 
     @Nullable
@@ -81,6 +124,52 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
         initAvailabilityPager();
     }
 
+    @Override
+    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (resultCode == Activity.RESULT_OK && requestCode == RequestCode.EDIT_HOURS) {
+            final DailyAvailabilityTimeline availability = (DailyAvailabilityTimeline)
+                    data.getSerializableExtra(BundleKeys.DAILY_AVAILABILITY_TIMELINE);
+            if (availability != null) {
+                updateAvailability(availability);
+            }
+        }
+    }
+
+    private void updateAvailability(final DailyAvailabilityTimeline availability) {
+        mUpdatedAvailabilityTimelines.put(availability.getDate(), availability);
+
+        if (availability.hasIntervals()) {
+            mDatesWithoutHours.remove(availability.getDate());
+        }
+        else {
+            mDatesWithoutHours.add(availability.getDate());
+        }
+
+        if (mAvailabilityPagerAdapter != null) {
+            mAvailabilityPagerAdapter.updateViewWithTimeline(availability);
+        }
+        else {
+            initAvailabilityPager();
+        }
+
+        updateSendButtonState();
+        callTargetFragmentResult(availability);
+    }
+
+    private void updateSendButtonState() {
+        mSendButton.setEnabled(mDatesWithoutHours.isEmpty());
+    }
+
+    private void callTargetFragmentResult(
+            final DailyAvailabilityTimeline updatedAvailabilityTimeline) {
+        if (getTargetFragment() != null) {
+            final Intent data = new Intent();
+            data.putExtra(BundleKeys.DAILY_AVAILABILITY_TIMELINE, updatedAvailabilityTimeline);
+            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
+        }
+    }
+
     private void initHeader() {
         final Booking.RequestAttributes requestAttributes = mBooking.getRequestAttributes();
         if (requestAttributes != null) {
@@ -97,11 +186,22 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
         if (mAvailability == null) {
             loadProviderAvailability();
         }
-        else {
-            mAvailabilityPager.setAdapter(
-                    new WeeklyAvailableHoursPagerAdapter(getActivity(), mAvailability));
+        else if (mAvailability.hasAvailableHours() || !mUpdatedAvailabilityTimelines.isEmpty()) {
+            mNoAvailabilityView.setVisibility(View.GONE);
+            mSendAvailabilityView.setVisibility(View.VISIBLE);
+            mAvailabilityPagerAdapter = new WeeklyAvailableHoursPagerAdapter(getActivity(),
+                    mAvailability, mEditHoursClickListener);
+            for (DailyAvailabilityTimeline availability : mUpdatedAvailabilityTimelines.values()) {
+                mAvailabilityPagerAdapter.updateViewWithTimeline(availability);
+            }
+            mAvailabilityPager.setAdapter(mAvailabilityPagerAdapter);
             mAvailabilityPager.setPageMargin(mGapMargin - (mCardMargin * 2));
         }
+        else {
+            mSendAvailabilityView.setVisibility(View.GONE);
+            mNoAvailabilityView.setVisibility(View.VISIBLE);
+        }
+        updateSendButtonState();
     }
 
     private void loadProviderAvailability() {
@@ -112,7 +212,8 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
                     public void onCallbackSuccess(final ProviderAvailability providerAvailability) {
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         mAvailability = providerAvailability;
-                        mUpdatedAvailabilityTimelines = new HashMap<>();
+                        mUpdatedAvailabilityTimelines.clear();
+                        initDatesWithoutHoursSet();
                         initAvailabilityPager();
                     }
 
@@ -124,6 +225,19 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
                 });
     }
 
+    private void initDatesWithoutHoursSet() {
+        for (final WeeklyAvailabilityTimelinesWrapper weekAvailability
+                : mAvailability.getWeeklyAvailabilityTimelinesWrappers()) {
+            for (final DailyAvailabilityTimeline availability
+                    : weekAvailability.getDailyAvailabilityTimelines()) {
+                final Date date = availability.getDate();
+                if (!DateTimeUtils.isDaysPast(date) && !availability.hasIntervals()) {
+                    mDatesWithoutHours.add(date);
+                }
+            }
+        }
+    }
+
     private static class WeeklyAvailableHoursPagerAdapter extends PagerAdapter {
         public static final int[] WEEK_TITLE_RES_IDS = {R.string.current_week, R.string.next_week};
         public static final int POSITION_NOT_FOUND = -1;
@@ -131,7 +245,8 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
 
         WeeklyAvailableHoursPagerAdapter(
                 final Context context,
-                final ProviderAvailability availability
+                final ProviderAvailability availability,
+                final View.OnClickListener editHoursClickListener
         ) {
             mViews = new ArrayList<>();
             ArrayList<WeeklyAvailabilityTimelinesWrapper> weeklyTimelinesList =
@@ -142,8 +257,17 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
                 final int weekTitleResId = i < WEEK_TITLE_RES_IDS.length ?
                         WEEK_TITLE_RES_IDS[i] : R.string.special_empty_string;
                 mViews.add(new WeeklyAvailableHoursCardView(context, weekTitleResId,
-                        weeklyAvailability, null));
-                // TODO: Implement ability to edit
+                        weeklyAvailability, editHoursClickListener));
+            }
+        }
+
+        public void updateViewWithTimeline(final DailyAvailabilityTimeline timeline) {
+            for (WeeklyAvailableHoursCardView weekView : mViews) {
+                final AvailableHoursWithDateStaticView view =
+                        weekView.getViewForDate(timeline.getDate());
+                if (view != null) {
+                    view.updateTimelines(timeline);
+                }
             }
         }
 

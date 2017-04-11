@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="@dimen/default_margin_double"
+    android:layout_marginLeft="@dimen/default_margin_double"
+    android:layout_marginRight="@dimen/default_margin_double"
+    android:layout_marginStart="@dimen/default_margin_double"
+    android:background="@drawable/bg_bordered_white_round"
+    android:orientation="vertical"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin_half"
+        android:layout_marginTop="@dimen/default_margin_half"
+        android:orientation="vertical"
+        android:padding="@dimen/default_padding"
+        >
+
+        <TextView
+            style="@style/TextView.Medium.Bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/send_available_hours_empty_state_title"
+            />
+
+        <TextView
+            style="@style/TextView.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin_half"
+            android:gravity="center"
+            android:text="@string/send_available_hours_empty_state_subtitle"
+            />
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/border"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/border_gray"
+        />
+
+    <Button
+        android:id="@+id/update_availability_button"
+        style="@style/Button.Transparent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/send_available_hours_empty_state_button_text"
+        android:textColor="@color/handy_blue"
+        android:textSize="@dimen/small_text_size"
+        />
+
+</LinearLayout>

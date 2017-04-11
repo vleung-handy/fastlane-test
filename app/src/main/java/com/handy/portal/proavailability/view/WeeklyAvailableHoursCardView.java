@@ -83,4 +83,16 @@ public class WeeklyAvailableHoursCardView extends FrameLayout {
 
         mEditButton.setOnClickListener(mEditClickListener);
     }
+
+    @Nullable
+    public AvailableHoursWithDateStaticView getViewForDate(final Date date) {
+        for (int i = 0; i < mTimelines.getChildCount(); i++) {
+            final AvailableHoursWithDateStaticView view =
+                    (AvailableHoursWithDateStaticView) mTimelines.getChildAt(i);
+            if (view.getDate().equals(date)) {
+                return view;
+            }
+        }
+        return null;
+    }
 }
