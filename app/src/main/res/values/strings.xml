@@ -722,5 +722,7 @@
     <string name="send_available_hours_empty_state_subtitle">Update your availability to let your client know when you are free.</string>
     <string name="send_available_hours_empty_state_button_text">Update Availability</string>
     <string name="send_available_hours_loading_error">Error loading your availability</string>
+    <string name="send_available_hours_send_error">Error sending your availability</string>
+    <string name="send_available_hours_send_success_formatted">Your availability has been sent to %1$s</string>
 
 </resources>

@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.BaseTransientBottomBar;
 import android.support.design.widget.Snackbar;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -104,6 +103,32 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
         bus.post(navigationEvent);
     }
 
+    @OnClick(R.id.send_availability_button)
+    void sendAvailability() {
+        final Booking.Action action = mBooking.getAction(Booking.Action.ACTION_SEND_TIMES);
+        if (action == null) { return; }
+        final String providerId = mProviderManager.getLastProviderId();
+        final String providerRequestId = action.getProviderRequest().getId();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        dataManager.sendAvailability(providerId, providerRequestId, null,
+                new FragmentSafeCallback<Void>(this) {
+                    @Override
+                    public void onCallbackSuccess(final Void response) {
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                        showToast(getString(R.string.send_available_hours_send_success_formatted,
+                                mBooking.getRequestAttributes().getCustomerName()));
+                        getActivity().onBackPressed();
+                    }
+
+                    @Override
+                    public void onCallbackError(final DataManager.DataManagerError error) {
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                        Snackbar.make(mContent, R.string.send_available_hours_send_error,
+                                Snackbar.LENGTH_LONG).show();
+                    }
+                });
+    }
+
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,11 +203,7 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
     }
 
     private void initHeader() {
-        final Booking.RequestAttributes requestAttributes = mBooking.getRequestAttributes();
-        if (requestAttributes != null) {
-            mHeaderTitle.setText(requestAttributes.hasCustomer() ?
-                    requestAttributes.getCustomerName() : requestAttributes.getDetailsTitle());
-        }
+        mHeaderTitle.setText(mBooking.getRequestAttributes().getCustomerName());
         mHeaderSubtitle.setText(getString(R.string.original_time_formatted,
                 DateTimeUtils.formatDateShortDayOfWeekShortMonthDay(mBooking.getStartDate()),
                 DateTimeUtils.formatDateTo12HourClock(mBooking.getStartDate()),
