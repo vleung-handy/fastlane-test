@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BaseTransientBottomBar;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
@@ -41,6 +43,7 @@ import java.util.Set;
 
 import javax.inject.Inject;
 
+import butterknife.BindColor;
 import butterknife.BindDimen;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +54,8 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
     @Inject
     ProviderManager mProviderManager;
 
+    @BindView(R.id.content)
+    View mContent;
     @BindView(R.id.no_availability_view)
     View mNoAvailabilityView;
     @BindView(R.id.send_availability_view)
@@ -67,6 +72,8 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
     int mGapMargin;
     @BindDimen(R.dimen.default_margin_double)
     int mCardMargin;
+    @BindColor(R.color.handy_blue)
+    int mBlueColor;
 
     private Booking mBooking;
     private ProviderAvailability mAvailability;
@@ -196,12 +203,13 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
             }
             mAvailabilityPager.setAdapter(mAvailabilityPagerAdapter);
             mAvailabilityPager.setPageMargin(mGapMargin - (mCardMargin * 2));
+            updateSendButtonState();
         }
         else {
             mSendAvailabilityView.setVisibility(View.GONE);
             mNoAvailabilityView.setVisibility(View.VISIBLE);
+            updateSendButtonState();
         }
-        updateSendButtonState();
     }
 
     private void loadProviderAvailability() {
@@ -220,7 +228,16 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
                     @Override
                     public void onCallbackError(final DataManager.DataManagerError error) {
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                        // TODO: Implement
+                        Snackbar.make(mContent, R.string.send_available_hours_loading_error,
+                                Snackbar.LENGTH_INDEFINITE)
+                                .setActionTextColor(mBlueColor)
+                                .setAction(R.string.retry, new View.OnClickListener() {
+                                    @Override
+                                    public void onClick(final View v) {
+                                        loadProviderAvailability();
+                                    }
+                                })
+                                .show();
                     }
                 });
     }
