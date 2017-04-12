@@ -30,7 +30,7 @@ public class AvailableHoursWithDateView extends FrameLayout {
     private final Date mDate;
     private DailyAvailabilityTimeline mAvailability;
     private RemoveTimeSlotListener mRemoveTimeSlotListener;
-    private final boolean mEnabled;
+    protected final boolean mEnabled;
 
     public AvailableHoursWithDateView(final Context context,
                                       final Date date,

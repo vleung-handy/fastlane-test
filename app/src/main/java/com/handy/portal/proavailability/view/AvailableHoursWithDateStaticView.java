@@ -18,6 +18,8 @@ public class AvailableHoursWithDateStaticView extends AvailableHoursWithDateView
 
     @BindColor(R.color.tertiary_gray)
     int mGrayColor;
+    @BindColor(R.color.error_red)
+    int mRedColor;
 
     public AvailableHoursWithDateStaticView(
             final Context context,
@@ -29,10 +31,18 @@ public class AvailableHoursWithDateStaticView extends AvailableHoursWithDateView
     @Override
     public void updateTimelines(final DailyAvailabilityTimeline availability) {
         super.updateTimelines(availability);
-        if (availability == null || !availability.hasIntervals()) {
+        if (mEnabled && (availability == null || !availability.hasIntervals())) {
+            mTimelines.removeAllViews();
             final TextView textView = new TextView(getContext());
-            textView.setText(R.string.hours_not_set);
-            textView.setTextColor(mGrayColor);
+            textView.setText(R.string.no_hours_set);
+            textView.setTextColor(mRedColor);
+            textView.setTypeface(FontUtils.getFont(getContext(), FontUtils.CIRCULAR_BOOK));
+            mTimelines.addView(textView);
+        }
+        else if (!mEnabled) {
+            mTimelines.removeAllViews();
+            final TextView textView = new TextView(getContext());
+            textView.setText(R.string.no_data);
             textView.setTypeface(FontUtils.getFont(getContext(), FontUtils.CIRCULAR_BOOK));
             mTimelines.addView(textView);
         }
