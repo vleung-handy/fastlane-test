@@ -65,6 +65,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     @BindColor(R.color.error_red)
     int mRedColorValue;
 
+    private String mFlowContext;
     private Date mDate;
     private DailyAvailabilityTimeline mAvailabilityTimeline;
 
@@ -151,12 +152,13 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         if (timeline.hasIntervals()) {
             final AvailabilityInterval interval = timeline.getAvailabilityIntervals().get(0);
             bus.post(new LogEvent.AddLogEvent(
-                    new ProAvailabilityLog.SetHoursSubmitted(timeline.getDateString(),
+                    new ProAvailabilityLog.SetHoursSubmitted(mFlowContext, timeline.getDateString(),
                             interval.getEndHour() - interval.getStartHour())));
         }
         else {
             bus.post(new LogEvent.AddLogEvent(
-                    new ProAvailabilityLog.RemoveHoursSubmitted(timeline.getDateString())));
+                    new ProAvailabilityLog.RemoveHoursSubmitted(mFlowContext,
+                            timeline.getDateString())));
         }
     }
 
@@ -166,12 +168,13 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         if (timeline.hasIntervals()) {
             final AvailabilityInterval interval = timeline.getAvailabilityIntervals().get(0);
             bus.post(new LogEvent.AddLogEvent(
-                    new ProAvailabilityLog.SetHoursSuccess(timeline.getDateString(),
+                    new ProAvailabilityLog.SetHoursSuccess(mFlowContext, timeline.getDateString(),
                             interval.getEndHour() - interval.getStartHour())));
         }
         else {
             bus.post(new LogEvent.AddLogEvent(
-                    new ProAvailabilityLog.RemoveHoursSuccess(timeline.getDateString())));
+                    new ProAvailabilityLog.RemoveHoursSuccess(mFlowContext,
+                            timeline.getDateString())));
         }
     }
 
@@ -181,12 +184,13 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         if (timeline.hasIntervals()) {
             final AvailabilityInterval interval = timeline.getAvailabilityIntervals().get(0);
             bus.post(new LogEvent.AddLogEvent(
-                    new ProAvailabilityLog.SetHoursError(timeline.getDateString(),
+                    new ProAvailabilityLog.SetHoursError(mFlowContext, timeline.getDateString(),
                             interval.getEndHour() - interval.getStartHour())));
         }
         else {
             bus.post(new LogEvent.AddLogEvent(
-                    new ProAvailabilityLog.RemoveHoursError(timeline.getDateString())));
+                    new ProAvailabilityLog.RemoveHoursError(mFlowContext,
+                            timeline.getDateString())));
         }
     }
 
@@ -295,6 +299,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFlowContext = getArguments().getString(BundleKeys.FLOW_CONTEXT);
         mDate = (Date) getArguments().getSerializable(BundleKeys.DATE);
         mAvailabilityTimeline = (DailyAvailabilityTimeline) getArguments()
                 .getSerializable(BundleKeys.DAILY_AVAILABILITY_TIMELINE);

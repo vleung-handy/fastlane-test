@@ -78,6 +78,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     @BindColor(R.color.error_red)
     int mRedColor;
 
+    private String mFlowContext;
     private ProviderAvailability mProviderAvailability;
     private TabAdapter mPagerAdapter;
     private ViewPager.OnPageChangeListener mWeekPageChangeListener =
@@ -129,9 +130,11 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     private DateClickListener mDateClickListener = new DateClickListener() {
         @Override
         public void onDateClicked(final Date date) {
-            bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.SetDayAvailabilitySelected(
-                    DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
+            bus.post(new LogEvent.AddLogEvent(
+                    new ProAvailabilityLog.SetDayAvailabilitySelected(mFlowContext,
+                            DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
             final Bundle bundle = new Bundle();
+            bundle.putString(BundleKeys.FLOW_CONTEXT, mFlowContext);
             bundle.putSerializable(BundleKeys.DATE, date);
             bundle.putSerializable(BundleKeys.DAILY_AVAILABILITY_TIMELINE,
                     getAvailabilityForDate(date));
@@ -158,8 +161,9 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     }
 
     private void removeInterval(final Date date, final AvailabilityInterval interval) {
-        bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.RemoveHoursSubmitted(
-                DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
+        bus.post(new LogEvent.AddLogEvent(
+                new ProAvailabilityLog.RemoveHoursSubmitted(mFlowContext,
+                        DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
         final DailyAvailabilityTimeline availability = getAvailabilityForDate(date);
         final ArrayList<AvailabilityInterval> intervals = new ArrayList<>();
         if (availability != null && availability.getAvailabilityIntervals() != null) {
@@ -173,8 +177,9 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
                 new FragmentSafeCallback<Void>(this) {
                     @Override
                     public void onCallbackSuccess(final Void response) {
-                        bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.RemoveHoursSuccess(
-                                DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
+                        bus.post(new LogEvent.AddLogEvent(
+                                new ProAvailabilityLog.RemoveHoursSuccess(mFlowContext,
+                                        DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         final DailyAvailabilityTimeline updatedAvailabilityTimeline =
                                 new DailyAvailabilityTimeline(date, intervals);
@@ -184,8 +189,9 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
 
                     @Override
                     public void onCallbackError(final DataManager.DataManagerError error) {
-                        bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.RemoveHoursError(
-                                DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
+                        bus.post(new LogEvent.AddLogEvent(
+                                new ProAvailabilityLog.RemoveHoursError(mFlowContext,
+                                        DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         String message = error.getMessage();
                         if (TextUtils.isEmpty(message)) {
@@ -218,7 +224,8 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
 
     @OnClick(R.id.copy_hours_button)
     public void onCopyHoursClicked() {
-        bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.CopyCurrentWeekSelected()));
+        bus.post(new LogEvent.AddLogEvent(
+                new ProAvailabilityLog.CopyCurrentWeekSelected(mFlowContext)));
         final AvailabilityTimelinesWrapper timelinesWrapper =
                 createNextWeekTimelinesFromCurrentWeek();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
@@ -276,6 +283,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFlowContext = getArguments().getString(BundleKeys.FLOW_CONTEXT);
         mProviderAvailability = (ProviderAvailability) getArguments()
                 .getSerializable(BundleKeys.PROVIDER_AVAILABILITY);
         mUpdatedAvailabilityTimelines = (HashMap<Date, DailyAvailabilityTimeline>) getArguments()

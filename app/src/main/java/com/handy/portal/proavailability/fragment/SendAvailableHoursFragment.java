@@ -28,6 +28,7 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.ProAvailabilityLog;
 import com.handy.portal.logger.handylogger.model.SendAvailabilityLog;
 import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
 import com.handy.portal.proavailability.model.ProviderAvailability;
@@ -95,6 +96,7 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
     @OnClick(R.id.update_availability_button)
     void navigateToEditWeeklyAvailableHours() {
         final Bundle arguments = new Bundle();
+        arguments.putString(BundleKeys.FLOW_CONTEXT, SendAvailabilityLog.EVENT_CONTEXT);
         arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY, mAvailability);
         arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY_CACHE,
                 mUpdatedAvailabilityTimelines);

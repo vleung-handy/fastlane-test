@@ -3,10 +3,10 @@ package com.handy.portal.logger.handylogger.model;
 import com.google.gson.annotations.SerializedName;
 
 public class ProAvailabilityLog extends EventLog {
-    private static final String EVENT_CONTEXT = "availability";
+    public static final String EVENT_CONTEXT = "availability";
 
-    public ProAvailabilityLog(final String eventType) {
-        super(eventType, EVENT_CONTEXT);
+    public ProAvailabilityLog(final String eventType, final String eventContext) {
+        super(eventType, eventContext);
     }
 
     public static class SetHoursSubmitted extends ProAvailabilityLog {
@@ -17,8 +17,8 @@ public class ProAvailabilityLog extends EventLog {
         @SerializedName("num_hours")
         private int mHours;
 
-        public SetHoursSubmitted(final String date, final int hours) {
-            super(EVENT_TYPE);
+        public SetHoursSubmitted(final String eventContext, final String date, final int hours) {
+            super(EVENT_TYPE, eventContext);
             mDate = date;
             mHours = hours;
         }
@@ -33,8 +33,8 @@ public class ProAvailabilityLog extends EventLog {
         @SerializedName("num_hours")
         private int mHours;
 
-        public SetHoursSuccess(final String date, final int hours) {
-            super(EVENT_TYPE);
+        public SetHoursSuccess(final String eventContext, final String date, final int hours) {
+            super(EVENT_TYPE, eventContext);
             mDate = date;
             mHours = hours;
         }
@@ -49,8 +49,8 @@ public class ProAvailabilityLog extends EventLog {
         @SerializedName("num_hours")
         private int mHours;
 
-        public SetHoursError(final String date, final int hours) {
-            super(EVENT_TYPE);
+        public SetHoursError(final String eventContext, final String date, final int hours) {
+            super(EVENT_TYPE, eventContext);
             mDate = date;
             mHours = hours;
         }
@@ -63,8 +63,8 @@ public class ProAvailabilityLog extends EventLog {
         @SerializedName("date")
         private String mDate;
 
-        public RemoveHoursSubmitted(final String date) {
-            super(EVENT_TYPE);
+        public RemoveHoursSubmitted(final String eventContext, final String date) {
+            super(EVENT_TYPE, eventContext);
             mDate = date;
         }
     }
@@ -76,8 +76,8 @@ public class ProAvailabilityLog extends EventLog {
         @SerializedName("date")
         private String mDate;
 
-        public RemoveHoursSuccess(final String date) {
-            super(EVENT_TYPE);
+        public RemoveHoursSuccess(final String eventContext, final String date) {
+            super(EVENT_TYPE, eventContext);
             mDate = date;
         }
     }
@@ -89,8 +89,8 @@ public class ProAvailabilityLog extends EventLog {
         @SerializedName("date")
         private String mDate;
 
-        public RemoveHoursError(final String date) {
-            super(EVENT_TYPE);
+        public RemoveHoursError(final String eventContext, final String date) {
+            super(EVENT_TYPE, eventContext);
             mDate = date;
         }
     }
@@ -102,8 +102,8 @@ public class ProAvailabilityLog extends EventLog {
 
         private static final String EVENT_TYPE = "set_day_availability_selected";
 
-        public SetDayAvailabilitySelected(final String date) {
-            super(EVENT_TYPE);
+        public SetDayAvailabilitySelected(final String eventContext, final String date) {
+            super(EVENT_TYPE, eventContext);
             mDate = date;
         }
     }
@@ -112,8 +112,8 @@ public class ProAvailabilityLog extends EventLog {
     public static class CopyCurrentWeekSelected extends ProAvailabilityLog {
         private static final String EVENT_TYPE = "copy_current_week_selected";
 
-        public CopyCurrentWeekSelected() {
-            super(EVENT_TYPE);
+        public CopyCurrentWeekSelected(final String eventContext) {
+            super(EVENT_TYPE, eventContext);
         }
     }
 }
