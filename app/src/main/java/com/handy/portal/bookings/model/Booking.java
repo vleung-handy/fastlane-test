@@ -485,10 +485,12 @@ public class Booking implements Comparable<Booking>, Serializable {
             return mIsDismissed;
         }
 
+        @Nullable
         public String getCustomerName() {
             return mCustomerName;
         }
 
+        @Nullable
         public String getCustomerId() {
             return mCustomerId;
         }
