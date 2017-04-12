@@ -385,8 +385,9 @@ public class BookingManager {
     }
 
     public void requestDismissJob(@NonNull final Booking booking,
+                                  @Nullable final String customerId,
                                   @DismissalReason final String dismissalReason) {
-        mDataManager.dismissJob(booking.getId(), booking.getType(), dismissalReason,
+        mDataManager.dismissJob(booking.getId(), booking.getType(), customerId, dismissalReason,
                 new DataManager.Callback<Void>() {
                     @Override
                     public void onSuccess(final Void response) {

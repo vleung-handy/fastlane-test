@@ -313,7 +313,14 @@ public class ProRequestedJobsFragment extends InjectedFragment {
                             @NonNull @DismissalReason final String dismissalReason) {
         bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobSubmitted(booking,
                 dismissalReason)));
-        mBookingManager.requestDismissJob(booking, dismissalReason);
+
+        final Booking.RequestAttributes requestAttributes = booking.getRequestAttributes();
+        String customerId = null;
+        if (requestAttributes != null && requestAttributes.hasCustomer()) {
+            customerId = requestAttributes.getCustomerId();
+        }
+
+        mBookingManager.requestDismissJob(booking, customerId, dismissalReason);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
     }
 
