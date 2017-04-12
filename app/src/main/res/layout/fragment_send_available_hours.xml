@@ -45,7 +45,7 @@
 
                     <TextView
                         android:id="@+id/header_subtitle"
-                        style="@style/TextView.XSmall"
+                        style="@style/TextView.Small"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/extra_margin"
