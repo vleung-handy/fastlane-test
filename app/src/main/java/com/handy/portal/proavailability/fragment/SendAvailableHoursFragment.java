@@ -27,6 +27,8 @@ import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.SendAvailabilityLog;
 import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
 import com.handy.portal.proavailability.model.ProviderAvailability;
 import com.handy.portal.proavailability.model.WeeklyAvailabilityTimelinesWrapper;
@@ -127,6 +129,8 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
                                 Snackbar.LENGTH_LONG).show();
                     }
                 });
+        bus.post(new LogEvent.AddLogEvent(
+                new SendAvailabilityLog.SendAvailabilitySubmitted(mBooking)));
     }
 
     @Override

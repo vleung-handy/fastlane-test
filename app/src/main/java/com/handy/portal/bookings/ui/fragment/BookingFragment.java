@@ -61,8 +61,10 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.EventType;
+import com.handy.portal.logger.handylogger.model.JobsLog;
 import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
+import com.handy.portal.logger.handylogger.model.SendAvailabilityLog;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handybook.shared.core.HandyLibrary;
 import com.handybook.shared.layer.LayerConstants;
@@ -545,6 +547,9 @@ public class BookingFragment extends TimerActionBarFragment {
         arguments.putSerializable(BundleKeys.BOOKING, mBooking);
         bus.post(new NavigationEvent.NavigateToPage(
                 MainViewPage.SEND_AVAILABLE_HOURS, arguments, true));
+        bus.post(new LogEvent.AddLogEvent(
+                new SendAvailabilityLog.SendAvailabilitySelected(
+                        JobsLog.JOB_DETAILS_EVENT_CONTEXT, mBooking)));
     }
 
     private void setActionButtonVisibility() {

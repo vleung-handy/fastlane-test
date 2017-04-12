@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.Booking;
 
 public abstract class RequestedJobsLog extends EventLog {
-    private static final String EVENT_CONTEXT = "requested_jobs";
+    public static final String EVENT_CONTEXT = "requested_jobs";
 
     private RequestedJobsLog(final String eventType) {
         super(eventType, EVENT_CONTEXT);
