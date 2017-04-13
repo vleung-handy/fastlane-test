@@ -282,11 +282,11 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
 
     private void updateSaveButtonVisibility() {
         if (mAvailabilityToggle.isChecked()) {
-            if (isOriginalIntervalSelected() || mTimePicker.hasSelectedSingleTime()) {
-                mSaveButton.setVisibility(View.GONE);
+            if (mTimePicker.hasSelectedRange() && !isOriginalIntervalSelected()) {
+                mSaveButton.setVisibility(View.VISIBLE);
             }
             else {
-                mSaveButton.setVisibility(View.VISIBLE);
+                mSaveButton.setVisibility(View.GONE);
             }
         }
         else {
@@ -300,13 +300,9 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
 
     private boolean isOriginalIntervalSelected() {
         final AvailabilityInterval originalInterval = getFirstAvailabilityInterval();
-        if (originalInterval == null) {
-            return !mTimePicker.hasSelectedRange();
-        }
-        else {
-            return originalInterval.getStartHour() == mTimePicker.getSelectedStartHour()
-                    && originalInterval.getEndHour() == mTimePicker.getSelectedEndHour();
-        }
+        return originalInterval != null
+                && originalInterval.getStartHour() == mTimePicker.getSelectedStartHour()
+                && originalInterval.getEndHour() == mTimePicker.getSelectedEndHour();
     }
 
     @Override
@@ -333,14 +329,13 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         super.onViewCreated(view, savedInstanceState);
         final String dateFormatted = DateTimeUtils.formatDateShortDayOfWeekShortMonthDay(mDate);
         setActionBar(getString(R.string.hours_for_date_formatted, dateFormatted), true);
-        initAvailabilityToggle();
         initTimePicker();
         initTimeRange();
+        initAvailabilityToggle();
         bus.post(new NavigationEvent.SetNavigationTabVisibility(false));
     }
 
     private void initAvailabilityToggle() {
-        mAvailabilityToggle.setChecked(isAvailable());
         mAvailabilityToggle.setOnCheckedChangeListener(
                 new CompoundButton.OnCheckedChangeListener() {
                     @Override
@@ -348,9 +343,38 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
                             final CompoundButton buttonView,
                             final boolean isChecked
                     ) {
+                        if (isChecked) {
+                            unfreezeTimePicker();
+                            initTimeRange();
+                        }
+                        else {
+                            clearSelection();
+                            freezeTimePicker();
+                        }
                         updateSaveButtonVisibility();
                     }
                 });
+        mAvailabilityToggle.setChecked(isAvailable());
+        if (!isAvailable()) {
+            freezeTimePicker();
+            updateSaveButtonVisibility();
+        }
+    }
+
+    private void unfreezeTimePicker() {
+        mStartTime.setClickable(true);
+        mStartTime.setAlpha(1.0f);
+        mEndTimeHolder.setClickable(true);
+        mEndTimeHolder.setAlpha(1.0f);
+        mTimePicker.setFrozen(false);
+    }
+
+    private void freezeTimePicker() {
+        mStartTime.setClickable(false);
+        mStartTime.setAlpha(0.3f);
+        mEndTimeHolder.setClickable(false);
+        mEndTimeHolder.setAlpha(0.3f);
+        mTimePicker.setFrozen(true);
     }
 
     private void initTimePicker() {
