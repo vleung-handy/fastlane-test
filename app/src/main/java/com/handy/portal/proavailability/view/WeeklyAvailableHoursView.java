@@ -10,7 +10,6 @@ import com.handy.portal.R;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
 import com.handy.portal.proavailability.model.WeeklyAvailabilityTimelinesWrapper;
-import com.handy.portal.proavailability.view.AvailableTimeSlotView.RemoveTimeSlotListener;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -22,7 +21,6 @@ import butterknife.ButterKnife;
 public class WeeklyAvailableHoursView extends LinearLayout {
     private final WeeklyAvailabilityTimelinesWrapper mWeeklyAvailability;
     private final DateClickListener mDateClickListener;
-    private RemoveTimeSlotListener mRemoveTimeSlotListener;
 
     @BindDimen(R.dimen.default_padding)
     int mDefaultPadding;
@@ -30,12 +28,10 @@ public class WeeklyAvailableHoursView extends LinearLayout {
     public WeeklyAvailableHoursView(
             final Context context,
             final WeeklyAvailabilityTimelinesWrapper weeklyAvailability,
-            final DateClickListener dateClickListener,
-            final RemoveTimeSlotListener removeTimeSlotListener) {
+            final DateClickListener dateClickListener) {
         super(context);
         mWeeklyAvailability = weeklyAvailability;
         mDateClickListener = dateClickListener;
-        mRemoveTimeSlotListener = removeTimeSlotListener;
         init();
     }
 
@@ -55,7 +51,7 @@ public class WeeklyAvailableHoursView extends LinearLayout {
                     mWeeklyAvailability.getAvailabilityForDate(date);
             boolean enabled = !DateTimeUtils.isDaysPast(date);
             final AvailableHoursWithDateView view = new AvailableHoursWithDateView(getContext(),
-                    date, availability, mRemoveTimeSlotListener, enabled);
+                    date, availability, enabled);
             view.setRowPadding(mDefaultPadding, mDefaultPadding);
             view.setBackgroundResource(R.drawable.border_gray_bottom);
             view.setOnClickListener(new OnClickListener() {

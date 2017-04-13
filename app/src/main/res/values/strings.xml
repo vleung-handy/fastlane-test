@@ -691,6 +691,7 @@
     <string name="info_dialog_confirm_button">Got It</string>
     <string name="no_hours_set">No hours set</string>
     <string name="i_am_available">I\'m available</string>
+    <string name="not_available">Not Available</string>
 
     <!-- Payments -->
     <string name="payment_status_formatted">Status: %1$s</string>
