@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -46,6 +48,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
 
     private static final int DEFAULT_START_HOUR = 7;
     private static final int DEFAULT_END_HOUR = 23;
+    @BindView(R.id.availability_toggle)
+    SwitchCompat mAvailabilityToggle;
     @BindView(R.id.time_picker)
     HandyTimePicker mTimePicker;
     @BindView(R.id.start_time)
@@ -277,12 +281,21 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     }
 
     private void updateSaveButtonVisibility() {
-        if (isOriginalIntervalSelected() || mTimePicker.hasSelectedSingleTime()) {
-            mSaveButton.setVisibility(View.GONE);
+        if (mAvailabilityToggle.isChecked()) {
+            if (isOriginalIntervalSelected() || mTimePicker.hasSelectedSingleTime()) {
+                mSaveButton.setVisibility(View.GONE);
+            }
+            else {
+                mSaveButton.setVisibility(View.VISIBLE);
+            }
         }
         else {
-            mSaveButton.setVisibility(View.VISIBLE);
+            mSaveButton.setVisibility(isAvailable() ? View.VISIBLE : View.GONE);
         }
+    }
+
+    private boolean isAvailable() {
+        return mAvailabilityTimeline == null || mAvailabilityTimeline.hasIntervals();
     }
 
     private boolean isOriginalIntervalSelected() {
@@ -320,9 +333,24 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         super.onViewCreated(view, savedInstanceState);
         final String dateFormatted = DateTimeUtils.formatDateShortDayOfWeekShortMonthDay(mDate);
         setActionBar(getString(R.string.hours_for_date_formatted, dateFormatted), true);
+        initAvailabilityToggle();
         initTimePicker();
         initTimeRange();
         bus.post(new NavigationEvent.SetNavigationTabVisibility(false));
+    }
+
+    private void initAvailabilityToggle() {
+        mAvailabilityToggle.setChecked(isAvailable());
+        mAvailabilityToggle.setOnCheckedChangeListener(
+                new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(
+                            final CompoundButton buttonView,
+                            final boolean isChecked
+                    ) {
+                        updateSaveButtonVisibility();
+                    }
+                });
     }
 
     private void initTimePicker() {
