@@ -28,7 +28,6 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.ProAvailabilityLog;
 import com.handy.portal.logger.handylogger.model.SendAvailabilityLog;
 import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
 import com.handy.portal.proavailability.model.ProviderAvailability;
@@ -37,10 +36,12 @@ import com.handy.portal.proavailability.view.AvailableHoursWithDateStaticView;
 import com.handy.portal.proavailability.view.WeeklyAvailableHoursCardView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import javax.inject.Inject;
@@ -82,7 +83,7 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
     private HashMap<Date, DailyAvailabilityTimeline> mUpdatedAvailabilityTimelines;
     private View.OnClickListener mEditHoursClickListener;
     private WeeklyAvailableHoursPagerAdapter mAvailabilityPagerAdapter;
-    private Set<Date> mDatesWithoutHours;
+    private Set<Date> mDatesWithoutAvailability;
 
     {
         mEditHoursClickListener = new View.OnClickListener() {
@@ -140,7 +141,7 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
         super.onCreate(savedInstanceState);
         mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
         mUpdatedAvailabilityTimelines = new HashMap<>();
-        mDatesWithoutHours = new HashSet<>();
+        mDatesWithoutAvailability = new HashSet<>();
     }
 
     @Nullable
@@ -176,13 +177,7 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
 
     private void updateAvailability(final DailyAvailabilityTimeline availability) {
         mUpdatedAvailabilityTimelines.put(availability.getDate(), availability);
-
-        if (availability.hasIntervals()) {
-            mDatesWithoutHours.remove(availability.getDate());
-        }
-        else {
-            mDatesWithoutHours.add(availability.getDate());
-        }
+        mDatesWithoutAvailability.remove(availability.getDate());
 
         if (mAvailabilityPagerAdapter != null) {
             mAvailabilityPagerAdapter.updateViewWithTimeline(availability);
@@ -196,7 +191,7 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
     }
 
     private void updateSendButtonState() {
-        mSendButton.setEnabled(mDatesWithoutHours.isEmpty());
+        mSendButton.setEnabled(mDatesWithoutAvailability.isEmpty());
     }
 
     private void callTargetFragmentResult(
@@ -248,7 +243,7 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         mAvailability = providerAvailability;
                         mUpdatedAvailabilityTimelines.clear();
-                        initDatesWithoutHoursSet();
+                        initDatesWithoutAvailability();
                         initAvailabilityPager();
                     }
 
@@ -269,15 +264,24 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
                 });
     }
 
-    private void initDatesWithoutHoursSet() {
+    private void initDatesWithoutAvailability() {
+        mDatesWithoutAvailability.clear();
         for (final WeeklyAvailabilityTimelinesWrapper weekAvailability
                 : mAvailability.getWeeklyAvailabilityTimelinesWrappers()) {
-            for (final DailyAvailabilityTimeline availability
-                    : weekAvailability.getDailyAvailabilityTimelines()) {
-                final Date date = availability.getDate();
-                if (!DateTimeUtils.isDaysPast(date) && !availability.hasIntervals()) {
-                    mDatesWithoutHours.add(date);
+            final Calendar calendar = Calendar.getInstance(Locale.US);
+            final Date startDate = weekAvailability.getStartDate();
+            final Date endDate = weekAvailability.getEndDate();
+            calendar.setTime(startDate);
+            while (DateTimeUtils.daysBetween(calendar.getTime(), endDate) >= 0) {
+                final Date date = calendar.getTime();
+                if (!DateTimeUtils.isDaysPast(date)) {
+                    final DailyAvailabilityTimeline availability =
+                            weekAvailability.getAvailabilityForDate(date);
+                    if (availability == null) {
+                        mDatesWithoutAvailability.add(date);
+                    }
                 }
+                calendar.add(Calendar.DATE, 1);
             }
         }
     }
