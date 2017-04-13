@@ -157,7 +157,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
             final AvailabilityInterval interval = timeline.getAvailabilityIntervals().get(0);
             bus.post(new LogEvent.AddLogEvent(
                     new ProAvailabilityLog.SetHoursSubmitted(mFlowContext, timeline.getDateString(),
-                            interval.getEndHour() - interval.getStartHour())));
+                            interval.getEndHour() - interval.getStartHour(),
+                            mAvailabilityToggle.isChecked())));
         }
         else {
             bus.post(new LogEvent.AddLogEvent(
@@ -173,7 +174,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
             final AvailabilityInterval interval = timeline.getAvailabilityIntervals().get(0);
             bus.post(new LogEvent.AddLogEvent(
                     new ProAvailabilityLog.SetHoursSuccess(mFlowContext, timeline.getDateString(),
-                            interval.getEndHour() - interval.getStartHour())));
+                            interval.getEndHour() - interval.getStartHour(),
+                            mAvailabilityToggle.isChecked())));
         }
         else {
             bus.post(new LogEvent.AddLogEvent(
@@ -189,7 +191,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
             final AvailabilityInterval interval = timeline.getAvailabilityIntervals().get(0);
             bus.post(new LogEvent.AddLogEvent(
                     new ProAvailabilityLog.SetHoursError(mFlowContext, timeline.getDateString(),
-                            interval.getEndHour() - interval.getStartHour())));
+                            interval.getEndHour() - interval.getStartHour(),
+                            mAvailabilityToggle.isChecked())));
         }
         else {
             bus.post(new LogEvent.AddLogEvent(

@@ -16,11 +16,19 @@ public class ProAvailabilityLog extends EventLog {
         private String mDate;
         @SerializedName("num_hours")
         private int mHours;
+        @SerializedName("is_closed")
+        private boolean mIsClosed;
 
-        public SetHoursSubmitted(final String eventContext, final String date, final int hours) {
+        public SetHoursSubmitted(
+                final String eventContext,
+                final String date,
+                final int hours,
+                final boolean isClosed
+        ) {
             super(EVENT_TYPE, eventContext);
             mDate = date;
             mHours = hours;
+            mIsClosed = isClosed;
         }
     }
 
@@ -32,11 +40,19 @@ public class ProAvailabilityLog extends EventLog {
         private String mDate;
         @SerializedName("num_hours")
         private int mHours;
+        @SerializedName("is_closed")
+        private boolean mIsClosed;
 
-        public SetHoursSuccess(final String eventContext, final String date, final int hours) {
+        public SetHoursSuccess(
+                final String eventContext,
+                final String date,
+                final int hours,
+                final boolean isClosed
+        ) {
             super(EVENT_TYPE, eventContext);
             mDate = date;
             mHours = hours;
+            mIsClosed = isClosed;
         }
     }
 
@@ -48,11 +64,19 @@ public class ProAvailabilityLog extends EventLog {
         private String mDate;
         @SerializedName("num_hours")
         private int mHours;
+        @SerializedName("is_closed")
+        private boolean mIsClosed;
 
-        public SetHoursError(final String eventContext, final String date, final int hours) {
+        public SetHoursError(
+                final String eventContext,
+                final String date,
+                final int hours,
+                final boolean isClosed
+        ) {
             super(EVENT_TYPE, eventContext);
             mDate = date;
             mHours = hours;
+            mIsClosed = isClosed;
         }
     }
 
