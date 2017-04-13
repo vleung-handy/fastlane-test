@@ -29,6 +29,8 @@ public class AvailableHoursWithDateView extends FrameLayout {
     ViewGroup mTimelines;
     @BindColor(R.color.tertiary_gray)
     int mGrayColor;
+    @BindColor(R.color.handy_blue)
+    int mBlueColor;
 
     private final Date mDate;
     private DailyAvailabilityTimeline mAvailability;
@@ -90,6 +92,12 @@ public class AvailableHoursWithDateView extends FrameLayout {
                 textView.setText(R.string.not_available);
                 mTimelines.addView(textView);
             }
+        }
+        else if (mEnabled) {
+            final TextView textView = createTextView();
+            textView.setText(R.string.set_hours);
+            textView.setTextColor(mBlueColor);
+            mTimelines.addView(textView);
         }
     }
 

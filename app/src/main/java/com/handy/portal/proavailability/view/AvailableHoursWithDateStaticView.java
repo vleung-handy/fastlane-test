@@ -28,7 +28,7 @@ public class AvailableHoursWithDateStaticView extends AvailableHoursWithDateView
     @Override
     public void updateTimelines(final DailyAvailabilityTimeline availability) {
         super.updateTimelines(availability);
-        if (mEnabled && (availability == null || !availability.hasIntervals())) {
+        if (mEnabled && availability == null) {
             mTimelines.removeAllViews();
             final TextView textView = createTextView();
             textView.setText(R.string.no_hours_set);
