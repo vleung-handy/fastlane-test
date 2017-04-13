@@ -53,6 +53,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class SendAvailableHoursFragment extends ActionBarFragment {
+    private static final int NEXT_WEEK_INDEX = 1;
 
     @Inject
     ProviderManager mProviderManager;
@@ -81,23 +82,28 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
     private Booking mBooking;
     private ProviderAvailability mAvailability;
     private HashMap<Date, DailyAvailabilityTimeline> mUpdatedAvailabilityTimelines;
-    private View.OnClickListener mEditHoursClickListener;
+    private WeeklyAvailableHoursCardView.EditListener mEditHoursClickListener;
     private WeeklyAvailableHoursPagerAdapter mAvailabilityPagerAdapter;
     private Set<Date> mDatesWithoutAvailability;
 
     {
-        mEditHoursClickListener = new View.OnClickListener() {
+        mEditHoursClickListener = new WeeklyAvailableHoursCardView.EditListener() {
             @Override
-            public void onClick(final View v) {
-                navigateToEditWeeklyAvailableHours();
+            public void onEdit(final int cardIndex) {
+                navigateToEditWeeklyAvailableHours(cardIndex == NEXT_WEEK_INDEX);
             }
         };
     }
 
     @OnClick(R.id.update_availability_button)
-    void navigateToEditWeeklyAvailableHours() {
+    void updateAvailability() {
+        navigateToEditWeeklyAvailableHours(false);
+    }
+
+    private void navigateToEditWeeklyAvailableHours(final boolean shouldDefaultToNextWeek) {
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.FLOW_CONTEXT, SendAvailabilityLog.EVENT_CONTEXT);
+        arguments.putBoolean(BundleKeys.SHOULD_DEFAULT_TO_NEXT_WEEK, shouldDefaultToNextWeek);
         arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY, mAvailability);
         arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY_CACHE,
                 mUpdatedAvailabilityTimelines);
@@ -294,7 +300,7 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
         WeeklyAvailableHoursPagerAdapter(
                 final Context context,
                 final ProviderAvailability availability,
-                final View.OnClickListener editHoursClickListener
+                final WeeklyAvailableHoursCardView.EditListener editHoursClickListener
         ) {
             mViews = new ArrayList<>();
             ArrayList<WeeklyAvailabilityTimelinesWrapper> weeklyTimelinesList =
@@ -305,7 +311,7 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
                 final int weekTitleResId = i < WEEK_TITLE_RES_IDS.length ?
                         WEEK_TITLE_RES_IDS[i] : R.string.special_empty_string;
                 mViews.add(new WeeklyAvailableHoursCardView(context, weekTitleResId,
-                        weeklyAvailability, editHoursClickListener));
+                        weeklyAvailability, editHoursClickListener, i));
             }
         }
 

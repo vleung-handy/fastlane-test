@@ -5,6 +5,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.StringRes;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
@@ -26,7 +27,8 @@ public class WeeklyAvailableHoursCardView extends FrameLayout {
     private final int mWeekTitleResId;
     private final WeeklyAvailabilityTimelinesWrapper mWeeklyAvailability;
     @Nullable
-    private final OnClickListener mEditClickListener;
+    private final EditListener mEditListener;
+    private final int mCardIndex;
 
     @BindView(R.id.date_range)
     TextView mDateRange;
@@ -45,12 +47,14 @@ public class WeeklyAvailableHoursCardView extends FrameLayout {
             @NonNull final Context context,
             @StringRes final int weekTitleResId,
             @NonNull final WeeklyAvailabilityTimelinesWrapper weeklyAvailability,
-            @Nullable final OnClickListener editClickListener
+            @NonNull final EditListener editClickListener,
+            final int cardIndex
     ) {
         super(context);
         mWeekTitleResId = weekTitleResId;
         mWeeklyAvailability = weeklyAvailability;
-        mEditClickListener = editClickListener;
+        mEditListener = editClickListener;
+        mCardIndex = cardIndex;
         init();
     }
 
@@ -81,7 +85,12 @@ public class WeeklyAvailableHoursCardView extends FrameLayout {
             calendar.add(Calendar.DATE, 1);
         }
 
-        mEditButton.setOnClickListener(mEditClickListener);
+        mEditButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                mEditListener.onEdit(mCardIndex);
+            }
+        });
     }
 
     @Nullable
@@ -94,5 +103,9 @@ public class WeeklyAvailableHoursCardView extends FrameLayout {
             }
         }
         return null;
+    }
+
+    public interface EditListener {
+        void onEdit(int cardIndex);
     }
 }
