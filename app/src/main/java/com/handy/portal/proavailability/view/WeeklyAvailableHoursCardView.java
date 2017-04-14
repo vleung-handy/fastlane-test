@@ -66,7 +66,8 @@ public class WeeklyAvailableHoursCardView extends FrameLayout {
                 DateTimeUtils.formatDateMonthDay(mWeeklyAvailability.getStartDate());
         final String endDateFormatted =
                 DateTimeUtils.formatDateMonthDay(mWeeklyAvailability.getEndDate());
-        mDateRange.setText(startDateFormatted + " - " + endDateFormatted);
+        mDateRange.setText(getContext().getString(R.string.dash_formatted,
+                startDateFormatted, endDateFormatted));
 
         mWeekTitle.setText(mWeekTitleResId);
 

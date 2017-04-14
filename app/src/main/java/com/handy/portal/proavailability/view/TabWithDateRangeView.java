@@ -40,6 +40,7 @@ public class TabWithDateRangeView extends FrameLayout {
         mTitle.setText(mTitleResId);
         final String startDateFormatted = DateTimeUtils.formatDateMonthDay(mStartDate);
         final String endDateFormatted = DateTimeUtils.formatDateMonthDay(mEndDate);
-        mDateRange.setText(startDateFormatted + " - " + endDateFormatted);
+        mDateRange.setText(getContext().getString(R.string.dash_formatted,
+                startDateFormatted, endDateFormatted));
     }
 }
