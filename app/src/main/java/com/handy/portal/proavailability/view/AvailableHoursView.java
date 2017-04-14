@@ -60,7 +60,7 @@ public class AvailableHoursView extends FrameLayout {
         if (availabilities == null || availabilities.isEmpty()) {
             mTitle.setText(R.string.no_available_hours);
             final TextView textView = new TextView(getContext());
-            textView.setText(R.string.set_hours);
+            textView.setText(availabilities == null ? R.string.set_hours : R.string.not_available);
             textView.setTextColor(mGrayColor);
             textView.setTypeface(FontUtils.getFont(getContext(), FontUtils.CIRCULAR_BOOK));
             mTimelines.addView(textView);

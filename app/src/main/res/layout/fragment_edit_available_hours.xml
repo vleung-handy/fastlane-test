@@ -4,13 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     >
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/availability_toggle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/background_white_bottom_border"
+        android:paddingBottom="@dimen/default_padding"
+        android:paddingEnd="@dimen/default_padding_half"
+        android:paddingLeft="@dimen/default_padding"
+        android:paddingRight="@dimen/default_padding_half"
+        android:paddingStart="@dimen/default_padding"
+        android:paddingTop="@dimen/default_padding"
+        android:text="@string/i_am_available"
+        android:textColor="@color/black"
+        android:textSize="@dimen/default_text_size"
+        />
 
     <LinearLayout
         android:id="@+id/time_range"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/availability_toggle"
         android:background="@color/border_gray"
         android:orientation="horizontal"
 

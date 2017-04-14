@@ -613,6 +613,7 @@ public class Booking implements Comparable<Booking>, Serializable {
         public static final String ACTION_CHECK_OUT = "check_out";
         public static final String ACTION_CONTACT_PHONE = "contact_phone";
         public static final String ACTION_CONTACT_TEXT = "contact_text";
+        public static final String ACTION_SEND_TIMES = "send_times";
 
         public static final String ACTION_HELP = "need_help";
 
@@ -645,6 +646,8 @@ public class Booking implements Comparable<Booking>, Serializable {
         private Extras mExtras;
         @SerializedName("checkin_config")
         private CheckInConfig mCheckInConfig;
+        @SerializedName("provider_request")
+        private ProviderRequest mProviderRequest;
 
 
         public Extras getExtras() {
@@ -703,6 +706,10 @@ public class Booking implements Comparable<Booking>, Serializable {
 
         public CheckInConfig getCheckInConfig() {
             return mCheckInConfig;
+        }
+
+        public ProviderRequest getProviderRequest() {
+            return mProviderRequest;
         }
 
         public static class CheckInConfig implements Serializable {
@@ -817,6 +824,16 @@ public class Booking implements Comparable<Booking>, Serializable {
                 public Float getOnNextUnassign() {
                     return mNextUnassign;
                 }
+            }
+        }
+
+
+        public static class ProviderRequest implements Serializable {
+            @SerializedName("id")
+            private String mId;
+
+            public String getId() {
+                return mId;
             }
         }
     }

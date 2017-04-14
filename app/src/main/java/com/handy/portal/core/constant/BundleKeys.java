@@ -23,6 +23,7 @@ public class BundleKeys {
     public static final String EXTRAS = "extras";
     public static final String NAVIGATION_SOURCE = "navigation_source";
     public static final String DATE = "date";
+    public static final String FLOW_CONTEXT = "flow_context";
 
     public static final String DRAWER_OPEN = "drawer_open";
 

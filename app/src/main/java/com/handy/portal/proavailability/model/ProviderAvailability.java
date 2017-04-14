@@ -40,4 +40,14 @@ public class ProviderAvailability implements Serializable {
     public boolean covers(final Date date) {
         return getWeeklyAvailabilityForDate(date) != null;
     }
+
+    public boolean hasAvailableHours() {
+        for (WeeklyAvailabilityTimelinesWrapper weeklyAvailabilityTimelinesWrapper :
+                mWeeklyAvailabilityTimelinesWrappers) {
+            if (weeklyAvailabilityTimelinesWrapper.hasAvailableHours()) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

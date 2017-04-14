@@ -2,7 +2,6 @@ package com.handy.portal.proavailability.fragment;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -10,7 +9,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -38,7 +36,6 @@ import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
 import com.handy.portal.proavailability.model.ProviderAvailability;
 import com.handy.portal.proavailability.model.WeeklyAvailabilityTimelinesWrapper;
 import com.handy.portal.proavailability.view.AvailableHoursWithDateView;
-import com.handy.portal.proavailability.view.AvailableTimeSlotView.RemoveTimeSlotListener;
 import com.handy.portal.proavailability.view.TabWithDateRangeView;
 import com.handy.portal.proavailability.view.WeeklyAvailableHoursView;
 import com.handy.portal.proavailability.view.WeeklyAvailableHoursView.DateClickListener;
@@ -78,6 +75,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     @BindColor(R.color.error_red)
     int mRedColor;
 
+    private String mFlowContext;
     private ProviderAvailability mProviderAvailability;
     private TabAdapter mPagerAdapter;
     private ViewPager.OnPageChangeListener mWeekPageChangeListener =
@@ -99,39 +97,14 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
                     // do nothing
                 }
             };
-    private RemoveTimeSlotListener mRemoveTimeSlotListener = new RemoveTimeSlotListener() {
-        @Override
-        public void onRemoveClicked(final Date date, final AvailabilityInterval interval) {
-            if (DateTimeUtils.isDaysPast(date)) {
-                return;
-            }
-            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-                    .setCancelable(true)
-                    .setMessage(R.string.time_slot_removal_prompt)
-                    .setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(final DialogInterface dialogInterface, final int i) {
-                            removeInterval(date, interval);
-                        }
-                    })
-                    .setNegativeButton(R.string.keep, null)
-                    .create();
-            alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(final DialogInterface dialogInterface) {
-                    alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(mRedColor);
-                    alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(mBlackColor);
-                }
-            });
-            alertDialog.show();
-        }
-    };
     private DateClickListener mDateClickListener = new DateClickListener() {
         @Override
         public void onDateClicked(final Date date) {
-            bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.SetDayAvailabilitySelected(
-                    DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
+            bus.post(new LogEvent.AddLogEvent(
+                    new ProAvailabilityLog.SetDayAvailabilitySelected(mFlowContext,
+                            DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
             final Bundle bundle = new Bundle();
+            bundle.putString(BundleKeys.FLOW_CONTEXT, mFlowContext);
             bundle.putSerializable(BundleKeys.DATE, date);
             bundle.putSerializable(BundleKeys.DAILY_AVAILABILITY_TIMELINE,
                     getAvailabilityForDate(date));
@@ -157,45 +130,6 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
         return availabilityForDate;
     }
 
-    private void removeInterval(final Date date, final AvailabilityInterval interval) {
-        bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.RemoveHoursSubmitted(
-                DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
-        final DailyAvailabilityTimeline availability = getAvailabilityForDate(date);
-        final ArrayList<AvailabilityInterval> intervals = new ArrayList<>();
-        if (availability != null && availability.getAvailabilityIntervals() != null) {
-            intervals.addAll(availability.getAvailabilityIntervals());
-            intervals.remove(interval);
-        }
-        final AvailabilityTimelinesWrapper timelinesWrapper = new AvailabilityTimelinesWrapper();
-        timelinesWrapper.addTimeline(date, intervals);
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        dataManager.saveProviderAvailability(mProviderManager.getLastProviderId(), timelinesWrapper,
-                new FragmentSafeCallback<Void>(this) {
-                    @Override
-                    public void onCallbackSuccess(final Void response) {
-                        bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.RemoveHoursSuccess(
-                                DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
-                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                        final DailyAvailabilityTimeline updatedAvailabilityTimeline =
-                                new DailyAvailabilityTimeline(date, intervals);
-                        updateAvailability(updatedAvailabilityTimeline);
-                        setIsCurrentWeekAndNextWeekInSync(false);
-                    }
-
-                    @Override
-                    public void onCallbackError(final DataManager.DataManagerError error) {
-                        bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.RemoveHoursError(
-                                DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
-                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                        String message = error.getMessage();
-                        if (TextUtils.isEmpty(message)) {
-                            message = getString(R.string.an_error_has_occurred);
-                        }
-                        showToast(message);
-                    }
-                });
-    }
-
     private void updateAvailability(final DailyAvailabilityTimeline timeline) {
         mUpdatedAvailabilityTimelines.put(timeline.getDate(), timeline);
         mPagerAdapter.updateViewWithTimeline(timeline);
@@ -218,7 +152,8 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
 
     @OnClick(R.id.copy_hours_button)
     public void onCopyHoursClicked() {
-        bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.CopyCurrentWeekSelected()));
+        bus.post(new LogEvent.AddLogEvent(
+                new ProAvailabilityLog.CopyCurrentWeekSelected(mFlowContext)));
         final AvailabilityTimelinesWrapper timelinesWrapper =
                 createNextWeekTimelinesFromCurrentWeek();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
@@ -276,6 +211,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mFlowContext = getArguments().getString(BundleKeys.FLOW_CONTEXT);
         mProviderAvailability = (ProviderAvailability) getArguments()
                 .getSerializable(BundleKeys.PROVIDER_AVAILABILITY);
         mUpdatedAvailabilityTimelines = (HashMap<Date, DailyAvailabilityTimeline>) getArguments()
@@ -341,8 +277,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     }
 
     private void displayAvailableHours() {
-        mPagerAdapter = new TabAdapter(getActivity(), mProviderAvailability, mDateClickListener,
-                mRemoveTimeSlotListener);
+        mPagerAdapter = new TabAdapter(getActivity(), mProviderAvailability, mDateClickListener);
         for (DailyAvailabilityTimeline availability : mUpdatedAvailabilityTimelines.values()) {
             mPagerAdapter.updateViewWithTimeline(availability);
         }
@@ -408,13 +343,12 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
 
         TabAdapter(final Context context,
                    final ProviderAvailability providerAvailability,
-                   final DateClickListener dateClickListener,
-                   final RemoveTimeSlotListener removeTimeSlotListener) {
+                   final DateClickListener dateClickListener) {
             mViews = new ArrayList<>();
             for (WeeklyAvailabilityTimelinesWrapper weeklyAvailabilityTimelinesWrapper :
                     providerAvailability.getWeeklyAvailabilityTimelinesWrappers()) {
                 mViews.add(new WeeklyAvailableHoursView(context, weeklyAvailabilityTimelinesWrapper,
-                        dateClickListener, removeTimeSlotListener));
+                        dateClickListener));
             }
         }
 

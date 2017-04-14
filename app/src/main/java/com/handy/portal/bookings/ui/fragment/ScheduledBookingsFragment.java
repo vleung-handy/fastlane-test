@@ -37,6 +37,7 @@ import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.deeplink.DeeplinkUtils;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.EventContext;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
 import com.handy.portal.proavailability.model.ProviderAvailability;
@@ -45,11 +46,9 @@ import com.handy.portal.proavailability.view.AvailableHoursView;
 
 import org.greenrobot.eventbus.Subscribe;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import javax.inject.Inject;
 
@@ -167,6 +166,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.SetWeekAvailabilitySelected(
                 DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(mSelectedDay))));
         final Bundle arguments = new Bundle();
+        arguments.putString(BundleKeys.FLOW_CONTEXT, EventContext.AVAILABILITY);
         arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY, mProviderAvailability);
         arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY_CACHE,
                 mUpdatedAvailabilityTimelines);
@@ -393,24 +393,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     private boolean hasAvailableHoursForNextWeek() {
         final WeeklyAvailabilityTimelinesWrapper weekAvailability = getNextWeekAvailability();
-        if (weekAvailability != null) {
-            boolean hasAvailableHours = false;
-            final Calendar calendar = Calendar.getInstance(Locale.US);
-            calendar.setTime(weekAvailability.getStartDate());
-            while (DateTimeUtils.daysBetween(calendar.getTime(), weekAvailability.getEndDate()) >= 0) {
-                final DailyAvailabilityTimeline availability =
-                        getAvailabilityForDate(calendar.getTime());
-                if (availability != null) {
-                    hasAvailableHours = availability.hasIntervals();
-                }
-                if (hasAvailableHours) {
-                    break;
-                }
-                calendar.add(Calendar.DATE, 1);
-            }
-            return hasAvailableHours;
-        }
-        return false;
+        return weekAvailability != null && weekAvailability.hasAvailableHours();
     }
 
     @Nullable
@@ -428,6 +411,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 mSelectedDay != null ? DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(mSelectedDay)
                         : null)));
         final Bundle bundle = new Bundle();
+        bundle.putString(BundleKeys.FLOW_CONTEXT, EventContext.AVAILABILITY);
         bundle.putSerializable(BundleKeys.DATE, mSelectedDay);
         bundle.putSerializable(BundleKeys.DAILY_AVAILABILITY_TIMELINE, mAvailabilityForSelectedDay);
         final NavigationEvent.NavigateToPage navigationEvent =

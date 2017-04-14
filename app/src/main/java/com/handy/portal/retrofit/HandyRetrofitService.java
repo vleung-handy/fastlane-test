@@ -219,6 +219,12 @@ public interface HandyRetrofitService {
                                   @Body AvailabilityTimelinesWrapper timelinesWrapper,
                                   HandyRetrofitCallback cb);
 
+    @POST(PROVIDERS_PATH + "{id}/provider_requests/{request_id}/send_times")
+    void sendAvailability(@Path("id") String providerId,
+                          @Path("request_id") String requestId,
+                          @Field("response_text") String response,
+                          HandyRetrofitCallback cb);
+
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/on_my_way")
     void notifyOnMyWay(@Path("booking_id") String bookingId,
@@ -346,6 +352,8 @@ public interface HandyRetrofitService {
     void requestOnboardingSupplies(@Path("id") String providerId,
                                    @Field("onboarding_supplies") Boolean value,
                                    HandyRetrofitCallback cb);
+
+
 
     @POST("/{before_start_url}")
     void beforeStartIdVerification(@Path(value = "before_start_url", encode = false) String beforeIdVerificationStartUrl,

@@ -193,6 +193,10 @@ public class DataManager {
         mService.saveProviderAvailability(providerId, timelinesWrapper, new EmptyHandyRetroFitCallback(cb));
     }
 
+    public void sendAvailability(String providerId, String requestId, String response, Callback<Void> cb) {
+        mService.sendAvailability(providerId, requestId, response, new EmptyHandyRetroFitCallback(cb));
+    }
+
     public void getBookingDetails(String bookingId, BookingType type, final Callback<Booking> cb) {
         mService.getBookingDetails(bookingId, type.toString().toLowerCase(), new BookingHandyRetroFitCallback(cb));
     }

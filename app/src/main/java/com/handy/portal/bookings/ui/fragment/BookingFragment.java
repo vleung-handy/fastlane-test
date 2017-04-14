@@ -60,9 +60,11 @@ import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
+import com.handy.portal.logger.handylogger.model.EventContext;
 import com.handy.portal.logger.handylogger.model.EventType;
 import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
+import com.handy.portal.logger.handylogger.model.SendAvailabilityLog;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handybook.shared.core.HandyLibrary;
 import com.handybook.shared.layer.LayerConstants;
@@ -126,6 +128,8 @@ public class BookingFragment extends TimerActionBarFragment {
     TextView mJobDateText;
     @BindView(R.id.booking_job_time_text)
     TextView mJobTimeText;
+    @BindView(R.id.booking_send_alternate_times_button)
+    View mSendAlternateTimesButton;
     @BindView(R.id.booking_job_payment_text)
     TextView mJobPaymentText;
     @BindView(R.id.booking_job_payment_bonus_text)
@@ -428,6 +432,13 @@ public class BookingFragment extends TimerActionBarFragment {
             mNoShowBanner.setVisibility(View.VISIBLE);
         }
 
+        if (mBooking.getAction(Booking.Action.ACTION_SEND_TIMES) != null) {
+            mSendAlternateTimesButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            mSendAlternateTimesButton.setVisibility(View.GONE);
+        }
+
         setActionBarTitle();
     }
 
@@ -528,6 +539,17 @@ public class BookingFragment extends TimerActionBarFragment {
             Utils.safeLaunchIntent(new Intent(
                     Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)), getContext());
         }
+    }
+
+    @OnClick(R.id.booking_send_alternate_times_button)
+    void sendAlternateTimes() {
+        final Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.BOOKING, mBooking);
+        bus.post(new NavigationEvent.NavigateToPage(
+                MainViewPage.SEND_AVAILABLE_HOURS, arguments, true));
+        bus.post(new LogEvent.AddLogEvent(
+                new SendAvailabilityLog.SendAvailabilitySelected(
+                        EventContext.JOB_DETAILS, mBooking)));
     }
 
     private void setActionButtonVisibility() {
