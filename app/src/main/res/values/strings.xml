@@ -106,6 +106,8 @@
     <string name="address">Address</string>
     <string name="time">Time</string>
     <string name="confirm">Confirm</string>
+    <string name="discard_changes">Discard changes?</string>
+    <string name="discard">Discard</string>
     <string name="save">Save</string>
     <string name="description">Description</string>
     <string name="back">Back</string>

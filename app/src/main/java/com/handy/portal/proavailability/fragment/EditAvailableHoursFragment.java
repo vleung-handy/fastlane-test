@@ -21,6 +21,7 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ProviderManager;
+import com.handy.portal.core.ui.activity.BaseActivity;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
@@ -66,12 +67,54 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     int mBlackColorValue;
     @BindColor(R.color.white)
     int mWhiteColorValue;
-    @BindColor(R.color.error_red)
-    int mRedColorValue;
+    @BindColor(R.color.tertiary_gray)
+    int mGrayColorValue;
+    @BindColor(R.color.handy_blue)
+    int mBlueColorValue;
 
     private String mFlowContext;
     private Date mDate;
     private DailyAvailabilityTimeline mAvailabilityTimeline;
+    private BaseActivity.OnBackPressedListener mOnBackPressedListener;
+
+    {
+        mOnBackPressedListener = new BaseActivity.OnBackPressedListener() {
+            @Override
+            public void onBackPressed() {
+                if (!isOriginalState()) {
+                    showDiscardChangesDialog();
+                    ((BaseActivity) getActivity()).addOnBackPressedListener(mOnBackPressedListener);
+                }
+                else {
+                    getActivity().onBackPressed();
+                }
+            }
+        };
+    }
+
+    private void showDiscardChangesDialog() {
+        final AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
+                .setCancelable(true)
+                .setMessage(R.string.discard_changes)
+                .setPositiveButton(R.string.discard,
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(final DialogInterface dialog, final int which) {
+                                ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
+                                getActivity().onBackPressed();
+                            }
+                        })
+                .setNegativeButton(R.string.cancel, null)
+                .create();
+        alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(final DialogInterface dialogInterface) {
+                alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(mBlueColorValue);
+                alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(mGrayColorValue);
+            }
+        });
+        alertDialog.show();
+    }
 
     @OnClick(R.id.reset_time_range)
     public void resetTimeRange() {
@@ -110,6 +153,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
                         logSuccess(availabilityTimelinesWrapper);
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         callTargetFragmentResult();
+                        ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
                         getActivity().onBackPressed();
                     }
 
@@ -268,12 +312,21 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
             return mTimePicker.hasSelectedRange() && !isOriginalIntervalSelected();
         }
         else {
-            return isAvailable();
+            return isOriginallyAvailable();
         }
     }
 
-    private boolean isAvailable() {
+    private boolean isOriginallyAvailable() {
         return mAvailabilityTimeline == null || mAvailabilityTimeline.hasIntervals();
+    }
+
+    private boolean isOriginalState() {
+        if (isOriginallyAvailable()) {
+            return mAvailabilityTimeline != null ? isOriginalIntervalSelected()
+                    : (mAvailabilityToggle.isChecked() && !mTimePicker.hasSelectedRange());
+        } else {
+            return !mAvailabilityToggle.isChecked();
+        }
     }
 
     private boolean isOriginalIntervalSelected() {
@@ -290,6 +343,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         mDate = (Date) getArguments().getSerializable(BundleKeys.DATE);
         mAvailabilityTimeline = (DailyAvailabilityTimeline) getArguments()
                 .getSerializable(BundleKeys.DAILY_AVAILABILITY_TIMELINE);
+        ((BaseActivity) getActivity()).addOnBackPressedListener(mOnBackPressedListener);
     }
 
     @Nullable
@@ -332,8 +386,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
                         updateSaveButtonVisibility();
                     }
                 });
-        mAvailabilityToggle.setChecked(isAvailable());
-        if (!isAvailable()) {
+        mAvailabilityToggle.setChecked(isOriginallyAvailable());
+        if (!isOriginallyAvailable()) {
             freezeTimePicker();
             updateSaveButtonVisibility();
         }
