@@ -681,7 +681,6 @@
     <string name="hours_for_date_formatted">Hours for %1$s</string>
     <string name="start_time">Start Time</string>
     <string name="end_time">End Time</string>
-    <string name="time_slot_removal_prompt">Are you sure you want to remove this time slot?</string>
     <string name="current_week">Current Week</string>
     <string name="next_week">Next Week</string>
     <string name="copy_hours_from_current_week">Copy Hours from Current Week</string>

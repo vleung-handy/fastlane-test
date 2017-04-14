@@ -75,31 +75,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
 
     @OnClick(R.id.reset_time_range)
     public void resetTimeRange() {
-        if (getFirstAvailabilityInterval() != null) {
-            final AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
-                    .setCancelable(true)
-                    .setMessage(R.string.time_slot_removal_prompt)
-                    .setPositiveButton(R.string.remove, new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(final DialogInterface dialogInterface, final int i) {
-                            clearSelection();
-                            onSave();
-                        }
-                    })
-                    .setNegativeButton(R.string.keep, null)
-                    .create();
-            alertDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(final DialogInterface dialogInterface) {
-                    alertDialog.getButton(DialogInterface.BUTTON_POSITIVE).setTextColor(mRedColorValue);
-                    alertDialog.getButton(DialogInterface.BUTTON_NEGATIVE).setTextColor(mBlackColorValue);
-                }
-            });
-            alertDialog.show();
-        }
-        else {
-            clearSelection();
-        }
+        clearSelection();
     }
 
     private void clearSelection() {
