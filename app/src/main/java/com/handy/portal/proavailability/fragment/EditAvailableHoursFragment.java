@@ -260,16 +260,15 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     }
 
     private void updateSaveButtonVisibility() {
+        mSaveButton.setVisibility(canSave() ? View.VISIBLE : View.GONE);
+    }
+
+    private boolean canSave() {
         if (mAvailabilityToggle.isChecked()) {
-            if (mTimePicker.hasSelectedRange() && !isOriginalIntervalSelected()) {
-                mSaveButton.setVisibility(View.VISIBLE);
-            }
-            else {
-                mSaveButton.setVisibility(View.GONE);
-            }
+            return mTimePicker.hasSelectedRange() && !isOriginalIntervalSelected();
         }
         else {
-            mSaveButton.setVisibility(isAvailable() ? View.VISIBLE : View.GONE);
+            return isAvailable();
         }
     }
 
