@@ -37,7 +37,7 @@ import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.deeplink.DeeplinkUtils;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.ProAvailabilityLog;
+import com.handy.portal.logger.handylogger.model.EventContext;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
 import com.handy.portal.proavailability.model.ProviderAvailability;
@@ -166,7 +166,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
         bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.SetWeekAvailabilitySelected(
                 DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(mSelectedDay))));
         final Bundle arguments = new Bundle();
-        arguments.putString(BundleKeys.FLOW_CONTEXT, ProAvailabilityLog.EVENT_CONTEXT);
+        arguments.putString(BundleKeys.FLOW_CONTEXT, EventContext.AVAILABILITY);
         arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY, mProviderAvailability);
         arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY_CACHE,
                 mUpdatedAvailabilityTimelines);
@@ -411,7 +411,7 @@ public class ScheduledBookingsFragment extends BookingsFragment<HandyEvent.Recei
                 mSelectedDay != null ? DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(mSelectedDay)
                         : null)));
         final Bundle bundle = new Bundle();
-        bundle.putString(BundleKeys.FLOW_CONTEXT, ProAvailabilityLog.EVENT_CONTEXT);
+        bundle.putString(BundleKeys.FLOW_CONTEXT, EventContext.AVAILABILITY);
         bundle.putSerializable(BundleKeys.DATE, mSelectedDay);
         bundle.putSerializable(BundleKeys.DAILY_AVAILABILITY_TIMELINE, mAvailabilityForSelectedDay);
         final NavigationEvent.NavigateToPage navigationEvent =

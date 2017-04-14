@@ -3,7 +3,6 @@ package com.handy.portal.logger.handylogger.model;
 import com.google.gson.annotations.SerializedName;
 
 public class ProAvailabilityLog extends EventLog {
-    public static final String EVENT_CONTEXT = "availability";
 
     public ProAvailabilityLog(final String eventType, final String eventContext) {
         super(eventType, eventContext);

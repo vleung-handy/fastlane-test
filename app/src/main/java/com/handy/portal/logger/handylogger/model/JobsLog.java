@@ -8,7 +8,6 @@ import com.handy.portal.payments.model.PaymentInfo;
 import java.util.Date;
 
 public abstract class JobsLog extends EventLog {
-    public static final String JOB_DETAILS_EVENT_CONTEXT = "job_details";
 
     @SerializedName("booking_id")
     private String mBookingId;

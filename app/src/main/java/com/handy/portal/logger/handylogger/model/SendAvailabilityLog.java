@@ -7,7 +7,6 @@ import com.handy.portal.bookings.model.Booking;
 import java.util.Date;
 
 public abstract class SendAvailabilityLog extends EventLog {
-    public static final String EVENT_CONTEXT = "send_availability";
 
     private SendAvailabilityLog(final String eventType, final String eventContext) {
         super(eventType, eventContext);
@@ -39,7 +38,7 @@ public abstract class SendAvailabilityLog extends EventLog {
         private String mUserId;
 
         public SendAvailabilitySubmitted(final Booking booking) {
-            super("send_availability_submitted", EVENT_CONTEXT);
+            super("send_availability_submitted", EventContext.SEND_AVAILABILITY);
             mBookingId = booking.getId();
             if (booking.getRequestAttributes() != null) {
                 mUserId = booking.getRequestAttributes().getCustomerId();
