@@ -129,6 +129,7 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         showToast(getString(R.string.send_available_hours_send_success_formatted,
                                 mBooking.getRequestAttributes().getCustomerName()));
+                        bus.post(new HandyEvent.AvailableHoursSent(mBooking));
                         getActivity().onBackPressed();
                     }
 
