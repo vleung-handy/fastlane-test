@@ -135,7 +135,8 @@ public class MainActivity extends BaseActivity
             = new NotificationBlockerDialogFragment();
 
     private ActionBarDrawerToggle mActionBarDrawerToggle;
-    private MainViewPage currentPage = null;
+    private MainViewPage mCurrentPage = null;
+    private String mCurrentTabTitle = null;
 
     // Other fragments will want to know to avoid re-doing things on their onCreateView
     public static boolean clearingBackStack = false;
@@ -162,6 +163,11 @@ public class MainActivity extends BaseActivity
 
         setDeeplinkData(savedInstanceState);
 
+        if (savedInstanceState != null) {
+            mCurrentPage = (MainViewPage) savedInstanceState.getSerializable(BundleKeys.PAGE);
+            mCurrentTabTitle = savedInstanceState.getString(BundleKeys.TAB_TITLE);
+        }
+
         mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
             @Override
@@ -180,6 +186,8 @@ public class MainActivity extends BaseActivity
         };
 
         mLayerHelper.registerUnreadConversationsCountChangedListener(this);
+
+        registerButtonListeners();
     }
 
     /**
@@ -203,7 +211,7 @@ public class MainActivity extends BaseActivity
         if (mAlertsButton != null && mAlertsButton.getVisibility() == View.VISIBLE) {
             bus.post(new NotificationEvent.RequestUnreadCount());
         }
-        if (currentPage == null) {
+        if (mCurrentPage == null) {
             switchToPage(MainViewPage.AVAILABLE_JOBS);
         }
         handleDeeplinkIfNecessary();
@@ -212,7 +220,6 @@ public class MainActivity extends BaseActivity
         mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
 
         AppseeManager.markViewsAsSensitive(mNavigationHeaderProName, mProImage);
-        registerButtonListeners();
 
         initProName();
         initProImage(null);
@@ -364,6 +371,9 @@ public class MainActivity extends BaseActivity
                 outState = new Bundle();
             }
             outState.putBoolean(BundleKeys.DEEPLINK_HANDLED, mDeeplinkHandled);
+            outState.putSerializable(BundleKeys.PAGE, mCurrentPage);
+            outState.putString(BundleKeys.TAB_TITLE, mTabs.getCurrentlySelectedTab().getTitle());
+
             super.onSaveInstanceState(outState);
         }
         catch (IllegalArgumentException e) {
@@ -465,7 +475,7 @@ public class MainActivity extends BaseActivity
         setDrawerActive(false);
         swapFragment(event);
         clearOnBackPressedListenerStack();
-        currentPage = event.targetPage;
+        mCurrentPage = event.targetPage;
     }
 
     @Override
@@ -602,6 +612,7 @@ public class MainActivity extends BaseActivity
                 .init(R.string.tab_more, R.drawable.ic_menu_more);
         mMoreButton.setId(R.id.tab_nav_item_more);
         mTabs.setTabs(mJobsButton, mScheduleButton, mClientsButton, mAlertsButton, mMoreButton);
+        mTabs.selected(mCurrentTabTitle);
 
         mJobsButton.setOnClickListener(
                 new TabOnClickListener(mJobsButton, MainViewPage.AVAILABLE_JOBS));
@@ -753,7 +764,7 @@ public class MainActivity extends BaseActivity
             if (mTabButton != null) {
                 mTabButton.toggle();
             }
-            if (mPage != currentPage) {
+            if (mPage != mCurrentPage) {
                 switchToPage(mPage);
             }
         }
