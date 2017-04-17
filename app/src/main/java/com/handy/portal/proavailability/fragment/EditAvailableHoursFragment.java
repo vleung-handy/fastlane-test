@@ -207,45 +207,34 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     private void logSubmit(final AvailabilityTimelinesWrapper availabilityTimelinesWrapper) {
         final DailyAvailabilityTimeline timeline =
                 availabilityTimelinesWrapper.getTimelines().get(0);
-        final AvailabilityInterval interval = timeline.getAvailabilityIntervals().get(0);
+        final AvailabilityInterval interval = timeline.hasIntervals() ?
+                timeline.getAvailabilityIntervals().get(0) : null;
         bus.post(new LogEvent.AddLogEvent(
                 new ProAvailabilityLog.SetHoursSubmitted(mFlowContext, timeline.getDateString(),
-                        interval.getEndHour() - interval.getStartHour(),
+                        interval != null ? interval.getEndHour() - interval.getStartHour() : 0,
                         !timeline.hasIntervals())));
     }
 
     private void logSuccess(final AvailabilityTimelinesWrapper availabilityTimelinesWrapper) {
         final DailyAvailabilityTimeline timeline =
                 availabilityTimelinesWrapper.getTimelines().get(0);
-        if (timeline.hasIntervals()) {
-            final AvailabilityInterval interval = timeline.getAvailabilityIntervals().get(0);
-            bus.post(new LogEvent.AddLogEvent(
-                    new ProAvailabilityLog.SetHoursSuccess(mFlowContext, timeline.getDateString(),
-                            interval.getEndHour() - interval.getStartHour(),
-                            !mAvailabilityToggle.isChecked())));
-        }
-        else {
-            bus.post(new LogEvent.AddLogEvent(
-                    new ProAvailabilityLog.RemoveHoursSuccess(mFlowContext,
-                            timeline.getDateString())));
-        }
+        final AvailabilityInterval interval = timeline.hasIntervals() ?
+                timeline.getAvailabilityIntervals().get(0) : null;
+        bus.post(new LogEvent.AddLogEvent(
+                new ProAvailabilityLog.SetHoursSuccess(mFlowContext, timeline.getDateString(),
+                        interval != null ? interval.getEndHour() - interval.getStartHour() : 0,
+                        !timeline.hasIntervals())));
     }
 
     private void logError(final AvailabilityTimelinesWrapper availabilityTimelinesWrapper) {
         final DailyAvailabilityTimeline timeline =
                 availabilityTimelinesWrapper.getTimelines().get(0);
-        if (timeline.hasIntervals()) {
-            final AvailabilityInterval interval = timeline.getAvailabilityIntervals().get(0);
-            bus.post(new LogEvent.AddLogEvent(
-                    new ProAvailabilityLog.SetHoursError(mFlowContext, timeline.getDateString(),
-                            interval.getEndHour() - interval.getStartHour(),
-                            !mAvailabilityToggle.isChecked())));
-        }
-        else {
-            bus.post(new LogEvent.AddLogEvent(
-                    new ProAvailabilityLog.RemoveHoursError(mFlowContext,
-                            timeline.getDateString())));
-        }
+        final AvailabilityInterval interval = timeline.hasIntervals() ?
+                timeline.getAvailabilityIntervals().get(0) : null;
+        bus.post(new LogEvent.AddLogEvent(
+                new ProAvailabilityLog.SetHoursError(mFlowContext, timeline.getDateString(),
+                        interval != null ? interval.getEndHour() - interval.getStartHour() : 0,
+                        !timeline.hasIntervals())));
     }
 
     private void callTargetFragmentResult() {
