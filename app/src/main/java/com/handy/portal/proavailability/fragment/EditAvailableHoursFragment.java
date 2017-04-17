@@ -76,6 +76,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     private Date mDate;
     private DailyAvailabilityTimeline mAvailabilityTimeline;
     private BaseActivity.OnBackPressedListener mOnBackPressedListener;
+    private CompoundButton.OnCheckedChangeListener mAvailabilityToggleCheckedChangeListener;
+    private boolean mIsFrozen;
 
     {
         mOnBackPressedListener = new BaseActivity.OnBackPressedListener() {
@@ -88,6 +90,23 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
                 else {
                     getActivity().onBackPressed();
                 }
+            }
+        };
+        mAvailabilityToggleCheckedChangeListener = new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(
+                    final CompoundButton buttonView,
+                    final boolean isChecked
+            ) {
+                if (isChecked) {
+                    unfreezeTimePicker();
+                    initTimeRange();
+                }
+                else {
+                    clearSelection();
+                    freezeTimePicker();
+                }
+                updateSaveButtonVisibility();
             }
         };
     }
@@ -132,12 +151,26 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
 
     @OnClick(R.id.start_time)
     public void onStartTimeClicked() {
+        if (mIsFrozen) {
+            setAvailabilityToggleOnWithoutCallback();
+        }
         mTimePicker.setSelectionType(HandyTimePicker.SelectionType.START_TIME);
     }
 
     @OnClick(R.id.end_time_holder)
     public void onEndTimeClicked() {
+        if (mIsFrozen) {
+            setAvailabilityToggleOnWithoutCallback();
+        }
         mTimePicker.setSelectionType(HandyTimePicker.SelectionType.END_TIME);
+    }
+
+    private void setAvailabilityToggleOnWithoutCallback() {
+        mAvailabilityToggle.setOnCheckedChangeListener(null);
+        mAvailabilityToggle.setChecked(true);
+        mAvailabilityToggle.setOnCheckedChangeListener(mAvailabilityToggleCheckedChangeListener);
+        unfreezeTimePicker();
+        updateSaveButtonVisibility();
     }
 
     @OnClick(R.id.save)
@@ -363,24 +396,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     }
 
     private void initAvailabilityToggle() {
-        mAvailabilityToggle.setOnCheckedChangeListener(
-                new CompoundButton.OnCheckedChangeListener() {
-                    @Override
-                    public void onCheckedChanged(
-                            final CompoundButton buttonView,
-                            final boolean isChecked
-                    ) {
-                        if (isChecked) {
-                            unfreezeTimePicker();
-                            initTimeRange();
-                        }
-                        else {
-                            clearSelection();
-                            freezeTimePicker();
-                        }
-                        updateSaveButtonVisibility();
-                    }
-                });
+        mAvailabilityToggle.setOnCheckedChangeListener(mAvailabilityToggleCheckedChangeListener);
         mAvailabilityToggle.setChecked(isOriginallyAvailable());
         if (!isOriginallyAvailable()) {
             freezeTimePicker();
@@ -389,19 +405,17 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     }
 
     private void unfreezeTimePicker() {
-        mStartTime.setClickable(true);
         mStartTime.setAlpha(1.0f);
-        mEndTimeHolder.setClickable(true);
         mEndTimeHolder.setAlpha(1.0f);
-        mTimePicker.setFrozen(false);
+        mTimePicker.setAlpha(1.0f);
+        mIsFrozen = false;
     }
 
     private void freezeTimePicker() {
-        mStartTime.setClickable(false);
         mStartTime.setAlpha(0.3f);
-        mEndTimeHolder.setClickable(false);
         mEndTimeHolder.setAlpha(0.3f);
-        mTimePicker.setFrozen(true);
+        mTimePicker.setAlpha(0.3f);
+        mIsFrozen = true;
     }
 
     private void initTimePicker() {
@@ -409,6 +423,9 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         mTimePicker.setCallbacks(new HandyTimePicker.Callbacks() {
             @Override
             public void onRangeUpdated(final int startHour, final int endHour) {
+                if (mIsFrozen) {
+                    setAvailabilityToggleOnWithoutCallback();
+                }
                 updateStartTime(startHour);
                 updateEndTime(endHour);
             }
