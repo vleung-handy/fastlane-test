@@ -80,19 +80,6 @@ public class ProAvailabilityLog extends EventLog {
     }
 
 
-    public static class RemoveHoursSubmitted extends ProAvailabilityLog {
-        private static final String EVENT_TYPE = "remove_hours_submitted";
-
-        @SerializedName("date")
-        private String mDate;
-
-        public RemoveHoursSubmitted(final String eventContext, final String date) {
-            super(EVENT_TYPE, eventContext);
-            mDate = date;
-        }
-    }
-
-
     public static class RemoveHoursSuccess extends ProAvailabilityLog {
         private static final String EVENT_TYPE = "remove_hours_success";
 

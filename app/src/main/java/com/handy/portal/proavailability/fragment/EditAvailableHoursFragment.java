@@ -173,18 +173,11 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     private void logSubmit(final AvailabilityTimelinesWrapper availabilityTimelinesWrapper) {
         final DailyAvailabilityTimeline timeline =
                 availabilityTimelinesWrapper.getTimelines().get(0);
-        if (timeline.hasIntervals()) {
-            final AvailabilityInterval interval = timeline.getAvailabilityIntervals().get(0);
-            bus.post(new LogEvent.AddLogEvent(
-                    new ProAvailabilityLog.SetHoursSubmitted(mFlowContext, timeline.getDateString(),
-                            interval.getEndHour() - interval.getStartHour(),
-                            !mAvailabilityToggle.isChecked())));
-        }
-        else {
-            bus.post(new LogEvent.AddLogEvent(
-                    new ProAvailabilityLog.RemoveHoursSubmitted(mFlowContext,
-                            timeline.getDateString())));
-        }
+        final AvailabilityInterval interval = timeline.getAvailabilityIntervals().get(0);
+        bus.post(new LogEvent.AddLogEvent(
+                new ProAvailabilityLog.SetHoursSubmitted(mFlowContext, timeline.getDateString(),
+                        interval.getEndHour() - interval.getStartHour(),
+                        !timeline.hasIntervals())));
     }
 
     private void logSuccess(final AvailabilityTimelinesWrapper availabilityTimelinesWrapper) {
@@ -324,7 +317,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         if (isOriginallyAvailable()) {
             return mAvailabilityTimeline != null ? isOriginalIntervalSelected()
                     : (mAvailabilityToggle.isChecked() && !mTimePicker.hasSelectedRange());
-        } else {
+        }
+        else {
             return !mAvailabilityToggle.isChecked();
         }
     }
