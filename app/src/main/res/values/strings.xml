@@ -729,5 +729,7 @@
     <string name="send_available_hours_loading_error">Error loading your availability</string>
     <string name="send_available_hours_send_error">Error sending your availability</string>
     <string name="send_available_hours_send_success_formatted">Your availability has been sent to %1$s</string>
+    <string name="send_available_hours_discard_confirmation_message">Your changes will not be saved.</string>
+    <string name="send_available_hours_discard_confirmation_title">Are you sure you want to leave?</string>
 
 </resources>
