@@ -83,6 +83,7 @@
                         />
 
                     <TextView
+                        android:id="@+id/send_availability_subtitle"
                         style="@style/TextView.Small"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -92,7 +93,7 @@
                         android:paddingLeft="@dimen/default_padding"
                         android:paddingRight="@dimen/default_padding"
                         android:paddingStart="@dimen/default_padding"
-                        android:text="@string/send_available_hours_content_subtitle"
+                        tools:text="You will see this job in your schedule once Thomas reschedules the booking to an open time slot."
                         />
 
                     <com.handy.portal.library.ui.view.DynamicHeightViewPager
@@ -116,6 +117,6 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:enabled="false"
-        android:text="@string/send"
+        android:text="@string/send_available_hours_button_label"
         />
 </RelativeLayout>

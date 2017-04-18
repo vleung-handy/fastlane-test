@@ -718,11 +718,11 @@
     <string name="announcements_dismiss_button">Got It</string>
 
     <!-- Send Availability  -->
-    <string name="send_alternate_times">Send Alternate Times</string>
+    <string name="send_new_times">Send New Times</string>
     <string name="original_time_formatted">Original Time: %1$s, %2$s - %3$s</string>
-    <string name="send_available_hours_content_title">Let clients book directly into your schedule!</string>
-    <string name="send_available_hours_content_subtitle">Keep more jobs by sharing your availability with clients who have made you their Favorite Pro.</string>
-    <string name="send_available_hours_cancellation_notice">Cancellation rules apply so make sure your availability is accurate.</string>
+    <string name="send_available_hours_content_title">When would you like to do this job?</string>
+    <string name="send_available_hours_content_subtitle">Make sure your times are up to date. Your client will be able to book directly into your schedule.</string>
+    <string name="send_available_hours_footer">You can update your availability at any time from the Schedule tab.</string>
     <string name="send_available_hours_empty_state_title">You have not set your availability</string>
     <string name="send_available_hours_empty_state_subtitle">Update your availability to let your client know when you are free.</string>
     <string name="send_available_hours_empty_state_button_text">Update Availability</string>
@@ -731,5 +731,7 @@
     <string name="send_available_hours_send_success_formatted">Your availability has been sent to %1$s</string>
     <string name="send_available_hours_discard_confirmation_message">Your changes will not be saved.</string>
     <string name="send_available_hours_discard_confirmation_title">Are you sure you want to leave?</string>
+    <string name="send_available_hours_claim_label">Claim at a new time</string>
+    <string name="send_available_hours_button_label">Send New Job Times</string>
 
 </resources>
