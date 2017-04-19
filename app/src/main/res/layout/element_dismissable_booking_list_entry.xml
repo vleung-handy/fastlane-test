@@ -19,41 +19,32 @@
         android:padding="1dp"
         >
 
-        <LinearLayout
-            android:id="@+id/favorite_indicator"
+        <TextView
+            android:id="@+id/dismissible_booking_aux_text"
+            style="@style/TextView.Medium.Bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/border_gray_bottom"
-            android:paddingBottom="@dimen/default_padding_half"
-            android:paddingEnd="@dimen/default_padding"
-            android:paddingLeft="@dimen/default_padding"
-            android:paddingRight="@dimen/default_padding"
-            android:paddingStart="@dimen/default_padding"
-            android:paddingTop="@dimen/default_padding_half"
+            android:drawablePadding="@dimen/default_padding_half"
+            android:ellipsize="end"
+            android:maxLines="1"
+            tools:drawableLeft="@drawable/ic_aux_info_fav"
+            tools:text="@string/customer_favorite_pro"
             android:visibility="gone"
             tools:visibility="visible"
-            >
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin"
+            />
 
-            <ImageView
-                android:layout_width="@dimen/small_icon_size"
-                android:layout_height="@dimen/small_icon_size"
-                android:layout_gravity="center_vertical"
-                android:src="@drawable/ic_heart_small"
-                />
-
-            <TextView
-                style="@style/TextView.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="@dimen/default_margin_half"
-                android:layout_marginStart="@dimen/default_margin_half"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:text="@string/customer_favorite_pro"
-                />
-
-        </LinearLayout>
+        <View
+            android:id="@+id/dismissible_booking_aux_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="@dimen/default_margin"
+            android:background="@drawable/divider_gray"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
 
         <FrameLayout
             android:id="@+id/available_booking_container"
