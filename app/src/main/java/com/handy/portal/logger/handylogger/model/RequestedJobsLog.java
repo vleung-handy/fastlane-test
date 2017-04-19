@@ -18,9 +18,20 @@ public abstract class RequestedJobsLog extends EventLog {
         @SerializedName("pending_requests_count")
         private int mPendingRequestsCount;
 
-        public RequestsShown(final int pendingRequestsCount) {
+        @SerializedName("pending_referral_request_count")
+        private int mPendingReferralRequestsCount;
+
+        @SerializedName("pending_favorite_request_count")
+        private int mPendingFavoriteRequestsCount;
+
+        public RequestsShown(final int pendingRequestsCount,
+                             final int pendingReferralRequestsCount,
+                             final int pendingFavoriteRequestsCount
+        ) {
             super(EVENT_TYPE);
             mPendingRequestsCount = pendingRequestsCount;
+            mPendingReferralRequestsCount = pendingReferralRequestsCount;
+            mPendingFavoriteRequestsCount = pendingFavoriteRequestsCount;
         }
     }
 
@@ -28,8 +39,16 @@ public abstract class RequestedJobsLog extends EventLog {
     public static class Clicked extends JobsLog {
         private static final String EVENT_TYPE = "job_selected";
 
+        @SerializedName("request_type")
+        private String mRequestType = "";
+
         public Clicked(final Booking booking) {
             super(EVENT_TYPE, EVENT_CONTEXT, booking);
+
+            if (booking.getAuxiliaryInfo() != null
+                    && booking.getAuxiliaryInfo().getType() != null) {
+                mRequestType = booking.getAuxiliaryInfo().getType().toString().toLowerCase();
+            }
         }
     }
 
