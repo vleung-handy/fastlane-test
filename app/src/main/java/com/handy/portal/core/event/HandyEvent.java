@@ -623,4 +623,17 @@ public abstract class HandyEvent {
             return mStepId;
         }
     }
+
+
+    public static class AvailableHoursSent extends HandyEvent {
+        private Booking mBooking;
+
+        public AvailableHoursSent(final Booking booking) {
+            mBooking = booking;
+        }
+
+        public Booking getBooking() {
+            return mBooking;
+        }
+    }
 }

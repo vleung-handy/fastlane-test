@@ -71,7 +71,7 @@
         android:layout_below="@+id/border"
         android:layout_marginTop="@dimen/default_margin"
         android:gravity="center"
-        android:text="@string/send_available_hours_cancellation_notice"
+        android:text="@string/send_available_hours_footer"
         android:textColor="@color/tertiary_gray"
         />
 

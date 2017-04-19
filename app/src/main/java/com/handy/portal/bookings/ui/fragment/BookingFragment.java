@@ -293,7 +293,7 @@ public class BookingFragment extends TimerActionBarFragment {
             mBookingCustomerContactLayout.setVisibility(View.GONE);
         }
         else {
-            mCustomerNameText.setText(mBooking.getUser().getFullName());
+            mCustomerNameText.setText(mBooking.getUser().getAbbreviatedName());
         }
 
         mSupportButton.setVisibility(shouldShowSupportButton() ? View.VISIBLE : View.GONE);

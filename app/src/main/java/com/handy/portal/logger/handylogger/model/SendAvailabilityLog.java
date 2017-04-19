@@ -38,7 +38,39 @@ public abstract class SendAvailabilityLog extends EventLog {
         private String mUserId;
 
         public SendAvailabilitySubmitted(final Booking booking) {
-            super("send_availability_submitted", EventContext.SEND_AVAILABILITY);
+            super("submitted", EventContext.SEND_AVAILABILITY);
+            mBookingId = booking.getId();
+            if (booking.getRequestAttributes() != null) {
+                mUserId = booking.getRequestAttributes().getCustomerId();
+            }
+        }
+    }
+
+
+    public static class SendAvailabilitySuccess extends SendAvailabilityLog {
+        @SerializedName("booking_id")
+        private String mBookingId;
+        @SerializedName("user_id")
+        private String mUserId;
+
+        public SendAvailabilitySuccess(final Booking booking) {
+            super("success", EventContext.SEND_AVAILABILITY);
+            mBookingId = booking.getId();
+            if (booking.getRequestAttributes() != null) {
+                mUserId = booking.getRequestAttributes().getCustomerId();
+            }
+        }
+    }
+
+
+    public static class SendAvailabilityError extends SendAvailabilityLog {
+        @SerializedName("booking_id")
+        private String mBookingId;
+        @SerializedName("user_id")
+        private String mUserId;
+
+        public SendAvailabilityError(final Booking booking) {
+            super("error", EventContext.SEND_AVAILABILITY);
             mBookingId = booking.getId();
             if (booking.getRequestAttributes() != null) {
                 mUserId = booking.getRequestAttributes().getCustomerId();
