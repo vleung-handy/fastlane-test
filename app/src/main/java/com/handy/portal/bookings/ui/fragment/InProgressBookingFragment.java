@@ -146,7 +146,7 @@ public class InProgressBookingFragment extends TimerActionBarFragment {
 
         User user = mBooking.getUser();
         if (user != null) {
-            mCustomerNameText.setText(user.getAbbreviatedName());
+            mCustomerNameText.setText(user.getFullName());
         }
 
         if (mBooking.getCheckInSummary() != null && mBooking.getCheckInSummary().getCheckInTime() != null) {
