@@ -3,12 +3,15 @@ package com.handy.portal.bookings.ui.element;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.bookings.model.AuxiliaryInfo;
 import com.handy.portal.bookings.model.Booking;
 
 import butterknife.BindView;
@@ -19,14 +22,18 @@ import butterknife.ButterKnife;
  * a message title/body using the booking's pro request display attributes model
  */
 public class BookingDetailsProRequestInfoView extends FrameLayout {
-    @BindView(R.id.booking_details_display_message_favorite_indicator)
-    View mMessageFavoriteIndicator;
+
     @BindView(R.id.booking_details_display_message_swap_indicator)
     View mMessageSwapIndicator;
     @BindView(R.id.booking_details_display_message_title)
     TextView mMessageTitleText;
     @BindView(R.id.booking_details_display_message_body_text)
     TextView mMessageBodyText;
+    @BindView(R.id.booking_details_aux_text)
+    TextView mAuxText;
+    @BindView(R.id.booking_details_aux_divider)
+    View mAuxDivider;
+
 
     public BookingDetailsProRequestInfoView(final Context context) {
         super(context);
@@ -61,7 +68,8 @@ public class BookingDetailsProRequestInfoView extends FrameLayout {
      *
      * @param requestAttributes
      */
-    public void setDisplayModel(Booking.RequestAttributes requestAttributes) {
+    public void setDisplayModel(@NonNull final Booking.RequestAttributes requestAttributes,
+                                @Nullable final AuxiliaryInfo auxiliaryInfo) {
         //set message title
         if (requestAttributes.getDetailsTitle() != null) {
             mMessageTitleText.setText(requestAttributes.getDetailsTitle());
@@ -79,13 +87,16 @@ public class BookingDetailsProRequestInfoView extends FrameLayout {
         else {
             mMessageBodyText.setVisibility(GONE);
         }
+
+        if (auxiliaryInfo != null) {
+            mAuxText.setVisibility(VISIBLE);
+            mAuxDivider.setVisibility(VISIBLE);
+            mAuxText.setText(auxiliaryInfo.getText());
+            mAuxText.setCompoundDrawablesWithIntrinsicBounds(auxiliaryInfo.getIconDrawableRes(), 0, 0, 0);
+        }
     }
 
     public void showSwapIndicator() {
         mMessageSwapIndicator.setVisibility(VISIBLE);
-    }
-
-    public void showFavoriteIndicator() {
-        mMessageFavoriteIndicator.setVisibility(VISIBLE);
     }
 }

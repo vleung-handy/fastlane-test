@@ -230,12 +230,9 @@ public class BookingFragment extends TimerActionBarFragment {
                     && (requestAttributes.getDetailsBody() != null
                     || requestAttributes.getDetailsTitle() != null)) {
                 mBookingDetailsProRequestInfoView.setVisibility(View.VISIBLE); //GONE by default
-                mBookingDetailsProRequestInfoView.setDisplayModel(requestAttributes);
+                mBookingDetailsProRequestInfoView.setDisplayModel(requestAttributes, mBooking.getAuxiliaryInfo());
                 if (mBooking.canSwap()) {
                     mBookingDetailsProRequestInfoView.showSwapIndicator();
-                }
-                if (mBooking.isFavorite()) {
-                    mBookingDetailsProRequestInfoView.showFavoriteIndicator();
                 }
             }
         }
