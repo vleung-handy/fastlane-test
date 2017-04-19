@@ -1,5 +1,7 @@
 package com.handy.portal.logger.handylogger.model;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.Booking;
 
@@ -62,11 +64,18 @@ public abstract class RequestedJobsLog extends EventLog {
     public static class ClaimSuccess extends JobsLog {
         private static final String EVENT_TYPE = "claim_success";
 
-        public ClaimSuccess(final Booking booking) {
+        @SerializedName("request_type")
+        private String mRequestType = "";
+
+        public ClaimSuccess(@NonNull final Booking booking) {
             super(EVENT_TYPE, EVENT_CONTEXT, booking);
+
+            if (booking.getAuxiliaryInfo() != null
+                    && booking.getAuxiliaryInfo().getType() != null) {
+                mRequestType = booking.getAuxiliaryInfo().getType().toString().toLowerCase();
+            }
         }
     }
-
 
     public static class ClaimError extends JobsLog {
         private static final String EVENT_TYPE = "claim_error";
