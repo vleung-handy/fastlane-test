@@ -18,7 +18,6 @@ public class AuxiliaryInfo implements Serializable {
         @SerializedName("referral")REFERRAL
     }
 
-
     @SerializedName("text")
     private String mText;
 
@@ -35,6 +34,9 @@ public class AuxiliaryInfo implements Serializable {
 
     @DrawableRes
     public int getIconDrawableRes() {
+        if (mType == null) {
+            return 0;
+        }
         switch (mType) {
             case FAVORITE:
                 return R.drawable.ic_aux_info_fav;
