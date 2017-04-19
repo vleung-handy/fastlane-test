@@ -26,7 +26,7 @@
     <View
         android:id="@+id/booking_details_aux_divider"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="1dp"
         android:layout_marginTop="@dimen/default_margin"
         android:layout_marginBottom="@dimen/default_margin"
         android:background="@drawable/divider_gray"
