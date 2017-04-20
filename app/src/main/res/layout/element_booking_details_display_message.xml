@@ -9,36 +9,30 @@
     android:orientation="vertical"
     >
 
-    <LinearLayout
-        android:id="@+id/booking_details_display_message_favorite_indicator"
+    <TextView
+        android:id="@+id/booking_details_aux_text"
+        style="@style/TextView.Medium.Bold"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingBottom="@dimen/default_padding_half"
-        android:paddingTop="@dimen/default_padding_half"
+        android:drawablePadding="@dimen/default_padding_half"
+        android:ellipsize="end"
+        android:maxLines="1"
+        tools:drawableLeft="@drawable/ic_aux_info_fav"
+        tools:text="@string/customer_favorite_pro"
         android:visibility="gone"
         tools:visibility="visible"
-        >
+        />
 
-        <ImageView
-            android:layout_width="@dimen/small_icon_size"
-            android:layout_height="@dimen/small_icon_size"
-            android:layout_gravity="center_vertical"
-            android:src="@drawable/ic_heart_small"
-            />
-
-        <TextView
-            style="@style/TextView.Small"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginLeft="@dimen/default_margin_half"
-            android:layout_marginStart="@dimen/default_margin_half"
-            android:ellipsize="end"
-            android:maxLines="1"
-            android:text="@string/customer_favorite_pro"
-            />
-
-    </LinearLayout>
+    <View
+        android:id="@+id/booking_details_aux_divider"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="@dimen/default_margin"
+        android:layout_marginBottom="@dimen/default_margin"
+        android:background="@drawable/divider_gray"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
 
     <LinearLayout
         android:layout_width="match_parent"

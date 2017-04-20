@@ -112,6 +112,9 @@ public class Booking implements Comparable<Booking>, Serializable {
     @SerializedName("provider_request_attributes")
     private RequestAttributes mRequestAttributes;
 
+    @SerializedName("auxiliary_info")
+    private AuxiliaryInfo mAuxiliaryInfo;
+
     // Payment booking
     @SerializedName("check_in_time")
     private Date mCheckInTime;
@@ -135,6 +138,10 @@ public class Booking implements Comparable<Booking>, Serializable {
 
     public RequestAttributes getRequestAttributes() {
         return mRequestAttributes;
+    }
+
+    public AuxiliaryInfo getAuxiliaryInfo() {
+        return mAuxiliaryInfo;
     }
 
     public Booking() { }
