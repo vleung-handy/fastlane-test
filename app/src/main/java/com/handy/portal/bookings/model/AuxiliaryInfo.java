@@ -13,7 +13,7 @@ import java.io.Serializable;
  */
 public class AuxiliaryInfo implements Serializable {
 
-    public enum AuxType {
+    public enum Type {
         @SerializedName("favorite")FAVORITE,
         @SerializedName("referral")REFERRAL
     }
@@ -22,13 +22,13 @@ public class AuxiliaryInfo implements Serializable {
     private String mText;
 
     @SerializedName("type")
-    private AuxType mType;
+    private Type mType;
 
     public String getText() {
         return mText;
     }
 
-    public AuxType getType() {
+    public Type getType() {
         return mType;
     }
 
