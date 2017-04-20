@@ -114,8 +114,8 @@ public class ProRequestedJobsFragment extends InjectedFragment {
         bus.post(new LogEvent.AddLogEvent(
                 new RequestedJobsLog.RequestsShown(
                         mUnreadJobsCount,
-                        getCountPerAuxType(filteredJobList, AuxiliaryInfo.AuxType.REFERRAL),
-                        getCountPerAuxType(filteredJobList, AuxiliaryInfo.AuxType.FAVORITE)
+                        getCountPerAuxType(filteredJobList, AuxiliaryInfo.Type.REFERRAL),
+                        getCountPerAuxType(filteredJobList, AuxiliaryInfo.Type.FAVORITE)
                 )
         ));
     }
@@ -129,7 +129,7 @@ public class ProRequestedJobsFragment extends InjectedFragment {
      */
     private int getCountPerAuxType(
             @Nullable List<BookingsWrapper> jobList,
-            @NonNull AuxiliaryInfo.AuxType type) {
+            @NonNull AuxiliaryInfo.Type type) {
         if (jobList == null || jobList.isEmpty()) {
             return 0;
         }
