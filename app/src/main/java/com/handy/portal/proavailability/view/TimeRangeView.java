@@ -12,8 +12,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.library.ui.view.timepicker.HandyTimePicker;
 import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.proavailability.viewmodel.TimePickerViewModel;
 
 import java.util.Date;
 
@@ -80,6 +80,11 @@ public class TimeRangeView extends FrameLayout {
         uneditStartTime();
     }
 
+    public void unedit() {
+        uneditStartTime();
+        uneditEndTime();
+    }
+
     public void uneditStartTime() {
         mStartTime.setBackgroundResource(R.color.handy_bg);
         mStartTime.setTextColor(mBlackColorValue);
@@ -100,7 +105,7 @@ public class TimeRangeView extends FrameLayout {
 
     private void updateTime(final TextView timeView, final int hour,
                             @StringRes final int emptyStringResId) {
-        if (hour == HandyTimePicker.NO_HOUR_SELECTED) {
+        if (hour == TimePickerViewModel.TimeRange.NO_HOUR) {
             timeView.setText(emptyStringResId);
         }
         else {

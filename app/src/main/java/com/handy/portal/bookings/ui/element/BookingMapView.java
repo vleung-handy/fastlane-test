@@ -219,7 +219,7 @@ public class BookingMapView extends MapView implements OnMapReadyCallback {
         }
         else {
             //fallback so we don't crash
-            Crashlytics.logException(new Exception("BookingMapView booking has no valid midpoint " + mBooking.getId()));
+            Crashlytics.logException(new Exception("BookingMapView booking has no validate midpoint " + mBooking.getId()));
             return new LatLng(0.0f, 0.0f);
         }
     }

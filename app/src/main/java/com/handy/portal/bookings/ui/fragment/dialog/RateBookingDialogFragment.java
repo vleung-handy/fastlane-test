@@ -108,7 +108,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment {
         }
 
         if (mBooking == null) {
-            Crashlytics.logException(new Exception("No valid booking passed to RateBookingDialogFragment, aborting rating"));
+            Crashlytics.logException(new Exception("No validate booking passed to RateBookingDialogFragment, aborting rating"));
         }
 
         mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.CustomerRatingShown()));
