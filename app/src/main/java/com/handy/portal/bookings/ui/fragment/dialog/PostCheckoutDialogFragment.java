@@ -124,7 +124,8 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
                 final String jobType = booking.getType().name().toLowerCase();
                 jobClaims.add(new JobClaim(booking.getId(), jobType));
             }
-            final JobClaimRequest jobClaimRequest = new JobClaimRequest(jobClaims);
+            final JobClaimRequest jobClaimRequest =
+                    new JobClaimRequest(jobClaims, JobClaimRequest.Source.CHECKOUT_FLOW);
             mBookingManager.requestClaimJobs(jobClaimRequest);
             mBus.post(new LogEvent.AddLogEvent(
                     new CheckOutFlowLog.ClaimBatchSubmitted(selectedBookings)));

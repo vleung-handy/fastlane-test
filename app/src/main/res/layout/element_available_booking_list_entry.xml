@@ -127,18 +127,6 @@
                     android:textColor="@color/tertiary_gray"
                     tools:text="One Time · 2-3.5 hour job"
                     />
-
-                <TextView
-                    android:id="@+id/send_alternate_times_button"
-                    style="@style/TextView.Medium"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/extra_margin"
-                    android:text="@string/send_alternate_times"
-                    android:textColor="@color/handy_blue"
-                    android:visibility="gone"
-                    tools:visibility="visible"
-                    />
             </LinearLayout>
 
             <LinearLayout
@@ -184,5 +172,17 @@
                     />
             </LinearLayout>
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/send_alternate_times_button"
+            style="@style/TextView.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/default_margin"
+            android:text="@string/send_available_hours_claim_label"
+            android:textColor="@color/handy_blue"
+            android:visibility="gone"
+            tools:visibility="visible"
+            />
     </LinearLayout>
 </LinearLayout>

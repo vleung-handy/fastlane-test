@@ -93,4 +93,8 @@ public class TabButton extends FrameLayout {
         mTabIcon.setAlpha(alpha);
         mTabTitle.setAlpha(alpha);
     }
+
+    public String getTitle() {
+        return mTabTitle.getText().toString();
+    }
 }

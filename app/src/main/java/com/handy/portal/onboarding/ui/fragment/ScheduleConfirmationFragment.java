@@ -240,7 +240,8 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowUIFragment {
                         return new JobClaim(bookingId, bookingType);
                     }
                 }));
-        mBookingManager.requestClaimJobs(new JobClaimRequest(jobClaims));
+        mBookingManager.requestClaimJobs(
+                new JobClaimRequest(jobClaims, JobClaimRequest.Source.ONBOARDING));
         logConfirmationPageSubmitted();
         bus.post(new NativeOnboardingLog.ClaimBatchSubmitted(mPendingBookings));
     }

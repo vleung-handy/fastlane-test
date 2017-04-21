@@ -78,7 +78,6 @@ public class ProRequestedJobsFragment extends InjectedFragment {
     private SwipeRefreshLayout.OnRefreshListener onProRequestedJobsListRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
         @Override
         public void onRefresh() {
-            setRefreshingIndicator(true);
             requestProRequestedJobs(false);
         }
     };
@@ -159,6 +158,12 @@ public class ProRequestedJobsFragment extends InjectedFragment {
                 TransitionStyle.JOB_LIST_TO_DETAILS, true));
     }
 
+    @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        bus.register(this);
+    }
+
     @NonNull
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
@@ -187,7 +192,6 @@ public class ProRequestedJobsFragment extends InjectedFragment {
     @Override
     public void onResume() {
         super.onResume();
-        bus.register(this);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         mJobListSwipeRefreshLayout.setRefreshing(false);
         if (mAdapter == null) {
@@ -198,9 +202,9 @@ public class ProRequestedJobsFragment extends InjectedFragment {
     }
 
     @Override
-    public void onPause() {
+    public void onDestroy() {
         bus.unregister(this);
-        super.onPause();
+        super.onDestroy();
     }
 
     /**
@@ -323,6 +327,11 @@ public class ProRequestedJobsFragment extends InjectedFragment {
         }
     }
 
+    @Subscribe
+    public void onAvailableHoursSent(final HandyEvent.AvailableHoursSent event) {
+        mAdapter.remove(event.getBooking());
+    }
+
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
         if (resultCode == Activity.RESULT_OK) {
@@ -384,8 +393,7 @@ public class ProRequestedJobsFragment extends InjectedFragment {
                 final Booking booking = (Booking) item;
                 if (booking.getRequestAttributes() != null
                         && booking.getRequestAttributes().hasCustomer()
-                        && booking.getRequestAttributes().getCustomerId().equals(customerId))
-                {
+                        && booking.getRequestAttributes().getCustomerId().equals(customerId)) {
                     bookingsToRemove.add(booking);
                 }
             }

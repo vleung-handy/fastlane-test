@@ -207,18 +207,6 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
         notifyRangeUpdate();
     }
 
-    public void setFrozen(final boolean frozen) {
-        for (int i = 0; i < getChildCount(); i++) {
-            final HandyTimePickerRow timePickerRow = (HandyTimePickerRow) getChildAt(i);
-            for (int j = 0; j < timePickerRow.mTimePickerCellViews.getChildCount(); j++) {
-                final HandyTimePickerCell timePickerCell =
-                        (HandyTimePickerCell) timePickerRow.mTimePickerCellViews.getChildAt(j);
-                timePickerCell.setClickable(!frozen);
-            }
-        }
-        setAlpha(frozen ? 0.3f : 1.0f);
-    }
-
     private void selectStartHour(final int hour) {
         if (mSelectedEndHour == NO_HOUR_SELECTED || hour < mSelectedEndHour) {
             resetCellForHour(mSelectedStartHour);

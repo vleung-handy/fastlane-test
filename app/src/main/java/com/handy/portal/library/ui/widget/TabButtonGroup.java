@@ -3,11 +3,14 @@ package com.handy.portal.library.ui.widget;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
 public class TabButtonGroup extends LinearLayout {
     private TabButton[] mTabButtons;
+    private TabButton mCurrentlySelectedTab;
 
     public TabButtonGroup(final Context context) {
         super(context);
@@ -42,5 +45,21 @@ public class TabButtonGroup extends LinearLayout {
             }
         }
         tabButtonToToggle.dim(1.0f);
+        mCurrentlySelectedTab = tabButtonToToggle;
+    }
+
+    public TabButton getCurrentlySelectedTab() {
+        return mCurrentlySelectedTab;
+    }
+
+    public void selected(@Nullable final String currentTabTitle) {
+        if (TextUtils.isEmpty(currentTabTitle)) { return; }
+
+        for (TabButton tabButton : mTabButtons) {
+            if (currentTabTitle.equals(tabButton.getTitle())) {
+                toggle(tabButton);
+                return;
+            }
+        }
     }
 }
