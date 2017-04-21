@@ -202,7 +202,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
             final View requestedIndicator =
                     associatedView.findViewById(R.id.booking_list_entry_left_strip_indicator);
             if (requestedIndicator != null) {
-                requestedIndicator.setVisibility(View.INVISIBLE);
+                requestedIndicator.setVisibility(View.GONE);
             }
 
             final View requestedText =
@@ -225,11 +225,6 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
             if (subtitle != null) {
                 subtitle.setVisibility(View.VISIBLE);
                 subtitle.setText(booking.getRegionName());
-            }
-
-            final View favoriteIndicator = associatedView.findViewById(R.id.favorite_indicator);
-            if (favoriteIndicator != null) {
-                favoriteIndicator.setVisibility(booking.isFavorite() ? View.VISIBLE : View.GONE);
             }
 
             final View swapIndicator = associatedView.findViewById(R.id.booking_swap_indicator);

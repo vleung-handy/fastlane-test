@@ -18,10 +18,10 @@ public abstract class RequestedJobsLog extends EventLog {
         @SerializedName("pending_requests_count")
         private int mPendingRequestsCount;
 
-        @SerializedName("pending_referral_request_count")
+        @SerializedName("pending_referral_requests_count")
         private int mPendingReferralRequestsCount;
 
-        @SerializedName("pending_favorite_request_count")
+        @SerializedName("pending_favorite_requests_count")
         private int mPendingFavoriteRequestsCount;
 
         public RequestsShown(final int pendingRequestsCount,
