@@ -32,6 +32,7 @@ import com.handy.portal.logger.handylogger.model.ProAvailabilityLog;
 import com.handy.portal.proavailability.model.AvailabilityInterval;
 import com.handy.portal.proavailability.model.AvailabilityTimelinesWrapper;
 import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
+import com.handy.portal.proavailability.view.TimeRangeListView;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -53,20 +54,22 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     SwitchCompat mAvailabilityToggle;
     @BindView(R.id.time_picker)
     HandyTimePicker mTimePicker;
-    @BindView(R.id.start_time)
-    TextView mStartTime;
-    @BindView(R.id.end_time)
-    TextView mEndTime;
-    @BindView(R.id.end_time_holder)
-    ViewGroup mEndTimeHolder;
-    @BindView(R.id.reset_time_range)
-    View mResetTimeRangeButton;
+    @BindView(R.id.time_ranges)
+    TimeRangeListView mTimeRanges;
+    //    @BindView(R.id.start_time)
+//    TextView mStartTime;
+//    @BindView(R.id.end_time)
+//    TextView mEndTime;
+//    @BindView(R.id.end_time_holder)
+//    ViewGroup mEndTimeHolder;
+//    @BindView(R.id.reset_time_range)
+//    View mResetTimeRangeButton;
     @BindView(R.id.save)
     Button mSaveButton;
-    @BindColor(R.color.black)
-    int mBlackColorValue;
-    @BindColor(R.color.white)
-    int mWhiteColorValue;
+    //    @BindColor(R.color.black)
+//    int mBlackColorValue;
+//    @BindColor(R.color.white)
+//    int mWhiteColorValue;
     @BindColor(R.color.tertiary_gray)
     int mGrayColorValue;
     @BindColor(R.color.handy_blue)
@@ -78,6 +81,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     private BaseActivity.OnBackPressedListener mOnBackPressedListener;
     private CompoundButton.OnCheckedChangeListener mAvailabilityToggleCheckedChangeListener;
     private boolean mIsFrozen;
+    private TimeRangeListView.Callbacks mTimeRangesCallbacks;
+    private int mCurrentTimeRangeIndex;
 
     {
         mOnBackPressedListener = new BaseActivity.OnBackPressedListener() {
@@ -100,13 +105,42 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
             ) {
                 if (isChecked) {
                     unfreezeTimePicker();
-                    initTimeRange();
+                    initTimeRanges();
                 }
                 else {
                     clearSelection();
                     freezeTimePicker();
                 }
                 updateSaveButtonVisibility();
+            }
+        };
+        mTimeRangesCallbacks = new TimeRangeListView.Callbacks() {
+            @Override
+            public void onStartTimeClicked(final int index) {
+                mCurrentTimeRangeIndex = index;
+                if (mIsFrozen) {
+                    setAvailabilityToggleOnWithoutCallback();
+                }
+                mTimePicker.setSelectionType(HandyTimePicker.SelectionType.START_TIME);
+            }
+
+            @Override
+            public void onEndTimeClicked(final int index) {
+                mCurrentTimeRangeIndex = index;
+                if (mIsFrozen) {
+                    setAvailabilityToggleOnWithoutCallback();
+                }
+                mTimePicker.setSelectionType(HandyTimePicker.SelectionType.END_TIME);
+            }
+
+            @Override
+            public void onClear(final int index) {
+                mTimePicker.clearSelection(index);
+            }
+
+            @Override
+            public void onRemove(final int index) {
+                mTimePicker.removeRangeAt(index);
             }
         };
     }
@@ -136,33 +170,10 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         alertDialog.show();
     }
 
-    @OnClick(R.id.reset_time_range)
-    public void resetTimeRange() {
-        clearSelection();
-    }
-
     private void clearSelection() {
-        uneditStartTime();
-        uneditEndTime();
-        mTimePicker.setSelectionType(null);
-        mResetTimeRangeButton.setVisibility(View.GONE);
-        mTimePicker.clearSelection();
-    }
-
-    @OnClick(R.id.start_time)
-    public void onStartTimeClicked() {
-        if (mIsFrozen) {
-            setAvailabilityToggleOnWithoutCallback();
-        }
+        mTimeRanges.clearCurrentTimeRange();
         mTimePicker.setSelectionType(HandyTimePicker.SelectionType.START_TIME);
-    }
-
-    @OnClick(R.id.end_time_holder)
-    public void onEndTimeClicked() {
-        if (mIsFrozen) {
-            setAvailabilityToggleOnWithoutCallback();
-        }
-        mTimePicker.setSelectionType(HandyTimePicker.SelectionType.END_TIME);
+        mTimePicker.clearCurrentSelection();
     }
 
     private void setAvailabilityToggleOnWithoutCallback() {
@@ -179,29 +190,29 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
                 getAvailabilityTimelinesWrapperFromTimePicker();
         logSubmit(availabilityTimelinesWrapper);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        dataManager.saveProviderAvailability(mProviderManager.getLastProviderId(),
-                availabilityTimelinesWrapper,
-                new FragmentSafeCallback<Void>(this) {
-                    @Override
-                    public void onCallbackSuccess(final Void response) {
-                        logSuccess(availabilityTimelinesWrapper);
-                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                        callTargetFragmentResult();
-                        ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
-                        getActivity().onBackPressed();
-                    }
-
-                    @Override
-                    public void onCallbackError(final DataManager.DataManagerError error) {
-                        logError(availabilityTimelinesWrapper);
-                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                        String message = error.getMessage();
-                        if (TextUtils.isEmpty(message)) {
-                            message = getString(R.string.an_error_has_occurred);
-                        }
-                        showToast(message);
-                    }
-                });
+//        dataManager.saveProviderAvailability(mProviderManager.getLastProviderId(),
+//                availabilityTimelinesWrapper,
+//                new FragmentSafeCallback<Void>(this) {
+//                    @Override
+//                    public void onCallbackSuccess(final Void response) {
+//                        logSuccess(availabilityTimelinesWrapper);
+//                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+//                        callTargetFragmentResult();
+//                        ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
+//                        getActivity().onBackPressed();
+//                    }
+//
+//                    @Override
+//                    public void onCallbackError(final DataManager.DataManagerError error) {
+//                        logError(availabilityTimelinesWrapper);
+//                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+//                        String message = error.getMessage();
+//                        if (TextUtils.isEmpty(message)) {
+//                            message = getString(R.string.an_error_has_occurred);
+//                        }
+//                        showToast(message);
+//                    }
+//                });
     }
 
     private void logSubmit(final AvailabilityTimelinesWrapper availabilityTimelinesWrapper) {
@@ -266,59 +277,6 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         return intervals;
     }
 
-    public void editStartTime() {
-        mStartTime.setBackgroundResource(R.color.tertiary_gray);
-        mStartTime.setTextColor(mWhiteColorValue);
-        uneditEndTime();
-    }
-
-    private void editEndTime() {
-        mEndTimeHolder.setBackgroundResource(R.color.tertiary_gray);
-        mEndTime.setTextColor(mWhiteColorValue);
-        uneditStartTime();
-    }
-
-    private void uneditStartTime() {
-        mStartTime.setBackgroundResource(R.color.handy_bg);
-        mStartTime.setTextColor(mBlackColorValue);
-    }
-
-    private void uneditEndTime() {
-        mEndTimeHolder.setBackgroundResource(R.color.handy_bg);
-        mEndTime.setTextColor(mBlackColorValue);
-    }
-
-    private void updateStartTime(final int hour) {
-        updateTime(mStartTime, hour, R.string.start_time);
-    }
-
-    private void updateEndTime(final int hour) {
-        updateTime(mEndTime, hour, R.string.end_time);
-    }
-
-    private void updateTime(final TextView timeView, final int hour,
-                            @StringRes final int emptyStringResId) {
-        if (hour == HandyTimePicker.NO_HOUR_SELECTED) {
-            timeView.setText(emptyStringResId);
-        }
-        else {
-            final Date date = DateTimeUtils.parseDateString(
-                    String.valueOf(hour), DateTimeUtils.HOUR_INT_FORMATTER);
-            timeView.setText(DateTimeUtils.formatDateTo12HourClock(date));
-        }
-        updateResetTimeRangeButtonVisibility();
-        updateSaveButtonVisibility();
-    }
-
-    private void updateResetTimeRangeButtonVisibility() {
-        if (mTimePicker.hasSelectedRange()) {
-            mResetTimeRangeButton.setVisibility(View.VISIBLE);
-        }
-        else {
-            mResetTimeRangeButton.setVisibility(View.GONE);
-        }
-    }
-
     private void updateSaveButtonVisibility() {
         mSaveButton.setVisibility(canSave() ? View.VISIBLE : View.GONE);
     }
@@ -379,30 +337,32 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         final String dateFormatted = DateTimeUtils.formatDateShortDayOfWeekShortMonthDay(mDate);
         setActionBar(getString(R.string.hours_for_date_formatted, dateFormatted), true);
         initTimePicker();
-        initTimeRange();
+        initTimeRanges();
         initAvailabilityToggle();
+        mTimeRanges.setCallbacks(mTimeRangesCallbacks);
         bus.post(new NavigationEvent.SetNavigationTabVisibility(false));
     }
 
     private void initAvailabilityToggle() {
-        mAvailabilityToggle.setOnCheckedChangeListener(mAvailabilityToggleCheckedChangeListener);
         mAvailabilityToggle.setChecked(isOriginallyAvailable());
+        mAvailabilityToggle.setOnCheckedChangeListener(mAvailabilityToggleCheckedChangeListener);
         if (!isOriginallyAvailable()) {
             freezeTimePicker();
-            updateSaveButtonVisibility();
         }
+        else {
+            unfreezeTimePicker();
+        }
+        updateSaveButtonVisibility();
     }
 
     private void unfreezeTimePicker() {
-        mStartTime.setAlpha(1.0f);
-        mEndTimeHolder.setAlpha(1.0f);
+        mTimeRanges.setAlpha(1.0f);
         mTimePicker.setAlpha(1.0f);
         mIsFrozen = false;
     }
 
     private void freezeTimePicker() {
-        mStartTime.setAlpha(0.3f);
-        mEndTimeHolder.setAlpha(0.3f);
+        mTimeRanges.setAlpha(0.3f);
         mTimePicker.setAlpha(0.3f);
         mIsFrozen = true;
     }
@@ -411,38 +371,44 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         mTimePicker.setTimeRange(DEFAULT_START_HOUR, DEFAULT_END_HOUR);
         mTimePicker.setCallbacks(new HandyTimePicker.Callbacks() {
             @Override
-            public void onRangeUpdated(final int startHour, final int endHour) {
+            public void onRangeUpdated(final int index, final HandyTimePicker.Range range) {
                 if (mIsFrozen) {
                     setAvailabilityToggleOnWithoutCallback();
                 }
-                updateStartTime(startHour);
-                updateEndTime(endHour);
+                mTimeRanges.updateCurrentTimeRange(range.getStartHour(), range.getEndHour());
             }
 
             @Override
-            public void onSelectionTypeChanged(final HandyTimePicker.SelectionType selectionType) {
+            public void onSelectionTypeChanged(
+                    final int index,
+                    final HandyTimePicker.SelectionType selectionType
+            ) {
                 if (selectionType == HandyTimePicker.SelectionType.START_TIME) {
-                    editStartTime();
+                    mTimeRanges.editCurrentStartTime();
                 }
                 else if (selectionType == HandyTimePicker.SelectionType.END_TIME) {
-                    editEndTime();
-                }
-                else if (selectionType == null) {
-                    uneditStartTime();
-                    uneditEndTime();
+                    mTimeRanges.editCurrentEndTime();
                 }
             }
         });
     }
 
-    private void initTimeRange() {
-        final AvailabilityInterval interval = getFirstAvailabilityInterval();
-        if (interval != null) {
-            if (mTimePicker.selectTimeRange(interval.getStartHour(), interval.getEndHour())) {
-                updateStartTime(interval.getStartHour());
-                updateEndTime(interval.getEndHour());
-                mTimePicker.setSelectionType(HandyTimePicker.SelectionType.END_TIME);
+    private void initTimeRanges() {
+        if (mAvailabilityTimeline != null && mAvailabilityTimeline.hasIntervals()) {
+            for (final AvailabilityInterval interval :
+                    mAvailabilityTimeline.getAvailabilityIntervals()) {
+                mTimeRanges.createNewTimeRange();
+                mTimeRanges.selectLastTimeRange();
+                mTimeRanges.updateCurrentTimeRange(interval.getStartHour(), interval.getEndHour());
+                mTimePicker.createNewRange(interval.getStartHour(), interval.getEndHour());
             }
+            mTimePicker.setSelectionType(HandyTimePicker.SelectionType.END_TIME);
+            mTimePicker.setCurrentRangeIndex(mCurrentTimeRangeIndex);
+        }
+        else {
+            mTimeRanges.createNewTimeRange();
+            mTimeRanges.selectLastTimeRange();
+            mTimePicker.setSelectionType(HandyTimePicker.SelectionType.START_TIME);
         }
     }
 

@@ -2,15 +2,46 @@ package com.handy.portal.library.ui.view.timepicker;
 
 import android.content.Context;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell.TimeClickListener {
     public enum SelectionType {
         START_TIME, END_TIME
+    }
+
+
+    public static class Range {
+        private int mStartHour;
+        private int mEndHour;
+
+        public Range(final int startHour, final int endHour) {
+            mStartHour = startHour;
+            mEndHour = endHour;
+        }
+
+        public int getStartHour() {
+            return mStartHour;
+        }
+
+        public void setStartHour(final int startHour) {
+            mStartHour = startHour;
+        }
+
+        public int getEndHour() {
+            return mEndHour;
+        }
+
+        public void setEndHour(final int endHour) {
+            mEndHour = endHour;
+        }
     }
 
 
@@ -20,10 +51,10 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
     public static final int MAXIMUM_START_HOUR = 24;
     private int mStartHour;
     private int mEndHour;
-    private int mSelectedStartHour = NO_HOUR_SELECTED;
-    private int mSelectedEndHour = NO_HOUR_SELECTED;
     private Callbacks mCallbacks;
     private SelectionType mSelectionType;
+    private List<Range> mSelectedRanges;
+    private int mCurrentRangeIndex;
 
     public HandyTimePicker(final Context context) {
         super(context);
@@ -48,33 +79,48 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
 
     private void init() {
         setOrientation(VERTICAL);
+        mSelectedRanges = new ArrayList<>();
+    }
+
+    public void createNewRange() {
+        mSelectedRanges.add(new Range(NO_HOUR_SELECTED, NO_HOUR_SELECTED));
+    }
+
+    public void createNewRange(final int startHour, final int endHour) {
+        mSelectedRanges.add(new Range(startHour, endHour));
+    }
+
+    public void setCurrentRangeIndex(final int currentRangeIndex) {
+        if (currentRangeIndex >= 0 && currentRangeIndex < mSelectedRanges.size()) {
+            mCurrentRangeIndex = currentRangeIndex;
+        }
     }
 
     public void setCallbacks(final Callbacks callbacks) {
         mCallbacks = callbacks;
     }
 
-    public void setSelectionType(@Nullable final SelectionType selectionType) {
+    public void setSelectionType(@NonNull final SelectionType selectionType) {
         mSelectionType = selectionType;
         if (mCallbacks != null) {
-            mCallbacks.onSelectionTypeChanged(mSelectionType);
+            mCallbacks.onSelectionTypeChanged(mCurrentRangeIndex, mSelectionType);
         }
     }
 
     public int getSelectedStartHour() {
-        return mSelectedStartHour;
+        return mSelectedRanges.get(mCurrentRangeIndex).getStartHour();
     }
 
     public int getSelectedEndHour() {
-        return mSelectedEndHour;
+        return mSelectedRanges.get(mCurrentRangeIndex).getEndHour();
     }
 
     public boolean hasSelectedStartTime() {
-        return mSelectedStartHour != NO_HOUR_SELECTED;
+        return getSelectedStartHour() != NO_HOUR_SELECTED;
     }
 
     public boolean hasSelectedEndTime() {
-        return mSelectedEndHour != NO_HOUR_SELECTED;
+        return getSelectedEndHour() != NO_HOUR_SELECTED;
     }
 
     public boolean hasSelectedRange() {
@@ -127,14 +173,12 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
             {
                 // Reset selection then reselect the original selected start hour.
                 final int selectedStartHour = getSelectedStartHour();
-                clearSelection();
+                clearCurrentSelection();
                 setSelectionType(SelectionType.START_TIME);
                 targetHour = selectedStartHour;
             }
             else // a single hour is currently selected
             {
-                clearSelection();
-                setSelectionType(null);
                 return;
             }
         }
@@ -166,9 +210,10 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
         if (startHour >= endHour || startHour < mStartHour || endHour > mEndHour) {
             return false;
         }
-        clearSelection();
-        mSelectedStartHour = startHour;
-        mSelectedEndHour = endHour;
+        clearCurrentSelection();
+        final Range currentRange = mSelectedRanges.get(mCurrentRangeIndex);
+        currentRange.setStartHour(startHour);
+        currentRange.setEndHour(endHour);
         for (int i = 0; i < getChildCount(); i++) {
             final HandyTimePickerRow timePickerRow = (HandyTimePickerRow) getChildAt(i);
             for (int j = 0; j < timePickerRow.mTimePickerCellViews.getChildCount(); j++) {
@@ -191,8 +236,14 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
         return true;
     }
 
-    public void clearSelection() {
-        mSelectedStartHour = mSelectedEndHour = NO_HOUR_SELECTED;
+    public void clearCurrentSelection() {
+        clearSelection(mCurrentRangeIndex);
+    }
+
+    public void clearSelection(final int index) {
+        final Range currentRange = mSelectedRanges.get(index);
+        currentRange.setStartHour(NO_HOUR_SELECTED);
+        currentRange.setEndHour(NO_HOUR_SELECTED);
         for (int i = 0; i < getChildCount(); i++) {
             final HandyTimePickerRow timePickerRow = (HandyTimePickerRow) getChildAt(i);
             for (int j = 0; j < timePickerRow.mTimePickerCellViews.getChildCount(); j++) {
@@ -207,12 +258,23 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
         notifyRangeUpdate();
     }
 
+    public void removeRangeAt(final int index) {
+        clearSelection(index);
+        mSelectedRanges.remove(index);
+        if (index >= mCurrentRangeIndex) {
+            setCurrentRangeIndex(index - 1);
+        }
+    }
+
     private void selectStartHour(final int hour) {
-        if (mSelectedEndHour == NO_HOUR_SELECTED || hour < mSelectedEndHour) {
-            resetCellForHour(mSelectedStartHour);
-            mSelectedStartHour = hour;
+        final Range currentRange = mSelectedRanges.get(mCurrentRangeIndex);
+        final int selectedStartHour = currentRange.getStartHour();
+        final int selectedEndHour = currentRange.getEndHour();
+        if (selectedEndHour == NO_HOUR_SELECTED || hour < selectedEndHour) {
+            resetCellForHour(selectedStartHour);
+            currentRange.setStartHour(hour);
             if (getSelectedEndHour() != NO_HOUR_SELECTED) {
-                selectTimeRange(mSelectedStartHour, mSelectedEndHour);
+                selectTimeRange(selectedStartHour, selectedEndHour);
             }
             else {
                 selectCellForHour(hour);
@@ -222,11 +284,14 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
     }
 
     private void selectEndHour(final int hour) {
-        if (mSelectedStartHour == NO_HOUR_SELECTED || hour > mSelectedStartHour) {
-            resetCellForHour(mSelectedEndHour);
-            mSelectedEndHour = hour;
+        final Range currentRange = mSelectedRanges.get(mCurrentRangeIndex);
+        final int selectedStartHour = currentRange.getStartHour();
+        final int selectedEndHour = currentRange.getEndHour();
+        if (selectedStartHour == NO_HOUR_SELECTED || hour > selectedStartHour) {
+            resetCellForHour(selectedEndHour);
+            currentRange.setEndHour(hour);
             if (getSelectedStartHour() != NO_HOUR_SELECTED) {
-                selectTimeRange(mSelectedStartHour, mSelectedEndHour);
+                selectTimeRange(selectedStartHour, selectedEndHour);
             }
             else {
                 selectCellForHour(hour);
@@ -269,13 +334,13 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
 
     private void notifyRangeUpdate() {
         if (mCallbacks != null) {
-            mCallbacks.onRangeUpdated(mSelectedStartHour, mSelectedEndHour);
+            mCallbacks.onRangeUpdated(mCurrentRangeIndex, mSelectedRanges.get(mCurrentRangeIndex));
         }
     }
 
     public interface Callbacks {
-        void onRangeUpdated(int startHour, int endHour);
+        void onRangeUpdated(int index, Range range);
 
-        void onSelectionTypeChanged(SelectionType selectionType);
+        void onSelectionTypeChanged(int index, SelectionType selectionType);
     }
 }

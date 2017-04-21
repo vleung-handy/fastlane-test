@@ -697,6 +697,7 @@
     <string name="i_am_available">I\'m available</string>
     <string name="not_available">Not Available</string>
     <string name="set_hours_prompt_subtitle">Let customers book directly with you.</string>
+    <string name="add_another_time_slot">Add another time slot</string>
 
     <!-- Payments -->
     <string name="payment_status_formatted">Status: %1$s</string>
