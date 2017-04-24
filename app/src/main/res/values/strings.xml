@@ -492,8 +492,8 @@
     <string name="see_job_details">see job details</string>
     <string name="continue_to_check_out">Continue to check out </string>
 
-    <!-- API -->
-    <string name="google_app_key">AIzaSyCKCHTy6QgYdpLXtEpoDs22MI0JnqP8_mc</string>
+    <!-- Google API: android-portal -->
+    <string name="google_app_key">AIzaSyAWYPhjXPCNcaNSV9dtHEiFoBfu7Q2x1Jw</string>
 
     <string name="job_no_longer_available">That job is no longer available.</string>
     <string name="environment">Environment</string>
