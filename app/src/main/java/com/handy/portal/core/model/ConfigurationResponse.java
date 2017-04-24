@@ -57,7 +57,7 @@ public class ConfigurationResponse {
     @SerializedName("portal_profile_share_enabled")
     private boolean mProfileShareEnabled;
 
-    @SerializedName("more_tab_enabled")
+    @SerializedName("more_tab_full_page_enabled")
     private boolean mMoreTabEnabled;
 
     @SerializedName("pro_announcements_enabled")
