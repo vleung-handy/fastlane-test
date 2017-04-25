@@ -29,6 +29,10 @@ public class User implements Serializable {
         return mFirstName;
     }
 
+    public String getLastName() {
+        return mLastName;
+    }
+
     public String getPhone() {
         return mPhone;
     }
@@ -44,5 +48,9 @@ public class User implements Serializable {
     public String getAbbreviatedName() {
         String lastInitial = TextUtils.isEmpty(mLastName) ? "" : mLastName.charAt(0) + ".";
         return mFirstName + " " + lastInitial;
+    }
+
+    public String getFullName() {
+        return mFirstName + " " + mLastName;
     }
 }

@@ -214,10 +214,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
             final TextView title =
                     (TextView) associatedView.findViewById(R.id.booking_entry_area_text);
             if (title != null) {
-                final Booking.RequestAttributes requestAttributes = booking.getRequestAttributes();
-                final String customerInfo = requestAttributes.hasCustomer() ?
-                        requestAttributes.getCustomerName() : requestAttributes.getDetailsTitle();
-                title.setText(customerInfo);
+                title.setText(booking.getRequestAttributes().getListingTitle());
             }
 
             final TextView subtitle =
