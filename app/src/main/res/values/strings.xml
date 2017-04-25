@@ -678,6 +678,8 @@
     <string name="saturday_initial">S</string>
 
     <!-- Pro Availability -->
+    <string name="available_hours_info_banner_header">Keep your availability up to date</string>
+    <string name="available_hours_info_banner_body">Your past customers can instantly book or reschedule into the availability you set</string>
     <string name="no_available_hours">No Available Hours</string>
     <string name="available_hours">Available Hours</string>
     <string name="set_hours">Set Hours</string>

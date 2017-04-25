@@ -7,8 +7,37 @@
     android:orientation="vertical"
     >
 
+    <LinearLayout
+        android:id="@+id/available_hours_info_banner_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/default_padding_medium"
+        android:paddingLeft="@dimen/default_padding"
+        android:paddingRight="@dimen/default_padding"
+        android:paddingTop="@dimen/default_padding_medium"
+        >
+
+        <TextView
+            style="@style/TextView.Medium.Bold"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/available_hours_info_banner_header"
+            />
+
+        <TextView
+            style="@style/TextView.Small"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/available_hours_info_banner_body"
+            />
+    </LinearLayout>
+
     <android.support.design.widget.TabLayout
         android:id="@+id/available_hours_tab_layout"
+        android:layout_below="@id/available_hours_info_banner_layout"
         style="@style/TextView.Large"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
