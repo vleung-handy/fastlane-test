@@ -45,6 +45,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     @Inject
     ProviderManager mProviderManager;
 
+    private static final int TIME_SLOTS_LIMIT = 3;
     private static final int DEFAULT_START_HOUR = 7;
     private static final int DEFAULT_END_HOUR = 23;
     @BindView(R.id.availability_toggle)
@@ -178,9 +179,20 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
             mTimePickerViewModel.setClosed(false);
         }
         else if (mTimePickerViewModel.validate()) {
-            mTimePickerViewModel.addTimeRange();
-            mTimePickerViewModel.getPointer().point(mTimePickerViewModel.getTimeRangesCount() - 1,
-                    SelectionType.START_TIME);
+            if (mTimePickerViewModel.getTimeRangesCount() < TIME_SLOTS_LIMIT) {
+                mTimePickerViewModel.addTimeRange();
+                mTimePickerViewModel.getPointer().point(
+                        mTimePickerViewModel.getTimeRangesCount() - 1,
+                        SelectionType.START_TIME
+                );
+            }
+            else {
+                showToast(getString(R.string.error_time_slots_limit_exceeded_formatted,
+                        TIME_SLOTS_LIMIT));
+            }
+        }
+        else {
+            showToast(R.string.error_incomplete_time_ranges);
         }
     }
 
@@ -297,6 +309,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
                              @Nullable final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_edit_available_hours, container, false);
         ButterKnife.bind(this, view);
+        bus.post(new NavigationEvent.SetNavigationTabVisibility(false));
         return view;
     }
 
@@ -311,7 +324,6 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         mTimePicker.setViewModel(mTimePickerViewModel);
         mTimeRanges.setViewModel(mTimePickerViewModel);
         mTimePickerViewModel.addListener(mTimePickerViewModelListener);
-        bus.post(new NavigationEvent.SetNavigationTabVisibility(false));
     }
 
     private void initTimePickerViewModel() {

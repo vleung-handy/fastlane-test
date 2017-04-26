@@ -6,6 +6,9 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import static com.handy.portal.proavailability.viewmodel.TimePickerViewModel.TimeRange.MAXIMUM_HOUR;
+import static com.handy.portal.proavailability.viewmodel.TimePickerViewModel.TimeRange.MINIMUM_HOUR;
+
 public class TimePickerViewModel {
 
     public enum SelectionType {
@@ -123,6 +126,23 @@ public class TimePickerViewModel {
         return true;
     }
 
+    private List<TimeRange> getInvertedTimeRanges(final List<TimeRange> timeRanges) {
+        final List<Integer> invertedTimeHours = new ArrayList<>();
+        for (final TimeRange timeRange : timeRanges) {
+            invertedTimeHours.add(timeRange.getStartHour());
+            invertedTimeHours.add(timeRange.getEndHour());
+        }
+        invertedTimeHours.add(0, MINIMUM_HOUR);
+        invertedTimeHours.add(MAXIMUM_HOUR);
+
+        final List<TimeRange> invertedTimeRanges = new ArrayList<>();
+        for (int i = 0; i < invertedTimeHours.size(); i += 2) {
+            invertedTimeRanges.add(new TimeRange(invertedTimeHours.get(i),
+                    invertedTimeHours.get(i + 1)));
+        }
+
+        return invertedTimeRanges;
+    }
 
     public class Pointer {
         private static final int NO_INDEX = -1;
@@ -226,15 +246,48 @@ public class TimePickerViewModel {
         }
 
         public boolean validateStartHour(final int startHour) {
-            return (startHour >= MINIMUM_HOUR && startHour < MAXIMUM_HOUR
+            return validatePotentialTimeRange(startHour, mEndHour)
+                    && (startHour >= MINIMUM_HOUR && startHour < MAXIMUM_HOUR
                     && (!hasEndHour() || startHour < mEndHour))
                     || startHour == NO_HOUR;
         }
 
         public boolean validateEndHour(final int endHour) {
-            return (endHour <= MAXIMUM_HOUR && endHour > MINIMUM_HOUR
+            return validatePotentialTimeRange(mStartHour, endHour)
+                    && (endHour <= MAXIMUM_HOUR && endHour > MINIMUM_HOUR
                     && (!hasStartHour() || endHour > mStartHour))
                     || endHour == NO_HOUR;
+        }
+
+        private boolean validatePotentialTimeRange(final int startHour, final int endHour) {
+            if (startHour == NO_HOUR && endHour == NO_HOUR) {
+                return true;
+            }
+            else {
+                final List<TimeRange> timeRanges = new ArrayList<>(mTimeRanges);
+                timeRanges.remove(getPointer().getTimeRange());
+
+                for (final TimeRange timeRange : getInvertedTimeRanges(timeRanges)) {
+                    if ((startHour == NO_HOUR || timeRange.covers(startHour, false))
+                            && (endHour == NO_HOUR || timeRange.covers(endHour, false))) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        private boolean covers(final int hour, final boolean inclusive) {
+            if (hour == NO_HOUR) {
+                return false;
+            }
+            if (inclusive && (hour == mStartHour || hour == mEndHour)) {
+                return true;
+            }
+            if (hasStartHour() && hasEndHour()) {
+                return hour > mStartHour && hour < mEndHour;
+            }
+            return false;
         }
 
         public void clear() {

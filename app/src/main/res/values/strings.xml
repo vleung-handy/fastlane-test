@@ -698,6 +698,8 @@
     <string name="not_available">Not Available</string>
     <string name="set_hours_prompt_subtitle">Let customers book directly with you.</string>
     <string name="add_another_time_slot">Add another time slot</string>
+    <string name="error_incomplete_time_ranges">You must fill out all time slots before adding a new one.</string>
+    <string name="error_time_slots_limit_exceeded_formatted">You may only enter up to %1$d times slots.</string>
 
     <!-- Payments -->
     <string name="payment_status_formatted">Status: %1$s</string>
