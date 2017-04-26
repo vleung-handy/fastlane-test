@@ -35,6 +35,7 @@ import com.handy.portal.proavailability.viewmodel.TimePickerViewModel;
 import com.handy.portal.proavailability.viewmodel.TimePickerViewModel.SelectionType;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -44,6 +45,8 @@ import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.handy.portal.proavailability.viewmodel.TimePickerViewModel.Pointer.*;
 
 public class EditAvailableHoursFragment extends ActionBarFragment {
     @Inject
@@ -95,8 +98,21 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
                     final CompoundButton buttonView,
                     final boolean isChecked
             ) {
-                mTimePickerViewModel.setClosed(!isChecked);
-                updateSaveButtonVisibility();
+                final boolean closed = !isChecked;
+                if (closed) {
+                    while (mTimePickerViewModel.getTimeRangesCount() > 1) {
+                        mTimePickerViewModel.removeTimeRange(1);
+                    }
+                    if (mTimePickerViewModel.getTimeRangesCount() == 1) {
+                        mTimePickerViewModel.clearTimeRange(0);
+                    }
+                    mTimePickerViewModel.getPointer().point(NO_INDEX, null);
+                }
+                else {
+                    mTimePickerViewModel.getPointer().point(0, SelectionType.START_TIME);
+                }
+                mTimePickerViewModel.setClosed(closed);
+                updateButtonsVisibility();
             }
         };
         mTimePickerViewModelListener = new TimePickerViewModel.Listener() {
@@ -109,13 +125,13 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
                     final int newEndHour
             ) {
                 mIsDirty = true;
-                updateSaveButtonVisibility();
+                updateButtonsVisibility();
             }
 
             @Override
             public void onTimeRangeAdded(final int index, final int startHour, final int endHour) {
                 mIsDirty = true;
-                updateSaveButtonVisibility();
+                updateButtonsVisibility();
             }
 
             @Override
@@ -125,7 +141,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
                     final int endHour
             ) {
                 mIsDirty = true;
-                updateSaveButtonVisibility();
+                updateButtonsVisibility();
             }
 
             @Override
@@ -145,9 +161,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
                 mAvailabilityToggle.setOnCheckedChangeListener(
                         mAvailabilityToggleCheckedChangeListener);
 
-                mAddTimeRangeButton.setAlpha(closed ? 0.3f : 1.0f);
-
-                updateSaveButtonVisibility();
+                updateButtonsVisibility();
             }
         };
     }
@@ -180,22 +194,11 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     @OnClick(R.id.add_time_range_button)
     public void onAddTimeRange() {
         mTimePickerViewModel.setClosed(false);
-        if (mTimePickerViewModel.validate()) {
-            if (mTimePickerViewModel.getTimeRangesCount() < TIME_SLOTS_LIMIT) {
-                mTimePickerViewModel.addTimeRange();
-                mTimePickerViewModel.getPointer().point(
-                        mTimePickerViewModel.getTimeRangesCount() - 1,
-                        SelectionType.START_TIME
-                );
-            }
-            else {
-                showToast(getString(R.string.error_time_slots_limit_exceeded_formatted,
-                        TIME_SLOTS_LIMIT));
-            }
-        }
-        else {
-            showToast(R.string.error_incomplete_time_ranges);
-        }
+        mTimePickerViewModel.addTimeRange();
+        mTimePickerViewModel.getPointer().point(
+                mTimePickerViewModel.getTimeRangesCount() - 1,
+                SelectionType.START_TIME
+        );
     }
 
     @OnClick(R.id.save)
@@ -285,15 +288,24 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
 
     private ArrayList<AvailabilityInterval> getAvailabilityIntervalsFromViewModel() {
         final ArrayList<AvailabilityInterval> intervals = new ArrayList<>();
-        for (final TimePickerViewModel.TimeRange timeRange : mTimePickerViewModel.getTimeRanges()) {
-            intervals.add(new AvailabilityInterval(timeRange.getStartHour(),
-                    timeRange.getEndHour()));
+        if (!mTimePickerViewModel.isClosed()) {
+            final List<TimePickerViewModel.TimeRange> timeRanges =
+                    mTimePickerViewModel.getTimeRanges();
+            Collections.sort(timeRanges);
+            for (final TimePickerViewModel.TimeRange timeRange : timeRanges) {
+                intervals.add(new AvailabilityInterval(timeRange.getStartHour(),
+                        timeRange.getEndHour()));
+            }
         }
         return intervals;
     }
 
-    private void updateSaveButtonVisibility() {
+    private void updateButtonsVisibility() {
         mSaveButton.setVisibility(mTimePickerViewModel.validate() ? View.VISIBLE : View.GONE);
+        mAddTimeRangeButton.setVisibility(!mTimePickerViewModel.isClosed()
+                && mTimePickerViewModel.hasCompleteTimeRanges()
+                && mTimePickerViewModel.getTimeRangesCount() < TIME_SLOTS_LIMIT ?
+                View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -325,9 +337,9 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         initTimePickerViewModel();
         initAvailabilityToggle();
         initTimePicker();
-        mAddTimeRangeButton.setAlpha(mTimePickerViewModel.isClosed() ? 0.3f : 1.0f);
         mTimeRanges.setViewModel(mTimePickerViewModel);
         mTimePickerViewModel.addListener(mTimePickerViewModelListener);
+        updateButtonsVisibility();
     }
 
     private void initTimePickerViewModel() {

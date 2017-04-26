@@ -3,6 +3,7 @@ package com.handy.portal.proavailability.view;
 import android.content.Context;
 import android.support.annotation.Nullable;
 import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -105,6 +106,7 @@ public class AvailableHoursWithDateView extends FrameLayout {
         final TextView textView = new TextView(getContext());
         textView.setTextColor(mGrayColor);
         textView.setTypeface(FontUtils.getFont(getContext(), FontUtils.CIRCULAR_BOOK));
+        textView.setGravity(Gravity.END);
         return textView;
     }
 }

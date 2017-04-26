@@ -1,6 +1,8 @@
 package com.handy.portal.proavailability.viewmodel;
 
 
+import android.support.annotation.NonNull;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -28,8 +30,8 @@ public class TimePickerViewModel {
         mClosed = false;
     }
 
-    public Collection<TimeRange> getTimeRanges() {
-        return Collections.unmodifiableCollection(mTimeRanges);
+    public List<TimeRange> getTimeRanges() {
+        return new ArrayList<>(mTimeRanges);
     }
 
     public void addTimeRange() {
@@ -74,22 +76,6 @@ public class TimePickerViewModel {
         return mPointer;
     }
 
-    public boolean hasStartTime(final int index) {
-        return getStartHour(index) != TimeRange.NO_HOUR;
-    }
-
-    private int getStartHour(final int index) {
-        return mTimeRanges.get(index).getStartHour();
-    }
-
-    public boolean hasEndTime(final int index) {
-        return getEndHour(index) != TimeRange.NO_HOUR;
-    }
-
-    public int getEndHour(final int index) {
-        return mTimeRanges.get(index).getEndHour();
-    }
-
     public boolean isClosed() {
         return mClosed;
     }
@@ -117,7 +103,7 @@ public class TimePickerViewModel {
         }
     }
 
-    private boolean hasCompleteTimeRanges() {
+    public boolean hasCompleteTimeRanges() {
         for (final TimeRange timeRange : mTimeRanges) {
             if (!timeRange.hasStartHour() || !timeRange.hasEndHour()) {
                 return false;
@@ -126,14 +112,40 @@ public class TimePickerViewModel {
         return true;
     }
 
+    private boolean validatePotentialTimeRange(final int startHour, final int endHour) {
+        if (startHour == TimeRange.NO_HOUR && endHour == TimeRange.NO_HOUR) {
+            return true;
+        }
+        else {
+            final List<TimeRange> timeRanges = new ArrayList<>(mTimeRanges);
+            timeRanges.remove(getPointer().getTimeRange());
+
+            for (final TimeRange timeRange : getInvertedTimeRanges(timeRanges)) {
+                if ((startHour == TimeRange.NO_HOUR || timeRange.covers(startHour, false))
+                        && (endHour == TimeRange.NO_HOUR || timeRange.covers(endHour, false))) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
     private List<TimeRange> getInvertedTimeRanges(final List<TimeRange> timeRanges) {
         final List<Integer> invertedTimeHours = new ArrayList<>();
         for (final TimeRange timeRange : timeRanges) {
-            invertedTimeHours.add(timeRange.getStartHour());
-            invertedTimeHours.add(timeRange.getEndHour());
+            if (timeRange.hasRange()) {
+                invertedTimeHours.add(timeRange.getStartHour());
+                invertedTimeHours.add(timeRange.getEndHour());
+            }
+            else if (timeRange.hasStartHour() ^ timeRange.hasEndHour()) {
+                final int hour = timeRange.hasStartHour() ?
+                        timeRange.getStartHour() : timeRange.getEndHour();
+                invertedTimeHours.add(hour);
+                invertedTimeHours.add(hour);
+            }
         }
-        invertedTimeHours.add(0, MINIMUM_HOUR);
-        invertedTimeHours.add(MAXIMUM_HOUR);
+        invertedTimeHours.add(0, MINIMUM_HOUR - 1);
+        invertedTimeHours.add(MAXIMUM_HOUR + 1);
 
         final List<TimeRange> invertedTimeRanges = new ArrayList<>();
         for (int i = 0; i < invertedTimeHours.size(); i += 2) {
@@ -190,10 +202,10 @@ public class TimePickerViewModel {
     }
 
 
-    public class TimeRange {
+    public class TimeRange implements Comparable<TimeRange> {
         public static final int MINIMUM_HOUR = 0;
         public static final int MAXIMUM_HOUR = 24;
-        public static final int NO_HOUR = -1;
+        public static final int NO_HOUR = -999;
 
         private int mStartHour;
         private int mEndHour;
@@ -207,8 +219,8 @@ public class TimePickerViewModel {
             return mStartHour;
         }
 
-        public void setStartHour(final int startHour) {
-            if (!validateStartHour(startHour)) { return; }
+        public boolean setStartHour(final int startHour) {
+            if (!validateStartHour(startHour)) { return false; }
             setClosed(false);
             final int oldStartHour = mStartHour;
             mStartHour = startHour;
@@ -216,6 +228,7 @@ public class TimePickerViewModel {
                 listener.onTimeRangeUpdated(mTimeRanges.indexOf(this), oldStartHour, mEndHour,
                         mStartHour, mEndHour);
             }
+            return true;
         }
 
         public boolean hasStartHour() {
@@ -226,8 +239,8 @@ public class TimePickerViewModel {
             return mEndHour;
         }
 
-        public void setEndHour(final int endHour) {
-            if (!validateEndHour(endHour)) { return; }
+        public boolean setEndHour(final int endHour) {
+            if (!validateEndHour(endHour)) { return false; }
             setClosed(false);
             final int oldEndHour = mEndHour;
             mEndHour = endHour;
@@ -235,6 +248,7 @@ public class TimePickerViewModel {
                 listener.onTimeRangeUpdated(mTimeRanges.indexOf(this), mStartHour, oldEndHour,
                         mStartHour, mEndHour);
             }
+            return true;
         }
 
         public boolean hasEndHour() {
@@ -259,25 +273,7 @@ public class TimePickerViewModel {
                     || endHour == NO_HOUR;
         }
 
-        private boolean validatePotentialTimeRange(final int startHour, final int endHour) {
-            if (startHour == NO_HOUR && endHour == NO_HOUR) {
-                return true;
-            }
-            else {
-                final List<TimeRange> timeRanges = new ArrayList<>(mTimeRanges);
-                timeRanges.remove(getPointer().getTimeRange());
-
-                for (final TimeRange timeRange : getInvertedTimeRanges(timeRanges)) {
-                    if ((startHour == NO_HOUR || timeRange.covers(startHour, false))
-                            && (endHour == NO_HOUR || timeRange.covers(endHour, false))) {
-                        return true;
-                    }
-                }
-            }
-            return false;
-        }
-
-        private boolean covers(final int hour, final boolean inclusive) {
+        public boolean covers(final int hour, final boolean inclusive) {
             if (hour == NO_HOUR) {
                 return false;
             }
@@ -297,6 +293,12 @@ public class TimePickerViewModel {
 
         public boolean validate() {
             return hasStartHour() && hasEndHour();
+        }
+
+        @Override
+        public int compareTo(@NonNull final TimeRange other) {
+            final int difference = mStartHour - other.getStartHour();
+            return difference == 0 ? 0 : (difference / Math.abs(difference));
         }
     }
 

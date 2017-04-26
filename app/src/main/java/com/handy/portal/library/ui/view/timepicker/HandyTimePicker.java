@@ -11,11 +11,13 @@ import com.handy.portal.proavailability.viewmodel.TimePickerViewModel;
 import com.handy.portal.proavailability.viewmodel.TimePickerViewModel.SelectionType;
 import com.handy.portal.proavailability.viewmodel.TimePickerViewModel.TimeRange;
 
+import java.util.List;
+
 
 public class HandyTimePicker extends LinearLayout
         implements HandyTimePickerCell.TimeClickListener, TimePickerViewModel.Listener {
 
-    private static final int DEFAULT_CELLS_PER_ROW_COUNT = 3;
+    private static final int DEFAULT_CELLS_PER_ROW_COUNT = 4;
     private int mStartHour;
     private int mEndHour;
     private TimePickerViewModel mViewModel;
@@ -87,6 +89,18 @@ public class HandyTimePicker extends LinearLayout
         if (!pointer.validate()) {
             pointer.point(0, SelectionType.START_TIME);
         }
+
+        // Select an existing range if necessary.
+        final List<TimeRange> timeRanges = mViewModel.getTimeRanges();
+        for (int i = 0; i < timeRanges.size(); i++) {
+            final TimeRange timeRange = timeRanges.get(i);
+            if (timeRange != pointer.getTimeRange() && timeRange.covers(targetHour, true)) {
+                pointer.point(i, targetHour == timeRange.getStartHour() ?
+                        SelectionType.START_TIME : SelectionType.END_TIME);
+                return;
+            }
+        }
+
         // Default selection to end hour if a start hour has been selected but end hour hasn't
         // been selected.
         final TimeRange pointerTimeRange = pointer.getTimeRange();
@@ -118,13 +132,17 @@ public class HandyTimePicker extends LinearLayout
 
         // Tapping an earlier hour when there is already a selected start hour will force the
         // selection to start hour.
-        if (pointerTimeRange.hasStartHour() && targetHour < pointerTimeRange.getStartHour()) {
+        if (pointerTimeRange.hasStartHour()
+                && targetHour < pointerTimeRange.getStartHour()
+                && pointerTimeRange.validateStartHour(targetHour)) {
             pointer.setSelectionType(SelectionType.START_TIME);
         }
 
         // Tapping a later hour when there is already a selected end hour will force the selection
         // to end hour.
-        if (pointerTimeRange.hasEndHour() && targetHour > pointerTimeRange.getEndHour()) {
+        if (pointerTimeRange.hasEndHour()
+                && targetHour > pointerTimeRange.getEndHour()
+                && pointerTimeRange.validateEndHour(targetHour)) {
             pointer.setSelectionType(SelectionType.END_TIME);
         }
 
