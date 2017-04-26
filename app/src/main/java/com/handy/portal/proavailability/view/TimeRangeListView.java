@@ -121,12 +121,14 @@ public class TimeRangeListView extends LinearLayout implements TimePickerViewMod
         for (final TimeRangeView timeRangeView : mTimeRangeViews) {
             timeRangeView.unedit();
         }
-        final TimeRangeView selectedTimeRangeView = mTimeRangeViews.get(index);
-        if (selectionType == SelectionType.START_TIME) {
-            selectedTimeRangeView.editStartTime();
-        }
-        else if (selectionType == SelectionType.END_TIME) {
-            selectedTimeRangeView.editEndTime();
+        if (index != TimePickerViewModel.Pointer.NO_INDEX) {
+            final TimeRangeView selectedTimeRangeView = mTimeRangeViews.get(index);
+            if (selectionType == SelectionType.START_TIME) {
+                selectedTimeRangeView.editStartTime();
+            }
+            else if (selectionType == SelectionType.END_TIME) {
+                selectedTimeRangeView.editEndTime();
+            }
         }
     }
 

@@ -145,7 +145,7 @@ public class TimePickerViewModel {
     }
 
     public class Pointer {
-        private static final int NO_INDEX = -1;
+        public static final int NO_INDEX = -1;
 
         private int mIndex;
         private SelectionType mSelectionType;
