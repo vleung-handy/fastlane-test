@@ -56,6 +56,7 @@ public class HandyTimePicker extends LinearLayout
                     timeRange.getEndHour());
         }
         setAlpha(mViewModel.isClosed() ? 0.3f : 1.0f);
+        updateEnabledHours();
     }
 
     private boolean covers(final int hour) {
@@ -63,11 +64,6 @@ public class HandyTimePicker extends LinearLayout
     }
 
     public void setTimeRange(final int startHour, final int endHour) {
-        if (startHour < TimeRange.MINIMUM_HOUR
-                || endHour > TimeRange.MAXIMUM_HOUR
-                || startHour >= endHour) {
-            return;
-        }
         mStartHour = startHour;
         mEndHour = endHour;
         for (int rowStartHour = startHour; rowStartHour <= endHour;
@@ -84,32 +80,7 @@ public class HandyTimePicker extends LinearLayout
     public void onHourClicked(final int hour) {
         int targetHour = hour;
         final TimePickerViewModel.Pointer pointer = mViewModel.getPointer();
-
-        // Default selection to start hour.
-        if (!pointer.validate()) {
-            pointer.point(0, SelectionType.START_TIME);
-        }
-
-        // Select an existing range if necessary.
-        final List<TimeRange> timeRanges = mViewModel.getTimeRanges();
-        for (int i = 0; i < timeRanges.size(); i++) {
-            final TimeRange timeRange = timeRanges.get(i);
-            if (timeRange != pointer.getTimeRange() && timeRange.covers(targetHour, true)) {
-                pointer.point(i, targetHour == timeRange.getStartHour() ?
-                        SelectionType.START_TIME : SelectionType.END_TIME);
-                return;
-            }
-        }
-
-        // Default selection to end hour if a start hour has been selected but end hour hasn't
-        // been selected.
         final TimeRange pointerTimeRange = pointer.getTimeRange();
-        if (pointer.getSelectionType() == SelectionType.START_TIME
-                && pointerTimeRange.hasStartHour()
-                && !pointerTimeRange.hasEndHour()
-                && targetHour != pointerTimeRange.getStartHour()) {
-            pointer.setSelectionType(SelectionType.END_TIME);
-        }
 
         // Tapping selected times on the picker will cancel the range and leave the start hour,
         // or deselect a single selection.
@@ -130,30 +101,19 @@ public class HandyTimePicker extends LinearLayout
             }
         }
 
-        // Tapping an earlier hour when there is already a selected start hour will force the
-        // selection to start hour.
-        if (pointerTimeRange.hasStartHour()
-                && targetHour < pointerTimeRange.getStartHour()
-                && pointerTimeRange.validateStartHour(targetHour)) {
-            pointer.setSelectionType(SelectionType.START_TIME);
-        }
-
-        // Tapping a later hour when there is already a selected end hour will force the selection
-        // to end hour.
-        if (pointerTimeRange.hasEndHour()
-                && targetHour > pointerTimeRange.getEndHour()
-                && pointerTimeRange.validateEndHour(targetHour)) {
-            pointer.setSelectionType(SelectionType.END_TIME);
-        }
-
         // Select start hour if applicable.
         if (pointer.getSelectionType() == SelectionType.START_TIME) {
-            pointerTimeRange.setStartHour(targetHour);
+            final boolean setStartHourSuccess = pointerTimeRange.setStartHour(targetHour);
+            if (setStartHourSuccess && !pointerTimeRange.hasEndHour()) {
+                pointer.setSelectionType(SelectionType.END_TIME);
+            }
         }
-
         // Select end hour if applicable.
-        if (pointer.getSelectionType() == SelectionType.END_TIME) {
-            pointerTimeRange.setEndHour(targetHour);
+        else if (pointer.getSelectionType() == SelectionType.END_TIME) {
+            final boolean setEndHourSuccess = pointerTimeRange.setEndHour(targetHour);
+            if (setEndHourSuccess && !pointerTimeRange.hasStartHour()) {
+                pointer.setSelectionType(SelectionType.START_TIME);
+            }
         }
     }
 
@@ -242,31 +202,59 @@ public class HandyTimePicker extends LinearLayout
         return null;
     }
 
+    private void updateEnabledHours() {
+        if (mViewModel.getPointer().validate()) {
+            final List<Integer> selectableHours =
+                    mViewModel.getSelectableHours(mViewModel.getPointer().getTimeRange());
+            for (int i = 0; i < getChildCount(); i++) {
+                final HandyTimePickerRow timePickerRow = (HandyTimePickerRow) getChildAt(i);
+                for (int j = 0; j < timePickerRow.mTimePickerCellViews.getChildCount(); j++) {
+                    final HandyTimePickerCell timePickerCell =
+                            (HandyTimePickerCell) timePickerRow.mTimePickerCellViews.getChildAt(j);
+                    final int hour = timePickerCell.getHour();
+                    timePickerCell.unfreeze();
+                    if (selectableHours != null) {
+                        if (selectableHours.contains(hour)) {
+                            timePickerCell.taunt(mViewModel.getPointer().getSelectionType());
+                        }
+                        else {
+                            timePickerCell.freeze();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     @Override
     public void onTimeRangeUpdated(
             final int index, final int oldStartHour, final int oldEndHour,
             final int newStartHour, final int newEndHour
     ) {
         selectTimeRange(oldStartHour, oldEndHour, newStartHour, newEndHour);
+        updateEnabledHours();
     }
 
     @Override
     public void onTimeRangeAdded(final int index, final int startHour, final int endHour) {
         selectTimeRange(TimeRange.NO_HOUR, TimeRange.NO_HOUR, startHour, endHour);
+        updateEnabledHours();
     }
 
     @Override
     public void onTimeRangeRemoved(final int index, final int startHour, final int endHour) {
         clearSelection(startHour, endHour);
+        updateEnabledHours();
     }
 
     @Override
     public void onPointerUpdated(final int index, final SelectionType selectionType) {
-        // do nothing
+        updateEnabledHours();
     }
 
     @Override
     public void onClosedStateChanged(final boolean closed) {
         setAlpha(closed ? 0.3f : 1.0f);
+        updateEnabledHours();
     }
 }

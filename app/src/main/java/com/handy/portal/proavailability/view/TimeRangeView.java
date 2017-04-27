@@ -31,10 +31,16 @@ public class TimeRangeView extends FrameLayout {
     ViewGroup mEndTimeHolder;
     @BindView(R.id.reset_time_range)
     View mResetTimeRangeButton;
+    @BindView(R.id.start_time_indicator)
+    View mStartTimeIndicator;
+    @BindView(R.id.end_time_indicator)
+    View mEndTimeIndicator;
     @BindColor(R.color.black)
-    int mBlackColorValue;
-    @BindColor(R.color.white)
-    int mWhiteColorValue;
+    int mBlackColor;
+    @BindColor(R.color.handy_darkened_blue)
+    int mBlueColor;
+    @BindColor(R.color.painter_purple)
+    int mPurpleColor;
 
     public TimeRangeView(@NonNull final Context context) {
         super(context);
@@ -69,14 +75,14 @@ public class TimeRangeView extends FrameLayout {
     }
 
     public void editStartTime() {
-        mStartTime.setBackgroundResource(R.color.tertiary_gray);
-        mStartTime.setTextColor(mWhiteColorValue);
+        mStartTimeIndicator.setVisibility(VISIBLE);
+        mStartTime.setTextColor(mBlueColor);
         uneditEndTime();
     }
 
     public void editEndTime() {
-        mEndTimeHolder.setBackgroundResource(R.color.tertiary_gray);
-        mEndTime.setTextColor(mWhiteColorValue);
+        mEndTimeIndicator.setVisibility(VISIBLE);
+        mEndTime.setTextColor(mPurpleColor);
         uneditStartTime();
     }
 
@@ -86,13 +92,13 @@ public class TimeRangeView extends FrameLayout {
     }
 
     public void uneditStartTime() {
-        mStartTime.setBackgroundResource(R.color.handy_bg);
-        mStartTime.setTextColor(mBlackColorValue);
+        mStartTimeIndicator.setVisibility(INVISIBLE);
+        mStartTime.setTextColor(mBlackColor);
     }
 
     public void uneditEndTime() {
-        mEndTimeHolder.setBackgroundResource(R.color.handy_bg);
-        mEndTime.setTextColor(mBlackColorValue);
+        mEndTimeIndicator.setVisibility(INVISIBLE);
+        mEndTime.setTextColor(mBlackColor);
     }
 
     public void updateStartTime(final int hour) {

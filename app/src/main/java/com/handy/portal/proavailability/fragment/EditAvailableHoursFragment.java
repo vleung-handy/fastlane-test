@@ -46,8 +46,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.handy.portal.proavailability.viewmodel.TimePickerViewModel.Pointer.*;
-
 public class EditAvailableHoursFragment extends ActionBarFragment {
     @Inject
     ProviderManager mProviderManager;
@@ -55,6 +53,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     private static final int TIME_SLOTS_LIMIT = 3;
     private static final int DEFAULT_START_HOUR = 7;
     private static final int DEFAULT_END_HOUR = 23;
+    private static final int DEFAULT_TIME_RANGE_DURATION = 3;
     @BindView(R.id.availability_toggle)
     SwitchCompat mAvailabilityToggle;
     @BindView(R.id.time_picker)
@@ -106,11 +105,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
                     if (mTimePickerViewModel.getTimeRangesCount() == 1) {
                         mTimePickerViewModel.clearTimeRange(0);
                     }
-                    mTimePickerViewModel.getPointer().point(NO_INDEX, null);
                 }
-                else {
-                    mTimePickerViewModel.getPointer().point(0, SelectionType.START_TIME);
-                }
+                mTimePickerViewModel.getPointer().point(0, SelectionType.START_TIME);
                 mTimePickerViewModel.setClosed(closed);
                 updateButtonsVisibility();
             }
@@ -149,7 +145,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
                     final int index,
                     final SelectionType selectionType
             ) {
-                // do nothing
+                updateButtonsVisibility();
             }
 
             @Override
@@ -304,8 +300,14 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         mSaveButton.setVisibility(mTimePickerViewModel.validate() ? View.VISIBLE : View.GONE);
         mAddTimeRangeButton.setVisibility(!mTimePickerViewModel.isClosed()
                 && mTimePickerViewModel.hasCompleteTimeRanges()
-                && mTimePickerViewModel.getTimeRangesCount() < TIME_SLOTS_LIMIT ?
+                && mTimePickerViewModel.getTimeRangesCount() < TIME_SLOTS_LIMIT
+                && hasSelectableHours() ?
                 View.VISIBLE : View.INVISIBLE);
+    }
+
+    private boolean hasSelectableHours() {
+        final List<Integer> selectableHours = mTimePickerViewModel.getSelectableHours(null);
+        return selectableHours != null && !selectableHours.isEmpty();
     }
 
     @Override
@@ -344,6 +346,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
 
     private void initTimePickerViewModel() {
         mTimePickerViewModel = new TimePickerViewModel();
+        mTimePickerViewModel.setLimits(DEFAULT_START_HOUR, DEFAULT_END_HOUR,
+                DEFAULT_TIME_RANGE_DURATION);
         if (mAvailabilityTimeline != null && mAvailabilityTimeline.hasIntervals()) {
             for (final AvailabilityInterval interval :
                     mAvailabilityTimeline.getAvailabilityIntervals()) {
@@ -354,6 +358,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         }
         else {
             mTimePickerViewModel.addTimeRange();
+            mTimePickerViewModel.getPointer().point(0, SelectionType.START_TIME);
         }
         mTimePickerViewModel.setClosed(mAvailabilityTimeline != null
                 && !mAvailabilityTimeline.hasIntervals());

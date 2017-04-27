@@ -26,7 +26,7 @@ public final class DateTimeUtils {
     public final static SimpleDateFormat HOUR_FORMATTER =
             new SimpleDateFormat("h a", Locale.getDefault());
     public final static SimpleDateFormat CLOCK_FORMATTER_12HR =
-            new SimpleDateFormat("h:mma", Locale.getDefault());
+            new SimpleDateFormat("h:mm a", Locale.getDefault());
     public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DAY_FORMATTER =
             new SimpleDateFormat("EEEE, MMMM d", Locale.getDefault());
     public final static SimpleDateFormat SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER =

@@ -10,7 +10,7 @@
     android:layout_marginRight="@dimen/default_margin_half"
     android:layout_marginStart="@dimen/default_margin_half"
     android:gravity="center"
-    android:textAppearance="@style/TextView.Small"
+    android:textAppearance="@style/TextView.Medium"
     android:textColor="@color/black"
     tools:background="@drawable/circle_inactive_gray"
     tools:text="8 am"

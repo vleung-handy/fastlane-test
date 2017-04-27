@@ -56,7 +56,7 @@
                 android:paddingTop="@dimen/default_padding_half"
                 android:text="@string/add_another_time_slot"
                 android:textColor="@color/tertiary_gray"
-                android:textSize="@dimen/xsmall_text_size"
+                android:textSize="@dimen/small_text_size"
                 />
 
             <com.handy.portal.library.ui.view.timepicker.HandyTimePicker

@@ -2,16 +2,17 @@ package com.handy.portal.proavailability.viewmodel;
 
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
-import static com.handy.portal.proavailability.viewmodel.TimePickerViewModel.TimeRange.MAXIMUM_HOUR;
-import static com.handy.portal.proavailability.viewmodel.TimePickerViewModel.TimeRange.MINIMUM_HOUR;
+import static com.handy.portal.proavailability.viewmodel.TimePickerViewModel.TimeRange.DEFAULT_MAXIMUM_HOUR;
+import static com.handy.portal.proavailability.viewmodel.TimePickerViewModel.TimeRange.DEFAULT_MINIMUM_HOUR;
+import static com.handy.portal.proavailability.viewmodel.TimePickerViewModel.TimeRange.DEFAULT_MINIMUM_TIME_RANGE_DURATION;
 
 public class TimePickerViewModel {
+
 
     public enum SelectionType {
         START_TIME, END_TIME
@@ -22,12 +23,28 @@ public class TimePickerViewModel {
     private List<TimeRange> mTimeRanges;
     private List<Listener> mListeners;
     private boolean mClosed;
+    private int mMinimumHour;
+    private int mMaximumHour;
+    private int mMinimumTimeRangeDuration;
 
     public TimePickerViewModel() {
         mPointer = new Pointer();
         mTimeRanges = new ArrayList<>();
         mListeners = new ArrayList<>();
         mClosed = false;
+        mMinimumHour = DEFAULT_MINIMUM_HOUR;
+        mMaximumHour = DEFAULT_MAXIMUM_HOUR;
+        mMinimumTimeRangeDuration = DEFAULT_MINIMUM_TIME_RANGE_DURATION;
+    }
+
+    public void setLimits(
+            final int minimumHour,
+            final int maximumHour,
+            final int minimumTimeRangeDuration
+    ) {
+        mMinimumHour = minimumHour;
+        mMaximumHour = maximumHour;
+        mMinimumTimeRangeDuration = minimumTimeRangeDuration;
     }
 
     public List<TimeRange> getTimeRanges() {
@@ -58,13 +75,14 @@ public class TimePickerViewModel {
 
     public void removeTimeRange(final int index) {
         setClosed(false);
+        int oldPointerIndex = mPointer.getIndex();
+        mPointer.point(Pointer.NO_INDEX, null);
         final TimeRange timeRange = mTimeRanges.remove(index);
         for (final Listener listener : mListeners) {
             listener.onTimeRangeRemoved(index, timeRange.getStartHour(), timeRange.getEndHour());
         }
-        int pointerIndex = mPointer.getIndex();
-        final int newPointerIndex = pointerIndex == mTimeRanges.size() ?
-                pointerIndex - 1 : pointerIndex;
+        final int newPointerIndex = oldPointerIndex == mTimeRanges.size() ?
+                oldPointerIndex - 1 : oldPointerIndex;
         mPointer.point(newPointerIndex, SelectionType.START_TIME);
     }
 
@@ -119,7 +137,6 @@ public class TimePickerViewModel {
         else {
             final List<TimeRange> timeRanges = new ArrayList<>(mTimeRanges);
             timeRanges.remove(getPointer().getTimeRange());
-
             for (final TimeRange timeRange : getInvertedTimeRanges(timeRanges)) {
                 if ((startHour == TimeRange.NO_HOUR || timeRange.covers(startHour, false))
                         && (endHour == TimeRange.NO_HOUR || timeRange.covers(endHour, false))) {
@@ -128,6 +145,42 @@ public class TimePickerViewModel {
             }
         }
         return false;
+    }
+
+    @Nullable
+    public List<Integer> getSelectableHours(@Nullable final TimeRange editingTimeRange) {
+        final SelectionType selectionType = getPointer().getSelectionType();
+        if (selectionType == null) { return null; }
+        final List<Integer> selectableHours = new ArrayList<>();
+        final List<TimeRange> timeRanges = new ArrayList<>(mTimeRanges);
+        final TimeRange currentTimeRange = editingTimeRange == null ?
+                new TimeRange() : editingTimeRange;
+        timeRanges.remove(currentTimeRange);
+        for (final TimeRange timeRange : getInvertedTimeRanges(timeRanges)) {
+            if ((currentTimeRange.hasStartHour() && !timeRange.covers(currentTimeRange.getStartHour(), false))
+                    || (currentTimeRange.hasEndHour() && !timeRange.covers(currentTimeRange.getEndHour(), false))) {
+                continue;
+            }
+            if (selectionType == SelectionType.START_TIME) {
+                for (int hour = timeRange.getStartHour() + 1;
+                     hour + mMinimumTimeRangeDuration < timeRange.getEndHour(); hour++) {
+                    if (!currentTimeRange.hasEndHour()
+                            || hour <= currentTimeRange.getEndHour() - mMinimumTimeRangeDuration) {
+                        selectableHours.add(hour);
+                    }
+                }
+            }
+            if (selectionType == SelectionType.END_TIME) {
+                for (int hour = timeRange.getEndHour() - 1;
+                     hour - mMinimumTimeRangeDuration > timeRange.getStartHour(); hour--) {
+                    if (!currentTimeRange.hasStartHour()
+                            || hour >= currentTimeRange.getStartHour() + mMinimumTimeRangeDuration) {
+                        selectableHours.add(hour);
+                    }
+                }
+            }
+        }
+        return selectableHours;
     }
 
     private List<TimeRange> getInvertedTimeRanges(final List<TimeRange> timeRanges) {
@@ -144,8 +197,8 @@ public class TimePickerViewModel {
                 invertedTimeHours.add(hour);
             }
         }
-        invertedTimeHours.add(0, MINIMUM_HOUR - 1);
-        invertedTimeHours.add(MAXIMUM_HOUR + 1);
+        invertedTimeHours.add(0, mMinimumHour - 1);
+        invertedTimeHours.add(mMaximumHour + 1);
 
         final List<TimeRange> invertedTimeRanges = new ArrayList<>();
         for (int i = 0; i < invertedTimeHours.size(); i += 2) {
@@ -203,12 +256,17 @@ public class TimePickerViewModel {
 
 
     public class TimeRange implements Comparable<TimeRange> {
-        public static final int MINIMUM_HOUR = 0;
-        public static final int MAXIMUM_HOUR = 24;
+        public static final int DEFAULT_MINIMUM_TIME_RANGE_DURATION = 1;
+        public static final int DEFAULT_MINIMUM_HOUR = 0;
+        public static final int DEFAULT_MAXIMUM_HOUR = 24;
         public static final int NO_HOUR = -999;
 
         private int mStartHour;
         private int mEndHour;
+
+        public TimeRange() {
+            this(NO_HOUR, NO_HOUR);
+        }
 
         public TimeRange(final int startHour, final int endHour) {
             mStartHour = startHour;
@@ -261,14 +319,14 @@ public class TimePickerViewModel {
 
         public boolean validateStartHour(final int startHour) {
             return validatePotentialTimeRange(startHour, mEndHour)
-                    && (startHour >= MINIMUM_HOUR && startHour < MAXIMUM_HOUR
+                    && (startHour >= mMinimumHour && startHour < mMaximumHour
                     && (!hasEndHour() || startHour < mEndHour))
                     || startHour == NO_HOUR;
         }
 
         public boolean validateEndHour(final int endHour) {
             return validatePotentialTimeRange(mStartHour, endHour)
-                    && (endHour <= MAXIMUM_HOUR && endHour > MINIMUM_HOUR
+                    && (endHour <= mMaximumHour && endHour > mMinimumHour
                     && (!hasStartHour() || endHour > mStartHour))
                     || endHour == NO_HOUR;
         }
