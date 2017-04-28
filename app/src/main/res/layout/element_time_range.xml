@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/border_gray"
+    android:orientation="horizontal"
+    android:paddingBottom="1dp"
+    >
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="1dp"
+        android:layout_marginRight="1dp"
+        android:layout_weight="1"
+        android:background="@color/handy_bg"
+        >
+
+        <TextView
+            android:id="@+id/start_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:padding="@dimen/default_padding"
+            android:text="@string/start_time"
+            android:textAppearance="@style/TextView.Medium"
+            />
+
+        <View
+            android:id="@+id/start_time_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_gravity="bottom"
+            android:background="@color/handy_darkened_blue"
+            android:visibility="invisible"
+            tools:visibility="visible"
+            />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/end_time_holder"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/handy_bg"
+        >
+
+        <TextView
+            android:id="@+id/end_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="@string/end_time"
+            android:textAppearance="@style/TextView.Medium"
+            />
+
+        <ImageView
+            android:id="@+id/reset_time_range"
+            android:layout_width="@dimen/time_range_reset_button_size"
+            android:layout_height="@dimen/time_range_reset_button_size"
+            android:layout_gravity="center|end"
+            android:layout_marginEnd="@dimen/default_margin_half"
+            android:layout_marginRight="@dimen/default_margin_half"
+            android:background="@drawable/circle_white_with_border"
+            android:padding="@dimen/extra_padding_small"
+            android:scaleType="fitXY"
+            android:src="@drawable/ic_cancel_x"
+            />
+
+        <View
+            android:id="@+id/end_time_indicator"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_gravity="bottom"
+            android:background="@color/painter_purple"
+            android:visibility="invisible"
+            tools:visibility="visible"
+            />
+
+    </FrameLayout>
+
+</LinearLayout>

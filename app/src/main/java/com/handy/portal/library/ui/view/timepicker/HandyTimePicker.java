@@ -7,23 +7,20 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
+import com.handy.portal.proavailability.viewmodel.TimePickerViewModel;
+import com.handy.portal.proavailability.viewmodel.TimePickerViewModel.SelectionType;
+import com.handy.portal.proavailability.viewmodel.TimePickerViewModel.TimeRange;
 
-public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell.TimeClickListener {
-    public enum SelectionType {
-        START_TIME, END_TIME
-    }
+import java.util.List;
 
 
-    private static final int DEFAULT_CELLS_PER_ROW_COUNT = 3;
-    public static final int NO_HOUR_SELECTED = -1;
-    public static final int MINIMUM_START_HOUR = 0;
-    public static final int MAXIMUM_START_HOUR = 24;
+public class HandyTimePicker extends LinearLayout
+        implements HandyTimePickerCell.TimeClickListener, TimePickerViewModel.Listener {
+
+    private static final int DEFAULT_CELLS_PER_ROW_COUNT = 4;
     private int mStartHour;
     private int mEndHour;
-    private int mSelectedStartHour = NO_HOUR_SELECTED;
-    private int mSelectedEndHour = NO_HOUR_SELECTED;
-    private Callbacks mCallbacks;
-    private SelectionType mSelectionType;
+    private TimePickerViewModel mViewModel;
 
     public HandyTimePicker(final Context context) {
         super(context);
@@ -50,47 +47,23 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
         setOrientation(VERTICAL);
     }
 
-    public void setCallbacks(final Callbacks callbacks) {
-        mCallbacks = callbacks;
-    }
-
-    public void setSelectionType(@Nullable final SelectionType selectionType) {
-        mSelectionType = selectionType;
-        if (mCallbacks != null) {
-            mCallbacks.onSelectionTypeChanged(mSelectionType);
+    public void setViewModel(final TimePickerViewModel viewModel) {
+        mViewModel = viewModel;
+        mViewModel.addListener(this);
+        clearSelection(mStartHour, mEndHour);
+        for (final TimeRange timeRange : mViewModel.getTimeRanges()) {
+            selectTimeRange(TimeRange.NO_HOUR, TimeRange.NO_HOUR, timeRange.getStartHour(),
+                    timeRange.getEndHour());
         }
+        setAlpha(mViewModel.isClosed() ? 0.3f : 1.0f);
+        updateEnabledHours();
     }
 
-    public int getSelectedStartHour() {
-        return mSelectedStartHour;
-    }
-
-    public int getSelectedEndHour() {
-        return mSelectedEndHour;
-    }
-
-    public boolean hasSelectedStartTime() {
-        return mSelectedStartHour != NO_HOUR_SELECTED;
-    }
-
-    public boolean hasSelectedEndTime() {
-        return mSelectedEndHour != NO_HOUR_SELECTED;
-    }
-
-    public boolean hasSelectedRange() {
-        return hasSelectedStartTime() && hasSelectedEndTime();
-    }
-
-    public boolean covers(final int hour) {
+    private boolean covers(final int hour) {
         return hour >= mStartHour && hour <= mEndHour;
     }
 
     public void setTimeRange(final int startHour, final int endHour) {
-        if (startHour < MINIMUM_START_HOUR
-                || endHour > MAXIMUM_START_HOUR
-                || startHour >= endHour) {
-            return;
-        }
         mStartHour = startHour;
         mEndHour = endHour;
         for (int rowStartHour = startHour; rowStartHour <= endHour;
@@ -106,150 +79,112 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
     @Override
     public void onHourClicked(final int hour) {
         int targetHour = hour;
-
-        // Default selection to start hour.
-        if (mSelectionType == null) {
-            setSelectionType(SelectionType.START_TIME);
-        }
-        // Default selection to end hour if a start hour has been selected but end hour hasn't
-        // been selected.
-        else if (mSelectionType == SelectionType.START_TIME
-                && hasSelectedStartTime()
-                && !hasSelectedEndTime()) {
-            setSelectionType(SelectionType.END_TIME);
-        }
+        final TimePickerViewModel.Pointer pointer = mViewModel.getPointer();
+        final TimeRange pointerTimeRange = pointer.getTimeRange();
 
         // Tapping selected times on the picker will cancel the range and leave the start hour,
         // or deselect a single selection.
-        if (getSelectedStartHour() == targetHour
-                || getSelectedEndHour() == targetHour) {
-            if (hasSelectedRange()) // a range is selected
+        if (pointerTimeRange.getStartHour() == targetHour
+                || pointerTimeRange.getEndHour() == targetHour) {
+            if (pointerTimeRange.hasRange()) // a range is selected
             {
                 // Reset selection then reselect the original selected start hour.
-                final int selectedStartHour = getSelectedStartHour();
-                clearSelection();
-                setSelectionType(SelectionType.START_TIME);
+                final int selectedStartHour = pointerTimeRange.getStartHour();
+                pointerTimeRange.clear();
+                pointer.setSelectionType(SelectionType.START_TIME);
                 targetHour = selectedStartHour;
             }
             else // a single hour is currently selected
             {
-                clearSelection();
-                setSelectionType(null);
+                pointerTimeRange.clear();
                 return;
             }
         }
 
-        // Tapping an earlier hour when there is already a selected start hour will force the
-        // selection to start hour.
-        if (hasSelectedStartTime() && targetHour < getSelectedStartHour()) {
-            setSelectionType(SelectionType.START_TIME);
-        }
-
-        // Tapping a later hour when there is already a selected end hour will force the selection
-        // to end hour.
-        if (hasSelectedEndTime() && targetHour > getSelectedEndHour()) {
-            setSelectionType(SelectionType.END_TIME);
-        }
-
         // Select start hour if applicable.
-        if (mSelectionType == SelectionType.START_TIME) {
-            selectStartHour(targetHour);
+        if (pointer.getSelectionType() == SelectionType.START_TIME) {
+            final boolean setStartHourSuccess = pointerTimeRange.setStartHour(targetHour);
+            if (setStartHourSuccess && !pointerTimeRange.hasEndHour()) {
+                pointer.setSelectionType(SelectionType.END_TIME);
+            }
         }
-
         // Select end hour if applicable.
-        if (mSelectionType == SelectionType.END_TIME) {
-            selectEndHour(targetHour);
+        else if (pointer.getSelectionType() == SelectionType.END_TIME) {
+            final boolean setEndHourSuccess = pointerTimeRange.setEndHour(targetHour);
+            if (setEndHourSuccess && !pointerTimeRange.hasStartHour()) {
+                pointer.setSelectionType(SelectionType.START_TIME);
+            }
         }
     }
 
-    public boolean selectTimeRange(final int startHour, final int endHour) {
-        if (startHour >= endHour || startHour < mStartHour || endHour > mEndHour) {
-            return false;
+    public void selectTimeRange(
+            final int oldStartHour, final int oldEndHour,
+            final int newStartHour, final int newEndHour
+    ) {
+        clearSelection(oldStartHour, oldEndHour);
+        if (newStartHour == TimeRange.NO_HOUR || newEndHour == TimeRange.NO_HOUR) {
+            selectCellForHour(newStartHour);
+            selectCellForHour(newEndHour);
         }
-        clearSelection();
-        mSelectedStartHour = startHour;
-        mSelectedEndHour = endHour;
-        for (int i = 0; i < getChildCount(); i++) {
-            final HandyTimePickerRow timePickerRow = (HandyTimePickerRow) getChildAt(i);
-            for (int j = 0; j < timePickerRow.mTimePickerCellViews.getChildCount(); j++) {
-                final HandyTimePickerCell timePickerCell =
-                        (HandyTimePickerCell) timePickerRow.mTimePickerCellViews.getChildAt(j);
-                final int timePickerCellHour = timePickerCell.getHour();
-                if (timePickerCellHour >= startHour && timePickerCellHour <= endHour) {
-                    if (timePickerCellHour == startHour || timePickerCellHour == endHour) {
-                        timePickerCell.select();
-                    }
-                    else {
-                        timePickerCell.highlight();
-                    }
-                    if (timePickerCellHour > startHour && j > 0) {
-                        timePickerRow.setGapVisibility(j - 1, true);
+        else {
+            for (int i = 0; i < getChildCount(); i++) {
+                final HandyTimePickerRow timePickerRow = (HandyTimePickerRow) getChildAt(i);
+                for (int j = 0; j < timePickerRow.mTimePickerCellViews.getChildCount(); j++) {
+                    final HandyTimePickerCell timePickerCell =
+                            (HandyTimePickerCell) timePickerRow.mTimePickerCellViews.getChildAt(j);
+                    final int hour = timePickerCell.getHour();
+                    if (hour >= newStartHour && hour <= newEndHour) {
+                        if (hour == newStartHour || hour == newEndHour) {
+                            timePickerCell.select();
+                        }
+                        else {
+                            timePickerCell.highlight();
+                        }
+                        if (hour > newStartHour && j > 0) {
+                            timePickerRow.setGapVisibility(j - 1, true);
+                        }
                     }
                 }
             }
         }
-        return true;
     }
 
-    public void clearSelection() {
-        mSelectedStartHour = mSelectedEndHour = NO_HOUR_SELECTED;
-        for (int i = 0; i < getChildCount(); i++) {
-            final HandyTimePickerRow timePickerRow = (HandyTimePickerRow) getChildAt(i);
-            for (int j = 0; j < timePickerRow.mTimePickerCellViews.getChildCount(); j++) {
-                final HandyTimePickerCell timePickerCell =
-                        (HandyTimePickerCell) timePickerRow.mTimePickerCellViews.getChildAt(j);
-                timePickerCell.reset();
-                if (j > 0) {
-                    timePickerRow.setGapVisibility(j - 1, false);
+    public void clearSelection(final int startHour, final int endHour) {
+        if (startHour == TimeRange.NO_HOUR || endHour == TimeRange.NO_HOUR) {
+            resetCellForHour(startHour);
+            resetCellForHour(endHour);
+        }
+        else {
+            for (int i = 0; i < getChildCount(); i++) {
+                final HandyTimePickerRow timePickerRow = (HandyTimePickerRow) getChildAt(i);
+                for (int j = 0; j < timePickerRow.mTimePickerCellViews.getChildCount(); j++) {
+                    final HandyTimePickerCell timePickerCell =
+                            (HandyTimePickerCell) timePickerRow.mTimePickerCellViews.getChildAt(j);
+                    final int hour = timePickerCell.getHour();
+                    if (hour >= startHour && hour <= endHour) {
+                        timePickerCell.reset();
+                        if (j > 0) {
+                            timePickerRow.setGapVisibility(j - 1, false);
+                        }
+                    }
                 }
             }
-        }
-        notifyRangeUpdate();
-    }
-
-    private void selectStartHour(final int hour) {
-        if (mSelectedEndHour == NO_HOUR_SELECTED || hour < mSelectedEndHour) {
-            resetCellForHour(mSelectedStartHour);
-            mSelectedStartHour = hour;
-            if (getSelectedEndHour() != NO_HOUR_SELECTED) {
-                selectTimeRange(mSelectedStartHour, mSelectedEndHour);
-            }
-            else {
-                selectCellForHour(hour);
-            }
-            notifyRangeUpdate();
-        }
-    }
-
-    private void selectEndHour(final int hour) {
-        if (mSelectedStartHour == NO_HOUR_SELECTED || hour > mSelectedStartHour) {
-            resetCellForHour(mSelectedEndHour);
-            mSelectedEndHour = hour;
-            if (getSelectedStartHour() != NO_HOUR_SELECTED) {
-                selectTimeRange(mSelectedStartHour, mSelectedEndHour);
-            }
-            else {
-                selectCellForHour(hour);
-            }
-            notifyRangeUpdate();
         }
     }
 
     private void resetCellForHour(final int hour) {
-        if (hour != NO_HOUR_SELECTED) {
-            final HandyTimePickerCell cell = getCellForHour(hour);
-            if (cell != null) {
-                cell.reset();
-            }
+        if (hour == TimeRange.NO_HOUR) { return; }
+        final HandyTimePickerCell cell = getCellForHour(hour);
+        if (cell != null) {
+            cell.reset();
         }
     }
 
     private void selectCellForHour(final int hour) {
-        if (hour != NO_HOUR_SELECTED) {
-            final HandyTimePickerCell cell = getCellForHour(hour);
-            if (cell != null) {
-                cell.select();
-            }
+        if (hour == TimeRange.NO_HOUR) { return; }
+        final HandyTimePickerCell cell = getCellForHour(hour);
+        if (cell != null) {
+            cell.select();
         }
     }
 
@@ -267,15 +202,59 @@ public class HandyTimePicker extends LinearLayout implements HandyTimePickerCell
         return null;
     }
 
-    private void notifyRangeUpdate() {
-        if (mCallbacks != null) {
-            mCallbacks.onRangeUpdated(mSelectedStartHour, mSelectedEndHour);
+    private void updateEnabledHours() {
+        if (mViewModel.getPointer().validate()) {
+            final List<Integer> selectableHours =
+                    mViewModel.getSelectableHours(mViewModel.getPointer().getTimeRange());
+            for (int i = 0; i < getChildCount(); i++) {
+                final HandyTimePickerRow timePickerRow = (HandyTimePickerRow) getChildAt(i);
+                for (int j = 0; j < timePickerRow.mTimePickerCellViews.getChildCount(); j++) {
+                    final HandyTimePickerCell timePickerCell =
+                            (HandyTimePickerCell) timePickerRow.mTimePickerCellViews.getChildAt(j);
+                    final int hour = timePickerCell.getHour();
+                    timePickerCell.unfreeze();
+                    if (selectableHours != null) {
+                        if (selectableHours.contains(hour)) {
+                            timePickerCell.taunt(mViewModel.getPointer().getSelectionType());
+                        }
+                        else {
+                            timePickerCell.freeze();
+                        }
+                    }
+                }
+            }
         }
     }
 
-    public interface Callbacks {
-        void onRangeUpdated(int startHour, int endHour);
+    @Override
+    public void onTimeRangeUpdated(
+            final int index, final int oldStartHour, final int oldEndHour,
+            final int newStartHour, final int newEndHour
+    ) {
+        selectTimeRange(oldStartHour, oldEndHour, newStartHour, newEndHour);
+        updateEnabledHours();
+    }
 
-        void onSelectionTypeChanged(SelectionType selectionType);
+    @Override
+    public void onTimeRangeAdded(final int index, final int startHour, final int endHour) {
+        selectTimeRange(TimeRange.NO_HOUR, TimeRange.NO_HOUR, startHour, endHour);
+        updateEnabledHours();
+    }
+
+    @Override
+    public void onTimeRangeRemoved(final int index, final int startHour, final int endHour) {
+        clearSelection(startHour, endHour);
+        updateEnabledHours();
+    }
+
+    @Override
+    public void onPointerUpdated(final int index, final SelectionType selectionType) {
+        updateEnabledHours();
+    }
+
+    @Override
+    public void onClosedStateChanged(final boolean closed) {
+        setAlpha(closed ? 0.3f : 1.0f);
+        updateEnabledHours();
     }
 }

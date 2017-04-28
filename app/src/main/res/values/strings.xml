@@ -616,6 +616,7 @@
     <string name="post_checkout_claim_prompt_subtitle_formatted">Want to claim their available jobs?</string>
     <string name="post_checkout_claim_subtitle_formatted">If %1$s cancels or reschedules the job, we\'ll do our best to replace it with a similar job.</string>
     <plurals name="claim_jobs_success_formatted">
+        <item quantity="zero">Sorry, we weren\'t able to add any of the jobs to your schedule.</item>
         <item quantity="one">Awesome! We added the job to your schedule.</item>
         <item quantity="other">Awesome! We added the jobs to your schedule.</item>
     </plurals>
@@ -697,6 +698,9 @@
     <string name="i_am_available">I\'m available</string>
     <string name="not_available">Not Available</string>
     <string name="set_hours_prompt_subtitle">Let customers book directly with you.</string>
+    <string name="add_another_time_slot">Add another time slot</string>
+    <string name="error_incomplete_time_ranges">You must fill out all time slots before adding a new one.</string>
+    <string name="error_time_slots_limit_exceeded_formatted">You may only enter up to %1$d times slots.</string>
 
     <!-- Payments -->
     <string name="payment_status_formatted">Status: %1$s</string>
