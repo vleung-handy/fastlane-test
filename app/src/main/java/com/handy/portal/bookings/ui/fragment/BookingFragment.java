@@ -505,6 +505,8 @@ public class BookingFragment extends TimerActionBarFragment {
                         public void success(
                                 final CreateConversationResponse conversationResponse,
                                 final Response response) {
+                            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
+                                    EventType.IN_APP_CHAT_WITH_CUSTOMER_SUCCESS, user.getId())));
                             Intent intent = new Intent(getContext(), MessagesListActivity.class);
                             intent.putExtra(LayerConstants.LAYER_CONVERSATION_KEY,
                                     Uri.parse(conversationResponse.getConversationId()));
