@@ -7,4 +7,5 @@ public interface EventType {
     String TEXT_CUSTOMER_FAILED = "text_customer_failed";
     String IN_APP_CHAT_WITH_CUSTOMER_SELECTED = "in_app_chat_with_customer_selected";
     String IN_APP_CHAT_WITH_CUSTOMER_FAILED = "in_app_chat_with_customer_failed";
+    String IN_APP_CHAT_WITH_CUSTOMER_SUCCESS = "in_app_chat_with_customer_success";
 }
