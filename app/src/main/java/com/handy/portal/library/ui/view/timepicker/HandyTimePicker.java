@@ -82,25 +82,6 @@ public class HandyTimePicker extends LinearLayout
         final TimePickerViewModel.Pointer pointer = mViewModel.getPointer();
         final TimeRange pointerTimeRange = pointer.getTimeRange();
 
-        // Tapping selected times on the picker will cancel the range and leave the start hour,
-        // or deselect a single selection.
-        if (pointerTimeRange.getStartHour() == targetHour
-                || pointerTimeRange.getEndHour() == targetHour) {
-            if (pointerTimeRange.hasRange()) // a range is selected
-            {
-                // Reset selection then reselect the original selected start hour.
-                final int selectedStartHour = pointerTimeRange.getStartHour();
-                pointerTimeRange.clear();
-                pointer.setSelectionType(SelectionType.START_TIME);
-                targetHour = selectedStartHour;
-            }
-            else // a single hour is currently selected
-            {
-                pointerTimeRange.clear();
-                return;
-            }
-        }
-
         // Select start hour if applicable.
         if (pointer.getSelectionType() == SelectionType.START_TIME) {
             final boolean setStartHourSuccess = pointerTimeRange.setStartHour(targetHour);
