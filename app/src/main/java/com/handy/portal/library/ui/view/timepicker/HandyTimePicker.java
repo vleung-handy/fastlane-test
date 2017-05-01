@@ -78,20 +78,19 @@ public class HandyTimePicker extends LinearLayout
 
     @Override
     public void onHourClicked(final int hour) {
-        int targetHour = hour;
         final TimePickerViewModel.Pointer pointer = mViewModel.getPointer();
         final TimeRange pointerTimeRange = pointer.getTimeRange();
 
         // Select start hour if applicable.
         if (pointer.getSelectionType() == SelectionType.START_TIME) {
-            final boolean setStartHourSuccess = pointerTimeRange.setStartHour(targetHour);
+            final boolean setStartHourSuccess = pointerTimeRange.setStartHour(hour);
             if (setStartHourSuccess && !pointerTimeRange.hasEndHour()) {
                 pointer.setSelectionType(SelectionType.END_TIME);
             }
         }
         // Select end hour if applicable.
         else if (pointer.getSelectionType() == SelectionType.END_TIME) {
-            final boolean setEndHourSuccess = pointerTimeRange.setEndHour(targetHour);
+            final boolean setEndHourSuccess = pointerTimeRange.setEndHour(hour);
             if (setEndHourSuccess && !pointerTimeRange.hasStartHour()) {
                 pointer.setSelectionType(SelectionType.START_TIME);
             }

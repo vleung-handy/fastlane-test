@@ -84,7 +84,7 @@ public class TimePickerViewModel {
         }
         final int newPointerIndex = oldPointerIndex == mTimeRanges.size() ?
                 oldPointerIndex - 1 : oldPointerIndex;
-        mPointer.point(newPointerIndex, SelectionType.START_TIME);
+        mPointer.point(newPointerIndex, SelectionType.END_TIME);
     }
 
     public int getTimeRangesCount() {
@@ -114,12 +114,7 @@ public class TimePickerViewModel {
     }
 
     public boolean validate() {
-        if (mClosed) {
-            return true;
-        }
-        else {
-            return hasCompleteTimeRanges();
-        }
+        return mClosed || hasCompleteTimeRanges();
     }
 
     public boolean hasCompleteTimeRanges() {
@@ -334,7 +329,7 @@ public class TimePickerViewModel {
         }
 
         public boolean covers(final int hour, final boolean inclusive) {
-            if (hour == NO_HOUR) {
+            if (hour == NO_HOUR || !hasRange()) {
                 return false;
             }
             if (inclusive && (hour == mStartHour || hour == mEndHour)) {
@@ -344,11 +339,6 @@ public class TimePickerViewModel {
                 return hour > mStartHour && hour < mEndHour;
             }
             return false;
-        }
-
-        public void clear() {
-            setStartHour(NO_HOUR);
-            setEndHour(NO_HOUR);
         }
 
         public boolean validate() {
