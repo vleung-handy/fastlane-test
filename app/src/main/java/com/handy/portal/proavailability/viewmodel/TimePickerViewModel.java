@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static com.handy.portal.proavailability.viewmodel.TimePickerViewModel.TimeRange.DEFAULT_MAXIMUM_HOUR;
@@ -184,6 +185,7 @@ public class TimePickerViewModel {
     }
 
     private List<TimeRange> getInvertedTimeRanges(final List<TimeRange> timeRanges) {
+        Collections.sort(timeRanges);
         final List<Integer> invertedTimeHours = new ArrayList<>();
         for (final TimeRange timeRange : timeRanges) {
             if (timeRange.hasRange()) {
