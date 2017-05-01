@@ -78,39 +78,19 @@ public class HandyTimePicker extends LinearLayout
 
     @Override
     public void onHourClicked(final int hour) {
-        int targetHour = hour;
         final TimePickerViewModel.Pointer pointer = mViewModel.getPointer();
         final TimeRange pointerTimeRange = pointer.getTimeRange();
 
-        // Tapping selected times on the picker will cancel the range and leave the start hour,
-        // or deselect a single selection.
-        if (pointerTimeRange.getStartHour() == targetHour
-                || pointerTimeRange.getEndHour() == targetHour) {
-            if (pointerTimeRange.hasRange()) // a range is selected
-            {
-                // Reset selection then reselect the original selected start hour.
-                final int selectedStartHour = pointerTimeRange.getStartHour();
-                pointerTimeRange.clear();
-                pointer.setSelectionType(SelectionType.START_TIME);
-                targetHour = selectedStartHour;
-            }
-            else // a single hour is currently selected
-            {
-                pointerTimeRange.clear();
-                return;
-            }
-        }
-
         // Select start hour if applicable.
         if (pointer.getSelectionType() == SelectionType.START_TIME) {
-            final boolean setStartHourSuccess = pointerTimeRange.setStartHour(targetHour);
+            final boolean setStartHourSuccess = pointerTimeRange.setStartHour(hour);
             if (setStartHourSuccess && !pointerTimeRange.hasEndHour()) {
                 pointer.setSelectionType(SelectionType.END_TIME);
             }
         }
         // Select end hour if applicable.
         else if (pointer.getSelectionType() == SelectionType.END_TIME) {
-            final boolean setEndHourSuccess = pointerTimeRange.setEndHour(targetHour);
+            final boolean setEndHourSuccess = pointerTimeRange.setEndHour(hour);
             if (setEndHourSuccess && !pointerTimeRange.hasStartHour()) {
                 pointer.setSelectionType(SelectionType.START_TIME);
             }
