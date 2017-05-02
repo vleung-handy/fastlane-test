@@ -16,7 +16,6 @@ import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
-import com.handy.portal.bookings.model.User;
 import com.handy.portal.bookings.ui.element.PostCheckoutRequestedBookingElementView;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
@@ -54,10 +53,6 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
     @Inject
     BookingManager mBookingManager;
 
-    @BindView(R.id.claim_prompt_text)
-    TextView mClaimPromptText;
-    @BindView(R.id.claim_subtitle_text)
-    TextView mClaimSubtitleText;
     @BindView(R.id.jobs_container)
     ViewGroup mJobsContainer;
     @BindView(R.id.claim_button)
@@ -101,11 +96,6 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
 
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
-        final User customer = mPostCheckoutInfo.getCustomer();
-        mClaimPromptText.setText(getString(R.string.post_checkout_claim_prompt_formatted,
-                customer.getFirstName()));
-        mClaimSubtitleText.setText(getString(R.string.post_checkout_claim_subtitle_formatted,
-                customer.getFirstName()));
         displayJobs();
     }
 
@@ -193,8 +183,7 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
         final int selectedJobsCount = getSelectedBookings().size();
         if (selectedJobsCount > 0) {
             mClaimButton.setBackgroundResource(R.drawable.button_green);
-            mClaimButton.setText(getResources().getQuantityString(R.plurals.claim_jobs_formatted,
-                    selectedJobsCount, selectedJobsCount));
+            mClaimButton.setText(R.string.claim_job);
         }
         else {
             mClaimButton.setBackgroundResource(R.drawable.button_gray);
