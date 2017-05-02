@@ -160,7 +160,7 @@ public class RateBookingDialogFragment extends InjectedDialogFragment {
             final BookingEvent.ReceivePostCheckoutInfoSuccess event) {
         hideLoadingOverlay();
         final PostCheckoutInfo postCheckoutInfo = event.getPostCheckoutInfo();
-        mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.ProTeamJobsReturned(
+        mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.ProTeamJobsReturned(mBooking.getId(),
                 postCheckoutInfo.getSuggestedJobs())));
         if (!postCheckoutInfo.getSuggestedJobs().isEmpty()) {
             FragmentUtils.safeLaunchDialogFragment(
