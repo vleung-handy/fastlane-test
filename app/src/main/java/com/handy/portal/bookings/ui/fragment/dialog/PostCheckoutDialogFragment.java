@@ -55,6 +55,8 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
 
     @BindView(R.id.jobs_container)
     ViewGroup mJobsContainer;
+    @BindView(R.id.claim_prompt_text)
+    TextView mClaimPromptText;
     @BindView(R.id.claim_button)
     Button mClaimButton;
 
@@ -96,6 +98,8 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
 
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
+        mClaimPromptText.setText(getString(R.string.post_checkout_claim_prompt_formatted,
+                mPostCheckoutInfo.getCustomer().getFirstName()));
         displayJobs();
     }
 

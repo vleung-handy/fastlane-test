@@ -605,7 +605,7 @@
 
     <!-- Post-checkout Claims -->
     <string name="continue_to_without_claiming">Continue without Claiming</string>
-    <string name="post_checkout_claim_prompt">Confirm your client\'s next job</string>
+    <string name="post_checkout_claim_prompt_formatted">Confirm your next booking with %1$s</string>
     <plurals name="claim_jobs_success_formatted">
         <item quantity="zero">Sorry, we weren\'t able to add any of the jobs to your schedule.</item>
         <item quantity="one">Awesome! We added the job to your schedule.</item>

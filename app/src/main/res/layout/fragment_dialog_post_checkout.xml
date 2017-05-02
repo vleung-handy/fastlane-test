@@ -34,7 +34,7 @@
                 android:paddingLeft="@dimen/default_padding_large"
                 android:paddingRight="@dimen/default_padding_large"
                 android:paddingStart="@dimen/default_padding_large"
-                android:text="@string/post_checkout_claim_prompt"
+                android:text="@string/post_checkout_claim_prompt_formatted"
                 />
 
             <FrameLayout
