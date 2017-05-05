@@ -258,7 +258,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     private int getIntervalsSum(final List<AvailabilityInterval> intervals) {
         int sum = 0;
         for (final AvailabilityInterval interval : intervals) {
-            sum += (interval.getEndHour() - interval.getEndHour());
+            sum += (interval.getEndHour() - interval.getStartHour());
         }
         return sum;
     }
