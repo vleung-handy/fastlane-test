@@ -60,7 +60,7 @@ public class CancelTest {
         onView(allOf(withId(R.id.tab_title), withText(R.string.tab_schedule))).perform(click());
 
         // click the first scheduled job
-        ViewUtil.waitForViewVisible(R.id.scheduled_jobs_list_view, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+        ViewUtil.waitForViewVisible(R.id.scheduled_jobs_recycler_view, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         onData(is(instanceOf(Booking.class)))
                 .atPosition(0)
                 .perform(click());

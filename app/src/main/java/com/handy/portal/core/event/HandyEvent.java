@@ -484,28 +484,6 @@ public abstract class HandyEvent {
     }
 
 
-    public static class DateClicked extends AnalyticsEvent {
-        private String type;
-        private Date date;
-
-        public DateClicked(String type, Date date) {
-            this.type = type;
-            this.date = date;
-        }
-    }
-
-
-    public static class BookingSelected extends AnalyticsEvent {
-        private String type;
-        private String bookingId;
-
-        public BookingSelected(String type, String bookingId) {
-            this.type = type;
-            this.bookingId = bookingId;
-        }
-    }
-
-
     public static class ClaimJobError extends AnalyticsEvent {
         private String message;
 

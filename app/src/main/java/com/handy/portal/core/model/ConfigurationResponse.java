@@ -48,9 +48,6 @@ public class ConfigurationResponse {
     @SerializedName("login_slt_enabled")
     private boolean mSltEnabled;
 
-    @SerializedName("scheduled_jobs_calendar_navigation_enabled")
-    private boolean mNewDateScrollerEnabled;
-
     @SerializedName("pro_availability_schedule_enabled")
     private boolean mAvailableHoursEnabled;
 
@@ -134,10 +131,6 @@ public class ConfigurationResponse {
     }
 
     public boolean isSltEnabled() { return mSltEnabled; }
-
-    public boolean isNewDateScrollerEnabled() {
-        return mNewDateScrollerEnabled;
-    }
 
     public boolean isAvailableHoursEnabled() {
         return mAvailableHoursEnabled;

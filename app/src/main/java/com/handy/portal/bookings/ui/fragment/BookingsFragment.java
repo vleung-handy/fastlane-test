@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -23,7 +22,6 @@ import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
-import com.handy.portal.bookings.ui.adapter.DatesPagerAdapter;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.BookingListView;
 import com.handy.portal.core.constant.BundleKeys;
@@ -59,6 +57,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+@Deprecated
 public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSuccess> extends ActionBarFragment {
     private static int SNACK_BAR_DURATION = 500;
 
@@ -144,9 +143,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     protected abstract Class<? extends BookingElementView> getBookingElementViewClass();
 
     protected abstract String getBookingSourceName();
-
-    @Nullable
-    protected abstract DatesPagerAdapter getDatesPagerAdapter();
 
     //Event listeners
     public abstract void onBookingsRetrieved(T event);
@@ -247,12 +243,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     }
 
     private void requestAllBookings() {
-        // if we're using the dates pager, this will be triggered after calling
-        // NewDateButton.select() on the initial date
-        if (getDatesPagerAdapter() == null) {
-            requestBookingsForSelectedDay(true, true);
-        }
-
+        requestBookingsForSelectedDay(true, true);
         requestBookingsForOtherDays(mSelectedDay);
     }
 
@@ -322,10 +313,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
             }
         }
 
-        if (getDatesPagerAdapter() != null && shouldShowClaimedIndicator(bookings)) {
-            getDatesPagerAdapter().showClaimIndicatorForDate(event.day);
-        }
-
         if (mSelectedDay != null && mSelectedDay.equals(event.day)) {
             setRefreshing(false);
             displayBookings(bookingsWrapper, mSelectedDay);
@@ -374,7 +361,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     }
 
     protected void onDateClicked(final Date day) {
-        bus.post(new HandyEvent.DateClicked(getTrackingType(), day));
         selectDay(day);
         beforeRequestBookings();
         requestBookings(Lists.newArrayList(day), true, true);
@@ -413,10 +399,6 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                     if (getTrackingType().equalsIgnoreCase(getString(R.string.available_job))) {
                         bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.Clicked(booking, oneBasedIndex)));
                     }
-                    else if (getTrackingType().equalsIgnoreCase(getString(R.string.scheduled_job))) {
-                        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.Clicked(booking, oneBasedIndex)));
-                    }
-                    bus.post(new HandyEvent.BookingSelected(getTrackingType(), booking.getId()));
                     showBookingDetails(booking);
                 }
             }

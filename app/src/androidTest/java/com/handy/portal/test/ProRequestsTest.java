@@ -103,11 +103,11 @@ public class ProRequestsTest {
         onView(withId(R.id.confirm_action_button)).perform(click());
 
         //wait for scheduled jobs
-        ViewUtil.waitForViewVisible(R.id.scheduled_jobs_list_view, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+        ViewUtil.waitForViewVisible(R.id.scheduled_jobs_recycler_view, ViewUtil.LONG_MAX_WAIT_TIME_MS);
 
         //confirm that a booking is there
         onData(anything())
-                .inAdapterView(withId(R.id.scheduled_jobs_list_view))
+                .inAdapterView(withId(R.id.scheduled_jobs_recycler_view))
                 .atPosition(0)
                 .check(matches(isDisplayed()));
 

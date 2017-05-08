@@ -214,12 +214,6 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         return SOURCE_AVAILABLE_JOBS_LIST;
     }
 
-    @Nullable
-    @Override
-    protected DatesPagerAdapter getDatesPagerAdapter() {
-        return null;
-    }
-
     protected void afterDisplayBookings(List<Booking> bookingsForDay, Date dateOfBookings) {
         super.afterDisplayBookings(bookingsForDay, dateOfBookings);
     }
