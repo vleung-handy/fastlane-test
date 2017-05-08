@@ -107,10 +107,10 @@ public class CheckOutTest {
         onView(withId(R.id.rating_button_5)).perform(click());
         onView(withId(R.id.rate_booking_submit_button)).perform(click());
 
-        // If nearby jobs shows up, skip it
+        // If post jobs shows up, skip it
         try {
-            ViewUtil.waitForViewVisible(R.id.nearby_bookings_description, ViewUtil.LONG_MAX_WAIT_TIME_MS);
-            onView(withId(R.id.action_exit)).perform(click());
+            ViewUtil.waitForViewVisible(R.id.claim_button, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+            onView(withId(R.id.claim_button)).perform(click());
         }
         catch (PerformException e) { }
 
