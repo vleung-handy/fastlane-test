@@ -8,6 +8,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -26,6 +27,7 @@ import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.adapter.DatesPagerAdapter;
+import com.handy.portal.bookings.ui.adapter.ScheduledJobsAdapter;
 import com.handy.portal.bookings.ui.element.NewDateButton;
 import com.handy.portal.bookings.ui.element.NewDateButtonGroup;
 import com.handy.portal.core.constant.BundleKeys;
@@ -41,6 +43,7 @@ import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.ui.activity.MainActivity;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
+import com.handy.portal.core.ui.view.SimpleDividerItemDecoration;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.deeplink.DeeplinkUtils;
@@ -111,6 +114,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     private HashMap<Date, DailyAvailabilityTimeline> mUpdatedAvailabilityTimelines;
     private final Runnable mRefreshRunnable;
     private final ViewPager.OnPageChangeListener mDatesPageChangeListener;
+    private final ScheduledJobsAdapter.JobClickListener mJobClickListener;
 
     {
         mDatesPageChangeListener =
@@ -149,6 +153,13 @@ public class ScheduledBookingsFragment extends ActionBarFragment
             @Override
             public void run() {
                 mRefreshLayout.setRefreshing(true);
+            }
+        };
+        mJobClickListener = new ScheduledJobsAdapter.JobClickListener() {
+            @Override
+            public void onJobClick(final Booking booking) {
+                bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.Clicked(booking)));
+                showBookingDetails(booking);
             }
         };
     }
@@ -208,6 +219,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
             }
         });
         mRefreshLayout.setColorSchemeResources(R.color.handy_blue);
+
+        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
 
         return view;
     }
@@ -314,7 +327,6 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     private void requestBookings(List<Date> dates, boolean refreshing, boolean useCachedIfPresent) {
         mFetchErrorView.setVisibility(View.GONE);
         if (refreshing) {
-            mRecyclerView.setLayoutManager(null);
             mRecyclerView.setAdapter(null);
             // this delay will prevent the refreshing icon to flicker when loading cached data
             mRecyclerView.postDelayed(mRefreshRunnable, 200);
@@ -463,12 +475,14 @@ public class ScheduledBookingsFragment extends ActionBarFragment
             @NonNull final BookingsWrapper bookingsWrapper,
             @NonNull final Date dateOfBookings
     ) {
-        final List<Booking> bookings = bookingsWrapper.getBookings();
-        // TODO: populate recycler view
-        // mRecyclerView.setAdapter(...);
-        // mRecyclerView.setLayoutManager(new LinearLayoutManager());
+        if (mRecyclerView.getLayoutManager() == null) {
+            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        }
 
-        // TODO: Log this somewhere -> bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.Clicked(booking, oneBasedIndex)));
+        final List<Booking> bookings = bookingsWrapper.getBookings();
+        final ScheduledJobsAdapter scheduledJobsAdapter =
+                new ScheduledJobsAdapter(getActivity(), bookings, mJobClickListener);
+        mRecyclerView.setAdapter(scheduledJobsAdapter);
     }
 
     private boolean shouldShowClaimedIndicator(final List<Booking> bookingsForDay) {
