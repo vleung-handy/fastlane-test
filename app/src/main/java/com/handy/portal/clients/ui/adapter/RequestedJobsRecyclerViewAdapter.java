@@ -36,8 +36,6 @@ import javax.inject.Inject;
 
 public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     @Inject
-    ConfigManager mConfigManager;
-    @Inject
     EventBus mBus;
 
     private static final int VIEW_TYPE_DATE = 1;
@@ -61,19 +59,13 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
         switch (viewType) {
             case VIEW_TYPE_DATE:
                 final View itemView = new ProRequestedJobsListGroupView(parent.getContext());
-                if (!isRequestDismissalEnabled()) {
-                    addBottomBorder(itemView, R.drawable.border_gray_bottom_bg);
-                }
                 return new DateViewHolder(itemView);
             case VIEW_TYPE_JOB:
                 final FrameLayout container = new FrameLayout(parent.getContext());
                 container.setLayoutParams(new ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT));
-                if (!isRequestDismissalEnabled()) {
-                    addBottomBorder(container, R.drawable.border_gray_bottom);
-                }
-                return new JobViewHolder(container);
+                return new JobViewHolder(container, mBus);
         }
         return null;
     }
@@ -128,20 +120,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
         }
     }
 
-    private boolean isRequestDismissalEnabled() {
-        final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
-        return configuration != null
-                && configuration.getRequestDismissal() != null
-                && configuration.getRequestDismissal().isEnabled();
-    }
-
-    private void addBottomBorder(final View view, final int bottomBorderDrawableId) {
-        final int oneDp = UIUtils.calculatePxToDp(view.getContext(), 1);
-        view.setPadding(0, 0, 0, oneDp);
-        view.setBackgroundResource(bottomBorderDrawableId);
-    }
-
-    private abstract class BaseViewHolder extends RecyclerView.ViewHolder {
+    private static abstract class BaseViewHolder extends RecyclerView.ViewHolder {
         BaseViewHolder(final View itemView) {
             super(itemView);
         }
@@ -150,7 +129,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
     }
 
 
-    private class DateViewHolder extends BaseViewHolder {
+    private static class DateViewHolder extends BaseViewHolder {
         DateViewHolder(final View itemView) {
             super(itemView);
         }
@@ -163,13 +142,16 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
     }
 
 
-    private class JobViewHolder extends RequestedJobsRecyclerViewAdapter.BaseViewHolder {
-        JobViewHolder(final View itemView) {
+    public static class JobViewHolder extends BaseViewHolder {
+        private final EventBus mBus;
+
+        public JobViewHolder(final View itemView, final EventBus bus) {
             super(itemView);
+            mBus = bus;
         }
 
         @Override
-        void init(final Object item) {
+        public void init(final Object item) {
             View convertView = null;
             final ViewGroup parentView = (ViewGroup) itemView;
             if (parentView.getChildCount() == 1) {
@@ -178,14 +160,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
 
             final Booking booking = (Booking) item;
 
-            BookingElementView bookingElementView;
-            final boolean isRequestDismissalEnabled = isRequestDismissalEnabled();
-            if (isRequestDismissalEnabled) {
-                bookingElementView = new DismissableBookingElementView();
-            }
-            else {
-                bookingElementView = new AvailableBookingElementView();
-            }
+            final BookingElementView bookingElementView = new DismissableBookingElementView();
 
             bookingElementView.initView(parentView.getContext(), booking, convertView, parentView);
             final View associatedView = bookingElementView.getAssociatedView();

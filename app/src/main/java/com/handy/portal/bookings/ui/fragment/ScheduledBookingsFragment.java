@@ -6,10 +6,9 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -17,6 +16,8 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
@@ -27,9 +28,10 @@ import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.adapter.DatesPagerAdapter;
-import com.handy.portal.bookings.ui.adapter.ScheduledJobsAdapter;
+import com.handy.portal.bookings.ui.adapter.RequestedJobsPagerAdapter;
 import com.handy.portal.bookings.ui.element.NewDateButton;
 import com.handy.portal.bookings.ui.element.NewDateButtonGroup;
+import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.PrefsKey;
@@ -43,7 +45,6 @@ import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.ui.activity.MainActivity;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
-import com.handy.portal.core.ui.view.SimpleDividerItemDecoration;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.deeplink.DeeplinkUtils;
@@ -66,6 +67,7 @@ import java.util.List;
 
 import javax.inject.Inject;
 
+import butterknife.BindDimen;
 import butterknife.BindDrawable;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -86,8 +88,10 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     @Inject
     ConfigManager mConfigManager;
 
-    @BindView(R.id.scheduled_jobs_recycler_view)
-    RecyclerView mRecyclerView;
+    @BindView(R.id.scheduled_jobs_view)
+    LinearLayout mScheduledJobsView;
+    @BindView(R.id.scheduled_jobs_scroll_view)
+    ScrollView mScheduledJobsScrollView;
     @BindView(R.id.dates_view_pager_holder)
     ViewGroup mDatesViewPagerHolder;
     @BindView(R.id.dates_view_pager)
@@ -106,6 +110,18 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     View mFetchErrorView;
     @BindView(R.id.fetch_error_text)
     TextView mErrorText;
+    @BindView(R.id.requested_jobs_view_pager)
+    ViewPager mRequestedJobsViewPager;
+    @BindView(R.id.requested_jobs_guide)
+    View mRequestedJobsGuide;
+    @BindView(R.id.requested_jobs_guide_date)
+    TextView mRequestedJobsGuideDate;
+    @BindView(R.id.requested_jobs_guide_item_count)
+    TextView mRequestedJobsGuideItemCount;
+    @BindDimen(R.dimen.default_margin_half)
+    int mRequestedJobsGapMargin;
+    @BindDimen(R.dimen.default_margin_x3)
+    int mRequestedJobsMargin;
     private Date mSelectedDay;
     private DatesPagerAdapter mDatesPagerAdapter;
     private int mLastDatesPosition;
@@ -114,52 +130,60 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     private HashMap<Date, DailyAvailabilityTimeline> mUpdatedAvailabilityTimelines;
     private final Runnable mRefreshRunnable;
     private final ViewPager.OnPageChangeListener mDatesPageChangeListener;
-    private final ScheduledJobsAdapter.JobClickListener mJobClickListener;
+    private final ViewPager.OnPageChangeListener mRequestedJobsPageChangeListener;
 
     {
-        mDatesPageChangeListener =
-                new ViewPager.OnPageChangeListener() {
-                    @Override
-                    public void onPageScrolled(final int position, final float positionOffset,
-                                               final int positionOffsetPixels) {
-                        // do nothing
-                    }
+        mDatesPageChangeListener = new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(final int position, final float positionOffset,
+                                       final int positionOffsetPixels) {
+                // do nothing
+            }
 
-                    @Override
-                    public void onPageSelected(final int position) {
-                        final NewDateButtonGroup dateButtonGroup =
-                                mDatesPagerAdapter.getItemAt(position);
-                        final NewDateButton dateButton;
-                        if (mLastDatesPosition > position) {
-                            dateButton =
-                                    dateButtonGroup.getLastEnabledDateButton();
-                        }
-                        else {
-                            dateButton =
-                                    dateButtonGroup.getFirstEnabledDateButton();
-                        }
-                        if (dateButton != null) {
-                            dateButton.select();
-                        }
-                        mLastDatesPosition = position;
-                    }
+            @Override
+            public void onPageSelected(final int position) {
+                final NewDateButtonGroup dateButtonGroup =
+                        mDatesPagerAdapter.getItemAt(position);
+                final NewDateButton dateButton;
+                if (mLastDatesPosition > position) {
+                    dateButton =
+                            dateButtonGroup.getLastEnabledDateButton();
+                }
+                else {
+                    dateButton =
+                            dateButtonGroup.getFirstEnabledDateButton();
+                }
+                if (dateButton != null) {
+                    dateButton.select();
+                }
+                mLastDatesPosition = position;
+            }
 
-                    @Override
-                    public void onPageScrollStateChanged(final int state) {
-                        // do nothing
-                    }
-                };
+            @Override
+            public void onPageScrollStateChanged(final int state) {
+                // do nothing
+            }
+        };
+        mRequestedJobsPageChangeListener = new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(final int position, final float positionOffset, final int positionOffsetPixels) {
+                // do nothing
+            }
+
+            @Override
+            public void onPageSelected(final int position) {
+                updateRequestedJobsItemCount(position);
+            }
+
+            @Override
+            public void onPageScrollStateChanged(final int state) {
+                // do nothing
+            }
+        };
         mRefreshRunnable = new Runnable() {
             @Override
             public void run() {
                 mRefreshLayout.setRefreshing(true);
-            }
-        };
-        mJobClickListener = new ScheduledJobsAdapter.JobClickListener() {
-            @Override
-            public void onJobClick(final Booking booking) {
-                bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.Clicked(booking)));
-                showBookingDetails(booking);
             }
         };
     }
@@ -220,7 +244,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         });
         mRefreshLayout.setColorSchemeResources(R.color.handy_blue);
 
-        mRecyclerView.addItemDecoration(new SimpleDividerItemDecoration(getActivity()));
+        mRequestedJobsViewPager.setPageMargin(-mRequestedJobsMargin + mRequestedJobsGapMargin);
+        mRequestedJobsViewPager.setOffscreenPageLimit(3);
 
         return view;
     }
@@ -300,7 +325,14 @@ public class ScheduledBookingsFragment extends ActionBarFragment
 
             requestProviderAvailability();
             setAvailableHoursBannerVisibility();
+
+            updateRequestedJobsItemCount(mRequestedJobsViewPager.getCurrentItem());
         }
+    }
+
+    @OnClick(R.id.try_again_button)
+    public void onRetryRequestBookings() {
+        requestBookingsForSelectedDay(true, false);
     }
 
     private void requestBookingsForSelectedDay(boolean refreshing, boolean useCachedIfPresent) {
@@ -327,16 +359,30 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     private void requestBookings(List<Date> dates, boolean refreshing, boolean useCachedIfPresent) {
         mFetchErrorView.setVisibility(View.GONE);
         if (refreshing) {
-            mRecyclerView.setAdapter(null);
+            mScheduledJobsScrollView.scrollTo(0, 0);
+            hideRequestedJobs();
+            mScheduledJobsView.removeAllViews();
             // this delay will prevent the refreshing icon to flicker when loading cached data
-            mRecyclerView.postDelayed(mRefreshRunnable, 200);
+            mScheduledJobsView.postDelayed(mRefreshRunnable, 200);
         }
         requestBookings(dates, useCachedIfPresent);
     }
 
+    private void hideRequestedJobs() {
+        mRequestedJobsViewPager.setAdapter(null);
+        mRequestedJobsViewPager.removeOnPageChangeListener(mRequestedJobsPageChangeListener);
+        mRequestedJobsViewPager.setVisibility(View.GONE);
+        mRequestedJobsGuide.setVisibility(View.GONE);
+    }
+
+    private void showRequestedJobs() {
+        mRequestedJobsViewPager.setVisibility(View.VISIBLE);
+        mRequestedJobsGuide.setVisibility(View.VISIBLE);
+    }
 
     private void requestBookings(List<Date> dates, boolean useCachedIfPresent) {
         mBookingManager.requestScheduledBookings(dates, useCachedIfPresent);
+        mBookingManager.requestProRequestedJobs(dates, useCachedIfPresent);
         requestProviderAvailability();
     }
 
@@ -424,17 +470,13 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         mDatesViewPager.addOnPageChangeListener(mDatesPageChangeListener);
     }
 
-    protected int getFragmentResourceId() {
-        return (R.layout.fragment_scheduled_bookings);
-    }
-
     @Subscribe
     public void onReceiveScheduledBookingsSuccess(
             final HandyEvent.ReceiveScheduledBookingsSuccess event
     ) {
         final BookingsWrapper bookingsWrapper = event.bookingsWrapper;
 
-        mRecyclerView.removeCallbacks(mRefreshRunnable);
+        mScheduledJobsView.removeCallbacks(mRefreshRunnable);
         List<Booking> bookings = event.bookingsWrapper.getBookings();
         Collections.sort(bookings);
 
@@ -450,7 +492,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
 
         if (mSelectedDay != null && mSelectedDay.equals(event.day)) {
             mRefreshLayout.setRefreshing(false);
-            displayBookings(bookingsWrapper, mSelectedDay);
+            displayJobs(bookingsWrapper, mSelectedDay);
         }
     }
 
@@ -471,18 +513,35 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         }
     }
 
-    protected void displayBookings(
+    private synchronized void displayJobs(
             @NonNull final BookingsWrapper bookingsWrapper,
             @NonNull final Date dateOfBookings
     ) {
-        if (mRecyclerView.getLayoutManager() == null) {
-            mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        }
-
+        mScheduledJobsView.removeAllViews();
         final List<Booking> bookings = bookingsWrapper.getBookings();
-        final ScheduledJobsAdapter scheduledJobsAdapter =
-                new ScheduledJobsAdapter(getActivity(), bookings, mJobClickListener);
-        mRecyclerView.setAdapter(scheduledJobsAdapter);
+        if (bookings.isEmpty()) {
+            LayoutInflater.from(getActivity()).inflate(R.layout.layout_scheduled_bookings_empty,
+                    mScheduledJobsView, true);
+        }
+        else {
+            for (final Booking booking : bookings) {
+                final ScheduledBookingElementView mediator = new ScheduledBookingElementView();
+                mediator.initView(getActivity(), booking, null, mScheduledJobsView);
+
+                final View view = mediator.getAssociatedView();
+                view.setBackgroundResource(R.drawable.border_gray_bottom);
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        showBookingDetails(booking);
+                    }
+                });
+                mScheduledJobsView.addView(view);
+            }
+        }
+        if (mRequestedJobsViewPager.getAdapter() != null) {
+            showRequestedJobs();
+        }
     }
 
     private boolean shouldShowClaimedIndicator(final List<Booking> bookingsForDay) {
@@ -492,6 +551,47 @@ public class ScheduledBookingsFragment extends ActionBarFragment
             }
         }
         return false;
+    }
+
+    @Subscribe
+    public synchronized void onReceiveProRequestedJobsSuccess(
+            final BookingEvent.ReceiveProRequestedJobsSuccess event
+    ) {
+        final List<BookingsWrapper> requestedJobsWrappers = event.getProRequestedJobs();
+
+        if (requestedJobsWrappers == null || requestedJobsWrappers.isEmpty()) { return; }
+
+        for (final BookingsWrapper requestedJobsWrapper : requestedJobsWrappers) {
+            if (mSelectedDay.equals(requestedJobsWrapper.getDate())) {
+                populateRequestedJobs(requestedJobsWrapper);
+                break;
+            }
+        }
+    }
+
+    private void populateRequestedJobs(final BookingsWrapper requestedJobsWrapper) {
+        final List<Booking> undismissedBookings = requestedJobsWrapper.getUndismissedBookings();
+        if (undismissedBookings != null && !undismissedBookings.isEmpty()) {
+            mRequestedJobsViewPager.setAdapter(new RequestedJobsPagerAdapter(
+                    getActivity(), bus, undismissedBookings));
+            mRequestedJobsViewPager.addOnPageChangeListener(mRequestedJobsPageChangeListener);
+            updateRequestedJobsItemCount(0);
+            final String formattedDate = DateTimeUtils.formatDateShortDayOfWeekShortMonthDay(
+                    requestedJobsWrapper.getDate());
+            mRequestedJobsGuideDate.setText(getString(R.string.requests_for_date_formatted,
+                    formattedDate));
+            if (mScheduledJobsView.getChildCount() > 0) {
+                showRequestedJobs();
+            }
+        }
+    }
+
+    private void updateRequestedJobsItemCount(final int position) {
+        final PagerAdapter adapter = mRequestedJobsViewPager.getAdapter();
+        if (adapter != null) {
+            mRequestedJobsGuideItemCount.setText(getString(R.string.x_of_n_formatted,
+                    position + 1, adapter.getCount()));
+        }
     }
 
     @OnClick(R.id.set_hours_dismiss_button)
