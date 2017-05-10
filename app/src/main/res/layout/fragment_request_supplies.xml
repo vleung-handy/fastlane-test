@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/default_margin"
                 android:gravity="center"
-                android:text="@string/handy_boxed_store"
+                android:text="@string/cleaning_supplies"
                 android:textColor="@color/black"
                 android:textSize="@dimen/title_text_size"
                 />
@@ -263,20 +263,4 @@
 
         </LinearLayout>
     </ScrollView>
-
-    <TextView
-        android:id="@+id/request_supplies_text"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/complete_button_height"
-        android:background="@color/cleaner_green"
-        android:drawableEnd="@drawable/ic_external_link"
-        android:drawableRight="@drawable/ic_external_link"
-        android:gravity="center"
-        android:paddingEnd="@dimen/default_padding_large"
-        android:paddingRight="@dimen/default_padding_large"
-        android:text="@string/shop_on_boxed"
-        android:textAllCaps="false"
-        android:textColor="@color/white"
-        android:textSize="@dimen/large_text_size"
-        />
 </LinearLayout>
