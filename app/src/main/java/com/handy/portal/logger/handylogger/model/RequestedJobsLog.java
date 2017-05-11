@@ -6,8 +6,8 @@ import com.handy.portal.bookings.model.Booking;
 public abstract class RequestedJobsLog extends EventLog {
     public static final String EVENT_CONTEXT = "requested_jobs";
 
-    private RequestedJobsLog(final String eventType) {
-        super(eventType, EVENT_CONTEXT);
+    public RequestedJobsLog(final String eventType, final String eventContext) {
+        super(eventType, eventContext);
     }
 
     public static class RequestsShown extends RequestedJobsLog {
@@ -22,11 +22,13 @@ public abstract class RequestedJobsLog extends EventLog {
         @SerializedName("pending_favorite_requests_count")
         private int mPendingFavoriteRequestsCount;
 
-        public RequestsShown(final int pendingRequestsCount,
-                             final int pendingReferralRequestsCount,
-                             final int pendingFavoriteRequestsCount
+        public RequestsShown(
+                final String eventContext,
+                final int pendingRequestsCount,
+                final int pendingReferralRequestsCount,
+                final int pendingFavoriteRequestsCount
         ) {
-            super(EVENT_TYPE);
+            super(EVENT_TYPE, eventContext);
             mPendingRequestsCount = pendingRequestsCount;
             mPendingReferralRequestsCount = pendingReferralRequestsCount;
             mPendingFavoriteRequestsCount = pendingFavoriteRequestsCount;

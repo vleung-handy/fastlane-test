@@ -27,6 +27,7 @@ import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
+import com.handy.portal.bookings.model.AuxiliaryInfo;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.adapter.DatesPagerAdapter;
@@ -34,6 +35,7 @@ import com.handy.portal.bookings.ui.adapter.RequestedJobsPagerAdapter;
 import com.handy.portal.bookings.ui.element.NewDateButton;
 import com.handy.portal.bookings.ui.element.NewDateButtonGroup;
 import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
+import com.handy.portal.bookings.util.BookingListUtils;
 import com.handy.portal.bookings.util.ClaimUtils;
 import com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapter;
 import com.handy.portal.clients.ui.fragment.dialog.RequestDismissalReasonsDialogFragment;
@@ -378,7 +380,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         if (refreshing) {
             mScheduledJobsScrollView.scrollTo(0, 0);
             hideRequestedJobs();
-            mScheduledJobsView.removeAllViews();
+            hideScheduledJobs();
             // this delay will prevent the refreshing icon to flicker when loading cached data
             mScheduledJobsView.postDelayed(mRefreshRunnable, 200);
         }
@@ -392,9 +394,17 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         mRequestedJobsGuide.setVisibility(View.GONE);
     }
 
-    private void showRequestedJobs() {
-        mRequestedJobsViewPager.setVisibility(View.VISIBLE);
-        mRequestedJobsGuide.setVisibility(View.VISIBLE);
+    private void hideScheduledJobs() {
+        mScheduledJobsView.setVisibility(View.GONE);
+        mScheduledJobsView.removeAllViews();
+    }
+
+    private void showJobs() {
+        mScheduledJobsView.setVisibility(View.VISIBLE);
+        if (mRequestedJobsViewPager.getAdapter().getCount() > 0) {
+            mRequestedJobsViewPager.setVisibility(View.VISIBLE);
+            mRequestedJobsGuide.setVisibility(View.VISIBLE);
+        }
     }
 
     private void requestBookings(final List<Date> dates, final boolean useCachedIfPresent) {
@@ -562,7 +572,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
             }
         }
         if (mRequestedJobsViewPager.getAdapter() != null) {
-            showRequestedJobs();
+            showJobs();
         }
     }
 
@@ -593,7 +603,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
 
     private void populateRequestedJobs(final BookingsWrapper requestedJobsWrapper) {
         final List<Booking> undismissedBookings = requestedJobsWrapper.getUndismissedBookings();
-        if (undismissedBookings != null && !undismissedBookings.isEmpty()) {
+        if (undismissedBookings != null) {
             mRequestedJobsViewPager.setAdapter(new RequestedJobsPagerAdapter(
                     getActivity(), bus, undismissedBookings));
             mRequestedJobsViewPager.addOnPageChangeListener(mRequestedJobsPageChangeListener);
@@ -603,8 +613,16 @@ public class ScheduledBookingsFragment extends ActionBarFragment
             mRequestedJobsGuideDate.setText(getString(R.string.requests_for_date_formatted,
                     formattedDate));
             if (mScheduledJobsView.getChildCount() > 0) {
-                showRequestedJobs();
+                showJobs();
             }
+            bus.post(new LogEvent.AddLogEvent(
+                    new RequestedJobsLog.RequestsShown(
+                            EventContext.SCHEDULED_JOBS,
+                            undismissedBookings.size(),
+                            BookingListUtils.getCountPerAuxType(undismissedBookings, AuxiliaryInfo.Type.REFERRAL),
+                            BookingListUtils.getCountPerAuxType(undismissedBookings, AuxiliaryInfo.Type.FAVORITE)
+                    )
+            ));
         }
     }
 

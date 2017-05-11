@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -24,6 +23,7 @@ import com.handy.portal.bookings.manager.BookingManager.DismissalReason;
 import com.handy.portal.bookings.model.AuxiliaryInfo;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
+import com.handy.portal.bookings.util.BookingListUtils;
 import com.handy.portal.bookings.util.ClaimUtils;
 import com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapter;
 import com.handy.portal.clients.ui.fragment.dialog.RequestDismissalReasonsDialogFragment;
@@ -115,39 +115,12 @@ public class ProRequestedJobsFragment extends InjectedFragment {
         }
         bus.post(new LogEvent.AddLogEvent(
                 new RequestedJobsLog.RequestsShown(
+                        EventContext.REQUESTED_JOBS,
                         mUnreadJobsCount,
-                        getCountPerAuxType(filteredJobList, AuxiliaryInfo.Type.REFERRAL),
-                        getCountPerAuxType(filteredJobList, AuxiliaryInfo.Type.FAVORITE)
+                        BookingListUtils.getOverallCountPerAuxType(filteredJobList, AuxiliaryInfo.Type.REFERRAL),
+                        BookingListUtils.getOverallCountPerAuxType(filteredJobList, AuxiliaryInfo.Type.FAVORITE)
                 )
         ));
-    }
-
-    /**
-     * returns the number of bookings that satisfy the corresponding type
-     *
-     * @param jobList
-     * @param type
-     * @return
-     */
-    private int getCountPerAuxType(
-            @Nullable List<BookingsWrapper> jobList,
-            @NonNull AuxiliaryInfo.Type type) {
-        if (jobList == null || jobList.isEmpty()) {
-            return 0;
-        }
-
-        int count = 0;
-        for (BookingsWrapper bookingsWrapper : jobList) {
-            if (bookingsWrapper.getBookings() != null) {
-                for (Booking booking : bookingsWrapper.getBookings()) {
-                    if (booking.getAuxiliaryInfo() != null && type == booking.getAuxiliaryInfo().getType()) {
-                        count++;
-                    }
-                }
-            }
-        }
-
-        return count;
     }
 
     private void navigateToJobDetails(@NonNull Booking booking) {
