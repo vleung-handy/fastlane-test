@@ -388,7 +388,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         mRequestedJobsGuide.setVisibility(View.VISIBLE);
     }
 
-    private void requestBookings(List<Date> dates, boolean useCachedIfPresent) {
+    private void requestBookings(final List<Date> dates, final boolean useCachedIfPresent) {
         mBookingManager.requestScheduledBookings(dates, useCachedIfPresent);
         mBookingManager.requestProRequestedJobs(dates, useCachedIfPresent);
         requestProviderAvailability();
