@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -32,6 +33,9 @@ import com.handy.portal.bookings.ui.adapter.RequestedJobsPagerAdapter;
 import com.handy.portal.bookings.ui.element.NewDateButton;
 import com.handy.portal.bookings.ui.element.NewDateButtonGroup;
 import com.handy.portal.bookings.ui.element.ScheduledBookingElementView;
+import com.handy.portal.bookings.util.ClaimUtils;
+import com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapter;
+import com.handy.portal.clients.ui.fragment.dialog.RequestDismissalReasonsDialogFragment;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.PrefsKey;
@@ -49,8 +53,10 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.deeplink.DeeplinkUtils;
 import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.EventContext;
+import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
 import com.handy.portal.proavailability.model.ProviderAvailability;
@@ -88,6 +94,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     @Inject
     ConfigManager mConfigManager;
 
+    @BindView(R.id.bookings_content)
+    LinearLayout mContent;
     @BindView(R.id.scheduled_jobs_view)
     LinearLayout mScheduledJobsView;
     @BindView(R.id.scheduled_jobs_scroll_view)
@@ -196,6 +204,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bus.register(this);
         setHasOptionsMenu(true);
 
         if (getArguments() != null
@@ -298,7 +307,6 @@ public class ScheduledBookingsFragment extends ActionBarFragment
 
     @Override
     public void onResume() {
-        bus.register(this);
         super.onResume();
 
         setActionBar(R.string.scheduled_jobs, false);
@@ -459,9 +467,14 @@ public class ScheduledBookingsFragment extends ActionBarFragment
 
     @Override
     public void onPause() {
-        bus.unregister(this);
         mDatesViewPager.removeOnPageChangeListener(mDatesPageChangeListener);
         super.onPause();
+    }
+
+    @Override
+    public void onDestroy() {
+        bus.unregister(this);
+        super.onDestroy();
     }
 
     private void initDateButtons() {
@@ -653,16 +666,29 @@ public class ScheduledBookingsFragment extends ActionBarFragment
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK && requestCode == RequestCode.EDIT_HOURS) {
-            final DailyAvailabilityTimeline availability = (DailyAvailabilityTimeline)
-                    data.getSerializableExtra(BundleKeys.DAILY_AVAILABILITY_TIMELINE);
-            if (availability != null) {
-                if (mUpdatedAvailabilityTimelines == null) {
-                    mUpdatedAvailabilityTimelines = new HashMap<>();
-                }
-                mUpdatedAvailabilityTimelines.put(availability.getDate(), availability);
-                showAvailableHours();
+        if (resultCode == Activity.RESULT_OK) {
+            final Booking booking = (Booking) data.getSerializableExtra(BundleKeys.BOOKING);
+            switch (requestCode) {
+                case RequestCode.CONFIRM_DISMISS:
+                    final String dismissalReason =
+                            data.getStringExtra(BundleKeys.DISMISSAL_REASON);
+                    dismissJob(booking, dismissalReason);
+                    break;
+                case RequestCode.CONFIRM_SWAP:
+                case RequestCode.CONFIRM_REQUEST:
+                    requestClaimJob(booking);
+                    break;
+                case RequestCode.EDIT_HOURS:
+                    final DailyAvailabilityTimeline availability = (DailyAvailabilityTimeline)
+                            data.getSerializableExtra(BundleKeys.DAILY_AVAILABILITY_TIMELINE);
+                    if (availability != null) {
+                        if (mUpdatedAvailabilityTimelines == null) {
+                            mUpdatedAvailabilityTimelines = new HashMap<>();
+                        }
+                        mUpdatedAvailabilityTimelines.put(availability.getDate(), availability);
+                        showAvailableHours();
+                    }
+                    break;
             }
         }
     }
@@ -683,5 +709,116 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         arguments.putSerializable(BundleKeys.PAGE, getAppPage());
         bus.post(new NavigationEvent.NavigateToPage(MainViewPage.JOB_DETAILS, arguments,
                 TransitionStyle.JOB_LIST_TO_DETAILS, true));
+    }
+
+    @Subscribe
+    public void onRequestedJobClicked(
+            final RequestedJobsRecyclerViewAdapter.Event.RequestedJobClicked event
+    ) {
+        showBookingDetails(event.getBooking());
+    }
+
+    @Subscribe
+    public void onRequestedJobClaimClicked(
+            final RequestedJobsRecyclerViewAdapter.Event.RequestedJobClaimClicked event
+    ) {
+        boolean confirmClaimDialogShown =
+                ClaimUtils.showConfirmBookingClaimDialogIfNecessary(event.getBooking(), this,
+                        getFragmentManager());
+        if (!confirmClaimDialogShown) {
+            requestClaimJob(event.getBooking());
+        }
+    }
+
+    private void requestClaimJob(final Booking booking) {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimSubmitted(booking)));
+        mBookingManager.requestClaimJob(booking, null);
+    }
+
+    @Subscribe
+    public void onReceiveClaimJobSuccess(final HandyEvent.ReceiveClaimJobSuccess event) {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        bus.post(new LogEvent.AddLogEvent(
+                new RequestedJobsLog.ClaimSuccess(event.originalBooking)));
+        Snackbar.make(mContent, R.string.job_claim_success,
+                Snackbar.LENGTH_LONG).show();
+        mBookingManager.requestProRequestedJobsCount();
+        requestBookingsForSelectedDay(true, false);
+    }
+
+    @Subscribe
+    public void onReceiveClaimJobError(final HandyEvent.ReceiveClaimJobError event) {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        String errorMessage = event.error.getMessage();
+        if (TextUtils.isEmpty(errorMessage)) {
+            errorMessage = getString(R.string.job_claim_error);
+        }
+        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimError(event.getBooking(),
+                errorMessage)));
+        Snackbar.make(mContent, errorMessage, Snackbar.LENGTH_LONG).show();
+    }
+
+    @Subscribe
+    public void onRequestedJobDismissClicked(
+            final RequestedJobsRecyclerViewAdapter.Event.RequestedJobDismissClicked event
+    ) {
+        final Booking booking = event.getBooking();
+        if (booking.getRequestAttributes() != null
+                && booking.getRequestAttributes().hasCustomer()) {
+            // Display dialog for selecting a request dismissal reason
+            final RequestDismissalReasonsDialogFragment dialogFragment =
+                    RequestDismissalReasonsDialogFragment.newInstance(booking);
+            dialogFragment.setTargetFragment(this, RequestCode.CONFIRM_DISMISS);
+            FragmentUtils.safeLaunchDialogFragment(dialogFragment, this, null);
+        }
+        else {
+            dismissJob(booking);
+        }
+    }
+
+    @Subscribe
+    public void onAvailableHoursSent(final HandyEvent.AvailableHoursSent event) {
+        requestBookingsForSelectedDay(true, false);
+    }
+
+    private void dismissJob(final Booking booking) {
+        dismissJob(booking, BookingManager.DISMISSAL_REASON_UNSPECIFIED);
+    }
+
+    private void dismissJob(@NonNull final Booking booking,
+                            @NonNull @BookingManager.DismissalReason final String dismissalReason) {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobSubmitted(booking,
+                dismissalReason)));
+        final Booking.RequestAttributes requestAttributes = booking.getRequestAttributes();
+        String customerId = null;
+        if (requestAttributes != null && requestAttributes.hasCustomer()) {
+            customerId = requestAttributes.getCustomerId();
+        }
+        mBookingManager.requestDismissJob(booking, customerId, dismissalReason);
+    }
+
+    @Subscribe
+    public void onReceiveDismissJobSuccess(final HandyEvent.ReceiveDismissJobSuccess event) {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        bus.post(new LogEvent.AddLogEvent(
+                new RequestedJobsLog.DismissJobSuccess(event.getBooking())));
+        Snackbar.make(mContent, R.string.request_dismissal_success_message,
+                Snackbar.LENGTH_LONG).show();
+        mBookingManager.requestProRequestedJobsCount();
+        requestBookingsForSelectedDay(true, false);
+    }
+
+    @Subscribe
+    public void onReceiveDismissJobError(final HandyEvent.ReceiveDismissJobError event) {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        String errorMessage = event.error.getMessage();
+        if (TextUtils.isEmpty(errorMessage)) {
+            errorMessage = getString(R.string.request_dismissal_error);
+        }
+        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobError(event.getBooking(),
+                errorMessage)));
+        Snackbar.make(mContent, errorMessage, Snackbar.LENGTH_LONG).show();
     }
 }
