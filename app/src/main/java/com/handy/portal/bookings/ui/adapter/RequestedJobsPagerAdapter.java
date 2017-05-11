@@ -10,6 +10,7 @@ import android.widget.FrameLayout;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapter;
+import com.handy.portal.logger.handylogger.model.EventContext;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -52,7 +53,11 @@ public class RequestedJobsPagerAdapter extends PagerAdapter {
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         frame.setPadding(xPadding, 0, xPadding, 0);
         frame.setTag(requestedJob);
-        new RequestedJobsRecyclerViewAdapter.JobViewHolder(frame, mBus).init(requestedJob);
+        new RequestedJobsRecyclerViewAdapter.JobViewHolder(
+                frame,
+                mBus,
+                EventContext.SCHEDULED_JOBS
+        ).init(requestedJob);
         container.addView(frame);
         return requestedJob;
     }

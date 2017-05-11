@@ -1,13 +1,19 @@
 package com.handy.portal.logger.handylogger.model;
 
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.core.model.Address;
 import com.handy.portal.payments.model.PaymentInfo;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
-public abstract class JobsLog extends EventLog {
+public class JobsLog extends EventLog {
 
     @SerializedName("booking_id")
     private String mBookingId;
@@ -43,8 +49,35 @@ public abstract class JobsLog extends EventLog {
     private String mScheduleConflictBookingId;
     @SerializedName("schedule_conflict_booking_type")
     private String mScheduleConflictBookingType;
+    @SerializedName("request_type")
+    private String mRequestType;
+    @SerializedName("claim_source")
+    private String mSource;
+    @SerializedName("claim_source_extras")
+    private Map<String, Object> mSourceExtras;
 
-    public JobsLog(final String eventType, final String eventContext, final Booking booking) {
+    public JobsLog(
+            @NonNull final String eventType,
+            @NonNull final String eventContext,
+            @NonNull final Booking booking,
+            @Nullable final String source,
+            @Nullable final Bundle sourceExtras
+    ) {
+        this(eventType, eventContext, booking);
+        mSource = source;
+        if (sourceExtras != null) {
+            mSourceExtras = new HashMap<>(sourceExtras.size());
+            for (final String key : sourceExtras.keySet()) {
+                mSourceExtras.put(key, sourceExtras.get(key));
+            }
+        }
+    }
+
+    public JobsLog(
+            @NonNull final String eventType,
+            @NonNull final String eventContext,
+            @NonNull final Booking booking
+    ) {
         super(eventType, eventContext);
         mBookingId = booking.getId();
         mBookingType = booking.getType().name().toLowerCase();
@@ -74,6 +107,10 @@ public abstract class JobsLog extends EventLog {
             final Booking swappableBooking = booking.getSwappableBooking();
             mScheduleConflictBookingId = swappableBooking.getId();
             mScheduleConflictBookingType = swappableBooking.getType().name().toLowerCase();
+        }
+        if (booking.getAuxiliaryInfo() != null
+                && booking.getAuxiliaryInfo().getType() != null) {
+            mRequestType = booking.getAuxiliaryInfo().getType().toString().toLowerCase();
         }
     }
 

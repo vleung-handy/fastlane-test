@@ -10,6 +10,7 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.library.util.Utils;
+import com.handy.portal.logger.handylogger.model.EventContext;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -66,6 +67,7 @@ public class DeepLinkService extends IntentService {
                 String bookingId = deepLink.getQuery();
                 bundle.putString(BundleKeys.BOOKING_ID, bookingId);
                 bundle.putString(BundleKeys.BOOKING_TYPE, BookingType.BOOKING.toString());
+                bundle.putString(BundleKeys.EVENT_CONTEXT, EventContext.DEEPLINK);
                 NavigationEvent.NavigateToPage navigateToPage = new NavigationEvent.NavigateToPage(MainViewPage.JOB_DETAILS, bundle, true);
                 bus.post(navigateToPage);
             }

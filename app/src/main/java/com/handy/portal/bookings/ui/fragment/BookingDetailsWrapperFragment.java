@@ -20,8 +20,8 @@ import com.google.common.base.Function;
 import com.google.common.collect.Collections2;
 import com.google.gson.Gson;
 import com.handy.portal.R;
-import com.handy.portal.announcements.model.Announcement;
 import com.handy.portal.announcements.AnnouncementEvent;
+import com.handy.portal.announcements.model.Announcement;
 import com.handy.portal.bookings.constant.BookingActionButtonType;
 import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.manager.BookingManager;
@@ -50,9 +50,10 @@ import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
-import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
+import com.handy.portal.logger.handylogger.model.EventContext;
+import com.handy.portal.logger.handylogger.model.EventType;
+import com.handy.portal.logger.handylogger.model.JobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -92,6 +93,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     private String mSource;
     private Bundle mSourceExtras;
     private MainViewPage mCurrentPage;
+    private String mOriginEventContext;
 
 
     @Override
@@ -127,6 +129,11 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
             mSourceExtras = arguments;
         }
         mCurrentPage = (MainViewPage) arguments.getSerializable(BundleKeys.PAGE);
+
+        mOriginEventContext = arguments.getString(BundleKeys.EVENT_CONTEXT);
+        if (mOriginEventContext == null) {
+            mOriginEventContext = EventContext.UNKNOWN;
+        }
     }
 
     @Override
@@ -196,13 +203,8 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         final BookingClaimDetails bookingClaimDetails = event.bookingClaimDetails;
         final Booking booking = bookingClaimDetails.getBooking();
-        if (mBooking != null && mBooking.isRequested()) {
-            bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimSuccess(mBooking)));
-        }
-        else {
-            bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimSuccess(booking, mSource, mSourceExtras, 0.0f)));
-        }
-
+        bus.post(new LogEvent.AddLogEvent(new JobsLog(EventType.CLAIM_SUCCESS, mOriginEventContext,
+                booking, mSource, mSourceExtras)));
         if (booking.isClaimedByMe() || booking.getProviderId().equals(getLoggedInUserId())) {
             if (bookingClaimDetails.shouldShowClaimTarget()) {
                 BookingClaimDetails.ClaimTargetInfo claimTargetInfo = bookingClaimDetails.getClaimTargetInfo();
@@ -225,13 +227,8 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
 
     @Subscribe
     public void onReceiveClaimJobError(final HandyEvent.ReceiveClaimJobError event) {
-        if (mBooking != null && mBooking.isRequested()) {
-            bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimError(mBooking,
-                    event.error.getMessage())));
-        }
-        else {
-            bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimError(event.getBooking(), mSource, mSourceExtras, 0.0f, event.error.getMessage())));
-        }
+        bus.post(new LogEvent.AddLogEvent(new JobsLog(EventType.CLAIM_ERROR, mOriginEventContext,
+                event.getBooking(), mSource, mSourceExtras)));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         handleBookingClaimError(event.error.getMessage(),
                 getString(R.string.job_claim_error), getString(R.string.return_to_available_jobs),
@@ -574,7 +571,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         {
             FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
             transaction.replace(mSlideUpPanelContainer.getId(),
-                    BookingFragment.newInstance(mBooking, mSource, false))
+                    BookingFragment.newInstance(mBooking, mSource, mOriginEventContext, false))
                     .commit();
         }
     }

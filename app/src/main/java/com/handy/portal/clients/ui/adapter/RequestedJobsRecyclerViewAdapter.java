@@ -11,19 +11,15 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
-import com.handy.portal.bookings.ui.element.AvailableBookingElementView;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.DismissableBookingElementView;
 import com.handy.portal.clients.ui.element.ProRequestedJobsListGroupView;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.NavigationEvent;
-import com.handy.portal.core.manager.ConfigManager;
-import com.handy.portal.core.model.ConfigurationResponse;
-import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
+import com.handy.portal.logger.handylogger.model.EventContext;
 import com.handy.portal.logger.handylogger.model.SendAvailabilityLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -65,7 +61,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                 container.setLayoutParams(new ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT));
-                return new JobViewHolder(container, mBus);
+                return new JobViewHolder(container, mBus, EventContext.REQUESTED_JOBS);
         }
         return null;
     }
@@ -144,10 +140,16 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
 
     public static class JobViewHolder extends BaseViewHolder {
         private final EventBus mBus;
+        private String mOriginEventContext;
 
-        public JobViewHolder(final View itemView, final EventBus bus) {
+        public JobViewHolder(
+                final View itemView,
+                final EventBus bus,
+                final String originEventContext
+        ) {
             super(itemView);
             mBus = bus;
+            mOriginEventContext = originEventContext;
         }
 
         @Override
@@ -220,7 +222,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                                     MainViewPage.SEND_AVAILABLE_HOURS, arguments, true));
                             mBus.post(new LogEvent.AddLogEvent(
                                     new SendAvailabilityLog.SendAvailabilitySelected(
-                                            RequestedJobsLog.EVENT_CONTEXT, booking)));
+                                            mOriginEventContext, booking)));
                         }
                     });
                 }
