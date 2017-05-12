@@ -6,16 +6,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.handy.portal.R;
-import com.handy.portal.core.constant.BundleKeys;
-import com.handy.portal.core.constant.MainViewPage;
-import com.handy.portal.core.event.NavigationEvent;
 
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 
 public class RequestSuppliesFragment extends ActionBarFragment {
-    private static final String REQUEST_SUPPLIES_URL = "https://www.handy.com/boxed";
 
     @Override
     public void onCreate(final Bundle savedInstanceState) {
@@ -33,15 +28,7 @@ public class RequestSuppliesFragment extends ActionBarFragment {
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        setActionBar(R.string.purchase_cleaning_supplies, false);
+        setActionBar(R.string.supplies, false);
         setBackButtonEnabled(true);
-    }
-
-    @OnClick(R.id.request_supplies_text)
-    public void onRequestSuppliesButtonClicked() {
-        Bundle bundle = new Bundle();
-        bundle.putString(BundleKeys.TARGET_URL, REQUEST_SUPPLIES_URL);
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.REQUEST_SUPPLIES_WEB_VIEW,
-                bundle, true));
     }
 }

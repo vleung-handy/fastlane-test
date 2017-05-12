@@ -398,7 +398,7 @@
     <string name="special_empty_string"> </string>
 
     <!-- Supplies -->
-    <string name="purchase_cleaning_supplies">Purchase Cleaning Supplies</string>
+    <string name="cleaning_supplies">Cleaning Supplies</string>
     <string name="supplies_footer">While we hope you find these suggestions of use, you are free to purchase whichever supplies you deem appropriate from this or any other vendor of your choosing.
     </string>
 
@@ -443,8 +443,6 @@
     <string name="purchase_supplies">Purchase Supplies</string>
     <string name="income_verification">Income Verification</string>
     <string name="send_email">Send Email</string>
-    <string name="shop_on_boxed">Shop on Boxed.com</string>
-    <string name="handy_boxed_store">Handy + Boxed.com Store</string>
     <string name="supplies_instruction1">Customers expect their professionals to arrive prepared. We partnered with Boxed to make it easier for you to purchase supplies.</string>
     <string name="supplies_instruction2">The most successful pros using Handy recommend these useful products:</string>
     <string name="vacuum">A vacuum</string>
