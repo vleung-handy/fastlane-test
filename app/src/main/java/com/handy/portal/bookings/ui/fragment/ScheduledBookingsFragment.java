@@ -18,6 +18,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -135,6 +136,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     int mRequestedJobsGapMargin;
     @BindDimen(R.dimen.default_margin_x3)
     int mRequestedJobsMargin;
+    @BindDimen(R.dimen.thin_padding)
+    int mBorderSize;
     private Date mSelectedDay;
     private DatesPagerAdapter mDatesPagerAdapter;
     private int mLastDatesPosition;
@@ -400,6 +403,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     }
 
     private void showJobs() {
+        mScheduledJobsView.removeCallbacks(mRefreshRunnable);
+        mRefreshLayout.setRefreshing(false);
         mScheduledJobsView.setVisibility(View.VISIBLE);
         if (mRequestedJobsViewPager.getAdapter().getCount() > 0) {
             mRequestedJobsViewPager.setVisibility(View.VISIBLE);
@@ -508,7 +513,6 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     ) {
         final BookingsWrapper bookingsWrapper = event.bookingsWrapper;
 
-        mScheduledJobsView.removeCallbacks(mRefreshRunnable);
         List<Booking> bookings = event.bookingsWrapper.getBookings();
         Collections.sort(bookings);
 
@@ -523,7 +527,6 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         }
 
         if (mSelectedDay != null && mSelectedDay.equals(event.day)) {
-            mRefreshLayout.setRefreshing(false);
             displayJobs(bookingsWrapper, mSelectedDay);
         }
     }
@@ -560,8 +563,10 @@ public class ScheduledBookingsFragment extends ActionBarFragment
                 final ScheduledBookingElementView mediator = new ScheduledBookingElementView();
                 mediator.initView(getActivity(), booking, null, mScheduledJobsView);
 
-                final View view = mediator.getAssociatedView();
+                final FrameLayout view = new FrameLayout(getActivity());
+                view.addView(mediator.getAssociatedView());
                 view.setBackgroundResource(R.drawable.border_gray_bottom);
+                view.setPadding(0, 0, 0, mBorderSize);
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
@@ -591,7 +596,9 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     ) {
         final List<BookingsWrapper> requestedJobsWrappers = event.getProRequestedJobs();
 
-        if (requestedJobsWrappers == null || requestedJobsWrappers.isEmpty()) { return; }
+        if (requestedJobsWrappers == null
+                || requestedJobsWrappers.isEmpty()
+                || mRequestedJobsViewPager.getAdapter() != null) { return; }
 
         for (final BookingsWrapper requestedJobsWrapper : requestedJobsWrappers) {
             if (mSelectedDay.equals(requestedJobsWrapper.getDate())) {

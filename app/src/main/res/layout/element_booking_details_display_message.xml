@@ -11,7 +11,7 @@
 
     <TextView
         android:id="@+id/booking_details_aux_text"
-        style="@style/TextView.Medium.Bold"
+        style="@style/TextView.Medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:drawablePadding="@dimen/default_padding_half"
