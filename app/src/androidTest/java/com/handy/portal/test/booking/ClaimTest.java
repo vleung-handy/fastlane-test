@@ -84,17 +84,10 @@ public class ClaimTest {
         onView(withId(R.id.confirm_action_button)).perform(click());
 
         //wait for loading screen to disappear and bookings to reload
-        ViewUtil.waitForViewVisible(R.id.scheduled_bookings_dates_scroll_view, ViewUtil.LONG_MAX_WAIT_TIME_MS);
-
-        //click the date button element at specific index
-        onView(ViewMatchers.childAtIndex(
-                withId(R.id.scheduled_bookings_dates_scroll_view_layout),
-                claimableJobDateButtonIndex))
-                .perform(scrollTo(), click());
+        ViewUtil.waitForViewVisible(R.id.scheduled_jobs_view, ViewUtil.LONG_MAX_WAIT_TIME_MS);
 
         //verify that the booking is claimed
-        onData(is(instanceOf(Booking.class)))
-                .atPosition(0)
+        onView(ViewMatchers.childAtIndex(withId(R.id.scheduled_jobs_view), 0))
                 .check(matches(isDisplayed()));
         //FIXME: ideally also check for the same booking as claimed
         // currently don't know how to extract text values from the view
