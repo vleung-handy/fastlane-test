@@ -57,9 +57,13 @@ import butterknife.OnClick;
 public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     private static final int CURRENT_WEEK_INDEX = 0;
     private static final int NEXT_WEEK_INDEX = 1;
+    private static final String SETTING_AVAILABLE_HOURS_HELP_URL = "https://handy.com/help/setting-available-hours";
     @Inject
     ProviderManager mProviderManager;
 
+
+    @BindView(R.id.available_hours_info_banner_body)
+    TextView mInfoBannerBody;
     @BindView(R.id.available_hours_tab_layout)
     TabLayout mTabLayout;
     @BindView(R.id.available_hours_view_pager)
@@ -143,6 +147,13 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
             data.putExtra(BundleKeys.DAILY_AVAILABILITY_TIMELINE, updatedAvailabilityTimeline);
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
         }
+    }
+
+    @OnClick(R.id.available_hours_info_banner_body)
+    public void onInfoBannerClicked() {
+        final Bundle arguments = new Bundle();
+        arguments.putString(BundleKeys.TARGET_URL, SETTING_AVAILABLE_HOURS_HELP_URL);
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.WEB_PAGE, arguments, true));
     }
 
     @OnClick(R.id.try_again_button)
@@ -243,6 +254,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
             displayTabs();
             updateCopyHoursButton();
         }
+        com.handy.portal.library.util.TextUtils.stripUnderlines(mInfoBannerBody);
     }
 
     private void setIsCurrentWeekAndNextWeekInSync(final boolean value) {
