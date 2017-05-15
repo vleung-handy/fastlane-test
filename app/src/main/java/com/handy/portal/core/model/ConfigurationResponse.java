@@ -60,6 +60,9 @@ public class ConfigurationResponse {
     @SerializedName("pro_announcements_enabled")
     private boolean mAnnouncementsEnabled;
 
+    @SerializedName("schedule_tab_requests_enabled")
+    private boolean mScheduleTabRequestedEnabled;
+
     // Getters
 
     public boolean areAnnouncementsEnabled() {
@@ -147,6 +150,10 @@ public class ConfigurationResponse {
     // Setters
     public void setProfilePictureUploadEnabled(final boolean profilePictureUploadEnabled) {
         mProfilePictureUploadEnabled = profilePictureUploadEnabled;
+    }
+
+    public boolean isScheduleTabRequestedEnabled() {
+        return mScheduleTabRequestedEnabled;
     }
 
     // Static classes

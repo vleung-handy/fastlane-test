@@ -406,15 +406,23 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         mScheduledJobsView.removeCallbacks(mRefreshRunnable);
         mRefreshLayout.setRefreshing(false);
         mScheduledJobsView.setVisibility(View.VISIBLE);
-        if (mRequestedJobsViewPager.getAdapter().getCount() > 0) {
+        if (mRequestedJobsViewPager.getAdapter() != null
+                && mRequestedJobsViewPager.getAdapter().getCount() > 0) {
             mRequestedJobsViewPager.setVisibility(View.VISIBLE);
             mRequestedJobsGuide.setVisibility(View.VISIBLE);
         }
     }
 
+    private boolean isScheduleTabRequestedEnabled() {
+        return mConfigManager.getConfigurationResponse() != null
+                && mConfigManager.getConfigurationResponse().isScheduleTabRequestedEnabled();
+    }
+
     private void requestBookings(final List<Date> dates, final boolean useCachedIfPresent) {
         mBookingManager.requestScheduledBookings(dates, useCachedIfPresent);
-        mBookingManager.requestProRequestedJobs(dates, useCachedIfPresent);
+        if (isScheduleTabRequestedEnabled()) {
+            mBookingManager.requestProRequestedJobs(dates, useCachedIfPresent);
+        }
         requestProviderAvailability();
     }
 
@@ -576,7 +584,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
                 mScheduledJobsView.addView(view);
             }
         }
-        if (mRequestedJobsViewPager.getAdapter() != null) {
+        if (!isScheduleTabRequestedEnabled()
+                || mRequestedJobsViewPager.getAdapter() != null) {
             showJobs();
         }
     }
@@ -596,7 +605,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     ) {
         final List<BookingsWrapper> requestedJobsWrappers = event.getProRequestedJobs();
 
-        if (requestedJobsWrappers == null
+        if (!isScheduleTabRequestedEnabled()
+                || requestedJobsWrappers == null
                 || requestedJobsWrappers.isEmpty()
                 || mRequestedJobsViewPager.getAdapter() != null) { return; }
 
@@ -627,7 +637,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
                             EventContext.SCHEDULED_JOBS,
                             undismissedBookings.size(),
                             BookingListUtils.getCountPerAuxType(undismissedBookings, AuxiliaryInfo.Type.REFERRAL),
-                            BookingListUtils.getCountPerAuxType(undismissedBookings, AuxiliaryInfo.Type.FAVORITE)
+                            BookingListUtils.getCountPerAuxType(undismissedBookings, AuxiliaryInfo.Type.FAVORITE),
+                            requestedJobsWrapper.getDate()
                     )
             ));
         }

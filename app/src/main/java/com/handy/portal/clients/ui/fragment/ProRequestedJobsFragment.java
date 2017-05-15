@@ -118,7 +118,8 @@ public class ProRequestedJobsFragment extends InjectedFragment {
                         EventContext.REQUESTED_JOBS,
                         mUnreadJobsCount,
                         BookingListUtils.getOverallCountPerAuxType(filteredJobList, AuxiliaryInfo.Type.REFERRAL),
-                        BookingListUtils.getOverallCountPerAuxType(filteredJobList, AuxiliaryInfo.Type.FAVORITE)
+                        BookingListUtils.getOverallCountPerAuxType(filteredJobList, AuxiliaryInfo.Type.FAVORITE),
+                        null
                 )
         ));
     }

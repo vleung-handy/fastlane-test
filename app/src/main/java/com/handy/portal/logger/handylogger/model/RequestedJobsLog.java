@@ -1,7 +1,11 @@
 package com.handy.portal.logger.handylogger.model;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.Booking;
+
+import java.util.Date;
 
 public abstract class RequestedJobsLog extends EventLog {
     public static final String EVENT_CONTEXT = "requested_jobs";
@@ -22,16 +26,21 @@ public abstract class RequestedJobsLog extends EventLog {
         @SerializedName("pending_favorite_requests_count")
         private int mPendingFavoriteRequestsCount;
 
+        @SerializedName("date")
+        private Date mDate;
+
         public RequestsShown(
                 final String eventContext,
                 final int pendingRequestsCount,
                 final int pendingReferralRequestsCount,
-                final int pendingFavoriteRequestsCount
+                final int pendingFavoriteRequestsCount,
+                @Nullable Date date
         ) {
             super(EVENT_TYPE, eventContext);
             mPendingRequestsCount = pendingRequestsCount;
             mPendingReferralRequestsCount = pendingReferralRequestsCount;
             mPendingFavoriteRequestsCount = pendingFavoriteRequestsCount;
+            mDate = date;
         }
     }
 
