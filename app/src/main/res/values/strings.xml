@@ -142,14 +142,11 @@
     <string name="scheduled_jobs">Scheduled Jobs</string>
     <string name="scheduled_job">Scheduled Job</string>
     <string name="block_jobs_schedule">Block Jobs Schedule</string>
-    <string name="time_window_formatted">\u22C5 %1$s\u2013%2$s hour job</string>
+    <string name="time_window_formatted">%1$s \u2013 %2$s hour job</string>
     <string name="payment_value">%s</string>
     <string name="payments">Payments</string>
     <string name="payments_details">Payment Details</string>
     <string name="bonus_payment_value">+ %s REWARD</string>
-    <string name="booking_frequency">Every %1$d weeks</string>
-    <string name="booking_frequency_every_week">Every week</string>
-    <string name="booking_frequency_non_recurring">One-time</string>
     <string name="supplies">Supplies</string>
     <string name="full_details_and_more_available_on_date"><![CDATA[Full job details, including exact address, will be available on <b>%1$s</b>. We\u2019ll send you a reminder at that time.]]></string>
     <string name="full_details_and_more_available_on_date_flex"><![CDATA[Depending on the specific customer details you receive, this job may be a minimum of <b>%1$s</b> hours up to a maximum of <b>%2$s</b> hours. The job will not start prior to <b>%3$s</b> and will not end after <b>%4$s</b>. Exact customer and booking details will be sent by 1 hour before job start.<br/><br/>Job payment depends on the number of hours of the booking you receive. It will be minimum <b>%5$s</b> for a <b>%6$s</b> hour booking and maximum <b>%7$s</b> for a <b>%8$s</b> hour booking.]]></string>
@@ -234,6 +231,7 @@
     <string name="unable_to_cancel_no_show">Unable to cancel customer no show report. Please try again.</string>
     <string name="remove_customer_no_show_question">Remove customer no show report?</string>
     <string name="booking_time">%1$s \u2013 %2$s</string>
+    <string name="expiration_timer_formatted">Expires in %1$s</string>
 
     <!-- Payments -->
     <string name="total_payment">Total Payment</string>

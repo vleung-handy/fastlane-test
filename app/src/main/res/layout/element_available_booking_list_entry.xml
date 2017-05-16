@@ -170,6 +170,18 @@
                     android:textColor="@color/handy_green"
                     tools:text="+$5 reward"
                     />
+
+                <TextView
+                    android:id="@+id/booking_entry_expiration_timer"
+                    style="@style/TextView.XSmall"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/default_margin"
+                    android:textColor="@color/error_red"
+                    android:visibility="gone"
+                    tools:text="Expires in 01:02:15"
+                    tools:visibility="visible"
+                    />
             </LinearLayout>
         </LinearLayout>
 

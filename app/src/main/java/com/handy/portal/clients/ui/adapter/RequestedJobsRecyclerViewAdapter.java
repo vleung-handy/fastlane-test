@@ -2,7 +2,9 @@ package com.handy.portal.clients.ui.adapter;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.v7.widget.RecyclerView;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -17,6 +19,7 @@ import com.handy.portal.clients.ui.element.ProRequestedJobsListGroupView;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.EventContext;
@@ -141,6 +144,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
     public static class JobViewHolder extends BaseViewHolder {
         private final EventBus mBus;
         private String mOriginEventContext;
+        private CountDownTimer mCountDownTimer;
 
         public JobViewHolder(
                 final View itemView,
@@ -228,6 +232,41 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                 }
                 else {
                     sendAlternateTimesButton.setVisibility(View.GONE);
+                }
+            }
+
+            final TextView expirationTimer =
+                    (TextView) associatedView.findViewById(R.id.booking_entry_expiration_timer);
+            if (expirationTimer != null) {
+                final Booking.RequestAttributes requestAttributes = booking.getRequestAttributes();
+                if (requestAttributes != null && requestAttributes.getExpirationDate() != null) {
+                    if (mCountDownTimer != null) {
+                        mCountDownTimer.cancel();
+                    }
+                    expirationTimer.setVisibility(View.VISIBLE);
+                    final Context context = expirationTimer.getContext();
+                    final Date expirationDate = requestAttributes.getExpirationDate();
+                    mCountDownTimer = new CountDownTimer(
+                            expirationDate.getTime() - new Date().getTime(),
+                            DateUtils.SECOND_IN_MILLIS
+                    ) {
+                        @Override
+                        public void onTick(final long millisUntilFinished) {
+                            expirationTimer.setText(context.getString(
+                                    R.string.expiration_timer_formatted,
+                                    DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)
+                            ));
+                        }
+
+                        @Override
+                        public void onFinish() {
+
+                        }
+                    };
+                    mCountDownTimer.start();
+                }
+                else {
+                    expirationTimer.setVisibility(View.GONE);
                 }
             }
         }

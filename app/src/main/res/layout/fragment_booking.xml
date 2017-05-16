@@ -326,36 +326,6 @@
                     </LinearLayout>
 
                     <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="@dimen/default_padding"
-                        >
-
-                        <TextView
-                            style="@style/CircularBold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/frequency"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/default_text_size"
-                            />
-
-                        <TextView
-                            android:id="@+id/booking_frequency_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:paddingEnd="@dimen/extra_padding"
-                            android:paddingLeft="@dimen/extra_padding"
-                            android:paddingRight="@dimen/extra_padding"
-                            android:paddingStart="@dimen/extra_padding"
-                            android:textColor="@color/black"
-                            android:textSize="@dimen/default_text_size"
-                            tools:text="@string/booking_frequency_every_week"
-                            />
-                    </LinearLayout>
-
-                    <LinearLayout
                         android:id="@+id/booking_job_instructions_list_layout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
