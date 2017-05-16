@@ -40,7 +40,7 @@ public class HandyRetrofitFluidEndpoint extends HandyRetrofitEndpoint {
         String url = mProperties.getProperty(UrlName.BASE_URL + "_" +
                 mEnvironmentModifier.getEnvironment().name().toLowerCase());
         if (TextUtils.isNullOrEmpty(url)) {
-            url = super.getUrl();
+            url = super.getBaseUrl();
         }
         return formatUrl(url);
     }

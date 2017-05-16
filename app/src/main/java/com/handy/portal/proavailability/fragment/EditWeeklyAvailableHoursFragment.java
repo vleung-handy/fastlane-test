@@ -27,6 +27,7 @@ import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
+import com.handy.portal.helpcenter.constants.HelpCenterConstants;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProAvailabilityLog;
@@ -57,7 +58,6 @@ import butterknife.OnClick;
 public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     private static final int CURRENT_WEEK_INDEX = 0;
     private static final int NEXT_WEEK_INDEX = 1;
-    private static final String SETTING_AVAILABLE_HOURS_HELP_URL = "https://handy.com/help/setting-available-hours";
     @Inject
     ProviderManager mProviderManager;
 
@@ -152,7 +152,10 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     @OnClick(R.id.available_hours_info_banner_body)
     public void onInfoBannerClicked() {
         final Bundle arguments = new Bundle();
-        arguments.putString(BundleKeys.TARGET_URL, SETTING_AVAILABLE_HOURS_HELP_URL);
+        arguments.putString(
+                BundleKeys.TARGET_URL,
+                dataManager.getBaseUrl() + HelpCenterConstants.SETTING_HOURS_INFO_PATH
+        );
         bus.post(new NavigationEvent.NavigateToPage(MainViewPage.WEB_PAGE, arguments, true));
     }
 

@@ -34,7 +34,7 @@ import com.handy.portal.core.event.ProviderSettingsEvent;
 import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.core.ui.activity.MainActivity;
 import com.handy.portal.deeplink.DeeplinkUtils;
-import com.handy.portal.helpcenter.constants.HelpCenterUrl;
+import com.handy.portal.helpcenter.constants.HelpCenterConstants;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FragmentUtils;
 
@@ -93,7 +93,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
         mJobAccessLockedLayout.setKeepRateInfoButtonClickListener(new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
-                goToHelpCenter(HelpCenterUrl.KEEP_RATE_INFO_REDIRECT_URL);
+                goToHelpCenter(HelpCenterConstants.KEEP_RATE_INFO_PATH);
             }
         });
 

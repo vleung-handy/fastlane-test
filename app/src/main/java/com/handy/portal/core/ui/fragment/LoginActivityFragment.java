@@ -26,7 +26,7 @@ import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.model.LoginDetails;
 import com.handy.portal.core.ui.activity.SplashActivity;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.helpcenter.constants.HelpCenterUrl;
+import com.handy.portal.helpcenter.constants.HelpCenterConstants;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.library.ui.widget.PhoneInputTextView;
@@ -177,7 +177,7 @@ public class LoginActivityFragment extends InjectedFragment {
             @Override
             public void onClick(final View v) {
 
-                goToUrl(HelpCenterUrl.LOGIN_HELP_ABSOLUTE_URL);
+                goToUrl(HelpCenterConstants.LOGIN_INFO_URL);
             }
         });
         mSlideUpPanelLayout.showPanel(R.string.instructions, instructionView);
