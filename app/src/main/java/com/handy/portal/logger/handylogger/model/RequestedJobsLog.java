@@ -1,15 +1,17 @@
 package com.handy.portal.logger.handylogger.model;
 
-import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
 import com.handy.portal.bookings.model.Booking;
 
+import java.util.Date;
+
 public abstract class RequestedJobsLog extends EventLog {
     public static final String EVENT_CONTEXT = "requested_jobs";
 
-    private RequestedJobsLog(final String eventType) {
-        super(eventType, EVENT_CONTEXT);
+    public RequestedJobsLog(final String eventType, final String eventContext) {
+        super(eventType, eventContext);
     }
 
     public static class RequestsShown extends RequestedJobsLog {
@@ -24,14 +26,21 @@ public abstract class RequestedJobsLog extends EventLog {
         @SerializedName("pending_favorite_requests_count")
         private int mPendingFavoriteRequestsCount;
 
-        public RequestsShown(final int pendingRequestsCount,
-                             final int pendingReferralRequestsCount,
-                             final int pendingFavoriteRequestsCount
+        @SerializedName("date")
+        private Date mDate;
+
+        public RequestsShown(
+                final String eventContext,
+                final int pendingRequestsCount,
+                final int pendingReferralRequestsCount,
+                final int pendingFavoriteRequestsCount,
+                @Nullable Date date
         ) {
-            super(EVENT_TYPE);
+            super(EVENT_TYPE, eventContext);
             mPendingRequestsCount = pendingRequestsCount;
             mPendingReferralRequestsCount = pendingReferralRequestsCount;
             mPendingFavoriteRequestsCount = pendingFavoriteRequestsCount;
+            mDate = date;
         }
     }
 
@@ -71,49 +80,11 @@ public abstract class RequestedJobsLog extends EventLog {
     }
 
 
-    public static class ClaimSubmitted extends JobsLog {
-        private static final String EVENT_TYPE = "claim_submitted";
-
-        public ClaimSubmitted(final Booking booking) {
-            super(EVENT_TYPE, EVENT_CONTEXT, booking);
-        }
-    }
-
-
-    public static class ClaimSuccess extends JobsLog {
-        private static final String EVENT_TYPE = "claim_success";
-
-        @SerializedName("request_type")
-        private String mRequestType = "";
-
-        public ClaimSuccess(@NonNull final Booking booking) {
-            super(EVENT_TYPE, EVENT_CONTEXT, booking);
-
-            if (booking.getAuxiliaryInfo() != null
-                    && booking.getAuxiliaryInfo().getType() != null) {
-                mRequestType = booking.getAuxiliaryInfo().getType().toString().toLowerCase();
-            }
-        }
-    }
-
-    public static class ClaimError extends JobsLog {
-        private static final String EVENT_TYPE = "claim_error";
-
-        @SerializedName("error_message")
-        private String mErrorMessage;
-
-        public ClaimError(final Booking booking, final String errorMessage) {
-            super(EVENT_TYPE, EVENT_CONTEXT, booking);
-            mErrorMessage = errorMessage;
-        }
-    }
-
-
     public static class DismissJobShown extends JobsLog {
         private static final String EVENT_TYPE = "dismiss_job_shown";
 
-        public DismissJobShown(final Booking booking) {
-            super(EVENT_TYPE, EVENT_CONTEXT, booking);
+        public DismissJobShown(final String eventContext, final Booking booking) {
+            super(EVENT_TYPE, eventContext, booking);
         }
     }
 
@@ -123,9 +94,12 @@ public abstract class RequestedJobsLog extends EventLog {
         @SerializedName("reason_machine_name")
         private final String mReasonMachineName;
 
-        public DismissJobSubmitted(final Booking booking,
-                                   final String reasonMachineName) {
-            super(EVENT_TYPE, EVENT_CONTEXT, booking);
+        public DismissJobSubmitted(
+                final String eventContext,
+                final Booking booking,
+                final String reasonMachineName
+        ) {
+            super(EVENT_TYPE, eventContext, booking);
             mReasonMachineName = reasonMachineName;
         }
     }
@@ -134,8 +108,8 @@ public abstract class RequestedJobsLog extends EventLog {
     public static class DismissJobSuccess extends JobsLog {
         private static final String EVENT_TYPE = "dismiss_job_success";
 
-        public DismissJobSuccess(final Booking booking) {
-            super(EVENT_TYPE, EVENT_CONTEXT, booking);
+        public DismissJobSuccess(final String eventContext, final Booking booking) {
+            super(EVENT_TYPE, eventContext, booking);
         }
     }
 
@@ -146,8 +120,12 @@ public abstract class RequestedJobsLog extends EventLog {
         @SerializedName("error_message")
         private String mErrorMessage;
 
-        public DismissJobError(final Booking booking, final String errorMessage) {
-            super(EVENT_TYPE, EVENT_CONTEXT, booking);
+        public DismissJobError(
+                final String eventContext,
+                final Booking booking,
+                final String errorMessage
+        ) {
+            super(EVENT_TYPE, eventContext, booking);
             mErrorMessage = errorMessage;
         }
     }

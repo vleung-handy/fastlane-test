@@ -23,23 +23,6 @@
                 android:visibility="gone"
                 />
 
-            <HorizontalScrollView
-                android:id="@+id/scheduled_bookings_dates_scroll_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:scrollbars="none"
-                >
-
-                <LinearLayout
-                    android:id="@+id/scheduled_bookings_dates_scroll_view_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    >
-                </LinearLayout>
-
-            </HorizontalScrollView>
-
             <LinearLayout
                 android:id="@+id/dates_view_pager_holder"
                 android:layout_width="match_parent"
@@ -59,6 +42,7 @@
                     android:id="@+id/dates_view_pager"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:overScrollMode="never"
                     />
 
                 <View
@@ -80,21 +64,86 @@
 
             <include layout="@layout/layout_fetch_error"/>
 
-            <include layout="@layout/layout_scheduled_bookings_empty"/>
-
             <com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout
                 android:id="@+id/refresh_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 >
 
-                <com.handy.portal.bookings.ui.element.BookingListView
-                    android:id="@+id/scheduled_jobs_list_view"
-                    android:layout_width="match_parent"
+                <ScrollView
+                    android:id="@+id/scheduled_jobs_scroll_view"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:divider="@color/list_divider"
-                    android:dividerHeight="1dp"
-                    />
+                    >
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        >
+
+                        <LinearLayout
+                            android:id="@+id/scheduled_jobs_view"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:layout_marginBottom="@dimen/default_margin"
+                            android:orientation="vertical"
+                            />
+
+                        <RelativeLayout
+                            android:id="@+id/requested_jobs_guide"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/extra_margin"
+                            android:paddingEnd="@dimen/default_padding"
+                            android:paddingLeft="@dimen/default_padding"
+                            android:paddingRight="@dimen/default_padding"
+                            android:paddingStart="@dimen/default_padding"
+                            android:visibility="gone"
+                            >
+
+                            <TextView
+                                android:id="@+id/requested_jobs_guide_date"
+                                style="@style/TextView.XSmall.Bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:layout_marginLeft="@dimen/default_margin_half"
+                                android:layout_marginStart="@dimen/default_margin_half"
+                                android:textAllCaps="true"
+                                android:textColor="@color/tertiary_gray"
+                                tools:text="Requests for Wed, Nov 30"
+                                />
+
+                            <TextView
+                                android:id="@+id/requested_jobs_guide_item_count"
+                                style="@style/TextView.XSmall.Bold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_alignParentRight="true"
+                                android:layout_marginEnd="@dimen/default_margin_half"
+                                android:layout_marginRight="@dimen/default_margin_half"
+                                android:textAllCaps="true"
+                                android:textColor="@color/tertiary_gray"
+                                tools:text="1 of 3"
+                                />
+
+                        </RelativeLayout>
+
+                        <com.handy.portal.library.ui.view.DynamicHeightViewPager
+                            android:id="@+id/requested_jobs_view_pager"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/default_margin"
+                            android:overScrollMode="never"
+                            android:visibility="gone"
+                            />
+
+                    </LinearLayout>
+                </ScrollView>
             </com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout>
 
         </LinearLayout>

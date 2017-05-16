@@ -8,4 +8,8 @@ public interface EventType {
     String IN_APP_CHAT_WITH_CUSTOMER_SELECTED = "in_app_chat_with_customer_selected";
     String IN_APP_CHAT_WITH_CUSTOMER_FAILED = "in_app_chat_with_customer_failed";
     String IN_APP_CHAT_WITH_CUSTOMER_SUCCESS = "in_app_chat_with_customer_success";
+
+    String CLAIM_SUBMITTED = "claim_submitted";
+    String CLAIM_SUCCESS = "claim_success";
+    String CLAIM_ERROR = "claim_error";
 }

@@ -135,8 +135,8 @@
     <!-- warning or error screen -->
     <dimen name="error_margin_top">10dp</dimen>
     <dimen name="error_margin_side">40dp</dimen>
-    <dimen name="error_margin_bottom">50dp</dimen>
-    <dimen name="error_text">20sp</dimen>
+    <dimen name="error_margin_bottom">20dp</dimen>
+    <dimen name="error_text">18sp</dimen>
 
     <!-- Account Settings -->
     <dimen name="account_settings_cell_height">70dp</dimen>

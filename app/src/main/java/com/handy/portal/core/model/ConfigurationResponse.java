@@ -48,9 +48,6 @@ public class ConfigurationResponse {
     @SerializedName("login_slt_enabled")
     private boolean mSltEnabled;
 
-    @SerializedName("scheduled_jobs_calendar_navigation_enabled")
-    private boolean mNewDateScrollerEnabled;
-
     @SerializedName("pro_availability_schedule_enabled")
     private boolean mAvailableHoursEnabled;
 
@@ -62,6 +59,9 @@ public class ConfigurationResponse {
 
     @SerializedName("pro_announcements_enabled")
     private boolean mAnnouncementsEnabled;
+
+    @SerializedName("schedule_tab_requests_enabled")
+    private boolean mScheduleTabRequestedEnabled;
 
     // Getters
 
@@ -135,10 +135,6 @@ public class ConfigurationResponse {
 
     public boolean isSltEnabled() { return mSltEnabled; }
 
-    public boolean isNewDateScrollerEnabled() {
-        return mNewDateScrollerEnabled;
-    }
-
     public boolean isAvailableHoursEnabled() {
         return mAvailableHoursEnabled;
     }
@@ -154,6 +150,10 @@ public class ConfigurationResponse {
     // Setters
     public void setProfilePictureUploadEnabled(final boolean profilePictureUploadEnabled) {
         mProfilePictureUploadEnabled = profilePictureUploadEnabled;
+    }
+
+    public boolean isScheduleTabRequestedEnabled() {
+        return mScheduleTabRequestedEnabled;
     }
 
     // Static classes

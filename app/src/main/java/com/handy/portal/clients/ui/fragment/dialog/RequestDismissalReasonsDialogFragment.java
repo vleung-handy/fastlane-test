@@ -18,8 +18,6 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.library.util.UIUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -83,7 +81,6 @@ public class RequestDismissalReasonsDialogFragment extends ConfirmBookingActionD
             });
             mReasonsRadioGroup.addView(radioButton);
         }
-        mBus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobShown(mBooking)));
     }
 
     @Override

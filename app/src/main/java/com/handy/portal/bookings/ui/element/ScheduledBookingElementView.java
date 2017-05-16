@@ -19,7 +19,7 @@ import butterknife.ButterKnife;
 
 //Not setting up a clean UI hierarchy with AvailableBookingElement because ScheduledBookingElement is going to radically change soon to a google calendar style view
 
-
+// TODO: Refactor into an actual view, not a mediator
 public class ScheduledBookingElementView extends BookingElementView {
     @BindView(R.id.booking_entry_address_text)
     TextView mAddressTextView;

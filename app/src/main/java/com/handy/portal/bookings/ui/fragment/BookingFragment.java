@@ -58,11 +58,10 @@ import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.EventContext;
 import com.handy.portal.logger.handylogger.model.EventType;
-import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
+import com.handy.portal.logger.handylogger.model.JobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.logger.handylogger.model.SendAvailabilityLog;
 import com.handy.portal.payments.model.PaymentInfo;
@@ -164,14 +163,20 @@ public class BookingFragment extends TimerActionBarFragment {
     private Intent mGetDirectionsIntent;
     private View.OnClickListener mOnSupportClickListener;
     private boolean mHideActionButtons;
+    private String mOriginEventContext;
 
-    public static BookingFragment newInstance(@NonNull final Booking booking, final String source,
-                                              boolean hideActionButtons) {
+    public static BookingFragment newInstance(
+            @NonNull final Booking booking,
+            final String source,
+            final String originEventContext,
+            boolean hideActionButtons
+    ) {
         BookingFragment fragment = new BookingFragment();
         Bundle args = new Bundle();
         args.putSerializable(BundleKeys.BOOKING, booking);
         args.putString(BundleKeys.BOOKING_SOURCE, source);
         args.putBoolean(BundleKeys.BOOKING_SHOULD_HIDE_ACTION_BUTTONS, hideActionButtons);
+        args.putString(BundleKeys.EVENT_CONTEXT, originEventContext);
 
         fragment.setArguments(args);
         return fragment;
@@ -190,6 +195,10 @@ public class BookingFragment extends TimerActionBarFragment {
         mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
         mSource = getArguments().getString(BundleKeys.BOOKING_SOURCE);
         mSourceExtras = getArguments();
+        mOriginEventContext = getArguments().getString(BundleKeys.EVENT_CONTEXT);
+        if (mOriginEventContext == null) {
+            mOriginEventContext = EventContext.UNKNOWN;
+        }
 
         mHideActionButtons = getArguments().getBoolean(BundleKeys.BOOKING_SHOULD_HIDE_ACTION_BUTTONS);
     }
@@ -600,13 +609,8 @@ public class BookingFragment extends TimerActionBarFragment {
 
     private void requestClaimJob() {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        if (mBooking.isRequested()) {
-            bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.ClaimSubmitted(mBooking)));
-        }
-        else {
-            bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ClaimSubmitted(
-                    mBooking, mSource, mSourceExtras, 0.0f)));
-        }
+        bus.post(new LogEvent.AddLogEvent(new JobsLog(EventType.CLAIM_SUBMITTED,
+                mOriginEventContext, mBooking, mSource, mSourceExtras)));
         mBookingManager.requestClaimJob(mBooking, mSource);
     }
 

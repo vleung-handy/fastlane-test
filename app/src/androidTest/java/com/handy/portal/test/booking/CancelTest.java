@@ -5,9 +5,9 @@ import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
 import com.handy.portal.R;
-import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.core.constant.PrefsKey;
 import com.handy.portal.core.ui.activity.SplashActivity;
+import com.handy.portal.tool.ViewMatchers;
 import com.handy.portal.tool.data.TestUsers;
 import com.handy.portal.tool.model.TestUser;
 import com.handy.portal.tool.util.AppInteractionUtil;
@@ -19,15 +19,12 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static android.support.test.espresso.Espresso.onData;
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.Matchers.is;
 
 @RunWith(AndroidJUnit4.class)
 public class CancelTest {
@@ -60,9 +57,8 @@ public class CancelTest {
         onView(allOf(withId(R.id.tab_title), withText(R.string.tab_schedule))).perform(click());
 
         // click the first scheduled job
-        ViewUtil.waitForViewVisible(R.id.scheduled_jobs_list_view, ViewUtil.LONG_MAX_WAIT_TIME_MS);
-        onData(is(instanceOf(Booking.class)))
-                .atPosition(0)
+        ViewUtil.waitForViewVisible(R.id.scheduled_jobs_view, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+        onView(ViewMatchers.childAtIndex(withId(R.id.scheduled_jobs_view), 0))
                 .perform(click());
 
         // wait for booking action button to be visible and verify it says "on my way"

@@ -156,11 +156,11 @@
     <string name="no_available_jobs">Sorry, there aren\'t any available jobs left for this day.</string>
     <string name="no_pro_requested_jobs">You don\'t have any new job requests.</string>
     <string name="customer_favorite_pro">You\'re this customer\'s Favorite Pro</string>
-    <string name="error_fetching_available_jobs">There was an error fetching your available jobs</string>
-    <string name="error_fetching_scheduled_jobs">There was an error fetching your scheduled jobs</string>
-    <string name="error_fetching_matching_jobs">There was an error searching for matching jobs</string>
-    <string name="error_fetching_booking_details">There was an error fetching your booking details</string>
-    <string name="error_fetching_connectivity_issue">Oops! There was an error with your internet connection</string>
+    <string name="error_fetching_available_jobs">There was an error fetching your available jobs.</string>
+    <string name="error_fetching_scheduled_jobs">There was an error fetching your scheduled jobs.</string>
+    <string name="error_fetching_matching_jobs">There was an error searching for matching jobs.</string>
+    <string name="error_fetching_booking_details">There was an error fetching your booking details.</string>
+    <string name="error_fetching_connectivity_issue">Oops! There was an error with your internet connection.</string>
     <string name="try_again">Try Again</string>
     <string name="no_scheduled_jobs">You have not claimed any jobs for this day.</string>
     <string name="return_to_available_jobs">"Return to Jobs"</string>
@@ -657,6 +657,8 @@
     <string name="job_requests">Job Requests</string>
     <string name="messages">Messages</string>
     <string name="no_messages">You have no messages.</string>
+    <string name="x_of_n_formatted">%1$d of %2$d</string>
+    <string name="requests_for_date_formatted">Requests for %1$s</string>
 
     <!-- Date Scroller -->
     <string name="sunday_initial">S</string>

@@ -86,5 +86,6 @@ public class BundleKeys {
     public static final String TITLE = "title";
     public static final String TAB_TITLE = "tab_title";
 
-
+    // Logging
+    public static final String EVENT_CONTEXT = "event_context";
 }

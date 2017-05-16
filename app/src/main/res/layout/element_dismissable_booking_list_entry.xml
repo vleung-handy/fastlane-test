@@ -21,26 +21,26 @@
 
         <TextView
             android:id="@+id/dismissible_booking_aux_text"
-            style="@style/TextView.Medium.Bold"
+            style="@style/TextView.Small"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/default_margin_half"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginRight="@dimen/default_margin"
+            android:layout_marginTop="@dimen/default_margin_half"
             android:drawablePadding="@dimen/default_padding_half"
             android:ellipsize="end"
             android:maxLines="1"
+            android:visibility="gone"
             tools:drawableLeft="@drawable/ic_aux_info_fav"
             tools:text="@string/customer_favorite_pro"
-            android:visibility="gone"
             tools:visibility="visible"
-            android:layout_marginLeft="@dimen/default_margin"
-            android:layout_marginRight="@dimen/default_margin"
-            android:layout_marginTop="@dimen/default_margin"
             />
 
         <View
             android:id="@+id/dismissible_booking_aux_divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:layout_marginTop="@dimen/default_margin"
             android:background="@drawable/divider_gray"
             android:visibility="gone"
             tools:visibility="visible"

@@ -1,38 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout
-    android:id="@+id/scheduled_bookings_empty"
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:visibility="gone"
+    android:layout_height="wrap_content"
+    android:clickable="true"
+    android:gravity="center"
+    android:orientation="vertical"
     >
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:clickable="true"
-        android:gravity="center"
-        android:orientation="vertical"
-        >
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_margin_large"
+        android:src="@drawable/ic_no_scheduled_jobs"
+        />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_no_scheduled_jobs"
-            />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin_large"
+        android:layout_marginLeft="@dimen/default_margin_xlarge"
+        android:layout_marginRight="@dimen/default_margin_xlarge"
+        android:layout_marginTop="@dimen/default_margin"
+        android:gravity="center_horizontal"
+        android:text="@string/no_scheduled_jobs"
+        android:textColor="@color/tertiary_gray"
+        android:textSize="@dimen/large_text_size"
+        />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/default_margin_large"
-            android:layout_marginLeft="@dimen/default_margin_xlarge"
-            android:layout_marginRight="@dimen/default_margin_xlarge"
-            android:layout_marginTop="@dimen/default_margin"
-            android:gravity="center_horizontal"
-            android:text="@string/no_scheduled_jobs"
-            android:textColor="@color/tertiary_gray"
-            android:textSize="@dimen/large_text_size"
-            />
-
-    </LinearLayout>
-</com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout>
+</LinearLayout>
