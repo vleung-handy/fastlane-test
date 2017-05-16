@@ -232,6 +232,8 @@
     <string name="remove_customer_no_show_question">Remove customer no show report?</string>
     <string name="booking_time">%1$s \u2013 %2$s</string>
     <string name="expiration_timer_formatted">Expires in %1$s</string>
+    <string name="expiration_tomorrow">Expires tomorrow</string>
+    <string name="expiration_days_formatted">Expires in %1$d days</string>
 
     <!-- Payments -->
     <string name="total_payment">Total Payment</string>

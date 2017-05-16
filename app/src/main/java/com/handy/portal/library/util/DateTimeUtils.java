@@ -5,7 +5,6 @@ import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v7.app.ActionBar;
 import android.text.format.DateUtils;
-import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
@@ -389,19 +388,6 @@ public final class DateTimeUtils {
         return getLocalTime12HoursFormatter().format(cal.getTime()).toLowerCase();
     }
 
-    public static CountDownTimer setCountDownTimer(final TextView textView, long timeRemainMillis) {
-        return new CountDownTimer(timeRemainMillis, DateUtils.SECOND_IN_MILLIS) {
-            @Override
-            public void onTick(final long millisUntilFinished) {
-                textView.setText(textView.getContext().getString(R.string.start_timer_formatted,
-                        DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)));
-            }
-
-            @Override
-            public void onFinish() { }
-        }.start();
-    }
-
     public static CountDownTimer setActionBarCountdownTimer(
             final Context context, final ActionBar actionBar, long timeRemainMillis, final int stringId) {
         return new CountDownTimer(timeRemainMillis, DateUtils.SECOND_IN_MILLIS) {
@@ -446,7 +432,11 @@ public final class DateTimeUtils {
     }
 
     public static int daysBetween(Date d1, Date d2) {
-        return Math.round((d2.getTime() - d1.getTime()) / (float) (DateUtils.HOUR_IN_MILLIS * HOURS_IN_DAY));
+        return millisToDays(d2.getTime() - d1.getTime());
+    }
+
+    public static int millisToDays(final long millis) {
+        return (int) Math.floor(millis / (float) (DateUtils.HOUR_IN_MILLIS * HOURS_IN_DAY));
     }
 
     public static int minutesBetween(final Date date1, final Date date2) {

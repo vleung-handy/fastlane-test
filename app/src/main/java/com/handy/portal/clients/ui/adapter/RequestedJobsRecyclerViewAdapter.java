@@ -20,6 +20,7 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.EventContext;
@@ -180,6 +181,8 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
         }
 
         private void customizeView(final View associatedView, final Booking booking) {
+            associatedView.setAlpha(1.0f);
+
             final View requestedIndicator =
                     associatedView.findViewById(R.id.booking_list_entry_left_strip_indicator);
             if (requestedIndicator != null) {
@@ -210,64 +213,66 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                 swapIndicator.setVisibility(booking.canSwap() ? View.VISIBLE : View.GONE);
             }
 
-            final View sendAlternateTimesButton =
-                    associatedView.findViewById(R.id.send_alternate_times_button);
-            if (sendAlternateTimesButton != null) {
-                final Booking.Action sendTimesAction =
-                        booking.getAction(Booking.Action.ACTION_SEND_TIMES);
-                if (sendTimesAction != null) {
-                    sendAlternateTimesButton.setVisibility(View.VISIBLE);
-                    sendAlternateTimesButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(final View v) {
-                            final Bundle arguments = new Bundle();
-                            arguments.putSerializable(BundleKeys.BOOKING, booking);
-                            mBus.post(new NavigationEvent.NavigateToPage(
-                                    MainViewPage.SEND_AVAILABLE_HOURS, arguments, true));
-                            mBus.post(new LogEvent.AddLogEvent(
-                                    new SendAvailabilityLog.SendAvailabilitySelected(
-                                            mOriginEventContext, booking)));
-                        }
-                    });
-                }
-                else {
-                    sendAlternateTimesButton.setVisibility(View.GONE);
-                }
-            }
-
             final TextView expirationTimer =
                     (TextView) associatedView.findViewById(R.id.booking_entry_expiration_timer);
             if (expirationTimer != null) {
+                if (mCountDownTimer != null) {
+                    mCountDownTimer.cancel();
+                }
                 final Booking.RequestAttributes requestAttributes = booking.getRequestAttributes();
                 if (requestAttributes != null && requestAttributes.getExpirationDate() != null) {
-                    if (mCountDownTimer != null) {
-                        mCountDownTimer.cancel();
-                    }
                     expirationTimer.setVisibility(View.VISIBLE);
-                    final Context context = expirationTimer.getContext();
                     final Date expirationDate = requestAttributes.getExpirationDate();
-                    mCountDownTimer = new CountDownTimer(
-                            expirationDate.getTime() - new Date().getTime(),
-                            DateUtils.SECOND_IN_MILLIS
-                    ) {
-                        @Override
-                        public void onTick(final long millisUntilFinished) {
-                            expirationTimer.setText(context.getString(
-                                    R.string.expiration_timer_formatted,
-                                    DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)
-                            ));
-                        }
-
-                        @Override
-                        public void onFinish() {
-
-                        }
-                    };
-                    mCountDownTimer.start();
+                    long millisInFuture = expirationDate.getTime() - new Date().getTime();
+                    if (millisInFuture > 0) {
+                        initExpirationTimer(associatedView, expirationTimer, millisInFuture);
+                    }
+                    else {
+                        expireJob(associatedView);
+                    }
                 }
                 else {
                     expirationTimer.setVisibility(View.GONE);
                 }
+            }
+        }
+
+        private void initExpirationTimer(
+                final View associatedView,
+                final TextView expirationTimer,
+                final long millisInFuture
+        ) {
+            final Context context = expirationTimer.getContext();
+            mCountDownTimer = new CountDownTimer(
+                    millisInFuture,
+                    DateUtils.SECOND_IN_MILLIS
+            ) {
+                @Override
+                public void onTick(final long millisUntilFinished) {
+                    expirationTimer.setText(getExpirationText(context, millisUntilFinished));
+                }
+
+                @Override
+                public void onFinish() {
+                    expireJob(associatedView);
+                }
+            };
+            mCountDownTimer.start();
+        }
+
+        private String getExpirationText(final Context context, final long millisUntilFinished) {
+            int daysUntilFinished = DateTimeUtils.millisToDays(millisUntilFinished);
+            if (daysUntilFinished == 0) {
+                return context.getString(
+                        R.string.expiration_timer_formatted,
+                        DateTimeUtils.millisecondsToFormattedString(millisUntilFinished)
+                );
+            }
+            else if (daysUntilFinished == 1) {
+                return context.getString(R.string.expiration_tomorrow);
+            }
+            else {
+                return context.getString(R.string.expiration_days_formatted, daysUntilFinished);
             }
         }
 
@@ -298,6 +303,44 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                     }
                 });
             }
+
+            final View sendAlternateTimesButton =
+                    associatedView.findViewById(R.id.send_alternate_times_button);
+            if (sendAlternateTimesButton != null) {
+                final Booking.Action sendTimesAction =
+                        booking.getAction(Booking.Action.ACTION_SEND_TIMES);
+                if (sendTimesAction != null) {
+                    sendAlternateTimesButton.setVisibility(View.VISIBLE);
+                    sendAlternateTimesButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(final View v) {
+                            final Bundle arguments = new Bundle();
+                            arguments.putSerializable(BundleKeys.BOOKING, booking);
+                            mBus.post(new NavigationEvent.NavigateToPage(
+                                    MainViewPage.SEND_AVAILABLE_HOURS, arguments, true));
+                            mBus.post(new LogEvent.AddLogEvent(
+                                    new SendAvailabilityLog.SendAvailabilitySelected(
+                                            mOriginEventContext, booking)));
+                        }
+                    });
+                }
+                else {
+                    sendAlternateTimesButton.setVisibility(View.GONE);
+                }
+            }
+        }
+
+        private void expireJob(final View associatedView) {
+            final TextView expirationTimer =
+                    (TextView) associatedView.findViewById(R.id.booking_entry_expiration_timer);
+            if (expirationTimer != null) {
+                expirationTimer.setText(associatedView.getContext().getString(
+                        R.string.expiration_timer_formatted,
+                        DateTimeUtils.millisecondsToFormattedString(0)
+                ));
+            }
+            associatedView.setAlpha(0.5f);
+            UIUtils.disableClicks(associatedView);
         }
     }
 

@@ -244,6 +244,7 @@ public final class UIUtils {
 
     public static void setService(final TextView serviceTextView, final Booking booking) {
         Booking.ServiceInfo serviceInfo = booking.getServiceInfo();
+        serviceTextView.setText(null);
         if (serviceInfo != null) {
             if (serviceInfo.isHomeCleaning()) {
                 if (booking.isUK() &&
@@ -315,6 +316,16 @@ public final class UIUtils {
             dialogBuilder.setTitle(titleResId);
         }
         return dialogBuilder;
+    }
+
+    public static void disableClicks(final View view) {
+        view.setClickable(false);
+        if (view instanceof ViewGroup) {
+            final ViewGroup viewGroup = (ViewGroup) view;
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                disableClicks(viewGroup.getChildAt(i));
+            }
+        }
     }
 
     public static class FormFieldErrorStateRemover implements TextWatcher {
