@@ -671,7 +671,8 @@
 
     <!-- Pro Availability -->
     <string name="available_hours_info_banner_header">Keep your availability up to date</string>
-    <string name="available_hours_info_banner_body">Your past customers can instantly book or reschedule into the availability you set</string>
+    <string name="available_hours_info_banner_body">Your clients can book you instantly based on your current availability. <a href="http://prohelp.handy.com/hc/en-us/categories/202579757-Payments-Fees">Learn More</a></string>
+    <string name="available_hours_info_footer">Make sure your availability is up to date as cancellation fees apply.</string>
     <string name="no_available_hours">No Available Hours</string>
     <string name="available_hours">Available Hours</string>
     <string name="set_hours">Set Hours</string>
@@ -690,6 +691,8 @@
     <string name="not_available">Not Available</string>
     <string name="set_hours_prompt_subtitle">Let customers book directly with you.</string>
     <string name="add_another_time_slot">Add another time slot</string>
+    <string name="edit_hours_confirmation">By confirming your hours, you authorize your clients to book jobs directly with you.</string>
+    <string name="confirm_hours">Confirm Hours</string>
     <string name="error_incomplete_time_ranges">You must fill out all time slots before adding a new one.</string>
     <string name="error_time_slots_limit_exceeded_formatted">You may only enter up to %1$d times slots.</string>
 

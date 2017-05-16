@@ -16,7 +16,7 @@ import com.handy.portal.core.model.SuccessWrapper;
 import com.handy.portal.core.ui.activity.LoginActivity;
 import com.handy.portal.core.ui.activity.SplashActivity;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.helpcenter.constants.HelpCenterUrl;
+import com.handy.portal.helpcenter.constants.HelpCenterConstants;
 import com.handy.portal.library.ui.widget.InputTextField;
 
 import org.greenrobot.eventbus.EventBus;
@@ -142,7 +142,7 @@ public class LoginActivityFragmentTest extends RobolectricGradleTestWrapper {
         fragmentView.findViewById(R.id.login_help).performClick();
 
         Intent actualIntent = shadowOf(activity).getNextStartedActivity();
-        Intent expectedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(HelpCenterUrl.LOGIN_HELP_ABSOLUTE_URL));
+        Intent expectedIntent = new Intent(Intent.ACTION_VIEW, Uri.parse(HelpCenterConstants.LOGIN_INFO_URL));
         assertThat(actualIntent, equalTo(expectedIntent));
     }
 

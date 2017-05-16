@@ -64,7 +64,17 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:layout_marginBottom="@dimen/default_margin_double"
+                />
+
+            <TextView
+                style="@style/TextView.Small"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/default_margin"
+                android:gravity="center"
+                android:padding="@dimen/default_padding"
+                android:text="@string/edit_hours_confirmation"
+                android:textColor="@color/tertiary_gray"
                 />
         </LinearLayout>
 
@@ -76,7 +86,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:text="@string/save"
+        android:text="@string/confirm_hours"
         android:visibility="gone"
         tools:visibility="visible"
         />

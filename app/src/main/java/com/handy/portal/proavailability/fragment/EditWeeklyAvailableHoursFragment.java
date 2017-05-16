@@ -27,6 +27,7 @@ import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
+import com.handy.portal.helpcenter.constants.HelpCenterConstants;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProAvailabilityLog;
@@ -60,6 +61,9 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     @Inject
     ProviderManager mProviderManager;
 
+
+    @BindView(R.id.available_hours_info_banner_body)
+    TextView mInfoBannerBody;
     @BindView(R.id.available_hours_tab_layout)
     TabLayout mTabLayout;
     @BindView(R.id.available_hours_view_pager)
@@ -143,6 +147,16 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
             data.putExtra(BundleKeys.DAILY_AVAILABILITY_TIMELINE, updatedAvailabilityTimeline);
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
         }
+    }
+
+    @OnClick(R.id.available_hours_info_banner_body)
+    public void onInfoBannerClicked() {
+        final Bundle arguments = new Bundle();
+        arguments.putString(
+                BundleKeys.TARGET_URL,
+                dataManager.getBaseUrl() + HelpCenterConstants.SETTING_HOURS_INFO_PATH
+        );
+        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.WEB_PAGE, arguments, true));
     }
 
     @OnClick(R.id.try_again_button)
@@ -243,6 +257,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
             displayTabs();
             updateCopyHoursButton();
         }
+        com.handy.portal.library.util.TextUtils.stripUnderlines(mInfoBannerBody);
     }
 
     private void setIsCurrentWeekAndNextWeekInSync(final boolean value) {

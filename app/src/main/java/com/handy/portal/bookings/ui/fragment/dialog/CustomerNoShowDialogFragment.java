@@ -18,7 +18,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.NavigationEvent;
-import com.handy.portal.helpcenter.constants.HelpCenterUrl;
+import com.handy.portal.helpcenter.constants.HelpCenterConstants;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.library.ui.widget.BulletListItem;
 import com.handy.portal.logger.handylogger.LogEvent;
@@ -125,7 +125,7 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment {
 
     private void showCustomerNoShowPolicyWebView() {
         final Bundle arguments = new Bundle();
-        arguments.putString(BundleKeys.HELP_REDIRECT_PATH, HelpCenterUrl.CUSTOMER_NO_SHOW_POLICY_REDIRECT_URL);
+        arguments.putString(BundleKeys.HELP_REDIRECT_PATH, HelpCenterConstants.CUSTOMER_NO_SHOW_POLICY_PATH);
         mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.HELP_WEBVIEW, arguments, true));
     }
 
