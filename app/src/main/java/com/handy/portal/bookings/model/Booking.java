@@ -474,6 +474,8 @@ public class Booking implements Comparable<Booking>, Serializable {
         private String mCustomerName;
         @SerializedName("is_favorite")
         private boolean mIsFavorite;
+        @SerializedName("expires_at")
+        private Date mExpirationDate;
 
 
         public String getListingTitle() {
@@ -508,6 +510,10 @@ public class Booking implements Comparable<Booking>, Serializable {
 
         public boolean isFavorite() {
             return mIsFavorite;
+        }
+
+        public Date getExpirationDate() {
+            return mExpirationDate;
         }
     }
 

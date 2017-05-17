@@ -235,7 +235,7 @@ public final class UIUtils {
             dollarTextView.setVisibility(View.VISIBLE);
         }
         else {
-            dollarTextView.setVisibility(View.INVISIBLE);
+            dollarTextView.setVisibility(View.GONE);
             if (centsTextView != null) {
                 centsTextView.setVisibility(View.GONE);
             }
@@ -244,22 +244,23 @@ public final class UIUtils {
 
     public static void setService(final TextView serviceTextView, final Booking booking) {
         Booking.ServiceInfo serviceInfo = booking.getServiceInfo();
+        serviceTextView.setText(null);
         if (serviceInfo != null) {
             if (serviceInfo.isHomeCleaning()) {
-                final Context context = serviceTextView.getContext();
-                String frequencyInfo = UIUtils.getFrequencyInfo(booking, context);
                 if (booking.isUK() &&
                         booking.getExtrasInfoByMachineName(Booking.ExtraInfo.TYPE_CLEANING_SUPPLIES)
                                 .size() > 0) {
-                    frequencyInfo += " \u22C5 " + context.getString(R.string.supplies);
+                    serviceTextView.setText(R.string.supplies);
                 }
-                serviceTextView.setText(frequencyInfo);
             }
             else {
                 serviceTextView.setText(serviceInfo.getDisplayName());
             }
         }
         appendTimeWindow(serviceTextView, booking.getMinimumHours(), booking.getHours());
+        if (android.text.TextUtils.isEmpty(serviceTextView.getText())) {
+            serviceTextView.setVisibility(View.GONE);
+        }
     }
 
     private static void appendTimeWindow(
@@ -271,38 +272,12 @@ public final class UIUtils {
             final String minimumHoursFormatted = TextUtils.formatHours(minimumHours);
             final String hoursFormatted = TextUtils.formatHours(hours);
             final Context context = timeWindowTextView.getContext();
-            timeWindowTextView.append(" " + context.getString(R.string.time_window_formatted,
+            if (!android.text.TextUtils.isEmpty(timeWindowTextView.getText())) {
+                timeWindowTextView.append(" \u22C5");
+            }
+            timeWindowTextView.append(context.getString(R.string.time_window_formatted,
                     minimumHoursFormatted, hoursFormatted));
         }
-    }
-
-    public static String getFrequencyInfo(Booking booking, Context parentContext) {
-        //Frequency
-        //Valid values : 1,2,4 every X weeks, 0 = non-recurring
-        int frequency = booking.getFrequency();
-        String bookingFrequencyFormat = getFrequencyFormatString(booking, parentContext);
-        return String.format(bookingFrequencyFormat, frequency);
-    }
-
-    public static void setFrequencyInfo(Booking booking, TextView textView, Context parentContext) {
-        String bookingFrequency = getFrequencyInfo(booking, parentContext);
-        textView.setText(bookingFrequency);
-    }
-
-    private static String getFrequencyFormatString(Booking booking, Context parentContext) {
-        int frequency = booking.getFrequency();
-        String bookingFrequencyFormat;
-
-        if (frequency == 0) {
-            bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency_non_recurring);
-        }
-        else if (frequency == 1) {
-            bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency_every_week);
-        }
-        else {
-            bookingFrequencyFormat = parentContext.getString(R.string.booking_frequency);
-        }
-        return bookingFrequencyFormat;
     }
 
     //Map action button data to a booking action button type
@@ -341,6 +316,16 @@ public final class UIUtils {
             dialogBuilder.setTitle(titleResId);
         }
         return dialogBuilder;
+    }
+
+    public static void disableClicks(final View view) {
+        view.setClickable(false);
+        if (view instanceof ViewGroup) {
+            final ViewGroup viewGroup = (ViewGroup) view;
+            for (int i = 0; i < viewGroup.getChildCount(); i++) {
+                disableClicks(viewGroup.getChildAt(i));
+            }
+        }
     }
 
     public static class FormFieldErrorStateRemover implements TextWatcher {

@@ -133,8 +133,6 @@ public class BookingFragment extends TimerActionBarFragment {
     TextView mJobPaymentText;
     @BindView(R.id.booking_job_payment_bonus_text)
     TextView mJobPaymentBonusText;
-    @BindView(R.id.booking_frequency_text)
-    TextView mFrequencyTest;
     @BindView(R.id.booking_support_button)
     Button mSupportButton;
     @BindView(R.id.booking_action_helper_text)
@@ -366,8 +364,6 @@ public class BookingFragment extends TimerActionBarFragment {
                     CurrencyUtils.formatPriceWithCents(bonusInfo.getAmount(), bonusInfo.getCurrencySymbol()));
             mJobPaymentBonusText.setText(bonusText);
         }
-
-        mFrequencyTest.setText(UIUtils.getFrequencyInfo(mBooking, getContext()));
 
         //Show description field regardless of claim status if the booking is not for cleaning (e.g. furniture assembly)
         boolean isHomeCleaning = mBooking.getServiceInfo().isHomeCleaning();
