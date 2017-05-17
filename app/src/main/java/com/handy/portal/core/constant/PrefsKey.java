@@ -27,6 +27,7 @@ public interface PrefsKey {
             LOG_SESSION,
             INSTALLATION_ID,
             ANNOUNCEMENT_RECORDS,
+            DISMISSED_AVAILABLE_HOURS_BANNER_WEEK_START_DATE
     })
     @interface Key {}
 }
