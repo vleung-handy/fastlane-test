@@ -3,8 +3,10 @@ package com.handy.portal.clients.ui.adapter;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.annotation.StringRes;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -15,7 +17,8 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.DismissableBookingElementView;
-import com.handy.portal.clients.ui.element.ProRequestedJobsListGroupView;
+import com.handy.portal.clients.ui.element.RequestedJobsDateView;
+import com.handy.portal.clients.ui.element.RequestedJobsHeaderView;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.NavigationEvent;
@@ -35,49 +38,104 @@ import java.util.List;
 import javax.inject.Inject;
 
 public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+    private final Context mContext;
+
     @Inject
     EventBus mBus;
 
     private static final int VIEW_TYPE_DATE = 1;
     private static final int VIEW_TYPE_JOB = 2;
+    private static final int VIEW_TYPE_HEADER = 3;
+    private static final int VIEW_TYPE_DIVIDER = 4;
     private List<Object> mItems;
 
     public RequestedJobsRecyclerViewAdapter(final Context context,
                                             final List<BookingsWrapper> jobList) {
+        mContext = context;
         Utils.inject(context, this);
-        mItems = new ArrayList<>();
+
+        final List<Booking> exclusiveBookings = new ArrayList<>();
+        final List<Booking> regularBookings = new ArrayList<>();
         for (BookingsWrapper bookingsWrapper : jobList) {
-            mItems.add(bookingsWrapper.getDate());
-            for (Booking booking : bookingsWrapper.getUndismissedBookings()) {
-                mItems.add(booking);
+            final List<Booking> undismissedBookings = bookingsWrapper.getUndismissedBookings();
+            for (final Booking booking : undismissedBookings) {
+                if (booking.isExclusive()) {
+                    exclusiveBookings.add(booking);
+                }
+                else {
+                    regularBookings.add(booking);
+                }
             }
+        }
+
+        mItems = new ArrayList<>();
+        if (!exclusiveBookings.isEmpty()) {
+            populateItemsWithSection(R.string.exclusive_requests, exclusiveBookings);
+        }
+        if (!regularBookings.isEmpty()) {
+            if (!exclusiveBookings.isEmpty()) {
+                mItems.add(VIEW_TYPE_DIVIDER);
+            }
+            populateItemsWithSection(R.string.other_requests, regularBookings);
+        }
+    }
+
+    private void populateItemsWithSection(
+            @StringRes final int titleId,
+            final List<Booking> bookings
+    ) {
+        mItems.add(new RequestedJobsHeaderView.ViewModel(mContext.getString(titleId), null));
+        for (final Booking booking : bookings) {
+            final Object previousItem = mItems.get(mItems.size() - 1);
+            if (!(previousItem instanceof Booking)
+                    || !DateTimeUtils.isOnSameDay(((Booking) previousItem).getStartDate(), booking.getStartDate())) {
+                mItems.add(DateTimeUtils.getDateWithoutTime(booking.getStartDate()));
+            }
+            mItems.add(booking);
         }
     }
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
         switch (viewType) {
+            case VIEW_TYPE_HEADER:
+                return new HeaderViewHolder(new RequestedJobsHeaderView(mContext));
             case VIEW_TYPE_DATE:
-                final View itemView = new ProRequestedJobsListGroupView(parent.getContext());
-                return new DateViewHolder(itemView);
+                return new DateViewHolder(new RequestedJobsDateView(mContext));
             case VIEW_TYPE_JOB:
-                final FrameLayout container = new FrameLayout(parent.getContext());
+                final FrameLayout container = new FrameLayout(mContext);
                 container.setLayoutParams(new ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT));
                 return new JobViewHolder(container, mBus, EventContext.REQUESTED_JOBS);
+            case VIEW_TYPE_DIVIDER:
+                return new BaseViewHolder(createSectionDivider());
         }
         return null;
+    }
+
+    private View createSectionDivider() {
+        final FrameLayout divider = new FrameLayout(mContext);
+        LayoutInflater.from(mContext).inflate(R.layout.divider, divider);
+        final int padding = (int) mContext.getResources().getDimension(R.dimen.default_padding);
+        divider.setPadding(padding, padding, padding, 0);
+        return divider;
     }
 
     @Override
     public int getItemViewType(final int position) {
         final Object item = mItems.get(position);
-        if (item instanceof Date) {
+        if (item instanceof RequestedJobsHeaderView.ViewModel) {
+            return VIEW_TYPE_HEADER;
+        }
+        else if (item instanceof Date) {
             return VIEW_TYPE_DATE;
         }
         else if (item instanceof Booking) {
             return VIEW_TYPE_JOB;
+        }
+        else if (item instanceof Integer) {
+            return (Integer) item;
         }
         return 0;
     }
@@ -120,12 +178,26 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
         }
     }
 
-    private static abstract class BaseViewHolder extends RecyclerView.ViewHolder {
+    private static class BaseViewHolder extends RecyclerView.ViewHolder {
         BaseViewHolder(final View itemView) {
             super(itemView);
         }
 
-        abstract void init(Object item);
+        void init(Object item) {
+            // do nothing
+        }
+    }
+
+
+    private static class HeaderViewHolder extends BaseViewHolder {
+        HeaderViewHolder(final View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        void init(final Object item) {
+            ((RequestedJobsHeaderView) itemView).bind((RequestedJobsHeaderView.ViewModel) item);
+        }
     }
 
 
@@ -136,7 +208,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
 
         @Override
         void init(final Object item) {
-            ((ProRequestedJobsListGroupView) itemView)
+            ((RequestedJobsDateView) itemView)
                     .updateDisplay((Date) item, itemView.getContext());
         }
     }

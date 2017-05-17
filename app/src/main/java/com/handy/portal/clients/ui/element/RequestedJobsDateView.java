@@ -16,16 +16,16 @@ import java.util.Date;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class ProRequestedJobsListGroupView extends FrameLayout {
+public class RequestedJobsDateView extends FrameLayout {
     @BindView(R.id.pro_requested_jobs_list_group_title_text)
     protected TextView titleText;
 
-    public ProRequestedJobsListGroupView(Context context) {
+    public RequestedJobsDateView(Context context) {
         super(context);
         init();
     }
 
-    public ProRequestedJobsListGroupView(Context context, AttributeSet attributeSet) {
+    public RequestedJobsDateView(Context context, AttributeSet attributeSet) {
         super(context, attributeSet);
         init();
     }
