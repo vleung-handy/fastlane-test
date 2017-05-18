@@ -43,6 +43,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
     @Inject
     EventBus mBus;
 
+    private static final int VIEW_TYPE_NONE = 0;
     private static final int VIEW_TYPE_DATE = 1;
     private static final int VIEW_TYPE_JOB = 2;
     private static final int VIEW_TYPE_HEADER = 3;
@@ -124,20 +125,22 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
 
     @Override
     public int getItemViewType(final int position) {
-        final Object item = mItems.get(position);
-        if (item instanceof RequestedJobsHeaderView.ViewModel) {
-            return VIEW_TYPE_HEADER;
+        if (position >= 0 && position < mItems.size()) {
+            final Object item = mItems.get(position);
+            if (item instanceof RequestedJobsHeaderView.ViewModel) {
+                return VIEW_TYPE_HEADER;
+            }
+            else if (item instanceof Date) {
+                return VIEW_TYPE_DATE;
+            }
+            else if (item instanceof Booking) {
+                return VIEW_TYPE_JOB;
+            }
+            else if (item instanceof Integer) {
+                return (Integer) item;
+            }
         }
-        else if (item instanceof Date) {
-            return VIEW_TYPE_DATE;
-        }
-        else if (item instanceof Booking) {
-            return VIEW_TYPE_JOB;
-        }
-        else if (item instanceof Integer) {
-            return (Integer) item;
-        }
-        return 0;
+        return VIEW_TYPE_NONE;
     }
 
     @Override
@@ -168,13 +171,32 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
         notifyItemRemoved(position);
         notifyItemRangeChanged(position, mItems.size());
 
-        final int itemBeforePosition = position - 1;
-        final Object itemBefore = mItems.get(itemBeforePosition);
-        final Object itemAfter = position < mItems.size() ? mItems.get(position) : null;
-        if (itemBefore instanceof Date && (itemAfter instanceof Date || itemAfter == null)) {
-            mItems.remove(itemBeforePosition);
-            notifyItemRemoved(itemBeforePosition);
-            notifyItemRangeChanged(itemBeforePosition, mItems.size());
+        int positionToRemove = position - 1;
+        int positionAfter = position;
+        // Remove date section if necessary
+        if (getItemViewType(positionToRemove) == VIEW_TYPE_DATE
+                && getItemViewType(positionAfter) != VIEW_TYPE_JOB) {
+            mItems.remove(positionToRemove);
+            notifyItemRemoved(positionToRemove);
+            notifyItemRangeChanged(positionToRemove, mItems.size());
+
+            // Remove section header if necessary
+            positionToRemove = position - 2;
+            positionAfter = position - 1;
+            if (getItemViewType(positionToRemove) == VIEW_TYPE_HEADER
+                    && getItemViewType(positionAfter) != VIEW_TYPE_DATE) {
+                mItems.remove(positionToRemove);
+                notifyItemRemoved(positionToRemove);
+                notifyItemRangeChanged(positionToRemove, mItems.size());
+
+                // Remove divider if necessary
+                positionToRemove = position - 2;
+                if (getItemViewType(positionToRemove) == VIEW_TYPE_DIVIDER) {
+                    mItems.remove(positionToRemove);
+                    notifyItemRemoved(positionToRemove);
+                    notifyItemRangeChanged(positionToRemove, mItems.size());
+                }
+            }
         }
     }
 
