@@ -29,6 +29,8 @@
         android:layout_marginStart="@dimen/extra_margin"
         android:padding="@dimen/extra_padding_xsmall"
         android:src="@drawable/ic_question_gray"
+        android:visibility="gone"
+        tools:visibility="visible"
         />
 
 </LinearLayout>

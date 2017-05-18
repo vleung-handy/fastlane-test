@@ -35,6 +35,7 @@
     <string name="profile">Profile</string>
     <string name="send">Send</string>
     <string name="dont_save">Don\'t Save</string>
+    <string name="reschedule">Reschedule</string>
 
     <!-- Environment -->
     <string name="select_environment">Select Environment</string>
@@ -630,7 +631,7 @@
     <string name="upload_photo_donts_4">Work angles</string>
 
     <!-- Request Dismissal -->
-    <string name="dismiss">Decline</string>
+    <string name="dismiss">I\'ll Pass</string>
     <string name="dismiss_request">Decline Request</string>
     <string name="request_dismissal_dialog_title_formatted">Would you like to continue receiving requests from %1$s?</string>
     <string name="request_dismissal_reason_not_selected">Please select an option</string>

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -17,6 +18,9 @@ import butterknife.OnClick;
 public class RequestedJobsHeaderView extends FrameLayout {
     @BindView(R.id.title)
     TextView mTitle;
+    @BindView(R.id.help_icon)
+    View mHelpIcon;
+
     private ViewModel mViewModel;
 
     public RequestedJobsHeaderView(@NonNull final Context context) {
@@ -43,6 +47,7 @@ public class RequestedJobsHeaderView extends FrameLayout {
     public void bind(final ViewModel viewModel) {
         mViewModel = viewModel;
         mTitle.setText(mViewModel.getTitle());
+        mHelpIcon.setVisibility(TextUtils.isEmpty(mViewModel.getHelpContent()) ? GONE : VISIBLE);
     }
 
     public static class ViewModel {

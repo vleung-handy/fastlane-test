@@ -378,6 +378,12 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                 }
             });
 
+            final View bottomButtomGroup =
+                    associatedView.findViewById(R.id.booking_entry_bottom_button_group);
+            if (bottomButtomGroup != null) {
+                bottomButtomGroup.setVisibility(View.VISIBLE);
+            }
+
             final View claimButton = associatedView.findViewById(R.id.claim_button);
             if (claimButton != null) {
                 claimButton.setOnClickListener(new View.OnClickListener() {
@@ -399,7 +405,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
             }
 
             final View sendAlternateTimesButton =
-                    associatedView.findViewById(R.id.send_alternate_times_button);
+                    associatedView.findViewById(R.id.reschedule_button);
             if (sendAlternateTimesButton != null) {
                 final Booking.Action sendTimesAction =
                         booking.getAction(Booking.Action.ACTION_SEND_TIMES);
@@ -419,7 +425,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                     });
                 }
                 else {
-                    sendAlternateTimesButton.setVisibility(View.GONE);
+                    sendAlternateTimesButton.setVisibility(View.INVISIBLE);
                 }
             }
         }
