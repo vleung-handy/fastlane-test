@@ -662,6 +662,8 @@
     <string name="requests_for_date_formatted">Requests for %1$s</string>
     <string name="exclusive_requests">Exclusive Requests</string>
     <string name="other_requests">Other Jobs From Your Clients</string>
+    <string name="exclusive_requests_help_content">These requests are from clients who are specifically asking for you!\n\nRespond to your clients by claiming, asking to reschedule, or passing on the request.</string>
+    <string name="other_requests_help_content">These jobs are from clients you\'ve worked with before or new clients recommended for you.\n\nJobs from these clients get sent to a list of other pros on their account, know as the "Pro Team".\n\nGrab jobs quickly by claiming or pass on the job to let other pros on the same Pro Team claim.</string>
 
     <!-- Date Scroller -->
     <string name="sunday_initial">S</string>

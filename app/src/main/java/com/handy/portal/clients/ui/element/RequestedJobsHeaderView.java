@@ -37,8 +37,10 @@ public class RequestedJobsHeaderView extends FrameLayout {
     void onHelpIconClicked() {
         if (mViewModel != null && !TextUtils.isEmpty(mViewModel.getHelpContent())) {
             new AlertDialog.Builder(getContext())
+                    .setTitle(mViewModel.getTitle())
                     .setMessage(mViewModel.getHelpContent())
                     .setPositiveButton(R.string.ok, null)
+                    .setCancelable(true)
                     .create()
                     .show();
         }

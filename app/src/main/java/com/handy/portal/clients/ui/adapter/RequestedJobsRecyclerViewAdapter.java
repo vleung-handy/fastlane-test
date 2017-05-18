@@ -3,7 +3,7 @@ package com.handy.portal.clients.ui.adapter;
 import android.content.Context;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.annotation.StringRes;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -71,21 +71,30 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
 
         mItems = new ArrayList<>();
         if (!exclusiveBookings.isEmpty()) {
-            populateItemsWithSection(R.string.exclusive_requests, exclusiveBookings);
+            populateItemsWithSection(
+                    mContext.getString(R.string.exclusive_requests),
+                    mContext.getString(R.string.exclusive_requests_help_content),
+                    exclusiveBookings
+            );
         }
         if (!regularBookings.isEmpty()) {
             if (!exclusiveBookings.isEmpty()) {
                 mItems.add(VIEW_TYPE_DIVIDER);
             }
-            populateItemsWithSection(R.string.other_requests, regularBookings);
+            populateItemsWithSection(
+                    mContext.getString(R.string.other_requests),
+                    mContext.getString(R.string.other_requests_help_content),
+                    regularBookings
+            );
         }
     }
 
     private void populateItemsWithSection(
-            @StringRes final int titleId,
+            final String title,
+            @Nullable final String helpContent,
             final List<Booking> bookings
     ) {
-        mItems.add(new RequestedJobsHeaderView.ViewModel(mContext.getString(titleId), null));
+        mItems.add(new RequestedJobsHeaderView.ViewModel(title, helpContent));
         for (final Booking booking : bookings) {
             final Object previousItem = mItems.get(mItems.size() - 1);
             if (!(previousItem instanceof Booking)
