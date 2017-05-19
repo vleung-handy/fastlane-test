@@ -435,16 +435,12 @@ public class Booking implements Comparable<Booking>, Serializable {
         return mSwappableBooking != null;
     }
 
-    public boolean isDismissed() {
+    public boolean isDismissedRequest() {
         return getRequestAttributes() != null && getRequestAttributes().isDismissed();
     }
 
-    public boolean isExclusive() {
+    public boolean isExclusiveRequest() {
         return getRequestAttributes() != null && getRequestAttributes().isExclusive();
-    }
-
-    public boolean isFavorite() {
-        return getRequestAttributes() != null && getRequestAttributes().isFavorite();
     }
 
     //Basic booking statuses inferrable from mProviderId

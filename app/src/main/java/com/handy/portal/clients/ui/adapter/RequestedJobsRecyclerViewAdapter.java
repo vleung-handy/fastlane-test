@@ -60,7 +60,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
         for (BookingsWrapper bookingsWrapper : jobList) {
             final List<Booking> undismissedBookings = bookingsWrapper.getUndismissedBookings();
             for (final Booking booking : undismissedBookings) {
-                if (booking.isExclusive()) {
+                if (booking.isExclusiveRequest()) {
                     exclusiveBookings.add(booking);
                 }
                 else {
@@ -199,7 +199,6 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                 notifyItemRangeChanged(positionToRemove, mItems.size());
 
                 // Remove divider if necessary
-                positionToRemove = position - 2;
                 if (getItemViewType(positionToRemove) == VIEW_TYPE_DIVIDER) {
                     mItems.remove(positionToRemove);
                     notifyItemRemoved(positionToRemove);

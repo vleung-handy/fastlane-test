@@ -104,7 +104,7 @@ public class BookingsWrapper implements Serializable {
         if (mUndismissedBookings == null) {
             mUndismissedBookings = new ArrayList<>();
             for (Booking booking : bookings) {
-                if (!booking.isDismissed()) {
+                if (!booking.isDismissedRequest()) {
                     mUndismissedBookings.add(booking);
                 }
             }
