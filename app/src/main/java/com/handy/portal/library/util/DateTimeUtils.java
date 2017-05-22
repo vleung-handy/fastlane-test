@@ -591,4 +591,8 @@ public final class DateTimeUtils {
             return Integer.parseInt(HOUR_INT_FORMATTER.format(date));
         }
     }
+
+    public static boolean isOnSameDay(final Date date1, final Date date2) {
+        return daysBetween(getDateWithoutTime(date1), getDateWithoutTime(date2)) == 0;
+    }
 }

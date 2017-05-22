@@ -51,39 +51,5 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/border_gray"
-            android:orientation="horizontal"
-            android:paddingTop="1dp"
-            >
-
-            <Button
-                android:id="@+id/dismiss_button"
-                style="@style/Button.White"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:focusable="false"
-                android:text="@string/dismiss"
-                android:textColor="@color/tertiary_gray"
-                />
-
-            <Button
-                android:id="@+id/claim_button"
-                style="@style/Button.White"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="1dp"
-                android:layout_marginStart="1dp"
-                android:layout_weight="1"
-                android:focusable="false"
-                android:text="@string/claim"
-                android:textColor="@color/handy_green"
-                />
-
-        </LinearLayout>
     </LinearLayout>
 </FrameLayout>

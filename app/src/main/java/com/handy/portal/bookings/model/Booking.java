@@ -48,8 +48,6 @@ public class Booking implements Comparable<Booking>, Serializable {
 
     @SerializedName("check_in_summary")
     private CheckInSummary mCheckInSummary;
-    @SerializedName("eta_lateness_minutes")
-    private Integer mProviderMinutesLate;//value returned from server can be null
 
     @SerializedName("address")
     private Address mAddress;
@@ -351,10 +349,6 @@ public class Booking implements Comparable<Booking>, Serializable {
         return mCheckInSummary != null && mCheckInSummary.isCheckedIn();
     }
 
-    public Integer getProviderMinutesLate() {
-        return mProviderMinutesLate;
-    }
-
     //providerId = 0, no one assigned, can claim, otherwise is already claimed
     public static final String NO_PROVIDER_ASSIGNED = "0";
 
@@ -441,14 +435,12 @@ public class Booking implements Comparable<Booking>, Serializable {
         return mSwappableBooking != null;
     }
 
-    public boolean isDismissed() {
-        return getRequestAttributes() != null
-                && getRequestAttributes().isDismissed();
+    public boolean isDismissedRequest() {
+        return getRequestAttributes() != null && getRequestAttributes().isDismissed();
     }
 
-    public boolean isFavorite() {
-        return getRequestAttributes() != null
-                && getRequestAttributes().isFavorite();
+    public boolean isExclusiveRequest() {
+        return getRequestAttributes() != null && getRequestAttributes().isExclusive();
     }
 
     //Basic booking statuses inferrable from mProviderId
@@ -474,6 +466,8 @@ public class Booking implements Comparable<Booking>, Serializable {
         private String mCustomerName;
         @SerializedName("is_favorite")
         private boolean mIsFavorite;
+        @SerializedName("is_exclusive")
+        private boolean mIsExclusive;
         @SerializedName("expires_at")
         private Date mExpirationDate;
 
@@ -514,6 +508,10 @@ public class Booking implements Comparable<Booking>, Serializable {
 
         public Date getExpirationDate() {
             return mExpirationDate;
+        }
+
+        public boolean isExclusive() {
+            return mIsExclusive;
         }
     }
 
