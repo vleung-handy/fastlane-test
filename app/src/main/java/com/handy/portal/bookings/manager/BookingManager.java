@@ -23,6 +23,7 @@ import com.handy.portal.core.model.LocationData;
 import com.handy.portal.core.model.TypeSafeMap;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.onboarding.model.claim.JobClaim;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 
@@ -464,6 +465,10 @@ public class BookingManager {
         });
     }
 
+    public void sendPostCheckoutInfo(final String bookingId, final boolean customerPreferred, final ArrayList<JobClaim> jobClaims, final String feedback) {
+        // FIXME: Implement
+    }
+
     public void requestNotifyUpdateArrivalTime(final String bookingId, final Booking.ArrivalTimeOption arrivalTimeOption) {
         mDataManager.notifyUpdateArrivalTimeBooking(bookingId, arrivalTimeOption, new DataManager.Callback<Booking>() {
             @Override
@@ -488,20 +493,6 @@ public class BookingManager {
             @Override
             public void onError(DataManager.DataManagerError error) {
                 mBus.post(new HandyEvent.ReceiveReportNoShowError(error));
-            }
-        });
-    }
-
-    public void rateCustomer(final String bookingId, final int rating, final String reviewText) {
-        mDataManager.rateCustomer(bookingId, rating, reviewText, new DataManager.Callback<Void>() {
-            @Override
-            public void onSuccess(Void response) {
-                mBus.post(new BookingEvent.RateCustomerSuccess());
-            }
-
-            @Override
-            public void onError(DataManager.DataManagerError error) {
-                mBus.post(new BookingEvent.RateCustomerError(error));
             }
         });
     }

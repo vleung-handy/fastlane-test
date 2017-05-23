@@ -36,6 +36,10 @@
     <string name="send">Send</string>
     <string name="dont_save">Don\'t Save</string>
     <string name="reschedule">Reschedule</string>
+    <string name="great_work">Great work!</string>
+    <string name="no_thanks">No Thanks</string>
+    <string name="yes_please">Yes, Please</string>
+    <string name="submit_feedback">Submit Feedback</string>
 
     <!-- Environment -->
     <string name="select_environment">Select Environment</string>
@@ -403,14 +407,6 @@
     <string name="supplies_footer">While we hope you find these suggestions of use, you are free to purchase whichever supplies you deem appropriate from this or any other vendor of your choosing.
     </string>
 
-    <!-- Rate Booking -->
-    <string name="rate_booking_submit_rating">Submit Rating</string>
-    <string name="rate_booking_comment_text_hint">Any additional comments?</string>
-    <string name="rate_booking_need_rating">You must select a rating</string>
-    <string name="you_earned_money_formatted">You made %1$s</string>
-    <string name="bonus_formatted">\u0020+ %s REWARD</string>
-    <string name="how_was_experience_formatted">How was your experience at %1$s’s home?</string>
-
     <!-- Nearby Booking -->
     <string name="start_timer_formatted">STARTS IN %1$s</string>
     <string name="start_timer_lowercase_formatted">Starts in %1$s</string>
@@ -541,6 +537,11 @@
     <string name="loading">Loading…</string>
     <string name="card">Card</string>
     <string name="claim_jobs">Claim Jobs</string>
+    <string name="continue_without_claiming">Continue without Claiming</string>
+    <plurals name="claim_x_jobs_formatted">
+        <item quantity="one">Claim Job</item>
+        <item quantity="other">Claim %1$d Jobs</item>
+    </plurals>
     <string name="continue_to_next_step">Continue</string>
     <string name="locations">Locations</string>
     <string name="choose_date">Choose a date</string>
@@ -603,8 +604,14 @@
     <string name="will_be_claimed">This requested job will be claimed</string>
 
     <!-- Post-checkout Claims -->
-    <string name="continue_to_without_claiming">Continue without Claiming</string>
-    <string name="post_checkout_claim_prompt_formatted">Confirm your next booking with %1$s</string>
+    <string name="post_checkout_booking_amount_formatted">You made %1$s</string>
+    <string name="post_checkout_booking_bonus_amount_formatted">\u0020+ %s reward</string>
+    <string name="post_checkout_no_jobs_formatted">Great! When %1$s has more available jobs, you\'ll see them in your Requests tab.</string>
+    <string name="post_checkout_claim_prompt_formatted"><![CDATA[Bring your total earnings with %1$s up to <b>%2$s</b> with these jobs:]]></string>
+    <string name="post_checkout_preference_prompt_formatted">Would you like to work with %1$s again?</string>
+    <string name="post_checkout_feedback_prompt"><![CDATA[Sorry you didn\'t enjoy working with this client. <b>We will never send you back.</b>]]></string>
+    <string name="post_checkout_feedback_hint">If you\'d like, please let us know what went wrong.</string>
+    <string name="post_checkout_claim_subtitle">You\'ll be able to see further requests from this client in your Requests tab.</string>
     <plurals name="claim_jobs_success_formatted">
         <item quantity="zero">Sorry, we weren\'t able to add any of the jobs to your schedule.</item>
         <item quantity="one">Awesome! We added the job to your schedule.</item>

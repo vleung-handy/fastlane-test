@@ -14,13 +14,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.crashlytics.android.Crashlytics;
 import com.github.gcacace.signaturepad.views.SignaturePad;
 import com.handy.portal.R;
+import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.CheckoutRequest;
-import com.handy.portal.bookings.ui.fragment.dialog.RateBookingDialogFragment;
+import com.handy.portal.bookings.ui.fragment.dialog.PostCheckoutDialogFragment;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.TransitionStyle;
@@ -33,6 +33,7 @@ import com.handy.portal.core.model.ProBookingFeedback;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.core.ui.view.CheckoutCompletedTaskView;
 import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.location.manager.LocationManager;
 import com.handy.portal.logger.handylogger.LogEvent;
@@ -93,6 +94,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bus.register(this);
 
         mHiddenTasksCount = 0;
         mTimeBroadcastReceiver = new BroadcastReceiver() {
@@ -130,15 +132,19 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     @Override
     public void onResume() {
         super.onResume();
-        bus.register(this);
         getContext().registerReceiver(mTimeBroadcastReceiver, mTimeIntentFilter);
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        bus.unregister(this);
         getContext().unregisterReceiver(mTimeBroadcastReceiver);
+    }
+
+    @Override
+    public void onDestroy() {
+        bus.unregister(this);
+        super.onDestroy();
     }
 
     @OnClick(R.id.clear_signature_button)
@@ -162,18 +168,10 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
 
     @Subscribe
     public void onReceiveNotifyJobCheckOutSuccess(final HandyEvent.ReceiveNotifyJobCheckOutSuccess event) {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         bus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.CheckOutSuccess(
                 mBooking, getLocationData())));
-
         mPrefsManager.setBookingInstructions(mBooking.getId(), null);
-
-        showToast(R.string.check_out_success, Toast.LENGTH_LONG);
-
-        showCheckoutRatingFlowIfNeeded();
-
-        returnToPage(MainViewPage.SCHEDULED_JOBS, mBooking.getStartDate().getTime(),
-                TransitionStyle.REFRESH_PAGE);
+        mBookingManager.requestPostCheckoutInfo(mBooking.getId());
     }
 
     @Subscribe
@@ -212,6 +210,27 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
         }
     }
 
+    @Subscribe
+    public void onReceivePostCheckoutInfoSuccess(
+            final BookingEvent.ReceivePostCheckoutInfoSuccess event) {
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        FragmentUtils.safeLaunchDialogFragment(
+                PostCheckoutDialogFragment.newInstance(mBooking, event.getPostCheckoutInfo()),
+                getActivity(),
+                PostCheckoutDialogFragment.TAG
+        );
+        returnToPage(MainViewPage.SCHEDULED_JOBS, mBooking.getStartDate().getTime(),
+                TransitionStyle.REFRESH_PAGE);
+    }
+
+    @Subscribe
+    public void onReceivePostCheckoutInfoError(
+            final BookingEvent.ReceivePostCheckoutInfoError event) {
+        showToast(R.string.check_out_success, Toast.LENGTH_LONG);
+        returnToPage(MainViewPage.SCHEDULED_JOBS, mBooking.getStartDate().getTime(),
+                TransitionStyle.REFRESH_PAGE);
+    }
+
     private void addTaskItem(String taskText) {
         // 6 total items, 3 on the left and 3 on the right. Anytime there are more, we replace the
         // last item in the second column with a string of the number of items that aren't being
@@ -243,22 +262,6 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.CheckOutSubmitted(mBooking, locationData)));
         mBookingManager.requestNotifyCheckOut(bookingId, checkoutRequest);
-    }
-
-    private void showCheckoutRatingFlowIfNeeded() {
-        if (mConfigManager.getConfigurationResponse() != null &&
-                mConfigManager.getConfigurationResponse().isCheckoutRatingFlowEnabled()) {
-            RateBookingDialogFragment rateBookingDialogFragment = new RateBookingDialogFragment();
-            Bundle arguments = new Bundle();
-            arguments.putSerializable(BundleKeys.BOOKING, mBooking);
-            rateBookingDialogFragment.setArguments(arguments);
-            try {
-                rateBookingDialogFragment.show(getFragmentManager(), RateBookingDialogFragment.FRAGMENT_TAG);
-            }
-            catch (IllegalStateException e) {
-                Crashlytics.logException(e);
-            }
-        }
     }
 
     private void handleNotifyCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event) {
