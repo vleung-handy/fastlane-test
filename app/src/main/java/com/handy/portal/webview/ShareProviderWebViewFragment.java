@@ -90,7 +90,7 @@ public class ShareProviderWebViewFragment extends PortalWebViewFragment {
             final ProviderProfile profile = mProviderManager.getCachedProviderProfile();
 
             final String channel = ShareUtils.getChannelFromIntent(getContext(), intent);
-            if (channel.equalsIgnoreCase(ShareUtils.CHANNEL_TWITTER)
+            if (ShareUtils.CHANNEL_TWITTER.equalsIgnoreCase(channel)
                     && profile != null && profile.getReferralInfo() != null) {
                 intent.putExtra(Intent.EXTRA_TEXT, getString(
                         R.string.profile_share_twitter_text_formatted,
