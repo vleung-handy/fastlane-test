@@ -58,6 +58,9 @@ import butterknife.OnClick;
 public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     private static final int CURRENT_WEEK_INDEX = 0;
     private static final int NEXT_WEEK_INDEX = 1;
+
+    //Used for displaying the max number of weeks in the tab
+    private static final int MAX_NUM_WEEKS = 2;
     @Inject
     ProviderManager mProviderManager;
 
@@ -198,7 +201,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     private AvailabilityTimelinesWrapper createNextWeekTimelinesFromCurrentWeek() {
         final AvailabilityTimelinesWrapper timelinesWrapper = new AvailabilityTimelinesWrapper();
         final WeeklyAvailabilityTimelinesWrapper currentWeekTimelines =
-                mProviderAvailability.getWeeklyAvailabilityTimelinesWrappers()
+                mProviderAvailability.getWeeklyAvailabilityTimelinesWrappers(MAX_NUM_WEEKS)
                         .get(CURRENT_WEEK_INDEX);
         final Calendar currentWeekDate = Calendar.getInstance(Locale.US);
         final Date startDate = currentWeekTimelines.getStartDate();
@@ -302,10 +305,10 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
 
     private void displayTabs() {
         final WeeklyAvailabilityTimelinesWrapper currentWeekTimelines =
-                mProviderAvailability.getWeeklyAvailabilityTimelinesWrappers()
+                mProviderAvailability.getWeeklyAvailabilityTimelinesWrappers(MAX_NUM_WEEKS)
                         .get(CURRENT_WEEK_INDEX);
         final WeeklyAvailabilityTimelinesWrapper nextWeekTimelines =
-                mProviderAvailability.getWeeklyAvailabilityTimelinesWrappers().get(NEXT_WEEK_INDEX);
+                mProviderAvailability.getWeeklyAvailabilityTimelinesWrappers(MAX_NUM_WEEKS).get(NEXT_WEEK_INDEX);
         final int selectedTabPosition = mTabLayout.getSelectedTabPosition();
         mTabLayout.removeAllTabs();
         mTabLayout.setupWithViewPager(mViewPager);
@@ -361,7 +364,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
                    final DateClickListener dateClickListener) {
             mViews = new ArrayList<>();
             for (WeeklyAvailabilityTimelinesWrapper weeklyAvailabilityTimelinesWrapper :
-                    providerAvailability.getWeeklyAvailabilityTimelinesWrappers()) {
+                    providerAvailability.getWeeklyAvailabilityTimelinesWrappers(MAX_NUM_WEEKS)) {
                 mViews.add(new WeeklyAvailableHoursView(context, weeklyAvailabilityTimelinesWrapper,
                         dateClickListener));
             }
