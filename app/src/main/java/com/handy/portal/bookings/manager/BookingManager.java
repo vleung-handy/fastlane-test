@@ -23,7 +23,6 @@ import com.handy.portal.core.model.LocationData;
 import com.handy.portal.core.model.TypeSafeMap;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.onboarding.model.claim.JobClaim;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 
@@ -44,8 +43,11 @@ public class BookingManager {
 
     public static final String DISMISSAL_REASON_UNSPECIFIED = "unspecified";
     public static final String DISMISSAL_REASON_BLOCK_CUSTOMER = "do_not_want_this_customer";
+
+
     @StringDef({DISMISSAL_REASON_UNSPECIFIED, DISMISSAL_REASON_BLOCK_CUSTOMER})
     public @interface DismissalReason {}
+
 
     private final EventBus mBus;
     private final DataManager mDataManager;
@@ -463,10 +465,6 @@ public class BookingManager {
                 mBus.post(new BookingEvent.ReceivePostCheckoutInfoError());
             }
         });
-    }
-
-    public void sendPostCheckoutInfo(final String bookingId, final boolean customerPreferred, final ArrayList<JobClaim> jobClaims, final String feedback) {
-        // FIXME: Implement
     }
 
     public void requestNotifyUpdateArrivalTime(final String bookingId, final Booking.ArrivalTimeOption arrivalTimeOption) {

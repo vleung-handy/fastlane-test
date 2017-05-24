@@ -5,6 +5,7 @@ import com.handy.portal.announcements.model.CurrentAnnouncementsRequest;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.core.model.ProviderSettings;
 import com.handy.portal.location.model.LocationBatchUpdate;
+import com.handy.portal.onboarding.model.claim.JobClaim;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.payments.model.BatchPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingPaymentReviewRequest;
@@ -246,6 +247,16 @@ public interface HandyRetrofitService {
 
     @GET(BOOKINGS_PATH + "{booking_id}/post_checkout")
     void requestPostCheckoutInfo(@Path("booking_id") String bookingId, HandyRetrofitCallback cb);
+
+    @FormUrlEncoded
+    @POST(BOOKINGS_PATH + "{booking_id}/post_checkout")
+    void submitPostCheckoutInfo(
+            @Path("booking_id") String bookingId,
+            @Field("customer_preferred") boolean customerPreferred,
+            @Field("selected_jobs[]") ArrayList<JobClaim> jobClaims,
+            @Field("feedback") String feedback,
+            HandyRetrofitCallback cb
+    );
 
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/customer_no_show")

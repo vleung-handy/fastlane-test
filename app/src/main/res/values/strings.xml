@@ -612,11 +612,6 @@
     <string name="post_checkout_feedback_prompt"><![CDATA[Sorry you didn\'t enjoy working with this client. <b>We will never send you back.</b>]]></string>
     <string name="post_checkout_feedback_hint">If you\'d like, please let us know what went wrong.</string>
     <string name="post_checkout_claim_subtitle">You\'ll be able to see further requests from this client in your Requests tab.</string>
-    <plurals name="claim_jobs_success_formatted">
-        <item quantity="zero">Sorry, we weren\'t able to add any of the jobs to your schedule.</item>
-        <item quantity="one">Awesome! We added the job to your schedule.</item>
-        <item quantity="other">Awesome! We added the jobs to your schedule.</item>
-    </plurals>
 
     <!-- Pro Pics -->
     <string name="edit_photo">Edit Photo</string>

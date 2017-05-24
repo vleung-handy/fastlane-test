@@ -11,6 +11,7 @@ import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
+import com.handy.portal.bookings.model.PostCheckoutResponse;
 import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.core.model.LoginDetails;
 import com.handy.portal.core.model.ProviderProfile;
@@ -79,6 +80,13 @@ class BookingHandyRetroFitCallback extends TypedHandyRetrofitCallback<Booking> {
 
 class PostCheckoutInfoHandyRetrofitCallback extends TypedHandyRetrofitCallback<PostCheckoutInfo> {
     PostCheckoutInfoHandyRetrofitCallback(DataManager.Callback callback) {
+        super(callback);
+    }
+}
+
+
+class PostCheckoutResponseHandyRetrofitCallback extends TypedHandyRetrofitCallback<PostCheckoutResponse> {
+    PostCheckoutResponseHandyRetrofitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }

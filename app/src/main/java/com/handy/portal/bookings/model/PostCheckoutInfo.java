@@ -10,8 +10,8 @@ public class PostCheckoutInfo implements Serializable {
     private User mCustomer;
     @SerializedName("suggested_jobs")
     private List<Booking> mSuggestedJobs;
-    @SerializedName("total_potential_value")
-    private int mTotalPotentialValueCents;
+    @SerializedName("total_potential_cents")
+    private int mTotalPotentialCents;
 
     public User getCustomer() {
         return mCustomer;
@@ -21,7 +21,7 @@ public class PostCheckoutInfo implements Serializable {
         return mSuggestedJobs;
     }
 
-    public int getTotalPotentialValueCents() {
-        return mTotalPotentialValueCents;
+    public int getTotalPotentialCents() {
+        return mTotalPotentialCents;
     }
 }

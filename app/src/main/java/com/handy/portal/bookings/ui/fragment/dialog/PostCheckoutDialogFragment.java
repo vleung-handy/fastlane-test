@@ -7,6 +7,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,14 +21,14 @@ import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
+import com.handy.portal.bookings.model.PostCheckoutResponse;
 import com.handy.portal.bookings.ui.element.PostCheckoutRequestedBookingElementView;
 import com.handy.portal.core.constant.BundleKeys;
-import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.data.DataManager;
+import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.UIUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.CheckOutFlowLog;
 import com.handy.portal.onboarding.model.claim.JobClaim;
 import com.handy.portal.onboarding.ui.view.SelectableJobsViewGroup;
 import com.handy.portal.onboarding.viewmodel.BookingViewModel;
@@ -35,7 +36,6 @@ import com.handy.portal.onboarding.viewmodel.BookingsWrapperViewModel;
 import com.handy.portal.payments.model.PaymentInfo;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -62,6 +62,8 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
     EventBus mBus;
     @Inject
     BookingManager mBookingManager;
+    @Inject
+    DataManager mDataManager;
 
     @BindView(R.id.post_checkout_scroll_view)
     ScrollView mScrollView;
@@ -115,7 +117,6 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
         mBooking = (Booking) getArguments().getSerializable(BundleKeys.BOOKING);
         mPostCheckoutInfo = (PostCheckoutInfo) getArguments()
                 .getSerializable(KEY_POST_CHECKOUT_INFO);
-        mBus.register(this);
     }
 
     @NonNull
@@ -154,7 +155,7 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
                 R.string.post_checkout_booking_amount_formatted,
                 CurrencyUtils.formatPriceWithoutCents(paymentToProvider.getAmount(), currencySymbol)
         ));
-        if (bonusPaymentToProvider != null) {
+        if (bonusPaymentToProvider != null && bonusPaymentToProvider.getAmount() > 0) {
             mBookingBonusAmountText.setText(getString(
                     R.string.post_checkout_booking_bonus_amount_formatted,
                     CurrencyUtils.formatPriceWithoutCents(
@@ -205,7 +206,7 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
                 R.string.post_checkout_claim_prompt_formatted,
                 mPostCheckoutInfo.getCustomer().getFirstName(),
                 CurrencyUtils.formatPriceWithoutCents(
-                        mPostCheckoutInfo.getTotalPotentialValueCents(),
+                        mPostCheckoutInfo.getTotalPotentialCents(),
                         paymentToProvider.getCurrencySymbol()
                 )
         );
@@ -229,12 +230,6 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
         }
     }
 
-    @Override
-    public void onDestroy() {
-        mBus.unregister(this);
-        super.onDestroy();
-    }
-
     @OnClick(R.id.submit_button)
     public void onSubmitButtonClicked() {
         if (mCustomerPreferred != null) {
@@ -253,8 +248,19 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
             else {
                 feedback = mFeedbackEditText.getText().toString();
             }
-            mBookingManager.sendPostCheckoutInfo(
-                    mBooking.getId(), mCustomerPreferred, jobClaims, feedback
+            mDataManager.submitPostCheckoutInfo(
+                    mBooking.getId(), mCustomerPreferred, jobClaims, feedback,
+                    new FragmentSafeCallback<PostCheckoutResponse>(this) {
+                        @Override
+                        public void onCallbackSuccess(final PostCheckoutResponse response) {
+                            onSubmitPostCheckoutInfoSuccess(response);
+                        }
+
+                        @Override
+                        public void onCallbackError(final DataManager.DataManagerError error) {
+                            onSubmitPostCheckoutInfoError(error);
+                        }
+                    }
             );
             showLoadingOverlay();
         }
@@ -299,40 +305,32 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
         mScrollView.smoothScrollTo(0, (int) mCustomerPreferenceSection.getY());
     }
 
-    @Subscribe
-    public void onReceiveClaimJobsSuccess(final HandyEvent.ReceiveClaimJobsSuccess event) {
+    private void onSubmitPostCheckoutInfoSuccess(final PostCheckoutResponse response) {
         hideLoadingOverlay();
-        final int claimedJobsCount = event.getJobClaimResponse().getJobs().size();
-        UIUtils.showToast(getActivity(),
-                getResources().getQuantityString(R.plurals.claim_jobs_success_formatted,
-                        claimedJobsCount));
-
-        final List<Booking> bookings = new ArrayList<>();
-
-        // Logging
-        for (BookingClaimDetails claimDetails : event.getJobClaimResponse().getJobs()) {
-            final Booking booking = claimDetails.getBooking();
-            bookings.add(booking);
-            mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.ClaimSuccess(booking)));
-        }
-        if (!bookings.isEmpty()) {
-            mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.ClaimBatchSuccess(bookings)));
-            final List<Date> dates = new ArrayList<>();
-            for (Booking booking : bookings) {
-                dates.add(booking.getStartDate());
-            }
-            // Trigger Schedule Refresh
-            mBookingManager.requestScheduledBookings(dates, false);
-        }
-
+        UIUtils.showToast(getActivity(), response.getMessage());
+        refreshScheduleDates(response);
         dismiss();
     }
 
-    @Subscribe
-    public void onReceiveClaimJobsError(final HandyEvent.ReceiveClaimJobsError event) {
+    private void refreshScheduleDates(final PostCheckoutResponse response) {
+        final List<Date> datesToRefresh = new ArrayList<>();
+        if (response.getJobs() != null) {
+            for (BookingClaimDetails claimDetails : response.getJobs()) {
+                final Booking booking = claimDetails.getBooking();
+                datesToRefresh.add(booking.getStartDate());
+            }
+        }
+        if (!datesToRefresh.isEmpty()) {
+            mBookingManager.requestScheduledBookings(datesToRefresh, false);
+        }
+    }
+
+    private void onSubmitPostCheckoutInfoError(final DataManager.DataManagerError error) {
         hideLoadingOverlay();
-        mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.ClaimBatchFailure()));
-        UIUtils.showToast(getActivity(), getString(R.string.an_error_has_occurred));
+        final String errorMessage = TextUtils.isEmpty(error.getMessage()) ?
+                getString(R.string.an_error_has_occurred) : error.getMessage();
+        UIUtils.showToast(getActivity(), errorMessage);
+        dismiss();
     }
 
     @Override
