@@ -16,6 +16,25 @@ public class ProviderAvailability implements Serializable {
         return mWeeklyAvailabilityTimelinesWrappers;
     }
 
+    /**
+     *
+     * @param maxWeeks Cap the number of items returned to max
+     * @return
+     */
+    public ArrayList<WeeklyAvailabilityTimelinesWrapper> getWeeklyAvailabilityTimelinesWrappers(int maxWeeks) {
+        if(mWeeklyAvailabilityTimelinesWrappers == null || maxWeeks >= mWeeklyAvailabilityTimelinesWrappers.size())
+            return mWeeklyAvailabilityTimelinesWrappers;
+        else {
+            ArrayList<WeeklyAvailabilityTimelinesWrapper> cappedWeeks = new ArrayList<>();
+            //get the number of weeks up to max weeks
+            for(int i=0; i < maxWeeks; i++) {
+                cappedWeeks.add(mWeeklyAvailabilityTimelinesWrappers.get(i));
+            }
+
+            return cappedWeeks;
+        }
+    }
+
     @Nullable
     public DailyAvailabilityTimeline getAvailabilityForDate(final Date date) {
         final WeeklyAvailabilityTimelinesWrapper weeklyAvailabilityTimelinesWrapper =
