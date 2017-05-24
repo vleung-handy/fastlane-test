@@ -1,6 +1,6 @@
 package com.handy.portal.core.manager;
 
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.core.event.HandyEvent;
@@ -49,11 +49,10 @@ public class ConfigManager {
         }
     }
 
-    //TODO: should we break this down into methods to get specific fields or just give them the object?
-    @Nullable
+    @NonNull
     public ConfigurationResponse getConfigurationResponse() {
         if (mConfigurationResponse == null) {
-            Crashlytics.logException(new RuntimeException("Configuration is null"));
+            mConfigurationResponse = new ConfigurationResponse();
         }
         return mConfigurationResponse;
     }
