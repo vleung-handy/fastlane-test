@@ -29,7 +29,6 @@ import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.core.model.LocationData;
-import com.handy.portal.core.model.ProBookingFeedback;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.core.ui.view.CheckoutCompletedTaskView;
 import com.handy.portal.library.util.DateTimeUtils;
@@ -159,8 +158,9 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     public void completeCheckout() {
         LocationData locationData = getLocationData();
         String noteToCustomer = mSendNoteEditText.getText().toString();
-        CheckoutRequest checkoutRequest = new CheckoutRequest(locationData,
-                new ProBookingFeedback(-1, ""), noteToCustomer, mBooking.getCustomerPreferences());
+        CheckoutRequest checkoutRequest = new CheckoutRequest(
+                locationData, noteToCustomer, mBooking.getCustomerPreferences()
+        );
         requestNotifyCheckOutJob(mBooking.getId(), checkoutRequest);
     }
 
