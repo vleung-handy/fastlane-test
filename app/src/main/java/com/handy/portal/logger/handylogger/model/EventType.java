@@ -12,4 +12,14 @@ public interface EventType {
     String CLAIM_SUBMITTED = "claim_submitted";
     String CLAIM_SUCCESS = "claim_success";
     String CLAIM_ERROR = "claim_error";
+
+    String CONTINUE_TO_CHECKOUT_SELECTED = "continue_to_checkout_selected";
+    String RECEIPT_SHOWN = "receipt_shown";
+    String MANUAL_CHECKOUT_SUBMITTED = "manual_checkout_submitted";
+    String MANUAL_CHECKOUT_SUCCESS = "manual_checkout_success";
+    String MANUAL_CHECKOUT_ERROR = "manual_checkout_error";
+    String CUSTOMER_PREFERENCE_SHOWN = "customer_preference_shown";
+    String POST_CHECKOUT_SUBMITTED = "post_checkout_submitted";
+    String POST_CHECKOUT_SUCCESS = "post_checkout_success";
+    String POST_CHECKOUT_ERROR = "post_checkout_error";
 }

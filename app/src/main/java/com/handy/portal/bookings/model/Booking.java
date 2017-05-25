@@ -910,6 +910,10 @@ public class Booking implements Comparable<Booking>, Serializable {
         public void setInstructionCompleted(boolean instructionCompleted) {
             mInstructionCompleted = instructionCompleted;
         }
+
+        public boolean isInstructionCompleted() {
+            return mInstructionCompleted;
+        }
     }
 
 

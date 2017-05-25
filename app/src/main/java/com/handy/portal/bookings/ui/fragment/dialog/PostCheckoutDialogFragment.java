@@ -26,11 +26,17 @@ import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.bookings.model.PostCheckoutResponse;
 import com.handy.portal.bookings.ui.element.PostCheckoutRequestedBookingElementView;
 import com.handy.portal.core.constant.BundleKeys;
+import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.UIUtils;
+import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.CheckOutFlowLog;
+import com.handy.portal.logger.handylogger.model.EventContext;
+import com.handy.portal.logger.handylogger.model.EventType;
+import com.handy.portal.logger.handylogger.model.JobsLog;
 import com.handy.portal.onboarding.model.claim.JobClaim;
 import com.handy.portal.onboarding.ui.view.SelectableJobsViewGroup;
 import com.handy.portal.onboarding.viewmodel.BookingViewModel;
@@ -66,6 +72,8 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
     BookingManager mBookingManager;
     @Inject
     DataManager mDataManager;
+    @Inject
+    ProviderManager mProviderManager;
 
     @BindView(R.id.post_checkout_scroll_view)
     ScrollView mScrollView;
@@ -149,6 +157,9 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
         initCustomerPreferenceSection();
         initJobsList();
         initFeedbackHeader();
+        mBus.post(new LogEvent.AddLogEvent(
+                new CheckOutFlowLog(EventType.CUSTOMER_PREFERENCE_SHOWN, mBooking)
+        ));
     }
 
     private void initHeader() {
@@ -237,36 +248,72 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
     @OnClick(R.id.submit_button)
     public void onSubmitButtonClicked() {
         if (mCustomerPreferred != null) {
-            ArrayList<JobClaim> jobClaims = null;
-            String feedback = null;
+            final ArrayList<JobClaim> jobClaims = new ArrayList<>();
+            final String feedback = mFeedbackEditText.getText().toString();
             if (mCustomerPreferred) {
                 final List<Booking> selectedBookings = getSelectedBookings();
                 if (!selectedBookings.isEmpty()) {
-                    jobClaims = new ArrayList<>();
                     for (Booking booking : selectedBookings) {
                         final String jobType = booking.getType().name().toLowerCase();
                         jobClaims.add(new JobClaim(booking.getId(), jobType));
                     }
                 }
             }
-            else {
-                feedback = mFeedbackEditText.getText().toString();
-            }
+            showLoadingOverlay();
             mDataManager.submitPostCheckoutInfo(
                     mBooking.getId(), mCustomerPreferred, jobClaims, feedback,
                     new FragmentSafeCallback<PostCheckoutResponse>(this) {
                         @Override
                         public void onCallbackSuccess(final PostCheckoutResponse response) {
+                            mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.PostCheckoutLog(
+                                    EventType.POST_CHECKOUT_SUCCESS,
+                                    mBooking,
+                                    mCustomerPreferred,
+                                    feedback,
+                                    jobClaims.size()
+                            )));
+                            logClaims(response.getClaims());
                             onSubmitPostCheckoutInfoSuccess(response);
                         }
 
                         @Override
                         public void onCallbackError(final DataManager.DataManagerError error) {
+                            mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.PostCheckoutLog(
+                                    EventType.POST_CHECKOUT_ERROR,
+                                    mBooking,
+                                    mCustomerPreferred,
+                                    feedback,
+                                    jobClaims.size()
+                            )));
                             onSubmitPostCheckoutInfoError(error);
                         }
                     }
             );
-            showLoadingOverlay();
+            mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.PostCheckoutLog(
+                    EventType.POST_CHECKOUT_SUBMITTED,
+                    mBooking,
+                    mCustomerPreferred,
+                    feedback,
+                    jobClaims.size()
+            )));
+        }
+    }
+
+    private void logClaims(final List<BookingClaimDetails> claims) {
+        if (claims != null) {
+            final String providerId = mProviderManager.getLastProviderId();
+            for (final BookingClaimDetails claimDetails : claims) {
+                final Booking booking = claimDetails.getBooking();
+                if (booking.inferBookingStatus(providerId)
+                        == Booking.BookingStatus.CLAIMED) {
+                    mBus.post(new LogEvent.AddLogEvent(new JobsLog(EventType.CLAIM_SUCCESS,
+                            EventContext.CHECKOUT_FLOW, booking)));
+                }
+                else {
+                    mBus.post(new LogEvent.AddLogEvent(new JobsLog(EventType.CLAIM_ERROR,
+                            EventContext.CHECKOUT_FLOW, booking)));
+                }
+            }
         }
     }
 
@@ -280,6 +327,9 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
             mJobsSection.setVisibility(View.GONE);
             mFeedbackSection.setVisibility(View.VISIBLE);
             updateSubmitButton();
+            mBus.post(new LogEvent.AddLogEvent(
+                    new CheckOutFlowLog.CustomerPreferenceSelected(mBooking, false)
+            ));
         }
     }
 
@@ -294,6 +344,14 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
             mFeedbackSection.setVisibility(View.GONE);
             mJobsSection.setVisibility(View.VISIBLE);
             updateSubmitButton();
+            mBus.post(new LogEvent.AddLogEvent(
+                    new CheckOutFlowLog.CustomerPreferenceSelected(mBooking, true)
+            ));
+            mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.UpcomingJobsShown(
+                    mBooking,
+                    mPostCheckoutInfo.getSuggestedJobs().size(),
+                    mPostCheckoutInfo.getTotalPotentialCents() / 100)
+            ));
         }
     }
 
@@ -327,8 +385,8 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
 
     private void refreshScheduleDates(final PostCheckoutResponse response) {
         final List<Date> datesToRefresh = new ArrayList<>();
-        if (response.getJobs() != null) {
-            for (BookingClaimDetails claimDetails : response.getJobs()) {
+        if (response.getClaims() != null) {
+            for (BookingClaimDetails claimDetails : response.getClaims()) {
                 final Booking booking = claimDetails.getBooking();
                 datesToRefresh.add(booking.getStartDate());
             }

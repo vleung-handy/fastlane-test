@@ -441,14 +441,14 @@ public class BookingManager {
         mDataManager.notifyCheckOutBooking(bookingId, checkoutRequest, new DataManager.Callback<Booking>() {
             @Override
             public void onSuccess(Booking booking) {
-                mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(booking));
+                mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(booking, checkoutRequest));
                 invalidateScheduledBookingCache(
                         DateTimeUtils.getDateWithoutTime(booking.getStartDate()));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error) {
-                mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutError(error));
+                mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutError(error, checkoutRequest));
             }
         });
     }

@@ -36,4 +36,12 @@ public class CheckoutRequest {
         mNoteToCustomer = noteToCustomer;
         mCustomerPreferences = customerPreferences;
     }
+
+    public String getNoteToCustomer() {
+        return mNoteToCustomer;
+    }
+
+    public List<Booking.BookingInstructionUpdateRequest> getCustomerPreferences() {
+        return mCustomerPreferences;
+    }
 }
