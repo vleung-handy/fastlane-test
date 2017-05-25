@@ -42,13 +42,15 @@ public class CheckOutFlowLog extends EventLog {
             mNoteToCustomer = checkoutRequest.getNoteToCustomer();
             mCompletedTaskCount = 0;
             mCompletedTasks = new ArrayList<>();
-            for (final Booking.BookingInstructionUpdateRequest request :
-                    checkoutRequest.getCustomerPreferences()) {
-                if (request.isInstructionCompleted()) {
-                    mCompletedTaskCount++;
-                    mCompletedTasks.add(request.getMachineName());
-                }
+            if (checkoutRequest.getCustomerPreferences() != null) {
+                for (final Booking.BookingInstructionUpdateRequest request :
+                        checkoutRequest.getCustomerPreferences()) {
+                    if (request.isInstructionCompleted()) {
+                        mCompletedTaskCount++;
+                        mCompletedTasks.add(request.getMachineName());
+                    }
 
+                }
             }
         }
     }

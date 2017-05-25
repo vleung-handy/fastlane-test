@@ -1,6 +1,5 @@
 package com.handy.portal.bookings.model;
 
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
@@ -23,12 +22,14 @@ public class CheckoutRequest {
     private List<Booking.BookingInstructionUpdateRequest> mCustomerPreferences;
 
 
-    public CheckoutRequest(@NonNull LocationData locationData,
+    public CheckoutRequest(@Nullable LocationData locationData,
                            @Nullable String noteToCustomer,
                            @Nullable List<Booking.BookingInstructionUpdateRequest> customerPreferences) {
-        mLatitude = locationData.getLocationMap().get(LocationKey.LATITUDE);
-        mLongitude = locationData.getLocationMap().get(LocationKey.LONGITUDE);
-        mAccuracy = locationData.getLocationMap().get(LocationKey.ACCURACY);
+        if (locationData != null) {
+            mLatitude = locationData.getLocationMap().get(LocationKey.LATITUDE);
+            mLongitude = locationData.getLocationMap().get(LocationKey.LONGITUDE);
+            mAccuracy = locationData.getLocationMap().get(LocationKey.ACCURACY);
+        }
         mNoteToCustomer = noteToCustomer;
         mCustomerPreferences = customerPreferences;
     }
@@ -37,6 +38,7 @@ public class CheckoutRequest {
         return mNoteToCustomer;
     }
 
+    @Nullable
     public List<Booking.BookingInstructionUpdateRequest> getCustomerPreferences() {
         return mCustomerPreferences;
     }
