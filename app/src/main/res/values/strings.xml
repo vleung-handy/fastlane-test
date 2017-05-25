@@ -482,10 +482,10 @@
     <string name="sign_here">Sign Here</string>
     <string name="clear_signature">clear signature</string>
     <string name="use_finger_to_sign">use your finger to sign</string>
-    <string name="complete_checkout">Complete checkout</string>
+    <string name="complete_checkout">Complete Check Out</string>
     <string name="job_started">Job started:</string>
     <string name="see_job_details">see job details</string>
-    <string name="continue_to_check_out">Continue to check out </string>
+    <string name="continue_to_check_out">Continue to Check Out</string>
 
     <string name="job_no_longer_available">That job is no longer available.</string>
     <string name="environment">Environment</string>
