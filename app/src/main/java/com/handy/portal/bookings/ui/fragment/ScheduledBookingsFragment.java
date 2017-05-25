@@ -225,6 +225,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
                 && getArguments().getBoolean(DeeplinkUtils.DEEP_LINK_AVAILABLE_HOURS, false)) {
             navigateToEditWeeklyAvailableHours();
         }
+
+        initializeSelectedDate();
     }
 
     @Override
@@ -256,8 +258,6 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         super.onCreateView(inflater, container, savedInstanceState);
         final View view = inflater.inflate((R.layout.fragment_scheduled_bookings), null);
         ButterKnife.bind(this, view);
-
-        initializeSelectedDate();
 
         mRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -292,6 +292,18 @@ public class ScheduledBookingsFragment extends ActionBarFragment
                 }
                 catch (Exception e) {
                     Crashlytics.logException(e);
+                }
+            } else {
+                //This is used to get the deep link date. This date will be the selected date
+                final String date = getArguments().getString(BundleKeys.DATE);
+
+                if(!TextUtils.isEmpty(date)) {
+                    try {
+                        mSelectedDay = DateTimeUtils.ISO8601_FORMATTER2.parse(date);
+                    }
+                    catch (Exception e) {
+                        Crashlytics.logException(e);
+                    }
                 }
             }
         }
@@ -337,13 +349,20 @@ public class ScheduledBookingsFragment extends ActionBarFragment
 
             final int position = mDatesPagerAdapter.getItemPositionWithDate(mSelectedDay);
             if (position != DatesPagerAdapter.POSITION_NOT_FOUND) {
+
+                //remove listener so it won't trigger since we're setting the date on the next section
+                mDatesViewPager.removeOnPageChangeListener(mDatesPageChangeListener);
                 mDatesViewPager.setCurrentItem(position);
+                //Add this back so that selecting will work now
+                mDatesViewPager.addOnPageChangeListener(mDatesPageChangeListener);
             }
+
             final NewDateButton dateButton =
                     mDatesPagerAdapter.getDateButtonForDate(mSelectedDay);
             if (dateButton != null) {
                 dateButton.select();
             }
+
 
             requestProviderAvailability();
             setAvailableHoursBannerVisibility();

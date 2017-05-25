@@ -6,6 +6,7 @@ import android.widget.LinearLayout;
 
 import com.google.common.collect.Lists;
 import com.handy.portal.bookings.ui.adapter.DatesPagerAdapter;
+import com.handy.portal.library.util.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -44,7 +45,8 @@ public class NewDateButtonGroup extends LinearLayout
     }
 
     public NewDateButton getDateButtonForDate(final Date date) {
-        return mDateButtons.get(date);
+        //We only care about the date, the time info will be ignored
+        return mDateButtons.get(DateTimeUtils.getDateWithoutTime(date));
     }
 
     public void clearSelection() {

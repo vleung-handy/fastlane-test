@@ -51,6 +51,8 @@ public final class DateTimeUtils {
             new SimpleDateFormat("MMM yyyy", Locale.getDefault());
     public final static SimpleDateFormat ISO8601_FORMATTER =
             new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'", Locale.getDefault());
+    public final static SimpleDateFormat ISO8601_FORMATTER2 =
+            new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.getDefault());
     public final static SimpleDateFormat LOCAL_TIME_12_HOURS =
             new SimpleDateFormat("hh:mm a", Locale.getDefault());
 
