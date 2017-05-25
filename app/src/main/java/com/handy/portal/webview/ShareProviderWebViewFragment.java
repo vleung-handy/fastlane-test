@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.RequestCode;
@@ -42,7 +43,12 @@ public class ShareProviderWebViewFragment extends PortalWebViewFragment {
 
         // This will be used by PortalWebViewFragment to populate the web view and title
         Bundle args = getArguments();
-        args.putString(BundleKeys.TARGET_URL, profile.getReferralInfo().getProfileUrl() + "?hide_header=1");
+        if (profile != null && profile.getReferralInfo() != null) {
+            args.putString(BundleKeys.TARGET_URL, profile.getReferralInfo().getProfileUrl() + "?hide_header=1");
+        }
+        else {
+            Crashlytics.log("Provider Profile or ReferralInfo is null");
+        }
         args.putString(BundleKeys.TITLE, getString(R.string.profile_your_public_profile));
     }
 
@@ -84,7 +90,8 @@ public class ShareProviderWebViewFragment extends PortalWebViewFragment {
             final ProviderProfile profile = mProviderManager.getCachedProviderProfile();
 
             final String channel = ShareUtils.getChannelFromIntent(getContext(), intent);
-            if (channel.equalsIgnoreCase(ShareUtils.CHANNEL_TWITTER)) {
+            if (ShareUtils.CHANNEL_TWITTER.equalsIgnoreCase(channel)
+                    && profile != null && profile.getReferralInfo() != null) {
                 intent.putExtra(Intent.EXTRA_TEXT, getString(
                         R.string.profile_share_twitter_text_formatted,
                         profile.getReferralInfo().getProfileUrl())
