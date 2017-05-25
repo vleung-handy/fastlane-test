@@ -15,11 +15,10 @@
         android:layout_alignParentTop="true"
         >
 
-        <!-- The 1280dp minHeight is needed for auto-scroll animations -->
         <LinearLayout
+            android:id="@+id/post_checkout_scroll_view_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="1280dp"
             android:orientation="vertical"
             >
 

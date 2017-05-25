@@ -3,11 +3,13 @@ package com.handy.portal.bookings.ui.fragment.dialog;
 import android.app.Dialog;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.text.Html;
 import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,6 +69,8 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
 
     @BindView(R.id.post_checkout_scroll_view)
     ScrollView mScrollView;
+    @BindView(R.id.post_checkout_scroll_view_content)
+    ViewGroup mScrollViewContent;
     @BindView(R.id.post_checkout_header)
     ViewGroup mHeader;
     @BindView(R.id.post_checkout_customer_preference_section)
@@ -302,7 +306,16 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
     }
 
     private void scrollToCustomerPreferenceSection() {
-        mScrollView.smoothScrollTo(0, (int) mCustomerPreferenceSection.getY());
+        final DisplayMetrics displayMetrics = new DisplayMetrics();
+        getActivity().getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        mScrollViewContent.setMinimumHeight(mHeader.getHeight() + displayMetrics.heightPixels);
+        // This delay allows the view height adjustment to take effect before the scrolling
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mScrollView.smoothScrollTo(0, (int) mCustomerPreferenceSection.getY());
+            }
+        }, 100);
     }
 
     private void onSubmitPostCheckoutInfoSuccess(final PostCheckoutResponse response) {
