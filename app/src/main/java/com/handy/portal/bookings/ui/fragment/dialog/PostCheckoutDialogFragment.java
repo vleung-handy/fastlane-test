@@ -24,6 +24,7 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.bookings.model.PostCheckoutResponse;
+import com.handy.portal.bookings.model.PostCheckoutSubmission;
 import com.handy.portal.bookings.ui.element.PostCheckoutRequestedBookingElementView;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.manager.ProviderManager;
@@ -261,7 +262,8 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
             }
             showLoadingOverlay();
             mDataManager.submitPostCheckoutInfo(
-                    mBooking.getId(), mCustomerPreferred, jobClaims, feedback,
+                    mBooking.getId(),
+                    new PostCheckoutSubmission(mCustomerPreferred, jobClaims, feedback),
                     new FragmentSafeCallback<PostCheckoutResponse>(this) {
                         @Override
                         public void onCallbackSuccess(final PostCheckoutResponse response) {

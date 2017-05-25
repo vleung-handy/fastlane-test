@@ -13,6 +13,7 @@ import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.bookings.model.PostCheckoutResponse;
+import com.handy.portal.bookings.model.PostCheckoutSubmission;
 import com.handy.portal.core.constant.LocationKey;
 import com.handy.portal.core.constant.ProviderKey;
 import com.handy.portal.core.model.ConfigurationResponse;
@@ -31,7 +32,6 @@ import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.notification.model.NotificationMessages;
-import com.handy.portal.onboarding.model.claim.JobClaim;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 import com.handy.portal.payments.model.AnnualPaymentSummaries;
@@ -247,8 +247,8 @@ public class DataManager {
         mService.requestPostCheckoutInfo(bookingId, new PostCheckoutInfoHandyRetrofitCallback(cb));
     }
 
-    public void submitPostCheckoutInfo(final String bookingId, final boolean customerPreferred, final ArrayList<JobClaim> jobClaims, final String feedback, final Callback<PostCheckoutResponse> cb) {
-        mService.submitPostCheckoutInfo(bookingId, customerPreferred, jobClaims, feedback, new PostCheckoutResponseHandyRetrofitCallback(cb));
+    public void submitPostCheckoutInfo(final String bookingId, final PostCheckoutSubmission postCheckoutSubmission, final Callback<PostCheckoutResponse> cb) {
+        mService.submitPostCheckoutInfo(bookingId, postCheckoutSubmission, new PostCheckoutResponseHandyRetrofitCallback(cb));
     }
 
     public void notifyUpdateArrivalTimeBooking(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption, final Callback<Booking> cb) {
