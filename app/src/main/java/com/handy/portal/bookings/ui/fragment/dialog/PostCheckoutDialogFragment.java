@@ -217,20 +217,30 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
     }
 
     private void initJobsListTexts() {
-        final PaymentInfo paymentToProvider = mBooking.getPaymentToProvider();
-        final String htmlString = getString(
-                R.string.post_checkout_claim_prompt_formatted,
-                mPostCheckoutInfo.getCustomer().getFirstName(),
-                CurrencyUtils.formatPriceWithoutCents(
-                        mPostCheckoutInfo.getTotalPotentialCents(),
-                        paymentToProvider.getCurrencySymbol()
-                )
-        );
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
-            mClaimPromptText.setText(Html.fromHtml(htmlString));
+        final int totalPotentialCents = mPostCheckoutInfo.getTotalPotentialCents();
+        if (totalPotentialCents > 0) {
+            final PaymentInfo paymentToProvider = mBooking.getPaymentToProvider();
+            final String htmlString = getString(
+                    R.string.post_checkout_claim_prompt_formatted,
+                    mPostCheckoutInfo.getCustomer().getFirstName(),
+                    CurrencyUtils.formatPriceWithoutCents(
+                            totalPotentialCents,
+                            paymentToProvider.getCurrencySymbol()
+                    )
+            );
+            if (Build.VERSION.SDK_INT < Build.VERSION_CODES.N) {
+                mClaimPromptText.setText(Html.fromHtml(htmlString));
+            }
+            else {
+                mClaimPromptText.setText(Html.fromHtml(htmlString, Html.FROM_HTML_MODE_LEGACY));
+            }
         }
         else {
-            mClaimPromptText.setText(Html.fromHtml(htmlString, Html.FROM_HTML_MODE_LEGACY));
+            mClaimPromptText.setText(getResources().getQuantityString(
+                    R.plurals.post_checkout_claim_prompt_default_formatted,
+                    mPostCheckoutInfo.getSuggestedJobs().size(),
+                    mPostCheckoutInfo.getCustomer().getFirstName()
+            ));
         }
         mClaimPromptText.setVisibility(View.VISIBLE);
         mClaimPromptSubtext.setVisibility(View.VISIBLE);

@@ -607,6 +607,10 @@
     <string name="post_checkout_booking_amount_formatted">You made %1$s</string>
     <string name="post_checkout_booking_bonus_amount_formatted">\u0020+ %s reward</string>
     <string name="post_checkout_no_jobs_formatted">Great! When %1$s has more available jobs, you\'ll see them in your Requests tab.</string>
+    <plurals name="post_checkout_claim_prompt_default_formatted">
+        <item quantity="one">Confirm your next booking with %1$s:</item>
+        <item quantity="other">Confirm your next bookings with %1$s:</item>
+    </plurals>
     <string name="post_checkout_claim_prompt_formatted"><![CDATA[Bring your total earnings with %1$s up to <b>%2$s</b> with these jobs:]]></string>
     <string name="post_checkout_preference_prompt_formatted">Would you like to work with %1$s again?</string>
     <string name="post_checkout_feedback_prompt"><![CDATA[Sorry you didn\'t enjoy working with this client. <b>We will never send you back.</b>]]></string>
