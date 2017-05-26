@@ -32,7 +32,6 @@ import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.notification.model.NotificationMessages;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
-import com.handy.portal.payments.model.AnnualPaymentSummaries;
 import com.handy.portal.payments.model.BatchPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingTransactions;
@@ -203,10 +202,6 @@ public class DataManager {
 
     public void getPaymentBatches(Date startDate, Date endDate, final Callback<PaymentBatches> cb) {
         mService.getPaymentBatches(startDate, endDate, new PaymentBatchesRetroFitCallback(cb));
-    }
-
-    public void getAnnualPaymentSummaries(final Callback<AnnualPaymentSummaries> cb) {
-        mService.getAnnualPaymentSummaries(new AnnualPaymentSummariesRetroFitCallback(cb));
     }
 
     public void getPaymentOutstandingFees(final Callback<PaymentOutstandingFees> cb) {

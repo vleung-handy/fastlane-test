@@ -1,6 +1,7 @@
 package com.handy.portal.payments.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,11 +14,14 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
+import com.handy.portal.data.DataManager;
+import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.util.TextUtils;
-import com.handy.portal.payments.PaymentEvent;
+import com.handy.portal.payments.PaymentsManager;
+import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.Transaction;
 
-import org.greenrobot.eventbus.Subscribe;
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,6 +34,9 @@ public class BookingTransactionsWrapperFragment extends ActionBarFragment {
     View mFetchErrorView;
     @BindView(R.id.fetch_error_text)
     TextView mErrorText;
+
+    @Inject
+    PaymentsManager mPaymentsManager;
 
     private String mRequestedBookingId;
     private String mRequestedBookingType;
@@ -59,14 +66,7 @@ public class BookingTransactionsWrapperFragment extends ActionBarFragment {
     @Override
     public void onResume() {
         super.onResume();
-        bus.register(this);
         requestBookingPaymentDetails();
-    }
-
-    @Override
-    public void onPause() {
-        bus.unregister(this);
-        super.onPause();
     }
 
     @OnClick(R.id.try_again_button)
@@ -74,11 +74,10 @@ public class BookingTransactionsWrapperFragment extends ActionBarFragment {
         requestBookingPaymentDetails();
     }
 
-    @Subscribe
-    public void onReceiveBookingDetailsSuccess(PaymentEvent.ReceiveBookingPaymentDetailsSuccess event) {
+    private void onReceiveBookingDetailsSuccess(@NonNull BookingTransactions bookingTransactions) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        Booking booking = event.mBookingTransactions.getBooking();
-        Transaction[] transactions = event.mBookingTransactions.getTransactions();
+        Booking booking = bookingTransactions.getBooking();
+        Transaction[] transactions = bookingTransactions.getTransactions();
         if (booking == null || transactions == null) {
             Crashlytics.log("Either booking or transactions is null in onReceiveBookingDetailsSuccess");
             onReceiveBookingDetailsError(null);
@@ -87,14 +86,13 @@ public class BookingTransactionsWrapperFragment extends ActionBarFragment {
 
         FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
         transaction.replace(mContainer.getId(),
-                BookingTransactionsFragment.newInstance(event.mBookingTransactions)).commit();
+                BookingTransactionsFragment.newInstance(bookingTransactions)).commit();
     }
 
-    @Subscribe
-    public void onReceiveBookingDetailsError(PaymentEvent.ReceiveBookingPaymentDetailsError event) {
+    private void onReceiveBookingDetailsError(@NonNull DataManager.DataManagerError error) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        if (event != null && event.error != null && !TextUtils.isNullOrEmpty(event.error.getMessage())) {
-            mErrorText.setText(event.error.getMessage());
+        if (!TextUtils.isNullOrEmpty(error.getMessage())) {
+            mErrorText.setText(error.getMessage());
         }
         else {
             mErrorText.setText(R.string.error_fetching_connectivity_issue);
@@ -105,6 +103,21 @@ public class BookingTransactionsWrapperFragment extends ActionBarFragment {
     private void requestBookingPaymentDetails() {
         mFetchErrorView.setVisibility(View.GONE);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new PaymentEvent.RequestBookingPaymentDetails(mRequestedBookingId, mRequestedBookingType));
+
+        mPaymentsManager.onRequestBookingPaymentDetails(
+                mRequestedBookingId,
+                mRequestedBookingType,
+                new FragmentSafeCallback<BookingTransactions>(this) {
+                    @Override
+                    public void onCallbackSuccess(BookingTransactions response) {
+                        onReceiveBookingDetailsSuccess(response);
+                    }
+
+                    @Override
+                    public void onCallbackError(DataManager.DataManagerError error) {
+                        onReceiveBookingDetailsError(error);
+                    }
+                }
+        );
     }
 }

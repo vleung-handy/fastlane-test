@@ -6,7 +6,6 @@ import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
 import com.handy.portal.core.model.SuccessWrapper;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.payments.model.AnnualPaymentSummaries;
 import com.handy.portal.payments.model.BatchPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingTransactions;
@@ -22,6 +21,7 @@ import com.stripe.android.model.Token;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -81,25 +81,17 @@ public class PaymentsManager {
         }
     }
 
-    @Subscribe
-    public void onRequestBookingPaymentDetails(final PaymentEvent.RequestBookingPaymentDetails event) {
-        mDataManager.getBookingTransactions(event.bookingId, event.bookingType.toLowerCase(), new DataManager.Callback<BookingTransactions>() {
-            @Override
-            public void onSuccess(BookingTransactions response) {
-                mBus.post(new PaymentEvent.ReceiveBookingPaymentDetailsSuccess(response));
-            }
-
-            @Override
-            public void onError(DataManager.DataManagerError error) {
-                mBus.post(new PaymentEvent.ReceiveBookingPaymentDetailsError(error));
-            }
-        });
+    public void onRequestBookingPaymentDetails(@NonNull final String bookingId,
+                                               @NonNull final String bookingType,
+                                               @NonNull final DataManager.Callback<BookingTransactions> callback) {
+        mDataManager.getBookingTransactions(bookingId, bookingType.toLowerCase(), callback);
     }
 
-    @Subscribe
-    public void onRequestPaymentBatches(final PaymentEvent.RequestPaymentBatches event) {
+    public void requestPaymentBatches(@NonNull final Date startDate,
+                                      @NonNull final Date endDate,
+                                      @NonNull final DataManager.Callback<PaymentBatches> callback) {
         //assuming startDate is inclusive and endDate is inclusive
-        mDataManager.getPaymentBatches(event.startDate, event.endDate, new DataManager.Callback<PaymentBatches>() {
+        mDataManager.getPaymentBatches(startDate, endDate, new DataManager.Callback<PaymentBatches>() {
             @Override
             public void onSuccess(PaymentBatches paymentBatches) {
                 //for now, filter non-legacy payment batches to remove empty groups until server side changes are made
@@ -114,27 +106,12 @@ public class PaymentsManager {
                     }
                     neoPaymentBatch.setPaymentGroups(paymentGroupList.toArray(new PaymentGroup[paymentGroupList.size()]));
                 }
-                mBus.post(new PaymentEvent.ReceivePaymentBatchesSuccess(paymentBatches, event.startDate, event.endDate, event.isInitialBatchRequest, event.callerIdentifier));
+                callback.onSuccess(paymentBatches);
             }
 
             @Override
             public void onError(DataManager.DataManagerError error) {
-                mBus.post(new PaymentEvent.ReceivePaymentBatchesError(error));
-            }
-        });
-    }
-
-    @Subscribe
-    public void onRequestAnnualPaymentSummaries(final PaymentEvent.RequestAnnualPaymentSummaries event) {
-        mDataManager.getAnnualPaymentSummaries(new DataManager.Callback<AnnualPaymentSummaries>() {
-            @Override
-            public void onSuccess(AnnualPaymentSummaries annualPaymentSummaries) {
-                mBus.post(new PaymentEvent.ReceiveAnnualPaymentSummariesSuccess(annualPaymentSummaries));
-            }
-
-            @Override
-            public void onError(DataManager.DataManagerError error) {
-                mBus.post(new PaymentEvent.ReceiveAnnualPaymentSummariesError(error));
+                callback.onError(error);
             }
         });
     }
