@@ -9,7 +9,6 @@ import android.widget.Toast;
 import com.handy.portal.R;
 import com.handy.portal.core.constant.FormDefinitionKey;
 import com.handy.portal.core.constant.MainViewPage;
-import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.RegionDefinitionEvent;
 import com.handy.portal.core.event.StripeEvent;
 import com.handy.portal.core.manager.ProviderManager;
@@ -59,6 +58,11 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment {
     //TODO: create a state manager object
     private boolean receivedDebitCardRecipientSuccess;
     private boolean receivedDebitCardForChargeSuccess;
+
+    public static PaymentsUpdateDebitCardFragment newInstance()
+    {
+        return new PaymentsUpdateDebitCardFragment();
+    }
 
     @Override
     public void onCreate(Bundle savedInstance) {
@@ -141,7 +145,7 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment {
             }
             bus.post(new StripeEvent.RequestStripeTokenFromDebitCard(debitCardInfo, DEBIT_CARD_FOR_CHARGE_REQUEST_ID));
             bus.post(new StripeEvent.RequestStripeTokenFromDebitCard(debitCardInfo, DEBIT_CARD_RECIPIENT_REQUEST_ID));
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+            showProgressSpinner(true);
         }
         else {
             onFailure(R.string.form_not_filled_out_correctly);
@@ -196,7 +200,7 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment {
 
     private void onFailure(int errorStringId) {
         resetStates();
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        hideProgressSpinner();
         showToast(errorStringId, Toast.LENGTH_LONG);
     }
 
@@ -207,7 +211,7 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment {
     }
 
     private void onSuccess() {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        hideProgressSpinner();
         showToast(R.string.update_debit_card_success, Toast.LENGTH_LONG);
         UIUtils.dismissOnBackPressed(getActivity());
     }

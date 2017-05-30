@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/handy_bg"
+              android:orientation="vertical"
+    >
+
+    <!--fixme make this toolbar reusable-->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/handy_blue"
+        >
+
+        <TextView
+            style="@style/TextView.XLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="@dimen/default_margin"
+            android:layout_marginStart="@dimen/default_margin"
+            android:text="@string/cash_out_now"
+            android:textColor="@color/white"
+            android:textSize="20sp"
+            />
+
+        <ImageView
+            android:id="@+id/payments_cash_out_dismiss_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_gravity="end"
+            android:padding="@dimen/default_padding"
+            android:src="@drawable/ic_x_white"
+            />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout
+            android:id="@+id/payments_cash_out_content_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            >
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        style="@style/TextView.Large.Bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/default_margin_half"
+                        android:layout_marginLeft="@dimen/default_margin"
+                        android:layout_marginRight="@dimen/default_margin"
+                        android:layout_marginTop="@dimen/default_margin"
+                        android:text="@string/payment_cash_out_dialog_title"
+                        />
+
+                    <TextView
+                        android:id="@+id/payments_cash_out_copy_block_1"
+                        style="@style/TextView.Medium"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/default_margin"
+                        android:layout_marginLeft="@dimen/default_margin"
+                        android:layout_marginRight="@dimen/default_margin"
+                        tools:text="Some text"
+                        android:textColorLink="@color/handy_blue"
+                        />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/background_white_bottom_border"
+                        android:orientation="vertical"
+                        android:paddingBottom="@dimen/payment_container_vertical_padding"
+                        android:paddingLeft="@dimen/payment_container_horizontal_padding"
+                        android:paddingRight="@dimen/payment_container_horizontal_padding"
+                        android:paddingTop="@dimen/payment_container_vertical_padding"
+                        >
+
+                        <TextView
+                            style="@style/TextView.Large"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginBottom="@dimen/default_margin_half"
+                            android:text="@string/payment_cash_out_dialog_partial_pay_week"
+                            />
+
+                        <TextView
+                            android:id="@+id/payments_cash_out_date_range_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/default_margin"
+                            tools:text="Some date range"
+                            android:textAppearance="@style/TextView.XLarge.Bold"
+                            />
+
+                        <TableLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:divider="@drawable/divider_gray"
+                            android:showDividers="middle"
+                            android:stretchColumns="1"
+                            >
+
+                            <com.handy.portal.payments.ui.element.PaymentBreakdownLineItemView
+                                android:id="@+id/payments_cash_out_net_earnings_line_item_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:labelText="@string/net_earnings"
+
+                                />
+
+                            <com.handy.portal.payments.ui.element.PaymentBreakdownLineItemView
+                                android:id="@+id/payments_cash_out_fee_line_item_view"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                app:labelText="@string/payment_cash_out_fee"
+
+                                />
+
+                            <TableRow
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:paddingBottom="@dimen/row_margin"
+                                android:paddingTop="@dimen/row_margin"
+                                android:weightSum="2"
+                                >
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center|start"
+                                    android:layout_weight="1"
+                                    android:text="@string/expected_payment"
+                                    android:textColor="@color/black"
+                                    android:textSize="@dimen/default_text_size"
+                                    />
+
+
+                                <TextView
+                                    android:id="@+id/payments_cash_out_expected_payment"
+                                    style="@style/TextView.XXXLarge"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="end|center"
+                                    android:layout_weight="1"
+                                    tools:text="$70.50"
+                                    />
+
+                            </TableRow>
+
+                        </TableLayout>
+
+                        <TextView
+                            android:layout_marginTop="@dimen/default_margin_half"
+                            android:id="@+id/payments_cash_out_copy_block_2"
+                            style="@style/TextView.Medium"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="@string/payment_cash_out_dialog_footer_html"
+                            android:textColorLink="@color/handy_blue"
+                            />
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/payments_cash_out_payment_method_details_button"
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/account_settings_cell_height"
+                        android:layout_marginBottom="@dimen/default_margin"
+                        android:layout_marginTop="@dimen/default_margin"
+                        android:background="@drawable/background_white_bottom_border"
+                        android:clickable="true"
+                        android:padding="@dimen/default_padding"
+                        >
+
+                        <TextView
+                            android:id="@+id/payments_cash_out_payment_method_details"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerVertical="true"
+                            android:textColor="@color/dark_gray"
+                            android:textSize="@dimen/default_text_size"
+                            tools:text="Deposit to account ending in 1234"
+                            />
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="@dimen/default_margin"
+                            android:layout_marginStart="@dimen/default_margin"
+                            android:contentDescription="@string/chevron_description"
+                            android:src="@drawable/ic_chevron_gray"
+                            />
+
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </ScrollView>
+
+            <Button
+                android:id="@+id/payments_cash_out_button"
+                style="@style/Button.Green.Round"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/payment_cash_out_dialog_confirm_button"
+                />
+
+        </LinearLayout>
+
+        <!--loading/error states are going to be made consistent throughout the app and
+        will be refactored in a separate PR. doing what other views are doing for now.-->
+        <include
+            layout="@layout/layout_fetch_error"
+            android:visibility="gone"
+            />
+
+        <include
+            layout="@layout/overlay_loading"
+            android:visibility="gone"
+            />
+    </RelativeLayout>
+
+
+</LinearLayout>

@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="priceCents"
+          format="integer"/>
+    <attr name="priceCurrencySymbol"
+          format="reference|string"/>
     <declare-styleable name="BasicInputTextView">
         <attr name="minLength"
               format="integer"/>
@@ -8,6 +12,13 @@
         <attr name="iconDrawable"
               format="reference"/>
         <attr name="text"
+              format="string"/>
+    </declare-styleable>
+
+    <declare-styleable name="PaymentBreakdownLineItemView">
+        <attr name="labelText"
+              format="string"/>
+        <attr name="helpText"
               format="string"/>
     </declare-styleable>
 </resources>

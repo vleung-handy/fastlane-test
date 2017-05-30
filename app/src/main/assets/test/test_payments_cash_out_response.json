@@ -1,0 +1,14 @@
+{
+  "date_start": "2017-06-05T16:00:00+00:00",
+  "date_end": "2017-06-11T16:12:56+00:00",
+  "net_earnings": 7000,
+  "cash_out_fee": 250,
+  "currency": "USD",
+  "currency_symbol": "$",
+  "expected_payment": 6850,
+  "payment_method_info": {
+    "type": "directdeposit",
+    "last_four": "1234"
+  },
+  "help_center_article_url": "https://help.handy.com/hc/en-us"
+}

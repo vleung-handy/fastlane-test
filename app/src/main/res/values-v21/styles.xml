@@ -41,4 +41,9 @@
            parent="@android:style/Widget.Material.Light.DatePicker">
         <item name="android:headerBackground">@color/handy_blue</item>
     </style>
+
+    <style name="DefaultProgressSpinnerCircle">
+        <item name="colorAccent">@color/handy_blue</item>
+        <!--change color to handy_blue_progress_bar when we consolidate all the progress spinners into one-->
+    </style>
 </resources>

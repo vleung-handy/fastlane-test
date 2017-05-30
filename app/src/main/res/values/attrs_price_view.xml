@@ -1,0 +1,18 @@
+<resources>
+    <declare-styleable name="PriceView">
+        <attr name="priceShowZeroCents"
+              format="boolean"
+            />
+
+        <attr name="cardinalTextAppearance"
+              format="reference"
+            />
+        <attr name="decimalTextAppearance"
+              format="reference"
+            />
+
+        <!--for layout preview purposes-->
+        <attr name="priceCurrencySymbol"/>
+        <attr name="priceCents"/>
+    </declare-styleable>
+</resources>

@@ -63,10 +63,16 @@ public class ConfigurationResponse {
     @SerializedName("schedule_tab_requests_enabled")
     private boolean mScheduleTabRequestedEnabled;
 
+    @SerializedName("daily_pro_payments_enabled")
+    private boolean mDailyProPaymentsEnabled;
+
     @SerializedName("template_availability_enabled")
     private boolean mTemplateAvailabilityEnabled;
 
     // Getters
+    public boolean isDailyProPaymentsEnabled() {
+        return true;
+    }
 
     public boolean areAnnouncementsEnabled() {
         return mAnnouncementsEnabled;

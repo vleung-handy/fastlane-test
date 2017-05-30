@@ -1,0 +1,50 @@
+{
+  "payments_batches": [
+    {
+      "batch_id": 1234,
+      "start_date": "2017-05-29T23:59:59-04:00",
+      "end_date": "2017-06-04T23:59:59-04:00",
+      "expected_deposit_date": "2017-06-12T23:59:59-04:00",
+      "status": "In Review",
+      "last4": "1234",
+      "currency_symbol": "$",
+      "num_completed_jobs": 1,
+      "num_withholdings": 0,
+      "net_earnings_total_amount": 1000,
+      "gross_earnings_total_amount": 1000,
+      "withholdings_total_amount": 0,
+      "remaining_withholding_amount": 0,
+      "payment_groups": [
+        {
+          "label": "Completed Jobs",
+          "machine_name": "completed_jobs",
+          "amount": 1000,
+          "payments": [
+            {
+              "amount": 1000,
+              "booking_id": 8215036,
+              "booking_type": "booking",
+              "currency_symbol": "$",
+              "date": "2017-05-30T23:59:59-04:00",
+              "subtitle": "4:00 pm \u22c5 3 hours",
+              "title": "Xanadu"
+            }
+          ]
+        },
+        {
+          "label": "Other Earnings",
+          "machine_name": "other",
+          "amount": 0,
+          "payments": []
+        },
+        {
+          "label": "Fees",
+          "machine_name": "withholdings",
+          "amount": 0,
+          "payments": []
+        }
+      ]
+    }
+  ],
+  "legacy_payments_batches": []
+}

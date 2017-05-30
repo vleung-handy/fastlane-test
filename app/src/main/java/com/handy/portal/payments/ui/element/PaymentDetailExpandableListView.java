@@ -11,6 +11,7 @@ import android.widget.LinearLayout;
 import com.handy.portal.R;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.ui.adapter.PaymentDetailExpandableListAdapter;
+import com.handy.portal.payments.viewmodel.PaymentDetailHeaderViewModel;
 
 public class PaymentDetailExpandableListView extends ExpandableListView {
     /**
@@ -66,12 +67,14 @@ public class PaymentDetailExpandableListView extends ExpandableListView {
         return mPaymentSupportButton;
     }
 
-    public void updateData(@NonNull NeoPaymentBatch neoPaymentBatch) {
+    public void updateData(@NonNull NeoPaymentBatch neoPaymentBatch, boolean cashOutButtonVisible) {
         PaymentDetailExpandableListAdapter itemsAdapter = new PaymentDetailExpandableListAdapter(
                 neoPaymentBatch);
         setAdapter(itemsAdapter);
 
-        mPaymentsDetailListHeaderView.updateDisplay(neoPaymentBatch);
+        PaymentDetailHeaderViewModel paymentDetailHeaderViewModel
+                = new PaymentDetailHeaderViewModel(neoPaymentBatch, cashOutButtonVisible);
+        mPaymentsDetailListHeaderView.updateDisplay(paymentDetailHeaderViewModel);
         /*
         the visibility of the payment support button is not updated here
         because it depends on things this view is not responsible for (the callback)

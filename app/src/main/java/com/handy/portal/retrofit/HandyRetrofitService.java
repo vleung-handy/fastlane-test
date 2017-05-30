@@ -10,6 +10,7 @@ import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.payments.model.BatchPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingPaymentReviewRequest;
+import com.handy.portal.payments.model.PaymentCashOutRequest;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -127,6 +128,12 @@ public interface HandyRetrofitService {
                     @Field("customer_id") String customerId,
                     @Field("dismissal_reason_machine_name") String dismissalReason,
                     HandyRetrofitCallback cb);
+
+    @GET(PAYMENTS_PATH + "cash_out")
+    void getPaymentCashOutInfo(HandyRetrofitCallback cb);
+
+    @POST(PAYMENTS_PATH + "cash_out")
+    void requestPaymentCashOut(@Body PaymentCashOutRequest paymentCashOutRequest, HandyRetrofitCallback cb);
 
     @GET(PAYMENTS_PATH)
     void getPaymentBatches(@Query("date_range_start") Date startDate,

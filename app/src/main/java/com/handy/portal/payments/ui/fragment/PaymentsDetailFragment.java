@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
@@ -16,6 +17,7 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.model.ProviderProfile;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
@@ -38,6 +40,7 @@ import com.handy.portal.payments.model.PaymentReviewResponse;
 import com.handy.portal.payments.model.PaymentSupportItem;
 import com.handy.portal.payments.ui.element.PaymentDetailExpandableListView;
 import com.handy.portal.payments.ui.element.PaymentsDetailListHeaderView;
+import com.handy.portal.payments.ui.fragment.dialog.PaymentCashOutDialogFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentFailedDialogFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportReasonsDialogFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportRequestReviewDialogFragment;
@@ -52,7 +55,8 @@ import butterknife.ButterKnife;
 public final class PaymentsDetailFragment extends ActionBarFragment
         implements ExpandableListView.OnChildClickListener,
         PaymentSupportReasonsDialogFragment.Callback,
-        PaymentSupportRequestReviewDialogFragment.Callback {
+        PaymentSupportRequestReviewDialogFragment.Callback,
+        PaymentCashOutDialogFragment.OnCashOutSuccessListener{
     @BindView(R.id.payments_detail_list_view)
     PaymentDetailExpandableListView paymentDetailExpandableListView; //using ExpandableListView because it is the only ListView that offers group view support
     @BindView(R.id.fragment_payments_detail_content)
@@ -65,6 +69,8 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     ProviderManager mProviderManager;
     @Inject
     PaymentsManager mPaymentsManager;
+    @Inject
+    ConfigManager mConfigManager;
     @Inject
     EventBus mBus;
 
@@ -100,7 +106,8 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         paymentDetailExpandableListView.setOnChildClickListener(this);
-        paymentDetailExpandableListView.updateData(mNeoPaymentBatch);
+        paymentDetailExpandableListView.updateData(mNeoPaymentBatch,
+                mConfigManager.getConfigurationResponse().isDailyProPaymentsEnabled());
         paymentDetailExpandableListView.getPaymentSupportButton().setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -136,6 +143,18 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         }
         else //if not failed
         {
+            paymentDetailExpandableListView.getHeaderView().setOnCashOutButtonClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    mBus.post(new LogEvent.AddLogEvent(
+                            new PaymentsLog.CashOutEarlySelected()));
+                    FragmentUtils.safeLaunchDialogFragment(
+                            PaymentCashOutDialogFragment.newInstance(),
+                            PaymentsDetailFragment.this,
+                            PaymentCashOutDialogFragment.TAG,
+                            true);
+                }
+            });
             if (mNeoPaymentBatch.getPaymentSupportItems() == null
                     || mNeoPaymentBatch.getPaymentSupportItems().length == 0) {
                 //don't show any payment supports that are based on the payment support items
@@ -310,5 +329,12 @@ public final class PaymentsDetailFragment extends ActionBarFragment
                         R.drawable.ic_exclaimation_red).show();
             }
         });
+    }
+
+    @Override
+    public void onCashOutSuccess(@NonNull final String message) {
+        //parent fragment is null, not payments fragment, so can't use its callback
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.PAYMENTS, false));
     }
 }

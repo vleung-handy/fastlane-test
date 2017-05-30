@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
@@ -19,6 +20,7 @@ import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.ui.element.PaymentsBatchListHeaderView;
 import com.handy.portal.payments.ui.element.PaymentsBatchListItemView;
+import com.handy.portal.payments.viewmodel.PaymentBatchListHeaderViewModel;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -34,8 +36,12 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
     @Inject
     EventBus mBus;
 
+    @Inject
+    ConfigManager mConfigManager;
+
     public static final int DAYS_TO_REQUEST_PER_BATCH = 28;
     private Date nextRequestEndDate;
+    private View.OnClickListener mOnCashOutButtonClickedListener;
 
     //TODO: we don't need to keep track of oldest date when we can use new pagination API that allows us to get the N next batches
 
@@ -119,6 +125,16 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
         return 2;
     }
 
+    /**
+     * the cash out dialog fragment needs to be launched by a fragment
+     * so that callbacks can be properly handled
+     * @param onClickListener
+     */
+    public void setCashOutButtonClickedListener(View.OnClickListener onClickListener)
+    {
+        mOnCashOutButtonClickedListener = onClickListener;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v;
@@ -140,7 +156,19 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
                 v = convertView;
             }
 
-            ((PaymentsBatchListHeaderView) v).updateDisplay((NeoPaymentBatch) paymentBatch);
+            PaymentsBatchListHeaderView paymentsBatchListHeaderView
+                    = ((PaymentsBatchListHeaderView) v);
+
+            PaymentBatchListHeaderViewModel paymentBatchListHeaderViewModel
+                    = new PaymentBatchListHeaderViewModel((NeoPaymentBatch) paymentBatch,
+                    mConfigManager.getConfigurationResponse().isDailyProPaymentsEnabled());
+
+            paymentsBatchListHeaderView.updateDisplay(paymentBatchListHeaderViewModel);
+
+            mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.PageShown(
+                    paymentBatchListHeaderViewModel.shouldShowCashOutButton())));
+
+            paymentsBatchListHeaderView.setOnCashOutButtonClickedListener(mOnCashOutButtonClickedListener);
         }
         else {
             if (convertView == null || !(convertView instanceof PaymentsBatchListItemView)) {

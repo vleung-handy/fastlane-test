@@ -173,6 +173,15 @@
             </TableRow>
 
         </TableLayout>
+
+        <Button
+            android:id="@+id/payments_batch_list_current_week_cash_out_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cash_out_now"
+            style="@style/Button.Green.Round"
+            />
+
     </LinearLayout>
 
     <include layout="@layout/element_payment_outstanding_fees"/>

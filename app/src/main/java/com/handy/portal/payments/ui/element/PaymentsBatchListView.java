@@ -130,4 +130,13 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
         return getWrappedAdapter().getNextRequestEndDate();
     }
 
+    /**
+     * the cash out dialog fragment needs to be launched by a fragment
+     * so that callbacks can be properly handled
+     * @param onCashOutButtonClickedListener
+     */
+    public void setCashOutButtonClickedListener(OnClickListener onCashOutButtonClickedListener)
+    {
+        getWrappedAdapter().setCashOutButtonClickedListener(onCashOutButtonClickedListener);
+    }
 }

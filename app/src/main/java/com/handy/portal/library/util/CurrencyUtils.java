@@ -1,5 +1,8 @@
 package com.handy.portal.library.util;
 
+import android.support.annotation.NonNull;
+
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
 
@@ -12,6 +15,23 @@ public class CurrencyUtils {
         final DecimalFormat decimalFormat = new DecimalFormat("#,##0");
         decimalFormat.setRoundingMode(RoundingMode.DOWN);
         return sign + currencySymbol + decimalFormat.format(Math.abs(price));
+    }
+
+    public static String formatPrice(final int priceCents,
+                                     @NonNull final String currencySymbol,
+                                     boolean shouldDisplayEmptyDecimals)
+    {
+        DecimalFormat decimalFormat;
+        if (!shouldDisplayEmptyDecimals && priceCents % 100 == 0) {
+            decimalFormat = new DecimalFormat();
+            decimalFormat.setMaximumFractionDigits(0);
+        }
+        else {
+            decimalFormat = new DecimalFormat("0.00");
+        }
+        decimalFormat.setPositivePrefix(currencySymbol);
+        decimalFormat.setNegativePrefix("-" + currencySymbol);
+        return decimalFormat.format(new BigDecimal(priceCents).movePointLeft(2));
     }
 
     public static String formatPriceWithCents(final int priceCents, final String currencyChar) {

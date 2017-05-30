@@ -10,7 +10,6 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.core.constant.FormDefinitionKey;
 import com.handy.portal.core.constant.MainViewPage;
-import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.RegionDefinitionEvent;
 import com.handy.portal.core.event.StripeEvent;
 import com.handy.portal.core.manager.ProviderManager;
@@ -54,6 +53,11 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment {
 
     private static final String FORM_KEY = FormDefinitionKey.UPDATE_BANK_INFO;
 
+    public static PaymentsUpdateBankAccountFragment newInstance()
+    {
+        return new PaymentsUpdateBankAccountFragment();
+    }
+
     @Override
     public void onCreate(Bundle savedInstance) {
         super.onCreate(savedInstance);
@@ -62,11 +66,9 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
-
-        View view = inflater.inflate(R.layout.fragment_payments_update_bank_account, container, false);
+        ViewGroup view = (ViewGroup) super.onCreateView(inflater, container, savedInstanceState);
+        view.addView(inflater.inflate(R.layout.fragment_payments_update_bank_account, container, false));
         ButterKnife.bind(this, view);
-
         return view;
     }
 
@@ -137,7 +139,7 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment {
                 bankAccountInfo.setCountry(providerPersonalInfo.getAddress().getCountry());
             }
             bus.post(new StripeEvent.RequestStripeTokenFromBankAccount(bankAccountInfo));
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+            showProgressSpinner(true);
         }
         else {
             onFailure(R.string.form_not_filled_out_correctly);
@@ -172,7 +174,7 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment {
     }
 
     private void onFailure(int errorStringId) {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        hideProgressSpinner();
         showToast(errorStringId, Toast.LENGTH_LONG);
     }
 
@@ -184,7 +186,7 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment {
     @Subscribe
     public void onReceiveCreateBankAccountSuccess(PaymentEvent.ReceiveCreateBankAccountSuccess event) {
         if (event.successfullyCreated) {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+            hideProgressSpinner();
             showToast(R.string.update_bank_account_success, Toast.LENGTH_LONG);
             UIUtils.dismissOnBackPressed(getActivity());
         }
