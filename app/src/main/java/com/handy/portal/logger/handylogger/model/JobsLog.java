@@ -19,6 +19,8 @@ public class JobsLog extends EventLog {
     private String mBookingId;
     @SerializedName("booking_type")
     private String mBookingType;
+    @SerializedName("user_id")
+    private String mUserId;
     @SerializedName("service_id")
     private String mServiceId;
     @SerializedName("region_id")
@@ -81,6 +83,7 @@ public class JobsLog extends EventLog {
         super(eventType, eventContext);
         mBookingId = booking.getId();
         mBookingType = booking.getType().name().toLowerCase();
+        mUserId = booking.getUser() != null ? booking.getUser().getId() : null;
         mServiceId = booking.getService();
         mRegionId = booking.getRegionId();
         mZipCode = getZipCode(booking.getAddress());

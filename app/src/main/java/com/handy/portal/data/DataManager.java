@@ -12,6 +12,8 @@ import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
+import com.handy.portal.bookings.model.PostCheckoutResponse;
+import com.handy.portal.bookings.model.PostCheckoutSubmission;
 import com.handy.portal.core.constant.LocationKey;
 import com.handy.portal.core.constant.ProviderKey;
 import com.handy.portal.core.model.ConfigurationResponse;
@@ -245,16 +247,16 @@ public class DataManager {
         mService.requestPostCheckoutInfo(bookingId, new PostCheckoutInfoHandyRetrofitCallback(cb));
     }
 
+    public void submitPostCheckoutInfo(final String bookingId, final PostCheckoutSubmission postCheckoutSubmission, final Callback<PostCheckoutResponse> cb) {
+        mService.submitPostCheckoutInfo(bookingId, postCheckoutSubmission, new PostCheckoutResponseHandyRetrofitCallback(cb));
+    }
+
     public void notifyUpdateArrivalTimeBooking(String bookingId, Booking.ArrivalTimeOption arrivalTimeOption, final Callback<Booking> cb) {
         mService.updateArrivalTime(bookingId, arrivalTimeOption.getValue(), new BookingHandyRetroFitCallback(cb));
     }
 
     public void reportNoShow(String bookingId, TypeSafeMap<ProviderKey> params, Callback<Booking> cb) {
         mService.reportNoShow(bookingId, params.toStringMap(), new BookingHandyRetroFitCallback(cb));
-    }
-
-    public void rateCustomer(String bookingId, int rating, String reviewText, Callback<Void> cb) {
-        mService.rateCustomer(bookingId, rating, reviewText, new EmptyHandyRetroFitCallback(cb));
     }
 
     public void requestPinCode(String phoneNumber, final Callback<SuccessWrapper> cb) {

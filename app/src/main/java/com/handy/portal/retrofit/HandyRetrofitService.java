@@ -3,6 +3,7 @@ package com.handy.portal.retrofit;
 import com.google.gson.JsonObject;
 import com.handy.portal.announcements.model.CurrentAnnouncementsRequest;
 import com.handy.portal.bookings.model.CheckoutRequest;
+import com.handy.portal.bookings.model.PostCheckoutSubmission;
 import com.handy.portal.core.model.ProviderSettings;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
@@ -247,6 +248,13 @@ public interface HandyRetrofitService {
     @GET(BOOKINGS_PATH + "{booking_id}/post_checkout")
     void requestPostCheckoutInfo(@Path("booking_id") String bookingId, HandyRetrofitCallback cb);
 
+    @POST(BOOKINGS_PATH + "{booking_id}/post_checkout")
+    void submitPostCheckoutInfo(
+            @Path("booking_id") String bookingId,
+            @Body PostCheckoutSubmission postCheckoutSubmission,
+            HandyRetrofitCallback cb
+    );
+
     @FormUrlEncoded
     @POST(BOOKINGS_PATH + "{booking_id}/customer_no_show")
     void reportNoShow(@Path("booking_id") String bookingId,
@@ -353,7 +361,6 @@ public interface HandyRetrofitService {
     void requestOnboardingSupplies(@Path("id") String providerId,
                                    @Field("onboarding_supplies") Boolean value,
                                    HandyRetrofitCallback cb);
-
 
 
     @POST("/{before_start_url}")

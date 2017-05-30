@@ -43,8 +43,11 @@ public class BookingManager {
 
     public static final String DISMISSAL_REASON_UNSPECIFIED = "unspecified";
     public static final String DISMISSAL_REASON_BLOCK_CUSTOMER = "do_not_want_this_customer";
+
+
     @StringDef({DISMISSAL_REASON_UNSPECIFIED, DISMISSAL_REASON_BLOCK_CUSTOMER})
     public @interface DismissalReason {}
+
 
     private final EventBus mBus;
     private final DataManager mDataManager;
@@ -438,14 +441,14 @@ public class BookingManager {
         mDataManager.notifyCheckOutBooking(bookingId, checkoutRequest, new DataManager.Callback<Booking>() {
             @Override
             public void onSuccess(Booking booking) {
-                mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(booking));
+                mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutSuccess(booking, checkoutRequest));
                 invalidateScheduledBookingCache(
                         DateTimeUtils.getDateWithoutTime(booking.getStartDate()));
             }
 
             @Override
             public void onError(DataManager.DataManagerError error) {
-                mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutError(error));
+                mBus.post(new HandyEvent.ReceiveNotifyJobCheckOutError(error, checkoutRequest));
             }
         });
     }
@@ -488,20 +491,6 @@ public class BookingManager {
             @Override
             public void onError(DataManager.DataManagerError error) {
                 mBus.post(new HandyEvent.ReceiveReportNoShowError(error));
-            }
-        });
-    }
-
-    public void rateCustomer(final String bookingId, final int rating, final String reviewText) {
-        mDataManager.rateCustomer(bookingId, rating, reviewText, new DataManager.Callback<Void>() {
-            @Override
-            public void onSuccess(Void response) {
-                mBus.post(new BookingEvent.RateCustomerSuccess());
-            }
-
-            @Override
-            public void onError(DataManager.DataManagerError error) {
-                mBus.post(new BookingEvent.RateCustomerError(error));
             }
         });
     }

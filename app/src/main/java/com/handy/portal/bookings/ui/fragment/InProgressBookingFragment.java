@@ -34,7 +34,9 @@ import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.EventContext;
 import com.handy.portal.logger.handylogger.model.EventType;
+import com.handy.portal.logger.handylogger.model.JobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handybook.shared.core.HandyLibrary;
 import com.handybook.shared.layer.LayerConstants;
@@ -224,6 +226,11 @@ public class InProgressBookingFragment extends TimerActionBarFragment {
             Bundle bundle = new Bundle();
             bundle.putSerializable(BundleKeys.BOOKING, mBooking);
             bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SEND_RECEIPT_CHECKOUT, bundle, true));
+            bus.post(new LogEvent.AddLogEvent(new JobsLog(
+                    EventType.CONTINUE_TO_CHECKOUT_SELECTED,
+                    EventContext.SCHEDULED_JOBS,
+                    mBooking
+            )));
         }
         else {
             showToast(getContext().getString(R.string.tap_preferences_before_checkout),

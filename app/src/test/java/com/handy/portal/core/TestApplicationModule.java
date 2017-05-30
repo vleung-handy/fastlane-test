@@ -10,7 +10,6 @@ import com.handy.portal.bookings.ui.fragment.BookingFragment;
 import com.handy.portal.bookings.ui.fragment.InProgressBookingFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
-import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragmentTest;
 import com.handy.portal.clients.ui.fragment.ProRequestedJobsFragment;
 import com.handy.portal.clients.ui.fragment.dialog.SwapBookingClaimDialogFragment;
 import com.handy.portal.core.manager.AppseeManager;
@@ -116,7 +115,6 @@ import static org.mockito.Mockito.when;
         MainActivityTest.class,
         LocationSettingsBlockerDialogFragment.class,
         SendReceiptCheckoutFragment.class,
-        SendReceiptCheckoutFragmentTest.class,
         PaymentBatchListAdapter.class,
         SetupHandler.class,
         BookingDetailsWrapperFragment.class,

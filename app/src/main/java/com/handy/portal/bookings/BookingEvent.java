@@ -56,14 +56,6 @@ public abstract class BookingEvent extends HandyEvent {
     }
 
 
-    public static class RateCustomerSuccess extends ReceiveSuccessEvent {}
-
-
-    public static class RateCustomerError extends ReceiveErrorEvent {
-        public RateCustomerError(DataManager.DataManagerError error) { this.error = error; }
-    }
-
-
     public static class ReceiveProRequestedJobsCountSuccess extends ReceiveSuccessEvent {
         private int mCount;
 

@@ -102,15 +102,11 @@ public class CheckOutTest {
         //complete checkout
         onView(withId(R.id.complete_checkout_button)).perform(click());
 
-        //rate the booking and submit it
-        ViewUtil.waitForViewVisible(R.id.rating_button_5, ViewUtil.LONG_MAX_WAIT_TIME_MS);
-        onView(withId(R.id.rating_button_5)).perform(click());
-        onView(withId(R.id.rate_booking_submit_button)).perform(click());
-
         // If post jobs shows up, skip it
         try {
-            ViewUtil.waitForViewVisible(R.id.claim_button, ViewUtil.LONG_MAX_WAIT_TIME_MS);
-            onView(withId(R.id.claim_button)).perform(click());
+            ViewUtil.waitForViewVisible(R.id.customer_preference_yes, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+            onView(withId(R.id.customer_preference_yes)).perform(click());
+            onView(withId(R.id.submit_button)).perform(click());
         }
         catch (PerformException e) { }
 

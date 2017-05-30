@@ -11,6 +11,7 @@ import com.handy.portal.bookings.model.Booking.Action;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
+import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.core.model.LoginDetails;
 import com.handy.portal.core.model.SuccessWrapper;
@@ -358,8 +359,15 @@ public abstract class HandyEvent {
 
 
     public static class ReceiveNotifyJobCheckOutSuccess extends ReceiveBookingSuccessEvent {
-        public ReceiveNotifyJobCheckOutSuccess(Booking booking) {
+        private CheckoutRequest mCheckoutRequest;
+
+        public ReceiveNotifyJobCheckOutSuccess(Booking booking, CheckoutRequest checkoutRequest) {
+            mCheckoutRequest = checkoutRequest;
             this.booking = booking;
+        }
+
+        public CheckoutRequest getCheckoutRequest() {
+            return mCheckoutRequest;
         }
     }
 
@@ -414,8 +422,15 @@ public abstract class HandyEvent {
 
 
     public static class ReceiveNotifyJobCheckOutError extends ReceiveErrorEvent {
-        public ReceiveNotifyJobCheckOutError(DataManager.DataManagerError error) {
+        private CheckoutRequest mCheckoutRequest;
+
+        public ReceiveNotifyJobCheckOutError(DataManager.DataManagerError error, final CheckoutRequest checkoutRequest) {
+            mCheckoutRequest = checkoutRequest;
             this.error = error;
+        }
+
+        public CheckoutRequest getCheckoutRequest() {
+            return mCheckoutRequest;
         }
     }
 

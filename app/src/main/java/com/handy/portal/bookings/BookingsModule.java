@@ -15,7 +15,6 @@ import com.handy.portal.bookings.ui.fragment.dialog.CustomerNoShowDialogFragment
 import com.handy.portal.bookings.ui.fragment.dialog.EarlyAccessTrialDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.JobAccessUnlockedDialogFragment;
 import com.handy.portal.bookings.ui.fragment.dialog.PostCheckoutDialogFragment;
-import com.handy.portal.bookings.ui.fragment.dialog.RateBookingDialogFragment;
 import com.handy.portal.data.DataManager;
 
 import org.greenrobot.eventbus.EventBus;
@@ -32,7 +31,6 @@ import dagger.Provides;
                 BookingDetailsWrapperFragment.class,
                 ScheduledBookingsFragment.class,
                 AvailableBookingsFragment.class,
-                RateBookingDialogFragment.class,
                 CancellationRequestFragment.class,
                 ConfirmBookingClaimDialogFragment.class,
                 ConfirmBookingCancelKeepRateDialogFragment.class,

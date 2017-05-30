@@ -8,7 +8,6 @@ import java.util.ArrayList;
 public class JobClaimRequest implements Serializable {
     public static class Source {
         public static final String ONBOARDING = "onboarding";
-        public static final String CHECKOUT_FLOW = "checkout_flow";
     }
 
     @SerializedName("jobs")
