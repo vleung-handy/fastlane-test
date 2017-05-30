@@ -49,6 +49,7 @@
                 android:layout_marginRight="@dimen/default_margin"
                 android:layout_marginTop="@dimen/default_margin"
                 android:gravity="start"
+                android:textColorLink="@color/handy_blue"
                 tools:text="Blah blah blah blah blah blah blah blah blah blah blah blah"
                 />
 
