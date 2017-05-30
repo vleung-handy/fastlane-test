@@ -133,9 +133,6 @@ public interface HandyRetrofitService {
                            @Query("date_range_end") Date endDate,
                            HandyRetrofitCallback cb);
 
-    @GET(PAYMENTS_PATH + "annual_summaries")
-    void getAnnualPaymentSummaries(HandyRetrofitCallback cb);
-
     @GET(PAYMENTS_PATH + "requires_update")
     void getNeedsToUpdatePaymentInfo(HandyRetrofitCallback cb);
 

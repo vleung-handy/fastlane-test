@@ -26,7 +26,6 @@ import com.handy.portal.location.scheduler.model.LocationScheduleStrategies;
 import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.notification.model.NotificationMessages;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
-import com.handy.portal.payments.model.AnnualPaymentSummaries;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
 import com.handy.portal.payments.model.PaymentBatches;
@@ -94,13 +93,6 @@ class PostCheckoutResponseHandyRetrofitCallback extends TypedHandyRetrofitCallba
 
 class PaymentBatchesRetroFitCallback extends TypedHandyRetrofitCallback<PaymentBatches> {
     PaymentBatchesRetroFitCallback(DataManager.Callback callback) {
-        super(callback);
-    }
-}
-
-
-class AnnualPaymentSummariesRetroFitCallback extends TypedHandyRetrofitCallback<AnnualPaymentSummaries> {
-    AnnualPaymentSummariesRetroFitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }

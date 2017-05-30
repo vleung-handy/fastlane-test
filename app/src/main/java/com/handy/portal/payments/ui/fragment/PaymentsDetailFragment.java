@@ -287,9 +287,9 @@ public final class PaymentsDetailFragment extends ActionBarFragment
 
         )));
 
-        //TODO: THIS ENDPOINT IS NOT IN PRODUCTION YET
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        mPaymentsManager.submitBatchPaymentReviewRequest(paymentReviewRequest, new FragmentSafeCallback<PaymentReviewResponse>(this) {
+        mPaymentsManager.submitBatchPaymentReviewRequest(paymentReviewRequest,
+                new FragmentSafeCallback<PaymentReviewResponse>(this) {
             @Override
             public void onCallbackSuccess(final PaymentReviewResponse response) {
                 bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
