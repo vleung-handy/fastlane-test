@@ -1,4 +1,4 @@
-package com.handy.portal.proavailability.view;
+package com.handy.portal.availability.view;
 
 import android.content.Context;
 import android.os.Build;
@@ -11,9 +11,9 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.availability.model.Availability;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FontUtils;
-import com.handy.portal.proavailability.model.AvailabilityInterval;
 
 import java.util.List;
 
@@ -24,8 +24,8 @@ import butterknife.ButterKnife;
 public class AvailableHoursView extends FrameLayout {
     @BindView(R.id.title)
     TextView mTitle;
-    @BindView(R.id.timelines)
-    ViewGroup mTimelines;
+    @BindView(R.id.intervals)
+    ViewGroup mIntervals;
     @BindColor(R.color.tertiary_gray)
     int mGrayColor;
 
@@ -55,29 +55,29 @@ public class AvailableHoursView extends FrameLayout {
         ButterKnife.bind(this);
     }
 
-    public void setAvailableHours(@Nullable final List<AvailabilityInterval> availabilities) {
-        mTimelines.removeAllViews();
-        if (availabilities == null || availabilities.isEmpty()) {
+    public void setAvailableHours(@Nullable final List<Availability.Interval> intervals) {
+        mIntervals.removeAllViews();
+        if (intervals == null || intervals.isEmpty()) {
             mTitle.setText(R.string.no_available_hours);
             final TextView textView = new TextView(getContext());
-            textView.setText(availabilities == null ? R.string.set_hours : R.string.not_available);
+            textView.setText(intervals == null ? R.string.set_hours : R.string.not_available);
             textView.setTextColor(mGrayColor);
             textView.setTypeface(FontUtils.getFont(getContext(), FontUtils.CIRCULAR_BOOK));
-            mTimelines.addView(textView);
+            mIntervals.addView(textView);
         }
         else {
             mTitle.setText(R.string.available_hours);
-            for (AvailabilityInterval availability : availabilities) {
-                final TextView timeline = new TextView(getContext());
+            for (Availability.Interval availability : intervals) {
+                final TextView intervalTextView = new TextView(getContext());
                 final String startTimeFormatted =
                         DateTimeUtils.formatDateTo12HourClock(availability.getStartTime());
                 final String endTimeFormatted =
                         DateTimeUtils.formatDateTo12HourClock(availability.getEndTime());
-                timeline.setText(startTimeFormatted + " - " + endTimeFormatted);
-                timeline.setTextColor(mGrayColor);
-                timeline.setTypeface(FontUtils.getFont(getContext(), FontUtils.CIRCULAR_BOOK));
-                timeline.setGravity(Gravity.END);
-                mTimelines.addView(timeline);
+                intervalTextView.setText(startTimeFormatted + " - " + endTimeFormatted);
+                intervalTextView.setTextColor(mGrayColor);
+                intervalTextView.setTypeface(FontUtils.getFont(getContext(), FontUtils.CIRCULAR_BOOK));
+                intervalTextView.setGravity(Gravity.END);
+                mIntervals.addView(intervalTextView);
             }
         }
     }
@@ -91,6 +91,6 @@ public class AvailableHoursView extends FrameLayout {
     private void updateAlpha() {
         float alpha = isEnabled() ? 1.0f : 0.3f;
         mTitle.setAlpha(alpha);
-        mTimelines.setAlpha(alpha);
+        mIntervals.setAlpha(alpha);
     }
 }

@@ -1,4 +1,4 @@
-package com.handy.portal.proavailability.view;
+package com.handy.portal.availability.view;
 
 import android.content.Context;
 import android.support.annotation.AttrRes;
@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.proavailability.viewmodel.TimePickerViewModel;
+import com.handy.portal.availability.viewmodel.TimePickerViewModel;
 
 import java.util.Date;
 

@@ -7,9 +7,9 @@ import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.widget.LinearLayout;
 
-import com.handy.portal.proavailability.viewmodel.TimePickerViewModel;
-import com.handy.portal.proavailability.viewmodel.TimePickerViewModel.SelectionType;
-import com.handy.portal.proavailability.viewmodel.TimePickerViewModel.TimeRange;
+import com.handy.portal.availability.viewmodel.TimePickerViewModel;
+import com.handy.portal.availability.viewmodel.TimePickerViewModel.SelectionType;
+import com.handy.portal.availability.viewmodel.TimePickerViewModel.TimeRange;
 
 import java.util.List;
 

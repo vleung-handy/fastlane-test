@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.google.gson.JsonObject;
 import com.handy.portal.announcements.model.AnnouncementsWrapper;
 import com.handy.portal.announcements.model.CurrentAnnouncementsRequest;
+import com.handy.portal.availability.model.Availability;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.Booking.BookingType;
 import com.handy.portal.bookings.model.BookingClaimDetails;
@@ -45,8 +46,6 @@ import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.model.PaymentReviewResponse;
 import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
 import com.handy.portal.payments.model.StripeTokenResponse;
-import com.handy.portal.proavailability.model.AvailabilityTimelinesWrapper;
-import com.handy.portal.proavailability.model.ProviderAvailability;
 import com.handy.portal.retrofit.DynamicEndpoint;
 import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
@@ -187,11 +186,11 @@ public class DataManager {
         mService.getResupplyKit(providerId, new ResupplyInfoRetrofitCallback(cb));
     }
 
-    public void getProviderAvailability(String providerId, Callback<ProviderAvailability> cb) {
-        mService.getProviderAvailability(providerId, new ProviderAvailabilityRetrofitCallback(cb));
+    public void getConcreteAvailability(String providerId, Callback<Availability.Wrapper.WeekRanges> cb) {
+        mService.getConcreteAvailability(providerId, new WeekRangesWrapperRetrofitCallback(cb));
     }
 
-    public void saveProviderAvailability(String providerId, AvailabilityTimelinesWrapper timelinesWrapper, Callback<Void> cb) {
+    public void saveProviderAvailability(String providerId, Availability.Wrapper.Timelines timelinesWrapper, Callback<Void> cb) {
         mService.saveProviderAvailability(providerId, timelinesWrapper, new EmptyHandyRetroFitCallback(cb));
     }
 

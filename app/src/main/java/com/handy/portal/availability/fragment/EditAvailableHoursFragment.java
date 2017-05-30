@@ -1,4 +1,4 @@
-package com.handy.portal.proavailability.fragment;
+package com.handy.portal.availability.fragment;
 
 import android.app.Activity;
 import android.content.DialogInterface;
@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 
 import com.handy.portal.R;
+import com.handy.portal.availability.model.Availability;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
@@ -27,12 +28,9 @@ import com.handy.portal.library.ui.view.timepicker.HandyTimePicker;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProAvailabilityLog;
-import com.handy.portal.proavailability.model.AvailabilityInterval;
-import com.handy.portal.proavailability.model.AvailabilityTimelinesWrapper;
-import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
-import com.handy.portal.proavailability.view.TimeRangeListView;
-import com.handy.portal.proavailability.viewmodel.TimePickerViewModel;
-import com.handy.portal.proavailability.viewmodel.TimePickerViewModel.SelectionType;
+import com.handy.portal.availability.view.TimeRangeListView;
+import com.handy.portal.availability.viewmodel.TimePickerViewModel;
+import com.handy.portal.availability.viewmodel.TimePickerViewModel.SelectionType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -71,7 +69,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
 
     private String mFlowContext;
     private Date mDate;
-    private DailyAvailabilityTimeline mAvailabilityTimeline;
+    private Availability.Timeline mTimeline;
     private BaseActivity.OnBackPressedListener mOnBackPressedListener;
     private CompoundButton.OnCheckedChangeListener mAvailabilityToggleCheckedChangeListener;
     private TimePickerViewModel mTimePickerViewModel;
@@ -199,16 +197,15 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
 
     @OnClick(R.id.save)
     public void onSave() {
-        final AvailabilityTimelinesWrapper availabilityTimelinesWrapper =
-                getAvailabilityTimelinesWrapperFromViewModel();
-        logSubmit(availabilityTimelinesWrapper);
+        final Availability.Wrapper.Timelines timelinesWrapper = getTimelinesWrapperFromViewModel();
+        logSubmit(timelinesWrapper);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         dataManager.saveProviderAvailability(mProviderManager.getLastProviderId(),
-                availabilityTimelinesWrapper,
+                timelinesWrapper,
                 new FragmentSafeCallback<Void>(this) {
                     @Override
                     public void onCallbackSuccess(final Void response) {
-                        logSuccess(availabilityTimelinesWrapper);
+                        logSuccess(timelinesWrapper);
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         callTargetFragmentResult();
                         ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
@@ -217,7 +214,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
 
                     @Override
                     public void onCallbackError(final DataManager.DataManagerError error) {
-                        logError(availabilityTimelinesWrapper);
+                        logError(timelinesWrapper);
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         String message = error.getMessage();
                         if (TextUtils.isEmpty(message)) {
@@ -228,36 +225,33 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
                 });
     }
 
-    private void logSubmit(final AvailabilityTimelinesWrapper availabilityTimelinesWrapper) {
-        final DailyAvailabilityTimeline timeline =
-                availabilityTimelinesWrapper.getTimelines().get(0);
+    private void logSubmit(final Availability.Wrapper.Timelines timelinesWrapper) {
+        final Availability.Timeline timeline = timelinesWrapper.get().get(0);
         bus.post(new LogEvent.AddLogEvent(
                 new ProAvailabilityLog.SetHoursSubmitted(mFlowContext, timeline.getDateString(),
-                        getIntervalsSum(timeline.getAvailabilityIntervals()),
+                        getIntervalsSum(timeline.getIntervals()),
                         !timeline.hasIntervals())));
     }
 
-    private void logSuccess(final AvailabilityTimelinesWrapper availabilityTimelinesWrapper) {
-        final DailyAvailabilityTimeline timeline =
-                availabilityTimelinesWrapper.getTimelines().get(0);
+    private void logSuccess(final Availability.Wrapper.Timelines timelinesWrapper) {
+        final Availability.Timeline timeline = timelinesWrapper.get().get(0);
         bus.post(new LogEvent.AddLogEvent(
                 new ProAvailabilityLog.SetHoursSuccess(mFlowContext, timeline.getDateString(),
-                        getIntervalsSum(timeline.getAvailabilityIntervals()),
+                        getIntervalsSum(timeline.getIntervals()),
                         !timeline.hasIntervals())));
     }
 
-    private void logError(final AvailabilityTimelinesWrapper availabilityTimelinesWrapper) {
-        final DailyAvailabilityTimeline timeline =
-                availabilityTimelinesWrapper.getTimelines().get(0);
+    private void logError(final Availability.Wrapper.Timelines timelinesWrapper) {
+        final Availability.Timeline timeline = timelinesWrapper.get().get(0);
         bus.post(new LogEvent.AddLogEvent(
                 new ProAvailabilityLog.SetHoursError(mFlowContext, timeline.getDateString(),
-                        getIntervalsSum(timeline.getAvailabilityIntervals()),
+                        getIntervalsSum(timeline.getIntervals()),
                         !timeline.hasIntervals())));
     }
 
-    private int getIntervalsSum(final List<AvailabilityInterval> intervals) {
+    private int getIntervalsSum(final List<Availability.Interval> intervals) {
         int sum = 0;
-        for (final AvailabilityInterval interval : intervals) {
+        for (final Availability.Interval interval : intervals) {
             sum += (interval.getEndHour() - interval.getStartHour());
         }
         return sum;
@@ -266,30 +260,30 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     private void callTargetFragmentResult() {
         if (getTargetFragment() != null) {
             final Intent data = new Intent();
-            data.putExtra(BundleKeys.DAILY_AVAILABILITY_TIMELINE,
-                    getDailyAvailabilityTimelineFromViewModel());
+            data.putExtra(BundleKeys.AVAILABILITY_TIMELINE,
+                    getTimelineFromViewModel());
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
         }
     }
 
-    private AvailabilityTimelinesWrapper getAvailabilityTimelinesWrapperFromViewModel() {
-        final AvailabilityTimelinesWrapper timelinesWrapper = new AvailabilityTimelinesWrapper();
-        timelinesWrapper.addTimeline(mDate, getAvailabilityIntervalsFromViewModel());
+    private Availability.Wrapper.Timelines getTimelinesWrapperFromViewModel() {
+        final Availability.Wrapper.Timelines timelinesWrapper = new Availability.Wrapper.Timelines();
+        timelinesWrapper.addTimeline(mDate, getIntervalsFromViewModel());
         return timelinesWrapper;
     }
 
-    private DailyAvailabilityTimeline getDailyAvailabilityTimelineFromViewModel() {
-        return new DailyAvailabilityTimeline(mDate, getAvailabilityIntervalsFromViewModel());
+    private Availability.Timeline getTimelineFromViewModel() {
+        return new Availability.Timeline(mDate, getIntervalsFromViewModel());
     }
 
-    private ArrayList<AvailabilityInterval> getAvailabilityIntervalsFromViewModel() {
-        final ArrayList<AvailabilityInterval> intervals = new ArrayList<>();
+    private ArrayList<Availability.Interval> getIntervalsFromViewModel() {
+        final ArrayList<Availability.Interval> intervals = new ArrayList<>();
         if (!mTimePickerViewModel.isClosed()) {
             final List<TimePickerViewModel.TimeRange> timeRanges =
                     mTimePickerViewModel.getTimeRanges();
             Collections.sort(timeRanges);
             for (final TimePickerViewModel.TimeRange timeRange : timeRanges) {
-                intervals.add(new AvailabilityInterval(timeRange.getStartHour(),
+                intervals.add(new Availability.Interval(timeRange.getStartHour(),
                         timeRange.getEndHour()));
             }
         }
@@ -315,8 +309,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         super.onCreate(savedInstanceState);
         mFlowContext = getArguments().getString(BundleKeys.FLOW_CONTEXT);
         mDate = (Date) getArguments().getSerializable(BundleKeys.DATE);
-        mAvailabilityTimeline = (DailyAvailabilityTimeline) getArguments()
-                .getSerializable(BundleKeys.DAILY_AVAILABILITY_TIMELINE);
+        mTimeline = (Availability.Timeline) getArguments()
+                .getSerializable(BundleKeys.AVAILABILITY_TIMELINE);
         ((BaseActivity) getActivity()).addOnBackPressedListener(mOnBackPressedListener);
     }
 
@@ -348,9 +342,9 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         mTimePickerViewModel = new TimePickerViewModel();
         mTimePickerViewModel.setLimits(DEFAULT_START_HOUR, DEFAULT_END_HOUR,
                 DEFAULT_TIME_RANGE_DURATION);
-        if (mAvailabilityTimeline != null && mAvailabilityTimeline.hasIntervals()) {
-            for (final AvailabilityInterval interval :
-                    mAvailabilityTimeline.getAvailabilityIntervals()) {
+        if (mTimeline != null && mTimeline.hasIntervals()) {
+            for (final Availability.Interval interval :
+                    mTimeline.getIntervals()) {
                 mTimePickerViewModel.addTimeRange(interval.getStartHour(), interval.getEndHour());
             }
             mTimePickerViewModel.getPointer().point(mTimePickerViewModel.getTimeRangesCount() - 1,
@@ -360,8 +354,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
             mTimePickerViewModel.addTimeRange();
             mTimePickerViewModel.getPointer().point(0, SelectionType.START_TIME);
         }
-        mTimePickerViewModel.setClosed(mAvailabilityTimeline != null
-                && !mAvailabilityTimeline.hasIntervals());
+        mTimePickerViewModel.setClosed(mTimeline != null
+                && !mTimeline.hasIntervals());
     }
 
     private void initAvailabilityToggle() {

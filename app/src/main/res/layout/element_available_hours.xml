@@ -27,7 +27,7 @@
         >
 
         <LinearLayout
-            android:id="@+id/timelines"
+            android:id="@+id/intervals"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
