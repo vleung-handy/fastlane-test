@@ -52,7 +52,7 @@
                     />
             </LinearLayout>
 
-            <com.handy.portal.proavailability.view.AvailableHoursView
+            <com.handy.portal.availability.view.AvailableHoursView
                 android:id="@+id/available_hours_view"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

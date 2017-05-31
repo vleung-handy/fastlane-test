@@ -38,7 +38,7 @@
             android:orientation="vertical"
             >
 
-            <com.handy.portal.proavailability.view.TimeRangeListView
+            <com.handy.portal.availability.view.TimeRangeListView
                 android:id="@+id/time_ranges"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

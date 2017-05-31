@@ -1,4 +1,4 @@
-package com.handy.portal.proavailability.viewmodel;
+package com.handy.portal.availability.viewmodel;
 
 
 import android.support.annotation.NonNull;
@@ -8,9 +8,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import static com.handy.portal.proavailability.viewmodel.TimePickerViewModel.TimeRange.DEFAULT_MAXIMUM_HOUR;
-import static com.handy.portal.proavailability.viewmodel.TimePickerViewModel.TimeRange.DEFAULT_MINIMUM_HOUR;
-import static com.handy.portal.proavailability.viewmodel.TimePickerViewModel.TimeRange.DEFAULT_MINIMUM_TIME_RANGE_DURATION;
+import static com.handy.portal.availability.viewmodel.TimePickerViewModel.TimeRange.DEFAULT_MAXIMUM_HOUR;
+import static com.handy.portal.availability.viewmodel.TimePickerViewModel.TimeRange.DEFAULT_MINIMUM_HOUR;
+import static com.handy.portal.availability.viewmodel.TimePickerViewModel.TimeRange.DEFAULT_MINIMUM_TIME_RANGE_DURATION;
 
 public class TimePickerViewModel {
 

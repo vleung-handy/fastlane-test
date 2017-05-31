@@ -1,4 +1,4 @@
-package com.handy.portal.proavailability.view;
+package com.handy.portal.availability.view;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
@@ -7,9 +7,8 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import com.handy.portal.R;
+import com.handy.portal.availability.model.Availability;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
-import com.handy.portal.proavailability.model.WeeklyAvailabilityTimelinesWrapper;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -19,7 +18,7 @@ import butterknife.BindDimen;
 import butterknife.ButterKnife;
 
 public class WeeklyAvailableHoursView extends LinearLayout {
-    private final WeeklyAvailabilityTimelinesWrapper mWeeklyAvailability;
+    private final Availability.Range mWeeklyAvailability;
     private final DateClickListener mDateClickListener;
 
     @BindDimen(R.dimen.default_padding)
@@ -27,7 +26,7 @@ public class WeeklyAvailableHoursView extends LinearLayout {
 
     public WeeklyAvailableHoursView(
             final Context context,
-            final WeeklyAvailabilityTimelinesWrapper weeklyAvailability,
+            final Availability.Range weeklyAvailability,
             final DateClickListener dateClickListener) {
         super(context);
         mWeeklyAvailability = weeklyAvailability;
@@ -47,11 +46,10 @@ public class WeeklyAvailableHoursView extends LinearLayout {
         calendar.setTime(startDate);
         while (DateTimeUtils.daysBetween(calendar.getTime(), endDate) >= 0) {
             final Date date = calendar.getTime();
-            final DailyAvailabilityTimeline availability =
-                    mWeeklyAvailability.getAvailabilityForDate(date);
+            final Availability.Timeline timeline = mWeeklyAvailability.getTimelineForDate(date);
             boolean enabled = !DateTimeUtils.isDaysPast(date);
             final AvailableHoursWithDateView view = new AvailableHoursWithDateView(getContext(),
-                    date, availability, enabled);
+                    date, timeline, enabled);
             view.setRowPadding(mDefaultPadding, mDefaultPadding);
             view.setBackgroundResource(R.drawable.border_gray_bottom);
             view.setOnClickListener(new OnClickListener() {

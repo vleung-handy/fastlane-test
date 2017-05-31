@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.crashlytics.android.Crashlytics;
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
+import com.handy.portal.availability.model.Availability;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.model.AuxiliaryInfo;
@@ -64,10 +65,7 @@ import com.handy.portal.logger.handylogger.model.EventType;
 import com.handy.portal.logger.handylogger.model.JobsLog;
 import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
-import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
-import com.handy.portal.proavailability.model.ProviderAvailability;
-import com.handy.portal.proavailability.model.WeeklyAvailabilityTimelinesWrapper;
-import com.handy.portal.proavailability.view.AvailableHoursView;
+import com.handy.portal.availability.view.AvailableHoursView;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -141,9 +139,9 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     private Date mSelectedDay;
     private DatesPagerAdapter mDatesPagerAdapter;
     private int mLastDatesPosition;
-    private ProviderAvailability mProviderAvailability;
-    private DailyAvailabilityTimeline mAvailabilityForSelectedDay;
-    private HashMap<Date, DailyAvailabilityTimeline> mUpdatedAvailabilityTimelines;
+    private Availability.Wrapper.WeekRanges mWeekRangesWrapper;
+    private Availability.Timeline mTimelineForSelectedDay;
+    private HashMap<Date, Availability.Timeline> mUpdatedTimelines;
     private final Runnable mRefreshRunnable;
     private final ViewPager.OnPageChangeListener mDatesPageChangeListener;
     private final ViewPager.OnPageChangeListener mRequestedJobsPageChangeListener;
@@ -293,11 +291,12 @@ public class ScheduledBookingsFragment extends ActionBarFragment
                 catch (Exception e) {
                     Crashlytics.logException(e);
                 }
-            } else {
+            }
+            else {
                 //This is used to get the deep link date. This date will be the selected date
                 final String date = getArguments().getString(BundleKeys.DATE);
 
-                if(!TextUtils.isEmpty(date)) {
+                if (!TextUtils.isEmpty(date)) {
                     try {
                         mSelectedDay = DateTimeUtils.ISO8601_FORMATTER2.parse(date);
                     }
@@ -319,9 +318,9 @@ public class ScheduledBookingsFragment extends ActionBarFragment
                 DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(mSelectedDay))));
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.FLOW_CONTEXT, EventContext.AVAILABILITY);
-        arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY, mProviderAvailability);
-        arguments.putSerializable(BundleKeys.PROVIDER_AVAILABILITY_CACHE,
-                mUpdatedAvailabilityTimelines);
+        arguments.putSerializable(BundleKeys.AVAILABILITY_WEEK_RANGES_WRAPPER, mWeekRangesWrapper);
+        arguments.putSerializable(BundleKeys.AVAILABILITY_TIMELINES_CACHE,
+                mUpdatedTimelines);
         arguments.putSerializable(BundleKeys.SHOULD_DEFAULT_TO_NEXT_WEEK,
                 !hasAvailableHoursForNextWeek());
         final NavigationEvent.NavigateToPage navigationEvent =
@@ -362,7 +361,6 @@ public class ScheduledBookingsFragment extends ActionBarFragment
             if (dateButton != null) {
                 dateButton.select();
             }
-
 
             requestProviderAvailability();
             setAvailableHoursBannerVisibility();
@@ -446,13 +444,15 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     }
 
     private void requestProviderAvailability() {
-        if (mProviderAvailability == null && isAvailableHoursEnabled()) {
-            dataManager.getProviderAvailability(mProviderManager.getLastProviderId(),
-                    new FragmentSafeCallback<ProviderAvailability>(this) {
+        if (mWeekRangesWrapper == null && isAvailableHoursEnabled()) {
+            dataManager.getConcreteAvailability(mProviderManager.getLastProviderId(),
+                    new FragmentSafeCallback<Availability.Wrapper.WeekRanges>(this) {
                         @Override
-                        public void onCallbackSuccess(final ProviderAvailability providerAvailability) {
-                            mProviderAvailability = providerAvailability;
-                            mUpdatedAvailabilityTimelines = null;
+                        public void onCallbackSuccess(
+                                final Availability.Wrapper.WeekRanges weekRangesWrapper
+                        ) {
+                            mWeekRangesWrapper = weekRangesWrapper;
+                            mUpdatedTimelines = null;
                             showAvailableHours();
                             setAvailableHoursBannerVisibility();
                         }
@@ -467,7 +467,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
 
     private void setAvailableHoursBannerVisibility() {
         if (isAvailableHoursEnabled()
-                && mProviderAvailability != null
+                && mWeekRangesWrapper != null
                 && !hasAvailableHoursForNextWeek()
                 && !hasDismissedAvailableHoursBannerThisWeek()) {
             mSetAvailableHoursBanner.setVisibility(View.VISIBLE);
@@ -481,7 +481,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     private boolean hasDismissedAvailableHoursBannerThisWeek() {
         final String dateString = mPrefsManager
                 .getString(PrefsKey.DISMISSED_AVAILABLE_HOURS_BANNER_WEEK_START_DATE, null);
-        final WeeklyAvailabilityTimelinesWrapper nextWeekAvailability = getNextWeekAvailability();
+        final Availability.Range nextWeekAvailability = getNextWeekRange();
         return nextWeekAvailability != null && dateString != null &&
                 nextWeekAvailability.getStartDateString().equals(dateString);
     }
@@ -492,28 +492,28 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     }
 
     private void showAvailableHours() {
-        if (mProviderAvailability == null || mSelectedDay == null) {
+        if (mWeekRangesWrapper == null || mSelectedDay == null) {
             mAvailableHoursView.setVisibility(View.GONE);
         }
         else {
             mAvailableHoursView.setVisibility(View.VISIBLE);
-            mAvailabilityForSelectedDay = getAvailabilityForDate(mSelectedDay);
-            mAvailableHoursView.setAvailableHours(mAvailabilityForSelectedDay == null ? null
-                    : mAvailabilityForSelectedDay.getAvailabilityIntervals());
-            mAvailableHoursView.setEnabled(mProviderAvailability.covers(mSelectedDay));
+            mTimelineForSelectedDay = getTimelineForDate(mSelectedDay);
+            mAvailableHoursView.setAvailableHours(mTimelineForSelectedDay == null ? null
+                    : mTimelineForSelectedDay.getIntervals());
+            mAvailableHoursView.setEnabled(mWeekRangesWrapper.covers(mSelectedDay));
         }
     }
 
     @Nullable
-    private DailyAvailabilityTimeline getAvailabilityForDate(final Date date) {
-        DailyAvailabilityTimeline availability = null;
-        if (mUpdatedAvailabilityTimelines != null) {
-            availability = mUpdatedAvailabilityTimelines.get(date);
+    private Availability.Timeline getTimelineForDate(final Date date) {
+        Availability.Timeline timeline = null;
+        if (mUpdatedTimelines != null) {
+            timeline = mUpdatedTimelines.get(date);
         }
-        if (mProviderAvailability != null && availability == null) {
-            availability = mProviderAvailability.getAvailabilityForDate(date);
+        if (mWeekRangesWrapper != null && timeline == null) {
+            timeline = mWeekRangesWrapper.getTimelineForDate(date);
         }
-        return availability;
+        return timeline;
     }
 
     @Override
@@ -674,7 +674,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     @OnClick(R.id.set_hours_dismiss_button)
     public void onDismissSetHoursBannerClicked() {
         mSetAvailableHoursBanner.setVisibility(View.GONE);
-        final WeeklyAvailabilityTimelinesWrapper nextWeekAvailability = getNextWeekAvailability();
+        final Availability.Range nextWeekAvailability = getNextWeekRange();
         if (nextWeekAvailability != null) {
             mPrefsManager.setString(PrefsKey.DISMISSED_AVAILABLE_HOURS_BANNER_WEEK_START_DATE,
                     nextWeekAvailability.getStartDateString());
@@ -700,15 +700,14 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     }
 
     private boolean hasAvailableHoursForNextWeek() {
-        final WeeklyAvailabilityTimelinesWrapper weekAvailability = getNextWeekAvailability();
-        return weekAvailability != null && weekAvailability.hasAvailableHours();
+        final Availability.Range nextWeekRange = getNextWeekRange();
+        return nextWeekRange != null && nextWeekRange.hasAvailableHours();
     }
 
     @Nullable
-    private WeeklyAvailabilityTimelinesWrapper getNextWeekAvailability() {
-        if (mProviderAvailability != null) {
-            return mProviderAvailability.getWeeklyAvailabilityTimelinesWrappers()
-                    .get(NEXT_WEEK_AVAILABILITY_INDEX);
+    private Availability.Range getNextWeekRange() {
+        if (mWeekRangesWrapper != null) {
+            return mWeekRangesWrapper.get().get(NEXT_WEEK_AVAILABILITY_INDEX);
         }
         return null;
     }
@@ -721,7 +720,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         final Bundle bundle = new Bundle();
         bundle.putString(BundleKeys.FLOW_CONTEXT, EventContext.AVAILABILITY);
         bundle.putSerializable(BundleKeys.DATE, mSelectedDay);
-        bundle.putSerializable(BundleKeys.DAILY_AVAILABILITY_TIMELINE, mAvailabilityForSelectedDay);
+        bundle.putSerializable(BundleKeys.AVAILABILITY_TIMELINE, mTimelineForSelectedDay);
         final NavigationEvent.NavigateToPage navigationEvent =
                 new NavigationEvent.NavigateToPage(MainViewPage.EDIT_AVAILABLE_HOURS, bundle, true);
         navigationEvent.setReturnFragment(this, RequestCode.EDIT_HOURS);
@@ -743,13 +742,13 @@ public class ScheduledBookingsFragment extends ActionBarFragment
                     requestClaimJob(booking);
                     break;
                 case RequestCode.EDIT_HOURS:
-                    final DailyAvailabilityTimeline availability = (DailyAvailabilityTimeline)
-                            data.getSerializableExtra(BundleKeys.DAILY_AVAILABILITY_TIMELINE);
-                    if (availability != null) {
-                        if (mUpdatedAvailabilityTimelines == null) {
-                            mUpdatedAvailabilityTimelines = new HashMap<>();
+                    final Availability.Timeline timeline = (Availability.Timeline)
+                            data.getSerializableExtra(BundleKeys.AVAILABILITY_TIMELINE);
+                    if (timeline != null) {
+                        if (mUpdatedTimelines == null) {
+                            mUpdatedTimelines = new HashMap<>();
                         }
-                        mUpdatedAvailabilityTimelines.put(availability.getDate(), availability);
+                        mUpdatedTimelines.put(timeline.getDate(), timeline);
                         showAvailableHours();
                     }
                     break;

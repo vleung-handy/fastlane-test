@@ -78,9 +78,9 @@ public class BundleKeys {
     public static final String DISMISSAL_REASON = "dismissal_reason";
 
     // Pro Availability
-    public static final String DAILY_AVAILABILITY_TIMELINE = "daily_availability_timeline";
-    public static final String PROVIDER_AVAILABILITY = "provider_availability";
-    public static final String PROVIDER_AVAILABILITY_CACHE = "provider_availability_cache";
+    public static final String AVAILABILITY_TIMELINE = "availability_timeline";
+    public static final String AVAILABILITY_WEEK_RANGES_WRAPPER = "availability_week_ranges_wrapper";
+    public static final String AVAILABILITY_TIMELINES_CACHE = "availability_timelines_cache";
     public static final String SHOULD_DEFAULT_TO_NEXT_WEEK = "should_default_to_next_week";
 
     public static final String TITLE = "title";

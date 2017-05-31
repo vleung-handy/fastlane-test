@@ -1,4 +1,4 @@
-package com.handy.portal.proavailability.view;
+package com.handy.portal.availability.view;
 
 import android.content.Context;
 import android.support.annotation.StringRes;
@@ -6,8 +6,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.availability.model.Availability;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.proavailability.model.WeeklyAvailabilityTimelinesWrapper;
 
 import java.util.Date;
 
@@ -26,7 +26,7 @@ public class TabWithDateRangeView extends FrameLayout {
 
     public TabWithDateRangeView(final Context context,
                                 @StringRes final int titleResId,
-                                final WeeklyAvailabilityTimelinesWrapper weekTimelines) {
+                                final Availability.Range weekTimelines) {
         super(context);
         mTitleResId = titleResId;
         mStartDate = weekTimelines.getStartDate();

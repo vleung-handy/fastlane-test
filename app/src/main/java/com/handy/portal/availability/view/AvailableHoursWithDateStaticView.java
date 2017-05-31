@@ -1,4 +1,4 @@
-package com.handy.portal.proavailability.view;
+package com.handy.portal.availability.view;
 
 
 import android.content.Context;
@@ -6,8 +6,8 @@ import android.support.annotation.Nullable;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.availability.model.Availability;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.proavailability.model.DailyAvailabilityTimeline;
 
 import java.util.Date;
 
@@ -21,25 +21,25 @@ public class AvailableHoursWithDateStaticView extends AvailableHoursWithDateView
     public AvailableHoursWithDateStaticView(
             final Context context,
             final Date date,
-            @Nullable final DailyAvailabilityTimeline availability) {
-        super(context, date, availability, !DateTimeUtils.isDaysPast(date));
+            @Nullable final Availability.Timeline timeline) {
+        super(context, date, timeline, !DateTimeUtils.isDaysPast(date));
     }
 
     @Override
-    public void updateTimelines(final DailyAvailabilityTimeline availability) {
-        super.updateTimelines(availability);
-        if (mEnabled && availability == null) {
-            mTimelines.removeAllViews();
+    public void updateIntervals(final Availability.Timeline timeline) {
+        super.updateIntervals(timeline);
+        if (mEnabled && timeline == null) {
+            mIntervals.removeAllViews();
             final TextView textView = createTextView();
             textView.setText(R.string.no_hours_set);
             textView.setTextColor(mRedColor);
-            mTimelines.addView(textView);
+            mIntervals.addView(textView);
         }
         else if (!mEnabled) {
-            mTimelines.removeAllViews();
+            mIntervals.removeAllViews();
             final TextView textView = createTextView();
             textView.setText(R.string.no_data);
-            mTimelines.addView(textView);
+            mIntervals.addView(textView);
         }
     }
 }

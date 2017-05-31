@@ -2,7 +2,6 @@ package com.handy.portal.library.ui.view.timepicker;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -10,8 +9,7 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.proavailability.viewmodel.TimePickerViewModel;
-import com.handy.portal.proavailability.viewmodel.TimePickerViewModel.SelectionType;
+import com.handy.portal.availability.viewmodel.TimePickerViewModel.SelectionType;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

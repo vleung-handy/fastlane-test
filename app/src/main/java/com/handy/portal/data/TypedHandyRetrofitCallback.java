@@ -6,6 +6,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.handy.portal.announcements.model.AnnouncementsWrapper;
+import com.handy.portal.availability.model.Availability;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.model.BookingClaimDetails;
 import com.handy.portal.bookings.model.BookingsListWrapper;
@@ -34,7 +35,6 @@ import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.model.PaymentReviewResponse;
 import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
 import com.handy.portal.payments.model.StripeTokenResponse;
-import com.handy.portal.proavailability.model.ProviderAvailability;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.setup.SetupData;
 import com.handy.portal.updater.model.UpdateDetails;
@@ -225,8 +225,8 @@ class ResupplyInfoRetrofitCallback extends TypedHandyRetrofitCallback<ProviderPr
 }
 
 
-class ProviderAvailabilityRetrofitCallback extends TypedHandyRetrofitCallback<ProviderAvailability> {
-    ProviderAvailabilityRetrofitCallback(DataManager.Callback callback) {
+class WeekRangesWrapperRetrofitCallback extends TypedHandyRetrofitCallback<Availability.Wrapper.WeekRanges> {
+    WeekRangesWrapperRetrofitCallback(DataManager.Callback callback) {
         super(callback);
     }
 }

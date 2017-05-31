@@ -1,4 +1,4 @@
-package com.handy.portal.proavailability.view;
+package com.handy.portal.availability.view;
 
 
 import android.content.Context;
@@ -11,8 +11,8 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.availability.model.Availability;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.proavailability.model.WeeklyAvailabilityTimelinesWrapper;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -25,7 +25,7 @@ import butterknife.ButterKnife;
 public class WeeklyAvailableHoursCardView extends FrameLayout {
 
     private final int mWeekTitleResId;
-    private final WeeklyAvailabilityTimelinesWrapper mWeeklyAvailability;
+    private final Availability.Range mWeeklyAvailability;
     @Nullable
     private final EditListener mEditListener;
     private final int mCardIndex;
@@ -46,7 +46,7 @@ public class WeeklyAvailableHoursCardView extends FrameLayout {
     public WeeklyAvailableHoursCardView(
             @NonNull final Context context,
             @StringRes final int weekTitleResId,
-            @NonNull final WeeklyAvailabilityTimelinesWrapper weeklyAvailability,
+            @NonNull final Availability.Range weeklyAvailability,
             @NonNull final EditListener editClickListener,
             final int cardIndex
     ) {
@@ -79,7 +79,7 @@ public class WeeklyAvailableHoursCardView extends FrameLayout {
             final Date date = calendar.getTime();
             final AvailableHoursWithDateStaticView view =
                     new AvailableHoursWithDateStaticView(getContext(), date,
-                            mWeeklyAvailability.getAvailabilityForDate(date));
+                            mWeeklyAvailability.getTimelineForDate(date));
             view.setRowPadding(0, mDefaultPaddingQuarter);
             view.setTitleSize(mSmallTextSize);
             mTimelines.addView(view);
