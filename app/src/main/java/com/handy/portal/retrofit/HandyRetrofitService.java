@@ -210,12 +210,12 @@ public interface HandyRetrofitService {
                         HandyRetrofitCallback cb);
 
     @GET(PROVIDERS_PATH + "{id}/availability_timeline")
-    void getConcreteAvailability(@Path("id") String providerId, HandyRetrofitCallback cb);
+    void getAvailability(@Path("id") String providerId, HandyRetrofitCallback cb);
 
     @POST(PROVIDERS_PATH + "{id}/availability_timeline")
-    void saveProviderAvailability(@Path("id") String providerId,
-                                  @Body Availability.Wrapper.Timelines timelinesWrapper,
-                                  HandyRetrofitCallback cb);
+    void saveAvailability(@Path("id") String providerId,
+                          @Body Availability.Wrapper.Timelines timelinesWrapper,
+                          HandyRetrofitCallback cb);
 
     @FormUrlEncoded
     @POST(PROVIDERS_PATH + "{id}/provider_requests/{request_id}/send_times")

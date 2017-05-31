@@ -105,13 +105,9 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.FLOW_CONTEXT, EventContext.SEND_AVAILABILITY);
         arguments.putBoolean(BundleKeys.SHOULD_DEFAULT_TO_NEXT_WEEK, shouldDefaultToNextWeek);
-        arguments.putSerializable(BundleKeys.AVAILABILITY_WEEK_RANGES_WRAPPER, mWeekRangesWrapper);
-        arguments.putSerializable(BundleKeys.AVAILABILITY_TIMELINES_CACHE,
-                mUpdatedTimelines);
         final NavigationEvent.NavigateToPage navigationEvent =
                 new NavigationEvent.NavigateToPage(MainViewPage.EDIT_WEEKLY_AVAILABLE_HOURS,
                         arguments, true);
-        navigationEvent.setReturnFragment(this, RequestCode.EDIT_HOURS);
         bus.post(navigationEvent);
     }
 
@@ -175,17 +171,6 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
         initAvailabilityPager();
     }
 
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK && requestCode == RequestCode.EDIT_HOURS) {
-            final Availability.Timeline timeline = (Availability.Timeline)
-                    data.getSerializableExtra(BundleKeys.AVAILABILITY_TIMELINE);
-            if (timeline != null) {
-                updateAvailability(timeline);
-            }
-        }
-    }
 
     private void updateAvailability(final Availability.Timeline availability) {
         mUpdatedTimelines.put(availability.getDate(), availability);
@@ -209,7 +194,6 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
     private void callTargetFragmentResult(final Availability.Timeline updatedTimeline) {
         if (getTargetFragment() != null) {
             final Intent data = new Intent();
-            data.putExtra(BundleKeys.AVAILABILITY_TIMELINE, updatedTimeline);
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
         }
     }
@@ -249,7 +233,7 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
 
     private void loadProviderAvailability() {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        dataManager.getConcreteAvailability(mProviderManager.getLastProviderId(),
+        dataManager.getAvailability(mProviderManager.getLastProviderId(),
                 new FragmentSafeCallback<Availability.Wrapper.WeekRanges>(this) {
                     @Override
                     public void onCallbackSuccess(
@@ -288,12 +272,6 @@ public class SendAvailableHoursFragment extends ActionBarFragment {
             calendar.setTime(startDate);
             while (DateTimeUtils.daysBetween(calendar.getTime(), endDate) >= 0) {
                 final Date date = calendar.getTime();
-                if (!DateTimeUtils.isDaysPast(date)) {
-                    final Availability.Timeline availability = weekRange.getTimelineForDate(date);
-                    if (availability == null) {
-                        mDatesWithoutAvailability.add(date);
-                    }
-                }
                 calendar.add(Calendar.DATE, 1);
             }
         }

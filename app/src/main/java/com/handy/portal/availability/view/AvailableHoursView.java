@@ -21,6 +21,7 @@ import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
+
 public class AvailableHoursView extends FrameLayout {
     @BindView(R.id.title)
     TextView mTitle;

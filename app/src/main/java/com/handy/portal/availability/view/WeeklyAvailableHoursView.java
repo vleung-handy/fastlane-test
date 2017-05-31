@@ -10,15 +10,13 @@ import com.handy.portal.R;
 import com.handy.portal.availability.model.Availability;
 import com.handy.portal.library.util.DateTimeUtils;
 
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
 
 import butterknife.BindDimen;
 import butterknife.ButterKnife;
 
 public class WeeklyAvailableHoursView extends LinearLayout {
-    private final Availability.Range mWeeklyAvailability;
+    private final Availability.Range mWeekRange;
     private final DateClickListener mDateClickListener;
 
     @BindDimen(R.dimen.default_padding)
@@ -26,10 +24,10 @@ public class WeeklyAvailableHoursView extends LinearLayout {
 
     public WeeklyAvailableHoursView(
             final Context context,
-            final Availability.Range weeklyAvailability,
+            final Availability.Range weekRange,
             final DateClickListener dateClickListener) {
         super(context);
-        mWeeklyAvailability = weeklyAvailability;
+        mWeekRange = weekRange;
         mDateClickListener = dateClickListener;
         init();
     }
@@ -40,16 +38,11 @@ public class WeeklyAvailableHoursView extends LinearLayout {
         setLayoutParams(new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        final Calendar calendar = Calendar.getInstance(Locale.US);
-        final Date startDate = mWeeklyAvailability.getStartDate();
-        final Date endDate = mWeeklyAvailability.getEndDate();
-        calendar.setTime(startDate);
-        while (DateTimeUtils.daysBetween(calendar.getTime(), endDate) >= 0) {
-            final Date date = calendar.getTime();
-            final Availability.Timeline timeline = mWeeklyAvailability.getTimelineForDate(date);
+        for (final Date date : mWeekRange.dates()) {
             boolean enabled = !DateTimeUtils.isDaysPast(date);
-            final AvailableHoursWithDateView view = new AvailableHoursWithDateView(getContext(),
-                    date, timeline, enabled);
+            final AvailableHoursWithDateView view = new AvailableHoursWithDateView(
+                    getContext(), date, enabled
+            );
             view.setRowPadding(mDefaultPadding, mDefaultPadding);
             view.setBackgroundResource(R.drawable.border_gray_bottom);
             view.setOnClickListener(new OnClickListener() {
@@ -59,7 +52,6 @@ public class WeeklyAvailableHoursView extends LinearLayout {
                 }
             });
             addView(view);
-            calendar.add(Calendar.DATE, 1);
         }
     }
 

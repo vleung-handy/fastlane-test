@@ -2,7 +2,6 @@ package com.handy.portal.availability.view;
 
 
 import android.content.Context;
-import android.support.annotation.Nullable;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -20,9 +19,8 @@ public class AvailableHoursWithDateStaticView extends AvailableHoursWithDateView
 
     public AvailableHoursWithDateStaticView(
             final Context context,
-            final Date date,
-            @Nullable final Availability.Timeline timeline) {
-        super(context, date, timeline, !DateTimeUtils.isDaysPast(date));
+            final Date date) {
+        super(context, date, !DateTimeUtils.isDaysPast(date));
     }
 
     @Override

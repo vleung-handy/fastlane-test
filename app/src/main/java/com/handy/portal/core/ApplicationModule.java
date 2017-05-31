@@ -9,6 +9,7 @@ import android.util.Base64;
 import com.google.gson.GsonBuilder;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.announcements.AnnouncementsModule;
+import com.handy.portal.availability.AvailabilityModule;
 import com.handy.portal.bookings.BookingsModule;
 import com.handy.portal.clients.ClientsModule;
 import com.handy.portal.core.constant.PrefsKey;
@@ -86,6 +87,7 @@ import retrofit.converter.GsonConverter;
                 TermsModule.class,
                 AppUpdaterModule.class,
                 AnnouncementsModule.class,
+                AvailabilityModule.class,
         }
 )
 public final class ApplicationModule {

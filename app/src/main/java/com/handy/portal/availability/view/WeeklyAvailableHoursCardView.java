@@ -77,9 +77,7 @@ public class WeeklyAvailableHoursCardView extends FrameLayout {
         calendar.setTime(startDate);
         while (DateTimeUtils.daysBetween(calendar.getTime(), endDate) >= 0) {
             final Date date = calendar.getTime();
-            final AvailableHoursWithDateStaticView view =
-                    new AvailableHoursWithDateStaticView(getContext(), date,
-                            mWeeklyAvailability.getTimelineForDate(date));
+            final AvailableHoursWithDateStaticView view = new AvailableHoursWithDateStaticView(getContext(), date);
             view.setRowPadding(0, mDefaultPaddingQuarter);
             view.setTitleSize(mSmallTextSize);
             mTimelines.addView(view);
