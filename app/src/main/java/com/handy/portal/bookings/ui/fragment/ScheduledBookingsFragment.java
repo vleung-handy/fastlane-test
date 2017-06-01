@@ -438,6 +438,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     private void requestProviderAvailability() {
         if (isAvailableHoursEnabled()) {
             mAvailabilityManager.getAvailability(
+                    false,
                     new FragmentSafeCallback<Void>(this) {
                         @Override
                         public void onCallbackSuccess(final Void response) {

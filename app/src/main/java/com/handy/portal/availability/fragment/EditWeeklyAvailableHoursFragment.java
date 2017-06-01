@@ -286,7 +286,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
 
     private void requestAvailableHours() {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        mAvailabilityManager.getAvailability(new FragmentSafeCallback<Void>(this) {
+        mAvailabilityManager.getAvailability(true, new FragmentSafeCallback<Void>(this) {
             @Override
             public void onCallbackSuccess(final Void response) {
                 bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));

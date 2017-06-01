@@ -36,9 +36,10 @@ public class AvailabilityManager {
     }
 
     public void getAvailability(
+            final boolean useCacheIfPresent,
             @Nullable final DataManager.Callback<Void> callback
     ) {
-        if (isReady()) {
+        if (useCacheIfPresent && isReady()) {
             if (callback != null) {
                 callback.onSuccess(null);
             }
