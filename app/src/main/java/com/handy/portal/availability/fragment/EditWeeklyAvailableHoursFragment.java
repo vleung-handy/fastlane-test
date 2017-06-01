@@ -108,6 +108,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
             final Bundle bundle = new Bundle();
             bundle.putString(BundleKeys.FLOW_CONTEXT, mFlowContext);
             bundle.putSerializable(BundleKeys.DATE, date);
+            bundle.putSerializable(BundleKeys.TIMELINE, mAvailabilityManager.getTimelineForDate(date));
             final NavigationEvent.NavigateToPage navigationEvent =
                     new NavigationEvent.NavigateToPage(MainViewPage.EDIT_AVAILABLE_HOURS, bundle, true);
             bus.post(navigationEvent);
@@ -145,7 +146,8 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
                 createNextWeekTimelinesWrapperFromCurrentWeekRange();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
 
-        dataManager.saveAvailability(mProviderManager.getLastProviderId(), timelinesWrapper,
+        mAvailabilityManager.saveAvailability(
+                timelinesWrapper,
                 new FragmentSafeCallback<Void>(this) {
                     @Override
                     public void onCallbackSuccess(final Void response) {
@@ -162,7 +164,8 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
                         }
                         showToast(message);
                     }
-                });
+                }
+        );
     }
 
     @NonNull

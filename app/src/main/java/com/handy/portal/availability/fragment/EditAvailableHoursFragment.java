@@ -293,7 +293,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         super.onCreate(savedInstanceState);
         mFlowContext = getArguments().getString(BundleKeys.FLOW_CONTEXT);
         mDate = (Date) getArguments().getSerializable(BundleKeys.DATE);
-        mOriginalTimeline = mAvailabilityManager.getTimelineForDate(mDate);
+        mOriginalTimeline =
+                (Availability.Timeline) getArguments().getSerializable(BundleKeys.TIMELINE);
         ((BaseActivity) getActivity()).addOnBackPressedListener(mOnBackPressedListener);
     }
 

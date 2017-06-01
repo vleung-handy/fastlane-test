@@ -79,6 +79,7 @@ public class BundleKeys {
 
     // Pro Availability
     public static final String SHOULD_DEFAULT_TO_NEXT_WEEK = "should_default_to_next_week";
+    public static final String TIMELINE = "timeline";
 
     public static final String TITLE = "title";
     public static final String TAB_TITLE = "tab_title";

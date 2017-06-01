@@ -1,5 +1,6 @@
 package com.handy.portal.availability.manager;
 
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.handy.portal.availability.AvailabilityEvent;
@@ -18,7 +19,7 @@ public class AvailabilityManager {
 
     private final EventBus mBus;
     private final DataManager mDataManager;
-    private ProviderManager mProviderManager;
+    private final ProviderManager mProviderManager;
 
     private Availability.Wrapper.WeekRanges mWeekRangesWrapper;
     private HashMap<Date, Availability.Timeline> mUpdatedTimelines;
@@ -99,7 +100,8 @@ public class AvailabilityManager {
         );
     }
 
-    public Availability.Timeline getTimelineForDate(final Date date) {
+    @Nullable
+    public Availability.Timeline getTimelineForDate(@NonNull final Date date) {
         Availability.Timeline timeline = mUpdatedTimelines.get(date);
         if (mWeekRangesWrapper != null && timeline == null) {
             timeline = mWeekRangesWrapper.getTimelineForDate(date);
@@ -116,16 +118,17 @@ public class AvailabilityManager {
         return false;
     }
 
+    // Determines whether the manager has information about the given date.
     public boolean covers(final Date date) {
         return mWeekRangesWrapper.covers(date);
     }
 
     public Availability.Range getCurrentWeekRange() {
-        return mWeekRangesWrapper.get().get(0);
+        return mWeekRangesWrapper.get().get(0); // server will always return 2 or more weeks
     }
 
     public Availability.Range getNextWeekRange() {
-        return mWeekRangesWrapper.get().get(1);
+        return mWeekRangesWrapper.get().get(1); // server will always return 2 or more weeks
     }
 
     public void invalidateData() {

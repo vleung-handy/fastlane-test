@@ -53,7 +53,6 @@ import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.event.ProviderSettingsEvent;
 import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.core.manager.PrefsManager;
-import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.ui.activity.MainActivity;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.data.DataManager;
@@ -88,8 +87,6 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     private static final int NUMBER_OF_DAYS_TO_DISPLAY = 28;
     private static final String SOURCE_SCHEDULED_JOBS_LIST = "scheduled_jobs_list";
 
-    @Inject
-    ProviderManager mProviderManager;
     @Inject
     BookingManager mBookingManager;
     @Inject
@@ -689,6 +686,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         final Bundle bundle = new Bundle();
         bundle.putString(BundleKeys.FLOW_CONTEXT, EventContext.AVAILABILITY);
         bundle.putSerializable(BundleKeys.DATE, mSelectedDay);
+        bundle.putSerializable(BundleKeys.TIMELINE, mAvailabilityManager.getTimelineForDate(mSelectedDay));
         final NavigationEvent.NavigateToPage navigationEvent =
                 new NavigationEvent.NavigateToPage(MainViewPage.EDIT_AVAILABLE_HOURS, bundle, true);
         bus.post(navigationEvent);
