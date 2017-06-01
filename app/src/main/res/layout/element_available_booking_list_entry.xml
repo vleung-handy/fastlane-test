@@ -236,6 +236,8 @@
                     android:paddingTop="@dimen/default_padding_half"
                     android:text="@string/reschedule"
                     android:textSize="@dimen/small_text_size"
+                    android:visibility="invisible"
+                    tools:visibility="visible"
                     />
 
                 <Button

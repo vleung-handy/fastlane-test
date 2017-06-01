@@ -23,7 +23,6 @@ import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
-import com.handy.portal.helpcenter.constants.HelpCenterConstants;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProAvailabilityLog;
@@ -69,8 +68,7 @@ public class EditWeeklyAdhocAvailableHoursFragment extends EditWeeklyAvailableHo
 
                 @Override
                 public void onPageSelected(final int position) {
-                    mCopyHoursButton.setVisibility(position == NEXT_WEEK_INDEX ?
-                            View.VISIBLE : View.GONE);
+                    updateCopyHoursButton();
                 }
 
                 @Override
@@ -87,6 +85,7 @@ public class EditWeeklyAdhocAvailableHoursFragment extends EditWeeklyAvailableHo
                             DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
             final Bundle bundle = new Bundle();
             bundle.putString(BundleKeys.FLOW_CONTEXT, mFlowContext);
+            bundle.putSerializable(BundleKeys.MODE, EditAvailableHoursFragment.Mode.ADHOC);
             bundle.putSerializable(BundleKeys.DATE, date);
             bundle.putSerializable(BundleKeys.TIMELINE, mAvailabilityManager.getTimelineForDate(date));
             final NavigationEvent.NavigateToPage navigationEvent =
@@ -101,31 +100,16 @@ public class EditWeeklyAdhocAvailableHoursFragment extends EditWeeklyAvailableHo
     }
 
     @Subscribe
-    public void onAvailabilityTimelineUpdated(final AvailabilityEvent.TimelineUpdated event) {
+    public void onAvailabilityTimelineUpdated(final AvailabilityEvent.AdhocTimelineUpdated event) {
         mPagerAdapter.updateViewWithTimeline(event.getTimeline().getDate(), event.getTimeline());
         setIsCurrentWeekAndNextWeekInSync(false);
-    }
-
-    @OnClick(R.id.available_hours_info_banner_body)
-    public void onInfoBannerClicked() {
-        final Bundle arguments = new Bundle();
-        arguments.putString(
-                BundleKeys.TARGET_URL,
-                dataManager.getBaseUrl() + HelpCenterConstants.SETTING_HOURS_INFO_PATH
-        );
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.WEB_PAGE, arguments, true));
-    }
-
-    @OnClick(R.id.try_again_button)
-    public void onRetryFetchAvailableHours() {
-        requestAvailableHours();
     }
 
     @OnClick(R.id.copy_hours_button)
     public void onCopyHoursClicked() {
         bus.post(new LogEvent.AddLogEvent(
                 new ProAvailabilityLog.CopyCurrentWeekSelected(mFlowContext)));
-        final Availability.Wrapper.Timelines timelinesWrapper =
+        final Availability.Wrapper.AdhocTimelines timelinesWrapper =
                 createNextWeekTimelinesWrapperFromCurrentWeekRange();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
 
@@ -152,15 +136,15 @@ public class EditWeeklyAdhocAvailableHoursFragment extends EditWeeklyAvailableHo
     }
 
     @NonNull
-    private Availability.Wrapper.Timelines createNextWeekTimelinesWrapperFromCurrentWeekRange() {
-        final Availability.Wrapper.Timelines timelinesWrapper = new Availability.Wrapper.Timelines();
+    private Availability.Wrapper.AdhocTimelines createNextWeekTimelinesWrapperFromCurrentWeekRange() {
+        final Availability.Wrapper.AdhocTimelines timelinesWrapper = new Availability.Wrapper.AdhocTimelines();
         final Availability.Range currentWeekRange = mAvailabilityManager.getCurrentWeekRange();
         for (final Date date : currentWeekRange.dates()) {
             final Calendar nextWeekDate = Calendar.getInstance(Locale.US);
             nextWeekDate.setTime(date);
             nextWeekDate.add(Calendar.DATE, DateTimeUtils.DAYS_IN_A_WEEK);
 
-            final Availability.Timeline timeline = mAvailabilityManager.getTimelineForDate(date);
+            final Availability.AdhocTimeline timeline = mAvailabilityManager.getTimelineForDate(date);
             final ArrayList<Availability.Interval> intervals = Lists.newArrayList();
             if (timeline != null && timeline.getIntervals() != null) {
                 intervals.addAll(timeline.getIntervals());
@@ -201,6 +185,8 @@ public class EditWeeklyAdhocAvailableHoursFragment extends EditWeeklyAvailableHo
     }
 
     private void updateCopyHoursButton() {
+        mCopyHoursButton.setVisibility(mViewPager.getCurrentItem() == NEXT_WEEK_INDEX ?
+                View.VISIBLE : View.GONE);
         if (mIsCurrentWeekAndNextWeekInSync) {
             mCopyHoursButton.setText(R.string.copied);
             mCopyHoursButton.setAlpha(0.3f);
@@ -247,23 +233,25 @@ public class EditWeeklyAdhocAvailableHoursFragment extends EditWeeklyAvailableHo
     @Override
     public void onResume() {
         super.onResume();
-        setActionBar(R.string.available_hours, true);
         if (mPagerAdapter == null) {
             requestAvailableHours();
         }
         else {
             // This is here to fix a UI duplication bug related to tabs
+            mScrollView.setVisibility(View.VISIBLE);
             displayTabs();
         }
     }
 
-    private void requestAvailableHours() {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+    @Override
+    protected void requestAvailableHours() {
+        mRefreshLayout.setRefreshing(true);
         mAvailabilityManager.getAvailability(true, new FragmentSafeCallback<Void>(this) {
             @Override
             public void onCallbackSuccess(final Void response) {
-                bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                mRefreshLayout.setRefreshing(false);
                 mFetchErrorView.setVisibility(View.GONE);
+                mScrollView.setVisibility(View.VISIBLE);
                 displayAvailableHours();
                 displayTabs();
                 updateCopyHoursButton();
@@ -271,7 +259,7 @@ public class EditWeeklyAdhocAvailableHoursFragment extends EditWeeklyAvailableHo
 
             @Override
             public void onCallbackError(final DataManager.DataManagerError error) {
-                bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                mRefreshLayout.setRefreshing(false);
                 mFetchErrorView.setVisibility(View.VISIBLE);
             }
         });

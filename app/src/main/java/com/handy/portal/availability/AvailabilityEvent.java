@@ -4,15 +4,27 @@ import com.handy.portal.availability.model.Availability;
 
 public abstract class AvailabilityEvent {
 
-    public static class TimelineUpdated {
-        private Availability.Timeline mTimeline;
+    public static class AdhocTimelineUpdated {
+        private Availability.AdhocTimeline mTimeline;
 
-        public TimelineUpdated(final Availability.Timeline timeline) {
-
+        public AdhocTimelineUpdated(final Availability.AdhocTimeline timeline) {
             mTimeline = timeline;
         }
 
-        public Availability.Timeline getTimeline() {
+        public Availability.AdhocTimeline getTimeline() {
+            return mTimeline;
+        }
+    }
+
+
+    public static class TemplateTimelineUpdated {
+        private Availability.TemplateTimeline mTimeline;
+
+        public TemplateTimelineUpdated(final Availability.TemplateTimeline timeline) {
+            mTimeline = timeline;
+        }
+
+        public Availability.TemplateTimeline getTimeline() {
             return mTimeline;
         }
     }

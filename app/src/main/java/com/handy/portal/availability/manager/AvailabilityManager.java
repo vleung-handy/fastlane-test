@@ -22,7 +22,7 @@ public class AvailabilityManager {
     private final ProviderManager mProviderManager;
 
     private Availability.Wrapper.WeekRanges mWeekRangesWrapper;
-    private HashMap<Date, Availability.Timeline> mUpdatedTimelines;
+    private HashMap<Date, Availability.AdhocTimeline> mUpdatedTimelines;
 
     @Inject
     public AvailabilityManager(
@@ -72,7 +72,7 @@ public class AvailabilityManager {
     }
 
     public void saveAvailability(
-            final Availability.Wrapper.Timelines timelinesWrapper,
+            final Availability.Wrapper.AdhocTimelines timelinesWrapper,
             @Nullable final DataManager.Callback<Void> callback
     ) {
         mDataManager.saveAvailability(
@@ -81,9 +81,9 @@ public class AvailabilityManager {
                 new DataManager.Callback<Void>() {
                     @Override
                     public void onSuccess(final Void response) {
-                        for (final Availability.Timeline timeline : timelinesWrapper.get()) {
+                        for (final Availability.AdhocTimeline timeline : timelinesWrapper.get()) {
                             mUpdatedTimelines.put(timeline.getDate(), timeline);
-                            mBus.post(new AvailabilityEvent.TimelineUpdated(timeline));
+                            mBus.post(new AvailabilityEvent.AdhocTimelineUpdated(timeline));
                         }
                         if (callback != null) {
                             callback.onSuccess(response);
@@ -100,9 +100,15 @@ public class AvailabilityManager {
         );
     }
 
+    public void getAvailabilityTemplate(
+            @Nullable final DataManager.Callback<Availability.Wrapper.TemplateTimelines> callback
+    ) {
+        mDataManager.getAvailabilityTemplate(mProviderManager.getLastProviderId(), callback);
+    }
+
     @Nullable
-    public Availability.Timeline getTimelineForDate(@NonNull final Date date) {
-        Availability.Timeline timeline = mUpdatedTimelines.get(date);
+    public Availability.AdhocTimeline getTimelineForDate(@NonNull final Date date) {
+        Availability.AdhocTimeline timeline = mUpdatedTimelines.get(date);
         if (mWeekRangesWrapper != null && timeline == null) {
             timeline = mWeekRangesWrapper.getTimelineForDate(date);
         }

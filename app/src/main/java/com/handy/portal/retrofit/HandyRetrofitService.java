@@ -214,8 +214,12 @@ public interface HandyRetrofitService {
 
     @POST(PROVIDERS_PATH + "{id}/availability_timeline")
     void saveAvailability(@Path("id") String providerId,
-                          @Body Availability.Wrapper.Timelines timelinesWrapper,
+                          @Body Availability.Wrapper.AdhocTimelines timelinesWrapper,
                           HandyRetrofitCallback cb);
+
+
+    @GET(PROVIDERS_PATH + "{id}/availability_template")
+    void getAvailabilityTemplate(@Path("id") String providerId, HandyRetrofitCallback cb);
 
     @FormUrlEncoded
     @POST(PROVIDERS_PATH + "{id}/provider_requests/{request_id}/send_times")

@@ -1,5 +1,6 @@
 package com.handy.portal.core.constant;
 
+import com.handy.portal.availability.fragment.EditWeeklyTemplateAvailableHoursFragment;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.BookingDetailsWrapperFragment;
 import com.handy.portal.bookings.ui.fragment.BookingFragment;
@@ -84,7 +85,8 @@ public enum MainViewPage implements Serializable {
 
     CLIENTS(ClientsFragment.class),
     EDIT_AVAILABLE_HOURS(EditAvailableHoursFragment.class),
-    EDIT_WEEKLY_ADHOC_AVAILABLE_HOURS(EditWeeklyAdhocAvailableHoursFragment.class),;
+    EDIT_WEEKLY_ADHOC_AVAILABLE_HOURS(EditWeeklyAdhocAvailableHoursFragment.class),
+    EDIT_WEEKLY_TEMPLATE_AVAILABLE_HOURS(EditWeeklyTemplateAvailableHoursFragment.class),;
 
     private static final MainViewPage[] TOP_LEVEL_PAGES = {
             AVAILABLE_JOBS, SCHEDULED_JOBS, CLIENTS, NOTIFICATIONS, DASHBOARD, PAYMENTS,

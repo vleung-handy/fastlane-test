@@ -46,7 +46,7 @@ public class WeeklyPagerAdapter extends PagerAdapter {
     @NonNull
     private AvailableHoursViewModel getAvailableHoursViewModel(
             final Date date,
-            final @Nullable Availability.Timeline timeline
+            final @Nullable Availability.AdhocTimeline timeline
     ) {
         return new AvailableHoursViewModel(
                 DateTimeUtils.formatDateShortDayOfWeekShortMonthDay(date),
@@ -58,7 +58,7 @@ public class WeeklyPagerAdapter extends PagerAdapter {
 
     public void updateViewWithTimeline(
             @NonNull final Date date,
-            @Nullable final Availability.Timeline timeline
+            @Nullable final Availability.AdhocTimeline timeline
     ) {
         for (WeeklyAvailableHoursView weekView : mViews) {
             final AvailableHoursWithDateView view = weekView.getViewWithIdentifier(date);
