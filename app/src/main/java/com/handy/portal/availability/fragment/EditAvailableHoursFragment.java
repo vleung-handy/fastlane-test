@@ -161,8 +161,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     private void showDiscardChangesDialog() {
         final AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                 .setCancelable(true)
-                .setTitle(R.string.send_available_hours_discard_confirmation_title)
-                .setMessage(R.string.send_available_hours_discard_confirmation_message)
+                .setTitle(R.string.discard_changes_confirmation_title)
+                .setMessage(R.string.discard_changes_confirmation_message)
                 .setPositiveButton(R.string.dont_save,
                         new DialogInterface.OnClickListener() {
                             @Override

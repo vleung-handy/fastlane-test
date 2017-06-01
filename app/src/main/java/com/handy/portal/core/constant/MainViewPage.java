@@ -32,7 +32,6 @@ import com.handy.portal.payments.ui.fragment.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.payments.ui.fragment.SelectPaymentMethodFragment;
 import com.handy.portal.availability.fragment.EditAvailableHoursFragment;
 import com.handy.portal.availability.fragment.EditWeeklyAvailableHoursFragment;
-import com.handy.portal.availability.fragment.SendAvailableHoursFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
 
 import java.io.Serializable;
@@ -85,8 +84,7 @@ public enum MainViewPage implements Serializable {
 
     CLIENTS(ClientsFragment.class),
     EDIT_AVAILABLE_HOURS(EditAvailableHoursFragment.class),
-    EDIT_WEEKLY_AVAILABLE_HOURS(EditWeeklyAvailableHoursFragment.class),
-    SEND_AVAILABLE_HOURS(SendAvailableHoursFragment.class);
+    EDIT_WEEKLY_AVAILABLE_HOURS(EditWeeklyAvailableHoursFragment.class),;
 
     private static final MainViewPage[] TOP_LEVEL_PAGES = {
             AVAILABLE_JOBS, SCHEDULED_JOBS, CLIENTS, NOTIFICATIONS, DASHBOARD, PAYMENTS,

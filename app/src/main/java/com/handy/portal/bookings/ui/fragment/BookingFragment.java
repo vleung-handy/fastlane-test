@@ -63,7 +63,6 @@ import com.handy.portal.logger.handylogger.model.EventContext;
 import com.handy.portal.logger.handylogger.model.EventType;
 import com.handy.portal.logger.handylogger.model.JobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
-import com.handy.portal.logger.handylogger.model.SendAvailabilityLog;
 import com.handy.portal.payments.model.PaymentInfo;
 import com.handybook.shared.core.HandyLibrary;
 import com.handybook.shared.layer.LayerConstants;
@@ -434,11 +433,13 @@ public class BookingFragment extends TimerActionBarFragment {
             mNoShowBanner.setVisibility(View.VISIBLE);
         }
 
-        if (mBooking.getAction(Booking.Action.ACTION_SEND_TIMES) != null) {
-            mSendAlternateTimesButton.setVisibility(View.VISIBLE);
-        }
-        else {
-            mSendAlternateTimesButton.setVisibility(View.GONE);
+        if (false) { // TODO: Remove short circuit once we know how to handle send times
+            if (mBooking.getAction(Booking.Action.ACTION_SEND_TIMES) != null) {
+                mSendAlternateTimesButton.setVisibility(View.VISIBLE);
+            }
+            else {
+                mSendAlternateTimesButton.setVisibility(View.GONE);
+            }
         }
 
         setActionBarTitle();
@@ -547,13 +548,7 @@ public class BookingFragment extends TimerActionBarFragment {
 
     @OnClick(R.id.booking_send_alternate_times_button)
     void sendAlternateTimes() {
-        final Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.BOOKING, mBooking);
-        bus.post(new NavigationEvent.NavigateToPage(
-                MainViewPage.SEND_AVAILABLE_HOURS, arguments, true));
-        bus.post(new LogEvent.AddLogEvent(
-                new SendAvailabilityLog.SendAvailabilitySelected(
-                        EventContext.JOB_DETAILS, mBooking)));
+        // TODO: Implement
     }
 
     private void setActionButtonVisibility() {

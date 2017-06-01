@@ -1,7 +1,6 @@
 package com.handy.portal.clients.ui.adapter;
 
 import android.content.Context;
-import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
@@ -19,15 +18,10 @@ import com.handy.portal.bookings.ui.element.BookingElementView;
 import com.handy.portal.bookings.ui.element.DismissableBookingElementView;
 import com.handy.portal.clients.ui.element.RequestedJobsDateView;
 import com.handy.portal.clients.ui.element.RequestedJobsHeaderView;
-import com.handy.portal.core.constant.BundleKeys;
-import com.handy.portal.core.constant.MainViewPage;
-import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.EventContext;
-import com.handy.portal.logger.handylogger.model.SendAvailabilityLog;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -414,7 +408,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
 
             final View sendAlternateTimesButton =
                     associatedView.findViewById(R.id.reschedule_button);
-            if (sendAlternateTimesButton != null) {
+            if (false && sendAlternateTimesButton != null) { // TODO: Remove short circuit once we know how to handle send times
                 final Booking.Action sendTimesAction =
                         booking.getAction(Booking.Action.ACTION_SEND_TIMES);
                 if (sendTimesAction != null) {
@@ -422,13 +416,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                     sendAlternateTimesButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(final View v) {
-                            final Bundle arguments = new Bundle();
-                            arguments.putSerializable(BundleKeys.BOOKING, booking);
-                            mBus.post(new NavigationEvent.NavigateToPage(
-                                    MainViewPage.SEND_AVAILABLE_HOURS, arguments, true));
-                            mBus.post(new LogEvent.AddLogEvent(
-                                    new SendAvailabilityLog.SendAvailabilitySelected(
-                                            mOriginEventContext, booking)));
+                            // TODO: Implement
                         }
                     });
                 }
