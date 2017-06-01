@@ -1,7 +1,7 @@
 package com.handy.portal.availability.view;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
+import android.support.annotation.NonNull;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
@@ -11,10 +11,9 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.availability.model.Availability;
+import com.handy.portal.availability.viewmodel.AvailableHoursViewModel;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FontUtils;
-
-import java.util.Date;
 
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -32,23 +31,15 @@ public class AvailableHoursWithDateView extends FrameLayout {
     @BindColor(R.color.handy_blue)
     int mBlueColor;
 
-    private final Date mDate;
-    private Availability.Timeline mTimeline;
-    protected final boolean mEnabled;
+    private AvailableHoursViewModel mAvailableHoursViewModel;
 
     public AvailableHoursWithDateView(
             final Context context,
-            final Date date,
-            final boolean enabled
+            @NonNull final AvailableHoursViewModel availableHoursViewModel
     ) {
         super(context);
-        mDate = date;
-        mEnabled = enabled;
+        mAvailableHoursViewModel = availableHoursViewModel;
         init();
-    }
-
-    public Date getDate() {
-        return mDate;
     }
 
     public void setRowPadding(final int xPadding, final int yPadding) {
@@ -62,22 +53,22 @@ public class AvailableHoursWithDateView extends FrameLayout {
     private void init() {
         inflate(getContext(), R.layout.element_available_hours_with_date, this);
         ButterKnife.bind(this);
-        mTitle.setText(DateTimeUtils.formatDateShortDayOfWeekShortMonthDay(mDate));
-        updateIntervals(mTimeline);
-        setEnabled(mEnabled);
-        if (!mEnabled) {
+        update(mAvailableHoursViewModel);
+        setEnabled(mAvailableHoursViewModel.isEnabled());
+        if (!mAvailableHoursViewModel.isEnabled()) {
             mTitle.setAlpha(0.3f);
             mIntervals.setAlpha(0.3f);
         }
     }
 
-    public void updateIntervals(@Nullable final Availability.Timeline timeline) {
-        mTimeline = timeline;
+    public void update(@NonNull final AvailableHoursViewModel availableHoursViewModel) {
+        mAvailableHoursViewModel = availableHoursViewModel;
+        mTitle.setText(mAvailableHoursViewModel.getTitle());
         mIntervals.removeAllViews();
-        if (mTimeline != null) {
-            if (mTimeline.hasIntervals()) {
+        if (mAvailableHoursViewModel.getIntervals() != null) {
+            if (!mAvailableHoursViewModel.getIntervals().isEmpty()) {
                 for (final Availability.Interval interval :
-                        mTimeline.getIntervals()) {
+                        mAvailableHoursViewModel.getIntervals()) {
                     final TextView textView = createTextView();
                     final String startTimeFormatted =
                             DateTimeUtils.formatDateTo12HourClock(interval.getStartTime());
@@ -93,12 +84,16 @@ public class AvailableHoursWithDateView extends FrameLayout {
                 mIntervals.addView(textView);
             }
         }
-        else if (mEnabled) {
+        else if (mAvailableHoursViewModel.isEnabled()) {
             final TextView textView = createTextView();
             textView.setText(R.string.set_hours);
             textView.setTextColor(mBlueColor);
             mIntervals.addView(textView);
         }
+    }
+
+    public AvailableHoursViewModel getViewModel() {
+        return mAvailableHoursViewModel;
     }
 
     protected TextView createTextView() {

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <android.support.design.widget.TabLayout
+        android:id="@+id/available_hours_tab_layout"
+        style="@style/TextView.Large"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:tabBackground="@drawable/tab"
+        app:tabIndicatorColor="@color/handy_blue"
+        app:tabIndicatorHeight="2dp"
+        app:tabSelectedTextColor="@color/white"
+        app:tabTextAppearance="@style/TextAppearance.TabText"
+        app:tabTextColor="@color/white_trans"
+        />
+
+    <com.handy.portal.library.ui.view.DynamicHeightViewPager
+        android:id="@+id/available_hours_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        />
+
+    <Button
+        android:id="@+id/copy_hours_button"
+        style="@style/Button.Transparent.Oval"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/default_margin"
+        android:text="@string/copy_hours_from_current_week"
+        android:textColor="@color/tertiary_gray"
+        android:textSize="@dimen/small_text_size"
+        android:visibility="gone"
+        />
+</merge>

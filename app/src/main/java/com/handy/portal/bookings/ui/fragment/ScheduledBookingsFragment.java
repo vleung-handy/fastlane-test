@@ -315,7 +315,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.FLOW_CONTEXT, EventContext.AVAILABILITY);
         final NavigationEvent.NavigateToPage navigationEvent =
-                new NavigationEvent.NavigateToPage(MainViewPage.EDIT_WEEKLY_AVAILABLE_HOURS,
+                new NavigationEvent.NavigateToPage(MainViewPage.EDIT_WEEKLY_ADHOC_AVAILABLE_HOURS,
                         arguments, true);
         bus.post(navigationEvent);
     }
