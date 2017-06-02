@@ -268,13 +268,13 @@ public abstract class Availability {
 
     public static class TemplateTimeline extends Timeline implements Serializable {
         public enum Day {
-            @SerializedName("0")SUNDAY(R.string.sundays),
-            @SerializedName("1")MONDAY(R.string.mondays),
-            @SerializedName("2")TUESDAY(R.string.tuesdays),
-            @SerializedName("3")WEDNESDAY(R.string.wednesdays),
-            @SerializedName("4")THURSDAY(R.string.thursdays),
-            @SerializedName("5")FRIDAY(R.string.fridays),
-            @SerializedName("6")SATURDAY(R.string.saturdays),;
+            SUNDAY(R.string.sundays),
+            MONDAY(R.string.mondays),
+            TUESDAY(R.string.tuesdays),
+            WEDNESDAY(R.string.wednesdays),
+            THURSDAY(R.string.thursdays),
+            FRIDAY(R.string.fridays),
+            SATURDAY(R.string.saturdays),;
 
             private int mDisplayStringResId;
 
@@ -290,7 +290,7 @@ public abstract class Availability {
 
 
         @SerializedName("day")
-        private Day mDay;
+        private Integer mDay;
         @SerializedName("interval_array")
         private ArrayList<Interval> mIntervals;
 
@@ -298,12 +298,12 @@ public abstract class Availability {
                 final Day day,
                 final ArrayList<Interval> intervals
         ) {
-            mDay = day;
+            mDay = day.ordinal();
             mIntervals = intervals;
         }
 
         public Day getDay() {
-            return mDay;
+            return Day.values()[mDay];
         }
 
         @Override
