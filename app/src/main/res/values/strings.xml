@@ -670,6 +670,7 @@
     <string name="other_requests">Other Requests</string>
     <string name="exclusive_requests_help_content">These requests are from clients who are specifically asking for you!\n\nRespond to your clients by claiming, asking to reschedule, or passing on the request.</string>
     <string name="other_requests_help_content">These jobs are from clients you\'ve worked with before or new clients recommended for you.</string>
+    <string name="empty_requests_formatted">You have no %1$s.</string>
 
     <!-- Date Scroller -->
     <string name="sunday_initial">S</string>
