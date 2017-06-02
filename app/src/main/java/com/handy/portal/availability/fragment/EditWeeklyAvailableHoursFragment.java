@@ -1,8 +1,6 @@
 package com.handy.portal.availability.fragment;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,10 +16,15 @@ import android.widget.TextView;
 
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
+import com.handy.portal.availability.AvailabilityEvent;
+import com.handy.portal.availability.manager.AvailabilityManager;
 import com.handy.portal.availability.model.Availability;
+import com.handy.portal.availability.view.AvailableHoursWithDateView;
+import com.handy.portal.availability.view.TabWithDateRangeView;
+import com.handy.portal.availability.view.WeeklyAvailableHoursView;
+import com.handy.portal.availability.view.WeeklyAvailableHoursView.DateClickListener;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
-import com.handy.portal.core.constant.RequestCode;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ProviderManager;
@@ -32,15 +35,12 @@ import com.handy.portal.helpcenter.constants.HelpCenterConstants;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProAvailabilityLog;
-import com.handy.portal.availability.view.AvailableHoursWithDateView;
-import com.handy.portal.availability.view.TabWithDateRangeView;
-import com.handy.portal.availability.view.WeeklyAvailableHoursView;
-import com.handy.portal.availability.view.WeeklyAvailableHoursView.DateClickListener;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -55,10 +55,10 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     private static final int CURRENT_WEEK_INDEX = 0;
     private static final int NEXT_WEEK_INDEX = 1;
 
-    //Used for displaying the max number of weeks in the tab
-    private static final int MAX_NUM_WEEKS = 2;
     @Inject
     ProviderManager mProviderManager;
+    @Inject
+    AvailabilityManager mAvailabilityManager;
 
 
     @BindView(R.id.available_hours_info_banner_body)
@@ -79,7 +79,6 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     int mRedColor;
 
     private String mFlowContext;
-    private Availability.Wrapper.WeekRanges mWeekRangesWrapper;
     private TabAdapter mPagerAdapter;
     private ViewPager.OnPageChangeListener mWeekPageChangeListener =
             new ViewPager.OnPageChangeListener() {
@@ -109,42 +108,19 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
             final Bundle bundle = new Bundle();
             bundle.putString(BundleKeys.FLOW_CONTEXT, mFlowContext);
             bundle.putSerializable(BundleKeys.DATE, date);
-            bundle.putSerializable(BundleKeys.AVAILABILITY_TIMELINE,
-                    getTimelineForDate(date));
+            bundle.putSerializable(BundleKeys.TIMELINE, mAvailabilityManager.getTimelineForDate(date));
             final NavigationEvent.NavigateToPage navigationEvent =
                     new NavigationEvent.NavigateToPage(MainViewPage.EDIT_AVAILABLE_HOURS, bundle, true);
-            navigationEvent.setReturnFragment(EditWeeklyAvailableHoursFragment.this,
-                    RequestCode.EDIT_HOURS);
             bus.post(navigationEvent);
         }
     };
-    private HashMap<Date, Availability.Timeline> mUpdatedTimelines;
     private boolean mIsCurrentWeekAndNextWeekInSync;
     private int mDefaultSelectedTab;
 
-    private Availability.Timeline getTimelineForDate(final Date date) {
-        Availability.Timeline timeline = null;
-        if (mUpdatedTimelines != null) {
-            timeline = mUpdatedTimelines.get(date);
-        }
-        if (timeline == null) {
-            timeline = mWeekRangesWrapper.getTimelineForDate(date);
-        }
-        return timeline;
-    }
-
-    private void updateAvailability(final Availability.Timeline timeline) {
-        mUpdatedTimelines.put(timeline.getDate(), timeline);
-        mPagerAdapter.updateViewWithTimeline(timeline);
-        callTargetFragmentResult(timeline);
-    }
-
-    private void callTargetFragmentResult(final Availability.Timeline updatedTimeline) {
-        if (getTargetFragment() != null) {
-            final Intent data = new Intent();
-            data.putExtra(BundleKeys.AVAILABILITY_TIMELINE, updatedTimeline);
-            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
-        }
+    @Subscribe
+    public void onAvailabilityTimelineUpdated(final AvailabilityEvent.TimelineUpdated event) {
+        mPagerAdapter.updateViewWithTimeline(event.getTimeline().getDate(), event.getTimeline());
+        setIsCurrentWeekAndNextWeekInSync(false);
     }
 
     @OnClick(R.id.available_hours_info_banner_body)
@@ -169,14 +145,13 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
         final Availability.Wrapper.Timelines timelinesWrapper =
                 createNextWeekTimelinesWrapperFromCurrentWeekRange();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        dataManager.saveProviderAvailability(mProviderManager.getLastProviderId(), timelinesWrapper,
+
+        mAvailabilityManager.saveAvailability(
+                timelinesWrapper,
                 new FragmentSafeCallback<Void>(this) {
                     @Override
                     public void onCallbackSuccess(final Void response) {
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                        for (Availability.Timeline timeline : timelinesWrapper.get()) {
-                            updateAvailability(timeline);
-                        }
                         setIsCurrentWeekAndNextWeekInSync(true);
                     }
 
@@ -189,32 +164,25 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
                         }
                         showToast(message);
                     }
-                });
+                }
+        );
     }
 
     @NonNull
     private Availability.Wrapper.Timelines createNextWeekTimelinesWrapperFromCurrentWeekRange() {
         final Availability.Wrapper.Timelines timelinesWrapper = new Availability.Wrapper.Timelines();
-        final Availability.Range currentWeekRange =
-                mWeekRangesWrapper.get(MAX_NUM_WEEKS).get(CURRENT_WEEK_INDEX);
-        final Calendar currentWeekDate = Calendar.getInstance(Locale.US);
-        final Date startDate = currentWeekRange.getStartDate();
-        final Date endDate = currentWeekRange.getEndDate();
-        currentWeekDate.setTime(startDate);
-        while (DateTimeUtils.daysBetween(currentWeekDate.getTime(), endDate) >= 0) {
-            final Date date = currentWeekDate.getTime();
+        final Availability.Range currentWeekRange = mAvailabilityManager.getCurrentWeekRange();
+        for (final Date date : currentWeekRange.dates()) {
             final Calendar nextWeekDate = Calendar.getInstance(Locale.US);
             nextWeekDate.setTime(date);
             nextWeekDate.add(Calendar.DATE, DateTimeUtils.DAYS_IN_A_WEEK);
 
-            final Availability.Timeline timeline = getTimelineForDate(date);
+            final Availability.Timeline timeline = mAvailabilityManager.getTimelineForDate(date);
             final ArrayList<Availability.Interval> intervals = Lists.newArrayList();
             if (timeline != null && timeline.getIntervals() != null) {
                 intervals.addAll(timeline.getIntervals());
             }
             timelinesWrapper.addTimeline(nextWeekDate.getTime(), intervals);
-
-            currentWeekDate.add(Calendar.DATE, 1);
         }
         return timelinesWrapper;
     }
@@ -222,14 +190,8 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bus.register(this);
         mFlowContext = getArguments().getString(BundleKeys.FLOW_CONTEXT);
-        mWeekRangesWrapper = (Availability.Wrapper.WeekRanges) getArguments()
-                .getSerializable(BundleKeys.AVAILABILITY_WEEK_RANGES_WRAPPER);
-        mUpdatedTimelines = (HashMap<Date, Availability.Timeline>) getArguments()
-                .getSerializable(BundleKeys.AVAILABILITY_TIMELINES_CACHE);
-        if (mUpdatedTimelines == null) {
-            mUpdatedTimelines = new HashMap<>();
-        }
         mDefaultSelectedTab = getArguments().getBoolean(BundleKeys.SHOULD_DEFAULT_TO_NEXT_WEEK,
                 false) ? NEXT_WEEK_INDEX : CURRENT_WEEK_INDEX;
     }
@@ -249,12 +211,18 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mFetchErrorText.setText(R.string.error_fetching_available_hours);
-        if (mWeekRangesWrapper != null) {
+        if (mPagerAdapter != null) {
             displayAvailableHours();
             displayTabs();
             updateCopyHoursButton();
         }
         com.handy.portal.library.util.TextUtils.stripUnderlines(mInfoBannerBody);
+    }
+
+    @Override
+    public void onDestroy() {
+        bus.unregister(this);
+        super.onDestroy();
     }
 
     private void setIsCurrentWeekAndNextWeekInSync(final boolean value) {
@@ -275,33 +243,26 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
         }
     }
 
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK && requestCode == RequestCode.EDIT_HOURS) {
-            final Availability.Timeline timeline = (Availability.Timeline)
-                    data.getSerializableExtra(BundleKeys.AVAILABILITY_TIMELINE);
-            if (timeline != null) {
-                updateAvailability(timeline);
-                setIsCurrentWeekAndNextWeekInSync(false);
-            }
-        }
-    }
-
     private void displayAvailableHours() {
-        mPagerAdapter = new TabAdapter(getActivity(), mWeekRangesWrapper, mDateClickListener);
-        for (Availability.Timeline timeline : mUpdatedTimelines.values()) {
-            mPagerAdapter.updateViewWithTimeline(timeline);
+        final Availability.Range currentWeekRange = mAvailabilityManager.getCurrentWeekRange();
+        final Availability.Range nextWeekRange = mAvailabilityManager.getNextWeekRange();
+        mPagerAdapter = new TabAdapter(
+                getActivity(), currentWeekRange, nextWeekRange, mDateClickListener
+        );
+
+        final List<Date> allDates = new ArrayList<>();
+        allDates.addAll(currentWeekRange.dates());
+        allDates.addAll(nextWeekRange.dates());
+        for (final Date date : allDates) {
+            mPagerAdapter.updateViewWithTimeline(date, mAvailabilityManager.getTimelineForDate(date));
         }
         mViewPager.setAdapter(mPagerAdapter);
         mViewPager.addOnPageChangeListener(mWeekPageChangeListener);
     }
 
     private void displayTabs() {
-        final Availability.Range currentWeekRange =
-                mWeekRangesWrapper.get().get(CURRENT_WEEK_INDEX);
-        final Availability.Range nextWeekRange =
-                mWeekRangesWrapper.get().get(NEXT_WEEK_INDEX);
+        final Availability.Range currentWeekRange = mAvailabilityManager.getCurrentWeekRange();
+        final Availability.Range nextWeekRange = mAvailabilityManager.getNextWeekRange();
         final int selectedTabPosition = mTabLayout.getSelectedTabPosition();
         mTabLayout.removeAllTabs();
         mTabLayout.setupWithViewPager(mViewPager);
@@ -317,7 +278,7 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
     public void onResume() {
         super.onResume();
         setActionBar(R.string.available_hours, true);
-        if (mWeekRangesWrapper == null) {
+        if (mPagerAdapter == null) {
             requestAvailableHours();
         }
         else {
@@ -328,45 +289,43 @@ public class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
 
     private void requestAvailableHours() {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        dataManager.getConcreteAvailability(mProviderManager.getLastProviderId(),
-                new FragmentSafeCallback<Availability.Wrapper.WeekRanges>(this) {
-                    @Override
-                    public void onCallbackSuccess(
-                            final Availability.Wrapper.WeekRanges weekRangesWrapper
-                    ) {
-                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                        mFetchErrorView.setVisibility(View.GONE);
-                        mWeekRangesWrapper = weekRangesWrapper;
-                        displayAvailableHours();
-                        displayTabs();
-                        updateCopyHoursButton();
-                    }
+        mAvailabilityManager.getAvailability(true, new FragmentSafeCallback<Void>(this) {
+            @Override
+            public void onCallbackSuccess(final Void response) {
+                bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                mFetchErrorView.setVisibility(View.GONE);
+                displayAvailableHours();
+                displayTabs();
+                updateCopyHoursButton();
+            }
 
-                    @Override
-                    public void onCallbackError(final DataManager.DataManagerError error) {
-                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                        mFetchErrorView.setVisibility(View.VISIBLE);
-                    }
-                });
+            @Override
+            public void onCallbackError(final DataManager.DataManagerError error) {
+                bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                mFetchErrorView.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     private class TabAdapter extends PagerAdapter {
-        public static final int POSITION_NOT_FOUND = -1;
+        private static final int POSITION_NOT_FOUND = -1;
         private List<WeeklyAvailableHoursView> mViews;
 
         TabAdapter(final Context context,
-                   final Availability.Wrapper.WeekRanges weekRangesWrapper,
+                   final Availability.Range currentWeekRange,
+                   final Availability.Range nextWeekRange,
                    final DateClickListener dateClickListener) {
             mViews = new ArrayList<>();
-            for (final Availability.Range weekRange : weekRangesWrapper.get(MAX_NUM_WEEKS)) {
-                mViews.add(new WeeklyAvailableHoursView(context, weekRange,
-                        dateClickListener));
-            }
+            mViews.add(new WeeklyAvailableHoursView(context, currentWeekRange, dateClickListener));
+            mViews.add(new WeeklyAvailableHoursView(context, nextWeekRange, dateClickListener));
         }
 
-        public void updateViewWithTimeline(final Availability.Timeline timeline) {
+        public void updateViewWithTimeline(
+                @NonNull final Date date,
+                @Nullable final Availability.Timeline timeline
+        ) {
             for (WeeklyAvailableHoursView weekView : mViews) {
-                final AvailableHoursWithDateView view = weekView.getViewForDate(timeline.getDate());
+                final AvailableHoursWithDateView view = weekView.getViewForDate(date);
                 if (view != null) {
                     view.updateIntervals(timeline);
                 }

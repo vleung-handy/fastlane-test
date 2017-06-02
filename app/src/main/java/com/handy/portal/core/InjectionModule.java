@@ -30,9 +30,6 @@ import com.handy.portal.onboarding.ui.activity.ActivationWelcomeActivity;
 import com.handy.portal.onboarding.ui.activity.FirstDayActivity;
 import com.handy.portal.onboarding.ui.fragment.CameraPermissionsBlockerDialogFragment;
 import com.handy.portal.onboarding.ui.fragment.IDVerificationFragment;
-import com.handy.portal.availability.fragment.EditAvailableHoursFragment;
-import com.handy.portal.availability.fragment.EditWeeklyAvailableHoursFragment;
-import com.handy.portal.availability.fragment.SendAvailableHoursFragment;
 import com.handy.portal.receiver.HandyPushReceiver;
 import com.handy.portal.receiver.LayerPushReceiver;
 import com.handy.portal.webview.PortalWebViewClient;
@@ -81,9 +78,6 @@ import dagger.Module;
                 LayerPushReceiver.class,
                 PortalWebViewClient.class,
                 RequestSuppliesWebViewClient.class,
-                EditAvailableHoursFragment.class,
-                EditWeeklyAvailableHoursFragment.class,
-                SendAvailableHoursFragment.class,
                 MoreNavItemsFragment.class,
                 ShareProviderWebViewFragment.class,
                 ProShareActivity.class,

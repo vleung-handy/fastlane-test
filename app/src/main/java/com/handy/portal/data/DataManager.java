@@ -185,12 +185,12 @@ public class DataManager {
         mService.getResupplyKit(providerId, new ResupplyInfoRetrofitCallback(cb));
     }
 
-    public void getConcreteAvailability(String providerId, Callback<Availability.Wrapper.WeekRanges> cb) {
-        mService.getConcreteAvailability(providerId, new WeekRangesWrapperRetrofitCallback(cb));
+    public void getAvailability(String providerId, Callback<Availability.Wrapper.WeekRanges> cb) {
+        mService.getAvailability(providerId, new WeekRangesWrapperRetrofitCallback(cb));
     }
 
-    public void saveProviderAvailability(String providerId, Availability.Wrapper.Timelines timelinesWrapper, Callback<Void> cb) {
-        mService.saveProviderAvailability(providerId, timelinesWrapper, new EmptyHandyRetroFitCallback(cb));
+    public void saveAvailability(String providerId, Availability.Wrapper.Timelines timelinesWrapper, Callback<Void> cb) {
+        mService.saveAvailability(providerId, timelinesWrapper, new EmptyHandyRetroFitCallback(cb));
     }
 
     public void sendAvailability(String providerId, String requestId, String response, Callback<Void> cb) {

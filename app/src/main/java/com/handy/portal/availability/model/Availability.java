@@ -12,6 +12,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 public abstract class Availability {
@@ -124,8 +125,9 @@ public abstract class Availability {
             return DateTimeUtils.parseDateString(mEndDate, DateTimeUtils.YEAR_MONTH_DAY_FORMATTER);
         }
 
+        // WARNING: Package access here is intentional, always access time lines using AvailabilityManager.
         @Nullable
-        public Timeline getTimelineForDate(@NonNull final Date date) {
+        Timeline getTimelineForDate(@NonNull final Date date) {
             for (Timeline timeline : mTimelines) {
                 if (timeline.matchesDate(date)) {
                     return timeline;
@@ -161,6 +163,19 @@ public abstract class Availability {
                 calendar.add(Calendar.DATE, 1);
             }
             return hasAvailableHours;
+        }
+
+        public List<Date> dates() {
+            final ArrayList<Date> dates = new ArrayList<>();
+            final Calendar calendar = Calendar.getInstance(Locale.US);
+            final Date startDate = getStartDate();
+            final Date endDate = getEndDate();
+            calendar.setTime(startDate);
+            while (DateTimeUtils.daysBetween(calendar.getTime(), endDate) >= 0) {
+                dates.add(calendar.getTime());
+                calendar.add(Calendar.DATE, 1);
+            }
+            return dates;
         }
     }
 

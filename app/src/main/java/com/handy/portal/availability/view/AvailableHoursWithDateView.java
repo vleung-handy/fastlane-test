@@ -39,12 +39,10 @@ public class AvailableHoursWithDateView extends FrameLayout {
     public AvailableHoursWithDateView(
             final Context context,
             final Date date,
-            @Nullable final Availability.Timeline timeline,
             final boolean enabled
     ) {
         super(context);
         mDate = date;
-        mTimeline = timeline;
         mEnabled = enabled;
         init();
     }
@@ -73,7 +71,7 @@ public class AvailableHoursWithDateView extends FrameLayout {
         }
     }
 
-    public void updateIntervals(final Availability.Timeline timeline) {
+    public void updateIntervals(@Nullable final Availability.Timeline timeline) {
         mTimeline = timeline;
         mIntervals.removeAllViews();
         if (mTimeline != null) {

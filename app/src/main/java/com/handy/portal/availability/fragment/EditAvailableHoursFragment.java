@@ -1,8 +1,6 @@
 package com.handy.portal.availability.fragment;
 
-import android.app.Activity;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
@@ -15,11 +13,14 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 
 import com.handy.portal.R;
+import com.handy.portal.availability.manager.AvailabilityManager;
 import com.handy.portal.availability.model.Availability;
+import com.handy.portal.availability.view.TimeRangeListView;
+import com.handy.portal.availability.viewmodel.TimePickerViewModel;
+import com.handy.portal.availability.viewmodel.TimePickerViewModel.SelectionType;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
-import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.ui.activity.BaseActivity;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.data.DataManager;
@@ -28,9 +29,6 @@ import com.handy.portal.library.ui.view.timepicker.HandyTimePicker;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProAvailabilityLog;
-import com.handy.portal.availability.view.TimeRangeListView;
-import com.handy.portal.availability.viewmodel.TimePickerViewModel;
-import com.handy.portal.availability.viewmodel.TimePickerViewModel.SelectionType;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,7 +44,7 @@ import butterknife.OnClick;
 
 public class EditAvailableHoursFragment extends ActionBarFragment {
     @Inject
-    ProviderManager mProviderManager;
+    AvailabilityManager mAvailabilityManager;
 
     private static final int TIME_SLOTS_LIMIT = 3;
     private static final int DEFAULT_START_HOUR = 7;
@@ -69,7 +67,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
 
     private String mFlowContext;
     private Date mDate;
-    private Availability.Timeline mTimeline;
+    private Availability.Timeline mOriginalTimeline;
     private BaseActivity.OnBackPressedListener mOnBackPressedListener;
     private CompoundButton.OnCheckedChangeListener mAvailabilityToggleCheckedChangeListener;
     private TimePickerViewModel mTimePickerViewModel;
@@ -163,8 +161,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     private void showDiscardChangesDialog() {
         final AlertDialog alertDialog = new AlertDialog.Builder(getActivity())
                 .setCancelable(true)
-                .setTitle(R.string.send_available_hours_discard_confirmation_title)
-                .setMessage(R.string.send_available_hours_discard_confirmation_message)
+                .setTitle(R.string.discard_changes_confirmation_title)
+                .setMessage(R.string.discard_changes_confirmation_message)
                 .setPositiveButton(R.string.dont_save,
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -200,14 +198,13 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         final Availability.Wrapper.Timelines timelinesWrapper = getTimelinesWrapperFromViewModel();
         logSubmit(timelinesWrapper);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        dataManager.saveProviderAvailability(mProviderManager.getLastProviderId(),
+        mAvailabilityManager.saveAvailability(
                 timelinesWrapper,
                 new FragmentSafeCallback<Void>(this) {
                     @Override
                     public void onCallbackSuccess(final Void response) {
                         logSuccess(timelinesWrapper);
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                        callTargetFragmentResult();
                         ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
                         getActivity().onBackPressed();
                     }
@@ -257,23 +254,10 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         return sum;
     }
 
-    private void callTargetFragmentResult() {
-        if (getTargetFragment() != null) {
-            final Intent data = new Intent();
-            data.putExtra(BundleKeys.AVAILABILITY_TIMELINE,
-                    getTimelineFromViewModel());
-            getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, data);
-        }
-    }
-
     private Availability.Wrapper.Timelines getTimelinesWrapperFromViewModel() {
         final Availability.Wrapper.Timelines timelinesWrapper = new Availability.Wrapper.Timelines();
         timelinesWrapper.addTimeline(mDate, getIntervalsFromViewModel());
         return timelinesWrapper;
-    }
-
-    private Availability.Timeline getTimelineFromViewModel() {
-        return new Availability.Timeline(mDate, getIntervalsFromViewModel());
     }
 
     private ArrayList<Availability.Interval> getIntervalsFromViewModel() {
@@ -309,8 +293,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         super.onCreate(savedInstanceState);
         mFlowContext = getArguments().getString(BundleKeys.FLOW_CONTEXT);
         mDate = (Date) getArguments().getSerializable(BundleKeys.DATE);
-        mTimeline = (Availability.Timeline) getArguments()
-                .getSerializable(BundleKeys.AVAILABILITY_TIMELINE);
+        mOriginalTimeline =
+                (Availability.Timeline) getArguments().getSerializable(BundleKeys.TIMELINE);
         ((BaseActivity) getActivity()).addOnBackPressedListener(mOnBackPressedListener);
     }
 
@@ -342,9 +326,9 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         mTimePickerViewModel = new TimePickerViewModel();
         mTimePickerViewModel.setLimits(DEFAULT_START_HOUR, DEFAULT_END_HOUR,
                 DEFAULT_TIME_RANGE_DURATION);
-        if (mTimeline != null && mTimeline.hasIntervals()) {
+        if (mOriginalTimeline != null && mOriginalTimeline.hasIntervals()) {
             for (final Availability.Interval interval :
-                    mTimeline.getIntervals()) {
+                    mOriginalTimeline.getIntervals()) {
                 mTimePickerViewModel.addTimeRange(interval.getStartHour(), interval.getEndHour());
             }
             mTimePickerViewModel.getPointer().point(mTimePickerViewModel.getTimeRangesCount() - 1,
@@ -354,8 +338,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
             mTimePickerViewModel.addTimeRange();
             mTimePickerViewModel.getPointer().point(0, SelectionType.START_TIME);
         }
-        mTimePickerViewModel.setClosed(mTimeline != null
-                && !mTimeline.hasIntervals());
+        mTimePickerViewModel.setClosed(mOriginalTimeline != null
+                && !mOriginalTimeline.hasIntervals());
     }
 
     private void initAvailabilityToggle() {
