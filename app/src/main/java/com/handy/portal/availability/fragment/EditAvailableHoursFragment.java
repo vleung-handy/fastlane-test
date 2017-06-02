@@ -207,7 +207,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         if (mMode == Mode.ADHOC) {
             saveAdhocAvailability();
         }
-        if (mMode == Mode.TEMPLATE) {
+        else if (mMode == Mode.TEMPLATE) {
             saveTemplateAvailability();
         }
     }
@@ -381,7 +381,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
                     DateTimeUtils.formatDateShortDayOfWeekShortMonthDay(mDate)
             );
         }
-        if (mMode == Mode.TEMPLATE) {
+        else if (mMode == Mode.TEMPLATE) {
             title = getString(mDay.getDisplayStringResId());
         }
         setActionBar(title, true);
