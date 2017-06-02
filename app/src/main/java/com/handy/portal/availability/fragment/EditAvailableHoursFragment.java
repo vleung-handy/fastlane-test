@@ -28,6 +28,7 @@ import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.ui.view.timepicker.HandyTimePicker;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.EventType;
 import com.handy.portal.logger.handylogger.model.ProAvailabilityLog;
 
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     public enum Mode {
         ADHOC, TEMPLATE
     }
+
 
     @Inject
     AvailabilityManager mAvailabilityManager;
@@ -213,14 +215,14 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     private void saveAdhocAvailability() {
         final Availability.Wrapper.AdhocTimelines timelinesWrapper =
                 getAdhocTimelinesWrapperFromViewModel();
-        logSubmit(timelinesWrapper);
+        logSetHours(EventType.SET_HOURS_SUBMITTED, timelinesWrapper);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         mAvailabilityManager.saveAvailability(
                 timelinesWrapper,
                 new FragmentSafeCallback<Void>(this) {
                     @Override
                     public void onCallbackSuccess(final Void response) {
-                        logSuccess(timelinesWrapper);
+                        logSetHours(EventType.SET_HOURS_SUCCESS, timelinesWrapper);
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
                         getActivity().onBackPressed();
@@ -228,7 +230,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
 
                     @Override
                     public void onCallbackError(final DataManager.DataManagerError error) {
-                        logError(timelinesWrapper);
+                        logSetHours(EventType.SET_HOURS_ERROR, timelinesWrapper);
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         String message = error.getMessage();
                         if (TextUtils.isEmpty(message)) {
@@ -242,12 +244,14 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     private void saveTemplateAvailability() {
         final Availability.Wrapper.TemplateTimelines timelinesWrapper =
                 getTemplateTimelinesWrapperFromViewModel();
+        logSetHours(EventType.SET_TEMPLATE_HOURS_SUBMITTED, timelinesWrapper);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         mAvailabilityManager.saveAvailabilityTemplate(
                 timelinesWrapper,
                 new FragmentSafeCallback<Void>(this) {
                     @Override
                     public void onCallbackSuccess(final Void response) {
+                        logSetHours(EventType.SET_TEMPLATE_HOURS_SUCCESS, timelinesWrapper);
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
                         getActivity().onBackPressed();
@@ -255,6 +259,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
 
                     @Override
                     public void onCallbackError(final DataManager.DataManagerError error) {
+                        logSetHours(EventType.SET_TEMPLATE_HOURS_ERROR, timelinesWrapper);
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         String message = error.getMessage();
                         if (TextUtils.isEmpty(message)) {
@@ -265,28 +270,32 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
                 });
     }
 
-    private void logSubmit(final Availability.Wrapper.AdhocTimelines timelinesWrapper) {
+    private void logSetHours(
+            final String eventType,
+            final Availability.Wrapper.AdhocTimelines timelinesWrapper
+    ) {
         final Availability.AdhocTimeline timeline = timelinesWrapper.get().get(0);
-        bus.post(new LogEvent.AddLogEvent(
-                new ProAvailabilityLog.SetHoursSubmitted(mFlowContext, timeline.getDateString(),
-                        getIntervalsSum(timeline.getIntervals()),
-                        !timeline.hasIntervals())));
+        bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.SetHoursLog(
+                eventType,
+                mFlowContext,
+                timeline.getDateString(),
+                getIntervalsSum(timeline.getIntervals()),
+                !timeline.hasIntervals())
+        ));
     }
 
-    private void logSuccess(final Availability.Wrapper.AdhocTimelines timelinesWrapper) {
-        final Availability.AdhocTimeline timeline = timelinesWrapper.get().get(0);
-        bus.post(new LogEvent.AddLogEvent(
-                new ProAvailabilityLog.SetHoursSuccess(mFlowContext, timeline.getDateString(),
-                        getIntervalsSum(timeline.getIntervals()),
-                        !timeline.hasIntervals())));
-    }
-
-    private void logError(final Availability.Wrapper.AdhocTimelines timelinesWrapper) {
-        final Availability.AdhocTimeline timeline = timelinesWrapper.get().get(0);
-        bus.post(new LogEvent.AddLogEvent(
-                new ProAvailabilityLog.SetHoursError(mFlowContext, timeline.getDateString(),
-                        getIntervalsSum(timeline.getIntervals()),
-                        !timeline.hasIntervals())));
+    private void logSetHours(
+            final String eventType,
+            final Availability.Wrapper.TemplateTimelines timelinesWrapper
+    ) {
+        final Availability.TemplateTimeline timeline = timelinesWrapper.get().get(0);
+        bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.SetTemplateHoursLog(
+                eventType,
+                mFlowContext,
+                timeline.getDay(),
+                getIntervalsSum(timeline.getIntervals()),
+                !timeline.hasIntervals())
+        ));
     }
 
     private int getIntervalsSum(final List<Availability.Interval> intervals) {

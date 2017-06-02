@@ -700,7 +700,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
                 mSelectedDay != null ? DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(mSelectedDay)
                         : null)));
         final Bundle bundle = new Bundle();
-        bundle.putString(BundleKeys.FLOW_CONTEXT, EventContext.AVAILABILITY);
+        bundle.putString(BundleKeys.FLOW_CONTEXT, EventContext.SCHEDULED_JOBS);
         bundle.putSerializable(BundleKeys.MODE, EditAvailableHoursFragment.Mode.ADHOC);
         bundle.putSerializable(BundleKeys.DATE, mSelectedDay);
         bundle.putSerializable(BundleKeys.TIMELINE,
