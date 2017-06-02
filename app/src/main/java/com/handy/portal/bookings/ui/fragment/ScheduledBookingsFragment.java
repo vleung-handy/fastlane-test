@@ -315,10 +315,14 @@ public class ScheduledBookingsFragment extends ActionBarFragment
                 DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(mSelectedDay))));
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.FLOW_CONTEXT, EventContext.AVAILABILITY);
-        // FIXME: Use adhoc vs template config
         final NavigationEvent.NavigateToPage navigationEvent =
-                new NavigationEvent.NavigateToPage(MainViewPage.EDIT_WEEKLY_ADHOC_AVAILABLE_HOURS,
-                        arguments, true);
+                new NavigationEvent.NavigateToPage(
+                        mConfigManager.getConfigurationResponse().isTemplateAvailabilityEnabled()
+                                ? MainViewPage.EDIT_WEEKLY_TEMPLATE_AVAILABLE_HOURS
+                                : MainViewPage.EDIT_WEEKLY_ADHOC_AVAILABLE_HOURS,
+                        arguments,
+                        true
+                );
         bus.post(navigationEvent);
     }
 
