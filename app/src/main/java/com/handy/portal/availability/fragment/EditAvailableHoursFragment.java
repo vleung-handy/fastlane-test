@@ -203,36 +203,66 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     @OnClick(R.id.save)
     public void onSave() {
         if (mMode == Mode.ADHOC) {
-            final Availability.Wrapper.AdhocTimelines timelinesWrapper =
-                    getAdhocTimelinesWrapperFromViewModel();
-            logSubmit(timelinesWrapper);
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-            mAvailabilityManager.saveAvailability(
-                    timelinesWrapper,
-                    new FragmentSafeCallback<Void>(this) {
-                        @Override
-                        public void onCallbackSuccess(final Void response) {
-                            logSuccess(timelinesWrapper);
-                            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                            ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
-                            getActivity().onBackPressed();
-                        }
-
-                        @Override
-                        public void onCallbackError(final DataManager.DataManagerError error) {
-                            logError(timelinesWrapper);
-                            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                            String message = error.getMessage();
-                            if (TextUtils.isEmpty(message)) {
-                                message = getString(R.string.an_error_has_occurred);
-                            }
-                            showToast(message);
-                        }
-                    });
+            saveAdhocAvailability();
         }
         if (mMode == Mode.TEMPLATE) {
-            // FIXME: Implement
+            saveTemplateAvailability();
         }
+    }
+
+    private void saveAdhocAvailability() {
+        final Availability.Wrapper.AdhocTimelines timelinesWrapper =
+                getAdhocTimelinesWrapperFromViewModel();
+        logSubmit(timelinesWrapper);
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        mAvailabilityManager.saveAvailability(
+                timelinesWrapper,
+                new FragmentSafeCallback<Void>(this) {
+                    @Override
+                    public void onCallbackSuccess(final Void response) {
+                        logSuccess(timelinesWrapper);
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                        ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
+                        getActivity().onBackPressed();
+                    }
+
+                    @Override
+                    public void onCallbackError(final DataManager.DataManagerError error) {
+                        logError(timelinesWrapper);
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                        String message = error.getMessage();
+                        if (TextUtils.isEmpty(message)) {
+                            message = getString(R.string.an_error_has_occurred);
+                        }
+                        showToast(message);
+                    }
+                });
+    }
+
+    private void saveTemplateAvailability() {
+        final Availability.Wrapper.TemplateTimelines timelinesWrapper =
+                getTemplateTimelinesWrapperFromViewModel();
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        mAvailabilityManager.saveAvailabilityTemplate(
+                timelinesWrapper,
+                new FragmentSafeCallback<Void>(this) {
+                    @Override
+                    public void onCallbackSuccess(final Void response) {
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                        ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
+                        getActivity().onBackPressed();
+                    }
+
+                    @Override
+                    public void onCallbackError(final DataManager.DataManagerError error) {
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                        String message = error.getMessage();
+                        if (TextUtils.isEmpty(message)) {
+                            message = getString(R.string.an_error_has_occurred);
+                        }
+                        showToast(message);
+                    }
+                });
     }
 
     private void logSubmit(final Availability.Wrapper.AdhocTimelines timelinesWrapper) {
@@ -271,6 +301,13 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         final Availability.Wrapper.AdhocTimelines timelinesWrapper =
                 new Availability.Wrapper.AdhocTimelines();
         timelinesWrapper.addTimeline(mDate, getIntervalsFromViewModel());
+        return timelinesWrapper;
+    }
+
+    public Availability.Wrapper.TemplateTimelines getTemplateTimelinesWrapperFromViewModel() {
+        final Availability.Wrapper.TemplateTimelines timelinesWrapper =
+                new Availability.Wrapper.TemplateTimelines();
+        timelinesWrapper.addTimeline(mDay, getIntervalsFromViewModel());
         return timelinesWrapper;
     }
 

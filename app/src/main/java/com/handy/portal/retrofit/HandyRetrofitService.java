@@ -221,6 +221,11 @@ public interface HandyRetrofitService {
     @GET(PROVIDERS_PATH + "{id}/availability_template")
     void getAvailabilityTemplate(@Path("id") String providerId, HandyRetrofitCallback cb);
 
+    @POST(PROVIDERS_PATH + "{id}/availability_template")
+    void saveAvailabilityTemplate(@Path("id") String providerId,
+                                  @Body Availability.Wrapper.TemplateTimelines timelinesWrapper,
+                                  HandyRetrofitCallback cb);
+
     @FormUrlEncoded
     @POST(PROVIDERS_PATH + "{id}/provider_requests/{request_id}/send_times")
     void sendAvailability(@Path("id") String providerId,

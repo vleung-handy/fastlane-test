@@ -197,6 +197,10 @@ public class DataManager {
         mService.getAvailabilityTemplate(providerId, new TemplateTimelinesWrapperRetrofitCallback(cb));
     }
 
+    public void saveAvailabilityTemplate(String providerId, final Availability.Wrapper.TemplateTimelines timelinesWrapper, final Callback<Void> cb) {
+        mService.saveAvailabilityTemplate(providerId, timelinesWrapper, new EmptyHandyRetroFitCallback(cb));
+    }
+
     public void sendAvailability(String providerId, String requestId, String response, Callback<Void> cb) {
         mService.sendAvailability(providerId, requestId, response, new EmptyHandyRetroFitCallback(cb));
     }

@@ -39,6 +39,37 @@ public abstract class Availability {
         }
 
 
+        public static class TemplateTimelines implements Serializable {
+            @SerializedName("templates")
+            private ArrayList<TemplateTimeline> mTimelines;
+
+            public TemplateTimelines() {
+                mTimelines = new ArrayList<>();
+            }
+
+            public void addTimeline(
+                    final TemplateTimeline.Day day,
+                    final ArrayList<Interval> intervals
+            ) {
+                mTimelines.add(new TemplateTimeline(day, intervals));
+            }
+
+            public ArrayList<TemplateTimeline> get() {
+                return mTimelines;
+            }
+
+            @Nullable
+            public TemplateTimeline findTemplateTimelineForDay(final TemplateTimeline.Day day) {
+                for (final TemplateTimeline timeline : mTimelines) {
+                    if (timeline.getDay() == day) {
+                        return timeline;
+                    }
+                }
+                return null;
+            }
+        }
+
+
         public static class WeekRanges implements Serializable {
             @SerializedName("weekly_timelines")
             private ArrayList<Range> mWeekRanges;
@@ -96,26 +127,6 @@ public abstract class Availability {
                     }
                 }
                 return false;
-            }
-        }
-
-
-        public static class TemplateTimelines implements Serializable {
-            @SerializedName("templates")
-            private ArrayList<TemplateTimeline> mTemplateTimelines;
-
-            public ArrayList<TemplateTimeline> get() {
-                return mTemplateTimelines;
-            }
-
-            @Nullable
-            public TemplateTimeline findTemplateTimelineForDay(final TemplateTimeline.Day day) {
-                for (final TemplateTimeline templateTimeline : mTemplateTimelines) {
-                    if (templateTimeline.getDay() == day) {
-                        return templateTimeline;
-                    }
-                }
-                return null;
             }
         }
     }
@@ -201,10 +212,13 @@ public abstract class Availability {
         }
     }
 
+
     public static abstract class Timeline implements Serializable {
         public abstract ArrayList<Interval> getIntervals();
+
         public abstract boolean hasIntervals();
     }
+
 
     public static class AdhocTimeline extends Timeline implements Serializable {
         @SerializedName("timeline_date")
@@ -273,6 +287,7 @@ public abstract class Availability {
                 return mDisplayStringResId;
             }
         }
+
 
         @SerializedName("day")
         private Day mDay;

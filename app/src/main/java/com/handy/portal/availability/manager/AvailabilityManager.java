@@ -106,6 +106,55 @@ public class AvailabilityManager {
         mDataManager.getAvailabilityTemplate(mProviderManager.getLastProviderId(), callback);
     }
 
+    public void saveAvailabilityTemplate(
+            final Availability.Wrapper.TemplateTimelines timelinesWrapper,
+            @Nullable final DataManager.Callback<Void> callback
+    ) {
+        mDataManager.saveAvailabilityTemplate(
+                mProviderManager.getLastProviderId(),
+                timelinesWrapper,
+                new DataManager.Callback<Void>() {
+                    @Override
+                    public void onSuccess(final Void response) {
+                        // Refresh availability cache
+                        getAvailability(false, new DataManager.Callback<Void>() {
+                            @Override
+                            public void onSuccess(final Void response) {
+                                finalizeSaveAvailabilityTemplate(timelinesWrapper, callback);
+                            }
+
+                            @Override
+                            public void onError(final DataManager.DataManagerError error) {
+                                // Since we're only trying to refresh availability cache here, it's
+                                // totally ok if it errors. We'll consider this a success because
+                                // because the original request succeeded.
+                                finalizeSaveAvailabilityTemplate(timelinesWrapper, callback);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error) {
+                        if (callback != null) {
+                            callback.onError(error);
+                        }
+                    }
+                }
+        );
+    }
+
+    private void finalizeSaveAvailabilityTemplate(
+            final Availability.Wrapper.TemplateTimelines timelinesWrapper,
+            @Nullable final DataManager.Callback<Void> callback
+    ) {
+        for (final Availability.TemplateTimeline timeline : timelinesWrapper.get()) {
+            mBus.post(new AvailabilityEvent.TemplateTimelineUpdated(timeline));
+        }
+        if (callback != null) {
+            callback.onSuccess(null);
+        }
+    }
+
     @Nullable
     public Availability.AdhocTimeline getTimelineForDate(@NonNull final Date date) {
         Availability.AdhocTimeline timeline = mUpdatedTimelines.get(date);

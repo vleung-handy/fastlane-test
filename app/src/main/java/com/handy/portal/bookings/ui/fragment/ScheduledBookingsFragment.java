@@ -458,7 +458,17 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onAvailabilityTimelineUpdated(final AvailabilityEvent.AdhocTimelineUpdated event) {
+    public void onAvailabilityAdhocTimelineUpdated(
+            final AvailabilityEvent.AdhocTimelineUpdated event
+    ) {
+        showAvailableHours();
+        setAvailableHoursBannerVisibility();
+    }
+
+    @Subscribe
+    public void onAvailabilityTemplateTimelineUpdated(
+            final AvailabilityEvent.TemplateTimelineUpdated event
+    ) {
         showAvailableHours();
         setAvailableHoursBannerVisibility();
     }
