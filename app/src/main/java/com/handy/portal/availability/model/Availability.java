@@ -119,15 +119,6 @@ public abstract class Availability {
             public boolean covers(final Date date) {
                 return getWeekRangeForDate(date) != null;
             }
-
-            public boolean hasAvailableHours() {
-                for (Range weekRange : mWeekRanges) {
-                    if (weekRange.hasAvailableHours()) {
-                        return true;
-                    }
-                }
-                return false;
-            }
         }
     }
 
@@ -179,23 +170,6 @@ public abstract class Availability {
                 return DateTimeUtils.daysBetween(date, startDate) <= 0
                         && DateTimeUtils.daysBetween(date, endDate) >= 0;
             }
-        }
-
-        public boolean hasAvailableHours() {
-            boolean hasAvailableHours = false;
-            final Calendar calendar = Calendar.getInstance(Locale.US);
-            calendar.setTime(getStartDate());
-            while (DateTimeUtils.daysBetween(calendar.getTime(), getEndDate()) >= 0) {
-                final AdhocTimeline timeline = getTimelineForDate(calendar.getTime());
-                if (timeline != null) {
-                    hasAvailableHours = timeline.hasIntervals();
-                }
-                if (hasAvailableHours) {
-                    break;
-                }
-                calendar.add(Calendar.DATE, 1);
-            }
-            return hasAvailableHours;
         }
 
         public List<Date> dates() {
