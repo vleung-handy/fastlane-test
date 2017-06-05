@@ -3,8 +3,11 @@ package com.handy.portal.clients.ui.adapter;
 import android.content.Context;
 import android.os.CountDownTimer;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
+import android.util.TypedValue;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,6 +22,7 @@ import com.handy.portal.bookings.ui.element.DismissableBookingElementView;
 import com.handy.portal.clients.ui.element.RequestedJobsDateView;
 import com.handy.portal.clients.ui.element.RequestedJobsHeaderView;
 import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.FontUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.model.EventContext;
@@ -42,6 +46,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
     private static final int VIEW_TYPE_JOB = 2;
     private static final int VIEW_TYPE_HEADER = 3;
     private static final int VIEW_TYPE_DIVIDER = 4;
+    private static final int VIEW_TYPE_EMPTY = 5;
     private List<Object> mItems;
 
     public RequestedJobsRecyclerViewAdapter(final Context context,
@@ -64,21 +69,19 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
         }
 
         mItems = new ArrayList<>();
-        if (!exclusiveBookings.isEmpty()) {
-            populateItemsWithSection(
-                    mContext.getString(R.string.exclusive_requests),
-                    mContext.getString(R.string.exclusive_requests_help_content),
-                    exclusiveBookings
-            );
-        }
+        populateItemsWithSection(
+                mContext.getString(R.string.exclusive_requests),
+                mContext.getString(R.string.exclusive_requests_help_content),
+                exclusiveBookings,
+                true
+        );
+        mItems.add(VIEW_TYPE_DIVIDER);
         if (!regularBookings.isEmpty()) {
-            if (!exclusiveBookings.isEmpty()) {
-                mItems.add(VIEW_TYPE_DIVIDER);
-            }
             populateItemsWithSection(
                     mContext.getString(R.string.other_requests),
                     mContext.getString(R.string.other_requests_help_content),
-                    regularBookings
+                    regularBookings,
+                    false
             );
         }
     }
@@ -86,9 +89,13 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
     private void populateItemsWithSection(
             final String title,
             @Nullable final String helpContent,
-            final List<Booking> bookings
+            final List<Booking> bookings,
+            final boolean showEmptyState
     ) {
         mItems.add(new RequestedJobsHeaderView.ViewModel(title, helpContent));
+        if (bookings.isEmpty() && showEmptyState) {
+            mItems.add(title);
+        }
         for (final Booking booking : bookings) {
             final Object previousItem = mItems.get(mItems.size() - 1);
             if (!(previousItem instanceof Booking)
@@ -112,10 +119,32 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT));
                 return new JobViewHolder(container, mBus, EventContext.REQUESTED_JOBS);
+            case VIEW_TYPE_EMPTY:
+                return new EmptyStateViewHolder(createEmptyStateTextView());
             case VIEW_TYPE_DIVIDER:
                 return new BaseViewHolder(createSectionDivider());
         }
         return null;
+    }
+
+    private TextView createEmptyStateTextView() {
+        final TextView textView = new TextView(mContext);
+        final ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        final int doublePadding = (int) mContext.getResources().getDimension(R.dimen.default_padding_double);
+        final int padding = (int) mContext.getResources().getDimension(R.dimen.default_padding);
+        textView.setPadding(0, doublePadding, 0, padding);
+        textView.setLayoutParams(layoutParams);
+        textView.setTextColor(ContextCompat.getColor(mContext, R.color.handy_text_gray));
+        textView.setTypeface(FontUtils.getFont(mContext, FontUtils.CIRCULAR_BOOK));
+        textView.setTextSize(
+                TypedValue.COMPLEX_UNIT_PX,
+                mContext.getResources().getDimension(R.dimen.medium_text_size)
+        );
+        textView.setGravity(Gravity.CENTER);
+        return textView;
     }
 
     private View createSectionDivider() {
@@ -138,6 +167,9 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
             }
             else if (item instanceof Booking) {
                 return VIEW_TYPE_JOB;
+            }
+            else if (item instanceof String) {
+                return VIEW_TYPE_EMPTY;
             }
             else if (item instanceof Integer) {
                 return (Integer) item;
@@ -234,6 +266,21 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
         void init(final Object item) {
             ((RequestedJobsDateView) itemView)
                     .updateDisplay((Date) item, itemView.getContext());
+        }
+    }
+
+
+    private static class EmptyStateViewHolder extends BaseViewHolder {
+        EmptyStateViewHolder(final View itemView) {
+            super(itemView);
+        }
+
+        @Override
+        void init(final Object item) {
+            ((TextView) itemView).setText(itemView.getContext().getString(
+                    R.string.empty_requests_formatted,
+                    ((String) item).toLowerCase()
+            ));
         }
     }
 
