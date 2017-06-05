@@ -265,18 +265,6 @@
                                 tools:text="8:00 am \u2013 10:30 am"
                                 />
                         </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/booking_send_alternate_times_button"
-                            style="@style/TextView.Medium"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/extra_margin"
-                            android:text="@string/reschedule"
-                            android:textColor="@color/handy_blue"
-                            android:visibility="gone"
-                            tools:visibility="visible"
-                            />
                     </LinearLayout>
 
                     <LinearLayout
