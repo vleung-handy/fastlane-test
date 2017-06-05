@@ -433,13 +433,11 @@ public class BookingFragment extends TimerActionBarFragment {
             mNoShowBanner.setVisibility(View.VISIBLE);
         }
 
-        if (false) { // TODO: Remove short circuit once we know how to handle send times
-            if (mBooking.getAction(Booking.Action.ACTION_SEND_TIMES) != null) {
-                mSendAlternateTimesButton.setVisibility(View.VISIBLE);
-            }
-            else {
-                mSendAlternateTimesButton.setVisibility(View.GONE);
-            }
+        if (mBooking.getAction(Booking.Action.ACTION_SEND_TIMES) != null) {
+            mSendAlternateTimesButton.setVisibility(View.VISIBLE);
+        }
+        else {
+            mSendAlternateTimesButton.setVisibility(View.GONE);
         }
 
         setActionBarTitle();

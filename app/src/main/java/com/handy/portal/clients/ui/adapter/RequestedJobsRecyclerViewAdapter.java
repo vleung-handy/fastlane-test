@@ -455,7 +455,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
 
             final View sendAlternateTimesButton =
                     associatedView.findViewById(R.id.reschedule_button);
-            if (false && sendAlternateTimesButton != null) { // TODO: Remove short circuit once we know how to handle send times
+            if (sendAlternateTimesButton != null) {
                 final Booking.Action sendTimesAction =
                         booking.getAction(Booking.Action.ACTION_SEND_TIMES);
                 if (sendTimesAction != null) {
