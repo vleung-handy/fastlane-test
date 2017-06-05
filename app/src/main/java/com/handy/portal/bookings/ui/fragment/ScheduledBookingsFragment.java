@@ -44,6 +44,7 @@ import com.handy.portal.bookings.util.BookingListUtils;
 import com.handy.portal.bookings.util.ClaimUtils;
 import com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapter;
 import com.handy.portal.clients.ui.fragment.dialog.RequestDismissalReasonsDialogFragment;
+import com.handy.portal.clients.ui.fragment.dialog.RescheduleDialogFragment;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.PrefsKey;
@@ -240,7 +241,11 @@ public class ScheduledBookingsFragment extends ActionBarFragment
 
             @Override
             public void onReschedule(final Booking booking) {
-                // FIXME: Implement
+                FragmentUtils.safeLaunchDialogFragment(
+                        RescheduleDialogFragment.newInstance(booking),
+                        ScheduledBookingsFragment.this,
+                        null
+                );
             }
         };
         mRefreshRunnable = new Runnable() {

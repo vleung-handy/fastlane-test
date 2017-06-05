@@ -464,8 +464,8 @@ public class Booking implements Comparable<Booking>, Serializable {
         private String mCustomerId;
         @SerializedName("customer_name")
         private String mCustomerName;
-        @SerializedName("is_favorite")
-        private boolean mIsFavorite;
+        @SerializedName("customer_first_name")
+        private String mCustomerFirstName;
         @SerializedName("is_exclusive")
         private boolean mIsExclusive;
         @SerializedName("expires_at")
@@ -494,16 +494,17 @@ public class Booking implements Comparable<Booking>, Serializable {
         }
 
         @Nullable
+        public String getCustomerFirstName() {
+            return mCustomerFirstName;
+        }
+
+        @Nullable
         public String getCustomerId() {
             return mCustomerId;
         }
 
         public boolean hasCustomer() {
             return !TextUtils.isEmpty(mCustomerId);
-        }
-
-        public boolean isFavorite() {
-            return mIsFavorite;
         }
 
         public Date getExpirationDate() {

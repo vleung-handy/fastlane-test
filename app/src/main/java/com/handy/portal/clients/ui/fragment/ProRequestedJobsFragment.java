@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
+import com.handy.portal.availability.manager.AvailabilityManager;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.manager.BookingManager.DismissalReason;
@@ -27,6 +28,7 @@ import com.handy.portal.bookings.util.BookingListUtils;
 import com.handy.portal.bookings.util.ClaimUtils;
 import com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapter;
 import com.handy.portal.clients.ui.fragment.dialog.RequestDismissalReasonsDialogFragment;
+import com.handy.portal.clients.ui.fragment.dialog.RescheduleDialogFragment;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.RequestCode;
@@ -59,6 +61,8 @@ import butterknife.OnClick;
 public class ProRequestedJobsFragment extends InjectedFragment {
     @Inject
     BookingManager mBookingManager;
+    @Inject
+    AvailabilityManager mAvailabilityManager;
 
     @BindView(R.id.fragment_pro_requested_jobs_recycler_view)
     RecyclerView mRequestedJobsRecyclerView;
@@ -126,7 +130,11 @@ public class ProRequestedJobsFragment extends InjectedFragment {
 
             @Override
             public void onReschedule(final Booking booking) {
-                // FIXME: Implement
+                FragmentUtils.safeLaunchDialogFragment(
+                        RescheduleDialogFragment.newInstance(booking),
+                        ProRequestedJobsFragment.this,
+                        null
+                );
             }
         };
     }
@@ -222,6 +230,11 @@ public class ProRequestedJobsFragment extends InjectedFragment {
             showContentViewAndHideOthers(mJobListSwipeRefreshLayout);
             mJobListSwipeRefreshLayout.setRefreshing(true);
             requestProRequestedJobs(true);
+        }
+        if (!mAvailabilityManager.isReady()) {
+            // We need this in case the pro decides to reschedule.
+            // See usage of AvailabilityManager in RescheduleDialogFragment.
+            mAvailabilityManager.getAvailability(false, null);
         }
     }
 
