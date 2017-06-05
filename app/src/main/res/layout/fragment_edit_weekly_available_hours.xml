@@ -30,8 +30,7 @@
                     android:id="@+id/available_hours_info_banner_layout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/default_margin_half"
-                    android:background="@color/white"
+                    android:background="@drawable/border_gray_bottom_bg"
                     android:orientation="vertical"
                     android:paddingBottom="@dimen/default_padding_medium"
                     android:paddingLeft="@dimen/default_padding"
@@ -44,7 +43,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
-                        android:text="@string/available_hours_info_banner_header"
+                        android:text="@string/set_weekly_availability"
                         />
 
                     <TextView
@@ -52,6 +51,7 @@
                         style="@style/TextView.Small"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/extra_margin"
                         android:gravity="center"
                         android:text="@string/available_hours_info_banner_body"
                         android:textColorLink="@color/handy_blue"

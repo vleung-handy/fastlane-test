@@ -682,9 +682,8 @@
     <string name="saturday_initial">S</string>
 
     <!-- Pro Availability -->
-    <string name="available_hours_info_banner_header">Keep your availability up to date</string>
-    <string name="available_hours_info_banner_body">Your clients can book you instantly based on your current availability. <a href="http://prohelp.handy.com/hc/en-us/categories/202579757-Payments-Fees">Learn More</a></string>
-    <string name="available_hours_info_footer">Make sure your availability is up to date as cancellation fees apply.</string>
+    <string name="available_hours_info_banner_body">Your clients can book you instantly based on your weekly availability. You can update any day in your Schedule. <a href="#">Learn More</a></string>
+    <string name="available_hours_info_footer">Make sure your availability is up to date as standard cancellation fees apply.</string>
     <string name="no_available_hours">No Available Hours</string>
     <string name="available_hours">Available Hours</string>
     <string name="set_hours">Set Hours</string>
@@ -696,12 +695,12 @@
     <string name="copy_hours_from_current_week">Copy Hours from Current Week</string>
     <string name="copied">Copied</string>
     <string name="error_fetching_available_hours">There was an error fetching your available hours.</string>
-    <string name="set_hours_prompt">Set your available hours</string>
+    <string name="set_weekly_availability">Set your weekly availability</string>
     <string name="info_dialog_confirm_button">Got It</string>
     <string name="no_hours_set">No hours set</string>
     <string name="i_am_available">I\'m available</string>
     <string name="not_available">Not Available</string>
-    <string name="set_hours_prompt_subtitle">Let customers book directly with you.</string>
+    <string name="set_hours_prompt_subtitle">Let clients book directly with you.</string>
     <string name="add_another_time_slot">Add another time slot</string>
     <string name="edit_hours_confirmation">By confirming your hours, you authorize your clients to book jobs directly with you.</string>
     <string name="confirm_hours">Confirm Hours</string>
