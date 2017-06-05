@@ -48,10 +48,15 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
     private static final int VIEW_TYPE_DIVIDER = 4;
     private static final int VIEW_TYPE_EMPTY = 5;
     private List<Object> mItems;
+    private JobViewHolder.Listener mJobViewHolderListener;
 
-    public RequestedJobsRecyclerViewAdapter(final Context context,
-                                            final List<BookingsWrapper> jobList) {
+    public RequestedJobsRecyclerViewAdapter(
+            final Context context,
+            final List<BookingsWrapper> jobList,
+            final JobViewHolder.Listener jobViewHolderListener
+    ) {
         mContext = context;
+        mJobViewHolderListener = jobViewHolderListener;
         Utils.inject(context, this);
 
         final List<Booking> exclusiveBookings = new ArrayList<>();
@@ -118,7 +123,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                 container.setLayoutParams(new ViewGroup.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT,
                         ViewGroup.LayoutParams.WRAP_CONTENT));
-                return new JobViewHolder(container, mBus, EventContext.REQUESTED_JOBS);
+                return new JobViewHolder(container, EventContext.REQUESTED_JOBS, mJobViewHolderListener);
             case VIEW_TYPE_EMPTY:
                 return new EmptyStateViewHolder(createEmptyStateTextView());
             case VIEW_TYPE_DIVIDER:
@@ -286,18 +291,18 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
 
 
     public static class JobViewHolder extends BaseViewHolder {
-        private final EventBus mBus;
+        private final Listener mListener;
         private String mOriginEventContext;
         private CountDownTimer mCountDownTimer;
 
         public JobViewHolder(
                 final View itemView,
-                final EventBus bus,
-                final String originEventContext
+                final String originEventContext,
+                final Listener listener
         ) {
             super(itemView);
-            mBus = bus;
             mOriginEventContext = originEventContext;
+            mListener = listener;
         }
 
         @Override
@@ -423,7 +428,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
             associatedView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(final View view) {
-                    mBus.post(new RequestedJobsRecyclerViewAdapter.Event.RequestedJobClicked(booking));
+                    mListener.onSelect(booking);
                 }
             });
 
@@ -438,7 +443,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                 claimButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View view) {
-                        mBus.post(new RequestedJobsRecyclerViewAdapter.Event.RequestedJobClaimClicked(booking));
+                        mListener.onClaim(booking);
                     }
                 });
             }
@@ -448,7 +453,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                 dismissButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View view) {
-                        mBus.post(new RequestedJobsRecyclerViewAdapter.Event.RequestedJobDismissClicked(booking));
+                        mListener.onDismiss(booking);
                     }
                 });
             }
@@ -463,7 +468,7 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
                     sendAlternateTimesButton.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(final View v) {
-                            // TODO: Implement
+                            mListener.onReschedule(booking);
                         }
                     });
                 }
@@ -485,46 +490,15 @@ public class RequestedJobsRecyclerViewAdapter extends RecyclerView.Adapter<Recyc
             associatedView.setAlpha(0.5f);
             UIUtils.disableClicks(associatedView);
         }
-    }
 
+        public interface Listener {
+            void onSelect(Booking booking);
 
-    public static abstract class Event {
-        public static class RequestedJobClicked {
-            private Booking mBooking;
+            void onClaim(Booking booking);
 
-            public RequestedJobClicked(final Booking booking) {
-                mBooking = booking;
-            }
+            void onDismiss(Booking booking);
 
-            public Booking getBooking() {
-                return mBooking;
-            }
-        }
-
-
-        public static class RequestedJobClaimClicked {
-            private Booking mBooking;
-
-            public RequestedJobClaimClicked(final Booking booking) {
-                mBooking = booking;
-            }
-
-            public Booking getBooking() {
-                return mBooking;
-            }
-        }
-
-
-        public static class RequestedJobDismissClicked {
-            private Booking mBooking;
-
-            public RequestedJobDismissClicked(final Booking booking) {
-                mBooking = booking;
-            }
-
-            public Booking getBooking() {
-                return mBooking;
-            }
+            void onReschedule(Booking booking);
         }
     }
 }
