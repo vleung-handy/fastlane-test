@@ -231,6 +231,11 @@ class WeekRangesWrapperRetrofitCallback extends TypedHandyRetrofitCallback<Avail
     }
 }
 
+class TemplateTimelinesWrapperRetrofitCallback extends TypedHandyRetrofitCallback<Availability.Wrapper.TemplateTimelines> {
+    TemplateTimelinesWrapperRetrofitCallback(DataManager.Callback callback) {
+        super(callback);
+    }
+}
 
 class StripeTokenRetroFitCallback extends TypedHandyRetrofitCallback<StripeTokenResponse> {
     StripeTokenRetroFitCallback(DataManager.Callback callback) {

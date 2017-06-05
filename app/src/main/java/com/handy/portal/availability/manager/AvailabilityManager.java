@@ -22,7 +22,7 @@ public class AvailabilityManager {
     private final ProviderManager mProviderManager;
 
     private Availability.Wrapper.WeekRanges mWeekRangesWrapper;
-    private HashMap<Date, Availability.Timeline> mUpdatedTimelines;
+    private HashMap<Date, Availability.AdhocTimeline> mUpdatedTimelines;
 
     @Inject
     public AvailabilityManager(
@@ -72,7 +72,7 @@ public class AvailabilityManager {
     }
 
     public void saveAvailability(
-            final Availability.Wrapper.Timelines timelinesWrapper,
+            final Availability.Wrapper.AdhocTimelines timelinesWrapper,
             @Nullable final DataManager.Callback<Void> callback
     ) {
         mDataManager.saveAvailability(
@@ -81,9 +81,9 @@ public class AvailabilityManager {
                 new DataManager.Callback<Void>() {
                     @Override
                     public void onSuccess(final Void response) {
-                        for (final Availability.Timeline timeline : timelinesWrapper.get()) {
+                        for (final Availability.AdhocTimeline timeline : timelinesWrapper.get()) {
                             mUpdatedTimelines.put(timeline.getDate(), timeline);
-                            mBus.post(new AvailabilityEvent.TimelineUpdated(timeline));
+                            mBus.post(new AvailabilityEvent.AdhocTimelineUpdated(timeline));
                         }
                         if (callback != null) {
                             callback.onSuccess(response);
@@ -100,9 +100,64 @@ public class AvailabilityManager {
         );
     }
 
+    public void getAvailabilityTemplate(
+            @Nullable final DataManager.Callback<Availability.Wrapper.TemplateTimelines> callback
+    ) {
+        mDataManager.getAvailabilityTemplate(mProviderManager.getLastProviderId(), callback);
+    }
+
+    public void saveAvailabilityTemplate(
+            final Availability.Wrapper.TemplateTimelines timelinesWrapper,
+            @Nullable final DataManager.Callback<Void> callback
+    ) {
+        mDataManager.saveAvailabilityTemplate(
+                mProviderManager.getLastProviderId(),
+                timelinesWrapper,
+                new DataManager.Callback<Void>() {
+                    @Override
+                    public void onSuccess(final Void response) {
+                        // Refresh availability cache
+                        getAvailability(false, new DataManager.Callback<Void>() {
+                            @Override
+                            public void onSuccess(final Void response) {
+                                finalizeSaveAvailabilityTemplate(timelinesWrapper, callback);
+                            }
+
+                            @Override
+                            public void onError(final DataManager.DataManagerError error) {
+                                // Since we're only trying to refresh availability cache here, it's
+                                // totally ok if it errors. We'll consider this a success because
+                                // because the original request succeeded.
+                                finalizeSaveAvailabilityTemplate(timelinesWrapper, callback);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onError(final DataManager.DataManagerError error) {
+                        if (callback != null) {
+                            callback.onError(error);
+                        }
+                    }
+                }
+        );
+    }
+
+    private void finalizeSaveAvailabilityTemplate(
+            final Availability.Wrapper.TemplateTimelines timelinesWrapper,
+            @Nullable final DataManager.Callback<Void> callback
+    ) {
+        for (final Availability.TemplateTimeline timeline : timelinesWrapper.get()) {
+            mBus.post(new AvailabilityEvent.TemplateTimelineUpdated(timeline));
+        }
+        if (callback != null) {
+            callback.onSuccess(null);
+        }
+    }
+
     @Nullable
-    public Availability.Timeline getTimelineForDate(@NonNull final Date date) {
-        Availability.Timeline timeline = mUpdatedTimelines.get(date);
+    public Availability.AdhocTimeline getTimelineForDate(@NonNull final Date date) {
+        Availability.AdhocTimeline timeline = mUpdatedTimelines.get(date);
         if (mWeekRangesWrapper != null && timeline == null) {
             timeline = mWeekRangesWrapper.getTimelineForDate(date);
         }

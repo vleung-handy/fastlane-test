@@ -189,8 +189,16 @@ public class DataManager {
         mService.getAvailability(providerId, new WeekRangesWrapperRetrofitCallback(cb));
     }
 
-    public void saveAvailability(String providerId, Availability.Wrapper.Timelines timelinesWrapper, Callback<Void> cb) {
+    public void saveAvailability(String providerId, Availability.Wrapper.AdhocTimelines timelinesWrapper, Callback<Void> cb) {
         mService.saveAvailability(providerId, timelinesWrapper, new EmptyHandyRetroFitCallback(cb));
+    }
+
+    public void getAvailabilityTemplate(String providerId, Callback<Availability.Wrapper.TemplateTimelines> cb) {
+        mService.getAvailabilityTemplate(providerId, new TemplateTimelinesWrapperRetrofitCallback(cb));
+    }
+
+    public void saveAvailabilityTemplate(String providerId, final Availability.Wrapper.TemplateTimelines timelinesWrapper, final Callback<Void> cb) {
+        mService.saveAvailabilityTemplate(providerId, timelinesWrapper, new EmptyHandyRetroFitCallback(cb));
     }
 
     public void sendAvailability(String providerId, String requestId, String response, Callback<Void> cb) {

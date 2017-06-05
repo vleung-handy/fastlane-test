@@ -3,8 +3,10 @@ package com.handy.portal.availability.model;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.StringRes;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.R;
 import com.handy.portal.library.util.DateTimeUtils;
 
 import java.io.Serializable;
@@ -19,20 +21,51 @@ public abstract class Availability {
 
     public static abstract class Wrapper {
 
-        public static class Timelines implements Serializable {
+        public static class AdhocTimelines implements Serializable {
             @SerializedName("timelines")
-            private ArrayList<Timeline> mTimelines;
+            private ArrayList<AdhocTimeline> mTimelines;
 
-            public Timelines() {
+            public AdhocTimelines() {
                 mTimelines = new ArrayList<>();
             }
 
             public void addTimeline(final Date date, final ArrayList<Interval> intervals) {
-                mTimelines.add(new Timeline(date, intervals));
+                mTimelines.add(new AdhocTimeline(date, intervals));
             }
 
-            public ArrayList<Timeline> get() {
+            public ArrayList<AdhocTimeline> get() {
                 return mTimelines;
+            }
+        }
+
+
+        public static class TemplateTimelines implements Serializable {
+            @SerializedName("templates")
+            private ArrayList<TemplateTimeline> mTimelines;
+
+            public TemplateTimelines() {
+                mTimelines = new ArrayList<>();
+            }
+
+            public void addTimeline(
+                    final TemplateTimeline.Day day,
+                    final ArrayList<Interval> intervals
+            ) {
+                mTimelines.add(new TemplateTimeline(day, intervals));
+            }
+
+            public ArrayList<TemplateTimeline> get() {
+                return mTimelines;
+            }
+
+            @Nullable
+            public TemplateTimeline findTemplateTimelineForDay(final TemplateTimeline.Day day) {
+                for (final TemplateTimeline timeline : mTimelines) {
+                    if (timeline.getDay() == day) {
+                        return timeline;
+                    }
+                }
+                return null;
             }
         }
 
@@ -65,7 +98,7 @@ public abstract class Availability {
             }
 
             @Nullable
-            public Timeline getTimelineForDate(final Date date) {
+            public AdhocTimeline getTimelineForDate(final Date date) {
                 final Range weekRange = getWeekRangeForDate(date);
                 if (weekRange != null) {
                     return weekRange.getTimelineForDate(date);
@@ -105,7 +138,7 @@ public abstract class Availability {
         @SerializedName("end_date")
         private String mEndDate;
         @SerializedName("timelines")
-        private ArrayList<Timeline> mTimelines;
+        private ArrayList<AdhocTimeline> mTimelines;
 
         public String getStartDateString() {
             return mStartDate;
@@ -127,8 +160,8 @@ public abstract class Availability {
 
         // WARNING: Package access here is intentional, always access time lines using AvailabilityManager.
         @Nullable
-        Timeline getTimelineForDate(@NonNull final Date date) {
-            for (Timeline timeline : mTimelines) {
+        AdhocTimeline getTimelineForDate(@NonNull final Date date) {
+            for (AdhocTimeline timeline : mTimelines) {
                 if (timeline.matchesDate(date)) {
                     return timeline;
                 }
@@ -153,7 +186,7 @@ public abstract class Availability {
             final Calendar calendar = Calendar.getInstance(Locale.US);
             calendar.setTime(getStartDate());
             while (DateTimeUtils.daysBetween(calendar.getTime(), getEndDate()) >= 0) {
-                final Timeline timeline = getTimelineForDate(calendar.getTime());
+                final AdhocTimeline timeline = getTimelineForDate(calendar.getTime());
                 if (timeline != null) {
                     hasAvailableHours = timeline.hasIntervals();
                 }
@@ -180,14 +213,23 @@ public abstract class Availability {
     }
 
 
-    public static class Timeline implements Serializable {
+    public static abstract class Timeline implements Serializable {
+        public abstract ArrayList<Interval> getIntervals();
+
+        public abstract boolean hasIntervals();
+    }
+
+
+    public static class AdhocTimeline extends Timeline implements Serializable {
         @SerializedName("timeline_date")
         private String mDate;
         @SerializedName("interval_array")
         private ArrayList<Interval> mIntervals;
 
-        public Timeline(final Date date,
-                        final ArrayList<Interval> intervals) {
+        public AdhocTimeline(
+                final Date date,
+                final ArrayList<Interval> intervals
+        ) {
             mDate = DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date);
             mIntervals = intervals;
         }
@@ -212,10 +254,64 @@ public abstract class Availability {
             return DateTimeUtils.daysBetween(getDate(), date) == 0;
         }
 
+        @Override
         public ArrayList<Interval> getIntervals() {
             return mIntervals;
         }
 
+        @Override
+        public boolean hasIntervals() {
+            return mIntervals != null && !mIntervals.isEmpty();
+        }
+    }
+
+
+    public static class TemplateTimeline extends Timeline implements Serializable {
+        public enum Day {
+            SUNDAY(R.string.sundays),
+            MONDAY(R.string.mondays),
+            TUESDAY(R.string.tuesdays),
+            WEDNESDAY(R.string.wednesdays),
+            THURSDAY(R.string.thursdays),
+            FRIDAY(R.string.fridays),
+            SATURDAY(R.string.saturdays),;
+
+            private int mDisplayStringResId;
+
+            Day(@StringRes final int displayStringResId) {
+
+                mDisplayStringResId = displayStringResId;
+            }
+
+            public int getDisplayStringResId() {
+                return mDisplayStringResId;
+            }
+        }
+
+
+        @SerializedName("day")
+        private Integer mDay;
+        @SerializedName("interval_array")
+        private ArrayList<Interval> mIntervals;
+
+        public TemplateTimeline(
+                final Day day,
+                final ArrayList<Interval> intervals
+        ) {
+            mDay = day.ordinal();
+            mIntervals = intervals;
+        }
+
+        public Day getDay() {
+            return Day.values()[mDay];
+        }
+
+        @Override
+        public ArrayList<Interval> getIntervals() {
+            return mIntervals;
+        }
+
+        @Override
         public boolean hasIntervals() {
             return mIntervals != null && !mIntervals.isEmpty();
         }

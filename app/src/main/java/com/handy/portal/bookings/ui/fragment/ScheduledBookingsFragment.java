@@ -26,6 +26,7 @@ import com.crashlytics.android.Crashlytics;
 import com.google.common.collect.Lists;
 import com.handy.portal.R;
 import com.handy.portal.availability.AvailabilityEvent;
+import com.handy.portal.availability.fragment.EditAvailableHoursFragment;
 import com.handy.portal.availability.manager.AvailabilityManager;
 import com.handy.portal.availability.model.Availability;
 import com.handy.portal.availability.view.AvailableHoursView;
@@ -137,7 +138,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     private Date mSelectedDay;
     private DatesPagerAdapter mDatesPagerAdapter;
     private int mLastDatesPosition;
-    private Availability.Timeline mTimelineForSelectedDay;
+    private Availability.AdhocTimeline mTimelineForSelectedDay;
     private final Runnable mRefreshRunnable;
     private final ViewPager.OnPageChangeListener mDatesPageChangeListener;
     private final ViewPager.OnPageChangeListener mRequestedJobsPageChangeListener;
@@ -315,8 +316,13 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.FLOW_CONTEXT, EventContext.AVAILABILITY);
         final NavigationEvent.NavigateToPage navigationEvent =
-                new NavigationEvent.NavigateToPage(MainViewPage.EDIT_WEEKLY_AVAILABLE_HOURS,
-                        arguments, true);
+                new NavigationEvent.NavigateToPage(
+                        mConfigManager.getConfigurationResponse().isTemplateAvailabilityEnabled()
+                                ? MainViewPage.EDIT_WEEKLY_TEMPLATE_AVAILABLE_HOURS
+                                : MainViewPage.EDIT_WEEKLY_ADHOC_AVAILABLE_HOURS,
+                        arguments,
+                        true
+                );
         bus.post(navigationEvent);
     }
 
@@ -452,7 +458,17 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     }
 
     @Subscribe
-    public void onAvailabilityTimelineUpdated(final AvailabilityEvent.TimelineUpdated event) {
+    public void onAvailabilityAdhocTimelineUpdated(
+            final AvailabilityEvent.AdhocTimelineUpdated event
+    ) {
+        showAvailableHours();
+        setAvailableHoursBannerVisibility();
+    }
+
+    @Subscribe
+    public void onAvailabilityTemplateTimelineUpdated(
+            final AvailabilityEvent.TemplateTimelineUpdated event
+    ) {
         showAvailableHours();
         setAvailableHoursBannerVisibility();
     }
@@ -684,9 +700,11 @@ public class ScheduledBookingsFragment extends ActionBarFragment
                 mSelectedDay != null ? DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(mSelectedDay)
                         : null)));
         final Bundle bundle = new Bundle();
-        bundle.putString(BundleKeys.FLOW_CONTEXT, EventContext.AVAILABILITY);
+        bundle.putString(BundleKeys.FLOW_CONTEXT, EventContext.SCHEDULED_JOBS);
+        bundle.putSerializable(BundleKeys.MODE, EditAvailableHoursFragment.Mode.ADHOC);
         bundle.putSerializable(BundleKeys.DATE, mSelectedDay);
-        bundle.putSerializable(BundleKeys.TIMELINE, mAvailabilityManager.getTimelineForDate(mSelectedDay));
+        bundle.putSerializable(BundleKeys.TIMELINE,
+                mAvailabilityManager.getTimelineForDate(mSelectedDay));
         final NavigationEvent.NavigateToPage navigationEvent =
                 new NavigationEvent.NavigateToPage(MainViewPage.EDIT_AVAILABLE_HOURS, bundle, true);
         bus.post(navigationEvent);

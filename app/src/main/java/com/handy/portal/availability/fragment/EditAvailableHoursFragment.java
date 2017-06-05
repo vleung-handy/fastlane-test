@@ -28,6 +28,7 @@ import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.ui.view.timepicker.HandyTimePicker;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.logger.handylogger.model.EventType;
 import com.handy.portal.logger.handylogger.model.ProAvailabilityLog;
 
 import java.util.ArrayList;
@@ -43,6 +44,11 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class EditAvailableHoursFragment extends ActionBarFragment {
+    public enum Mode {
+        ADHOC, TEMPLATE
+    }
+
+
     @Inject
     AvailabilityManager mAvailabilityManager;
 
@@ -66,7 +72,10 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     int mBlueColorValue;
 
     private String mFlowContext;
-    private Date mDate;
+    private Date mDate; // only non-null in adhoc mode
+    private Availability.TemplateTimeline.Day mDay; // only non-null in template mode
+    private Mode mMode;
+    @Nullable
     private Availability.Timeline mOriginalTimeline;
     private BaseActivity.OnBackPressedListener mOnBackPressedListener;
     private CompoundButton.OnCheckedChangeListener mAvailabilityToggleCheckedChangeListener;
@@ -195,15 +204,25 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
 
     @OnClick(R.id.save)
     public void onSave() {
-        final Availability.Wrapper.Timelines timelinesWrapper = getTimelinesWrapperFromViewModel();
-        logSubmit(timelinesWrapper);
+        if (mMode == Mode.ADHOC) {
+            saveAdhocAvailability();
+        }
+        else if (mMode == Mode.TEMPLATE) {
+            saveTemplateAvailability();
+        }
+    }
+
+    private void saveAdhocAvailability() {
+        final Availability.Wrapper.AdhocTimelines timelinesWrapper =
+                getAdhocTimelinesWrapperFromViewModel();
+        logSetHours(EventType.SET_HOURS_SUBMITTED, timelinesWrapper);
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         mAvailabilityManager.saveAvailability(
                 timelinesWrapper,
                 new FragmentSafeCallback<Void>(this) {
                     @Override
                     public void onCallbackSuccess(final Void response) {
-                        logSuccess(timelinesWrapper);
+                        logSetHours(EventType.SET_HOURS_SUCCESS, timelinesWrapper);
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
                         getActivity().onBackPressed();
@@ -211,7 +230,7 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
 
                     @Override
                     public void onCallbackError(final DataManager.DataManagerError error) {
-                        logError(timelinesWrapper);
+                        logSetHours(EventType.SET_HOURS_ERROR, timelinesWrapper);
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
                         String message = error.getMessage();
                         if (TextUtils.isEmpty(message)) {
@@ -222,28 +241,61 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
                 });
     }
 
-    private void logSubmit(final Availability.Wrapper.Timelines timelinesWrapper) {
-        final Availability.Timeline timeline = timelinesWrapper.get().get(0);
-        bus.post(new LogEvent.AddLogEvent(
-                new ProAvailabilityLog.SetHoursSubmitted(mFlowContext, timeline.getDateString(),
-                        getIntervalsSum(timeline.getIntervals()),
-                        !timeline.hasIntervals())));
+    private void saveTemplateAvailability() {
+        final Availability.Wrapper.TemplateTimelines timelinesWrapper =
+                getTemplateTimelinesWrapperFromViewModel();
+        logSetHours(EventType.SET_TEMPLATE_HOURS_SUBMITTED, timelinesWrapper);
+        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        mAvailabilityManager.saveAvailabilityTemplate(
+                timelinesWrapper,
+                new FragmentSafeCallback<Void>(this) {
+                    @Override
+                    public void onCallbackSuccess(final Void response) {
+                        logSetHours(EventType.SET_TEMPLATE_HOURS_SUCCESS, timelinesWrapper);
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                        ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
+                        getActivity().onBackPressed();
+                    }
+
+                    @Override
+                    public void onCallbackError(final DataManager.DataManagerError error) {
+                        logSetHours(EventType.SET_TEMPLATE_HOURS_ERROR, timelinesWrapper);
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                        String message = error.getMessage();
+                        if (TextUtils.isEmpty(message)) {
+                            message = getString(R.string.an_error_has_occurred);
+                        }
+                        showToast(message);
+                    }
+                });
     }
 
-    private void logSuccess(final Availability.Wrapper.Timelines timelinesWrapper) {
-        final Availability.Timeline timeline = timelinesWrapper.get().get(0);
-        bus.post(new LogEvent.AddLogEvent(
-                new ProAvailabilityLog.SetHoursSuccess(mFlowContext, timeline.getDateString(),
-                        getIntervalsSum(timeline.getIntervals()),
-                        !timeline.hasIntervals())));
+    private void logSetHours(
+            final String eventType,
+            final Availability.Wrapper.AdhocTimelines timelinesWrapper
+    ) {
+        final Availability.AdhocTimeline timeline = timelinesWrapper.get().get(0);
+        bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.SetHoursLog(
+                eventType,
+                mFlowContext,
+                timeline.getDateString(),
+                getIntervalsSum(timeline.getIntervals()),
+                !timeline.hasIntervals())
+        ));
     }
 
-    private void logError(final Availability.Wrapper.Timelines timelinesWrapper) {
-        final Availability.Timeline timeline = timelinesWrapper.get().get(0);
-        bus.post(new LogEvent.AddLogEvent(
-                new ProAvailabilityLog.SetHoursError(mFlowContext, timeline.getDateString(),
-                        getIntervalsSum(timeline.getIntervals()),
-                        !timeline.hasIntervals())));
+    private void logSetHours(
+            final String eventType,
+            final Availability.Wrapper.TemplateTimelines timelinesWrapper
+    ) {
+        final Availability.TemplateTimeline timeline = timelinesWrapper.get().get(0);
+        bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.SetTemplateHoursLog(
+                eventType,
+                mFlowContext,
+                timeline.getDay(),
+                getIntervalsSum(timeline.getIntervals()),
+                !timeline.hasIntervals())
+        ));
     }
 
     private int getIntervalsSum(final List<Availability.Interval> intervals) {
@@ -254,9 +306,17 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         return sum;
     }
 
-    private Availability.Wrapper.Timelines getTimelinesWrapperFromViewModel() {
-        final Availability.Wrapper.Timelines timelinesWrapper = new Availability.Wrapper.Timelines();
+    private Availability.Wrapper.AdhocTimelines getAdhocTimelinesWrapperFromViewModel() {
+        final Availability.Wrapper.AdhocTimelines timelinesWrapper =
+                new Availability.Wrapper.AdhocTimelines();
         timelinesWrapper.addTimeline(mDate, getIntervalsFromViewModel());
+        return timelinesWrapper;
+    }
+
+    public Availability.Wrapper.TemplateTimelines getTemplateTimelinesWrapperFromViewModel() {
+        final Availability.Wrapper.TemplateTimelines timelinesWrapper =
+                new Availability.Wrapper.TemplateTimelines();
+        timelinesWrapper.addTimeline(mDay, getIntervalsFromViewModel());
         return timelinesWrapper;
     }
 
@@ -293,6 +353,8 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         super.onCreate(savedInstanceState);
         mFlowContext = getArguments().getString(BundleKeys.FLOW_CONTEXT);
         mDate = (Date) getArguments().getSerializable(BundleKeys.DATE);
+        mDay = (Availability.TemplateTimeline.Day) getArguments().getSerializable(BundleKeys.DAY);
+        mMode = (Mode) getArguments().getSerializable(BundleKeys.MODE);
         mOriginalTimeline =
                 (Availability.Timeline) getArguments().getSerializable(BundleKeys.TIMELINE);
         ((BaseActivity) getActivity()).addOnBackPressedListener(mOnBackPressedListener);
@@ -312,8 +374,17 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        final String dateFormatted = DateTimeUtils.formatDateShortDayOfWeekShortMonthDay(mDate);
-        setActionBar(getString(R.string.hours_for_date_formatted, dateFormatted), true);
+        String title = null;
+        if (mMode == Mode.ADHOC) {
+            title = getString(
+                    R.string.hours_for_date_formatted,
+                    DateTimeUtils.formatDateShortDayOfWeekShortMonthDay(mDate)
+            );
+        }
+        else if (mMode == Mode.TEMPLATE) {
+            title = getString(mDay.getDisplayStringResId());
+        }
+        setActionBar(title, true);
         initTimePickerViewModel();
         initAvailabilityToggle();
         initTimePicker();

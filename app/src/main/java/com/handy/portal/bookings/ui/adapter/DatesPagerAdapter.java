@@ -17,7 +17,7 @@ import java.util.Locale;
 
 public class DatesPagerAdapter extends PagerAdapter {
     public static final int POSITION_NOT_FOUND = -1;
-    private static final int WEEKS_TOTAL = 4;
+    private static final int WEEKS_TOTAL = 5;
     private static final int DAYS_IN_A_WEEK = 7;
     private final List<NewDateButtonGroup> mViews;
     private final DateSelectedListener mDateSelectedListener;

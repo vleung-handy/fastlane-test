@@ -325,7 +325,7 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
         /*
             If we get a date that is smaller than what we've seen so far, then navigate to that
-            page via onDateClicked method. Since this booking is already loaded, it'll fetch
+            page via onCellClicked method. Since this booking is already loaded, it'll fetch
             from cache, no extra service call.
          */
         if (mFastForwardToFirst

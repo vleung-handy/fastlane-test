@@ -63,6 +63,9 @@ public class ConfigurationResponse {
     @SerializedName("schedule_tab_requests_enabled")
     private boolean mScheduleTabRequestedEnabled;
 
+    @SerializedName("template_availability_enabled")
+    private boolean mTemplateAvailabilityEnabled;
+
     // Getters
 
     public boolean areAnnouncementsEnabled() {
@@ -154,6 +157,10 @@ public class ConfigurationResponse {
 
     public boolean isScheduleTabRequestedEnabled() {
         return mScheduleTabRequestedEnabled;
+    }
+
+    public boolean isTemplateAvailabilityEnabled() {
+        return mTemplateAvailabilityEnabled;
     }
 
     // Static classes

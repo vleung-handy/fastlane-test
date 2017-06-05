@@ -1,7 +1,8 @@
 package com.handy.portal.availability;
 
 import com.handy.portal.availability.fragment.EditAvailableHoursFragment;
-import com.handy.portal.availability.fragment.EditWeeklyAvailableHoursFragment;
+import com.handy.portal.availability.fragment.EditWeeklyAdhocAvailableHoursFragment;
+import com.handy.portal.availability.fragment.EditWeeklyTemplateAvailableHoursFragment;
 import com.handy.portal.availability.manager.AvailabilityManager;
 import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.data.DataManager;
@@ -18,7 +19,8 @@ import dagger.Provides;
         complete = false,
         injects = {
                 EditAvailableHoursFragment.class,
-                EditWeeklyAvailableHoursFragment.class,
+                EditWeeklyAdhocAvailableHoursFragment.class,
+                EditWeeklyTemplateAvailableHoursFragment.class,
         })
 public class AvailabilityModule {
     @Provides

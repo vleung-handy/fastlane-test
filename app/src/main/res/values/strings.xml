@@ -731,4 +731,12 @@
     <string name="announcements_next_button">Next</string>
     <string name="announcements_dismiss_button">Got It</string>
 
+    <!-- Plural Days -->
+    <string name="sundays">Sundays</string>
+    <string name="mondays">Mondays</string>
+    <string name="tuesdays">Tuesdays</string>
+    <string name="wednesdays">Wednesdays</string>
+    <string name="thursdays">Thursdays</string>
+    <string name="fridays">Fridays</string>
+    <string name="saturdays">Saturdays</string>
 </resources>

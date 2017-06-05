@@ -22,4 +22,11 @@ public interface EventType {
     String POST_CHECKOUT_SUBMITTED = "post_checkout_submitted";
     String POST_CHECKOUT_SUCCESS = "post_checkout_success";
     String POST_CHECKOUT_ERROR = "post_checkout_error";
+
+    String SET_HOURS_SUBMITTED = "set_hours_submitted";
+    String SET_HOURS_SUCCESS = "set_hours_success";
+    String SET_HOURS_ERROR = "set_hours_error";
+    String SET_TEMPLATE_HOURS_SUBMITTED = "set_template_hours_submitted";
+    String SET_TEMPLATE_HOURS_SUCCESS = "set_template_hours_success";
+    String SET_TEMPLATE_HOURS_ERROR = "set_template_hours_error";
 }
