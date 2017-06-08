@@ -165,9 +165,11 @@ public class AvailabilityManager {
     }
 
     public boolean hasAvailableHours() {
-        for (final Availability.Range range : mWeekRangesWrapper.get()) {
-            if (range.hasAvailableHours()) {
-                return true;
+        if (isReady()) {
+            for (final Availability.Range range : mWeekRangesWrapper.get()) {
+                if (range.hasAvailableHours()) {
+                    return true;
+                }
             }
         }
         return false;
@@ -175,7 +177,7 @@ public class AvailabilityManager {
 
     // Determines whether the manager has information about the given date.
     public boolean covers(final Date date) {
-        return mWeekRangesWrapper.covers(date);
+        return isReady() && mWeekRangesWrapper.covers(date);
     }
 
     public Availability.Range getCurrentWeekRange() {
