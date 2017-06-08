@@ -45,6 +45,7 @@ import com.handy.portal.logger.handylogger.model.EventContext;
 import com.handy.portal.logger.handylogger.model.EventType;
 import com.handy.portal.logger.handylogger.model.JobsLog;
 import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
+import com.handy.portal.logger.handylogger.model.SendAvailabilityLog;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -135,6 +136,9 @@ public class ProRequestedJobsFragment extends InjectedFragment {
                         ProRequestedJobsFragment.this,
                         null
                 );
+                bus.post(new LogEvent.AddLogEvent(new SendAvailabilityLog.SendAvailabilitySelected(
+                        EventContext.REQUESTED_JOBS, booking)
+                ));
             }
         };
     }

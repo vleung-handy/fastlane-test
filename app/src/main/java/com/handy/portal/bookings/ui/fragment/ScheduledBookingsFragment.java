@@ -68,6 +68,7 @@ import com.handy.portal.logger.handylogger.model.EventType;
 import com.handy.portal.logger.handylogger.model.JobsLog;
 import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
+import com.handy.portal.logger.handylogger.model.SendAvailabilityLog;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -246,6 +247,9 @@ public class ScheduledBookingsFragment extends ActionBarFragment
                         ScheduledBookingsFragment.this,
                         null
                 );
+                bus.post(new LogEvent.AddLogEvent(new SendAvailabilityLog.SendAvailabilitySelected(
+                        EventContext.SCHEDULED_JOBS, booking)
+                ));
             }
         };
         mRefreshRunnable = new Runnable() {
