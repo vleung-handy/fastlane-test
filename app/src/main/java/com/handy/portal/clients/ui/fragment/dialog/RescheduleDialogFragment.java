@@ -95,7 +95,21 @@ public class RescheduleDialogFragment extends ConfirmBookingActionDialogFragment
         final String customerName = mBooking.getRequestAttributes().getCustomerFirstName();
         if (mHasAvailableHours) {
             mTitle.setText(getString(R.string.reschedule_with_formatted, customerName));
-            mSubtitle.setText(R.string.reschedule_prompt);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                mSubtitle.setText(Html.fromHtml(
+                        getString(R.string.reschedule_prompt), Html.FROM_HTML_MODE_LEGACY)
+                );
+            }
+            else {
+                mSubtitle.setText(Html.fromHtml(getString(R.string.reschedule_prompt)));
+            }
+            TextUtils.stripUnderlines(mSubtitle);
+            mSubtitle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(final View v) {
+                    navigateToEditWeeklyAvailability();
+                }
+            });
             mInput.setVisibility(View.VISIBLE);
             mInput.append(getString(
                     R.string.reschedule_message_formatted,
@@ -120,7 +134,6 @@ public class RescheduleDialogFragment extends ConfirmBookingActionDialogFragment
                 @Override
                 public void onClick(final View v) {
                     navigateToHelp();
-                    dismiss();
                 }
             });
             mInput.setVisibility(View.GONE);
@@ -162,16 +175,7 @@ public class RescheduleDialogFragment extends ConfirmBookingActionDialogFragment
             );
         }
         else {
-            final Bundle arguments = new Bundle();
-            arguments.putString(BundleKeys.FLOW_CONTEXT, EventContext.AVAILABILITY);
-            mBus.post(new NavigationEvent.NavigateToPage(
-                    mConfigManager.getConfigurationResponse().isTemplateAvailabilityEnabled()
-                            ? MainViewPage.EDIT_WEEKLY_TEMPLATE_AVAILABLE_HOURS
-                            : MainViewPage.EDIT_WEEKLY_ADHOC_AVAILABLE_HOURS,
-                    arguments,
-                    true
-            ));
-            dismiss();
+            navigateToEditWeeklyAvailability();
         }
     }
 
@@ -185,6 +189,19 @@ public class RescheduleDialogFragment extends ConfirmBookingActionDialogFragment
         return getString(mHasAvailableHours ? R.string.send_message : R.string.set_my_availability);
     }
 
+    private void navigateToEditWeeklyAvailability() {
+        final Bundle arguments = new Bundle();
+        arguments.putString(BundleKeys.FLOW_CONTEXT, EventContext.AVAILABILITY);
+        mBus.post(new NavigationEvent.NavigateToPage(
+                mConfigManager.getConfigurationResponse().isTemplateAvailabilityEnabled()
+                        ? MainViewPage.EDIT_WEEKLY_TEMPLATE_AVAILABLE_HOURS
+                        : MainViewPage.EDIT_WEEKLY_ADHOC_AVAILABLE_HOURS,
+                arguments,
+                true
+        ));
+        dismiss();
+    }
+
     private void navigateToHelp() {
         final Bundle arguments = new Bundle();
         arguments.putString(
@@ -192,5 +209,6 @@ public class RescheduleDialogFragment extends ConfirmBookingActionDialogFragment
                 mDataManager.getBaseUrl() + HelpCenterConstants.SETTING_HOURS_INFO_PATH
         );
         mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.WEB_PAGE, arguments, true));
+        dismiss();
     }
 }

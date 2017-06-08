@@ -743,8 +743,8 @@
 
     <!-- Reschedule -->
     <string name="reschedule_with_formatted">Reschedule with %1$s</string>
-    <string name="reschedule_prompt">Your client will be able to reschedule directly into your availability, so be sure it\'s up to date.</string>
-    <string name="reschedule_set_availability_prompt_formatted"><![CDATA[You need to set your availability in order to reschedule with %1$s. <a href="#">Learn More</a>]]></string>
+    <string name="reschedule_prompt"><![CDATA[Your client will be able to reschedule directly into your availability, so be sure it\'s up to date. <a href="#">Update\u00A0Availability</a>]]></string>
+    <string name="reschedule_set_availability_prompt_formatted"><![CDATA[You need to set your availability in order to reschedule with %1$s. <a href="#">Learn\u00A0More</a>]]></string>
     <string name="reschedule_no_availability">You haven\'t set your availability</string>
     <string name="reschedule_message_formatted">Hi %1$s, I can\'t make your booking on %2$s, but if you\'d like you can reschedule and view my availability. Hope to see you soon!</string>
     <string name="reschedule_message_sent_formatted">Your message has been sent to %1$s</string>
