@@ -165,11 +165,13 @@ public class AvailabilityManager {
     }
 
     public boolean hasAvailableHours() {
-        for (final Availability.Range range : mWeekRangesWrapper.get()) {
-            for (final Date date : range.dates()) {
-                final Availability.AdhocTimeline timeline = getTimelineForDate(date);
-                if (timeline != null && timeline.hasIntervals()) {
-                    return true;
+        if (isReady()) {
+            for (final Availability.Range range : mWeekRangesWrapper.get()) {
+                for (final Date date : range.dates()) {
+                    final Availability.AdhocTimeline timeline = getTimelineForDate(date);
+                    if (timeline != null && timeline.hasIntervals()) {
+                        return true;
+                    }
                 }
             }
         }
@@ -178,7 +180,7 @@ public class AvailabilityManager {
 
     // Determines whether the manager has information about the given date.
     public boolean covers(final Date date) {
-        return mWeekRangesWrapper.covers(date);
+        return isReady() && mWeekRangesWrapper.covers(date);
     }
 
     public Availability.Range getCurrentWeekRange() {
