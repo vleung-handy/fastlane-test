@@ -1,11 +1,16 @@
 package com.handy.portal.payments.ui.fragment.dialog;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.Layout;
+import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -29,6 +34,7 @@ import com.handy.portal.payments.model.PaymentCashOutInfo;
 import com.handy.portal.payments.model.PaymentCashOutRequest;
 import com.handy.portal.payments.ui.element.PaymentBreakdownLineItemView;
 import com.handy.portal.payments.ui.fragment.SelectPaymentMethodFragment;
+import com.handy.portal.webview.PortalWebViewFragment;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -138,13 +144,42 @@ public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
         refresh(); //don't want to risk showing outdated payment information
     }
 
-    private void updateWithModel(@NonNull PaymentCashOutInfo paymentCashOutInfo) {
+    private void updateWithModel(@NonNull final PaymentCashOutInfo paymentCashOutInfo) {
         mPaymentCashOutInfo = paymentCashOutInfo;
 
         String headerHtml = getString(R.string.payment_cash_out_dialog_subtitle_html_formatted,
                 paymentCashOutInfo.getHelpCenterArticleUrl());
         mHeaderText.setText(TextUtils.Support.fromHtml(headerHtml));
-        mHeaderText.setMovementMethod(LinkMovementMethod.getInstance());
+
+        //todo put in shared place
+        mHeaderText.setMovementMethod(new LinkMovementMethod() {
+            @Override
+            public boolean onTouchEvent(
+                    final TextView widget,
+                    final Spannable buffer, final MotionEvent event
+            ) {
+                final int action = event.getAction();
+                if (action == MotionEvent.ACTION_DOWN) {
+                    final int x = (int) event.getX() - widget.getTotalPaddingLeft() +
+                            widget.getScrollX();
+                    final int y = (int) event.getY() - widget.getTotalPaddingTop() +
+                            widget.getScrollY();
+                    final Layout layout = widget.getLayout();
+                    final int line = layout.getLineForVertical(y);
+                    //get the tap position
+                    final int off = layout.getOffsetForHorizontal(line, x);
+
+                    //get the link at the tap position
+                    final ClickableSpan[] link = buffer.getSpans(off, off, ClickableSpan.class);
+                    if (link.length != 0 && off < buffer.length()) {
+                        onBankHelpButtonClicked(paymentCashOutInfo.getHelpCenterArticleUrl());
+                        return true;
+                    }
+                }
+                return false;
+            }
+        });
+        TextUtils.stripUnderlines(mHeaderText);
 
         mPaymentSummaryText.setText(TextUtils.Support.fromHtml(
                 getString(R.string.payment_cash_out_dialog_footer_html)
@@ -271,6 +306,19 @@ public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
                         showErrorMessage(getString(R.string.an_error_has_occurred));
                     }
                 });
+    }
+
+    private void onBankHelpButtonClicked(@NonNull String helpUrl)
+    {
+        mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.CashOutEarlyBankHelpSelected()));
+
+        Bundle arguments = PortalWebViewFragment.createBundle(helpUrl, getString(R.string.help));
+        Intent webviewIntent = FragmentContainerActivity.getIntent(
+                getContext(),
+                PortalWebViewFragment.class,
+                arguments
+        );
+        startActivity(webviewIntent);
     }
 
     private void showErrorMessage(@Nullable String errorMessage) {

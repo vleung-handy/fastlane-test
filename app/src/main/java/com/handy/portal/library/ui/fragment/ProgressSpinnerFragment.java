@@ -1,6 +1,7 @@
 package com.handy.portal.library.ui.fragment;
 
 import android.os.Bundle;
+import android.support.annotation.CallSuper;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +10,18 @@ import android.widget.ProgressBar;
 
 import com.handy.portal.R;
 
+/**
+ * copied from consumer app
+ *
+ * child classes must call super.onCreateView()
+ * before calling showProgressSpinner and hideProgressSpinner
+ */
 public abstract class ProgressSpinnerFragment extends InjectedFragment {
 
     private ProgressBar mProgressSpinner;
     private View mOverlay;
 
+    @CallSuper
     @Override
     public View onCreateView(
             final LayoutInflater inflater,

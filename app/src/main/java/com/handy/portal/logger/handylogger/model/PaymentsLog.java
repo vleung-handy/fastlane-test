@@ -29,6 +29,15 @@ public class PaymentsLog extends EventLog {
         }
     }
 
+    public static class CashOutEarlyBankHelpSelected extends PaymentsLog
+    {
+        private static final String EVENT_TYPE = "cash_out_early_bank_help_selected";
+        public CashOutEarlyBankHelpSelected()
+        {
+            super(EVENT_TYPE);
+        }
+    }
+
     public static class CashOutEarlyPaymentMethodSelected extends PaymentsLog
     {
         private static final String EVENT_TYPE = "cash_out_early_payment_method_selected";
