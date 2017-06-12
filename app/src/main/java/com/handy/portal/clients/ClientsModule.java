@@ -6,6 +6,7 @@ import com.handy.portal.clients.ui.fragment.ClientConversationsFragment;
 import com.handy.portal.clients.ui.fragment.ClientsFragment;
 import com.handy.portal.clients.ui.fragment.ProRequestedJobsFragment;
 import com.handy.portal.clients.ui.fragment.dialog.RequestDismissalReasonsDialogFragment;
+import com.handy.portal.clients.ui.fragment.dialog.RescheduleDialogFragment;
 import com.handy.portal.clients.ui.fragment.dialog.SwapBookingClaimDialogFragment;
 import com.handybook.shared.core.HandyLibrary;
 import com.handybook.shared.layer.LayerHelper;
@@ -24,6 +25,7 @@ import dagger.Provides;
                 SwapBookingClaimDialogFragment.class,
                 ClientConversationsFragment.class,
                 ConversationHolder.class,
+                RescheduleDialogFragment.class,
         })
 public final class ClientsModule {
     @Provides

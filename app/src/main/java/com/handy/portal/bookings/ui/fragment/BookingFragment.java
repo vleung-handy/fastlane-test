@@ -126,8 +126,6 @@ public class BookingFragment extends TimerActionBarFragment {
     TextView mJobDateText;
     @BindView(R.id.booking_job_time_text)
     TextView mJobTimeText;
-    @BindView(R.id.booking_send_alternate_times_button)
-    View mSendAlternateTimesButton;
     @BindView(R.id.booking_job_payment_text)
     TextView mJobPaymentText;
     @BindView(R.id.booking_job_payment_bonus_text)
@@ -433,15 +431,6 @@ public class BookingFragment extends TimerActionBarFragment {
             mNoShowBanner.setVisibility(View.VISIBLE);
         }
 
-        if (false) { // TODO: Remove short circuit once we know how to handle send times
-            if (mBooking.getAction(Booking.Action.ACTION_SEND_TIMES) != null) {
-                mSendAlternateTimesButton.setVisibility(View.VISIBLE);
-            }
-            else {
-                mSendAlternateTimesButton.setVisibility(View.GONE);
-            }
-        }
-
         setActionBarTitle();
     }
 
@@ -544,11 +533,6 @@ public class BookingFragment extends TimerActionBarFragment {
             Utils.safeLaunchIntent(new Intent(
                     Intent.ACTION_VIEW, Uri.fromParts("sms", phoneNumber, null)), getContext());
         }
-    }
-
-    @OnClick(R.id.booking_send_alternate_times_button)
-    void sendAlternateTimes() {
-        // TODO: Implement
     }
 
     private void setActionButtonVisibility() {

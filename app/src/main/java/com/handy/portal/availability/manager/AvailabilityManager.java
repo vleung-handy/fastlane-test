@@ -167,8 +167,11 @@ public class AvailabilityManager {
     public boolean hasAvailableHours() {
         if (isReady()) {
             for (final Availability.Range range : mWeekRangesWrapper.get()) {
-                if (range.hasAvailableHours()) {
-                    return true;
+                for (final Date date : range.dates()) {
+                    final Availability.AdhocTimeline timeline = getTimelineForDate(date);
+                    if (timeline != null && timeline.hasIntervals()) {
+                        return true;
+                    }
                 }
             }
         }
