@@ -131,8 +131,8 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
         super.onViewCreated(view, savedInstanceState);
         paymentsBatchListView.setOnDataItemClickListener(new PaymentsBatchListView.OnDataItemClickListener() {
             @Override
-            public void onDataItemClicked(PaymentBatch paymentBatch) {
-                showPaymentDetailsForBatch(paymentBatch);
+            public void onDataItemClicked(PaymentBatch paymentBatch, boolean isCurrentWeekBatch) {
+                showPaymentDetailsForBatch(paymentBatch, isCurrentWeekBatch);
             }
         });
 
@@ -230,10 +230,11 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
         });
     }
 
-    public void showPaymentDetailsForBatch(PaymentBatch paymentBatch) {
+    public void showPaymentDetailsForBatch(PaymentBatch paymentBatch, boolean isCurrentWeekBatch) {
         if (paymentBatch instanceof NeoPaymentBatch) {
             Bundle arguments = new Bundle();
             arguments.putSerializable(BundleKeys.PAYMENT_BATCH, paymentBatch);
+            arguments.putBoolean(BundleKeys.IS_CURRENT_WEEK_PAYMENT_BATCH, isCurrentWeekBatch);
             bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PAYMENTS_DETAIL, arguments, true));
         }
     }

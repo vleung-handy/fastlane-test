@@ -43,6 +43,9 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
     private Date nextRequestEndDate;
     private View.OnClickListener mOnCashOutButtonClickedListener;
 
+    public static final int VIEW_TYPE_CURRENT_WEEK_BATCH = 0;
+    public static final int VIEW_TYPE_PAST_BATCH = 1;
+
     //TODO: we don't need to keep track of oldest date when we can use new pagination API that allows us to get the N next batches
 
     public PaymentBatchListAdapter(Context context) {
@@ -141,7 +144,8 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
         PaymentBatch paymentBatch = getItem(position);
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        if (position == 0 && paymentBatch instanceof NeoPaymentBatch) {
+        int viewType = getViewTypeForPosition(position);
+        if (viewType == VIEW_TYPE_CURRENT_WEEK_BATCH) {
             if (convertView == null || !(convertView instanceof PaymentsBatchListHeaderView)) {
                 v = inflater.inflate(R.layout.element_payments_batch_list_current_week_header, parent, false);
                 v.findViewById(R.id.payments_current_week_remaining_fees_row).setOnClickListener(new View.OnClickListener() {
@@ -184,6 +188,15 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
         }
 
         return v;
+    }
+
+    public int getViewTypeForPosition(int position)
+    {
+        if(position == 0 && getItem(position) instanceof NeoPaymentBatch)
+        {
+            return VIEW_TYPE_CURRENT_WEEK_BATCH;
+        }
+        return VIEW_TYPE_PAST_BATCH;
     }
 
     @Override

@@ -16,6 +16,7 @@ public class BundleKeys {
     public static final String HELP_REDIRECT_PATH = "help_redirect_path";
     public static final String PAGE = "page";
     public static final String PAYMENT_BATCH = "payment_batch";
+    public static final String IS_CURRENT_WEEK_PAYMENT_BATCH = "is_current_week_payment_batch";
     public static final String BOOKINGS = "bookings";
     public static final String MAP_CENTER = "map_center";
     public static final String MESSAGE = "message";

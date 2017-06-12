@@ -63,6 +63,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     CoordinatorLayout mMainContentLayout;
 
     private NeoPaymentBatch mNeoPaymentBatch;
+    private boolean mIsCurrentWeekPaymentBatch;
     private View mFragmentView;
 
     @Inject
@@ -85,6 +86,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
 
         if (getArguments() != null) {
             mNeoPaymentBatch = (NeoPaymentBatch) getArguments().getSerializable(BundleKeys.PAYMENT_BATCH);
+            mIsCurrentWeekPaymentBatch = getArguments().getBoolean(BundleKeys.IS_CURRENT_WEEK_PAYMENT_BATCH, false);
         }
         else {
             Crashlytics.logException(new Exception("Null arguments for class " + this.getClass().getName()));
@@ -106,8 +108,11 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         paymentDetailExpandableListView.setOnChildClickListener(this);
-        paymentDetailExpandableListView.updateData(mNeoPaymentBatch,
-                mConfigManager.getConfigurationResponse().isDailyProPaymentsEnabled());
+
+        paymentDetailExpandableListView.updateData(
+                mNeoPaymentBatch,
+                mConfigManager.getConfigurationResponse().isDailyProPaymentsEnabled()
+                        && mIsCurrentWeekPaymentBatch);
         paymentDetailExpandableListView.getPaymentSupportButton().setOnClickListener(
                 new View.OnClickListener() {
                     @Override
