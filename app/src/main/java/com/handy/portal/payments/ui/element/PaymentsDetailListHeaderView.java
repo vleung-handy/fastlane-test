@@ -13,6 +13,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.payments.PaymentsUtil;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.viewmodel.PaymentDetailHeaderViewModel;
 
@@ -103,7 +104,8 @@ public class PaymentsDetailListHeaderView extends LinearLayout {
     }
 
     private void updateCashOutButton(@NonNull PaymentDetailHeaderViewModel paymentDetailHeaderViewModel) {
-        mCashOutButton.setEnabled(paymentDetailHeaderViewModel.shouldEnableCashOutButton());
+        PaymentsUtil.CashOut.styleCashOutButtonForApparentEnabledState(mCashOutButton,
+                paymentDetailHeaderViewModel.shouldApparentlyEnableCashOutButton());
         mCashOutButton.setVisibility(paymentDetailHeaderViewModel.shouldShowCashOutButton() ? VISIBLE : GONE);
     }
 
@@ -160,8 +162,7 @@ public class PaymentsDetailListHeaderView extends LinearLayout {
         void onRequestStatusSupportButtonClicked();
     }
 
-    public void setOnCashOutButtonClickListener(OnClickListener onCashOutButtonClickListener)
-    {
+    public void setOnCashOutButtonClickListener(OnClickListener onCashOutButtonClickListener) {
         mCashOutButton.setOnClickListener(onCashOutButtonClickListener);
     }
 }

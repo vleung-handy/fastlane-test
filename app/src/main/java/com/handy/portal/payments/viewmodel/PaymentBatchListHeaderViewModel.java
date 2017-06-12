@@ -16,9 +16,9 @@ public class PaymentBatchListHeaderViewModel {
 
     private final NeoPaymentBatch mNeoPaymentBatch;
     private final boolean mShouldShowCashOutButton;
+
     public PaymentBatchListHeaderViewModel(@NonNull NeoPaymentBatch neoPaymentBatch,
-                                           boolean canShowCashOutButton)
-    {
+                                           boolean canShowCashOutButton) {
         mNeoPaymentBatch = neoPaymentBatch;
         mShouldShowCashOutButton = canShowCashOutButton;
     }
@@ -27,55 +27,47 @@ public class PaymentBatchListHeaderViewModel {
         return mShouldShowCashOutButton;
     }
 
-    public boolean shouldEnableCashOutButton()
-    {
+    public boolean shouldApparentlyEnableCashOutButton() {
         return mNeoPaymentBatch.isCashOutEnabled();
     }
 
-    public boolean shouldShowCurrentWeekRemainingFees()
-    {
+    public boolean shouldShowCurrentWeekRemainingFees() {
         return mNeoPaymentBatch.getRemainingFeeAmount() > 0;
     }
 
-    public String getCurrentWeekDateRange()
-    {
+    public String getCurrentWeekDateRange() {
         return DateTimeUtils.formatDateRange(
                 DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER,
                 mNeoPaymentBatch.getStartDate(),
                 mNeoPaymentBatch.getEndDate());
     }
 
-    public String getCurrentWeekRemainingFees()
-    {
+    public String getCurrentWeekRemainingFees() {
         return CurrencyUtils.formatPriceWithCents(
                 mNeoPaymentBatch.getRemainingFeeAmount(),
                 mNeoPaymentBatch.getCurrencySymbol());
 
     }
 
-    public String getCurrentWeekExpectedPayment()
-    {
+    public String getCurrentWeekExpectedPayment() {
         return CurrencyUtils.formatPriceWithCents(
                 mNeoPaymentBatch.getNetEarningsTotalAmount(),
                 mNeoPaymentBatch.getCurrencySymbol());
     }
 
-    public String getCurrentWeekFees()
-    {
+    public String getCurrentWeekFees() {
         return CurrencyUtils.formatPriceWithCents(
                 mNeoPaymentBatch.getFeesTotalAmount(),
                 mNeoPaymentBatch.getCurrencySymbol());
     }
 
-    public String getCurrentWeekTotalEarnings()
-    {
+    public String getCurrentWeekTotalEarnings() {
         return CurrencyUtils.formatPriceWithCents(
                 mNeoPaymentBatch.getGrossEarningsTotalAmount(),
                 mNeoPaymentBatch.getCurrencySymbol());
     }
 
-    public int getCurrentWeekFeesColor(@NonNull Context context)
-    {
+    public int getCurrentWeekFeesColor(@NonNull Context context) {
         return ContextCompat.getColor(context,
                 mNeoPaymentBatch.getFeesTotalAmount() < 0 ? R.color.plumber_red : R.color.black);
     }

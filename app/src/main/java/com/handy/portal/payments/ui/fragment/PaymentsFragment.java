@@ -2,6 +2,7 @@ package com.handy.portal.payments.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,10 +25,10 @@ import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.library.ui.widget.InfiniteScrollListView;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.PaymentsManager;
+import com.handy.portal.payments.PaymentsUtil;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
@@ -126,32 +127,6 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
         inflater.inflate(R.menu.menu_payments, menu);
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        paymentsBatchListView.setOnDataItemClickListener(new PaymentsBatchListView.OnDataItemClickListener() {
-            @Override
-            public void onDataItemClicked(PaymentBatch paymentBatch, boolean isCurrentWeekBatch) {
-                showPaymentDetailsForBatch(paymentBatch, isCurrentWeekBatch);
-            }
-        });
-
-        paymentsBatchListView.setCashOutButtonClickedListener(new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                bus.post(new LogEvent.AddLogEvent(
-                        new PaymentsLog.CashOutEarlySelected()));
-
-                //this needs to be launched from a fragment so that callbacks can be properly handled
-                FragmentUtils.safeLaunchDialogFragment(
-                        PaymentCashOutDialogFragment.newInstance(),
-                        PaymentsFragment.this,
-                        PaymentCashOutDialogFragment.TAG,
-                        true);
-            }
-        });
-    }
-
     @OnClick(R.id.try_again_button)
     public void doInitialRequestAgain() {
         requestInitialPaymentsInfo();
@@ -205,6 +180,16 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
         }
     }
 
+    private void updateCashOutButtonClickListener(@Nullable PaymentBatches.CashOutInfo cashOutInfo, boolean isCashOutEnabled)
+    {
+        View.OnClickListener onClickListener = PaymentsUtil.CashOut.getCashOutButtonClickListener(
+                this,
+                isCashOutEnabled,
+                cashOutInfo,
+                bus);
+        paymentsBatchListView.setCashOutButtonClickListener(onClickListener);
+    }
+
     public void onInitialPaymentBatchReceived(final PaymentBatches paymentBatches, Date requestStartDate) //should only be called once in this instance. should never be empty
     {
         //reset payment batch list view and its adapter
@@ -219,6 +204,19 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
             return;
         }
         paymentsBatchListView.appendData(paymentBatches, requestStartDate);
+
+        NeoPaymentBatch currentWeekBatch = paymentsBatchListView.getWrappedAdapter().getCurrentWeekBatch();
+
+        updateCashOutButtonClickListener(paymentBatches.getCashOutInfo(),
+                currentWeekBatch != null && currentWeekBatch.isCashOutEnabled());
+
+        //updating with data from payment batches
+        paymentsBatchListView.setOnDataItemClickListener(new PaymentsBatchListView.OnDataItemClickListener() {
+            @Override
+            public void onDataItemClicked(PaymentBatch paymentBatch, boolean isCurrentWeekBatch) {
+                showPaymentDetailsForBatch(paymentBatch, isCurrentWeekBatch, paymentBatches.getCashOutInfo());
+            }
+        });
         paymentsBatchListView.setOnScrollToBottomListener(new InfiniteScrollListView.OnScrollToBottomListener() {
             @Override
             public void onScrollToBottom() {
@@ -230,11 +228,13 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
         });
     }
 
-    public void showPaymentDetailsForBatch(PaymentBatch paymentBatch, boolean isCurrentWeekBatch) {
+    public void showPaymentDetailsForBatch(@NonNull PaymentBatch paymentBatch,
+                                           boolean isCurrentWeekBatch,
+                                           @Nullable PaymentBatches.CashOutInfo cashOutInfo) {
         if (paymentBatch instanceof NeoPaymentBatch) {
-            Bundle arguments = new Bundle();
-            arguments.putSerializable(BundleKeys.PAYMENT_BATCH, paymentBatch);
-            arguments.putBoolean(BundleKeys.IS_CURRENT_WEEK_PAYMENT_BATCH, isCurrentWeekBatch);
+            Bundle arguments = PaymentsDetailFragment.createBundle((NeoPaymentBatch) paymentBatch,
+                    isCurrentWeekBatch,
+                    cashOutInfo);
             bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PAYMENTS_DETAIL, arguments, true));
         }
     }

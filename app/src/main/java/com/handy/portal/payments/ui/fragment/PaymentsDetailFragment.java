@@ -2,6 +2,7 @@ package com.handy.portal.payments.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -35,6 +36,7 @@ import com.handy.portal.payments.PaymentsUtil;
 import com.handy.portal.payments.model.BatchPaymentReviewRequest;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.Payment;
+import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.model.PaymentGroup;
 import com.handy.portal.payments.model.PaymentReviewResponse;
 import com.handy.portal.payments.model.PaymentSupportItem;
@@ -64,6 +66,10 @@ public final class PaymentsDetailFragment extends ActionBarFragment
 
     private NeoPaymentBatch mNeoPaymentBatch;
     private boolean mIsCurrentWeekPaymentBatch;
+    /**
+     * used to determine what happens when the cash out button is clicked
+     */
+    private PaymentBatches.CashOutInfo mCashOutInfo;
     private View mFragmentView;
 
     @Inject
@@ -80,6 +86,17 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         return MainViewPage.PAYMENTS;
     }
 
+    public static Bundle createBundle(@NonNull NeoPaymentBatch neoPaymentBatch,
+                                      boolean isCurrentWeekPaymentBatch,
+                                      @Nullable PaymentBatches.CashOutInfo cashOutInfo)
+    {
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.PAYMENT_BATCH, neoPaymentBatch);
+        arguments.putBoolean(BundleKeys.IS_CURRENT_WEEK_PAYMENT_BATCH, isCurrentWeekPaymentBatch);
+        arguments.putSerializable(BundleKeys.PAYMENT_CASH_OUT_INFO, cashOutInfo);
+        return arguments;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -87,6 +104,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         if (getArguments() != null) {
             mNeoPaymentBatch = (NeoPaymentBatch) getArguments().getSerializable(BundleKeys.PAYMENT_BATCH);
             mIsCurrentWeekPaymentBatch = getArguments().getBoolean(BundleKeys.IS_CURRENT_WEEK_PAYMENT_BATCH, false);
+            mCashOutInfo = (PaymentBatches.CashOutInfo) getArguments().getSerializable(BundleKeys.PAYMENT_CASH_OUT_INFO);
         }
         else {
             Crashlytics.logException(new Exception("Null arguments for class " + this.getClass().getName()));
@@ -148,18 +166,15 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         }
         else //if not failed
         {
-            paymentDetailExpandableListView.getHeaderView().setOnCashOutButtonClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(final View v) {
-                    mBus.post(new LogEvent.AddLogEvent(
-                            new PaymentsLog.CashOutEarlySelected()));
-                    FragmentUtils.safeLaunchDialogFragment(
-                            PaymentCashOutDialogFragment.newInstance(),
-                            PaymentsDetailFragment.this,
-                            PaymentCashOutDialogFragment.TAG,
-                            true);
-                }
-            });
+            View.OnClickListener onCashOutButtonClickedListener =
+                    PaymentsUtil.CashOut.getCashOutButtonClickListener(
+                            this,
+                            mNeoPaymentBatch.isCashOutEnabled(),
+                            mCashOutInfo,
+                            bus
+                    );
+            paymentDetailExpandableListView.getHeaderView()
+                    .setOnCashOutButtonClickListener(onCashOutButtonClickedListener);
             if (mNeoPaymentBatch.getPaymentSupportItems() == null
                     || mNeoPaymentBatch.getPaymentSupportItems().length == 0) {
                 //don't show any payment supports that are based on the payment support items

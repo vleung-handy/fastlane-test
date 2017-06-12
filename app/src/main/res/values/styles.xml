@@ -235,7 +235,7 @@
 
     <style name="Button.Green">
         <item name="android:background">@drawable/button_green</item>
-        <item name="android:textColor">@drawable/button_text_booking_action_white</item>
+        <item name="android:textColor">@color/button_text_booking_action_white</item>
     </style>
 
     <style name="Button.Green.Round">
@@ -316,7 +316,7 @@
     </style>
 
     <style name="Button.BookingAction">
-        <item name="android:textColor">@drawable/button_text_booking_action_white</item>
+        <item name="android:textColor">@color/button_text_booking_action_white</item>
     </style>
 
     <style name="Button.BookingAction.White">

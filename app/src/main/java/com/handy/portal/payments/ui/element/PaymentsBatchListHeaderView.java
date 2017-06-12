@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.payments.PaymentsUtil;
 import com.handy.portal.payments.viewmodel.PaymentBatchListHeaderViewModel;
 
 import butterknife.BindView;
@@ -51,8 +52,7 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
         ButterKnife.bind(this);
     }
 
-    public void updateDisplay(@NonNull PaymentBatchListHeaderViewModel paymentBatchListHeaderViewModel)
-    {
+    public void updateDisplay(@NonNull PaymentBatchListHeaderViewModel paymentBatchListHeaderViewModel) {
         currentWeekDateRangeText.setText(paymentBatchListHeaderViewModel.getCurrentWeekDateRange());
         currentWeekRemainingFeesText.setText(paymentBatchListHeaderViewModel.getCurrentWeekRemainingFees());
         currentWeekExpectedPaymentText.setText(paymentBatchListHeaderViewModel.getCurrentWeekExpectedPayment());
@@ -62,12 +62,12 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
 
         currentWeekRemainingFeesRow.setVisibility(paymentBatchListHeaderViewModel.shouldShowCurrentWeekRemainingFees() ? VISIBLE : GONE);
 
-        mCashOutButton.setEnabled(paymentBatchListHeaderViewModel.shouldEnableCashOutButton());
+        PaymentsUtil.CashOut.styleCashOutButtonForApparentEnabledState(mCashOutButton,
+                paymentBatchListHeaderViewModel.shouldApparentlyEnableCashOutButton());
         mCashOutButton.setVisibility(paymentBatchListHeaderViewModel.shouldShowCashOutButton() ? VISIBLE : GONE);
     }
 
-    public void setOnCashOutButtonClickedListener(OnClickListener onCashOutButtonClickedListener)
-    {
+    public void setOnCashOutButtonClickedListener(OnClickListener onCashOutButtonClickedListener) {
         mCashOutButton.setOnClickListener(onCashOutButtonClickedListener);
     }
 
