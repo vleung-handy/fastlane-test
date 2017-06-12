@@ -12,24 +12,22 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapter;
 import com.handy.portal.logger.handylogger.model.EventContext;
 
-import org.greenrobot.eventbus.EventBus;
-
 import java.util.List;
 
 public class RequestedJobsPagerAdapter extends PagerAdapter {
     public static final int POSITION_NOT_FOUND = -1;
     private final Context mContext;
-    private final EventBus mBus;
     private final List<Booking> mRequestedJobs;
+    private RequestedJobsRecyclerViewAdapter.JobViewHolder.Listener mJobViewHolderListener;
 
     public RequestedJobsPagerAdapter(
             final Context context,
-            final EventBus bus,
-            final List<Booking> requestedJobs
+            final List<Booking> requestedJobs,
+            final RequestedJobsRecyclerViewAdapter.JobViewHolder.Listener jobViewHolderListener
     ) {
         mContext = context;
-        mBus = bus;
         mRequestedJobs = requestedJobs;
+        mJobViewHolderListener = jobViewHolderListener;
     }
 
     @Override
@@ -55,8 +53,8 @@ public class RequestedJobsPagerAdapter extends PagerAdapter {
         frame.setTag(requestedJob);
         new RequestedJobsRecyclerViewAdapter.JobViewHolder(
                 frame,
-                mBus,
-                EventContext.SCHEDULED_JOBS
+                EventContext.SCHEDULED_JOBS,
+                mJobViewHolderListener
         ).init(requestedJob);
         container.addView(frame);
         return requestedJob;

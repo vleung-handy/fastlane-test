@@ -44,6 +44,7 @@ import com.handy.portal.bookings.util.BookingListUtils;
 import com.handy.portal.bookings.util.ClaimUtils;
 import com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapter;
 import com.handy.portal.clients.ui.fragment.dialog.RequestDismissalReasonsDialogFragment;
+import com.handy.portal.clients.ui.fragment.dialog.RescheduleDialogFragment;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.PrefsKey;
@@ -67,6 +68,7 @@ import com.handy.portal.logger.handylogger.model.EventType;
 import com.handy.portal.logger.handylogger.model.JobsLog;
 import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
+import com.handy.portal.logger.handylogger.model.SendAvailabilityLog;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -142,6 +144,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     private final Runnable mRefreshRunnable;
     private final ViewPager.OnPageChangeListener mDatesPageChangeListener;
     private final ViewPager.OnPageChangeListener mRequestedJobsPageChangeListener;
+    private RequestedJobsRecyclerViewAdapter.JobViewHolder.Listener mJobViewHolderListener;
 
     {
         mDatesPageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -195,6 +198,58 @@ public class ScheduledBookingsFragment extends ActionBarFragment
             @Override
             public void onPageScrollStateChanged(final int state) {
                 // do nothing
+            }
+        };
+        mJobViewHolderListener = new RequestedJobsRecyclerViewAdapter.JobViewHolder.Listener() {
+            @Override
+            public void onSelect(final Booking booking) {
+                showBookingDetails(booking);
+            }
+
+            @Override
+            public void onClaim(final Booking booking) {
+                boolean confirmClaimDialogShown =
+                        ClaimUtils.showConfirmBookingClaimDialogIfNecessary(
+                                booking,
+                                ScheduledBookingsFragment.this,
+                                getFragmentManager()
+                        );
+                if (!confirmClaimDialogShown) {
+                    requestClaimJob(booking);
+                }
+            }
+
+            @Override
+            public void onDismiss(final Booking booking) {
+                if (booking.getRequestAttributes() != null
+                        && booking.getRequestAttributes().hasCustomer()) {
+                    // Display dialog for selecting a request dismissal reason
+                    final RequestDismissalReasonsDialogFragment dialogFragment =
+                            RequestDismissalReasonsDialogFragment.newInstance(booking);
+                    dialogFragment.setTargetFragment(
+                            ScheduledBookingsFragment.this, RequestCode.CONFIRM_DISMISS
+                    );
+                    FragmentUtils.safeLaunchDialogFragment(
+                            dialogFragment, ScheduledBookingsFragment.this, null
+                    );
+                    bus.post(new LogEvent.AddLogEvent(
+                            new RequestedJobsLog.DismissJobShown(EventContext.SCHEDULED_JOBS, booking)));
+                }
+                else {
+                    dismissJob(booking);
+                }
+            }
+
+            @Override
+            public void onReschedule(final Booking booking) {
+                FragmentUtils.safeLaunchDialogFragment(
+                        RescheduleDialogFragment.newInstance(booking),
+                        ScheduledBookingsFragment.this,
+                        null
+                );
+                bus.post(new LogEvent.AddLogEvent(new SendAvailabilityLog.SendAvailabilitySelected(
+                        EventContext.SCHEDULED_JOBS, booking)
+                ));
             }
         };
         mRefreshRunnable = new Runnable() {
@@ -636,7 +691,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         final List<Booking> undismissedBookings = requestedJobsWrapper.getUndismissedBookings();
         if (undismissedBookings != null) {
             mRequestedJobsViewPager.setAdapter(new RequestedJobsPagerAdapter(
-                    getActivity(), bus, undismissedBookings));
+                    getActivity(), undismissedBookings, mJobViewHolderListener));
             mRequestedJobsViewPager.addOnPageChangeListener(mRequestedJobsPageChangeListener);
             updateRequestedJobsItemCount(0);
             final String formattedDate = DateTimeUtils.formatDateShortDayOfWeekShortMonthDay(
@@ -747,25 +802,6 @@ public class ScheduledBookingsFragment extends ActionBarFragment
                 TransitionStyle.JOB_LIST_TO_DETAILS, true));
     }
 
-    @Subscribe
-    public void onRequestedJobClicked(
-            final RequestedJobsRecyclerViewAdapter.Event.RequestedJobClicked event
-    ) {
-        showBookingDetails(event.getBooking());
-    }
-
-    @Subscribe
-    public void onRequestedJobClaimClicked(
-            final RequestedJobsRecyclerViewAdapter.Event.RequestedJobClaimClicked event
-    ) {
-        boolean confirmClaimDialogShown =
-                ClaimUtils.showConfirmBookingClaimDialogIfNecessary(event.getBooking(), this,
-                        getFragmentManager());
-        if (!confirmClaimDialogShown) {
-            requestClaimJob(event.getBooking());
-        }
-    }
-
     private void requestClaimJob(final Booking booking) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new LogEvent.AddLogEvent(new JobsLog(EventType.CLAIM_SUBMITTED,
@@ -794,26 +830,6 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         bus.post(new LogEvent.AddLogEvent(new JobsLog(EventType.CLAIM_ERROR,
                 EventContext.SCHEDULED_JOBS, event.getBooking())));
         Snackbar.make(mContent, errorMessage, Snackbar.LENGTH_LONG).show();
-    }
-
-    @Subscribe
-    public void onRequestedJobDismissClicked(
-            final RequestedJobsRecyclerViewAdapter.Event.RequestedJobDismissClicked event
-    ) {
-        final Booking booking = event.getBooking();
-        if (booking.getRequestAttributes() != null
-                && booking.getRequestAttributes().hasCustomer()) {
-            // Display dialog for selecting a request dismissal reason
-            final RequestDismissalReasonsDialogFragment dialogFragment =
-                    RequestDismissalReasonsDialogFragment.newInstance(booking);
-            dialogFragment.setTargetFragment(this, RequestCode.CONFIRM_DISMISS);
-            FragmentUtils.safeLaunchDialogFragment(dialogFragment, this, null);
-            bus.post(new LogEvent.AddLogEvent(
-                    new RequestedJobsLog.DismissJobShown(EventContext.SCHEDULED_JOBS, booking)));
-        }
-        else {
-            dismissJob(booking);
-        }
     }
 
     @Subscribe

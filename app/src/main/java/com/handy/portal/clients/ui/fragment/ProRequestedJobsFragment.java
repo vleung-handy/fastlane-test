@@ -17,6 +17,7 @@ import android.widget.TextView;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
+import com.handy.portal.availability.manager.AvailabilityManager;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.manager.BookingManager.DismissalReason;
@@ -27,6 +28,7 @@ import com.handy.portal.bookings.util.BookingListUtils;
 import com.handy.portal.bookings.util.ClaimUtils;
 import com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapter;
 import com.handy.portal.clients.ui.fragment.dialog.RequestDismissalReasonsDialogFragment;
+import com.handy.portal.clients.ui.fragment.dialog.RescheduleDialogFragment;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.RequestCode;
@@ -43,6 +45,7 @@ import com.handy.portal.logger.handylogger.model.EventContext;
 import com.handy.portal.logger.handylogger.model.EventType;
 import com.handy.portal.logger.handylogger.model.JobsLog;
 import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
+import com.handy.portal.logger.handylogger.model.SendAvailabilityLog;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -56,11 +59,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.handy.portal.clients.ui.adapter.RequestedJobsRecyclerViewAdapter.Event;
-
 public class ProRequestedJobsFragment extends InjectedFragment {
     @Inject
     BookingManager mBookingManager;
+    @Inject
+    AvailabilityManager mAvailabilityManager;
 
     @BindView(R.id.fragment_pro_requested_jobs_recycler_view)
     RecyclerView mRequestedJobsRecyclerView;
@@ -77,13 +80,68 @@ public class ProRequestedJobsFragment extends InjectedFragment {
     private RequestedJobsRecyclerViewAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private int mUnreadJobsCount;
+    private SwipeRefreshLayout.OnRefreshListener onProRequestedJobsListRefreshListener;
+    private RequestedJobsRecyclerViewAdapter.JobViewHolder.Listener mJobViewHolderListener;
 
-    private SwipeRefreshLayout.OnRefreshListener onProRequestedJobsListRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
-        @Override
-        public void onRefresh() {
-            requestProRequestedJobs(false);
-        }
-    };
+    {
+        onProRequestedJobsListRefreshListener = new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                requestProRequestedJobs(false);
+            }
+        };
+        mJobViewHolderListener = new RequestedJobsRecyclerViewAdapter.JobViewHolder.Listener() {
+            @Override
+            public void onSelect(final Booking booking) {
+                navigateToJobDetails(booking);
+            }
+
+            @Override
+            public void onClaim(final Booking booking) {
+                boolean confirmClaimDialogShown =
+                        ClaimUtils.showConfirmBookingClaimDialogIfNecessary(
+                                booking, ProRequestedJobsFragment.this, getFragmentManager()
+                        );
+                if (!confirmClaimDialogShown) {
+                    requestClaimJob(booking);
+                }
+            }
+
+            @Override
+            public void onDismiss(final Booking booking) {
+                if (booking.getRequestAttributes() != null
+                        && booking.getRequestAttributes().hasCustomer()) {
+                    // Display dialog for selecting a request dismissal reason
+                    final RequestDismissalReasonsDialogFragment dialogFragment =
+                            RequestDismissalReasonsDialogFragment.newInstance(booking);
+                    dialogFragment.setTargetFragment(
+                            ProRequestedJobsFragment.this, RequestCode.CONFIRM_DISMISS
+                    );
+                    FragmentUtils.safeLaunchDialogFragment(
+                            dialogFragment, ProRequestedJobsFragment.this, null
+                    );
+                    bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobShown(
+                            EventContext.REQUESTED_JOBS, booking
+                    )));
+                }
+                else {
+                    dismissJob(booking);
+                }
+            }
+
+            @Override
+            public void onReschedule(final Booking booking) {
+                FragmentUtils.safeLaunchDialogFragment(
+                        RescheduleDialogFragment.newInstance(booking),
+                        ProRequestedJobsFragment.this,
+                        null
+                );
+                bus.post(new LogEvent.AddLogEvent(new SendAvailabilityLog.SendAvailabilitySelected(
+                        EventContext.REQUESTED_JOBS, booking)
+                ));
+            }
+        };
+    }
 
     public static ProRequestedJobsFragment newInstance() {
         return new ProRequestedJobsFragment();
@@ -105,7 +163,7 @@ public class ProRequestedJobsFragment extends InjectedFragment {
             }
         }
         bus.post(new BookingEvent.ReceiveProRequestedJobsCountSuccess(mUnreadJobsCount));
-        mAdapter = new RequestedJobsRecyclerViewAdapter(getActivity(), filteredJobList);
+        mAdapter = new RequestedJobsRecyclerViewAdapter(getActivity(), filteredJobList, mJobViewHolderListener);
         mRequestedJobsRecyclerView.setAdapter(mAdapter);
         if (filteredJobList.isEmpty()) {
             showContentViewAndHideOthers(mEmptyJobsSwipeRefreshLayout);
@@ -177,6 +235,11 @@ public class ProRequestedJobsFragment extends InjectedFragment {
             mJobListSwipeRefreshLayout.setRefreshing(true);
             requestProRequestedJobs(true);
         }
+        if (!mAvailabilityManager.isReady()) {
+            // We need this in case the pro decides to reschedule.
+            // See usage of AvailabilityManager in RescheduleDialogFragment.
+            mAvailabilityManager.getAvailability(false, null);
+        }
     }
 
     @Override
@@ -242,21 +305,6 @@ public class ProRequestedJobsFragment extends InjectedFragment {
         onError(event.error);
     }
 
-    @Subscribe
-    public void onRequestedJobClicked(final Event.RequestedJobClicked event) {
-        navigateToJobDetails(event.getBooking());
-    }
-
-    @Subscribe
-    public void onRequestedJobClaimClicked(final Event.RequestedJobClaimClicked event) {
-        boolean confirmClaimDialogShown =
-                ClaimUtils.showConfirmBookingClaimDialogIfNecessary(event.getBooking(), this,
-                        getFragmentManager());
-        if (!confirmClaimDialogShown) {
-            requestClaimJob(event.getBooking());
-        }
-    }
-
     private void requestClaimJob(final Booking booking) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         bus.post(new LogEvent.AddLogEvent(new JobsLog(EventType.CLAIM_SUBMITTED,
@@ -289,24 +337,6 @@ public class ProRequestedJobsFragment extends InjectedFragment {
         bus.post(new LogEvent.AddLogEvent(new JobsLog(EventType.CLAIM_ERROR,
                 EventContext.REQUESTED_JOBS, event.getBooking())));
         Snackbar.make(mJobListSwipeRefreshLayout, errorMessage, Snackbar.LENGTH_LONG).show();
-    }
-
-    @Subscribe
-    public void onRequestedJobDismissClicked(final Event.RequestedJobDismissClicked event) {
-        final Booking booking = event.getBooking();
-        if (booking.getRequestAttributes() != null
-                && booking.getRequestAttributes().hasCustomer()) {
-            // Display dialog for selecting a request dismissal reason
-            final RequestDismissalReasonsDialogFragment dialogFragment =
-                    RequestDismissalReasonsDialogFragment.newInstance(booking);
-            dialogFragment.setTargetFragment(this, RequestCode.CONFIRM_DISMISS);
-            FragmentUtils.safeLaunchDialogFragment(dialogFragment, this, null);
-            bus.post(new LogEvent.AddLogEvent(
-                    new RequestedJobsLog.DismissJobShown(EventContext.REQUESTED_JOBS, booking)));
-        }
-        else {
-            dismissJob(booking);
-        }
     }
 
     @Subscribe
