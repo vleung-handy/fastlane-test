@@ -17,10 +17,24 @@ public class PaymentsLog extends EventLog {
         @SerializedName("cash_out_cta_shown")
         private boolean mCashOutCtaShown;
 
-        public PageShown(final boolean cashOutCtaShown)
+        @SerializedName("cash_out_cta_enabled")
+        private boolean mCashOutCtaEnabled;
+
+        public PageShown(final boolean cashOutCtaShown,
+                         final boolean cashOutCtaEnabled)
         {
             super(EVENT_TYPE);
             mCashOutCtaShown = cashOutCtaShown;
+            mCashOutCtaEnabled = cashOutCtaEnabled;
+        }
+    }
+
+    public static class CashOutEarlyPaymentMethodSelected extends PaymentsLog
+    {
+        private static final String EVENT_TYPE = "cash_out_early_payment_method_selected";
+        public CashOutEarlyPaymentMethodSelected()
+        {
+            super(EVENT_TYPE);
         }
     }
 

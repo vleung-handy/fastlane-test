@@ -71,7 +71,7 @@ public class ConfigurationResponse {
 
     // Getters
     public boolean isDailyProPaymentsEnabled() {
-        return true;
+        return mDailyProPaymentsEnabled;
     }
 
     public boolean areAnnouncementsEnabled() {
@@ -153,7 +153,7 @@ public class ConfigurationResponse {
     }
 
     public boolean isMoreFullTabEnabled() {
-        return mMoreTabEnabled;
+        return true;
     }
 
     // Setters

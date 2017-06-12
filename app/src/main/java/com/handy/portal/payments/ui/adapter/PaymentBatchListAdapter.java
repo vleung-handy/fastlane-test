@@ -166,7 +166,9 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
             paymentsBatchListHeaderView.updateDisplay(paymentBatchListHeaderViewModel);
 
             mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.PageShown(
-                    paymentBatchListHeaderViewModel.shouldShowCashOutButton())));
+                    paymentBatchListHeaderViewModel.shouldShowCashOutButton(),
+                    paymentBatchListHeaderViewModel.shouldEnableCashOutButton()
+                    )));
 
             paymentsBatchListHeaderView.setOnCashOutButtonClickedListener(mOnCashOutButtonClickedListener);
         }

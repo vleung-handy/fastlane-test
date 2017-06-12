@@ -208,6 +208,7 @@ public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
 
     @OnClick(R.id.payments_cash_out_payment_method_details_button)
     public void onPaymentMethodDetailsButtonClicked() {
+        mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.CashOutEarlyPaymentMethodSelected()));
         startActivity(FragmentContainerActivity.getIntent(
                 getContext(),
                 SelectPaymentMethodFragment.class,
