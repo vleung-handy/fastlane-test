@@ -89,7 +89,8 @@ public class PaymentBreakdownLineItemView extends FrameLayout {
     /**
      * TODO fully implement when we need this functionality
      *
-     * @param helpText
+     * this is currently not being used anywhere. we do not yet need to show tooltips for
+     * individual payment line items
      */
     public void updateHelpText(@Nullable String helpText) {
         if (TextUtils.isNullOrEmpty(helpText)) {
