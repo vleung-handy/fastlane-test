@@ -145,7 +145,11 @@ public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
                 paymentCashOutInfo.getHelpCenterArticleUrl());
         mHeaderText.setText(TextUtils.Support.fromHtml(headerHtml));
 
-        //todo put in shared place
+        /*
+        copied from consumer
+        don't know how to get callback for a specific link now
+        but may figure that out later and put this in a shared place
+         */
         mHeaderText.setMovementMethod(new LinkMovementMethod() {
             @Override
             public boolean onTouchEvent(

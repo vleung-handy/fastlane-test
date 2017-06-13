@@ -8,7 +8,9 @@
               android:orientation="vertical"
     >
 
-    <!--todo make this toolbar reusable-->
+    <!--todo there are other places that have a toolbar similar to this
+    with some slight differences. discuss with designer so we can
+    consolidate all of them and then make this reusable-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
