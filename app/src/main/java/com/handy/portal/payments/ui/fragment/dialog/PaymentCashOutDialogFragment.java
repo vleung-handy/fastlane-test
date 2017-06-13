@@ -62,9 +62,6 @@ public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
     @BindView(R.id.payments_cash_out_copy_block_1)
     TextView mHeaderText;
 
-    @BindView(R.id.payments_cash_out_copy_block_2)
-    TextView mPaymentSummaryText;
-
     @BindView(R.id.payments_cash_out_date_range_text)
     TextView mDateRangeText;
 
@@ -177,11 +174,6 @@ public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
             }
         });
         TextUtils.stripUnderlines(mHeaderText);
-
-        mPaymentSummaryText.setText(TextUtils.Support.fromHtml(
-                getString(R.string.payment_cash_out_dialog_footer_html)
-        ));
-        mPaymentSummaryText.setMovementMethod(LinkMovementMethod.getInstance());
 
         mDateRangeText.setText(DateTimeUtils.formatDateRange(
                 DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER,

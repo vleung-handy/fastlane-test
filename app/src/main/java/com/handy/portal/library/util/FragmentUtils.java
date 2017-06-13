@@ -73,7 +73,7 @@ public class FragmentUtils {
     private static boolean safeLaunchDialogFragment(@NonNull DialogFragment dialogFragment,
                                                     @NonNull FragmentManager fragmentManager,
                                                     @Nullable String dialogFragmentTag,
-                                                    boolean onlyLaunchIfNotLaunched) {//fixme rename?
+                                                    boolean onlyLaunchIfNotLaunched) {
         try {
             fragmentManager.executePendingTransactions();
 

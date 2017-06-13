@@ -174,16 +174,6 @@
                             </TableRow>
 
                         </TableLayout>
-
-                        <TextView
-                            android:id="@+id/payments_cash_out_copy_block_2"
-                            style="@style/TextView.Medium"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/default_margin_half"
-                            android:text="@string/payment_cash_out_dialog_footer_html"
-                            android:textColorLink="@color/handy_blue"
-                            />
                     </LinearLayout>
 
                     <RelativeLayout

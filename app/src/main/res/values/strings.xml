@@ -728,16 +728,16 @@
     <string name="cash_out_now">Cash Out Now</string>
 
     <string name="payment_method_details_button_formatted">Deposit to account ending in %1$s</string>
-    <string name="payment_cash_out_dialog_title">Get paid faster!</string>
-    <string name="payment_cash_out_dialog_subtitle_html_formatted"><![CDATA[Have your payment sent immediately and receive cash into your account as early as today, depending on your <a href=\"%1$s\">bank</a>.]]></string>
+    <string name="payment_cash_out_dialog_title">Get paid as early as today!</string>
+    <string name="payment_cash_out_dialog_subtitle_html_formatted"><![CDATA[Have your payment sent now. Your deposit may take up to 3 business days to appear in your account depending on your <a href=\"%1$s\">bank</a>.]]></string>
     <string name="payment_cash_out_dialog_footer_html"><![CDATA[Please allow up to <b>3 business days</b> to see funds in your account.]]></string>
     <string name="payment_cash_out_dialog_partial_pay_week">Summary: Partial Pay Week</string>
     <string name="payment_cash_out_dialog_confirm_button">Confirm &amp; Cash Out</string>
     <string name="payment_cash_out_fee">Cash Out Fee</string>
 
     <string name="payment_cash_out_denied_error">You cannot cash out at this time</string>
-    <string name="payment_cash_out_disabled_dialog_title_formatted">How to unlock the Cash Out feature</string>
-    <string name="payment_cash_out_disabled_dialog_body_formatted">Your payment is normally processed every week at no cost.\n\nOnce you\'ve earned more than %1$s with Handy, you\'ll be able to access the \'Cash Out Now\' button anytime and get paid faster for a small fee.</string>
+    <string name="payment_cash_out_disabled_dialog_title_formatted">Unlock the cash out feature</string>
+    <string name="payment_cash_out_disabled_dialog_body_formatted">Your payment is normally processed every week at no additional cost.\n\nOnce you\'ve earned more than %1$s with Handy, you\'ll be able to access the \'Cash Out Now\' button anytime and get paid faster for a small fee.</string>
 
     <!-- Announcements -->
     <string name="announcements_next_button">Next</string>
