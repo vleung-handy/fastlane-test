@@ -3,11 +3,13 @@ package com.handy.portal.library.util;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.Html;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.text.TextPaint;
 import android.text.style.ClickableSpan;
 import android.text.style.URLSpan;
@@ -32,6 +34,27 @@ public final class TextUtils {
     public static boolean isNullOrEmpty(String string) {
         return string == null || string.isEmpty();
     }
+
+    public abstract static class Support {
+        public static void setTextAppearance(@NonNull TextView textView, int textAppearanceResourceId) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                textView.setTextAppearance(textAppearanceResourceId);
+            }
+            else {
+                textView.setTextAppearance(textView.getContext(), textAppearanceResourceId);
+            }
+        }
+
+        public static Spanned fromHtml(String text) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                return Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY);
+            }
+            else {
+                return Html.fromHtml(text);
+            }
+        }
+    }
+
 
     public static Typeface get(final Context c, final String name) {
         synchronized (cache) {

@@ -2,6 +2,7 @@ package com.handy.portal.payments.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -10,12 +11,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
-import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
@@ -27,11 +28,13 @@ import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.PaymentsManager;
+import com.handy.portal.payments.PaymentsUtil;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.payments.ui.element.PaymentsBatchListView;
+import com.handy.portal.payments.ui.fragment.dialog.PaymentCashOutDialogFragment;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -42,7 +45,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public final class PaymentsFragment extends ActionBarFragment {
+public final class PaymentsFragment extends ActionBarFragment implements PaymentCashOutDialogFragment.OnCashOutSuccessListener {
     private static final String HELP_PAYMENTS_SECTION_REDIRECT_PATH = "/sections/203828247";
 
     @Inject
@@ -69,13 +72,13 @@ public final class PaymentsFragment extends ActionBarFragment {
 
     //TODO: refactor request protocols when we can use new pagination API that allows us to get the N next batches
 
-    private View fragmentView;
+    private ViewGroup fragmentView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
         if (fragmentView == null) {
-            fragmentView = inflater.inflate(R.layout.fragment_payments, container, false);
+            fragmentView = (ViewGroup) super.onCreateView(inflater, container, savedInstanceState);
+            fragmentView.addView(inflater.inflate(R.layout.fragment_payments, container, false));
         }
 
         ButterKnife.bind(this, fragmentView);
@@ -86,6 +89,18 @@ public final class PaymentsFragment extends ActionBarFragment {
     @Override
     protected MainViewPage getAppPage() {
         return MainViewPage.PAYMENTS;
+    }
+
+    @Override
+    protected void showProgressSpinner(final boolean isBlocking) {
+        super.showProgressSpinner(isBlocking);
+        scrollView.setVisibility(View.GONE);
+    }
+
+    @Override
+    protected void hideProgressSpinner() {
+        scrollView.setVisibility(View.VISIBLE);
+        super.hideProgressSpinner();
     }
 
     @Override
@@ -100,9 +115,8 @@ public final class PaymentsFragment extends ActionBarFragment {
         {
             requestInitialPaymentsInfo();
         }
-        else //have to put this logic here because of the way the loading overlay is handled by the bus system e.g. when child fragment is destroyed but caused overlay to show (messy to put in onResume because user could have just navigated away from app)
-        {
-            setLoadingOverlayVisible(false);
+        else {
+            hideProgressSpinner();
         }
     }
 
@@ -112,34 +126,22 @@ public final class PaymentsFragment extends ActionBarFragment {
         inflater.inflate(R.menu.menu_payments, menu);
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        paymentsBatchListView.setOnDataItemClickListener(new PaymentsBatchListView.OnDataItemClickListener() {
-            @Override
-            public void onDataItemClicked(PaymentBatch paymentBatch) {
-                showPaymentDetailsForBatch(paymentBatch);
-            }
-        });
-    }
-
     @OnClick(R.id.try_again_button)
     public void doInitialRequestAgain() {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         requestInitialPaymentsInfo();
-    }
-
-    public void setLoadingOverlayVisible(boolean visible) {
-        scrollView.setVisibility(visible ? View.GONE : View.VISIBLE);
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(visible));
     }
 
     private void requestInitialPaymentsInfo() {
         requestNextPaymentBatches(true);
-        setLoadingOverlayVisible(true);
+        showProgressSpinner(true);
     }
 
+    private FragmentSafeCallback mCurrentPaymentBatchCallback;
+
     private void requestNextPaymentBatches(final boolean isInitialRequest) {
+        if (isInitialRequest) {
+            paymentsBatchListView.clear();
+        }
         final Date endDate = paymentsBatchListView.getNextRequestEndDate();
 
         if (endDate != null) {
@@ -147,7 +149,12 @@ public final class PaymentsFragment extends ActionBarFragment {
             c.setTime(endDate);
             c.add(Calendar.DATE, -PaymentBatchListAdapter.DAYS_TO_REQUEST_PER_BATCH);
             final Date startDate = DateTimeUtils.getBeginningOfDay(c.getTime());
-            mPaymentsManager.requestPaymentBatches(startDate, endDate, new FragmentSafeCallback<PaymentBatches>(this) {
+            if (mCurrentPaymentBatchCallback != null) {
+                //only one payment batch request at a time
+                mCurrentPaymentBatchCallback.cancel();
+            }
+            mCurrentPaymentBatchCallback
+                    = new FragmentSafeCallback<PaymentBatches>(this) {
                 @Override
                 public void onCallbackSuccess(PaymentBatches response) {
                     onReceivePaymentBatchesSuccess(response,
@@ -160,7 +167,8 @@ public final class PaymentsFragment extends ActionBarFragment {
                 public void onCallbackError(DataManager.DataManagerError error) {
                     onReceivePaymentBatchesError(error);
                 }
-            });
+            };
+            mPaymentsManager.requestPaymentBatches(startDate, endDate, mCurrentPaymentBatchCallback);
 
             paymentsBatchListView.showFooter(R.string.loading_more_payments);
         }
@@ -169,25 +177,42 @@ public final class PaymentsFragment extends ActionBarFragment {
         }
     }
 
-    @Override
-    public void onPause() {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));//don't want overlay to persist when this fragment is paused
-        super.onPause();
+    private void updateCashOutButtonClickListener(@Nullable PaymentBatches.CashOutInfo cashOutInfo, boolean isCashOutEnabled) {
+        View.OnClickListener onClickListener = PaymentsUtil.CashOut.createCashOutButtonClickListener(
+                this,
+                isCashOutEnabled,
+                cashOutInfo,
+                bus);
+        paymentsBatchListView.setCashOutButtonClickListener(onClickListener);
     }
 
     public void onInitialPaymentBatchReceived(final PaymentBatches paymentBatches, Date requestStartDate) //should only be called once in this instance. should never be empty
     {
         //reset payment batch list view and its adapter
         paymentsBatchListView.clear();
-        setLoadingOverlayVisible(false);
+        hideProgressSpinner();
 
         //update the current pay week
         if (paymentBatches.getNeoPaymentBatches().length == 0) //this should never happen. always expecting at least one entry (current pay week) from server in initial batch
         {
             Crashlytics.logException(new Exception("Bad initial payment batch received! Non-legacy payment batch list is empty. Expecting first entry to be current pay week"));
+            showToast(R.string.an_error_has_occurred);
             return;
         }
         paymentsBatchListView.appendData(paymentBatches, requestStartDate);
+
+        NeoPaymentBatch currentWeekBatch = paymentsBatchListView.getWrappedAdapter().getCurrentWeekBatch();
+
+        updateCashOutButtonClickListener(paymentBatches.getCashOutInfo(),
+                currentWeekBatch != null && currentWeekBatch.isCashOutEnabled());
+
+        //updating with data from payment batches
+        paymentsBatchListView.setOnDataItemClickListener(new PaymentsBatchListView.OnDataItemClickListener() {
+            @Override
+            public void onDataItemClicked(PaymentBatch paymentBatch, boolean isCurrentWeekBatch) {
+                showPaymentDetailsForBatch(paymentBatch, isCurrentWeekBatch, paymentBatches.getCashOutInfo());
+            }
+        });
         paymentsBatchListView.setOnScrollToBottomListener(new InfiniteScrollListView.OnScrollToBottomListener() {
             @Override
             public void onScrollToBottom() {
@@ -199,10 +224,13 @@ public final class PaymentsFragment extends ActionBarFragment {
         });
     }
 
-    public void showPaymentDetailsForBatch(PaymentBatch paymentBatch) {
+    public void showPaymentDetailsForBatch(@NonNull PaymentBatch paymentBatch,
+                                           boolean isCurrentWeekBatch,
+                                           @Nullable PaymentBatches.CashOutInfo cashOutInfo) {
         if (paymentBatch instanceof NeoPaymentBatch) {
-            Bundle arguments = new Bundle();
-            arguments.putSerializable(BundleKeys.PAYMENT_BATCH, paymentBatch);
+            Bundle arguments = PaymentsDetailFragment.createBundle((NeoPaymentBatch) paymentBatch,
+                    isCurrentWeekBatch,
+                    cashOutInfo);
             bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PAYMENTS_DETAIL, arguments, true));
         }
     }
@@ -257,12 +285,18 @@ public final class PaymentsFragment extends ActionBarFragment {
 
     private void onReceivePaymentBatchesError(@NonNull DataManager.DataManagerError error) {
         if (paymentsBatchListView.isDataEmpty()) {
-            bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             fetchErrorView.setVisibility(View.VISIBLE);
             fetchErrorText.setText(R.string.request_payments_batches_failed);
         }
         else {
             paymentsBatchListView.showFooter(R.string.request_payments_batches_failed);
         }
+        hideProgressSpinner();
+    }
+
+    @Override
+    public void onCashOutSuccess(@NonNull final String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        requestInitialPaymentsInfo();
     }
 }

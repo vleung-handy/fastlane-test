@@ -13,6 +13,7 @@ import com.handy.portal.payments.ui.fragment.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.payments.ui.fragment.SelectPaymentMethodFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
+import com.handy.portal.payments.ui.fragment.dialog.PaymentCashOutDialogFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentFailedDialogFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportReasonsDialogFragment;
 
@@ -41,6 +42,7 @@ import dagger.Provides;
                 BookingTransactionsWrapperFragment.class,
                 PaymentSupportReasonsDialogFragment.class,
                 PaymentFailedDialogFragment.class,
+                PaymentCashOutDialogFragment.class,
         })
 public final class PaymentsModule {
     @Provides

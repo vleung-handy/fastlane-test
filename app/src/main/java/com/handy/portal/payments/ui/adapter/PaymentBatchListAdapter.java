@@ -1,6 +1,7 @@
 package com.handy.portal.payments.ui.adapter;
 
 import android.content.Context;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
@@ -19,6 +21,7 @@ import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.ui.element.PaymentsBatchListHeaderView;
 import com.handy.portal.payments.ui.element.PaymentsBatchListItemView;
+import com.handy.portal.payments.viewmodel.PaymentBatchListHeaderViewModel;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -34,8 +37,17 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
     @Inject
     EventBus mBus;
 
+    @Inject
+    ConfigManager mConfigManager;
+
     public static final int DAYS_TO_REQUEST_PER_BATCH = 28;
     private Date nextRequestEndDate;
+    private View.OnClickListener mCashOutButtonClickedListener;
+
+    public static final int VIEW_TYPE_CURRENT_WEEK_BATCH = 0;
+    public static final int VIEW_TYPE_PAST_BATCH = 1;
+
+    private static final int VIEW_POSITION_CURRENT_WEEK_BATCH = 0;
 
     //TODO: we don't need to keep track of oldest date when we can use new pagination API that allows us to get the N next batches
 
@@ -119,13 +131,23 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
         return 2;
     }
 
+    /**
+     * the cash out dialog fragment needs to be launched by a fragment
+     * so that callbacks can be properly handled
+     */
+    public void setCashOutButtonClickedListener(View.OnClickListener cashOutEnabledClickListener)
+    {
+        mCashOutButtonClickedListener = cashOutEnabledClickListener;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v;
         PaymentBatch paymentBatch = getItem(position);
         LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        if (position == 0 && paymentBatch instanceof NeoPaymentBatch) {
+        int viewType = getViewTypeForPosition(position);
+        if (viewType == VIEW_TYPE_CURRENT_WEEK_BATCH) {
             if (convertView == null || !(convertView instanceof PaymentsBatchListHeaderView)) {
                 v = inflater.inflate(R.layout.element_payments_batch_list_current_week_header, parent, false);
                 v.findViewById(R.id.payments_current_week_remaining_fees_row).setOnClickListener(new View.OnClickListener() {
@@ -140,7 +162,21 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
                 v = convertView;
             }
 
-            ((PaymentsBatchListHeaderView) v).updateDisplay((NeoPaymentBatch) paymentBatch);
+            PaymentsBatchListHeaderView paymentsBatchListHeaderView
+                    = ((PaymentsBatchListHeaderView) v);
+
+            PaymentBatchListHeaderViewModel paymentBatchListHeaderViewModel
+                    = new PaymentBatchListHeaderViewModel((NeoPaymentBatch) paymentBatch,
+                    mConfigManager.getConfigurationResponse().isDailyProPaymentsEnabled());
+
+            paymentsBatchListHeaderView.updateDisplay(paymentBatchListHeaderViewModel);
+
+            mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.PageShown(
+                    paymentBatchListHeaderViewModel.shouldShowCashOutButton(),
+                    paymentBatchListHeaderViewModel.shouldApparentlyEnableCashOutButton()
+                    )));
+
+            paymentsBatchListHeaderView.setOnCashOutButtonClickedListener(mCashOutButtonClickedListener);
         }
         else {
             if (convertView == null || !(convertView instanceof PaymentsBatchListItemView)) {
@@ -154,6 +190,30 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
         }
 
         return v;
+    }
+
+    public int getViewTypeForPosition(int position)
+    {
+        if(position == VIEW_POSITION_CURRENT_WEEK_BATCH
+                && getItem(position) instanceof NeoPaymentBatch)
+        {
+            return VIEW_TYPE_CURRENT_WEEK_BATCH;
+        }
+        return VIEW_TYPE_PAST_BATCH;
+    }
+
+    @Nullable
+    public NeoPaymentBatch getCurrentWeekBatch()
+    {
+        if(getDataItemsCount() > VIEW_POSITION_CURRENT_WEEK_BATCH)
+        {
+            PaymentBatch paymentBatch = getDataItem(VIEW_POSITION_CURRENT_WEEK_BATCH);
+            if(paymentBatch instanceof NeoPaymentBatch)
+            {
+                return (NeoPaymentBatch) paymentBatch;
+            }
+        }
+        return null;
     }
 
     @Override

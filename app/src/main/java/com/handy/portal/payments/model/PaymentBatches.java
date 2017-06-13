@@ -1,5 +1,8 @@
 package com.handy.portal.payments.model;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+
 import com.google.common.collect.ObjectArrays;
 import com.google.gson.annotations.SerializedName;
 
@@ -11,6 +14,14 @@ public class PaymentBatches implements Serializable {
 
     @SerializedName("legacy_payments_batches")
     private LegacyPaymentBatch[] legacyPaymentsBatchBatches;
+
+    @SerializedName("cash_out")
+    private CashOutInfo mCashOutInfo;
+
+    @Nullable
+    public CashOutInfo getCashOutInfo() {
+        return mCashOutInfo;
+    }
 
     public NeoPaymentBatch[] getNeoPaymentBatches() {
         return neoPaymentBatches;
@@ -42,4 +53,30 @@ public class PaymentBatches implements Serializable {
 
     }
 
+    public static class CashOutInfo implements Serializable
+    {
+        @SerializedName("cash_out_minimum_threshold")
+        private Integer mCashOutMinimumThresholdCents;
+
+        @SerializedName("cash_out_threshold_exceeded")
+        private Boolean mCashOutThresholdExceeded;
+
+        @SerializedName("cash_out_currency_symbol")
+        private String mCashOutCurrencySymbol;
+
+        @NonNull
+        public String getCashOutCurrencySymbol() {
+            return mCashOutCurrencySymbol;
+        }
+
+        @Nullable
+        public Boolean getCashOutThresholdExceeded() {
+            return mCashOutThresholdExceeded;
+        }
+
+        @Nullable
+        public Integer getCashOutMinimumThresholdCents() {
+            return mCashOutMinimumThresholdCents;
+        }
+    }
 }

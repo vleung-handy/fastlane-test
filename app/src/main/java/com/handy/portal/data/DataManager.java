@@ -40,6 +40,8 @@ import com.handy.portal.payments.model.BookingPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
 import com.handy.portal.payments.model.PaymentBatches;
+import com.handy.portal.payments.model.PaymentCashOutInfo;
+import com.handy.portal.payments.model.PaymentCashOutRequest;
 import com.handy.portal.payments.model.PaymentFlow;
 import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.model.PaymentReviewResponse;
@@ -303,6 +305,15 @@ public class DataManager {
 
     public void updateCreditCard(final String token, final Callback<SuccessWrapper> cb) {
         mService.updateCreditCard(token, new CreateBankAccountRetroFitCallback(cb));
+    }
+
+    public void getPaymentCashOutInfo(final Callback<PaymentCashOutInfo> cb) {
+        mService.getPaymentCashOutInfo(new GetPaymentCashOutInfoRetroFitCallback(cb));
+    }
+
+    public void requestPaymentCashOut(final PaymentCashOutRequest paymentCashOutRequest,
+                                      final Callback<SuccessWrapper> cb) {
+        mService.requestPaymentCashOut(paymentCashOutRequest, new SuccessWrapperRetroFitCallback(cb));
     }
 
     public void getPaymentFlow(String providerId, final Callback<PaymentFlow> cb) {

@@ -12,6 +12,8 @@ import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
+import com.handy.portal.payments.model.PaymentCashOutInfo;
+import com.handy.portal.payments.model.PaymentCashOutRequest;
 import com.handy.portal.payments.model.PaymentGroup;
 import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.model.PaymentReviewResponse;
@@ -85,6 +87,16 @@ public class PaymentsManager {
                                                @NonNull final String bookingType,
                                                @NonNull final DataManager.Callback<BookingTransactions> callback) {
         mDataManager.getBookingTransactions(bookingId, bookingType.toLowerCase(), callback);
+    }
+
+    public void requestPaymentCashOutInfo(final DataManager.Callback<PaymentCashOutInfo> cb) {
+        mDataManager.getPaymentCashOutInfo(cb);
+    }
+
+    public void requestCashOut(
+            @NonNull PaymentCashOutRequest paymentCashOutRequest,
+            @NonNull final DataManager.Callback<SuccessWrapper> callback) {
+        mDataManager.requestPaymentCashOut(paymentCashOutRequest, callback);
     }
 
     public void requestPaymentBatches(@NonNull final Date startDate,

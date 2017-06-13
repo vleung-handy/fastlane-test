@@ -2,6 +2,7 @@ package com.handy.portal.payments.ui.fragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListAdapter;
 import android.widget.ExpandableListView;
+import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
@@ -16,6 +18,7 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.model.ProviderProfile;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
@@ -33,11 +36,13 @@ import com.handy.portal.payments.PaymentsUtil;
 import com.handy.portal.payments.model.BatchPaymentReviewRequest;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.Payment;
+import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.model.PaymentGroup;
 import com.handy.portal.payments.model.PaymentReviewResponse;
 import com.handy.portal.payments.model.PaymentSupportItem;
 import com.handy.portal.payments.ui.element.PaymentDetailExpandableListView;
 import com.handy.portal.payments.ui.element.PaymentsDetailListHeaderView;
+import com.handy.portal.payments.ui.fragment.dialog.PaymentCashOutDialogFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentFailedDialogFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportReasonsDialogFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportRequestReviewDialogFragment;
@@ -52,19 +57,27 @@ import butterknife.ButterKnife;
 public final class PaymentsDetailFragment extends ActionBarFragment
         implements ExpandableListView.OnChildClickListener,
         PaymentSupportReasonsDialogFragment.Callback,
-        PaymentSupportRequestReviewDialogFragment.Callback {
+        PaymentSupportRequestReviewDialogFragment.Callback,
+        PaymentCashOutDialogFragment.OnCashOutSuccessListener {
     @BindView(R.id.payments_detail_list_view)
     PaymentDetailExpandableListView paymentDetailExpandableListView; //using ExpandableListView because it is the only ListView that offers group view support
     @BindView(R.id.fragment_payments_detail_content)
     CoordinatorLayout mMainContentLayout;
 
     private NeoPaymentBatch mNeoPaymentBatch;
+    private boolean mIsCurrentWeekPaymentBatch;
+    /**
+     * used to determine what happens when the cash out button is clicked
+     */
+    private PaymentBatches.CashOutInfo mCashOutInfo;
     private View mFragmentView;
 
     @Inject
     ProviderManager mProviderManager;
     @Inject
     PaymentsManager mPaymentsManager;
+    @Inject
+    ConfigManager mConfigManager;
     @Inject
     EventBus mBus;
 
@@ -73,12 +86,24 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         return MainViewPage.PAYMENTS;
     }
 
+    public static Bundle createBundle(@NonNull NeoPaymentBatch neoPaymentBatch,
+                                      boolean isCurrentWeekPaymentBatch,
+                                      @Nullable PaymentBatches.CashOutInfo cashOutInfo) {
+        Bundle arguments = new Bundle();
+        arguments.putSerializable(BundleKeys.PAYMENT_BATCH, neoPaymentBatch);
+        arguments.putBoolean(BundleKeys.IS_CURRENT_WEEK_PAYMENT_BATCH, isCurrentWeekPaymentBatch);
+        arguments.putSerializable(BundleKeys.PAYMENT_CASH_OUT_INFO, cashOutInfo);
+        return arguments;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
             mNeoPaymentBatch = (NeoPaymentBatch) getArguments().getSerializable(BundleKeys.PAYMENT_BATCH);
+            mIsCurrentWeekPaymentBatch = getArguments().getBoolean(BundleKeys.IS_CURRENT_WEEK_PAYMENT_BATCH, false);
+            mCashOutInfo = (PaymentBatches.CashOutInfo) getArguments().getSerializable(BundleKeys.PAYMENT_CASH_OUT_INFO);
         }
         else {
             Crashlytics.logException(new Exception("Null arguments for class " + this.getClass().getName()));
@@ -100,7 +125,11 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         paymentDetailExpandableListView.setOnChildClickListener(this);
-        paymentDetailExpandableListView.updateData(mNeoPaymentBatch);
+
+        paymentDetailExpandableListView.updateData(
+                mNeoPaymentBatch,
+                mConfigManager.getConfigurationResponse().isDailyProPaymentsEnabled()
+                        && mIsCurrentWeekPaymentBatch);
         paymentDetailExpandableListView.getPaymentSupportButton().setOnClickListener(
                 new View.OnClickListener() {
                     @Override
@@ -136,6 +165,15 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         }
         else //if not failed
         {
+            View.OnClickListener onCashOutButtonClickedListener =
+                    PaymentsUtil.CashOut.createCashOutButtonClickListener(
+                            this,
+                            mNeoPaymentBatch.isCashOutEnabled(),
+                            mCashOutInfo,
+                            bus
+                    );
+            paymentDetailExpandableListView.getHeaderView()
+                    .setOnCashOutButtonClickListener(onCashOutButtonClickedListener);
             if (mNeoPaymentBatch.getPaymentSupportItems() == null
                     || mNeoPaymentBatch.getPaymentSupportItems().length == 0) {
                 //don't show any payment supports that are based on the payment support items
@@ -290,25 +328,32 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         mPaymentsManager.submitBatchPaymentReviewRequest(paymentReviewRequest,
                 new FragmentSafeCallback<PaymentReviewResponse>(this) {
-            @Override
-            public void onCallbackSuccess(final PaymentReviewResponse response) {
-                bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                int drawableResourceId = response.isSuccess() ?
-                        R.drawable.ic_green_envelope : R.drawable.ic_exclaimation_red;
-                UIUtils.getDefaultSnackbarWithImage(getContext(),
-                        mMainContentLayout,
-                        response.getMessage(),
-                        drawableResourceId).show();
-            }
+                    @Override
+                    public void onCallbackSuccess(final PaymentReviewResponse response) {
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                        int drawableResourceId = response.isSuccess() ?
+                                R.drawable.ic_green_envelope : R.drawable.ic_exclaimation_red;
+                        UIUtils.getDefaultSnackbarWithImage(getContext(),
+                                mMainContentLayout,
+                                response.getMessage(),
+                                drawableResourceId).show();
+                    }
 
-            @Override
-            public void onCallbackError(final DataManager.DataManagerError error) {
-                bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                UIUtils.getDefaultSnackbarWithImage(getContext(),
-                        mMainContentLayout,
-                        getString(R.string.an_error_has_occurred),
-                        R.drawable.ic_exclaimation_red).show();
-            }
-        });
+                    @Override
+                    public void onCallbackError(final DataManager.DataManagerError error) {
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                        UIUtils.getDefaultSnackbarWithImage(getContext(),
+                                mMainContentLayout,
+                                getString(R.string.an_error_has_occurred),
+                                R.drawable.ic_exclaimation_red).show();
+                    }
+                });
+    }
+
+    @Override
+    public void onCashOutSuccess(@NonNull final String message) {
+        //parent fragment is null, not payments fragment, so can't use its callback
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.PAYMENTS, false));
     }
 }

@@ -30,6 +30,7 @@ import com.handy.portal.onboarding.model.claim.JobClaimResponse;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
 import com.handy.portal.payments.model.PaymentBatches;
+import com.handy.portal.payments.model.PaymentCashOutInfo;
 import com.handy.portal.payments.model.PaymentFlow;
 import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.model.PaymentReviewResponse;
@@ -271,6 +272,12 @@ class CreateDebitCardRetroFitCallback extends TypedHandyRetrofitCallback<CreateD
     }
 }
 
+
+class GetPaymentCashOutInfoRetroFitCallback extends TypedHandyRetrofitCallback<PaymentCashOutInfo> {
+    GetPaymentCashOutInfoRetroFitCallback(DataManager.Callback callback) {
+        super(callback);
+    }
+}
 
 class GetPaymentFlowRetroFitCallback extends TypedHandyRetrofitCallback<PaymentFlow> {
     GetPaymentFlowRetroFitCallback(DataManager.Callback callback) {

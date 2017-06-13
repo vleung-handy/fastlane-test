@@ -53,6 +53,8 @@ public class NeoPaymentBatch extends PaymentBatch {
     @SerializedName("last4")
     private String mPaymentMethodLast4Digits;
 
+    @SerializedName("cash_out_enabled")
+    private boolean mCashOutEnabled;
 
     /**
      * values that getStatus() should return
@@ -63,6 +65,10 @@ public class NeoPaymentBatch extends PaymentBatch {
         public static final String IN_REVIEW = "In Review";
         public static final String IN_TRANSIT = "In Transit";
         public static final String PAID = "Paid";
+    }
+
+    public boolean isCashOutEnabled() {
+        return mCashOutEnabled;
     }
 
     public String getPaymentMethodLast4Digits() {

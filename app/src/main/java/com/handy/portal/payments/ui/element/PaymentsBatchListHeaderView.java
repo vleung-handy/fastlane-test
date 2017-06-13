@@ -1,16 +1,16 @@
 package com.handy.portal.payments.ui.element;
 
 import android.content.Context;
-import android.support.v4.content.ContextCompat;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.library.util.CurrencyUtils;
-import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.payments.model.NeoPaymentBatch;
+import com.handy.portal.payments.PaymentsUtil;
+import com.handy.portal.payments.viewmodel.PaymentBatchListHeaderViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -35,6 +35,9 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
     @BindView(R.id.payments_current_week_remaining_fees_row)
     ViewGroup currentWeekRemainingFeesRow;
 
+    @BindView(R.id.payments_batch_list_current_week_cash_out_button)
+    Button mCashOutButton;
+
     public PaymentsBatchListHeaderView(Context context) {
         super(context);
     }
@@ -49,18 +52,23 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
         ButterKnife.bind(this);
     }
 
-    public void updateDisplay(NeoPaymentBatch neoPaymentBatch) //assuming that current pay week is always returned and is the first element
-    {
-        currentWeekDateRangeText.setText(DateTimeUtils.formatDateRange(DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER, neoPaymentBatch.getStartDate(), neoPaymentBatch.getEndDate()));
-        currentWeekRemainingFeesText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getRemainingFeeAmount(), neoPaymentBatch.getCurrencySymbol()));
-        currentWeekExpectedPaymentText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getNetEarningsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
-        currentWeekFeesText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getFeesTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
-        currentWeekTotalEarningsText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getGrossEarningsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
-        currentWeekFeesText.setTextColor(ContextCompat.getColor(getContext(), neoPaymentBatch.getFeesTotalAmount() < 0 ? R.color.plumber_red : R.color.black));
+    public void updateDisplay(@NonNull PaymentBatchListHeaderViewModel paymentBatchListHeaderViewModel) {
+        currentWeekDateRangeText.setText(paymentBatchListHeaderViewModel.getCurrentWeekDateRange());
+        currentWeekRemainingFeesText.setText(paymentBatchListHeaderViewModel.getCurrentWeekRemainingFees());
+        currentWeekExpectedPaymentText.setText(paymentBatchListHeaderViewModel.getCurrentWeekExpectedPayment());
+        currentWeekFeesText.setText(paymentBatchListHeaderViewModel.getCurrentWeekFees());
+        currentWeekTotalEarningsText.setText(paymentBatchListHeaderViewModel.getCurrentWeekTotalEarnings());
+        currentWeekFeesText.setTextColor(paymentBatchListHeaderViewModel.getCurrentWeekFeesColor(getContext()));
 
-        if (neoPaymentBatch.getRemainingFeeAmount() == 0) {
-            currentWeekRemainingFeesRow.setVisibility(GONE);
-        }
+        currentWeekRemainingFeesRow.setVisibility(paymentBatchListHeaderViewModel.shouldShowCurrentWeekRemainingFees() ? VISIBLE : GONE);
+
+        PaymentsUtil.CashOut.styleCashOutButtonForApparentEnabledState(mCashOutButton,
+                paymentBatchListHeaderViewModel.shouldApparentlyEnableCashOutButton());
+        mCashOutButton.setVisibility(paymentBatchListHeaderViewModel.shouldShowCashOutButton() ? VISIBLE : GONE);
+    }
+
+    public void setOnCashOutButtonClickedListener(OnClickListener onCashOutButtonClickedListener) {
+        mCashOutButton.setOnClickListener(onCashOutButtonClickedListener);
     }
 
 }

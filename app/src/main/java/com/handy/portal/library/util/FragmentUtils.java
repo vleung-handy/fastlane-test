@@ -1,6 +1,7 @@
 package com.handy.portal.library.util;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -24,7 +25,15 @@ public class FragmentUtils {
      */
     public static boolean safeLaunchDialogFragment(
             @NonNull DialogFragment dialogFragment, @NonNull FragmentActivity sourceActivity, String dialogFragmentTag) {
-        return safeLaunchDialogFragment(dialogFragment, sourceActivity.getSupportFragmentManager(), dialogFragmentTag);
+        return safeLaunchDialogFragment(dialogFragment, sourceActivity.getSupportFragmentManager(), dialogFragmentTag, false);
+    }
+
+    public static boolean safeLaunchDialogFragment(
+            @NonNull DialogFragment dialogFragment,
+            @NonNull FragmentActivity sourceActivity,
+            String dialogFragmentTag,
+            boolean onlyLaunchIfNotLaunched) {
+        return safeLaunchDialogFragment(dialogFragment, sourceActivity.getSupportFragmentManager(), dialogFragmentTag, onlyLaunchIfNotLaunched);
     }
 
     /**
@@ -42,7 +51,15 @@ public class FragmentUtils {
      */
     public static boolean safeLaunchDialogFragment(
             @NonNull DialogFragment dialogFragment, @NonNull Fragment sourceFragment, String dialogFragmentTag) {
-        return safeLaunchDialogFragment(dialogFragment, sourceFragment.getChildFragmentManager(), dialogFragmentTag);
+        return safeLaunchDialogFragment(dialogFragment, sourceFragment.getChildFragmentManager(), dialogFragmentTag, false);
+    }
+
+    public static boolean safeLaunchDialogFragment(
+            @NonNull DialogFragment dialogFragment,
+            @NonNull Fragment sourceFragment,
+            String dialogFragmentTag,
+            boolean onlyLaunchIfNotLaunched) {
+        return safeLaunchDialogFragment(dialogFragment, sourceFragment.getChildFragmentManager(), dialogFragmentTag, onlyLaunchIfNotLaunched);
     }
 
     /**
@@ -55,9 +72,14 @@ public class FragmentUtils {
      */
     private static boolean safeLaunchDialogFragment(@NonNull DialogFragment dialogFragment,
                                                     @NonNull FragmentManager fragmentManager,
-                                                    String dialogFragmentTag) {
+                                                    @Nullable String dialogFragmentTag,
+                                                    boolean onlyLaunchIfNotLaunched) {
         try {
-            dialogFragment.show(fragmentManager, dialogFragmentTag);
+            fragmentManager.executePendingTransactions();
+
+            if (!onlyLaunchIfNotLaunched || fragmentManager.findFragmentByTag(dialogFragmentTag) == null) {
+                dialogFragment.show(fragmentManager, dialogFragmentTag);
+            }
             return true;
         }
         catch (Exception e) {

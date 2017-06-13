@@ -15,13 +15,13 @@ import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
-import com.handy.portal.library.ui.fragment.InjectedFragment;
+import com.handy.portal.library.ui.fragment.ProgressSpinnerFragment;
 import com.handy.portal.library.util.EnvironmentUtils;
 import com.handy.portal.library.util.UIUtils;
 
 import javax.inject.Inject;
 
-public abstract class ActionBarFragment extends InjectedFragment {
+public abstract class ActionBarFragment extends ProgressSpinnerFragment {
     @Inject
     EnvironmentModifier environmentModifier;
     private Menu mMenu;

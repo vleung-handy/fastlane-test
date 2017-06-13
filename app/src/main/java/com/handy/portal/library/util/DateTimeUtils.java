@@ -71,6 +71,7 @@ public final class DateTimeUtils {
     public static final int MINUTES_IN_AN_HOUR = 60;
     public static final int DAYS_IN_A_WEEK = 7;
 
+    public final static String UNIVERSAL_DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ssZ";
 
     //returns a today or tomorrow prepend as needed
     public static String getTodayTomorrowStringByStartDate(Date startDate, Context context) {

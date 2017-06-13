@@ -75,21 +75,24 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
         getWrappedAdapter().clear();
     }
 
-    public interface OnDataItemClickListener { //TODO: put this somewhere else and make type generic?
-        void onDataItemClicked(PaymentBatch paymentBatch);
+    public interface OnDataItemClickListener {
+        //PaymentBatch does not denote whether it is the current week batch
+        void onDataItemClicked(PaymentBatch paymentBatch, boolean isCurrentWeekBatch);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        final boolean isCurrentWeek = (position == 0);
+        final boolean isCurrentWeek =
+                getWrappedAdapter().getViewTypeForPosition(position)
+                        == PaymentBatchListAdapter.VIEW_TYPE_CURRENT_WEEK_BATCH;
         mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.BatchSelected(isCurrentWeek, position + 1))); // index needs to be one based
         PaymentBatch paymentBatch = getWrappedAdapter().getDataItem(position);
-        notifyDataItemClickListener(paymentBatch);
+        notifyDataItemClickListener(paymentBatch, isCurrentWeek);
     }
 
-    private void notifyDataItemClickListener(PaymentBatch paymentBatch) {
+    private void notifyDataItemClickListener(PaymentBatch paymentBatch, boolean isCurrentWeekBatch) {
         if (onDataItemClickListener != null) {
-            onDataItemClickListener.onDataItemClicked(paymentBatch);
+            onDataItemClickListener.onDataItemClicked(paymentBatch, isCurrentWeekBatch);
         }
     }
 
@@ -130,4 +133,12 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
         return getWrappedAdapter().getNextRequestEndDate();
     }
 
+    /**
+     * the cash out dialog fragment needs to be launched by a fragment
+     * so that callbacks can be properly handled
+     */
+    public void setCashOutButtonClickListener(OnClickListener cashOutButtonClickedListener)
+    {
+        getWrappedAdapter().setCashOutButtonClickedListener(cashOutButtonClickedListener);
+    }
 }

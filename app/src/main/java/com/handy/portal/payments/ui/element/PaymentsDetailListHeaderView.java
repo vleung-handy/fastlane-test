@@ -8,13 +8,14 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.View;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.library.util.CurrencyUtils;
-import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.payments.PaymentsUtil;
 import com.handy.portal.payments.model.NeoPaymentBatch;
+import com.handy.portal.payments.viewmodel.PaymentDetailHeaderViewModel;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,6 +43,9 @@ public class PaymentsDetailListHeaderView extends LinearLayout {
     @BindView(R.id.payments_detail_list_header_payment_status_payment_method_text)
     TextView mPaymentStatusPaymentMethodText;
 
+    @BindView(R.id.payment_details_list_header_cash_out_button)
+    Button mCashOutButton;
+
     private Callback mCallback;
 
     public PaymentsDetailListHeaderView(Context context) {
@@ -58,32 +62,33 @@ public class PaymentsDetailListHeaderView extends LinearLayout {
         ButterKnife.bind(this);
     }
 
-    private void updateExpectedDepositDate(@NonNull NeoPaymentBatch neoPaymentBatch) {
-        String batchPaymentStatus = neoPaymentBatch.getStatus();
-        if (NeoPaymentBatch.Status.FAILED.equalsIgnoreCase(batchPaymentStatus)
-                || NeoPaymentBatch.Status.PAID.equalsIgnoreCase(batchPaymentStatus)) {
-            //don't show the deposit date if payment status is failed or paid
-            paymentStatusExpectedDepositDate.setVisibility(GONE);
+    public void updateDisplay(@NonNull PaymentDetailHeaderViewModel paymentDetailHeaderViewModel) {
+        paymentDetailDateRangeText.setText(paymentDetailHeaderViewModel.getDateRange());
+        paymentDetailTotalPaymentText.setText(paymentDetailHeaderViewModel.getTotalPayment());
+        updatePaymentStatusLayout(paymentDetailHeaderViewModel);
+    }
+
+    private void updateExpectedDepositDate(@NonNull PaymentDetailHeaderViewModel paymentDetailHeaderViewModel) {
+        if (paymentDetailHeaderViewModel.shouldShowExpectedDepositDate()) {
+            paymentStatusExpectedDepositDate.setVisibility(VISIBLE);
+            paymentStatusExpectedDepositDate.setText(paymentDetailHeaderViewModel.getExpectedDepositDate(getContext()));
         }
         else {
-            paymentStatusExpectedDepositDate.setVisibility(VISIBLE);
-            paymentStatusExpectedDepositDate.setText(
-                    getResources().getString(R.string.expected_deposit_formatted,
-                            DateTimeUtils.formatDayOfWeekMonthDate(
-                                    neoPaymentBatch.getExpectedDepositDate())));
+            paymentStatusExpectedDepositDate.setVisibility(GONE);
+
         }
     }
 
-    private void updatePaymentStatusText(@NonNull NeoPaymentBatch neoPaymentBatch) {
-        final String paymentStatusFormatted = getContext().getString(R.string.payment_status_formatted,
-                neoPaymentBatch.getStatus() == null ? "" : neoPaymentBatch.getStatus());
+    private void updatePaymentStatusText(@NonNull PaymentDetailHeaderViewModel paymentDetailHeaderViewModel) {
+        final String paymentStatusFormatted = paymentDetailHeaderViewModel.getPaymentStatusFormatted(getContext());
         mPaymentStatusText.setText(paymentStatusFormatted, TextView.BufferType.SPANNABLE);
-        if (!TextUtils.isEmpty(neoPaymentBatch.getStatus())) {
+
+        if (!TextUtils.isEmpty(paymentDetailHeaderViewModel.getPaymentStatus())) {
             final Spannable spannable = (Spannable) mPaymentStatusText.getText();
-            final int start = paymentStatusFormatted.indexOf(neoPaymentBatch.getStatus());
-            final int end = start + neoPaymentBatch.getStatus().length();
+            final int start = paymentStatusFormatted.indexOf(paymentDetailHeaderViewModel.getPaymentStatus());
+            final int end = start + paymentDetailHeaderViewModel.getPaymentStatus().length();
             int colorResourceId;
-            if (NeoPaymentBatch.Status.FAILED.equalsIgnoreCase(neoPaymentBatch.getStatus())) {
+            if (NeoPaymentBatch.Status.FAILED.equalsIgnoreCase(paymentDetailHeaderViewModel.getPaymentStatus())) {
                 colorResourceId = R.color.error_red;
             }
             else {
@@ -98,38 +103,33 @@ public class PaymentsDetailListHeaderView extends LinearLayout {
         }
     }
 
-    private void updatePaymentMethodText(@NonNull NeoPaymentBatch neoPaymentBatch) {
-        /*
-        only show the payment method view if payment method info present
-        last4 is nullable because there are moments when a batch
-        won't be associated with any payment flow
-         */
-        if (TextUtils.isEmpty(neoPaymentBatch.getPaymentMethodLast4Digits())) {
-            mPaymentStatusPaymentMethodText.setVisibility(GONE);
+    private void updateCashOutButton(@NonNull PaymentDetailHeaderViewModel paymentDetailHeaderViewModel) {
+        PaymentsUtil.CashOut.styleCashOutButtonForApparentEnabledState(mCashOutButton,
+                paymentDetailHeaderViewModel.shouldApparentlyEnableCashOutButton());
+        mCashOutButton.setVisibility(paymentDetailHeaderViewModel.shouldShowCashOutButton() ? VISIBLE : GONE);
+    }
+
+    private void updatePaymentMethodText(@NonNull PaymentDetailHeaderViewModel paymentDetailHeaderViewModel) {
+
+        if (paymentDetailHeaderViewModel.shouldShowPaymentMethodDetails()) {
+            mPaymentStatusPaymentMethodText.setVisibility(VISIBLE);
+            mPaymentStatusPaymentMethodText.setText(paymentDetailHeaderViewModel.getPaymentMethodDetails(getContext()));
         }
         else {
-            mPaymentStatusPaymentMethodText.setVisibility(VISIBLE);
-            mPaymentStatusPaymentMethodText.setText(getResources().getString(R.string.payment_method_info_last4_formatted,
-                    neoPaymentBatch.getPaymentMethodLast4Digits()));
+            mPaymentStatusPaymentMethodText.setVisibility(GONE);
         }
     }
 
-    private void updatePaymentStatusLayout(@NonNull NeoPaymentBatch neoPaymentBatch) {
-        if ((neoPaymentBatch.getPaymentGroups() == null
-                || neoPaymentBatch.getPaymentGroups().length == 0) //unsure if 0 payment groups means 0 payment
-                && neoPaymentBatch.getFeesTotalAmount() == 0
-                && neoPaymentBatch.getNetEarningsTotalAmount() == 0
-                && neoPaymentBatch.getGrossEarningsTotalAmount() == 0
-                && neoPaymentBatch.getRemainingFeeAmount() == 0
-                ) {
-            //don't show the payment status layout if there are no payments
-            mPaymentStatusLayout.setVisibility(GONE);
+    private void updatePaymentStatusLayout(@NonNull PaymentDetailHeaderViewModel paymentDetailHeaderViewModel) {
+        if (paymentDetailHeaderViewModel.shouldShowPaymentStatusLayout()) {
+            mPaymentStatusLayout.setVisibility(VISIBLE);
+            updateExpectedDepositDate(paymentDetailHeaderViewModel);
+            updatePaymentStatusText(paymentDetailHeaderViewModel);
+            updatePaymentMethodText(paymentDetailHeaderViewModel);
+            updateCashOutButton(paymentDetailHeaderViewModel);
         }
         else {
-            mPaymentStatusLayout.setVisibility(VISIBLE);
-            updateExpectedDepositDate(neoPaymentBatch);
-            updatePaymentStatusText(neoPaymentBatch);
-            updatePaymentMethodText(neoPaymentBatch);
+            mPaymentStatusLayout.setVisibility(GONE);
         }
     }
 
@@ -147,12 +147,6 @@ public class PaymentsDetailListHeaderView extends LinearLayout {
         mPaymentStatusHelpButton.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void updateDisplay(@NonNull NeoPaymentBatch neoPaymentBatch) {
-        paymentDetailDateRangeText.setText(DateTimeUtils.formatDateRange(DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER, neoPaymentBatch.getStartDate(), neoPaymentBatch.getEndDate()));
-        paymentDetailTotalPaymentText.setText(CurrencyUtils.formatPriceWithCents(neoPaymentBatch.getNetEarningsTotalAmount(), neoPaymentBatch.getCurrencySymbol()));
-        updatePaymentStatusLayout(neoPaymentBatch);
-    }
-
     @OnClick(R.id.payment_details_list_header_payment_status_help_button)
     public void onRequestStatusSupportButtonClicked() {
         if (mCallback != null) {
@@ -166,5 +160,9 @@ public class PaymentsDetailListHeaderView extends LinearLayout {
 
     public interface Callback {
         void onRequestStatusSupportButtonClicked();
+    }
+
+    public void setOnCashOutButtonClickListener(OnClickListener onCashOutButtonClickListener) {
+        mCashOutButton.setOnClickListener(onCashOutButtonClickListener);
     }
 }

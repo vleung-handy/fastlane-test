@@ -78,6 +78,7 @@ public class UpdatePaymentMethodTest {
 
         /*Test updating bank account info*/
         //click the bank account option
+        ViewUtil.waitForViewVisible(R.id.bank_account_option, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
         onView(withId(R.id.bank_account_option)).perform(click());
 
         //update bank account fields
@@ -95,6 +96,7 @@ public class UpdatePaymentMethodTest {
 
         /*Test updating debit card info*/
         //click the debit card option
+        ViewUtil.waitForViewVisible(R.id.debit_card_option, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
         onView(withId(R.id.debit_card_option)).perform(click());
 
         //update debit card fields

@@ -235,6 +235,7 @@
 
     <style name="Button.Green">
         <item name="android:background">@drawable/button_green</item>
+        <item name="android:textColor">@color/button_text_booking_action_white</item>
     </style>
 
     <style name="Button.Green.Round">
@@ -315,7 +316,7 @@
     </style>
 
     <style name="Button.BookingAction">
-        <item name="android:textColor">@drawable/button_text_booking_action_white</item>
+        <item name="android:textColor">@color/button_text_booking_action_white</item>
     </style>
 
     <style name="Button.BookingAction.White">
@@ -343,6 +344,16 @@
     <style name="Button.BookingAction.Red.Empty">
         <item name="android:background">@drawable/button_booking_action_red</item>
         <item name="android:textColor">@drawable/button_text_booking_action_red</item>
+    </style>
+
+
+    <style name="PriceView">
+        <item name="android:textColor">@color/handy_text_black</item>
+    </style>
+
+    <style name="PriceView.TotalPayment">
+        <item name="cardinalTextAppearance">@style/TextView.XXXLarge</item>
+        <item name="decimalTextAppearance">@style/TextView.Large</item>
     </style>
 
     <style name="Button.Radio">
@@ -431,6 +442,12 @@
 
     <style name="TextView.XXLarge.Bold">
         <item name="fontPath">fonts/CircularStd-Bold.otf</item>
+    </style>
+
+    <style name="TextView.XXXLarge">
+        <item name="android:textSize">@dimen/xxlarge_text_size</item>
+        <!--TextView.XXLarge is actually not of size xxlarge_text_size, but
+        xxlarge_text_size_new which is smaller. needs discussion-->
     </style>
 
     <style name="TextView.Headline">

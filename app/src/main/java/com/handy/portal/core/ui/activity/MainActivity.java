@@ -33,6 +33,7 @@ import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.ui.element.BookingMapView;
 import com.handy.portal.core.EnvironmentModifier;
+import com.handy.portal.core.MainContentFragmentHolder;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.RequestCode;
@@ -78,7 +79,7 @@ import static com.handy.portal.core.model.ProviderPersonalInfo.ProfileImage.Type
 
 //TODO: should move some of this logic out of here
 public class MainActivity extends BaseActivity
-        implements BookingMapProvider, LayerHelper.UnreadConversationsCountChangedListener {
+        implements BookingMapProvider, LayerHelper.UnreadConversationsCountChangedListener, MainContentFragmentHolder {
     @Inject
     ProviderManager providerManager;
     @Inject
@@ -660,13 +661,6 @@ public class MainActivity extends BaseActivity
     }
 
     private void swapFragment(NavigationEvent.SwapFragmentEvent swapFragmentEvent) {
-        if (!swapFragmentEvent.addToBackStack) {
-            clearFragmentBackStack();
-        }
-
-        //replace the existing fragment with the new fragment
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
         Fragment newFragment = null;
         if (swapFragmentEvent.targetPage != null) {
             try {
@@ -677,28 +671,47 @@ public class MainActivity extends BaseActivity
                 return;
             }
         }
+        swapFragment(newFragment,
+                swapFragmentEvent.getReturnFragment(),
+                swapFragmentEvent.getActivityRequestCode(),
+                swapFragmentEvent.arguments,
+                swapFragmentEvent.transitionStyle,
+                swapFragmentEvent.addToBackStack);
+    }
 
-        if (newFragment != null && swapFragmentEvent.arguments != null) {
-            newFragment.setArguments(swapFragmentEvent.arguments);
-            if (swapFragmentEvent.getReturnFragment() != null) {
-                newFragment.setTargetFragment(swapFragmentEvent.getReturnFragment(),
-                        swapFragmentEvent.getActivityRequestCode());
+    private void swapFragment(@Nullable Fragment newFragment,
+                              @Nullable Fragment targetFragment,
+                              int activityRequestCode,
+                              @Nullable Bundle arguments,
+                              @Nullable TransitionStyle transitionStyle,
+                              boolean addToBackStack) {
+        if (!addToBackStack) {
+            clearFragmentBackStack();
+        }
+
+        //replace the existing fragment with the new fragment
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+        if (newFragment != null && arguments != null) {
+            newFragment.setArguments(arguments);
+            if (targetFragment != null) {
+                newFragment.setTargetFragment(targetFragment, activityRequestCode);
             }
         }
 
         //Animate the transition, animations must come before the .replace call
-        if (swapFragmentEvent.transitionStyle != null) {
+        if (transitionStyle != null) {
             transaction.setCustomAnimations(
-                    swapFragmentEvent.transitionStyle.getIncomingAnimId(),
-                    swapFragmentEvent.transitionStyle.getOutgoingAnimId(),
-                    swapFragmentEvent.transitionStyle.getPopIncomingAnimId(),
-                    swapFragmentEvent.transitionStyle.getPopOutgoingAnimId()
+                    transitionStyle.getIncomingAnimId(),
+                    transitionStyle.getOutgoingAnimId(),
+                    transitionStyle.getPopIncomingAnimId(),
+                    transitionStyle.getPopOutgoingAnimId()
             );
 
             //Runs async, covers the transition
-            if (swapFragmentEvent.transitionStyle.shouldShowOverlay()) {
+            if (transitionStyle.shouldShowOverlay()) {
                 TransientOverlayDialogFragment overlayDialogFragment = TransientOverlayDialogFragment
-                        .newInstance(R.anim.overlay_fade_in_then_out, R.drawable.ic_success_circle, swapFragmentEvent.transitionStyle.getOverlayStringId());
+                        .newInstance(R.anim.overlay_fade_in_then_out, R.drawable.ic_success_circle, transitionStyle.getOverlayStringId());
                 overlayDialogFragment.show(getSupportFragmentManager(), "overlay dialog fragment");
             }
         }
@@ -707,7 +720,7 @@ public class MainActivity extends BaseActivity
         // and add the transaction to the back stack so the user can navigate back
         transaction.replace(R.id.main_container, newFragment);
 
-        if (swapFragmentEvent.addToBackStack) {
+        if (addToBackStack) {
             transaction.addToBackStack(null);
         }
         else {
@@ -747,6 +760,12 @@ public class MainActivity extends BaseActivity
         bus.post(new HandyEvent.UserLoggedOut());
         startActivity(new Intent(this, LoginActivity.class));
         finish();
+    }
+
+    //todo will refactor navigation in this class later; this is just being used to support the interface that the select payment method screen expects
+    @Override
+    public void replaceMainContentFragment(@NonNull final Fragment replacementFragment, final boolean addToBackStack) {
+        swapFragment(replacementFragment, null, 0, replacementFragment.getArguments(), TransitionStyle.NATIVE_TO_NATIVE, addToBackStack);
     }
 
     // Inner classes

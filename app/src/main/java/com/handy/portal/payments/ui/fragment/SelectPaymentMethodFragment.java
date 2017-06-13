@@ -7,12 +7,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.core.constant.MainViewPage;
-import com.handy.portal.core.constant.TransitionStyle;
-import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.model.ProviderProfile;
+import com.handy.portal.core.MainContentFragmentHolder;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.PaymentFlow;
@@ -50,14 +47,23 @@ public class SelectPaymentMethodFragment extends ActionBarFragment {
     @BindView(R.id.pending_indicator)
     View pendingIndicator;
 
+    public static SelectPaymentMethodFragment newInstance() {
+        return new SelectPaymentMethodFragment();
+    }
+
+    /*
+    - not using event bus for navigation because want to ensure that the right component handles the navigation
+    - not putting fragment switching logic in here because this fragment should not know about the fragment container
+     */
     @OnClick(R.id.debit_card_option)
     public void onDebitCardOptionClicked() {
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.UPDATE_DEBIT_CARD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
+
+        ((MainContentFragmentHolder) getActivity()).replaceMainContentFragment(PaymentsUpdateDebitCardFragment.newInstance(), true);
     }
 
     @OnClick(R.id.bank_account_option)
     public void onBankAccountOptionClicked() {
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.UPDATE_BANK_ACCOUNT, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
+        ((MainContentFragmentHolder) getActivity()).replaceMainContentFragment(PaymentsUpdateBankAccountFragment.newInstance(), true);
     }
 
     @Override
@@ -81,7 +87,7 @@ public class SelectPaymentMethodFragment extends ActionBarFragment {
 
         paymentMethodContainer.setVisibility(View.GONE);
         bus.post(new PaymentEvent.RequestPaymentFlow());
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
+        showProgressSpinner();
     }
 
     @Override
@@ -92,9 +98,9 @@ public class SelectPaymentMethodFragment extends ActionBarFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+        ViewGroup view = (ViewGroup) super.onCreateView(inflater, container, savedInstanceState);
+        view.addView(inflater.inflate(R.layout.fragment_select_payment_method, container, false));
 
-        View view = inflater.inflate(R.layout.fragment_select_payment_method, container, false);
         ButterKnife.bind(this, view);
 
         final ProviderProfile providerProfile = providerManager.getCachedProviderProfile();
@@ -109,8 +115,7 @@ public class SelectPaymentMethodFragment extends ActionBarFragment {
 
     @Subscribe
     public void onGetPaymentFlowSuccess(PaymentEvent.ReceivePaymentFlowSuccess event) {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-
+        hideProgressSpinner();
         String accountDetails = event.paymentFlow.getAccountDetails();
         if (accountDetails != null) {
             if (event.paymentFlow.isDebitCard()) {
@@ -144,7 +149,7 @@ public class SelectPaymentMethodFragment extends ActionBarFragment {
 
     @Subscribe
     public void onGetPaymentFlowError(PaymentEvent.ReceivePaymentFlowError event) {
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+        hideProgressSpinner();
         showToast(R.string.payment_flow_error);
     }
 

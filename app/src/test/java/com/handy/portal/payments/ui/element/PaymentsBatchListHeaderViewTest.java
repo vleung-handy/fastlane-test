@@ -8,6 +8,7 @@ import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.core.ui.activity.TestActivity;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
+import com.handy.portal.payments.viewmodel.PaymentBatchListHeaderViewModel;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -39,7 +40,7 @@ public class PaymentsBatchListHeaderViewTest extends RobolectricGradleTestWrappe
     @Test
     public void shouldNotDisplayRemainingIfItIsZero() {
         when(neoPaymentBatch.getRemainingFeeAmount()).thenReturn(0);
-        batchListHeaderView.updateDisplay(paymentBatches.getNeoPaymentBatches()[0]);
+        batchListHeaderView.updateDisplay(new PaymentBatchListHeaderViewModel(paymentBatches.getNeoPaymentBatches()[0], true));
 
         assertEquals("Should not see remaining payments row if remaining fee is 0", View.GONE, remainingRow.getVisibility());
     }
@@ -47,7 +48,7 @@ public class PaymentsBatchListHeaderViewTest extends RobolectricGradleTestWrappe
     @Test
     public void shouldDisplayRemainingIfItIsNotZero() {
         when(neoPaymentBatch.getRemainingFeeAmount()).thenReturn(100);
-        batchListHeaderView.updateDisplay(paymentBatches.getNeoPaymentBatches()[0]);
+        batchListHeaderView.updateDisplay(new PaymentBatchListHeaderViewModel(paymentBatches.getNeoPaymentBatches()[0], true));
 
         assertEquals("Should see remaining payments row if remaining fee is not 0", View.VISIBLE, remainingRow.getVisibility());
     }

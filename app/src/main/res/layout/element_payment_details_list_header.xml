@@ -103,6 +103,15 @@
                 />
         </RelativeLayout>
 
+        <Button
+            android:layout_marginTop="@dimen/default_margin"
+            android:id="@+id/payment_details_list_header_cash_out_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/cash_out_now"
+            style="@style/Button.Green.Round"
+            />
+
     </LinearLayout>
 
 </com.handy.portal.payments.ui.element.PaymentsDetailListHeaderView>

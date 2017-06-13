@@ -9,6 +9,65 @@ public class PaymentsLog extends EventLog {
         super(eventType, EVENT_CONTEXT);
     }
 
+
+    public static class PageShown extends PaymentsLog {
+        private static final String EVENT_TYPE = "page_shown";
+
+        @SerializedName("cash_out_cta_shown")
+        private boolean mCashOutCtaShown;
+
+        @SerializedName("cash_out_cta_enabled")
+        private boolean mCashOutCtaEnabled;
+
+        public PageShown(final boolean cashOutCtaShown,
+                         final boolean cashOutCtaEnabled) {
+            super(EVENT_TYPE);
+            mCashOutCtaShown = cashOutCtaShown;
+            mCashOutCtaEnabled = cashOutCtaEnabled;
+        }
+    }
+
+
+    public static class CashOutEarlyBankHelpSelected extends PaymentsLog {
+        private static final String EVENT_TYPE = "cash_out_early_bank_help_selected";
+
+        public CashOutEarlyBankHelpSelected() {
+            super(EVENT_TYPE);
+        }
+    }
+
+
+    public static class CashOutEarlyPaymentMethodSelected extends PaymentsLog {
+        private static final String EVENT_TYPE = "cash_out_early_payment_method_selected";
+
+        public CashOutEarlyPaymentMethodSelected() {
+            super(EVENT_TYPE);
+        }
+    }
+
+
+    public static class CashOutEarlySelected extends PaymentsLog {
+        private static final String EVENT_TYPE = "cash_out_early_selected";
+
+        public CashOutEarlySelected() {
+            super(EVENT_TYPE);
+        }
+    }
+
+
+    public static class CashOutEarlyConfirmSelected extends PaymentsLog {
+        private static final String EVENT_TYPE = "cash_out_early_confirm_selected";
+
+        @SerializedName("cash_out_profit")
+        private int mCashOutProfitCents;
+
+        public CashOutEarlyConfirmSelected(int cashOutProfitCents) {
+            super(EVENT_TYPE);
+            mCashOutProfitCents = cashOutProfitCents;
+        }
+    }
+
+
     //TODO agree on contract
     public static class BatchTransaction extends PaymentsLog {
         private static final String EVENT_SUB_CONTEXT = "batch";
