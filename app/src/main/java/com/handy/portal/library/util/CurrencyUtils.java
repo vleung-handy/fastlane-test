@@ -19,8 +19,7 @@ public class CurrencyUtils {
 
     public static String formatPrice(final int priceCents,
                                      @NonNull final String currencySymbol,
-                                     boolean shouldDisplayEmptyDecimals)
-    {
+                                     boolean shouldDisplayEmptyDecimals) {
         DecimalFormat decimalFormat;
         if (!shouldDisplayEmptyDecimals && priceCents % 100 == 0) {
             decimalFormat = new DecimalFormat();

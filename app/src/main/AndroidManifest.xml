@@ -183,7 +183,7 @@
         </activity>
         <activity
             android:name=".core.ui.activity.FragmentContainerActivity"
-            android:label="Fragment Container"
+            android:label="@string/app_name"
             android:screenOrientation="portrait"
             >
         </activity>

@@ -8,9 +8,6 @@ import android.support.v4.app.DialogFragment;
 
 import com.handy.portal.R;
 
-/**
- * dialog fragment that is full screen
- */
 public abstract class FullScreenDialogFragment extends InjectedDialogFragment {
 
     @NonNull

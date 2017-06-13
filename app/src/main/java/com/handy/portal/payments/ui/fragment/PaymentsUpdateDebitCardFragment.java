@@ -59,8 +59,7 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment {
     private boolean receivedDebitCardRecipientSuccess;
     private boolean receivedDebitCardForChargeSuccess;
 
-    public static PaymentsUpdateDebitCardFragment newInstance()
-    {
+    public static PaymentsUpdateDebitCardFragment newInstance() {
         return new PaymentsUpdateDebitCardFragment();
     }
 

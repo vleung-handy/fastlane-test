@@ -58,7 +58,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         implements ExpandableListView.OnChildClickListener,
         PaymentSupportReasonsDialogFragment.Callback,
         PaymentSupportRequestReviewDialogFragment.Callback,
-        PaymentCashOutDialogFragment.OnCashOutSuccessListener{
+        PaymentCashOutDialogFragment.OnCashOutSuccessListener {
     @BindView(R.id.payments_detail_list_view)
     PaymentDetailExpandableListView paymentDetailExpandableListView; //using ExpandableListView because it is the only ListView that offers group view support
     @BindView(R.id.fragment_payments_detail_content)
@@ -88,8 +88,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
 
     public static Bundle createBundle(@NonNull NeoPaymentBatch neoPaymentBatch,
                                       boolean isCurrentWeekPaymentBatch,
-                                      @Nullable PaymentBatches.CashOutInfo cashOutInfo)
-    {
+                                      @Nullable PaymentBatches.CashOutInfo cashOutInfo) {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PAYMENT_BATCH, neoPaymentBatch);
         arguments.putBoolean(BundleKeys.IS_CURRENT_WEEK_PAYMENT_BATCH, isCurrentWeekPaymentBatch);
@@ -167,7 +166,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         else //if not failed
         {
             View.OnClickListener onCashOutButtonClickedListener =
-                    PaymentsUtil.CashOut.getCashOutButtonClickListener(
+                    PaymentsUtil.CashOut.createCashOutButtonClickListener(
                             this,
                             mNeoPaymentBatch.isCashOutEnabled(),
                             mCashOutInfo,
@@ -329,26 +328,26 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         mPaymentsManager.submitBatchPaymentReviewRequest(paymentReviewRequest,
                 new FragmentSafeCallback<PaymentReviewResponse>(this) {
-            @Override
-            public void onCallbackSuccess(final PaymentReviewResponse response) {
-                bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                int drawableResourceId = response.isSuccess() ?
-                        R.drawable.ic_green_envelope : R.drawable.ic_exclaimation_red;
-                UIUtils.getDefaultSnackbarWithImage(getContext(),
-                        mMainContentLayout,
-                        response.getMessage(),
-                        drawableResourceId).show();
-            }
+                    @Override
+                    public void onCallbackSuccess(final PaymentReviewResponse response) {
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                        int drawableResourceId = response.isSuccess() ?
+                                R.drawable.ic_green_envelope : R.drawable.ic_exclaimation_red;
+                        UIUtils.getDefaultSnackbarWithImage(getContext(),
+                                mMainContentLayout,
+                                response.getMessage(),
+                                drawableResourceId).show();
+                    }
 
-            @Override
-            public void onCallbackError(final DataManager.DataManagerError error) {
-                bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-                UIUtils.getDefaultSnackbarWithImage(getContext(),
-                        mMainContentLayout,
-                        getString(R.string.an_error_has_occurred),
-                        R.drawable.ic_exclaimation_red).show();
-            }
-        });
+                    @Override
+                    public void onCallbackError(final DataManager.DataManagerError error) {
+                        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
+                        UIUtils.getDefaultSnackbarWithImage(getContext(),
+                                mMainContentLayout,
+                                getString(R.string.an_error_has_occurred),
+                                R.drawable.ic_exclaimation_red).show();
+                    }
+                });
     }
 
     @Override

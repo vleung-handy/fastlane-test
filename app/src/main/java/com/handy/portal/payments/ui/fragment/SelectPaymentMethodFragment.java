@@ -47,8 +47,7 @@ public class SelectPaymentMethodFragment extends ActionBarFragment {
     @BindView(R.id.pending_indicator)
     View pendingIndicator;
 
-    public static SelectPaymentMethodFragment newInstance()
-    {
+    public static SelectPaymentMethodFragment newInstance() {
         return new SelectPaymentMethodFragment();
     }
 

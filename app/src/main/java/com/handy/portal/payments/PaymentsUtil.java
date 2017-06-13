@@ -37,8 +37,7 @@ public abstract class PaymentsUtil {
         }
     }
 
-    public abstract static class CashOut
-    {
+    public abstract static class CashOut {
         /**
          * @param callbackFragment the callback fragment that should be used to launch another fragment if necessary
          * @param cashOutInfo
@@ -48,7 +47,7 @@ public abstract class PaymentsUtil {
          * - toast
          * - alert dialog
          */
-        public static View.OnClickListener getCashOutButtonClickListener(
+        public static View.OnClickListener createCashOutButtonClickListener(
                 @NonNull final Fragment callbackFragment,
                 boolean cashOutEnabled,
                 @Nullable PaymentBatches.CashOutInfo cashOutInfo,
@@ -114,7 +113,7 @@ public abstract class PaymentsUtil {
         /**
          * we need to style the cash out button in multiple components
          * based on whether it should look enabled.
-         *
+         * <p>
          * this cannot be put into styles.xml and has to be done at runtime
          * because we cannot use a native state, such as "state_enabled"
          * because we still need it to be clickable

@@ -53,8 +53,7 @@ public class PaymentsUpdateBankAccountFragment extends ActionBarFragment {
 
     private static final String FORM_KEY = FormDefinitionKey.UPDATE_BANK_INFO;
 
-    public static PaymentsUpdateBankAccountFragment newInstance()
-    {
+    public static PaymentsUpdateBankAccountFragment newInstance() {
         return new PaymentsUpdateBankAccountFragment();
     }
 

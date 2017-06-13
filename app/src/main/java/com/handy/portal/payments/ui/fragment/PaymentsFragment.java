@@ -45,7 +45,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public final class PaymentsFragment extends ActionBarFragment implements PaymentCashOutDialogFragment.OnCashOutSuccessListener{
+public final class PaymentsFragment extends ActionBarFragment implements PaymentCashOutDialogFragment.OnCashOutSuccessListener {
     private static final String HELP_PAYMENTS_SECTION_REDIRECT_PATH = "/sections/203828247";
 
     @Inject
@@ -115,8 +115,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
         {
             requestInitialPaymentsInfo();
         }
-        else
-        {
+        else {
             hideProgressSpinner();
         }
     }
@@ -140,8 +139,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
     private FragmentSafeCallback mCurrentPaymentBatchCallback;
 
     private void requestNextPaymentBatches(final boolean isInitialRequest) {
-        if(isInitialRequest)
-        {
+        if (isInitialRequest) {
             paymentsBatchListView.clear();
         }
         final Date endDate = paymentsBatchListView.getNextRequestEndDate();
@@ -151,26 +149,25 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
             c.setTime(endDate);
             c.add(Calendar.DATE, -PaymentBatchListAdapter.DAYS_TO_REQUEST_PER_BATCH);
             final Date startDate = DateTimeUtils.getBeginningOfDay(c.getTime());
-            if(mCurrentPaymentBatchCallback != null)
-            {
+            if (mCurrentPaymentBatchCallback != null) {
                 //only one payment batch request at a time
                 mCurrentPaymentBatchCallback.cancel();
             }
             mCurrentPaymentBatchCallback
                     = new FragmentSafeCallback<PaymentBatches>(this) {
-                        @Override
-                        public void onCallbackSuccess(PaymentBatches response) {
-                            onReceivePaymentBatchesSuccess(response,
-                                    startDate,
-                                    endDate,
-                                    isInitialRequest);
-                        }
+                @Override
+                public void onCallbackSuccess(PaymentBatches response) {
+                    onReceivePaymentBatchesSuccess(response,
+                            startDate,
+                            endDate,
+                            isInitialRequest);
+                }
 
-                        @Override
-                        public void onCallbackError(DataManager.DataManagerError error) {
-                            onReceivePaymentBatchesError(error);
-                        }
-                    };
+                @Override
+                public void onCallbackError(DataManager.DataManagerError error) {
+                    onReceivePaymentBatchesError(error);
+                }
+            };
             mPaymentsManager.requestPaymentBatches(startDate, endDate, mCurrentPaymentBatchCallback);
 
             paymentsBatchListView.showFooter(R.string.loading_more_payments);
@@ -180,9 +177,8 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
         }
     }
 
-    private void updateCashOutButtonClickListener(@Nullable PaymentBatches.CashOutInfo cashOutInfo, boolean isCashOutEnabled)
-    {
-        View.OnClickListener onClickListener = PaymentsUtil.CashOut.getCashOutButtonClickListener(
+    private void updateCashOutButtonClickListener(@Nullable PaymentBatches.CashOutInfo cashOutInfo, boolean isCashOutEnabled) {
+        View.OnClickListener onClickListener = PaymentsUtil.CashOut.createCashOutButtonClickListener(
                 this,
                 isCashOutEnabled,
                 cashOutInfo,

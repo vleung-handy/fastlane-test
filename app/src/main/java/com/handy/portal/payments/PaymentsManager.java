@@ -89,15 +89,13 @@ public class PaymentsManager {
         mDataManager.getBookingTransactions(bookingId, bookingType.toLowerCase(), callback);
     }
 
-    public void requestPaymentCashOutInfo(final DataManager.Callback<PaymentCashOutInfo> cb)
-    {
+    public void requestPaymentCashOutInfo(final DataManager.Callback<PaymentCashOutInfo> cb) {
         mDataManager.getPaymentCashOutInfo(cb);
     }
 
     public void requestCashOut(
             @NonNull PaymentCashOutRequest paymentCashOutRequest,
-            @NonNull final DataManager.Callback<SuccessWrapper> callback)
-    {
+            @NonNull final DataManager.Callback<SuccessWrapper> callback) {
         mDataManager.requestPaymentCashOut(paymentCashOutRequest, callback);
     }
 
