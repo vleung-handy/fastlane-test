@@ -18,3 +18,6 @@ _Optional. Call out remaining action items to finalize the pull request. Can be 
 - [x] Example completed task.
 
 /cc _Mention any teams or individuals that are particularly relevant to review the changes._
+
+_Optional. PM Approved should be included for PM Features if it's not in ghost mode.
+- [ ] PM Approved
