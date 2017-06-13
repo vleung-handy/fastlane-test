@@ -50,8 +50,7 @@ public class FragmentContainerActivity extends BaseActivity
     public void replaceMainContentFragment(@NonNull final Fragment replacementFragment, final boolean addToBackStack) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
                 .replace(R.id.main_container, replacementFragment);
-        if(addToBackStack)
-        {
+        if (addToBackStack) {
             transaction.addToBackStack(null);
         }
         transaction.commit();

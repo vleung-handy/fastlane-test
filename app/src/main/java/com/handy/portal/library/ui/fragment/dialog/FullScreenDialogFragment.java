@@ -17,15 +17,13 @@ public abstract class FullScreenDialogFragment extends InjectedDialogFragment {
     @Override
     public Dialog onCreateDialog(final Bundle savedInstanceState) {
         final Dialog dialog = super.onCreateDialog(savedInstanceState);
-        if(dialog.getWindow() != null && getWindowAnimationResourceId() > 0)
-        {
+        if (dialog.getWindow() != null && getWindowAnimationResourceId() > 0) {
             dialog.getWindow().setWindowAnimations(getWindowAnimationResourceId());
         }
         return dialog;
     }
 
-    protected int getWindowAnimationResourceId()
-    {
+    protected int getWindowAnimationResourceId() {
         return R.style.dialog_animation_slide_down_up_from_top;
     }
 

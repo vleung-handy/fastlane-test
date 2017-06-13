@@ -8,7 +8,7 @@
               android:orientation="vertical"
     >
 
-    <!--fixme make this toolbar reusable-->
+    <!--todo make this toolbar reusable-->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
@@ -19,8 +19,8 @@
             style="@style/TextView.XLarge"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:layout_alignParentLeft="true"
+            android:layout_centerInParent="true"
             android:layout_marginLeft="@dimen/default_margin"
             android:layout_marginStart="@dimen/default_margin"
             android:text="@string/cash_out_now"
@@ -84,8 +84,8 @@
                         android:layout_marginBottom="@dimen/default_margin"
                         android:layout_marginLeft="@dimen/default_margin"
                         android:layout_marginRight="@dimen/default_margin"
-                        tools:text="Some text"
                         android:textColorLink="@color/handy_blue"
+                        tools:text="Some text"
                         />
 
                     <LinearLayout
@@ -113,8 +113,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/default_margin"
-                            tools:text="Some date range"
                             android:textAppearance="@style/TextView.XLarge.Bold"
+                            tools:text="Some date range"
                             />
 
                         <TableLayout
@@ -176,11 +176,11 @@
                         </TableLayout>
 
                         <TextView
-                            android:layout_marginTop="@dimen/default_margin_half"
                             android:id="@+id/payments_cash_out_copy_block_2"
                             style="@style/TextView.Medium"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/default_margin_half"
                             android:text="@string/payment_cash_out_dialog_footer_html"
                             android:textColorLink="@color/handy_blue"
                             />

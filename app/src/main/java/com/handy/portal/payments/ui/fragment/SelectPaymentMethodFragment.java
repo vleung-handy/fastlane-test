@@ -60,22 +60,11 @@ public class SelectPaymentMethodFragment extends ActionBarFragment {
     public void onDebitCardOptionClicked() {
 
         ((MainContentFragmentHolder) getActivity()).replaceMainContentFragment(PaymentsUpdateDebitCardFragment.newInstance(), true);
-//        FragmentUtils.switchToFragment(
-//                getActivity().getSupportFragmentManager(),
-//                PaymentsUpdateDebitCardFragment.newInstance(),
-//                true
-//        );
     }
 
     @OnClick(R.id.bank_account_option)
     public void onBankAccountOptionClicked() {
         ((MainContentFragmentHolder) getActivity()).replaceMainContentFragment(PaymentsUpdateBankAccountFragment.newInstance(), true);
-//
-//        FragmentUtils.switchToFragment(
-//                getActivity().getSupportFragmentManager(),
-//                PaymentsUpdateBankAccountFragment.newInstance(),
-//                true
-//        );
     }
 
     @Override

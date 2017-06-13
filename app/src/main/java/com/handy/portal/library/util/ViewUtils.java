@@ -5,8 +5,8 @@ import android.view.View;
 
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class ViewUtils {
-    public static class Support {
+public abstract class ViewUtils {
+    public abstract static class Support {
         private static final AtomicInteger sNextGeneratedId = new AtomicInteger(1);
         /**
          * @return unique view id

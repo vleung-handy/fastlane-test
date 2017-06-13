@@ -22,7 +22,7 @@ import com.handy.portal.library.util.ViewUtils;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PaymentBreakdownLineItemView extends FrameLayout{
+public class PaymentBreakdownLineItemView extends FrameLayout {
 
     @BindView(R.id.payment_breakdown_line_item_label_text)
     TextView mLabelText;
@@ -73,36 +73,30 @@ public class PaymentBreakdownLineItemView extends FrameLayout{
         mAmountText.setId(ViewUtils.Support.generateViewId());
     }
 
-    public void updateLabelText(@Nullable String labelText)
-    {
+    public void updateLabelText(@Nullable String labelText) {
         mLabelText.setText(labelText);
     }
 
-    public void updatePrice(@Nullable Integer priceCents, String currencySymbol)
-    {
-        if(priceCents == null)
-        {
+    public void updatePrice(@Nullable Integer priceCents, String currencySymbol) {
+        if (priceCents == null) {
             mAmountText.setText(R.string.no_data);
         }
-        else
-        {
+        else {
             mAmountText.setText(CurrencyUtils.formatPrice(priceCents, currencySymbol, true));
         }
     }
 
     /**
      * TODO fully implement when we need this functionality
+     *
      * @param helpText
      */
-    public void updateHelpText(@Nullable String helpText)
-    {
-        if(TextUtils.isNullOrEmpty(helpText))
-        {
+    public void updateHelpText(@Nullable String helpText) {
+        if (TextUtils.isNullOrEmpty(helpText)) {
             mQuestionMarkImage.setVisibility(GONE);
             mQuestionMarkImage.setOnClickListener(null);
         }
-        else
-        {
+        else {
             mQuestionMarkImage.setVisibility(VISIBLE);
             mQuestionMarkImage.setOnClickListener(new OnClickListener() {
                 @Override

@@ -23,8 +23,7 @@ public class CurrencyUtilsTest {
     }
 
     @Test
-    public void formatPriceWithoutEmptyDecimals()
-    {
+    public void formatPriceWithoutEmptyDecimals() {
         int priceCents = 1200;
         String priceString = CurrencyUtils.formatPrice(priceCents, TEST_CURRENCY_SYMBOL, false);
         assertEquals("$12", priceString);

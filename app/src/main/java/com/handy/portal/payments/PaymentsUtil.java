@@ -23,7 +23,7 @@ import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportReasonsDialogF
 
 import org.greenrobot.eventbus.EventBus;
 
-public class PaymentsUtil {
+public abstract class PaymentsUtil {
     /**
      * this is in util because there are 3 places where this dialog can be triggered
      */
@@ -37,7 +37,7 @@ public class PaymentsUtil {
         }
     }
 
-    public static class CashOut
+    public abstract static class CashOut
     {
         /**
          * @param callbackFragment the callback fragment that should be used to launch another fragment if necessary

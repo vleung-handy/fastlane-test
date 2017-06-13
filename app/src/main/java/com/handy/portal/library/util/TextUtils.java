@@ -35,28 +35,21 @@ public final class TextUtils {
         return string == null || string.isEmpty();
     }
 
-    public static class Support
-    {
-        public static void setTextAppearance(@NonNull TextView textView, int textAppearanceResourceId)
-        {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            {
+    public abstract static class Support {
+        public static void setTextAppearance(@NonNull TextView textView, int textAppearanceResourceId) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 textView.setTextAppearance(textAppearanceResourceId);
             }
-            else
-            {
+            else {
                 textView.setTextAppearance(textView.getContext(), textAppearanceResourceId);
             }
         }
 
-        public static Spanned fromHtml(String text)
-        {
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.N)
-            {
+        public static Spanned fromHtml(String text) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 return Html.fromHtml(text, Html.FROM_HTML_MODE_LEGACY);
             }
-            else
-            {
+            else {
                 return Html.fromHtml(text);
             }
         }

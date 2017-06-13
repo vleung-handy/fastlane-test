@@ -44,9 +44,6 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-/**
- * fixme
- */
 public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
 
     @BindView(R.id.payments_cash_out_content_container)
@@ -260,8 +257,7 @@ public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
     public void onCashOutButtonClicked() {
 
         if (mPaymentCashOutInfo.getCashOutFeeCents() == null) {
-            //throw an error and return
-            //fixme do something better
+            //should never happen
             Crashlytics.logException(new Exception("Got null expected payment"));
             showErrorMessage(getString(R.string.an_error_has_occurred));
             return;
@@ -276,7 +272,6 @@ public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
                 = new PaymentCashOutRequest(mProviderManager.getLastProviderId(),
                 expectedPaymentCents);
 
-        //FIXME clean this up!
         mPaymentsManager.requestCashOut(
                 paymentCashOutRequest,
                 new FragmentSafeCallback<SuccessWrapper>(this) {
