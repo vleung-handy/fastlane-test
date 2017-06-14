@@ -40,6 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:text="@string/current_pay_week"
+                android:textAllCaps="true"
                 android:textAppearance="@style/TextView.Medium.Bold"
                 android:textColor="@color/handy_green"
                 android:textStyle="bold"
@@ -193,6 +194,7 @@
         android:paddingLeft="@dimen/payment_container_horizontal_padding"
         android:paddingRight="@dimen/payment_container_horizontal_padding"
         android:paddingTop="@dimen/default_padding"
+        android:textAllCaps="true"
         android:text="@string/previous_pay_weeks"
         android:textAppearance="@style/HandyTextAppearanceListHeader"
         />

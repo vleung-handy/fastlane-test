@@ -71,9 +71,9 @@ public class PaymentsUpdateDebitCardFragment extends ActionBarFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
+        ViewGroup view = (ViewGroup) super.onCreateView(inflater, container, savedInstanceState);
+        view.addView(inflater.inflate(R.layout.fragment_payments_update_debit_card, container, false));
 
-        View view = inflater.inflate(R.layout.fragment_payments_update_debit_card, container, false);
         ButterKnife.bind(this, view);
 
         return view;

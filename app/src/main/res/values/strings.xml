@@ -245,9 +245,9 @@
     <!-- Payments -->
     <string name="total_payment">Total Payment</string>
     <string name="expected_payment">Expected Payment</string>
-    <string name="previous_pay_weeks">PREVIOUS PAY WEEKS</string>
+    <string name="previous_pay_weeks">Previous Pay Periods</string>
     <string name="fees">Fees</string>
-    <string name="current_pay_week">CURRENT PAY WEEK</string>
+    <string name="current_pay_week">Current Pay Period</string>
     <string name="total_earnings">Total Earnings</string>
     <string name="no_more_payments">You have no more payments to load.</string>
     <string name="expected_deposit_formatted">Expect deposit by %1$s</string>
