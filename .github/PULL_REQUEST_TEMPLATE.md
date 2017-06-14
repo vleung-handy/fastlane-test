@@ -21,3 +21,4 @@ _Optional. Call out remaining action items to finalize the pull request. Can be 
 
 _Optional. PM Approved should be included for PM Features if it's not in ghost mode.
 - [ ] PM Approved
+- [ ] Feature/Bug Verified
