@@ -211,6 +211,10 @@ public class DataManager {
         mService.getBookingDetails(bookingId, type.toString().toLowerCase(), new BookingHandyRetroFitCallback(cb));
     }
 
+    public void getPaymentBatchesPage(Integer startBatchId, int pageSize, final Callback<PaymentBatches> cb) {
+        mService.getPaymentBatchesPage(startBatchId, pageSize, new PaymentBatchesRetroFitCallback(cb));
+    }
+
     public void getPaymentBatches(Date startDate, Date endDate, final Callback<PaymentBatches> cb) {
         mService.getPaymentBatches(startDate, endDate, new PaymentBatchesRetroFitCallback(cb));
     }

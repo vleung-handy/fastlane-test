@@ -135,6 +135,11 @@ public interface HandyRetrofitService {
     @POST(PAYMENTS_PATH + "cash_out")
     void requestPaymentCashOut(@Body PaymentCashOutRequest paymentCashOutRequest, HandyRetrofitCallback cb);
 
+    @GET(PAYMENTS_PATH + "batches")
+    void getPaymentBatchesPage(@Query("start_batch_id") Integer startBatchId,
+                               @Query("size") int pageSize,
+                           HandyRetrofitCallback cb);
+
     @GET(PAYMENTS_PATH)
     void getPaymentBatches(@Query("date_range_start") Date startDate,
                            @Query("date_range_end") Date endDate,

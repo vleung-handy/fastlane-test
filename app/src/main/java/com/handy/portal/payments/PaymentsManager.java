@@ -1,6 +1,7 @@
 package com.handy.portal.payments;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
@@ -99,25 +100,16 @@ public class PaymentsManager {
         mDataManager.requestPaymentCashOut(paymentCashOutRequest, callback);
     }
 
-    public void requestPaymentBatches(@NonNull final Date startDate,
-                                      @NonNull final Date endDate,
-                                      @NonNull final DataManager.Callback<PaymentBatches> callback) {
+
+    public void requestPaymentBatchesPage(@Nullable final Integer startBatchId,
+                                          int pageSize,
+                                          @NonNull final DataManager.Callback<PaymentBatches> callback) {
         //assuming startDate is inclusive and endDate is inclusive
-        mDataManager.getPaymentBatches(startDate, endDate, new DataManager.Callback<PaymentBatches>() {
+        mDataManager.getPaymentBatchesPage(startBatchId, pageSize, new DataManager.Callback<PaymentBatches>() {
             @Override
             public void onSuccess(PaymentBatches paymentBatches) {
                 //for now, filter non-legacy payment batches to remove empty groups until server side changes are made
-                NeoPaymentBatch neoPaymentBatches[] = paymentBatches.getNeoPaymentBatches();
-                for (NeoPaymentBatch neoPaymentBatch : neoPaymentBatches) {
-                    PaymentGroup paymentGroups[] = neoPaymentBatch.getPaymentGroups();
-                    List<PaymentGroup> paymentGroupList = new LinkedList<>();
-                    for (PaymentGroup paymentGroup : paymentGroups) {
-                        if (paymentGroup.getPayments() != null && paymentGroup.getPayments().length > 0) {
-                            paymentGroupList.add(paymentGroup);
-                        }
-                    }
-                    neoPaymentBatch.setPaymentGroups(paymentGroupList.toArray(new PaymentGroup[paymentGroupList.size()]));
-                }
+                removeEmptyGroupsFromPaymentBatches(paymentBatches);
                 callback.onSuccess(paymentBatches);
             }
 
@@ -126,6 +118,40 @@ public class PaymentsManager {
                 callback.onError(error);
             }
         });
+    }
+
+    public void requestPaymentBatches(@NonNull final Date startDate,
+                                      @NonNull final Date endDate,
+                                      @NonNull final DataManager.Callback<PaymentBatches> callback) {
+        //assuming startDate is inclusive and endDate is inclusive
+        mDataManager.getPaymentBatches(startDate, endDate, new DataManager.Callback<PaymentBatches>() {
+            @Override
+            public void onSuccess(PaymentBatches paymentBatches) {
+                //for now, filter non-legacy payment batches to remove empty groups until server side changes are made
+                removeEmptyGroupsFromPaymentBatches(paymentBatches);
+                callback.onSuccess(paymentBatches);
+            }
+
+            @Override
+            public void onError(DataManager.DataManagerError error) {
+                callback.onError(error);
+            }
+        });
+    }
+
+    //for now, filter non-legacy payment batches to remove empty groups until server side changes are made
+    private void removeEmptyGroupsFromPaymentBatches(@NonNull PaymentBatches paymentBatches) {
+        NeoPaymentBatch neoPaymentBatches[] = paymentBatches.getNeoPaymentBatches();
+        for (NeoPaymentBatch neoPaymentBatch : neoPaymentBatches) {
+            PaymentGroup paymentGroups[] = neoPaymentBatch.getPaymentGroups();
+            List<PaymentGroup> paymentGroupList = new LinkedList<>();
+            for (PaymentGroup paymentGroup : paymentGroups) {
+                if (paymentGroup.getPayments() != null && paymentGroup.getPayments().length > 0) {
+                    paymentGroupList.add(paymentGroup);
+                }
+            }
+            neoPaymentBatch.setPaymentGroups(paymentGroupList.toArray(new PaymentGroup[paymentGroupList.size()]));
+        }
     }
 
     @Subscribe
