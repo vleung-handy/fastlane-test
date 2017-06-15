@@ -24,7 +24,6 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.library.ui.widget.InfiniteScrollListView;
-import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.PaymentsManager;
@@ -32,12 +31,8 @@ import com.handy.portal.payments.PaymentsUtil;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
-import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.payments.ui.element.PaymentsBatchListView;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentCashOutDialogFragment;
-
-import java.util.Calendar;
-import java.util.Date;
 
 import javax.inject.Inject;
 
@@ -47,6 +42,7 @@ import butterknife.OnClick;
 
 public final class PaymentsFragment extends ActionBarFragment implements PaymentCashOutDialogFragment.OnCashOutSuccessListener {
     private static final String HELP_PAYMENTS_SECTION_REDIRECT_PATH = "/sections/203828247";
+    private static final int PAYMENT_BATCHES_PAGE_SIZE = 10;
 
     @Inject
     ConfigManager mConfigManager;
@@ -54,36 +50,35 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
     @Inject
     PaymentsManager mPaymentsManager;
 
-    //TODO: investigate using @Produce and make manager handle more of this logic
     @BindView(R.id.slide_up_panel_container)
     SlideUpPanelLayout mSlideUpPanelLayout;
 
     @BindView(R.id.payments_scroll_view)
-    ScrollView scrollView;
+    ScrollView mScrollView;
 
     @BindView(R.id.payments_batch_list_view)
-    PaymentsBatchListView paymentsBatchListView;
+    PaymentsBatchListView mPaymentsBatchListView;
 
     @BindView(R.id.fetch_error_text)
-    TextView fetchErrorText;
+    TextView mFetchErrorText;
 
     @BindView(R.id.fetch_error_view)
-    ViewGroup fetchErrorView;
+    ViewGroup mFetchErrorView;
 
-    //TODO: refactor request protocols when we can use new pagination API that allows us to get the N next batches
+    private ViewGroup mFragmentView;
 
-    private ViewGroup fragmentView;
+    private FragmentSafeCallback mCurrentPaymentBatchCallback;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (fragmentView == null) {
-            fragmentView = (ViewGroup) super.onCreateView(inflater, container, savedInstanceState);
-            fragmentView.addView(inflater.inflate(R.layout.fragment_payments, container, false));
+        if (mFragmentView == null) {
+            mFragmentView = (ViewGroup) super.onCreateView(inflater, container, savedInstanceState);
+            mFragmentView.addView(inflater.inflate(R.layout.fragment_payments, container, false));
         }
 
-        ButterKnife.bind(this, fragmentView);
+        ButterKnife.bind(this, mFragmentView);
 
-        return fragmentView;
+        return mFragmentView;
     }
 
     @Override
@@ -94,12 +89,12 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
     @Override
     protected void showProgressSpinner(final boolean isBlocking) {
         super.showProgressSpinner(isBlocking);
-        scrollView.setVisibility(View.GONE);
+        mScrollView.setVisibility(View.GONE);
     }
 
     @Override
     protected void hideProgressSpinner() {
-        scrollView.setVisibility(View.VISIBLE);
+        mScrollView.setVisibility(View.VISIBLE);
         super.hideProgressSpinner();
     }
 
@@ -107,13 +102,12 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
     public void onResume() {
         super.onResume();
 
-        boolean enableBack = mConfigManager.getConfigurationResponse() != null &&
-                mConfigManager.getConfigurationResponse().isMoreFullTabEnabled();
+        boolean enableBack = mConfigManager.getConfigurationResponse().isMoreFullTabEnabled();
         setActionBar(R.string.payments, enableBack);
 
-        if (paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData())//if initial batch has not been received yet
+        if (mPaymentsBatchListView.getWrappedAdapter().isDataEmpty() && mPaymentsBatchListView.getWrappedAdapter().shouldRequestMoreData())//if initial batch has not been received yet
         {
-            requestInitialPaymentsInfo();
+            clearAllAndRequestInitialPaymentsInfo();
         }
         else {
             hideProgressSpinner();
@@ -127,69 +121,56 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
     }
 
     @OnClick(R.id.try_again_button)
-    public void doInitialRequestAgain() {
-        requestInitialPaymentsInfo();
+    public void onTryRequestingInitialPaymentsAgainButtonClicked() {
+        clearAllAndRequestInitialPaymentsInfo();
     }
 
-    private void requestInitialPaymentsInfo() {
-        requestNextPaymentBatches(true);
+    private final View.OnClickListener mOnRequestNextPaymentBatchButtonClickedListener
+            = new View.OnClickListener() {
+        @Override
+        public void onClick(final View v) {
+            requestNextPaymentBatches();
+        }
+    };
+
+    private void clearAllAndRequestInitialPaymentsInfo() {
         showProgressSpinner(true);
+        mPaymentsBatchListView.clear();
+        requestNextPaymentBatches();
     }
 
-    private FragmentSafeCallback mCurrentPaymentBatchCallback;
-
-    private void requestNextPaymentBatches(final boolean isInitialRequest) {
-        if (isInitialRequest) {
-            paymentsBatchListView.clear();
+    private void requestNextPaymentBatches() {
+        final Integer lastPaymentBatchId = mPaymentsBatchListView.getWrappedAdapter().getLastPaymentBatchId();
+        if (mCurrentPaymentBatchCallback != null) {
+            //only one payment batch request at a time
+            mCurrentPaymentBatchCallback.cancel();
         }
-        final Date endDate = paymentsBatchListView.getNextRequestEndDate();
-
-        if (endDate != null) {
-            Calendar c = Calendar.getInstance();
-            c.setTime(endDate);
-            c.add(Calendar.DATE, -PaymentBatchListAdapter.DAYS_TO_REQUEST_PER_BATCH);
-            final Date startDate = DateTimeUtils.getBeginningOfDay(c.getTime());
-            if (mCurrentPaymentBatchCallback != null) {
-                //only one payment batch request at a time
-                mCurrentPaymentBatchCallback.cancel();
+        mCurrentPaymentBatchCallback
+                = new FragmentSafeCallback<PaymentBatches>(this) {
+            @Override
+            public void onCallbackSuccess(PaymentBatches response) {
+                onReceivePaymentBatchesSuccess(response);
             }
-            mCurrentPaymentBatchCallback
-                    = new FragmentSafeCallback<PaymentBatches>(this) {
-                @Override
-                public void onCallbackSuccess(PaymentBatches response) {
-                    onReceivePaymentBatchesSuccess(response,
-                            startDate,
-                            endDate,
-                            isInitialRequest);
-                }
 
-                @Override
-                public void onCallbackError(DataManager.DataManagerError error) {
-                    onReceivePaymentBatchesError(error);
-                }
-            };
-            mPaymentsManager.requestPaymentBatches(startDate, endDate, mCurrentPaymentBatchCallback);
+            @Override
+            public void onCallbackError(DataManager.DataManagerError error) {
+                onReceivePaymentBatchesError(error);
+            }
+        };
+        mPaymentsManager.requestPaymentBatchesPage(lastPaymentBatchId, PAYMENT_BATCHES_PAGE_SIZE, mCurrentPaymentBatchCallback);
 
-            paymentsBatchListView.showFooter(R.string.loading_more_payments);
-        }
-        else {
-            paymentsBatchListView.showFooter(R.string.no_more_payments);
-        }
+        mPaymentsBatchListView.showFooter(R.string.loading_more_payments);
     }
 
-    private void updateCashOutButtonClickListener(@Nullable PaymentBatches.CashOutInfo cashOutInfo, boolean isCashOutEnabled) {
-        View.OnClickListener onClickListener = PaymentsUtil.CashOut.createCashOutButtonClickListener(
-                this,
-                isCashOutEnabled,
-                cashOutInfo,
-                bus);
-        paymentsBatchListView.setCashOutButtonClickListener(onClickListener);
-    }
 
-    public void onInitialPaymentBatchReceived(final PaymentBatches paymentBatches, Date requestStartDate) //should only be called once in this instance. should never be empty
-    {
-        //reset payment batch list view and its adapter
-        paymentsBatchListView.clear();
+    /**
+     * assumptions:
+     * - the batch list is empty
+     * - the given PaymentBatches is the first batch of the first page
+     * <p>
+     * should only be called once in this instance. should never be empty
+     */
+    private void onInitialPaymentBatchReceived(@NonNull final PaymentBatches paymentBatches) {
         hideProgressSpinner();
 
         //update the current pay week
@@ -199,29 +180,79 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
             showToast(R.string.an_error_has_occurred);
             return;
         }
-        paymentsBatchListView.appendData(paymentBatches, requestStartDate);
+        mPaymentsBatchListView.appendData(paymentBatches);
 
-        NeoPaymentBatch currentWeekBatch = paymentsBatchListView.getWrappedAdapter().getCurrentWeekBatch();
+        NeoPaymentBatch currentWeekBatch = mPaymentsBatchListView.getWrappedAdapter().getCurrentWeekBatch();
 
         updateCashOutButtonClickListener(paymentBatches.getCashOutInfo(),
                 currentWeekBatch != null && currentWeekBatch.isCashOutEnabled());
 
         //updating with data from payment batches
-        paymentsBatchListView.setOnDataItemClickListener(new PaymentsBatchListView.OnDataItemClickListener() {
+        mPaymentsBatchListView.setOnDataItemClickListener(new PaymentsBatchListView.OnDataItemClickListener() {
             @Override
             public void onDataItemClicked(PaymentBatch paymentBatch, boolean isCurrentWeekBatch) {
                 showPaymentDetailsForBatch(paymentBatch, isCurrentWeekBatch, paymentBatches.getCashOutInfo());
             }
         });
-        paymentsBatchListView.setOnScrollToBottomListener(new InfiniteScrollListView.OnScrollToBottomListener() {
+        mPaymentsBatchListView.setOnScrollToBottomListener(new InfiniteScrollListView.OnScrollToBottomListener() {
             @Override
             public void onScrollToBottom() {
-                if (paymentsBatchListView != null) //this is to handle case in which Butterknife.reset(this) makes paymentBatchListView null but this callback still gets called. TODO: need more general solution
+                if (mPaymentsBatchListView != null) //this is to handle case in which Butterknife.reset(this) makes paymentBatchListView null but this callback still gets called. TODO: need more general solution
                 {
-                    requestNextPaymentBatches(false);
+                    requestNextPaymentBatches();
                 }
             }
         });
+    }
+
+    private void onReceivePaymentBatchesSuccess(@NonNull final PaymentBatches paymentBatches) {
+        mFetchErrorView.setVisibility(View.GONE);
+        mPaymentsBatchListView.setFooterVisible(false);
+
+        //todo more checks to ensure this is the current week batch?
+        if (mPaymentsBatchListView.getWrappedAdapter().isDataEmpty())
+        //if it was previously empty, then initial batch received
+        {
+            onInitialPaymentBatchReceived(paymentBatches);
+        }
+        else {
+            mPaymentsBatchListView.appendData(paymentBatches);
+        }
+
+        if (mPaymentsBatchListView.getWrappedAdapter().shouldRequestMoreData()) {
+            requestNextPaymentBatches();
+        }
+        else {
+            mPaymentsBatchListView.showFooter(R.string.no_more_payments);
+        }
+    }
+
+    private void onReceivePaymentBatchesError(@NonNull DataManager.DataManagerError error) {
+        if (mPaymentsBatchListView.getWrappedAdapter().isDataEmpty()) {
+            mFetchErrorView.setVisibility(View.VISIBLE);
+            mFetchErrorText.setText(R.string.request_payments_batches_failed);
+        }
+        else {
+            mPaymentsBatchListView.showFooter(R.string.request_payments_batches_failed,
+                    mOnRequestNextPaymentBatchButtonClickedListener);
+        }
+        hideProgressSpinner();
+    }
+
+    //cash out stuff
+    private void updateCashOutButtonClickListener(@Nullable PaymentBatches.CashOutInfo cashOutInfo, boolean isCashOutEnabled) {
+        View.OnClickListener onClickListener = PaymentsUtil.CashOut.createCashOutButtonClickListener(
+                this,
+                isCashOutEnabled,
+                cashOutInfo,
+                bus);
+        mPaymentsBatchListView.setCashOutButtonClickListener(onClickListener);
+    }
+
+    @Override
+    public void onCashOutSuccess(@NonNull final String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        clearAllAndRequestInitialPaymentsInfo();
     }
 
     public void showPaymentDetailsForBatch(@NonNull PaymentBatch paymentBatch,
@@ -251,52 +282,5 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, HELP_PAYMENTS_SECTION_REDIRECT_PATH);
         bus.post(new NavigationEvent.NavigateToPage(MainViewPage.HELP_WEBVIEW, arguments, true));
-    }
-
-    private void onReceivePaymentBatchesSuccess(@NonNull final PaymentBatches paymentBatches,
-                                                @NonNull final Date requestStartDate,
-                                                @NonNull final Date requestEndDate,
-                                                final boolean isFromInitialBatchRequest
-    ) {
-        fetchErrorView.setVisibility(View.GONE);
-        if (!paymentsBatchListView.getWrappedAdapter().canAppendBatch(requestEndDate)) {
-            return;
-        }
-        paymentsBatchListView.setFooterVisible(false);
-        if (isFromInitialBatchRequest) //if it was previously empty
-        {
-            onInitialPaymentBatchReceived(paymentBatches, requestStartDate);
-        }
-        else {
-            paymentsBatchListView.appendData(paymentBatches, requestStartDate);
-        }
-
-        //only if the data returned is empty, determine whether we need to re-request
-        //TODO: this is gross and we won't need to do this when new payments API comes out
-        if (paymentBatches.isEmpty()) {
-            if (paymentsBatchListView.shouldRequestMoreData()) {
-                requestNextPaymentBatches(false);
-            }
-            else {
-                paymentsBatchListView.showFooter(R.string.no_more_payments);
-            }
-        }
-    }
-
-    private void onReceivePaymentBatchesError(@NonNull DataManager.DataManagerError error) {
-        if (paymentsBatchListView.isDataEmpty()) {
-            fetchErrorView.setVisibility(View.VISIBLE);
-            fetchErrorText.setText(R.string.request_payments_batches_failed);
-        }
-        else {
-            paymentsBatchListView.showFooter(R.string.request_payments_batches_failed);
-        }
-        hideProgressSpinner();
-    }
-
-    @Override
-    public void onCashOutSuccess(@NonNull final String message) {
-        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-        requestInitialPaymentsInfo();
     }
 }

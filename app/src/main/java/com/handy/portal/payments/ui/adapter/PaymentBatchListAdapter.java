@@ -1,6 +1,7 @@
 package com.handy.portal.payments.ui.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,13 +26,13 @@ import com.handy.portal.payments.viewmodel.PaymentBatchListHeaderViewModel;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import javax.inject.Inject;
 
 import se.emilsjolander.stickylistheaders.StickyListHeadersAdapter;
 
+/**
+ * FIXME confirm we're no longer supporting legacy payment batches
+ */
 public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implements StickyListHeadersAdapter //TODO: THIS IS GROSS, NEED TO REFACTOR THIS COMPLETELY!
 {
     @Inject
@@ -40,8 +41,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
     @Inject
     ConfigManager mConfigManager;
 
-    public static final int DAYS_TO_REQUEST_PER_BATCH = 28;
-    private Date nextRequestEndDate;
+    private final PaginationMetadata mPaginationMetadata;
     private View.OnClickListener mCashOutButtonClickedListener;
 
     public static final int VIEW_TYPE_CURRENT_WEEK_BATCH = 0;
@@ -54,11 +54,12 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
     public PaymentBatchListAdapter(Context context) {
         super(context, R.layout.element_payments_batch_list_entry, 0);
         Utils.inject(context, this);
+        mPaginationMetadata = new PaginationMetadata();
         resetMetadata();
     }
 
     private void resetMetadata() {
-        nextRequestEndDate = new Date();
+        mPaginationMetadata.reset();
     }
 
     public void clear() {
@@ -67,36 +68,33 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
     }
 
     public boolean shouldRequestMoreData() {
-        return nextRequestEndDate != null;
+        return !mPaginationMetadata.isFinalBatchReceived();
     }
 
-    public Date getNextRequestEndDate() {
-        return nextRequestEndDate;
+    public Integer getLastPaymentBatchId() {
+        return mPaginationMetadata.getLastPaymentBatchId();
     }
 
-    public void appendData(PaymentBatches paymentBatches, Date requestStartDate) //this should also be called if paymentBatch is empty
+    public void appendData(PaymentBatches paymentBatches) //this should also be called if paymentBatch is empty
     {
-        addAll(paymentBatches.getAggregateBatchList());
-        updateOldestDate(requestStartDate);
+        PaymentBatch[] aggregateBatchList = paymentBatches.getAggregateBatchList();
+        addAll(aggregateBatchList);
+        updatePaginationMetadata(aggregateBatchList);
         notifyDataSetChanged();
     }
 
-    public boolean canAppendBatch(Date batchRequestEndDate) //TODO: do something more elegant
-    {
-        return nextRequestEndDate != null && batchRequestEndDate.equals(nextRequestEndDate); //compares the exact time
-    }
+    private void updatePaginationMetadata(@NonNull PaymentBatch paymentBatches[]) {
+        if (paymentBatches.length == 0) {
+            mPaginationMetadata.setFinalBatchReceived(true);
+        }
+        else {
+            //update the last payment batch id
+            PaymentBatch lastPaymentBatch = paymentBatches[paymentBatches.length - 1];
 
-    private void updateOldestDate(Date requestStartDate) {
-        if (nextRequestEndDate != null) {
-            final Calendar lowerBoundPaymentRequestDate = Calendar.getInstance();
-            lowerBoundPaymentRequestDate.set(2013, 9, 23); // No payments precede Oct 23, 2013
+            Integer lastPaymentBatchId = ((NeoPaymentBatch) lastPaymentBatch).getBatchId();
+            //fixme make everything neopaymentbatch; going to discontinue support of legacy payments
 
-            Date newDate = new Date(requestStartDate.getTime() - 1);
-            Calendar newDateCalendar = Calendar.getInstance();
-            newDateCalendar.setTime(requestStartDate);
-
-            nextRequestEndDate = newDateCalendar.before(lowerBoundPaymentRequestDate)
-                    ? null : newDate;
+            mPaginationMetadata.setLastPaymentBatchId(lastPaymentBatchId);
         }
     }
 
@@ -135,8 +133,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
      * the cash out dialog fragment needs to be launched by a fragment
      * so that callbacks can be properly handled
      */
-    public void setCashOutButtonClickedListener(View.OnClickListener cashOutEnabledClickListener)
-    {
+    public void setCashOutButtonClickedListener(View.OnClickListener cashOutEnabledClickListener) {
         mCashOutButtonClickedListener = cashOutEnabledClickListener;
     }
 
@@ -174,7 +171,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
             mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.PageShown(
                     paymentBatchListHeaderViewModel.shouldShowCashOutButton(),
                     paymentBatchListHeaderViewModel.shouldApparentlyEnableCashOutButton()
-                    )));
+            )));
 
             paymentsBatchListHeaderView.setOnCashOutButtonClickedListener(mCashOutButtonClickedListener);
         }
@@ -192,24 +189,19 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
         return v;
     }
 
-    public int getViewTypeForPosition(int position)
-    {
-        if(position == VIEW_POSITION_CURRENT_WEEK_BATCH
-                && getItem(position) instanceof NeoPaymentBatch)
-        {
+    public int getViewTypeForPosition(int position) {
+        if (position == VIEW_POSITION_CURRENT_WEEK_BATCH
+                && getItem(position) instanceof NeoPaymentBatch) {
             return VIEW_TYPE_CURRENT_WEEK_BATCH;
         }
         return VIEW_TYPE_PAST_BATCH;
     }
 
     @Nullable
-    public NeoPaymentBatch getCurrentWeekBatch()
-    {
-        if(getDataItemsCount() > VIEW_POSITION_CURRENT_WEEK_BATCH)
-        {
+    public NeoPaymentBatch getCurrentWeekBatch() {
+        if (getDataItemsCount() > VIEW_POSITION_CURRENT_WEEK_BATCH) {
             PaymentBatch paymentBatch = getDataItem(VIEW_POSITION_CURRENT_WEEK_BATCH);
-            if(paymentBatch instanceof NeoPaymentBatch)
-            {
+            if (paymentBatch instanceof NeoPaymentBatch) {
                 return (NeoPaymentBatch) paymentBatch;
             }
         }
@@ -239,5 +231,35 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
     public long getHeaderId(int position) {
         PaymentBatch paymentBatch = getItem(position);
         return DateTimeUtils.getYearInt(paymentBatch.getEffectiveDate());
+    }
+
+    private class PaginationMetadata {
+        private Integer mLastPaymentBatchId;
+        private boolean mFinalBatchReceived;
+
+        PaginationMetadata() {
+            reset();
+        }
+
+        void reset() {
+            mLastPaymentBatchId = null;
+            mFinalBatchReceived = false;
+        }
+
+        void setLastPaymentBatchId(final Integer lastPaymentBatchId) {
+            mLastPaymentBatchId = lastPaymentBatchId;
+        }
+
+        void setFinalBatchReceived(final boolean finalBatchReceived) {
+            mFinalBatchReceived = finalBatchReceived;
+        }
+
+        Integer getLastPaymentBatchId() {
+            return mLastPaymentBatchId;
+        }
+
+        boolean isFinalBatchReceived() {
+            return mFinalBatchReceived;
+        }
     }
 }

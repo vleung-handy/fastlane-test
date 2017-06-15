@@ -2,6 +2,8 @@ package com.handy.portal.payments.ui.element;
 
 import android.content.Context;
 import android.graphics.drawable.ColorDrawable;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -20,11 +22,14 @@ import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.Date;
-
 import javax.inject.Inject;
 
 public final class PaymentsBatchListView extends InfiniteScrollListView implements AdapterView.OnItemClickListener {
+
+    /**
+     * for logging purposes only
+     * fixme try to rip out
+     */
     @Inject
     EventBus mBus;
 
@@ -101,36 +106,27 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
     }
 
     public void showFooter(int stringResourceId) {
-        setFooterVisible(true);
-        setFooterText(stringResourceId);
+        showFooter(stringResourceId, null);
     }
 
-    public void setFooterText(int resourceId) {
-        footerView.setText(resourceId);
+    public void showFooter(int stringResourceId,
+                           @Nullable OnClickListener onClickListener) {
+        setFooterVisible(true);
+        footerView.setText(stringResourceId);
+        footerView.setOnClickListener(onClickListener);
     }
 
     public void setFooterVisible(boolean visible) {
         footerView.setVisibility(visible ? VISIBLE : GONE);
     }
 
-    public void appendData(PaymentBatches paymentBatches, Date requestStartDate) {
-        getWrappedAdapter().appendData(paymentBatches, requestStartDate);
+    public void appendData(@NonNull PaymentBatches paymentBatches) {
+        getWrappedAdapter().appendData(paymentBatches);
     }
 
+    @NonNull
     public PaymentBatchListAdapter getWrappedAdapter() {
         return (PaymentBatchListAdapter) getAdapter();
-    }
-
-    public boolean shouldRequestMoreData() {
-        return getWrappedAdapter().shouldRequestMoreData();
-    }
-
-    public boolean isDataEmpty() {
-        return getWrappedAdapter().isDataEmpty();
-    }
-
-    public Date getNextRequestEndDate() {
-        return getWrappedAdapter().getNextRequestEndDate();
     }
 
     /**
