@@ -215,6 +215,7 @@ public class DataManager {
         mService.getPaymentBatchesPage(startBatchId, pageSize, new PaymentBatchesRetroFitCallback(cb));
     }
 
+    @Deprecated
     public void getPaymentBatches(Date startDate, Date endDate, final Callback<PaymentBatches> cb) {
         mService.getPaymentBatches(startDate, endDate, new PaymentBatchesRetroFitCallback(cb));
     }

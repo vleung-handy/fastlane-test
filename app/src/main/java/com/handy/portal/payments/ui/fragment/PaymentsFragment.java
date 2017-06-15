@@ -77,7 +77,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
         }
 
         ButterKnife.bind(this, mFragmentView);
-
+        mFetchErrorText.setText(R.string.request_payments_batches_failed);
         return mFragmentView;
     }
 
@@ -120,12 +120,18 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
         inflater.inflate(R.menu.menu_payments, menu);
     }
 
+    /**
+     * try again button for the full-screen error view
+     */
     @OnClick(R.id.try_again_button)
     public void onTryRequestingInitialPaymentsAgainButtonClicked() {
         clearAllAndRequestInitialPaymentsInfo();
     }
 
-    private final View.OnClickListener mOnRequestNextPaymentBatchButtonClickedListener
+    /**
+     * try again button for the pagination error footer
+     */
+    private final View.OnClickListener mRetryFailedBatchRequestButtonClickedListener
             = new View.OnClickListener() {
         @Override
         public void onClick(final View v) {
@@ -145,6 +151,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
             //only one payment batch request at a time
             mCurrentPaymentBatchCallback.cancel();
         }
+
         mCurrentPaymentBatchCallback
                 = new FragmentSafeCallback<PaymentBatches>(this) {
             @Override
@@ -157,9 +164,9 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
                 onReceivePaymentBatchesError(error);
             }
         };
-        mPaymentsManager.requestPaymentBatchesPage(lastPaymentBatchId, PAYMENT_BATCHES_PAGE_SIZE, mCurrentPaymentBatchCallback);
 
         mPaymentsBatchListView.showFooter(R.string.loading_more_payments);
+        mPaymentsManager.requestPaymentBatchesPage(lastPaymentBatchId, PAYMENT_BATCHES_PAGE_SIZE, mCurrentPaymentBatchCallback);
     }
 
 
@@ -190,7 +197,13 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
         //updating with data from payment batches
         mPaymentsBatchListView.setOnDataItemClickListener(new PaymentsBatchListView.OnDataItemClickListener() {
             @Override
-            public void onDataItemClicked(PaymentBatch paymentBatch, boolean isCurrentWeekBatch) {
+            public void onDataItemClicked(PaymentBatch paymentBatch,
+                                          boolean isCurrentWeekBatch,
+                                          int listIndex) {
+                bus.post(new LogEvent.AddLogEvent(
+                        new PaymentsLog.BatchSelected(isCurrentWeekBatch, listIndex + 1)));
+                //index needs to be one based
+
                 showPaymentDetailsForBatch(paymentBatch, isCurrentWeekBatch, paymentBatches.getCashOutInfo());
             }
         });
@@ -211,7 +224,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
 
         //todo more checks to ensure this is the current week batch?
         if (mPaymentsBatchListView.getWrappedAdapter().isDataEmpty())
-        //if it was previously empty, then initial batch received
+        //if we received batch containing current pay period
         {
             onInitialPaymentBatchReceived(paymentBatches);
         }
@@ -230,11 +243,11 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
     private void onReceivePaymentBatchesError(@NonNull DataManager.DataManagerError error) {
         if (mPaymentsBatchListView.getWrappedAdapter().isDataEmpty()) {
             mFetchErrorView.setVisibility(View.VISIBLE);
-            mFetchErrorText.setText(R.string.request_payments_batches_failed);
         }
         else {
+            //we have at least one item in the list
             mPaymentsBatchListView.showFooter(R.string.request_payments_batches_failed,
-                    mOnRequestNextPaymentBatchButtonClickedListener);
+                    mRetryFailedBatchRequestButtonClickedListener);
         }
         hideProgressSpinner();
     }
@@ -255,6 +268,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
         clearAllAndRequestInitialPaymentsInfo();
     }
 
+    //navigate to payment details fragment
     public void showPaymentDetailsForBatch(@NonNull PaymentBatch paymentBatch,
                                            boolean isCurrentWeekBatch,
                                            @Nullable PaymentBatches.CashOutInfo cashOutInfo) {

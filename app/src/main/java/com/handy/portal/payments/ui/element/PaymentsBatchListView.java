@@ -14,30 +14,17 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.library.ui.widget.InfiniteScrollListView;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.logger.handylogger.LogEvent;
-import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
 
-import org.greenrobot.eventbus.EventBus;
-
-import javax.inject.Inject;
-
 public final class PaymentsBatchListView extends InfiniteScrollListView implements AdapterView.OnItemClickListener {
 
-    /**
-     * for logging purposes only
-     * fixme try to rip out
-     */
-    @Inject
-    EventBus mBus;
-
-    private TextView footerView;
-    private OnDataItemClickListener onDataItemClickListener; //TODO: WIP. refine
+    private TextView mFooterView;
+    private OnDataItemClickListener mOnDataItemClickListener;
 
     /*
-    we need dataItemClick listener because the lists header data is linked to adapter data
+    we need dataItemClick listener because the lists header data is linked to adapter data.
     should set OnDataItemClickListener instead of OnItemClickListener
      */
 
@@ -66,8 +53,8 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
     public void init() {
         PaymentBatchListAdapter itemsAdapter = new PaymentBatchListAdapter(getContext());
 
-        footerView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.element_infinite_scrolling_list_footer, null);
-        addFooterView(footerView, null, false);
+        mFooterView = (TextView) LayoutInflater.from(getContext()).inflate(R.layout.element_infinite_scrolling_list_footer, null);
+        addFooterView(mFooterView, null, false);
         setAdapter(itemsAdapter);
         setOnItemClickListener(this);
         // Override the StickyListHeaderView not setting these correctly
@@ -80,29 +67,25 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
         getWrappedAdapter().clear();
     }
 
-    public interface OnDataItemClickListener {
-        //PaymentBatch does not denote whether it is the current week batch
-        void onDataItemClicked(PaymentBatch paymentBatch, boolean isCurrentWeekBatch);
-    }
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         final boolean isCurrentWeek =
                 getWrappedAdapter().getViewTypeForPosition(position)
                         == PaymentBatchListAdapter.VIEW_TYPE_CURRENT_WEEK_BATCH;
-        mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.BatchSelected(isCurrentWeek, position + 1))); // index needs to be one based
         PaymentBatch paymentBatch = getWrappedAdapter().getDataItem(position);
-        notifyDataItemClickListener(paymentBatch, isCurrentWeek);
+        notifyDataItemClickListener(paymentBatch, isCurrentWeek, position);
     }
 
-    private void notifyDataItemClickListener(PaymentBatch paymentBatch, boolean isCurrentWeekBatch) {
-        if (onDataItemClickListener != null) {
-            onDataItemClickListener.onDataItemClicked(paymentBatch, isCurrentWeekBatch);
+    private void notifyDataItemClickListener(PaymentBatch paymentBatch,
+                                             boolean isCurrentWeekBatch,
+                                             int listIndex) {
+        if (mOnDataItemClickListener != null) {
+            mOnDataItemClickListener.onDataItemClicked(paymentBatch, isCurrentWeekBatch, listIndex);
         }
     }
 
     public void setOnDataItemClickListener(OnDataItemClickListener onDataItemClickListener) {
-        this.onDataItemClickListener = onDataItemClickListener;
+        this.mOnDataItemClickListener = onDataItemClickListener;
     }
 
     public void showFooter(int stringResourceId) {
@@ -112,12 +95,12 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
     public void showFooter(int stringResourceId,
                            @Nullable OnClickListener onClickListener) {
         setFooterVisible(true);
-        footerView.setText(stringResourceId);
-        footerView.setOnClickListener(onClickListener);
+        mFooterView.setText(stringResourceId);
+        mFooterView.setOnClickListener(onClickListener);
     }
 
     public void setFooterVisible(boolean visible) {
-        footerView.setVisibility(visible ? VISIBLE : GONE);
+        mFooterView.setVisibility(visible ? VISIBLE : GONE);
     }
 
     public void appendData(@NonNull PaymentBatches paymentBatches) {
@@ -136,5 +119,17 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
     public void setCashOutButtonClickListener(OnClickListener cashOutButtonClickedListener)
     {
         getWrappedAdapter().setCashOutButtonClickedListener(cashOutButtonClickedListener);
+    }
+
+    public interface OnDataItemClickListener {
+        /**
+         * @param paymentBatch
+         * @param isCurrentWeekBatch needed because the given PaymentBatch does not denote
+         *                           whether it is the current week batch
+         * @param listIndex          currently used for logging purposes only
+         */
+        void onDataItemClicked(PaymentBatch paymentBatch,
+                               boolean isCurrentWeekBatch,
+                               int listIndex);
     }
 }

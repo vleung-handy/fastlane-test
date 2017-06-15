@@ -1,5 +1,7 @@
 package com.handy.portal.payments.model;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.util.Date;
@@ -9,7 +11,7 @@ public class NeoPaymentBatch extends PaymentBatch {
      * assuming all amounts are passed in as cents
      */
     @SerializedName("batch_id")
-    private int batchId;
+    private Integer batchId;
 
     @SerializedName("start_date")
     private Date startDate;
@@ -95,7 +97,12 @@ public class NeoPaymentBatch extends PaymentBatch {
         return numCompletedJobs;
     }
 
-    public int getBatchId() {
+    /**
+     * todo
+     * i think this is null for the current batch. need to verify
+     */
+    @Nullable
+    public Integer getBatchId() {
         return batchId;
     }
 

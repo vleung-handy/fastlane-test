@@ -100,14 +100,18 @@ public class PaymentsManager {
         mDataManager.requestPaymentCashOut(paymentCashOutRequest, callback);
     }
 
-
-    public void requestPaymentBatchesPage(@Nullable final Integer startBatchId,
+    /**
+     * request next N payment batches
+     *
+     * @param lastBatchId the id of the last batch in the current page. the server will use this to get the next page
+     * @param pageSize    the maximum number of batches to return
+     */
+    public void requestPaymentBatchesPage(@Nullable final Integer lastBatchId,
                                           int pageSize,
                                           @NonNull final DataManager.Callback<PaymentBatches> callback) {
-        //assuming startDate is inclusive and endDate is inclusive
-        mDataManager.getPaymentBatchesPage(startBatchId, pageSize, new DataManager.Callback<PaymentBatches>() {
+        mDataManager.getPaymentBatchesPage(lastBatchId, pageSize, new DataManager.Callback<PaymentBatches>() {
             @Override
-            public void onSuccess(PaymentBatches paymentBatches) {
+            public void onSuccess(@NonNull PaymentBatches paymentBatches) {
                 //for now, filter non-legacy payment batches to remove empty groups until server side changes are made
                 removeEmptyGroupsFromPaymentBatches(paymentBatches);
                 callback.onSuccess(paymentBatches);
@@ -120,6 +124,8 @@ public class PaymentsManager {
         });
     }
 
+    //fixme remove
+    @Deprecated
     public void requestPaymentBatches(@NonNull final Date startDate,
                                       @NonNull final Date endDate,
                                       @NonNull final DataManager.Callback<PaymentBatches> callback) {
@@ -139,7 +145,9 @@ public class PaymentsManager {
         });
     }
 
-    //for now, filter non-legacy payment batches to remove empty groups until server side changes are made
+    /**
+     * for now, filter non-legacy payment batches to remove empty groups until server side changes are made
+     */
     private void removeEmptyGroupsFromPaymentBatches(@NonNull PaymentBatches paymentBatches) {
         NeoPaymentBatch neoPaymentBatches[] = paymentBatches.getNeoPaymentBatches();
         for (NeoPaymentBatch neoPaymentBatch : neoPaymentBatches) {
