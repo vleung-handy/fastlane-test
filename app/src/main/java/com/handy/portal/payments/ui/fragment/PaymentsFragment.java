@@ -23,7 +23,7 @@ import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
-import com.handy.portal.library.ui.widget.InfiniteScrollListView;
+import com.handy.portal.library.ui.listener.OnScrollToListViewBottomListener;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.PaymentsManager;
@@ -79,6 +79,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
         ButterKnife.bind(this, mFragmentView);
         mFetchErrorText.setText(R.string.request_payments_batches_failed);
         return mFragmentView;
+
     }
 
     @Override
@@ -207,7 +208,9 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
                 showPaymentDetailsForBatch(paymentBatch, isCurrentWeekBatch, paymentBatches.getCashOutInfo());
             }
         });
-        mPaymentsBatchListView.setOnScrollToBottomListener(new InfiniteScrollListView.OnScrollToBottomListener() {
+
+        //fixme test. if works, use plain list view or even recyclerview (if time)
+        mPaymentsBatchListView.setOnScrollListener(new OnScrollToListViewBottomListener() {
             @Override
             public void onScrollToBottom() {
                 if (mPaymentsBatchListView != null) //this is to handle case in which Butterknife.reset(this) makes paymentBatchListView null but this callback still gets called. TODO: need more general solution
@@ -216,6 +219,15 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
                 }
             }
         });
+//        mPaymentsBatchListView.setOnScrollToBottomListener(new InfiniteScrollListView.OnScrollToBottomListener() {
+//            @Override
+//            public void onScrollToBottom() {
+//                if (mPaymentsBatchListView != null) //this is to handle case in which Butterknife.reset(this) makes paymentBatchListView null but this callback still gets called. TODO: need more general solution
+//                {
+//                    requestNextPaymentBatches();
+//                }
+//            }
+//        });
     }
 
     private void onReceivePaymentBatchesSuccess(@NonNull final PaymentBatches paymentBatches) {
