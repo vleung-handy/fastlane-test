@@ -87,8 +87,8 @@ import butterknife.OnClick;
 
 public class ScheduledBookingsFragment extends ActionBarFragment
         implements DatesPagerAdapter.DateSelectedListener {
-    private static final int NUMBER_OF_DAYS_TO_DISPLAY = 28;
     private static final String SOURCE_SCHEDULED_JOBS_LIST = "scheduled_jobs_list";
+    public static final int DEFAULT_NUMBER_OF_DAYS_TO_ENABLE = 28;
 
     @Inject
     BookingManager mBookingManager;
@@ -432,7 +432,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
 
     private void requestBookingsForOtherDays() {
         final List<Date> dates = Lists.newArrayList();
-        for (int i = 0; i < NUMBER_OF_DAYS_TO_DISPLAY; i++) {
+        for (int i = 0; i < getNumberOfDaysToEnable(); i++) {
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(new Date());
             calendar.add(Calendar.DATE, i);
@@ -579,9 +579,13 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     }
 
     private void initDateButtons() {
-        mDatesPagerAdapter = new DatesPagerAdapter(getActivity(), this);
+        mDatesPagerAdapter = new DatesPagerAdapter(getActivity(), getNumberOfDaysToEnable(), this);
         mDatesViewPager.setAdapter(mDatesPagerAdapter);
         mDatesViewPager.addOnPageChangeListener(mDatesPageChangeListener);
+    }
+
+    private int getNumberOfDaysToEnable() {
+        return mConfigManager.getConfigurationResponse().getNumberOfDaysForScheduledJobs();
     }
 
     @Subscribe

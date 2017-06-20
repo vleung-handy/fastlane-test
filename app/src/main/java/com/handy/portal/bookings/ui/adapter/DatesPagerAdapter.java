@@ -17,7 +17,6 @@ import java.util.Locale;
 
 public class DatesPagerAdapter extends PagerAdapter {
     public static final int POSITION_NOT_FOUND = -1;
-    private static final int WEEKS_TOTAL = 5;
     private static final int DAYS_IN_A_WEEK = 7;
     private final List<NewDateButtonGroup> mViews;
     private final DateSelectedListener mDateSelectedListener;
@@ -34,20 +33,51 @@ public class DatesPagerAdapter extends PagerAdapter {
         }
     };
 
-    public DatesPagerAdapter(final Context context, final DateSelectedListener dateSelectedListener) {
+    public DatesPagerAdapter(
+            final Context context,
+            final int numberOfDaysToEnable,
+            final DateSelectedListener dateSelectedListener
+    ) {
         mDateSelectedListener = dateSelectedListener;
         mViews = new ArrayList<>();
         final Calendar calendar = Calendar.getInstance(Locale.US);
         DateTimeUtils.convertToMidnight(calendar);
         calendar.set(Calendar.DAY_OF_WEEK, calendar.getFirstDayOfWeek());
-        for (int i = 0; i < WEEKS_TOTAL; i++) {
+        for (int i = 0; i < getNumberOfWeeksToDisplay(numberOfDaysToEnable); i++) {
             final List<Date> dates = new ArrayList<>(DAYS_IN_A_WEEK);
             for (int j = 0; j < DAYS_IN_A_WEEK; j++) {
                 dates.add(calendar.getTime());
                 calendar.add(Calendar.DATE, 1);
             }
-            mViews.add(new NewDateButtonGroup(context, dates, mDateSelectedListenerWrapper));
+            mViews.add(new NewDateButtonGroup(
+                    context,
+                    dates,
+                    numberOfDaysToEnable,
+                    mDateSelectedListenerWrapper
+            ));
         }
+    }
+
+    private int getNumberOfWeeksToDisplay(final int numberOfDaysToEnable) {
+        // The following code might be confusing to you, but let me explain what it does.
+        // The purpose of this method is to determine how many weeks we need to display given the
+        // number of enabled days, N. Assuming all enabled days are shown in the dates pager and
+        // that N is inclusive and contiguous (e.g. N=2 means today and tomorrow are enabled), we
+        // take the sum of the number of past days in the current week and N, and divide the result
+        // by 7 (which is the number of days in a week).
+        //
+        // For example, on a Wednesday and N=5, the result will be 1.1428571429. If we take the
+        // ceil of that, the result will be 2 weeks which makes sense because we want to display 5
+        // enabled days starting from the current day. In order to do this, we would have display
+        // 2 weeks, show 4 out of 5 enabled days (Wednesday to Saturday) on the first week, and 1
+        // out of 5 enabled days (Sunday) on the second week, with the rest of the days disabled.
+
+        final Calendar today = Calendar.getInstance(Locale.US);
+        today.setTime(new Date());
+        final int numberOfPastDaysInCurrentWeek = today.get(Calendar.DAY_OF_WEEK) - 1;
+        return ((Double) Math.ceil((double)
+                (numberOfPastDaysInCurrentWeek + numberOfDaysToEnable) / DAYS_IN_A_WEEK
+        )).intValue();
     }
 
     @Override
