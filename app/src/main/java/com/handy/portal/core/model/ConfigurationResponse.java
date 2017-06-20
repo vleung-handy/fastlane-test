@@ -24,6 +24,9 @@ public class ConfigurationResponse {
     @SerializedName("number_of_days_for_available_jobs")
     private int mNumberOfDaysForAvailableJobs;
 
+    @SerializedName("number_of_days_for_scheduled_jobs")
+    private int mNumberOfDaysForScheduledJobs;
+
     @SerializedName("show_payment_transactions")
     private boolean mShowBookingTransactionSummary;
 
@@ -124,6 +127,10 @@ public class ConfigurationResponse {
 
     public int getNumberOfDaysForAvailableJobs() {
         return mNumberOfDaysForAvailableJobs;
+    }
+
+    public int getNumberOfDaysForScheduledJobs() {
+        return mNumberOfDaysForScheduledJobs > 0 ? mNumberOfDaysForScheduledJobs : 28;
     }
 
     public String getHelpCenterUrl() {

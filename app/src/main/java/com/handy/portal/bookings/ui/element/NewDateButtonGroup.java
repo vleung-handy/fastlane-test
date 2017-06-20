@@ -24,24 +24,35 @@ public class NewDateButtonGroup extends LinearLayout
     public NewDateButtonGroup(
             final Context context,
             final List<Date> dates,
+            final int numberOfDaysToEnable,
             final DatesPagerAdapter.DateSelectedListener dateSelectedListener
     ) {
         super(context);
         mDateSelectedListener = dateSelectedListener;
         mDateButtons = new LinkedHashMap<>();
-        init(dates);
+        init(dates, numberOfDaysToEnable);
     }
 
-    private void init(final List<Date> dates) {
+    private void init(final List<Date> dates, final int numberOfDaysToEnable) {
         setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT));
         setOrientation(LinearLayout.HORIZONTAL);
         for (final Date date : dates) {
-            final NewDateButton dateButton = new NewDateButton(getContext(), date);
+            final NewDateButton dateButton = new NewDateButton(
+                    getContext(),
+                    date,
+                    isDateEnabled(date, numberOfDaysToEnable)
+            );
             dateButton.setSelectionChangedListener(this);
             mDateButtons.put(date, dateButton);
             addView(dateButton);
         }
+    }
+
+    private boolean isDateEnabled(final Date date, final int numberOfDaysToEnable) {
+        final Date today = DateTimeUtils.getDateWithoutTime(new Date());
+        return !DateTimeUtils.isDaysPast(date)
+                && DateTimeUtils.daysBetween(today, date) < numberOfDaysToEnable;
     }
 
     public NewDateButton getDateButtonForDate(final Date date) {

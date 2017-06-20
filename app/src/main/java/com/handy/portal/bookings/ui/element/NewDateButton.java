@@ -57,12 +57,13 @@ public class NewDateButton extends LinearLayout {
         }
     };
 
-    public NewDateButton(final Context context, final Date date) {
+    public NewDateButton(final Context context, final Date date, final boolean isEnabled) {
         super(context);
         mDate = date;
         final Calendar calendar = Calendar.getInstance();
         calendar.setTime(mDate);
         mDayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
+        mIsEnabled = isEnabled;
         init();
     }
 
@@ -86,19 +87,17 @@ public class NewDateButton extends LinearLayout {
             mMonthText.setText(DateTimeUtils.getMonthShortName(mDate));
         }
         refreshState();
-        if (DateTimeUtils.isDaysPast(mDate)) {
-            mMonthText.setTextColor(mGray);
-            mDayOfMonthText.setTextColor(mGray);
-            mIsEnabled = false;
-        }
-        else {
+        if (mIsEnabled) {
             setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(final View view) {
                     setSelected(true);
                 }
             });
-            mIsEnabled = true;
+        }
+        else {
+            mMonthText.setTextColor(mGray);
+            mDayOfMonthText.setTextColor(mGray);
         }
     }
 
