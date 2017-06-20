@@ -11,12 +11,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
-import com.handy.portal.announcements.model.Announcement;
-import com.handy.portal.announcements.ui.AnnouncementCarouselDialogFragment;
-import com.handy.portal.announcements.AnnouncementEvent;
 import com.handy.portal.announcements.AnnouncementEventListener;
 import com.handy.portal.announcements.AnnouncementsLauncher;
 import com.handy.portal.announcements.AnnouncementsManager;
+import com.handy.portal.announcements.model.Announcement;
+import com.handy.portal.announcements.ui.AnnouncementCarouselDialogFragment;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.manager.AppseeManager;
@@ -60,8 +59,8 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
 
     private AppUpdateEventListener mAppUpdateEventListener;
     private AnnouncementEventListener mAnnouncementEventListener;
-    protected boolean allowCallbacks;
-    private Stack<OnBackPressedListener> onBackPressedListenerStack;
+    private boolean mAllowCallbacks;
+    private Stack<OnBackPressedListener> mOnBackPressedListenerStack;
 
     //According to android docs this is the preferred way of accessing location instead of using LocationManager
     //will also let us do geofencing and reverse address lookup which is nice
@@ -84,7 +83,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
 
     //Public Properties
     public boolean getAllowCallbacks() {
-        return this.allowCallbacks;
+        return this.mAllowCallbacks;
     }
 
     @Override
@@ -120,7 +119,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
 
         mAppUpdateEventListener = new AppUpdateEventListener(this);
         mAnnouncementEventListener = new AnnouncementEventListener(this);
-        onBackPressedListenerStack = new Stack<>();
+        mOnBackPressedListenerStack = new Stack<>();
     }
 
     @Inject
@@ -202,13 +201,13 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
     @Override
     protected void onStart() {
         super.onStart();
-        allowCallbacks = true;
+        mAllowCallbacks = true;
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        allowCallbacks = false;
+        mAllowCallbacks = false;
     }
 
     @Override
@@ -226,8 +225,8 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
 
     @Override
     public void onBackPressed() {
-        if (!onBackPressedListenerStack.isEmpty()) {
-            onBackPressedListenerStack.pop().onBackPressed();
+        if (!mOnBackPressedListenerStack.isEmpty()) {
+            mOnBackPressedListenerStack.pop().onBackPressed();
         }
         else {
             super.onBackPressed();
@@ -249,11 +248,13 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
     }
 
     public void addOnBackPressedListener(final OnBackPressedListener onBackPressedListener) {
-        this.onBackPressedListenerStack.push(onBackPressedListener);
+        if (mOnBackPressedListenerStack != null) {
+            mOnBackPressedListenerStack.push(onBackPressedListener);
+        }
     }
 
     public void clearOnBackPressedListenerStack() {
-        onBackPressedListenerStack.clear();
+        mOnBackPressedListenerStack.clear();
     }
 
     public interface OnBackPressedListener {
