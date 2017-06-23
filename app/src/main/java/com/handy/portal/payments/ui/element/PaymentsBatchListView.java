@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -115,14 +116,21 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
 
     public void appendData(PaymentBatches paymentBatches, Date requestStartDate) {
         getWrappedAdapter().appendData(paymentBatches, requestStartDate);
+        initialRequest = false;
     }
 
     public PaymentBatchListAdapter getWrappedAdapter() {
         return (PaymentBatchListAdapter) getAdapter();
     }
 
+    boolean initialRequest = true;
+
     public boolean shouldRequestMoreData() {
-        return getWrappedAdapter().shouldRequestMoreData();
+
+        //fixme test only remove
+
+        return initialRequest;
+//        return getWrappedAdapter().shouldRequestMoreData();
     }
 
     public boolean isDataEmpty() {
@@ -140,5 +148,10 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
     public void setCashOutButtonClickListener(OnClickListener cashOutButtonClickedListener)
     {
         getWrappedAdapter().setCashOutButtonClickedListener(cashOutButtonClickedListener);
+    }
+
+    public void setDailyCashOutListeners(CompoundButton.OnCheckedChangeListener onCheckedChangeListener,
+                                         OnClickListener onClickListener) {
+        getWrappedAdapter().setDailyCashOutListeners(onCheckedChangeListener, onClickListener);
     }
 }

@@ -52,5 +52,20 @@
     "cash_out_minimum_threshold": 20000,
     "cash_out_threshold_exceeded": false,
     "cash_out_currency_symbol": "$"
+  },
+  "daily_cash_out": {
+    "enabled": true,
+    "help_center_url": "http://www.google.com",
+    "fee": {
+      "currency_symbol": "$",
+      "currency_code": "USD",
+      "amount": 200
+    },
+    "toggle_confirmation_copy": {
+      "title": "Some title",
+      "body": "Body body body",
+      "confirm_button": "Turn On",
+      "cancel_button": "Nevermind"
+    }
   }
 }

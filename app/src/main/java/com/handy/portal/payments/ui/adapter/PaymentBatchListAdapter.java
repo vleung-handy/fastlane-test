@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -62,6 +63,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
     }
 
     public void clear() {
+        mDailyCashOutInfo = null;
         resetMetadata();
         super.clear();
     }
@@ -74,6 +76,11 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
         return nextRequestEndDate;
     }
 
+    private PaymentBatches.DailyCashOutInfo mDailyCashOutInfo;
+
+    public void setDailyCashOutInfo(PaymentBatches.DailyCashOutInfo dailyCashOutInfo) {
+        mDailyCashOutInfo = dailyCashOutInfo;
+    }
     public void appendData(PaymentBatches paymentBatches, Date requestStartDate) //this should also be called if paymentBatch is empty
     {
         addAll(paymentBatches.getAggregateBatchList());
@@ -140,6 +147,15 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
         mCashOutButtonClickedListener = cashOutEnabledClickListener;
     }
 
+    CompoundButton.OnCheckedChangeListener mOnDailyCashOutToggleChangedListener;
+    View.OnClickListener mOnHelpCenterUrlClickedListener;
+
+    public void setDailyCashOutListeners(CompoundButton.OnCheckedChangeListener onCheckedChangeListener,
+                                         View.OnClickListener onHelpCenterUrlClickedListener) {
+        mOnDailyCashOutToggleChangedListener = onCheckedChangeListener;
+        mOnHelpCenterUrlClickedListener = onHelpCenterUrlClickedListener;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v;
@@ -167,6 +183,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
 
             PaymentBatchListHeaderViewModel paymentBatchListHeaderViewModel
                     = new PaymentBatchListHeaderViewModel((NeoPaymentBatch) paymentBatch,
+                    mDailyCashOutInfo,
                     mConfigManager.getConfigurationResponse().isDailyProPaymentsEnabled());
 
             paymentsBatchListHeaderView.updateDisplay(paymentBatchListHeaderViewModel);
@@ -177,6 +194,34 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
                     )));
 
             paymentsBatchListHeaderView.setOnCashOutButtonClickedListener(mCashOutButtonClickedListener);
+            paymentsBatchListHeaderView.setDailyCashOutToggleListeners(
+//                    new CompoundButton.OnCheckedChangeListener() {
+//                        @Override
+//                        public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
+//                            AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+//                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+//                                        @Override
+//                                        public void onClick(final DialogInterface dialog, final int which) {
+//                                            //todo make a server post
+//                                        }
+//                                    })
+//                                    .setNegativeButton("Cancel", null)
+//                                    .setMessage("Some message")
+//                                    .create();
+//                            alertDialog.show();
+//                        }
+//                    },
+                    new CompoundButton.OnCheckedChangeListener() {
+                        @Override
+                        public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
+                            if(mOnDailyCashOutToggleChangedListener != null)
+                            {
+                                mOnDailyCashOutToggleChangedListener.onCheckedChanged(buttonView, isChecked);
+                            }
+                        }
+                    },
+                    mOnHelpCenterUrlClickedListener
+            );
         }
         else {
             if (convertView == null || !(convertView instanceof PaymentsBatchListItemView)) {

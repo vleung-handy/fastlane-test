@@ -2,12 +2,14 @@ package com.handy.portal.payments.viewmodel;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 
 import com.handy.portal.R;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.payments.model.NeoPaymentBatch;
+import com.handy.portal.payments.model.PaymentBatches;
 
 /**
  * ViewModel for {@link com.handy.portal.payments.ui.element.PaymentsBatchListHeaderView}
@@ -15,12 +17,34 @@ import com.handy.portal.payments.model.NeoPaymentBatch;
 public class PaymentBatchListHeaderViewModel {
 
     private final NeoPaymentBatch mNeoPaymentBatch;
+    private final PaymentBatches.DailyCashOutInfo mDailyCashOutInfoInfo;
     private final boolean mShouldShowCashOutButton;
 
     public PaymentBatchListHeaderViewModel(@NonNull NeoPaymentBatch neoPaymentBatch,
+                                           @Nullable PaymentBatches.DailyCashOutInfo dailyCashOutInfoInfo,
                                            boolean canShowCashOutButton) {
         mNeoPaymentBatch = neoPaymentBatch;
+        mDailyCashOutInfoInfo = dailyCashOutInfoInfo;
         mShouldShowCashOutButton = canShowCashOutButton;
+    }
+
+    public boolean shouldShowDailyCashOutToggle() {
+        return mDailyCashOutInfoInfo != null;
+    }
+
+    public boolean isDailyCashOutEnabled() {
+        return mDailyCashOutInfoInfo != null && mDailyCashOutInfoInfo.isEnabled();
+    }
+
+    public String getFormattedDailyCashOutInfoText(@NonNull Context context) {
+        if (mDailyCashOutInfoInfo == null || mDailyCashOutInfoInfo.getCashOutFee().getAmountCents() == null) {
+            return null;
+        }
+        String formattedFee = CurrencyUtils.formatPrice(mDailyCashOutInfoInfo.getCashOutFee().getAmountCents(),
+                mDailyCashOutInfoInfo.getCashOutFee().getCurrencySymbol(),
+                true);
+        return context.getResources().getString(R.string.payment_daily_cash_out_toggle_info_text,
+                formattedFee, mDailyCashOutInfoInfo.getHelpCenterArticleUrl());
     }
 
     public boolean shouldShowCashOutButton() {

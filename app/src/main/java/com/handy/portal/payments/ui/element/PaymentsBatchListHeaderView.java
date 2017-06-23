@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -38,6 +39,9 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
     @BindView(R.id.payments_batch_list_current_week_cash_out_button)
     Button mCashOutButton;
 
+    @BindView(R.id.payments_batch_list_current_week_daily_pro_pay_toggle_container)
+    DailyCashOutToggleView mDailyCashOutToggleView;
+
     public PaymentsBatchListHeaderView(Context context) {
         super(context);
     }
@@ -62,13 +66,35 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
 
         currentWeekRemainingFeesRow.setVisibility(paymentBatchListHeaderViewModel.shouldShowCurrentWeekRemainingFees() ? VISIBLE : GONE);
 
+        updateCashOutButton(paymentBatchListHeaderViewModel);
+        updateDailyCashOutToggle(paymentBatchListHeaderViewModel);
+    }
+
+    private void updateDailyCashOutToggle(@NonNull PaymentBatchListHeaderViewModel paymentBatchListHeaderViewModel) {
+        if (paymentBatchListHeaderViewModel.shouldShowDailyCashOutToggle()) {
+            mDailyCashOutToggleView.setVisibility(VISIBLE);
+            mDailyCashOutToggleView.setToggleChecked(paymentBatchListHeaderViewModel.isDailyCashOutEnabled());
+            mDailyCashOutToggleView.setBodyText(paymentBatchListHeaderViewModel.getFormattedDailyCashOutInfoText(getContext()));
+        }
+        else {
+            mDailyCashOutToggleView.setVisibility(GONE);
+        }
+    }
+
+    private void updateCashOutButton(@NonNull PaymentBatchListHeaderViewModel paymentBatchListHeaderViewModel) {
         PaymentsUtil.CashOut.styleCashOutButtonForApparentEnabledState(mCashOutButton,
                 paymentBatchListHeaderViewModel.shouldApparentlyEnableCashOutButton());
         mCashOutButton.setVisibility(paymentBatchListHeaderViewModel.shouldShowCashOutButton() ? VISIBLE : GONE);
+
     }
 
     public void setOnCashOutButtonClickedListener(OnClickListener onCashOutButtonClickedListener) {
         mCashOutButton.setOnClickListener(onCashOutButtonClickedListener);
+    }
+
+    public void setDailyCashOutToggleListeners(CompoundButton.OnCheckedChangeListener onCheckedChangeListener,
+                                               OnClickListener onHelpCenterUrlClickedListener) {
+        mDailyCashOutToggleView.setClickListeners(onCheckedChangeListener, onHelpCenterUrlClickedListener);
     }
 
 }

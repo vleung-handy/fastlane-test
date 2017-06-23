@@ -1,14 +1,18 @@
 package com.handy.portal.payments.ui.fragment;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -19,6 +23,7 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.ui.activity.FragmentContainerActivity;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
@@ -35,6 +40,7 @@ import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.payments.ui.element.PaymentsBatchListView;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentCashOutDialogFragment;
+import com.handy.portal.webview.PortalWebViewFragment;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -168,7 +174,13 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
                     onReceivePaymentBatchesError(error);
                 }
             };
-            mPaymentsManager.requestPaymentBatches(startDate, endDate, mCurrentPaymentBatchCallback);
+//            mPaymentsManager.requestPaymentBatches(startDate, endDate, mCurrentPaymentBatchCallback);
+
+            //fixme test only remove
+            mPaymentsManager.requestTestPaymentBatches(getContext(),
+                    startDate,
+                    endDate,
+                    mCurrentPaymentBatchCallback);
 
             paymentsBatchListView.showFooter(R.string.loading_more_payments);
         }
@@ -186,6 +198,39 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
         paymentsBatchListView.setCashOutButtonClickListener(onClickListener);
     }
 
+    private void updateDailyCashOutListeners(@Nullable final PaymentBatches.DailyCashOutInfo dailyCashOutInfo) {
+        if (dailyCashOutInfo == null) {
+            paymentsBatchListView.setDailyCashOutListeners(null, null);
+            return;
+        }
+        paymentsBatchListView.setDailyCashOutListeners(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
+                //fixme dont wnat to toggle until confirmed; is there a different callback we can use?
+                PaymentBatches.DailyCashOutInfo.ToggleConfirmationCopy confirmationDialog
+                        = dailyCashOutInfo.getToggleConfirmationCopy();
+                //todo for testing only
+                AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                        .setPositiveButton(confirmationDialog.getConfirmButtonText(), new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(final DialogInterface dialog, final int which) {
+                                //todo make a server post
+                            }
+                        })
+                        .setNegativeButton(confirmationDialog.getCancelButtonText(), null)
+                        .setMessage(confirmationDialog.getBodyText())
+                        .setTitle(confirmationDialog.getTitleText())
+                        .create();
+                alertDialog.show();
+            }
+        }, new View.OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                onHelpCenterUrlLinkClicked(dailyCashOutInfo.getHelpCenterArticleUrl());
+            }
+        });
+    }
+
     public void onInitialPaymentBatchReceived(final PaymentBatches paymentBatches, Date requestStartDate) //should only be called once in this instance. should never be empty
     {
         //reset payment batch list view and its adapter
@@ -199,12 +244,14 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
             showToast(R.string.an_error_has_occurred);
             return;
         }
+        paymentsBatchListView.getWrappedAdapter().setDailyCashOutInfo(paymentBatches.getDailyCashOutInfo());
         paymentsBatchListView.appendData(paymentBatches, requestStartDate);
 
         NeoPaymentBatch currentWeekBatch = paymentsBatchListView.getWrappedAdapter().getCurrentWeekBatch();
 
         updateCashOutButtonClickListener(paymentBatches.getOneTimeCashOutInfo(),
                 currentWeekBatch != null && currentWeekBatch.isCashOutEnabled());
+        updateDailyCashOutListeners(paymentBatches.getDailyCashOutInfo());
 
         //updating with data from payment batches
         paymentsBatchListView.setOnDataItemClickListener(new PaymentsBatchListView.OnDataItemClickListener() {
@@ -298,5 +345,15 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
     public void onCashOutSuccess(@NonNull final String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         requestInitialPaymentsInfo();
+    }
+
+    private void onHelpCenterUrlLinkClicked(@NonNull String helpUrl) {
+        Bundle arguments = PortalWebViewFragment.createBundle(helpUrl, getString(R.string.help));
+        Intent webviewIntent = FragmentContainerActivity.getIntent(
+                getContext(),
+                PortalWebViewFragment.class,
+                arguments
+        );
+        startActivity(webviewIntent);
     }
 }
