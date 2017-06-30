@@ -34,7 +34,7 @@ import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.RequestCode;
 import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout;
@@ -64,6 +64,8 @@ public class ProRequestedJobsFragment extends InjectedFragment {
     BookingManager mBookingManager;
     @Inject
     AvailabilityManager mAvailabilityManager;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.fragment_pro_requested_jobs_recycler_view)
     RecyclerView mRequestedJobsRecyclerView;
@@ -190,8 +192,8 @@ public class ProRequestedJobsFragment extends InjectedFragment {
         arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
         arguments.putString(BundleKeys.EVENT_CONTEXT, EventContext.REQUESTED_JOBS);
         bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.Clicked(booking)));
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.JOB_DETAILS, arguments,
-                TransitionStyle.JOB_LIST_TO_DETAILS, true));
+        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.JOB_DETAILS, arguments,
+                TransitionStyle.JOB_LIST_TO_DETAILS, true);
     }
 
     @Override

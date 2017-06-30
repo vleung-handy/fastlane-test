@@ -27,7 +27,7 @@ import com.handy.portal.bookings.ui.element.CustomerRequestsView;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.core.ui.fragment.TimerActionBarFragment;
 import com.handy.portal.library.util.DateTimeUtils;
@@ -64,6 +64,8 @@ public class InProgressBookingFragment extends TimerActionBarFragment {
 
     @Inject
     PrefsManager mPrefsManager;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.in_progress_booking_no_show_banner_text)
     View mNoShowBannerView;
@@ -216,7 +218,8 @@ public class InProgressBookingFragment extends TimerActionBarFragment {
         args.putString(BundleKeys.BOOKING_SOURCE, mSource);
         args.putBoolean(BundleKeys.BOOKING_SHOULD_HIDE_ACTION_BUTTONS, true);
 
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.NOT_IN_PROGRESS_JOB_DETAILS, args, true));
+        mNavigationManager.navigateToPage(getFragmentManager(),
+                MainViewPage.NOT_IN_PROGRESS_JOB_DETAILS, args, null, true);
     }
 
     @OnClick(R.id.in_progress_booking_action_button)
@@ -225,7 +228,8 @@ public class InProgressBookingFragment extends TimerActionBarFragment {
         if (proReportedNoShow || mBooking.isAnyPreferenceChecked()) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(BundleKeys.BOOKING, mBooking);
-            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SEND_RECEIPT_CHECKOUT, bundle, true));
+            mNavigationManager.navigateToPage(getFragmentManager(),
+                    MainViewPage.SEND_RECEIPT_CHECKOUT, bundle, null, true);
             bus.post(new LogEvent.AddLogEvent(new JobsLog(
                     EventType.CONTINUE_TO_CHECKOUT_SELECTED,
                     EventContext.SCHEDULED_JOBS,

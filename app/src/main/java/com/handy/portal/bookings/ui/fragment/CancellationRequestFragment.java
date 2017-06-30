@@ -20,7 +20,7 @@ import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.PrefsKey;
 import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.util.CurrencyUtils;
@@ -42,6 +42,8 @@ public class CancellationRequestFragment extends ActionBarFragment {
     PrefsManager mPrefsManager;
     @Inject
     BookingManager mBookingManager;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.cancellation_address)
     TextView mAddressTextView;
@@ -150,7 +152,8 @@ public class CancellationRequestFragment extends ActionBarFragment {
             Bundle arguments = new Bundle();
             arguments.putLong(BundleKeys.DATE_EPOCH_TIME, event.booking.getStartDate().getTime());
             //Return to available jobs on that day
-            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SCHEDULED_JOBS, arguments, transitionStyle));
+            mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.SCHEDULED_JOBS,
+                    arguments, transitionStyle, false);
         }
     }
 

@@ -130,7 +130,8 @@ public final class NotificationsFragment extends ActionBarFragment {
     private void triggerMessageAction(final NotificationAction notificationAction) {
         final String deeplinkUriString = notificationAction.getDeeplink();
         if (deeplinkUriString != null) {
-            mPageNavigationManager.handleDeeplinkUrl(DeeplinkLog.Source.NOTIFICATION_FEED, deeplinkUriString);
+            mPageNavigationManager.handleDeeplinkUrl(
+                    getFragmentManager(), DeeplinkLog.Source.NOTIFICATION_FEED, deeplinkUriString);
         }
     }
 

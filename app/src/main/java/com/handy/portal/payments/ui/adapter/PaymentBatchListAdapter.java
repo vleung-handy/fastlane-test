@@ -2,6 +2,7 @@ package com.handy.portal.payments.ui.adapter;
 
 import android.content.Context;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,8 +11,8 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.core.constant.MainViewPage;
-import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.LogEvent;
@@ -36,6 +37,8 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
 {
     @Inject
     EventBus mBus;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @Inject
     ConfigManager mConfigManager;
@@ -135,8 +138,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
      * the cash out dialog fragment needs to be launched by a fragment
      * so that callbacks can be properly handled
      */
-    public void setCashOutButtonClickedListener(View.OnClickListener cashOutEnabledClickListener)
-    {
+    public void setCashOutButtonClickedListener(View.OnClickListener cashOutEnabledClickListener) {
         mCashOutButtonClickedListener = cashOutEnabledClickListener;
     }
 
@@ -153,7 +155,11 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
                 v.findViewById(R.id.payments_current_week_remaining_fees_row).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
-                        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.OUTSTANDING_FEES, true));
+                        if (getContext() instanceof AppCompatActivity) {
+                            mNavigationManager.navigateToPage(
+                                    ((AppCompatActivity) getContext()).getSupportFragmentManager(),
+                                    MainViewPage.OUTSTANDING_FEES, null, null, false);
+                        }
                         mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.FeeDetailSelected()));
                     }
                 });
@@ -174,7 +180,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
             mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.PageShown(
                     paymentBatchListHeaderViewModel.shouldShowCashOutButton(),
                     paymentBatchListHeaderViewModel.shouldApparentlyEnableCashOutButton()
-                    )));
+            )));
 
             paymentsBatchListHeaderView.setOnCashOutButtonClickedListener(mCashOutButtonClickedListener);
         }
@@ -192,24 +198,19 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
         return v;
     }
 
-    public int getViewTypeForPosition(int position)
-    {
-        if(position == VIEW_POSITION_CURRENT_WEEK_BATCH
-                && getItem(position) instanceof NeoPaymentBatch)
-        {
+    public int getViewTypeForPosition(int position) {
+        if (position == VIEW_POSITION_CURRENT_WEEK_BATCH
+                && getItem(position) instanceof NeoPaymentBatch) {
             return VIEW_TYPE_CURRENT_WEEK_BATCH;
         }
         return VIEW_TYPE_PAST_BATCH;
     }
 
     @Nullable
-    public NeoPaymentBatch getCurrentWeekBatch()
-    {
-        if(getDataItemsCount() > VIEW_POSITION_CURRENT_WEEK_BATCH)
-        {
+    public NeoPaymentBatch getCurrentWeekBatch() {
+        if (getDataItemsCount() > VIEW_POSITION_CURRENT_WEEK_BATCH) {
             PaymentBatch paymentBatch = getDataItem(VIEW_POSITION_CURRENT_WEEK_BATCH);
-            if(paymentBatch instanceof NeoPaymentBatch)
-            {
+            if (paymentBatch instanceof NeoPaymentBatch) {
                 return (NeoPaymentBatch) paymentBatch;
             }
         }

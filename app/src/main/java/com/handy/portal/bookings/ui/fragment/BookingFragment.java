@@ -41,9 +41,10 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.PrefsKey;
 import com.handy.portal.core.constant.RequestCode;
+import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.AppseeManager;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.core.model.Address;
 import com.handy.portal.core.ui.element.bookings.BookingMapProvider;
@@ -97,6 +98,8 @@ public class BookingFragment extends TimerActionBarFragment {
     LocationManager mLocationManager;
     @Inject
     BookingManager mBookingManager;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.booking_details_display_message_layout)
     BookingDetailsProRequestInfoView mBookingDetailsProRequestInfoView;
@@ -670,7 +673,8 @@ public class BookingFragment extends TimerActionBarFragment {
                     public void onClick(final View v) {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(BundleKeys.BOOKING, mBooking);
-                        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SEND_RECEIPT_CHECKOUT, bundle, true));
+                        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.SEND_RECEIPT_CHECKOUT,
+                                bundle, TransitionStyle.NATIVE_TO_NATIVE, true);
                     }
                 });
                 initHelperText(action);

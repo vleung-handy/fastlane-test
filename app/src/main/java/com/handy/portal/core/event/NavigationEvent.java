@@ -1,7 +1,6 @@
 package com.handy.portal.core.event;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
@@ -9,59 +8,6 @@ import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.TransitionStyle;
 
 public abstract class NavigationEvent extends HandyEvent {
-    public static class NavigateToPage extends NavigationEvent {
-        public final MainViewPage targetPage;
-        public final boolean addToBackStack;
-        @NonNull
-        public final Bundle arguments;
-        public final TransitionStyle transitionStyle;
-        private Fragment mReturnFragment;
-        private int mActivityRequestCode;
-
-        public NavigateToPage(MainViewPage targetPage) {
-            this(targetPage, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, false);
-        }
-
-        public NavigateToPage(MainViewPage targetPage, boolean addToBackStack) {
-            this(targetPage, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, addToBackStack);
-        }
-
-        public NavigateToPage(MainViewPage targetPage, Bundle arguments) {
-            this(targetPage, arguments, TransitionStyle.NATIVE_TO_NATIVE, false);
-        }
-
-        public NavigateToPage(MainViewPage targetPage, Bundle arguments, boolean addToBackStack) {
-            this(targetPage, arguments, TransitionStyle.NATIVE_TO_NATIVE, addToBackStack);
-        }
-
-        public NavigateToPage(MainViewPage targetPage, Bundle arguments, TransitionStyle transitionStyle) {
-            this(targetPage, arguments, transitionStyle, false);
-        }
-
-        public NavigateToPage(MainViewPage targetPage, @Nullable Bundle arguments, TransitionStyle transitionStyle, boolean addToBackStack) {
-            this.targetPage = targetPage;
-            this.addToBackStack = addToBackStack;
-            this.arguments = (arguments != null) ? arguments : new Bundle();
-            this.transitionStyle = transitionStyle;
-        }
-
-        public void setReturnFragment(@Nullable final Fragment returnFragment,
-                                      final int requestCode) {
-            mReturnFragment = returnFragment;
-            mActivityRequestCode = requestCode;
-        }
-
-        @Nullable
-        public Fragment getReturnFragment() {
-            return mReturnFragment;
-        }
-
-        public int getActivityRequestCode() {
-            return mActivityRequestCode;
-        }
-    }
-
-
     public static class SwapFragmentEvent extends NavigationEvent {
         public MainViewPage targetPage;
         public Bundle arguments;

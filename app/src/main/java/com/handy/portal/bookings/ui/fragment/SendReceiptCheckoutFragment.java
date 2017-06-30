@@ -25,8 +25,8 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.core.model.LocationData;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
@@ -61,6 +61,8 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     LocationManager mLocationManager;
     @Inject
     BookingManager mBookingManager;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.started_time_text)
     TextView mStartTimeText;
@@ -286,7 +288,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
         //Return to available jobs on that day
-        bus.post(new NavigationEvent.NavigateToPage(targetPage, arguments, transitionStyle));
+        mNavigationManager.navigateToPage(getFragmentManager(), targetPage, arguments, transitionStyle, false);
     }
 
     private LocationData getLocationData() {

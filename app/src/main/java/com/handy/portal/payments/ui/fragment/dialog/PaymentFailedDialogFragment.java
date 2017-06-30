@@ -9,7 +9,7 @@ import android.widget.Button;
 import com.handy.portal.R;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.TransitionStyle;
-import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.library.ui.fragment.dialog.PopupDialogFragment;
 
 import org.greenrobot.eventbus.EventBus;
@@ -33,6 +33,8 @@ public class PaymentFailedDialogFragment extends PopupDialogFragment {
 
     @Inject
     EventBus mBus;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     public static PaymentFailedDialogFragment newInstance() {
         return new PaymentFailedDialogFragment();
@@ -49,13 +51,8 @@ public class PaymentFailedDialogFragment extends PopupDialogFragment {
         mUpdateNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBus.post(
-                        new NavigationEvent.NavigateToPage(
-                                MainViewPage.SELECT_PAYMENT_METHOD,
-                                new Bundle(),
-                                TransitionStyle.REFRESH_PAGE,
-                                true
-                        ));
+                mNavigationManager.navigateToPage(getFragmentManager(),
+                        MainViewPage.SELECT_PAYMENT_METHOD, null, TransitionStyle.REFRESH_PAGE, true);
                 PaymentFailedDialogFragment.this.dismiss();
             }
         });

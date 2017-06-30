@@ -10,7 +10,7 @@ import com.handy.portal.R;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.payments.PaymentEvent;
@@ -22,11 +22,16 @@ import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
+import javax.inject.Inject;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
 public class OutstandingFeesFragment extends ActionBarFragment {
+    @Inject
+    PageNavigationManager mNavigationManager;
+
     @BindView(R.id.fetch_error_view)
     ViewGroup mFetchErrorView;
     @BindView(R.id.fetch_error_text)
@@ -114,9 +119,8 @@ public class OutstandingFeesFragment extends ActionBarFragment {
                         Bundle arguments = new Bundle();
                         arguments.putString(BundleKeys.BOOKING_ID, payment.getBookingId());
                         arguments.putString(BundleKeys.BOOKING_TYPE, payment.getBookingType());
-                        NavigationEvent.NavigateToPage event =
-                                new NavigationEvent.NavigateToPage(MainViewPage.JOB_PAYMENT_DETAILS, arguments, true);
-                        bus.post(event);
+                        mNavigationManager.navigateToPage(getFragmentManager(),
+                                MainViewPage.JOB_PAYMENT_DETAILS, arguments, null, true);
                     }
                 });
                 mOutstandingFeeBreakdownLayout.addView(paymentFeeBreakdownView);

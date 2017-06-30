@@ -23,10 +23,10 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.event.ProfileEvent;
 import com.handy.portal.core.manager.AppseeManager;
 import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.model.ProviderProfile;
@@ -60,6 +60,8 @@ public class AccountSettingsFragment extends ActionBarFragment {
     BookingManager mBookingManager;
     @Inject
     LayerHelper mLayerHelper;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.provider_name_text)
     TextView mProviderNameText;
@@ -125,20 +127,21 @@ public class AccountSettingsFragment extends ActionBarFragment {
     @OnClick(R.id.contact_info_layout)
     public void switchToProfile() {
         bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileSelected()));
-        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_UPDATE, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
+        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.PROFILE_UPDATE,
+                null, TransitionStyle.NATIVE_TO_NATIVE, true);
     }
 
     @OnClick(R.id.edit_payment_option)
     public void switchToPayments() {
-        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
+        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.SELECT_PAYMENT_METHOD,
+                null, TransitionStyle.NATIVE_TO_NATIVE, true);
     }
 
     @OnClick(R.id.order_resupply_layout)
     public void getResupplyKit() {
         mBus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitSelected()));
-
-        mBus.post(new NavigationEvent.NavigateToPage(
-                MainViewPage.REQUEST_SUPPLIES, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, true));
+        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.REQUEST_SUPPLIES,
+                null, TransitionStyle.NATIVE_TO_NATIVE, true);
     }
 
 
@@ -207,7 +210,8 @@ public class AccountSettingsFragment extends ActionBarFragment {
 
     @OnClick(R.id.software_licenses_text)
     public void showSoftwareLicenses() {
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SOFTWARE_LICENSES, true));
+        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.SOFTWARE_LICENSES,
+                null, TransitionStyle.NATIVE_TO_NATIVE, true);
     }
 
     @Subscribe
@@ -245,7 +249,8 @@ public class AccountSettingsFragment extends ActionBarFragment {
     @Subscribe
     public void onSendIncomeVerificationSuccess(HandyEvent.ReceiveSendIncomeVerificationSuccess event) {
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.ACCOUNT_SETTINGS, null, TransitionStyle.SEND_VERIFICAITON_SUCCESS));
+        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.ACCOUNT_SETTINGS,
+                null, TransitionStyle.SEND_VERIFICAITON_SUCCESS, false);
     }
 
     @Subscribe
@@ -259,8 +264,7 @@ public class AccountSettingsFragment extends ActionBarFragment {
         if (mProviderProfile.getProviderPersonalInfo() != null) {
             mProviderNameText.setText(mProviderProfile.getProviderPersonalInfo().getFullName());
         }
-        if (mConfigManager.getConfigurationResponse() != null &&
-                mConfigManager.getConfigurationResponse().isBoxedSuppliesEnabled()) {
+        if (mConfigManager.getConfigurationResponse().isBoxedSuppliesEnabled()) {
             mOrderResupplyLayout.setVisibility(View.VISIBLE);
         }
     }

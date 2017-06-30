@@ -28,9 +28,10 @@ import com.handy.portal.bookings.ui.fragment.dialog.JobAccessUnlockedDialogFragm
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.PrefsKey;
+import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.event.ProviderSettingsEvent;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.core.ui.activity.MainActivity;
 import com.handy.portal.deeplink.DeeplinkUtils;
@@ -68,6 +69,8 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
 
     @Inject
     BookingModalsManager mBookingModalsManager;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     private boolean mFastForwardToFirst;
     private Date mFirstAvailableDate;
@@ -174,7 +177,8 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     private void goToHelpCenter(final String helpCenterRedirectPath) {
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, helpCenterRedirectPath);
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.HELP_WEBVIEW, arguments, true));
+        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.HELP_WEBVIEW,
+                arguments, TransitionStyle.NATIVE_TO_NATIVE, true);
     }
 
     @Override

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -14,7 +15,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
-import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.dashboard.model.ProviderFeedback;
 import com.handy.portal.library.ui.view.YoutubeImagePlaceholderView;
 import com.handy.portal.library.ui.widget.BulletTextView;
@@ -33,6 +34,8 @@ import butterknife.ButterKnife;
 public class DashboardFeedbackView extends FrameLayout implements View.OnClickListener {
     @Inject
     EventBus mBus;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.dashboard_feedback_title)
     TextView mTitle;
@@ -104,6 +107,9 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
         bundle.putString(BundleKeys.YOUTUBE_VIDEO_ID, view.getID());
 
         mBus.post(new LogEvent.AddLogEvent(new FeedbackLog.VideoSelected(view.getSection())));
-        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.YOUTUBE_PLAYER, bundle));
+        if (getContext() instanceof AppCompatActivity) {
+            mNavigationManager.navigateToPage(((AppCompatActivity) getContext()).getSupportFragmentManager(),
+                    MainViewPage.YOUTUBE_PLAYER, bundle, null, false);
+        }
     }
 }

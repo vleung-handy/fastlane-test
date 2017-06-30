@@ -13,8 +13,8 @@ import com.handy.portal.R;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.event.ProviderDashboardEvent;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.model.ProviderProfile;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
@@ -36,9 +36,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.handy.portal.core.constant.TransitionStyle.NATIVE_TO_NATIVE;
+
 public class RatingsAndFeedbackFragment extends ActionBarFragment {
     @Inject
     ProviderManager mProviderManager;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.dashboard_layout)
     ViewGroup mDashboardLayout;
@@ -204,6 +208,7 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment {
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
 
         bus.post(new LogEvent.AddLogEvent(new PerformanceLog.FeedbackSelected()));
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.DASHBOARD_FEEDBACK, arguments, true));
+        mNavigationManager.navigateToPage(
+                getFragmentManager(), MainViewPage.DASHBOARD_FEEDBACK, arguments, NATIVE_TO_NATIVE, true);
     }
 }

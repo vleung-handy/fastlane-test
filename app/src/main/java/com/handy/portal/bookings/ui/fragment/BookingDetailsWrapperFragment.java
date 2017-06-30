@@ -40,7 +40,7 @@ import com.handy.portal.core.constant.SupportActionType;
 import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.constant.WarningButtonsText;
 import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.core.ui.activity.MainActivity;
 import com.handy.portal.core.ui.element.SupportActionContainerView;
@@ -78,6 +78,8 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     LocationManager mLocationManager;
     @Inject
     BookingManager mBookingManager;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.booking_details_slide_up_panel_container)
     SlideUpPanelLayout mSlideUpPanelContainer;
@@ -486,7 +488,7 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         if (additionalArguments != null) {
             arguments.putAll(additionalArguments);
         }
-        bus.post(new NavigationEvent.NavigateToPage(targetPage, arguments, transitionStyle));
+        mNavigationManager.navigateToPage(getFragmentManager(), targetPage, arguments, transitionStyle, false);
     }
 
     private void handleBookingDetailsError(String errorMessage) {
@@ -525,7 +527,8 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 .setPositiveButton(option1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.SCHEDULED_JOBS, arguments, TransitionStyle.REFRESH_PAGE));
+                        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.SCHEDULED_JOBS,
+                                arguments, TransitionStyle.REFRESH_PAGE, false);
                     }
                 });
 
@@ -665,14 +668,16 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     private void goToHelpCenter(final Booking.Action action) {
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, action.getHelpRedirectPath());
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.HELP_WEBVIEW, arguments, true));
+        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.HELP_WEBVIEW,
+                arguments, TransitionStyle.NATIVE_TO_NATIVE, true);
     }
 
     private void unassignJob(@NonNull Booking.Action removeAction) {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING, mBooking);
         arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.CANCELLATION_REQUEST, arguments));
+        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.CANCELLATION_REQUEST,
+                arguments, TransitionStyle.NATIVE_TO_NATIVE, false);
     }
 
     private void removeJob(@NonNull Booking.Action removeAction) {

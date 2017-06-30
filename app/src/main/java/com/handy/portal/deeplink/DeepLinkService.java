@@ -8,6 +8,7 @@ import android.os.Bundle;
 import com.handy.portal.bookings.model.Booking.BookingType;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.logger.handylogger.model.EventContext;
@@ -57,8 +58,9 @@ public class DeepLinkService extends IntentService {
 
         switch (path) {
             case URI_PATH_AVAILABLE_JOBS: {
-                NavigationEvent.NavigateToPage navigateToPage = new NavigationEvent.NavigateToPage(MainViewPage.AVAILABLE_JOBS);
-                bus.post(navigateToPage);
+                NavigationEvent.SwapFragmentEvent swapFragmentEvent = new NavigationEvent.SwapFragmentEvent(
+                        MainViewPage.AVAILABLE_JOBS, new Bundle(), TransitionStyle.NATIVE_TO_NATIVE, false);
+                bus.post(swapFragmentEvent);
             }
             break;
 
@@ -68,8 +70,9 @@ public class DeepLinkService extends IntentService {
                 bundle.putString(BundleKeys.BOOKING_ID, bookingId);
                 bundle.putString(BundleKeys.BOOKING_TYPE, BookingType.BOOKING.toString());
                 bundle.putString(BundleKeys.EVENT_CONTEXT, EventContext.DEEPLINK);
-                NavigationEvent.NavigateToPage navigateToPage = new NavigationEvent.NavigateToPage(MainViewPage.JOB_DETAILS, bundle, true);
-                bus.post(navigateToPage);
+                NavigationEvent.SwapFragmentEvent swapFragmentEvent = new NavigationEvent.SwapFragmentEvent(
+                        MainViewPage.JOB_DETAILS, bundle, TransitionStyle.NATIVE_TO_NATIVE, true);
+                bus.post(swapFragmentEvent);
             }
             break;
         }

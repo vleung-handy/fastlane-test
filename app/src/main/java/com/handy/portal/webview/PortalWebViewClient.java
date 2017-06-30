@@ -41,7 +41,7 @@ public class PortalWebViewClient extends WebViewClient {
 
     @Override
     public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        mPageNavigationManager.handleDeeplinkUrl(DeeplinkLog.Source.WEBVIEW, url);
+        mPageNavigationManager.handleDeeplinkUrl(parentFragment.getFragmentManager(), DeeplinkLog.Source.WEBVIEW, url);
 
         // To prevent a bug in webkit where it redirects to a url ending with /undefined
         if (url.substring(Math.max(0, url.length() - 10)).equals("/undefined")) {

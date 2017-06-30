@@ -20,7 +20,7 @@ import com.handy.portal.availability.viewmodel.WeeklyPagerAdapter;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.util.DateTimeUtils;
@@ -46,6 +46,8 @@ public class EditWeeklyAdhocAvailableHoursFragment extends EditWeeklyAvailableHo
 
     @Inject
     AvailabilityManager mAvailabilityManager;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.available_hours_tab_layout)
     TabLayout mTabLayout;
@@ -88,9 +90,8 @@ public class EditWeeklyAdhocAvailableHoursFragment extends EditWeeklyAvailableHo
             bundle.putSerializable(BundleKeys.MODE, EditAvailableHoursFragment.Mode.ADHOC);
             bundle.putSerializable(BundleKeys.DATE, date);
             bundle.putSerializable(BundleKeys.TIMELINE, mAvailabilityManager.getTimelineForDate(date));
-            final NavigationEvent.NavigateToPage navigationEvent =
-                    new NavigationEvent.NavigateToPage(MainViewPage.EDIT_AVAILABLE_HOURS, bundle, true);
-            bus.post(navigationEvent);
+            mNavigationManager.navigateToPage(getFragmentManager(),
+                    MainViewPage.EDIT_AVAILABLE_HOURS, bundle, null, true);
         }
     };
 

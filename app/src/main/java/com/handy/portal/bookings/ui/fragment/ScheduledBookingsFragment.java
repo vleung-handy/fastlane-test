@@ -51,9 +51,9 @@ import com.handy.portal.core.constant.PrefsKey;
 import com.handy.portal.core.constant.RequestCode;
 import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.event.ProviderSettingsEvent;
 import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.core.ui.activity.MainActivity;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
@@ -98,6 +98,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     ConfigManager mConfigManager;
     @Inject
     AvailabilityManager mAvailabilityManager;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.bookings_content)
     LinearLayout mContent;
@@ -370,15 +372,14 @@ public class ScheduledBookingsFragment extends ActionBarFragment
                 DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(mSelectedDay))));
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.FLOW_CONTEXT, EventContext.AVAILABILITY);
-        final NavigationEvent.NavigateToPage navigationEvent =
-                new NavigationEvent.NavigateToPage(
-                        mConfigManager.getConfigurationResponse().isTemplateAvailabilityEnabled()
-                                ? MainViewPage.EDIT_WEEKLY_TEMPLATE_AVAILABLE_HOURS
-                                : MainViewPage.EDIT_WEEKLY_ADHOC_AVAILABLE_HOURS,
-                        arguments,
-                        true
-                );
-        bus.post(navigationEvent);
+        mNavigationManager.navigateToPage(
+                getFragmentManager(),
+                mConfigManager.getConfigurationResponse().isTemplateAvailabilityEnabled() ?
+                        MainViewPage.EDIT_WEEKLY_TEMPLATE_AVAILABLE_HOURS :
+                        MainViewPage.EDIT_WEEKLY_ADHOC_AVAILABLE_HOURS,
+                arguments,
+                TransitionStyle.NATIVE_TO_NATIVE,
+                true);
     }
 
     @Override
@@ -764,9 +765,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         bundle.putSerializable(BundleKeys.DATE, mSelectedDay);
         bundle.putSerializable(BundleKeys.TIMELINE,
                 mAvailabilityManager.getTimelineForDate(mSelectedDay));
-        final NavigationEvent.NavigateToPage navigationEvent =
-                new NavigationEvent.NavigateToPage(MainViewPage.EDIT_AVAILABLE_HOURS, bundle, true);
-        bus.post(navigationEvent);
+        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.EDIT_AVAILABLE_HOURS,
+                bundle, TransitionStyle.NATIVE_TO_NATIVE, true);
     }
 
     @Override
@@ -802,8 +802,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         arguments.putString(BundleKeys.BOOKING_SOURCE, SOURCE_SCHEDULED_JOBS_LIST);
         arguments.putString(BundleKeys.EVENT_CONTEXT, EventContext.SCHEDULED_JOBS);
         arguments.putSerializable(BundleKeys.PAGE, getAppPage());
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.JOB_DETAILS, arguments,
-                TransitionStyle.JOB_LIST_TO_DETAILS, true));
+        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.JOB_DETAILS, arguments,
+                TransitionStyle.JOB_LIST_TO_DETAILS, true);
     }
 
     private void requestClaimJob(final Booking booking) {

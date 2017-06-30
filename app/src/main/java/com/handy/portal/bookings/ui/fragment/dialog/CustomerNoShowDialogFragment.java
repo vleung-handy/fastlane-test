@@ -17,7 +17,8 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
-import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.constant.TransitionStyle;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.helpcenter.constants.HelpCenterConstants;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.library.ui.widget.BulletListItem;
@@ -40,6 +41,8 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment {
 
     @Inject
     EventBus mBus;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     private Booking mBooking;
 
@@ -126,7 +129,8 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment {
     private void showCustomerNoShowPolicyWebView() {
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, HelpCenterConstants.CUSTOMER_NO_SHOW_POLICY_PATH);
-        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.HELP_WEBVIEW, arguments, true));
+        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.HELP_WEBVIEW,
+                arguments, TransitionStyle.NATIVE_TO_NATIVE, true);
     }
 
     @OnClick(R.id.fragment_dialog_customer_no_show_complete_report_button)
