@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -92,9 +91,9 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
         mCashOutButton.setOnClickListener(onCashOutButtonClickedListener);
     }
 
-    public void setDailyCashOutToggleListeners(CompoundButton.OnCheckedChangeListener onCheckedChangeListener,
+    public void setDailyCashOutToggleListeners(OnTouchListener onToggleTouchListener,
                                                OnClickListener onHelpCenterUrlClickedListener) {
-        mDailyCashOutToggleView.setClickListeners(onCheckedChangeListener, onHelpCenterUrlClickedListener);
+        mDailyCashOutToggleView.setClickListeners(onToggleTouchListener, onHelpCenterUrlClickedListener);
     }
 
 }

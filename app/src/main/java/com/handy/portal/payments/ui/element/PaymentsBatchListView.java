@@ -7,7 +7,6 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -150,8 +149,8 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
         getWrappedAdapter().setCashOutButtonClickedListener(cashOutButtonClickedListener);
     }
 
-    public void setDailyCashOutListeners(CompoundButton.OnCheckedChangeListener onCheckedChangeListener,
+    public void setDailyCashOutListeners(OnTouchListener onToggleTouchListener,
                                          OnClickListener onClickListener) {
-        getWrappedAdapter().setDailyCashOutListeners(onCheckedChangeListener, onClickListener);
+        getWrappedAdapter().setDailyCashOutListeners(onToggleTouchListener, onClickListener);
     }
 }

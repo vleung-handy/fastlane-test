@@ -10,9 +10,9 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CompoundButton;
 import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +23,7 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.model.SuccessWrapper;
 import com.handy.portal.core.ui.activity.FragmentContainerActivity;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.data.DataManager;
@@ -34,6 +35,7 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsUtil;
+import com.handy.portal.payments.model.DailyCashOutRequest;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
@@ -203,30 +205,46 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
             paymentsBatchListView.setDailyCashOutListeners(null, null);
             return;
         }
-        paymentsBatchListView.setDailyCashOutListeners(new CompoundButton.OnCheckedChangeListener() {
+        final PaymentBatches.DailyCashOutInfo.ToggleConfirmationCopy
+                confirmationCopy = dailyCashOutInfo.getToggleConfirmationCopy();
+        paymentsBatchListView.setDailyCashOutListeners(new View.OnTouchListener() {
             @Override
-            public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
-                //fixme dont wnat to toggle until confirmed; is there a different callback we can use?
-                PaymentBatches.DailyCashOutInfo.ToggleConfirmationCopy confirmationDialog
-                        = dailyCashOutInfo.getToggleConfirmationCopy();
-                //todo for testing only
-                AlertDialog alertDialog = new AlertDialog.Builder(getContext())
-                        .setPositiveButton(confirmationDialog.getConfirmButtonText(), new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(final DialogInterface dialog, final int which) {
-                                //todo make a server post
-                            }
-                        })
-                        .setNegativeButton(confirmationDialog.getCancelButtonText(), null)
-                        .setMessage(confirmationDialog.getBodyText())
-                        .setTitle(confirmationDialog.getTitleText())
-                        .create();
-                alertDialog.show();
+            public boolean onTouch(final View v, final MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP) {
+                    AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                            .setPositiveButton(confirmationCopy.getConfirmButtonText(), new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(final DialogInterface dialog, final int which) {
+                                    //TODO make server post
+                                }
+                            })
+                            .setNegativeButton(confirmationCopy.getCancelButtonText(), null)
+                            .setMessage(confirmationCopy.getBodyText())
+                            .setTitle(confirmationCopy.getTitleText())
+                            .create();
+                    alertDialog.show();
+                }
+                return true;
             }
         }, new View.OnClickListener() {
             @Override
             public void onClick(final View v) {
                 onHelpCenterUrlLinkClicked(dailyCashOutInfo.getHelpCenterArticleUrl());
+            }
+        });
+    }
+
+    private void requestDailyCashOut(@NonNull final DailyCashOutRequest dailyCashOutRequest) {
+        mPaymentsManager.requestDailyCashOut(dailyCashOutRequest, new FragmentSafeCallback<SuccessWrapper>(this) {
+            @Override
+            public void onCallbackSuccess(final SuccessWrapper response) {
+                //update the toggle
+
+            }
+
+            @Override
+            public void onCallbackError(final DataManager.DataManagerError error) {
+
             }
         });
     }

@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -147,12 +146,12 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
         mCashOutButtonClickedListener = cashOutEnabledClickListener;
     }
 
-    CompoundButton.OnCheckedChangeListener mOnDailyCashOutToggleChangedListener;
+    View.OnTouchListener mOnToggleTouchListener;
     View.OnClickListener mOnHelpCenterUrlClickedListener;
 
-    public void setDailyCashOutListeners(CompoundButton.OnCheckedChangeListener onCheckedChangeListener,
+    public void setDailyCashOutListeners(View.OnTouchListener onToggleTouchListener,
                                          View.OnClickListener onHelpCenterUrlClickedListener) {
-        mOnDailyCashOutToggleChangedListener = onCheckedChangeListener;
+        mOnToggleTouchListener = onToggleTouchListener;
         mOnHelpCenterUrlClickedListener = onHelpCenterUrlClickedListener;
     }
 
@@ -195,31 +194,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
 
             paymentsBatchListHeaderView.setOnCashOutButtonClickedListener(mCashOutButtonClickedListener);
             paymentsBatchListHeaderView.setDailyCashOutToggleListeners(
-//                    new CompoundButton.OnCheckedChangeListener() {
-//                        @Override
-//                        public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
-//                            AlertDialog alertDialog = new AlertDialog.Builder(getContext())
-//                                    .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-//                                        @Override
-//                                        public void onClick(final DialogInterface dialog, final int which) {
-//                                            //todo make a server post
-//                                        }
-//                                    })
-//                                    .setNegativeButton("Cancel", null)
-//                                    .setMessage("Some message")
-//                                    .create();
-//                            alertDialog.show();
-//                        }
-//                    },
-                    new CompoundButton.OnCheckedChangeListener() {
-                        @Override
-                        public void onCheckedChanged(final CompoundButton buttonView, final boolean isChecked) {
-                            if(mOnDailyCashOutToggleChangedListener != null)
-                            {
-                                mOnDailyCashOutToggleChangedListener.onCheckedChanged(buttonView, isChecked);
-                            }
-                        }
-                    },
+                    mOnToggleTouchListener,
                     mOnHelpCenterUrlClickedListener
             );
         }
