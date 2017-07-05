@@ -19,6 +19,7 @@ import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
+import com.handy.portal.payments.ui.element.DailyCashOutToggleView;
 import com.handy.portal.payments.ui.element.PaymentsBatchListHeaderView;
 import com.handy.portal.payments.ui.element.PaymentsBatchListItemView;
 import com.handy.portal.payments.viewmodel.PaymentBatchListHeaderViewModel;
@@ -45,6 +46,8 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
     public static final int DAYS_TO_REQUEST_PER_BATCH = 28;
     private Date nextRequestEndDate;
     private View.OnClickListener mCashOutButtonClickedListener;
+    private DailyCashOutToggleView.OnToggleClickedListener mOnToggleClickedListener;
+    private View.OnClickListener mOnHelpCenterUrlClickedListener;
 
     public static final int VIEW_TYPE_CURRENT_WEEK_BATCH = 0;
     public static final int VIEW_TYPE_PAST_BATCH = 1;
@@ -64,6 +67,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
     }
 
     public void clear() {
+        mDailyCashOutInfo = null;
         resetMetadata();
         super.clear();
     }
@@ -76,6 +80,11 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
         return nextRequestEndDate;
     }
 
+    private PaymentBatches.DailyCashOutInfo mDailyCashOutInfo;
+
+    public void setDailyCashOutInfo(PaymentBatches.DailyCashOutInfo dailyCashOutInfo) {
+        mDailyCashOutInfo = dailyCashOutInfo;
+    }
     public void appendData(PaymentBatches paymentBatches, Date requestStartDate) //this should also be called if paymentBatch is empty
     {
         addAll(paymentBatches.getAggregateBatchList());
@@ -141,6 +150,12 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
         mCashOutButtonClickedListener = cashOutEnabledClickListener;
     }
 
+    public void setDailyCashOutListeners(DailyCashOutToggleView.OnToggleClickedListener onToggleClickedListener,
+                                         View.OnClickListener onHelpCenterUrlClickedListener) {
+        mOnToggleClickedListener = onToggleClickedListener;
+        mOnHelpCenterUrlClickedListener = onHelpCenterUrlClickedListener;
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         View v;
@@ -150,7 +165,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
         int viewType = getViewTypeForPosition(position);
         if (viewType == VIEW_TYPE_CURRENT_WEEK_BATCH) {
             if (convertView == null || !(convertView instanceof PaymentsBatchListHeaderView)) {
-                v = inflater.inflate(R.layout.element_payments_batch_list_current_week_header, parent, false);
+                v = new PaymentsBatchListHeaderView(getContext());
                 v.findViewById(R.id.payments_current_week_remaining_fees_row).setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(final View v) {
@@ -172,6 +187,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
 
             PaymentBatchListHeaderViewModel paymentBatchListHeaderViewModel
                     = new PaymentBatchListHeaderViewModel((NeoPaymentBatch) paymentBatch,
+                    mDailyCashOutInfo,
                     mConfigManager.getConfigurationResponse().isAdhocCashOutEnabled());
 
             paymentsBatchListHeaderView.updateDisplay(paymentBatchListHeaderViewModel);
@@ -182,6 +198,10 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
             ));
 
             paymentsBatchListHeaderView.setOnCashOutButtonClickedListener(mCashOutButtonClickedListener);
+            paymentsBatchListHeaderView.setDailyCashOutListeners(
+                    mOnToggleClickedListener,
+                    mOnHelpCenterUrlClickedListener
+            );
         }
         else {
             if (convertView == null || !(convertView instanceof PaymentsBatchListItemView)) {
