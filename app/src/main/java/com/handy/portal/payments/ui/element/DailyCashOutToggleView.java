@@ -12,6 +12,7 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
+import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
@@ -28,6 +29,8 @@ public class DailyCashOutToggleView extends FrameLayout {
 
     @BindView(R.id.payments_daily_cash_out_toggle_info_text)
     TextView mDailyCashOutInfoText;
+
+    private OnClickListener mOnHelpCenterUrlClickedListener;
 
     public DailyCashOutToggleView(final Context context) {
         super(context);
@@ -61,7 +64,6 @@ public class DailyCashOutToggleView extends FrameLayout {
         mDailyCashOutToggle.setChecked(checked);
     }
 
-    OnClickListener mOnHelpCenterUrlClickedListener;
     public void setBodyText(@Nullable String text) {
         mDailyCashOutInfoText.setText(TextUtils.Support.fromHtml(text));
         mDailyCashOutInfoText.setMovementMethod(new LinkMovementMethod() {
@@ -87,7 +89,6 @@ public class DailyCashOutToggleView extends FrameLayout {
                         if (mOnHelpCenterUrlClickedListener != null) {
                             mOnHelpCenterUrlClickedListener.onClick(widget);
                         }
-//                        onBankHelpButtonClicked(paymentCashOutInfo.getHelpCenterArticleUrl());
                         return true;
                     }
                 }
@@ -100,32 +101,23 @@ public class DailyCashOutToggleView extends FrameLayout {
         mDailyCashOutToggle.setChecked(dailyCashOutInfo.isEnabled());
     }
 
-    public void setClickListeners(OnTouchListener toggleOnTouchListener,
-                                  OnClickListener helpCenterUrlClickedListener) {
-        //FIXME remove, test only
-//        mDailyCashOutToggle.setOnTouchListener(new OnTouchListener() {
-//            @Override
-//            public boolean onTouch(final View v, final MotionEvent event) {
-//                if(event.getAction() == MotionEvent.ACTION_UP)
-//                {
-//                    AlertDialog alertDialog = new AlertDialog.Builder(getContext())
-//                            .setPositiveButton("yes", new DialogInterface.OnClickListener() {
-//                                @Override
-//                                public void onClick(final DialogInterface dialog, final int which) {
-//                                    Toast.makeText(getContext(), "checked: " + mDailyCashOutToggle.isChecked(), Toast.LENGTH_SHORT).show();
-//                                }
-//                            })
-//                            .setNegativeButton("no", null)
-//                            .setMessage("Some message")
-//                            .setTitle("on touch")
-//                            .create();
-//                    alertDialog.show();
-//                }
-//                return true;
-//            }
-//        });
-        mDailyCashOutToggle.setOnTouchListener(toggleOnTouchListener);
+    public void setClickListeners(@Nullable final OnToggleClickedListener onToggleClickedListener,
+                                  @Nullable OnClickListener helpCenterUrlClickedListener) {
+        mDailyCashOutToggle.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(final View v, final MotionEvent event) {
+                if (event.getAction() == MotionEvent.ACTION_UP
+                        && onToggleClickedListener != null) {
+                    onToggleClickedListener.onToggleClicked(mDailyCashOutToggle);
+                }
+                return true;
+            }
+        });
         mOnHelpCenterUrlClickedListener = helpCenterUrlClickedListener;
 
+    }
+
+    public interface OnToggleClickedListener {
+        void onToggleClicked(@NonNull SwitchCompat toggleView);
     }
 }

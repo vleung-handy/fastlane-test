@@ -109,7 +109,8 @@ public class PaymentsManager {
     public void requestDailyCashOut(
             @NonNull DailyCashOutRequest dailyCashOutRequest,
             @NonNull final DataManager.Callback<SuccessWrapper> callback) {
-        mDataManager.requestDailyCashOut(dailyCashOutRequest, callback);
+//        mDataManager.requestDailyCashOut(dailyCashOutRequest, callback);
+        callback.onSuccess(new SuccessWrapper(true));//todo remove, test only
     }
     //fixme test only remove
     public void requestTestPaymentBatches(

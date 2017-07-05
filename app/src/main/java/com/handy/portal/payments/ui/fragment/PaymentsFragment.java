@@ -6,11 +6,11 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ScrollView;
@@ -23,6 +23,7 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.model.SuccessWrapper;
 import com.handy.portal.core.ui.activity.FragmentContainerActivity;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
@@ -40,6 +41,7 @@ import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
+import com.handy.portal.payments.ui.element.DailyCashOutToggleView;
 import com.handy.portal.payments.ui.element.PaymentsBatchListView;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentCashOutDialogFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
@@ -61,6 +63,9 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
 
     @Inject
     PaymentsManager mPaymentsManager;
+
+    @Inject
+    ProviderManager mProviderManager;
 
     //TODO: investigate using @Produce and make manager handle more of this logic
     @BindView(R.id.slide_up_panel_container)
@@ -202,44 +207,49 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
 
     private void updateDailyCashOutListeners(@Nullable final PaymentBatches.DailyCashOutInfo dailyCashOutInfo) {
         if (dailyCashOutInfo == null) {
-            paymentsBatchListView.setDailyCashOutListeners(null, null);
+            paymentsBatchListView.getWrappedAdapter().setDailyCashOutListeners(null, null);
             return;
         }
         final PaymentBatches.DailyCashOutInfo.ToggleConfirmationCopy
                 confirmationCopy = dailyCashOutInfo.getToggleConfirmationCopy();
-        paymentsBatchListView.setDailyCashOutListeners(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(final View v, final MotionEvent event) {
-                if (event.getAction() == MotionEvent.ACTION_UP) {
-                    AlertDialog alertDialog = new AlertDialog.Builder(getContext())
-                            .setPositiveButton(confirmationCopy.getConfirmButtonText(), new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(final DialogInterface dialog, final int which) {
-                                    //TODO make server post
-                                }
-                            })
-                            .setNegativeButton(confirmationCopy.getCancelButtonText(), null)
-                            .setMessage(confirmationCopy.getBodyText())
-                            .setTitle(confirmationCopy.getTitleText())
-                            .create();
-                    alertDialog.show();
+        paymentsBatchListView.getWrappedAdapter().setDailyCashOutListeners(
+                new DailyCashOutToggleView.OnToggleClickedListener() {
+                    @Override
+                    public void onToggleClicked(@NonNull final SwitchCompat toggleView) {
+                        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                                .setPositiveButton(confirmationCopy.getConfirmButtonText(), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(final DialogInterface dialog, final int which) {
+                                        DailyCashOutRequest dailyCashOutRequest =
+                                                new DailyCashOutRequest(
+                                                        mProviderManager.getLastProviderId(),
+                                                        !toggleView.isChecked());
+                                        requestDailyCashOut(dailyCashOutRequest, toggleView);
+                                    }
+                                })
+                                .setNegativeButton(confirmationCopy.getCancelButtonText(), null)
+                                .setMessage(confirmationCopy.getBodyText())
+                                .setTitle(confirmationCopy.getTitleText())
+                                .create();
+                        alertDialog.show();
+
+                    }
+                }, new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        onHelpCenterUrlLinkClicked(dailyCashOutInfo.getHelpCenterArticleUrl());
+                    }
                 }
-                return true;
-            }
-        }, new View.OnClickListener() {
-            @Override
-            public void onClick(final View v) {
-                onHelpCenterUrlLinkClicked(dailyCashOutInfo.getHelpCenterArticleUrl());
-            }
-        });
+        );
     }
 
-    private void requestDailyCashOut(@NonNull final DailyCashOutRequest dailyCashOutRequest) {
+    private void requestDailyCashOut(@NonNull final DailyCashOutRequest dailyCashOutRequest,
+                                     @NonNull final SwitchCompat toggleView) {
         mPaymentsManager.requestDailyCashOut(dailyCashOutRequest, new FragmentSafeCallback<SuccessWrapper>(this) {
             @Override
             public void onCallbackSuccess(final SuccessWrapper response) {
                 //update the toggle
-
+                toggleView.setChecked(dailyCashOutRequest.isDailyCashOutEnabled());
             }
 
             @Override

@@ -20,4 +20,8 @@ public class DailyCashOutRequest {
         mUserId = userId;
         mDailyCashOutEnabled = dailyCashOutEnabled;
     }
+
+    public boolean isDailyCashOutEnabled() {
+        return mDailyCashOutEnabled;
+    }
 }

@@ -1,11 +1,14 @@
 package com.handy.portal.payments.ui.element;
 
 import android.content.Context;
+import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
@@ -15,7 +18,7 @@ import com.handy.portal.payments.viewmodel.PaymentBatchListHeaderViewModel;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we can make this more linked with the batch adapter data
+public class PaymentsBatchListHeaderView extends FrameLayout //TODO: see if we can make this more linked with the batch adapter data
 {
     @BindView(R.id.payments_current_week_date_range_text)
     TextView currentWeekDateRangeText;
@@ -41,17 +44,29 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
     @BindView(R.id.payments_batch_list_current_week_daily_pro_pay_toggle_container)
     DailyCashOutToggleView mDailyCashOutToggleView;
 
-    public PaymentsBatchListHeaderView(Context context) {
+    public PaymentsBatchListHeaderView(final Context context) {
         super(context);
+        init();
     }
 
-    public PaymentsBatchListHeaderView(Context context, AttributeSet attributeSet) {
-        super(context, attributeSet);
+    public PaymentsBatchListHeaderView(final Context context, @Nullable final AttributeSet attrs) {
+        super(context, attrs);
+        init();
     }
 
-    @Override
-    protected void onFinishInflate() {
-        super.onFinishInflate();
+    public PaymentsBatchListHeaderView(final Context context, @Nullable final AttributeSet attrs, final int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init();
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+    public PaymentsBatchListHeaderView(final Context context, final AttributeSet attrs, final int defStyleAttr, final int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init();
+    }
+
+    private void init() {
+        inflate(getContext(), R.layout.element_payments_batch_list_current_week_header, this);
         ButterKnife.bind(this);
     }
 
@@ -91,9 +106,8 @@ public class PaymentsBatchListHeaderView extends LinearLayout //TODO: see if we 
         mCashOutButton.setOnClickListener(onCashOutButtonClickedListener);
     }
 
-    public void setDailyCashOutToggleListeners(OnTouchListener onToggleTouchListener,
-                                               OnClickListener onHelpCenterUrlClickedListener) {
-        mDailyCashOutToggleView.setClickListeners(onToggleTouchListener, onHelpCenterUrlClickedListener);
+    public void setDailyCashOutListeners(DailyCashOutToggleView.OnToggleClickedListener onToggleClickedListener,
+                                         OnClickListener onHelpCenterUrlClickListener) {
+        mDailyCashOutToggleView.setClickListeners(onToggleClickedListener, onHelpCenterUrlClickListener);
     }
-
 }

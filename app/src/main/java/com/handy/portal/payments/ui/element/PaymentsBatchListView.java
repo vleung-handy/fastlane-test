@@ -148,9 +148,4 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
     {
         getWrappedAdapter().setCashOutButtonClickedListener(cashOutButtonClickedListener);
     }
-
-    public void setDailyCashOutListeners(OnTouchListener onToggleTouchListener,
-                                         OnClickListener onClickListener) {
-        getWrappedAdapter().setDailyCashOutListeners(onToggleTouchListener, onClickListener);
-    }
 }
