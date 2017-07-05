@@ -26,7 +26,7 @@ import org.junit.Test;
 import org.mockito.Answers;
 import org.mockito.Mock;
 import org.robolectric.Robolectric;
-import org.robolectric.util.ActivityController;
+import org.robolectric.android.controller.ActivityController;
 
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.MatcherAssert.assertThat;
