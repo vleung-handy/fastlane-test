@@ -18,6 +18,7 @@ import com.handy.portal.payments.model.PaymentGroup;
 import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.model.PaymentReviewResponse;
 import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
+import com.handy.portal.payments.model.DailyCashOutRequest;
 import com.stripe.android.model.Token;
 
 import org.greenrobot.eventbus.EventBus;
@@ -97,6 +98,12 @@ public class PaymentsManager {
             @NonNull PaymentCashOutRequest paymentCashOutRequest,
             @NonNull final DataManager.Callback<SuccessWrapper> callback) {
         mDataManager.requestPaymentCashOut(paymentCashOutRequest, callback);
+    }
+
+    public void requestDailyCashOut(
+            @NonNull DailyCashOutRequest dailyCashOutRequest,
+            @NonNull final DataManager.Callback<SuccessWrapper> callback) {
+        mDataManager.requestDailyCashOut(dailyCashOutRequest, callback);
     }
 
     public void requestPaymentBatches(@NonNull final Date startDate,

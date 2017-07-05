@@ -15,12 +15,23 @@ public class PaymentBatches implements Serializable {
     @SerializedName("legacy_payments_batches")
     private LegacyPaymentBatch[] legacyPaymentsBatchBatches;
 
+    /**
+     * acknowledged that this key name is confusing, but it is too late to rename now
+     */
     @SerializedName("cash_out")
-    private CashOutInfo mCashOutInfo;
+    private OneTimeCashOutInfo mOneTimeCashOutInfo;
+
+    @SerializedName("daily_cash_out")
+    private DailyCashOutInfo mDailyCashOutInfo;
 
     @Nullable
-    public CashOutInfo getCashOutInfo() {
-        return mCashOutInfo;
+    public DailyCashOutInfo getDailyCashOutInfo() {
+        return mDailyCashOutInfo;
+    }
+
+    @Nullable
+    public OneTimeCashOutInfo getOneTimeCashOutInfo() {
+        return mOneTimeCashOutInfo;
     }
 
     public NeoPaymentBatch[] getNeoPaymentBatches() {
@@ -53,7 +64,10 @@ public class PaymentBatches implements Serializable {
 
     }
 
-    public static class CashOutInfo implements Serializable
+    /**
+     * used to render UI for the "cash out now" feature
+     */
+    public static class OneTimeCashOutInfo implements Serializable
     {
         @SerializedName("cash_out_minimum_threshold")
         private Integer mCashOutMinimumThresholdCents;
@@ -77,6 +91,81 @@ public class PaymentBatches implements Serializable {
         @Nullable
         public Integer getCashOutMinimumThresholdCents() {
             return mCashOutMinimumThresholdCents;
+        }
+    }
+
+
+    /**
+     * used to render UI related to the daily cash out feature,
+     * including the toggle and confirmation screen.
+     * <p>
+     * we will never support any frequency besides daily.
+     */
+    public static class DailyCashOutInfo implements Serializable {
+        @SerializedName("enabled")
+        private boolean mEnabled;
+        /**
+         * the fee charged per cash out
+         */
+        @SerializedName("fee")
+        private PaymentAmount mCashOutFee;
+        @SerializedName("help_center_url")
+        private String mHelpCenterArticleUrl;
+        @SerializedName("toggle_confirmation_copy")
+        private ToggleConfirmationCopy mToggleConfirmationCopy;
+
+        public boolean isEnabled() {
+            return mEnabled;
+        }
+
+        @NonNull
+        public PaymentAmount getCashOutFee() {
+            return mCashOutFee;
+        }
+
+        @NonNull
+        public ToggleConfirmationCopy getToggleConfirmationCopy() {
+            return mToggleConfirmationCopy;
+        }
+
+        @NonNull
+        public String getHelpCenterArticleUrl() {
+            return mHelpCenterArticleUrl;
+        }
+
+
+        public static class ToggleConfirmationCopy implements Serializable {
+            @SerializedName("title")
+            private String mTitleText;
+
+            @SerializedName("body")
+            private String mBodyText;
+
+            @SerializedName("confirm_button")
+            private String mConfirmButtonText;
+
+            @SerializedName("cancel_button")
+            private String mCancelButtonText;
+
+            @NonNull
+            public String getTitleText() {
+                return mTitleText;
+            }
+
+            @NonNull
+            public String getBodyText() {
+                return mBodyText;
+            }
+
+            @NonNull
+            public String getConfirmButtonText() {
+                return mConfirmButtonText;
+            }
+
+            @NonNull
+            public String getCancelButtonText() {
+                return mCancelButtonText;
+            }
         }
     }
 }

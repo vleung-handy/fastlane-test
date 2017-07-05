@@ -177,11 +177,11 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
         }
     }
 
-    private void updateCashOutButtonClickListener(@Nullable PaymentBatches.CashOutInfo cashOutInfo, boolean isCashOutEnabled) {
+    private void updateCashOutButtonClickListener(@Nullable PaymentBatches.OneTimeCashOutInfo oneTimeCashOutInfo, boolean isCashOutEnabled) {
         View.OnClickListener onClickListener = PaymentsUtil.CashOut.createCashOutButtonClickListener(
                 this,
                 isCashOutEnabled,
-                cashOutInfo,
+                oneTimeCashOutInfo,
                 bus);
         paymentsBatchListView.setCashOutButtonClickListener(onClickListener);
     }
@@ -203,14 +203,14 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
 
         NeoPaymentBatch currentWeekBatch = paymentsBatchListView.getWrappedAdapter().getCurrentWeekBatch();
 
-        updateCashOutButtonClickListener(paymentBatches.getCashOutInfo(),
+        updateCashOutButtonClickListener(paymentBatches.getOneTimeCashOutInfo(),
                 currentWeekBatch != null && currentWeekBatch.isCashOutEnabled());
 
         //updating with data from payment batches
         paymentsBatchListView.setOnDataItemClickListener(new PaymentsBatchListView.OnDataItemClickListener() {
             @Override
             public void onDataItemClicked(PaymentBatch paymentBatch, boolean isCurrentWeekBatch) {
-                showPaymentDetailsForBatch(paymentBatch, isCurrentWeekBatch, paymentBatches.getCashOutInfo());
+                showPaymentDetailsForBatch(paymentBatch, isCurrentWeekBatch, paymentBatches.getOneTimeCashOutInfo());
             }
         });
         paymentsBatchListView.setOnScrollToBottomListener(new InfiniteScrollListView.OnScrollToBottomListener() {
@@ -226,11 +226,11 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
 
     public void showPaymentDetailsForBatch(@NonNull PaymentBatch paymentBatch,
                                            boolean isCurrentWeekBatch,
-                                           @Nullable PaymentBatches.CashOutInfo cashOutInfo) {
+                                           @Nullable PaymentBatches.OneTimeCashOutInfo oneTimeCashOutInfo) {
         if (paymentBatch instanceof NeoPaymentBatch) {
             Bundle arguments = PaymentsDetailFragment.createBundle((NeoPaymentBatch) paymentBatch,
                     isCurrentWeekBatch,
-                    cashOutInfo);
+                    oneTimeCashOutInfo);
             bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PAYMENTS_DETAIL, arguments, true));
         }
     }
