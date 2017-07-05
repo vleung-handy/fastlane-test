@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -225,7 +226,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
                                                 new DailyCashOutRequest(
                                                         mProviderManager.getLastProviderId(),
                                                         !toggleView.isChecked());
-                                        requestDailyCashOut(dailyCashOutRequest, toggleView);
+                                        requestDailyCashOut(dailyCashOutRequest);
                                     }
                                 })
                                 .setNegativeButton(confirmationCopy.getCancelButtonText(), null)
@@ -233,6 +234,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
                                 .setTitle(confirmationCopy.getTitleText())
                                 .create();
                         alertDialog.show();
+                        //can only update buttons after show() is called
                         alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
                                 ContextCompat.getColor(getContext(), R.color.handy_tertiary_gray));
                         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(
@@ -248,18 +250,24 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
         );
     }
 
-    private void requestDailyCashOut(@NonNull final DailyCashOutRequest dailyCashOutRequest,
-                                     @NonNull final SwitchCompat toggleView) {
+    private void requestDailyCashOut(@NonNull final DailyCashOutRequest dailyCashOutRequest) {
+        showProgressSpinner();
         mPaymentsManager.requestDailyCashOut(dailyCashOutRequest, new FragmentSafeCallback<SuccessWrapper>(this) {
             @Override
             public void onCallbackSuccess(final SuccessWrapper response) {
-                //update the toggle
-                toggleView.setChecked(dailyCashOutRequest.isDailyCashOutEnabled());
+                hideProgressSpinner();
+                if (!TextUtils.isEmpty(response.getMessage())) {
+                    Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                if (response.getSuccess() != null && response.getSuccess()) {
+                    requestInitialPaymentsInfo();
+                }
             }
 
             @Override
             public void onCallbackError(final DataManager.DataManagerError error) {
-
+                hideProgressSpinner();
+                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }

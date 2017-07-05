@@ -230,6 +230,7 @@
         android:id="@+id/payments_batch_list_current_week_daily_pro_pay_toggle_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clickable="true"
         tools:visibility="visible"
         android:visibility="gone"
         />

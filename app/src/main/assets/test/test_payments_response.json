@@ -54,7 +54,7 @@
     "cash_out_currency_symbol": "$"
   },
   "daily_cash_out": {
-    "enabled": true,
+    "enabled": false,
     "help_center_url": "http://www.google.com",
     "fee": {
       "currency_symbol": "$",
@@ -62,8 +62,8 @@
       "amount": 200
     },
     "toggle_confirmation_copy": {
-      "title": "Some title",
-      "body": "Body body body",
+      "title": "Turn on Daily Cash Out",
+      "body": "A cash out fee of $2.00 will be applied daily. The fee only applies to days with earnings.\n\nYour earnings will be sent automatically every midnight. It may take up to 3 business days to appear in your account, depending on your bank.",
       "confirm_button": "Turn On",
       "cancel_button": "Nevermind"
     }

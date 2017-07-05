@@ -95,6 +95,7 @@ public class DailyCashOutToggleView extends FrameLayout {
                 return false;
             }
         });
+        TextUtils.stripUnderlines(mDailyCashOutInfoText);
     }
 
     public void setModel(@NonNull PaymentBatches.DailyCashOutInfo dailyCashOutInfo) {
