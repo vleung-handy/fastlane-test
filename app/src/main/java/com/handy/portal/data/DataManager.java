@@ -47,6 +47,7 @@ import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.model.PaymentReviewResponse;
 import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
 import com.handy.portal.payments.model.StripeTokenResponse;
+import com.handy.portal.payments.model.DailyCashOutRequest;
 import com.handy.portal.retrofit.DynamicEndpoint;
 import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
@@ -314,6 +315,11 @@ public class DataManager {
     public void requestPaymentCashOut(final PaymentCashOutRequest paymentCashOutRequest,
                                       final Callback<SuccessWrapper> cb) {
         mService.requestPaymentCashOut(paymentCashOutRequest, new SuccessWrapperRetroFitCallback(cb));
+    }
+
+    public void requestDailyCashOut(final DailyCashOutRequest dailyCashOutRequest,
+                                    final Callback<SuccessWrapper> cb) {
+        mService.requestDailyCashOut(dailyCashOutRequest, new SuccessWrapperRetroFitCallback(cb));
     }
 
     public void getPaymentFlow(String providerId, final Callback<PaymentFlow> cb) {

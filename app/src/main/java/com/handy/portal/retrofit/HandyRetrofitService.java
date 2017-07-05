@@ -11,6 +11,7 @@ import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.payments.model.BatchPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingPaymentReviewRequest;
 import com.handy.portal.payments.model.PaymentCashOutRequest;
+import com.handy.portal.payments.model.DailyCashOutRequest;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -134,6 +135,9 @@ public interface HandyRetrofitService {
 
     @POST(PAYMENTS_PATH + "cash_out")
     void requestPaymentCashOut(@Body PaymentCashOutRequest paymentCashOutRequest, HandyRetrofitCallback cb);
+
+    @POST(PAYMENTS_PATH + "daily_cash_out")
+    void requestDailyCashOut(@Body DailyCashOutRequest dailyCashOutRequest, HandyRetrofitCallback cb);
 
     @GET(PAYMENTS_PATH)
     void getPaymentBatches(@Query("date_range_start") Date startDate,

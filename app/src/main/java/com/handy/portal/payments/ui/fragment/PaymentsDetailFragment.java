@@ -69,7 +69,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     /**
      * used to determine what happens when the cash out button is clicked
      */
-    private PaymentBatches.CashOutInfo mCashOutInfo;
+    private PaymentBatches.OneTimeCashOutInfo mOneTimeCashOutInfo;
     private View mFragmentView;
 
     @Inject
@@ -88,11 +88,11 @@ public final class PaymentsDetailFragment extends ActionBarFragment
 
     public static Bundle createBundle(@NonNull NeoPaymentBatch neoPaymentBatch,
                                       boolean isCurrentWeekPaymentBatch,
-                                      @Nullable PaymentBatches.CashOutInfo cashOutInfo) {
+                                      @Nullable PaymentBatches.OneTimeCashOutInfo oneTimeCashOutInfo) {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PAYMENT_BATCH, neoPaymentBatch);
         arguments.putBoolean(BundleKeys.IS_CURRENT_WEEK_PAYMENT_BATCH, isCurrentWeekPaymentBatch);
-        arguments.putSerializable(BundleKeys.PAYMENT_CASH_OUT_INFO, cashOutInfo);
+        arguments.putSerializable(BundleKeys.PAYMENT_CASH_OUT_INFO, oneTimeCashOutInfo);
         return arguments;
     }
 
@@ -103,7 +103,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         if (getArguments() != null) {
             mNeoPaymentBatch = (NeoPaymentBatch) getArguments().getSerializable(BundleKeys.PAYMENT_BATCH);
             mIsCurrentWeekPaymentBatch = getArguments().getBoolean(BundleKeys.IS_CURRENT_WEEK_PAYMENT_BATCH, false);
-            mCashOutInfo = (PaymentBatches.CashOutInfo) getArguments().getSerializable(BundleKeys.PAYMENT_CASH_OUT_INFO);
+            mOneTimeCashOutInfo = (PaymentBatches.OneTimeCashOutInfo) getArguments().getSerializable(BundleKeys.PAYMENT_CASH_OUT_INFO);
         }
         else {
             Crashlytics.logException(new Exception("Null arguments for class " + this.getClass().getName()));
@@ -169,7 +169,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
                     PaymentsUtil.CashOut.createCashOutButtonClickListener(
                             this,
                             mNeoPaymentBatch.isCashOutEnabled(),
-                            mCashOutInfo,
+                            mOneTimeCashOutInfo,
                             bus
                     );
             paymentDetailExpandableListView.getHeaderView()

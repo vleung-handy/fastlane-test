@@ -40,7 +40,7 @@ public abstract class PaymentsUtil {
     public abstract static class CashOut {
         /**
          * @param callbackFragment the callback fragment that should be used to launch another fragment if necessary
-         * @param cashOutInfo
+         * @param oneTimeCashOutInfo
          * @param logEventBus      for logging purposes only
          * @return a click listener that shows one of the following:
          * - dialog fragment
@@ -50,7 +50,7 @@ public abstract class PaymentsUtil {
         public static View.OnClickListener createCashOutButtonClickListener(
                 @NonNull final Fragment callbackFragment,
                 boolean cashOutEnabled,
-                @Nullable PaymentBatches.CashOutInfo cashOutInfo,
+                @Nullable PaymentBatches.OneTimeCashOutInfo oneTimeCashOutInfo,
                 @NonNull final EventBus logEventBus) {
             final Context context = callbackFragment.getContext();
             View.OnClickListener cashOutButtonClickedListener;
@@ -72,10 +72,10 @@ public abstract class PaymentsUtil {
                         };
             }
             else {
-                if (cashOutInfo == null
-                        || cashOutInfo.getCashOutThresholdExceeded() == null
-                        || cashOutInfo.getCashOutMinimumThresholdCents() == null
-                        || cashOutInfo.getCashOutThresholdExceeded()) {
+                if (oneTimeCashOutInfo == null
+                        || oneTimeCashOutInfo.getCashOutThresholdExceeded() == null
+                        || oneTimeCashOutInfo.getCashOutMinimumThresholdCents() == null
+                        || oneTimeCashOutInfo.getCashOutThresholdExceeded()) {
                     cashOutButtonClickedListener = new View.OnClickListener() {
                         @Override
                         public void onClick(final View v) {
@@ -88,8 +88,8 @@ public abstract class PaymentsUtil {
                 else {
                     final String cashOutThresholdFormatted =
                             CurrencyUtils.formatPrice(
-                                    cashOutInfo.getCashOutMinimumThresholdCents(),
-                                    cashOutInfo.getCashOutCurrencySymbol(),
+                                    oneTimeCashOutInfo.getCashOutMinimumThresholdCents(),
+                                    oneTimeCashOutInfo.getCashOutCurrencySymbol(),
                                     false);
 
                     cashOutButtonClickedListener = new View.OnClickListener() {
