@@ -115,14 +115,21 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
 
     public void appendData(PaymentBatches paymentBatches, Date requestStartDate) {
         getWrappedAdapter().appendData(paymentBatches, requestStartDate);
+        initialRequest = false;
     }
 
     public PaymentBatchListAdapter getWrappedAdapter() {
         return (PaymentBatchListAdapter) getAdapter();
     }
 
+    boolean initialRequest = true;
+
     public boolean shouldRequestMoreData() {
-        return getWrappedAdapter().shouldRequestMoreData();
+
+        //fixme test only remove
+
+        return initialRequest;
+//        return getWrappedAdapter().shouldRequestMoreData();
     }
 
     public boolean isDataEmpty() {

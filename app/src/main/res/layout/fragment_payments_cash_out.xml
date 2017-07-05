@@ -152,16 +152,34 @@
                                 android:weightSum="2"
                                 >
 
-                                <TextView
+                                <LinearLayout
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:layout_gravity="center|start"
+                                    android:orientation="vertical"
                                     android:layout_weight="1"
-                                    android:text="@string/expected_payment"
-                                    android:textColor="@color/black"
-                                    android:textSize="@dimen/default_text_size"
-                                    />
 
+                                    >
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center|start"
+                                        android:text="@string/total_payment"
+                                        android:textColor="@color/black"
+                                        android:textSize="@dimen/default_text_size"
+                                        />
+
+                                    <TextView
+                                        android:id="@+id/payments_cash_out_payment_method_details"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/default_margin_quarter"
+                                        android:textColor="@color/handy_tertiary_gray"
+                                        style="@style/TextView.Small"
+                                        tools:text="Deposit to **** 1234"
+                                        />
+
+                                </LinearLayout>
 
                                 <TextView
                                     android:id="@+id/payments_cash_out_expected_payment"
@@ -177,41 +195,6 @@
 
                         </TableLayout>
                     </LinearLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/payments_cash_out_payment_method_details_button"
-                        android:layout_width="match_parent"
-                        android:layout_height="@dimen/account_settings_cell_height"
-                        android:layout_marginBottom="@dimen/default_margin"
-                        android:layout_marginTop="@dimen/default_margin"
-                        android:background="@drawable/background_white_bottom_border"
-                        android:clickable="true"
-                        android:padding="@dimen/default_padding"
-                        >
-
-                        <TextView
-                            android:id="@+id/payments_cash_out_payment_method_details"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerVertical="true"
-                            android:textColor="@color/dark_gray"
-                            android:textSize="@dimen/default_text_size"
-                            tools:text="Deposit to account ending in 1234"
-                            />
-
-                        <ImageView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true"
-                            android:layout_marginLeft="@dimen/default_margin"
-                            android:layout_marginStart="@dimen/default_margin"
-                            android:contentDescription="@string/chevron_description"
-                            android:src="@drawable/ic_chevron_gray"
-                            />
-
-                    </RelativeLayout>
 
                 </LinearLayout>
 

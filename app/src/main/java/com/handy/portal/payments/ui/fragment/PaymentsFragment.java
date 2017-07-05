@@ -1,8 +1,14 @@
 package com.handy.portal.payments.ui.fragment;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SwitchCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +25,9 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.manager.ProviderManager;
+import com.handy.portal.core.model.SuccessWrapper;
+import com.handy.portal.core.ui.activity.FragmentContainerActivity;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
@@ -29,12 +38,15 @@ import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsUtil;
+import com.handy.portal.payments.model.DailyCashOutRequest;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
+import com.handy.portal.payments.ui.element.DailyCashOutToggleView;
 import com.handy.portal.payments.ui.element.PaymentsBatchListView;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentCashOutDialogFragment;
+import com.handy.portal.webview.PortalWebViewFragment;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -53,6 +65,9 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
 
     @Inject
     PaymentsManager mPaymentsManager;
+
+    @Inject
+    ProviderManager mProviderManager;
 
     //TODO: investigate using @Produce and make manager handle more of this logic
     @BindView(R.id.slide_up_panel_container)
@@ -168,7 +183,13 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
                     onReceivePaymentBatchesError(error);
                 }
             };
-            mPaymentsManager.requestPaymentBatches(startDate, endDate, mCurrentPaymentBatchCallback);
+//            mPaymentsManager.requestPaymentBatches(startDate, endDate, mCurrentPaymentBatchCallback);
+
+            //fixme test only remove
+            mPaymentsManager.requestTestPaymentBatches(getContext(),
+                    startDate,
+                    endDate,
+                    mCurrentPaymentBatchCallback);
 
             paymentsBatchListView.showFooter(R.string.loading_more_payments);
         }
@@ -186,6 +207,71 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
         paymentsBatchListView.setCashOutButtonClickListener(onClickListener);
     }
 
+    private void updateDailyCashOutListeners(@Nullable final PaymentBatches.DailyCashOutInfo dailyCashOutInfo) {
+        if (dailyCashOutInfo == null) {
+            paymentsBatchListView.getWrappedAdapter().setDailyCashOutListeners(null, null);
+            return;
+        }
+        final PaymentBatches.DailyCashOutInfo.ToggleConfirmationCopy
+                confirmationCopy = dailyCashOutInfo.getToggleConfirmationCopy();
+        paymentsBatchListView.getWrappedAdapter().setDailyCashOutListeners(
+                new DailyCashOutToggleView.OnToggleClickedListener() {
+                    @Override
+                    public void onToggleClicked(@NonNull final SwitchCompat toggleView) {
+                        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                                .setPositiveButton(confirmationCopy.getConfirmButtonText(), new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(final DialogInterface dialog, final int which) {
+                                        DailyCashOutRequest dailyCashOutRequest =
+                                                new DailyCashOutRequest(
+                                                        mProviderManager.getLastProviderId(),
+                                                        !toggleView.isChecked());
+                                        requestDailyCashOut(dailyCashOutRequest);
+                                    }
+                                })
+                                .setNegativeButton(confirmationCopy.getCancelButtonText(), null)
+                                .setMessage(confirmationCopy.getBodyText())
+                                .setTitle(confirmationCopy.getTitleText())
+                                .create();
+                        alertDialog.show();
+                        //can only update buttons after show() is called
+                        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
+                                ContextCompat.getColor(getContext(), R.color.handy_tertiary_gray));
+                        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(
+                                ContextCompat.getColor(getContext(), R.color.handy_blue));
+
+                    }
+                }, new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        onHelpCenterUrlLinkClicked(dailyCashOutInfo.getHelpCenterArticleUrl());
+                    }
+                }
+        );
+    }
+
+    private void requestDailyCashOut(@NonNull final DailyCashOutRequest dailyCashOutRequest) {
+        showProgressSpinner();
+        mPaymentsManager.requestDailyCashOut(dailyCashOutRequest, new FragmentSafeCallback<SuccessWrapper>(this) {
+            @Override
+            public void onCallbackSuccess(final SuccessWrapper response) {
+                hideProgressSpinner();
+                if (!TextUtils.isEmpty(response.getMessage())) {
+                    Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                if (response.getSuccess() != null && response.getSuccess()) {
+                    requestInitialPaymentsInfo();
+                }
+            }
+
+            @Override
+            public void onCallbackError(final DataManager.DataManagerError error) {
+                hideProgressSpinner();
+                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public void onInitialPaymentBatchReceived(final PaymentBatches paymentBatches, Date requestStartDate) //should only be called once in this instance. should never be empty
     {
         //reset payment batch list view and its adapter
@@ -199,12 +285,14 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
             showToast(R.string.an_error_has_occurred);
             return;
         }
+        paymentsBatchListView.getWrappedAdapter().setDailyCashOutInfo(paymentBatches.getDailyCashOutInfo());
         paymentsBatchListView.appendData(paymentBatches, requestStartDate);
 
         NeoPaymentBatch currentWeekBatch = paymentsBatchListView.getWrappedAdapter().getCurrentWeekBatch();
 
         updateCashOutButtonClickListener(paymentBatches.getOneTimeCashOutInfo(),
                 currentWeekBatch != null && currentWeekBatch.isCashOutEnabled());
+        updateDailyCashOutListeners(paymentBatches.getDailyCashOutInfo());
 
         //updating with data from payment batches
         paymentsBatchListView.setOnDataItemClickListener(new PaymentsBatchListView.OnDataItemClickListener() {
@@ -298,5 +386,15 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
     public void onCashOutSuccess(@NonNull final String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         requestInitialPaymentsInfo();
+    }
+
+    private void onHelpCenterUrlLinkClicked(@NonNull String helpUrl) {
+        Bundle arguments = PortalWebViewFragment.createBundle(helpUrl, getString(R.string.help));
+        Intent webviewIntent = FragmentContainerActivity.getIntent(
+                getContext(),
+                PortalWebViewFragment.class,
+                arguments
+        );
+        startActivity(webviewIntent);
     }
 }

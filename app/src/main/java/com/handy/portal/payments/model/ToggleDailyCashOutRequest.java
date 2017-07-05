@@ -2,7 +2,7 @@ package com.handy.portal.payments.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class DailyCashOutRequest {
+public class ToggleDailyCashOutRequest {
     /**
      * used by server only for rate-limiting
      */
@@ -13,15 +13,11 @@ public class DailyCashOutRequest {
      * whether daily cash out should be enabled
      */
     @SerializedName("enabled")
-    private boolean mDailyCashOutEnabled;
+    private boolean mEnableDailyCashOut;
 
-    public DailyCashOutRequest(final String userId,
-                               final boolean dailyCashOutEnabled) {
+    public ToggleDailyCashOutRequest(final String userId,
+                                     final boolean enableDailyCashOut) {
         mUserId = userId;
-        mDailyCashOutEnabled = dailyCashOutEnabled;
-    }
-
-    public boolean isDailyCashOutEnabled() {
-        return mDailyCashOutEnabled;
+        mEnableDailyCashOut = enableDailyCashOut;
     }
 }

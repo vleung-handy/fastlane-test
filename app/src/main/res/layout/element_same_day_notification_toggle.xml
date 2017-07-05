@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.SwitchCompat
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/toggle_available_job_notification"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -11,4 +12,5 @@
     android:textSize="@dimen/default_text_size"
     android:checked="true"
     android:visibility="gone"
+    tools:visibility="visible"
     />

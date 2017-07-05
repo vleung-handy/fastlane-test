@@ -1,11 +1,16 @@
 package com.handy.portal.payments;
 
+import android.content.Context;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
+import com.google.gson.GsonBuilder;
 import com.handy.portal.core.model.SuccessWrapper;
 import com.handy.portal.data.DataManager;
+import com.handy.portal.library.util.DateTimeUtils;
+import com.handy.portal.library.util.IOUtils;
 import com.handy.portal.payments.model.BatchPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingTransactions;
@@ -24,6 +29,7 @@ import com.stripe.android.model.Token;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -94,6 +100,30 @@ public class PaymentsManager {
         mDataManager.getPaymentCashOutInfo(cb);
     }
 
+    public void requestTestPaymentCashOutInfo(final Context context,
+                                              final DataManager.Callback<PaymentCashOutInfo> callback) {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String json = IOUtils.loadJSONFromAsset(context, "test/test_payments_cash_out_response.json");
+                    PaymentCashOutInfo paymentCashOutInfo =
+                            (new GsonBuilder().setDateFormat(DateTimeUtils.UNIVERSAL_DATE_FORMAT).
+                                    create()
+                                    .fromJson(json, PaymentCashOutInfo.class));
+                    callback.onSuccess(paymentCashOutInfo);
+                    return;
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+                callback.onError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.CLIENT, "blah"));
+
+            }
+        }, 1000);
+    }
+
     public void requestCashOut(
             @NonNull PaymentCashOutRequest paymentCashOutRequest,
             @NonNull final DataManager.Callback<SuccessWrapper> callback) {
@@ -103,9 +133,35 @@ public class PaymentsManager {
     public void requestDailyCashOut(
             @NonNull DailyCashOutRequest dailyCashOutRequest,
             @NonNull final DataManager.Callback<SuccessWrapper> callback) {
-        mDataManager.requestDailyCashOut(dailyCashOutRequest, callback);
+//        mDataManager.requestDailyCashOut(dailyCashOutRequest, callback);
+        callback.onSuccess(new SuccessWrapper(true));//todo remove, test only
     }
+    //fixme test only remove
+    public void requestTestPaymentBatches(
+            @NonNull final Context context,
+            @NonNull final Date startDate,
+            @NonNull final Date endDate,
+            @NonNull final DataManager.Callback<PaymentBatches> callback) {
 
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String json = IOUtils.loadJSONFromAsset(context, "test/test_payments_response.json");
+                    PaymentBatches paymentBatches = (new GsonBuilder().setDateFormat(DateTimeUtils.UNIVERSAL_DATE_FORMAT).create()
+                            .fromJson(json, PaymentBatches.class));
+                    callback.onSuccess(paymentBatches);
+                    return;
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+                callback.onError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.CLIENT, "blah"));
+
+            }
+        }, 1000);
+    }
     public void requestPaymentBatches(@NonNull final Date startDate,
                                       @NonNull final Date endDate,
                                       @NonNull final DataManager.Callback<PaymentBatches> callback) {
