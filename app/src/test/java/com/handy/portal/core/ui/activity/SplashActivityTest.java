@@ -7,7 +7,7 @@ import com.handy.portal.RobolectricGradleTestWrapper;
 
 import org.junit.Test;
 import org.robolectric.Robolectric;
-import org.robolectric.util.ActivityController;
+import org.robolectric.android.controller.ActivityController;
 
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.junit.Assert.assertThat;
