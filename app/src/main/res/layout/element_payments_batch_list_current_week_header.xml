@@ -151,15 +151,32 @@
                 android:weightSum="2"
                 >
 
-                <TextView
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center|start"
                     android:layout_weight="1"
-                    android:text="@string/expected_payment"
-                    android:textColor="@color/black"
-                    android:textSize="@dimen/default_text_size"
-                    />
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/expected_payment"
+                        android:textColor="@color/black"
+                        android:textSize="@dimen/default_text_size"
+                        />
+
+                    <TextView
+                        android:id="@+id/payments_batch_list_current_week_expected_deposit_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/default_margin_quarter"
+                        android:textColor="@color/handy_tertiary_gray"
+                        android:textSize="@dimen/small_text_size"
+                        tools:text="Deposited by Mon June 5"
+                        />
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/payments_current_week_expected_payment"
@@ -176,13 +193,34 @@
 
         </TableLayout>
 
-        <Button
-            android:id="@+id/payments_batch_list_current_week_cash_out_button"
+        <LinearLayout
+            android:id="@+id/payments_batch_list_current_week_cash_out_button_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/cash_out_now"
-            style="@style/Button.Green.Round"
-            />
+            android:layout_gravity="center"
+            android:visibility="gone"
+            tools:visiblity="visible"
+            android:orientation="vertical"
+            >
+
+            <Button
+                android:id="@+id/payments_batch_list_current_week_cash_out_button"
+                style="@style/Button.Green.Round"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/cash_out_now"
+                />
+
+            <TextView
+                style="@style/TextView.Small"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/default_margin_half"
+                android:text="@string/payments_cash_out_button_sub_text"
+                />
+        </LinearLayout>
+
 
     </LinearLayout>
 

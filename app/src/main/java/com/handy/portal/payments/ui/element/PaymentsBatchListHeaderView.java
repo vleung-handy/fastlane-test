@@ -6,6 +6,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -37,6 +38,12 @@ public class PaymentsBatchListHeaderView extends FrameLayout //TODO: see if we c
 
     @BindView(R.id.payments_current_week_remaining_fees_row)
     ViewGroup currentWeekRemainingFeesRow;
+
+    @BindView(R.id.payments_batch_list_current_week_expected_deposit_date)
+    TextView mExpectedDepositDate;
+
+    @BindView(R.id.payments_batch_list_current_week_cash_out_button_container)
+    View mCashOutButtonContainer;
 
     @BindView(R.id.payments_batch_list_current_week_cash_out_button)
     Button mCashOutButton;
@@ -79,6 +86,7 @@ public class PaymentsBatchListHeaderView extends FrameLayout //TODO: see if we c
         currentWeekFeesText.setTextColor(paymentBatchListHeaderViewModel.getCurrentWeekFeesColor(getContext()));
 
         currentWeekRemainingFeesRow.setVisibility(paymentBatchListHeaderViewModel.shouldShowCurrentWeekRemainingFees() ? VISIBLE : GONE);
+        mExpectedDepositDate.setText(paymentBatchListHeaderViewModel.getExpectedDepositDate(getContext()));
 
         updateCashOutButton(paymentBatchListHeaderViewModel);
         updateDailyCashOutToggle(paymentBatchListHeaderViewModel);
@@ -98,8 +106,7 @@ public class PaymentsBatchListHeaderView extends FrameLayout //TODO: see if we c
     private void updateCashOutButton(@NonNull PaymentBatchListHeaderViewModel paymentBatchListHeaderViewModel) {
         PaymentsUtil.CashOut.styleCashOutButtonForApparentEnabledState(mCashOutButton,
                 paymentBatchListHeaderViewModel.shouldApparentlyEnableCashOutButton());
-        mCashOutButton.setVisibility(paymentBatchListHeaderViewModel.shouldShowCashOutButton() ? VISIBLE : GONE);
-
+        mCashOutButtonContainer.setVisibility(paymentBatchListHeaderViewModel.shouldShowCashOutButton() ? VISIBLE : GONE);
     }
 
     public void setOnCashOutButtonClickedListener(OnClickListener onCashOutButtonClickedListener) {

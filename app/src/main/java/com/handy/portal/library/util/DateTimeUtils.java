@@ -45,7 +45,7 @@ public final class DateTimeUtils {
     public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DATE_YEAR_FORMATTER =
             new SimpleDateFormat("EEE, MMM d, yyyy", Locale.getDefault());
     public final static SimpleDateFormat DAY_OF_WEEK_MONTH_DATE_FORMATTER =
-            new SimpleDateFormat("EEEE, MMM d", Locale.getDefault());
+            new SimpleDateFormat("EEE, MMM d", Locale.getDefault());
     public final static SimpleDateFormat YEAR_FORMATTER = new SimpleDateFormat("yyyy", Locale.getDefault());
     public final static SimpleDateFormat MONTH_YEAR_FORMATTER =
             new SimpleDateFormat("MMM yyyy", Locale.getDefault());

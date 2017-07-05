@@ -736,6 +736,7 @@
     <string name="payment_cash_out_dialog_partial_pay_week">Summary: Partial Pay Week</string>
     <string name="payment_cash_out_dialog_confirm_button">Confirm &amp; Cash Out</string>
     <string name="payment_cash_out_fee">Cash Out Fee</string>
+    <string name="payments_cash_out_button_sub_text">Cash out for a small fee and get paid faster.</string>
 
     <string name="payment_cash_out_denied_error">You cannot cash out at this time</string>
     <string name="payment_cash_out_disabled_dialog_title_formatted">How to unlock the Cash Out feature</string>
