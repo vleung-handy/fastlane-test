@@ -33,7 +33,6 @@ import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.model.PaymentCashOutInfo;
 import com.handy.portal.payments.model.PaymentCashOutRequest;
 import com.handy.portal.payments.ui.element.PaymentBreakdownLineItemView;
-import com.handy.portal.payments.ui.fragment.SelectPaymentMethodFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
 
 import org.greenrobot.eventbus.EventBus;
@@ -102,7 +101,7 @@ public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
         mErrorView.setVisibility(View.GONE);
         mContentContainer.setVisibility(View.GONE);
         showLoadingOverlay();
-        mPaymentsManager.requestPaymentCashOutInfo(
+        mPaymentsManager.requestTestPaymentCashOutInfo(getContext(),//todo revert
                 new FragmentSafeCallback<PaymentCashOutInfo>(this) {
             @Override
             public void onCallbackSuccess(final PaymentCashOutInfo response) {
@@ -179,7 +178,7 @@ public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
         });
         TextUtils.stripUnderlines(mHeaderText);
 
-        mDateRangeText.setText(DateTimeUtils.formatDateRange(
+        mDateRangeText.setText(DateTimeUtils.formatDayRange(
                 DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER,
                 paymentCashOutInfo.getDateStart(),
                 paymentCashOutInfo.getDateEnd()));
@@ -231,17 +230,6 @@ public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
         mErrorText.setText(R.string.error_missing_server_data);
-    }
-
-
-    @OnClick(R.id.payments_cash_out_payment_method_details_button)
-    public void onPaymentMethodDetailsButtonClicked() {
-        mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.CashOutEarlyPaymentMethodSelected()));
-        startActivity(FragmentContainerActivity.getIntent(
-                getContext(),
-                SelectPaymentMethodFragment.class,
-                null
-        ));
     }
 
     @OnClick(R.id.payments_cash_out_dismiss_button)

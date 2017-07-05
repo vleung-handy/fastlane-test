@@ -100,6 +100,30 @@ public class PaymentsManager {
         mDataManager.getPaymentCashOutInfo(cb);
     }
 
+    public void requestTestPaymentCashOutInfo(final Context context,
+                                              final DataManager.Callback<PaymentCashOutInfo> callback) {
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    String json = IOUtils.loadJSONFromAsset(context, "test/test_payments_cash_out_response.json");
+                    PaymentCashOutInfo paymentCashOutInfo =
+                            (new GsonBuilder().setDateFormat(DateTimeUtils.UNIVERSAL_DATE_FORMAT).
+                                    create()
+                                    .fromJson(json, PaymentCashOutInfo.class));
+                    callback.onSuccess(paymentCashOutInfo);
+                    return;
+                }
+                catch (IOException e) {
+                    e.printStackTrace();
+                }
+                callback.onError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.CLIENT, "blah"));
+
+            }
+        }, 1000);
+    }
+
     public void requestCashOut(
             @NonNull PaymentCashOutRequest paymentCashOutRequest,
             @NonNull final DataManager.Callback<SuccessWrapper> callback) {

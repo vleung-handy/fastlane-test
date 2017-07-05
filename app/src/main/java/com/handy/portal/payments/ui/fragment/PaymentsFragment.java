@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SwitchCompat;
 import android.view.LayoutInflater;
@@ -232,6 +233,10 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
                                 .setTitle(confirmationCopy.getTitleText())
                                 .create();
                         alertDialog.show();
+                        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
+                                ContextCompat.getColor(getContext(), R.color.handy_tertiary_gray));
+                        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(
+                                ContextCompat.getColor(getContext(), R.color.handy_blue));
 
                     }
                 }, new View.OnClickListener() {

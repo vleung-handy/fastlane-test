@@ -2,8 +2,8 @@
   "payments_batches": [
     {
       "batch_id": 1234,
-      "start_date": "2017-05-29T23:59:59-04:00",
-      "end_date": "2017-06-04T23:59:59-04:00",
+      "start_date": "2017-05-29T21:59:59-04:00",
+      "end_date": "2017-05-29T23:59:59-04:00",
       "expected_deposit_date": "2017-06-12T23:59:59-04:00",
       "status": "In Review",
       "last4": "1234",

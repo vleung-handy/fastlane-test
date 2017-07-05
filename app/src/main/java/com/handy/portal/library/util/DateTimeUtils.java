@@ -19,6 +19,8 @@ import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
+import static android.icu.text.DateTimePatternGenerator.DAY;
+
 public final class DateTimeUtils {
     //TODO: refactor code throughout the app to put date formats here
     //TODO: rename these fields & methods to something better
@@ -306,12 +308,27 @@ public final class DateTimeUtils {
         return getIso8601Formatter().format(date);
     }
 
+    /**
+     * if the given start and end date are on the same day, only show one date
+     *
+     * @param dateFormat must not include time (hours, minutes, etc)
+     * @param start
+     * @param end
+     * @return
+     */
     @Nullable
-    public static String formatDateRange(SimpleDateFormat dateFormat, Date start, Date end) {
+    public static String formatDayRange(SimpleDateFormat dateFormat, Date start, Date end) {
         if (start == null || end == null) { return null; }
-        return dateFormat.format(start) + " – " + dateFormat.format(end);
+        String formattedDayRange = dateFormat.format(start);
+        if (!equalCalendarDates(start, end)) {
+            return formattedDayRange + " – " + dateFormat.format(end);
+        }
+        return formattedDayRange;
     }
 
+    /**
+     * @return true if the dates' year, month and day are equal
+     */
     public static boolean equalCalendarDates(final Date date1, final Date date2) {
         Calendar c = Calendar.getInstance();
         c.setTime(date1);

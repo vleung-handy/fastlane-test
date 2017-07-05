@@ -66,7 +66,7 @@ public class PaymentBatchListHeaderViewModel {
     }
 
     public String getCurrentWeekDateRange() {
-        return DateTimeUtils.formatDateRange(
+        return DateTimeUtils.formatDayRange(
                 DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER,
                 mNeoPaymentBatch.getStartDate(),
                 mNeoPaymentBatch.getEndDate());

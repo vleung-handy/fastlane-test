@@ -74,7 +74,7 @@ public class ConfigurationResponse {
 
     // Getters
     public boolean isDailyProPaymentsEnabled() {
-        return mDailyProPaymentsEnabled;
+        return true;
     }
 
     public boolean areAnnouncementsEnabled() {

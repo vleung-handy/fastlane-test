@@ -87,7 +87,7 @@ public class PaymentDetailHeaderViewModel {
     }
 
     public String getDateRange() {
-        return DateTimeUtils.formatDateRange(DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER,
+        return DateTimeUtils.formatDayRange(DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER,
                 mNeoPaymentBatch.getStartDate(),
                 mNeoPaymentBatch.getEndDate());
     }

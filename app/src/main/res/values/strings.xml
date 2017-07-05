@@ -729,7 +729,7 @@
     <string name="payment_support_button">Payment Support</string>
     <string name="cash_out_now">Cash Out Now</string>
 
-    <string name="payment_method_details_button_formatted">Deposit to account ending in %1$s</string>
+    <string name="payment_method_details_button_formatted">Deposit to •••• %1$s</string>
     <string name="payment_cash_out_dialog_title">Get paid as early as today!</string>
     <string name="payment_cash_out_dialog_subtitle_html_formatted"><![CDATA[Have your payment sent now. Your deposit may take up to 3 business days to appear in your account depending on your <a href=\"%1$s\">bank</a>.]]></string>
     <string name="payment_cash_out_dialog_footer_html"><![CDATA[Please allow up to <b>3 business days</b> to see funds in your account.]]></string>
