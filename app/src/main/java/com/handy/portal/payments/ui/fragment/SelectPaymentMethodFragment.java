@@ -62,12 +62,14 @@ public class SelectPaymentMethodFragment extends ActionBarFragment {
      */
     @OnClick(R.id.debit_card_option)
     public void onDebitCardOptionClicked() {
-        mNavigationManager.navigateToPage(getFragmentManager(), UPDATE_DEBIT_CARD, null, null, true);
+        mNavigationManager.navigateToPage(
+                getActivity().getSupportFragmentManager(), UPDATE_DEBIT_CARD, null, null, true);
     }
 
     @OnClick(R.id.bank_account_option)
     public void onBankAccountOptionClicked() {
-        mNavigationManager.navigateToPage(getFragmentManager(), UPDATE_BANK_ACCOUNT, null, null, true);
+        mNavigationManager.navigateToPage(
+                getActivity().getSupportFragmentManager(), UPDATE_BANK_ACCOUNT, null, null, true);
     }
 
     @Override

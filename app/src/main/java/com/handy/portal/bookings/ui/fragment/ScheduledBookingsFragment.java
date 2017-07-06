@@ -373,7 +373,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.FLOW_CONTEXT, EventContext.AVAILABILITY);
         mNavigationManager.navigateToPage(
-                getFragmentManager(),
+                getActivity().getSupportFragmentManager(),
                 mConfigManager.getConfigurationResponse().isTemplateAvailabilityEnabled() ?
                         MainViewPage.EDIT_WEEKLY_TEMPLATE_AVAILABLE_HOURS :
                         MainViewPage.EDIT_WEEKLY_ADHOC_AVAILABLE_HOURS,
@@ -765,8 +765,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         bundle.putSerializable(BundleKeys.DATE, mSelectedDay);
         bundle.putSerializable(BundleKeys.TIMELINE,
                 mAvailabilityManager.getTimelineForDate(mSelectedDay));
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.EDIT_AVAILABLE_HOURS,
-                bundle, TransitionStyle.NATIVE_TO_NATIVE, true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.EDIT_AVAILABLE_HOURS, bundle, TransitionStyle.NATIVE_TO_NATIVE, true);
     }
 
     @Override
@@ -802,8 +802,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         arguments.putString(BundleKeys.BOOKING_SOURCE, SOURCE_SCHEDULED_JOBS_LIST);
         arguments.putString(BundleKeys.EVENT_CONTEXT, EventContext.SCHEDULED_JOBS);
         arguments.putSerializable(BundleKeys.PAGE, getAppPage());
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.JOB_DETAILS, arguments,
-                TransitionStyle.JOB_LIST_TO_DETAILS, true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.JOB_DETAILS, arguments, TransitionStyle.JOB_LIST_TO_DETAILS, true);
     }
 
     private void requestClaimJob(final Booking booking) {

@@ -207,14 +207,13 @@ public class RescheduleDialogFragment extends ConfirmBookingActionDialogFragment
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.FLOW_CONTEXT, EventContext.AVAILABILITY);
         mNavigationManager.navigateToPage(
-                getFragmentManager(),
+                getActivity().getSupportFragmentManager(),
                 mConfigManager.getConfigurationResponse().isTemplateAvailabilityEnabled()
                         ? MainViewPage.EDIT_WEEKLY_TEMPLATE_AVAILABLE_HOURS
                         : MainViewPage.EDIT_WEEKLY_ADHOC_AVAILABLE_HOURS,
                 arguments,
                 TransitionStyle.NATIVE_TO_NATIVE,
-                true
-        );
+                true);
         dismiss();
     }
 
@@ -224,8 +223,8 @@ public class RescheduleDialogFragment extends ConfirmBookingActionDialogFragment
                 BundleKeys.TARGET_URL,
                 mDataManager.getBaseUrl() + HelpCenterConstants.SETTING_HOURS_INFO_PATH
         );
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.WEB_PAGE, arguments,
-                TransitionStyle.NATIVE_TO_NATIVE, true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.WEB_PAGE, arguments, TransitionStyle.NATIVE_TO_NATIVE, true);
         dismiss();
     }
 }

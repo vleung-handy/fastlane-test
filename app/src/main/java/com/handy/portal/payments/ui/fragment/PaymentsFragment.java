@@ -232,8 +232,8 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
             Bundle arguments = PaymentsDetailFragment.createBundle((NeoPaymentBatch) paymentBatch,
                     isCurrentWeekBatch,
                     oneTimeCashOutInfo);
-            mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.PAYMENTS_DETAIL,
-                    arguments, null, true);
+            mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                    MainViewPage.PAYMENTS_DETAIL, arguments, null, true);
         }
     }
 
@@ -252,8 +252,8 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
     private void goToHelpCenterWebView() {
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, HELP_PAYMENTS_SECTION_REDIRECT_PATH);
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.HELP_WEBVIEW,
-                arguments, null, true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.HELP_WEBVIEW, arguments, null, true);
     }
 
     private void onReceivePaymentBatchesSuccess(@NonNull final PaymentBatches paymentBatches,

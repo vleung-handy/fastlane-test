@@ -80,14 +80,14 @@ public class DashboardFeedbackFragment extends ActionBarFragment {
     @OnClick(R.id.video_library)
     public void switchToVideoLibrary() {
         bus.post(new LogEvent.AddLogEvent(new FeedbackLog.VideoLibrarySelected()));
-        mNavigationManager.navigateToPage(getFragmentManager(),
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
                 MainViewPage.DASHBOARD_VIDEO_LIBRARY, null, null, true);
     }
 
     public void swapToVideo(String youtubeId) {
         Bundle bundle = new Bundle();
         bundle.putSerializable(BundleKeys.YOUTUBE_VIDEO_ID, youtubeId);
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.YOUTUBE_PLAYER, bundle,
-                null, false);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.YOUTUBE_PLAYER, bundle, null, false);
     }
 }

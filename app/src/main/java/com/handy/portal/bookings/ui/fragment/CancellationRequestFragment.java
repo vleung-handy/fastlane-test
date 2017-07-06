@@ -152,8 +152,8 @@ public class CancellationRequestFragment extends ActionBarFragment {
             Bundle arguments = new Bundle();
             arguments.putLong(BundleKeys.DATE_EPOCH_TIME, event.booking.getStartDate().getTime());
             //Return to available jobs on that day
-            mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.SCHEDULED_JOBS,
-                    arguments, transitionStyle, false);
+            mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                    MainViewPage.SCHEDULED_JOBS, arguments, transitionStyle, false);
         }
     }
 

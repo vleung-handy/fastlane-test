@@ -127,21 +127,21 @@ public class AccountSettingsFragment extends ActionBarFragment {
     @OnClick(R.id.contact_info_layout)
     public void switchToProfile() {
         bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileSelected()));
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.PROFILE_UPDATE,
-                null, TransitionStyle.NATIVE_TO_NATIVE, true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.PROFILE_UPDATE, null, TransitionStyle.NATIVE_TO_NATIVE, true);
     }
 
     @OnClick(R.id.edit_payment_option)
     public void switchToPayments() {
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.SELECT_PAYMENT_METHOD,
-                null, TransitionStyle.NATIVE_TO_NATIVE, true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.SELECT_PAYMENT_METHOD, null, TransitionStyle.NATIVE_TO_NATIVE, true);
     }
 
     @OnClick(R.id.order_resupply_layout)
     public void getResupplyKit() {
         mBus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitSelected()));
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.REQUEST_SUPPLIES,
-                null, TransitionStyle.NATIVE_TO_NATIVE, true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.REQUEST_SUPPLIES, null, TransitionStyle.NATIVE_TO_NATIVE, true);
     }
 
 
@@ -210,8 +210,8 @@ public class AccountSettingsFragment extends ActionBarFragment {
 
     @OnClick(R.id.software_licenses_text)
     public void showSoftwareLicenses() {
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.SOFTWARE_LICENSES,
-                null, TransitionStyle.NATIVE_TO_NATIVE, true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.SOFTWARE_LICENSES, null, TransitionStyle.NATIVE_TO_NATIVE, true);
     }
 
     @Subscribe
@@ -249,8 +249,8 @@ public class AccountSettingsFragment extends ActionBarFragment {
     @Subscribe
     public void onSendIncomeVerificationSuccess(HandyEvent.ReceiveSendIncomeVerificationSuccess event) {
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.ACCOUNT_SETTINGS,
-                null, TransitionStyle.SEND_VERIFICAITON_SUCCESS, false);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.ACCOUNT_SETTINGS, null, TransitionStyle.SEND_VERIFICAITON_SUCCESS, false);
     }
 
     @Subscribe

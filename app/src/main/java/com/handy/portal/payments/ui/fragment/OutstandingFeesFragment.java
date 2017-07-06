@@ -119,7 +119,7 @@ public class OutstandingFeesFragment extends ActionBarFragment {
                         Bundle arguments = new Bundle();
                         arguments.putString(BundleKeys.BOOKING_ID, payment.getBookingId());
                         arguments.putString(BundleKeys.BOOKING_TYPE, payment.getBookingType());
-                        mNavigationManager.navigateToPage(getFragmentManager(),
+                        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
                                 MainViewPage.JOB_PAYMENT_DETAILS, arguments, null, true);
                     }
                 });

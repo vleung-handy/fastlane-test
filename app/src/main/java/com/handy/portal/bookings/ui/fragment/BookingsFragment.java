@@ -415,8 +415,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         arguments.putString(BundleKeys.BOOKING_SOURCE, getBookingSourceName());
         arguments.putString(BundleKeys.EVENT_CONTEXT, EventContext.AVAILABLE_JOBS);
         arguments.putSerializable(BundleKeys.PAGE, getAppPage());
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.JOB_DETAILS, arguments,
-                TransitionStyle.JOB_LIST_TO_DETAILS, true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.JOB_DETAILS, arguments, TransitionStyle.JOB_LIST_TO_DETAILS, true);
     }
 
     private void setRefreshing(final boolean refreshing) {

@@ -177,8 +177,8 @@ public class AvailableBookingsFragment extends BookingsFragment<HandyEvent.Recei
     private void goToHelpCenter(final String helpCenterRedirectPath) {
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, helpCenterRedirectPath);
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.HELP_WEBVIEW,
-                arguments, TransitionStyle.NATIVE_TO_NATIVE, true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.HELP_WEBVIEW, arguments, TransitionStyle.NATIVE_TO_NATIVE, true);
     }
 
     @Override

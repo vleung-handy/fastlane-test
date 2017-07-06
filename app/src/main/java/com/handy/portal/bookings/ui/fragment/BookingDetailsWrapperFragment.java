@@ -488,7 +488,8 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
         if (additionalArguments != null) {
             arguments.putAll(additionalArguments);
         }
-        mNavigationManager.navigateToPage(getFragmentManager(), targetPage, arguments, transitionStyle, false);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                targetPage, arguments, transitionStyle, false);
     }
 
     private void handleBookingDetailsError(String errorMessage) {
@@ -527,8 +528,8 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
                 .setPositiveButton(option1, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-                        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.SCHEDULED_JOBS,
-                                arguments, TransitionStyle.REFRESH_PAGE, false);
+                        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                                MainViewPage.SCHEDULED_JOBS, arguments, TransitionStyle.REFRESH_PAGE, false);
                     }
                 });
 
@@ -668,16 +669,16 @@ public class BookingDetailsWrapperFragment extends ActionBarFragment implements 
     private void goToHelpCenter(final Booking.Action action) {
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, action.getHelpRedirectPath());
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.HELP_WEBVIEW,
-                arguments, TransitionStyle.NATIVE_TO_NATIVE, true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.HELP_WEBVIEW, arguments, TransitionStyle.NATIVE_TO_NATIVE, true);
     }
 
     private void unassignJob(@NonNull Booking.Action removeAction) {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.BOOKING, mBooking);
         arguments.putSerializable(BundleKeys.BOOKING_ACTION, removeAction);
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.CANCELLATION_REQUEST,
-                arguments, TransitionStyle.NATIVE_TO_NATIVE, false);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.CANCELLATION_REQUEST, arguments, TransitionStyle.NATIVE_TO_NATIVE, false);
     }
 
     private void removeJob(@NonNull Booking.Action removeAction) {

@@ -288,7 +288,8 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
         Bundle arguments = new Bundle();
         arguments.putLong(BundleKeys.DATE_EPOCH_TIME, epochTime);
         //Return to available jobs on that day
-        mNavigationManager.navigateToPage(getFragmentManager(), targetPage, arguments, transitionStyle, false);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                targetPage, arguments, transitionStyle, false);
     }
 
     private LocationData getLocationData() {

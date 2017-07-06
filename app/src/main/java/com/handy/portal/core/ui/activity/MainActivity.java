@@ -477,7 +477,11 @@ public class MainActivity extends BaseActivity
         mPageNavigationManager.navigateToPage(getSupportFragmentManager(), event.targetPage,
                 event.arguments, event.transitionStyle, event.addToBackStack);
         clearOnBackPressedListenerStack();
-        mCurrentPage = event.targetPage;
+    }
+
+    @Subscribe
+    public void updateCurrentPage(NavigationEvent.SelectPage event) {
+        mCurrentPage = event.page;
     }
 
     @Override
@@ -626,7 +630,7 @@ public class MainActivity extends BaseActivity
                 new TabOnClickListener(mAlertsButton, MainViewPage.NOTIFICATIONS));
 
         ConfigurationResponse config = mConfigManager.getConfigurationResponse();
-        if (config != null && config.isMoreFullTabEnabled()) {
+        if (config.isMoreFullTabEnabled()) {
             mMoreButton.setOnClickListener(new TabOnClickListener(mMoreButton, MainViewPage.MORE_ITEMS));
         }
         else {

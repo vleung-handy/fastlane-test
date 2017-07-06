@@ -129,8 +129,8 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment {
     private void showCustomerNoShowPolicyWebView() {
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, HelpCenterConstants.CUSTOMER_NO_SHOW_POLICY_PATH);
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.HELP_WEBVIEW,
-                arguments, TransitionStyle.NATIVE_TO_NATIVE, true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.HELP_WEBVIEW, arguments, TransitionStyle.NATIVE_TO_NATIVE, true);
     }
 
     @OnClick(R.id.fragment_dialog_customer_no_show_complete_report_button)

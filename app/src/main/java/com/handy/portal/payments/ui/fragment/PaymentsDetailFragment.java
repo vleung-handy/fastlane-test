@@ -225,8 +225,8 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.BOOKING_ID, bookingId);
         arguments.putString(BundleKeys.BOOKING_TYPE, bookingType);
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.JOB_PAYMENT_DETAILS,
-                arguments, null, true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.JOB_PAYMENT_DETAILS, arguments, null, true);
     }
 
     /**
@@ -355,6 +355,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     public void onCashOutSuccess(@NonNull final String message) {
         //parent fragment is null, not payments fragment, so can't use its callback
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.PAYMENTS, null, null, false);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.PAYMENTS, null, null, false);
     }
 }

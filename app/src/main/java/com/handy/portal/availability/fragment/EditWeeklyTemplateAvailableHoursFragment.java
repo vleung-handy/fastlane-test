@@ -125,8 +125,8 @@ public class EditWeeklyTemplateAvailableHoursFragment extends EditWeeklyAvailabl
         bundle.putSerializable(BundleKeys.DAY, day);
         bundle.putSerializable(BundleKeys.TIMELINE,
                 mTemplateTimelinesWrapper.findTemplateTimelineForDay(day));
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.EDIT_AVAILABLE_HOURS,
-                bundle, null, true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.EDIT_AVAILABLE_HOURS, bundle, null, true);
     }
 
     private List<AvailableHoursViewModel> getViewModelsFromTemplateTimelines() {

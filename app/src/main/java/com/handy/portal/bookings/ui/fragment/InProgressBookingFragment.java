@@ -218,7 +218,7 @@ public class InProgressBookingFragment extends TimerActionBarFragment {
         args.putString(BundleKeys.BOOKING_SOURCE, mSource);
         args.putBoolean(BundleKeys.BOOKING_SHOULD_HIDE_ACTION_BUTTONS, true);
 
-        mNavigationManager.navigateToPage(getFragmentManager(),
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
                 MainViewPage.NOT_IN_PROGRESS_JOB_DETAILS, args, null, true);
     }
 
@@ -228,7 +228,7 @@ public class InProgressBookingFragment extends TimerActionBarFragment {
         if (proReportedNoShow || mBooking.isAnyPreferenceChecked()) {
             Bundle bundle = new Bundle();
             bundle.putSerializable(BundleKeys.BOOKING, mBooking);
-            mNavigationManager.navigateToPage(getFragmentManager(),
+            mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
                     MainViewPage.SEND_RECEIPT_CHECKOUT, bundle, null, true);
             bus.post(new LogEvent.AddLogEvent(new JobsLog(
                     EventType.CONTINUE_TO_CHECKOUT_SELECTED,

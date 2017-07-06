@@ -208,7 +208,7 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment {
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
 
         bus.post(new LogEvent.AddLogEvent(new PerformanceLog.FeedbackSelected()));
-        mNavigationManager.navigateToPage(
-                getFragmentManager(), MainViewPage.DASHBOARD_FEEDBACK, arguments, NATIVE_TO_NATIVE, true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.DASHBOARD_FEEDBACK, arguments, NATIVE_TO_NATIVE, true);
     }
 }

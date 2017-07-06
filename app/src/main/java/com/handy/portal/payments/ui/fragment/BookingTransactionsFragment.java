@@ -109,8 +109,8 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
         public void launchUrl(final String url) {
             Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.TARGET_URL, url);
-            mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.WEB_PAGE,
-                    arguments, TransitionStyle.NATIVE_TO_NATIVE, true);
+            mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                    MainViewPage.WEB_PAGE, arguments, TransitionStyle.NATIVE_TO_NATIVE, true);
 
             bus.post(new LogEvent.AddLogEvent(new CompletedJobsLog.HelpClicked(mBooking)));
         }

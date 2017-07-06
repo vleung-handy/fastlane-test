@@ -192,8 +192,8 @@ public class ProRequestedJobsFragment extends InjectedFragment {
         arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
         arguments.putString(BundleKeys.EVENT_CONTEXT, EventContext.REQUESTED_JOBS);
         bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.Clicked(booking)));
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.JOB_DETAILS, arguments,
-                TransitionStyle.JOB_LIST_TO_DETAILS, true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.JOB_DETAILS, arguments, TransitionStyle.JOB_LIST_TO_DETAILS, true);
     }
 
     @Override

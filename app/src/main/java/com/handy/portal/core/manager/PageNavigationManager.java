@@ -15,6 +15,7 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
+import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.deeplink.DeeplinkMapper;
 import com.handy.portal.deeplink.DeeplinkUtils;
 import com.handy.portal.library.ui.fragment.dialog.TransientOverlayDialogFragment;
@@ -149,6 +150,8 @@ public class PageNavigationManager {
         mBus.post(new HandyEvent.Navigation(newPage.toString().toLowerCase()));
 
         switchFragment(fragmentManager, newFragment, transitionStyle, addToBackStack);
+
+        mBus.post(new NavigationEvent.SelectPage(newPage));
     }
 
     public void switchFragment(
@@ -157,6 +160,10 @@ public class PageNavigationManager {
             TransitionStyle transitionStyle,
             boolean addToBackStack
     ) {
+        if (!addToBackStack) {
+            fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+        }
+
         FragmentTransaction transaction = fragmentManager.beginTransaction();
 
         //Animate the transition, animations must come before the .replace call
@@ -178,11 +185,13 @@ public class PageNavigationManager {
             }
         }
 
+        transaction.replace(R.id.main_container, newFragment);
         if (addToBackStack) {
-            transaction.replace(R.id.main_container, newFragment).addToBackStack(null).commit();
+            transaction.addToBackStack(null);
         }
         else {
-            transaction.replace(R.id.main_container, newFragment).commit();
+            transaction.disallowAddToBackStack();
         }
+        transaction.commit();
     }
 }

@@ -61,7 +61,7 @@ public class PaymentBillBlockerDialogFragment extends PopupDialogFragment //TODO
         updateNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mNavigationManager.navigateToPage(getFragmentManager(),
+                mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
                         MainViewPage.SELECT_PAYMENT_METHOD, null, TransitionStyle.REFRESH_PAGE, true);
                 PaymentBillBlockerDialogFragment.this.dismiss();
             }

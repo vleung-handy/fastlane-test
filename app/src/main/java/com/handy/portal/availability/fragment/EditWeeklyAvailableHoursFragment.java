@@ -85,7 +85,7 @@ public abstract class EditWeeklyAvailableHoursFragment extends ActionBarFragment
                 BundleKeys.TARGET_URL,
                 dataManager.getBaseUrl() + HelpCenterConstants.SETTING_HOURS_INFO_PATH
         );
-        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.WEB_PAGE, arguments,
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(), MainViewPage.WEB_PAGE, arguments,
                 null, true);
     }
 

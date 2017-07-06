@@ -673,8 +673,8 @@ public class BookingFragment extends TimerActionBarFragment {
                     public void onClick(final View v) {
                         Bundle bundle = new Bundle();
                         bundle.putSerializable(BundleKeys.BOOKING, mBooking);
-                        mNavigationManager.navigateToPage(getFragmentManager(), MainViewPage.SEND_RECEIPT_CHECKOUT,
-                                bundle, TransitionStyle.NATIVE_TO_NATIVE, true);
+                        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                                MainViewPage.SEND_RECEIPT_CHECKOUT, bundle, TransitionStyle.NATIVE_TO_NATIVE, true);
                     }
                 });
                 initHelperText(action);

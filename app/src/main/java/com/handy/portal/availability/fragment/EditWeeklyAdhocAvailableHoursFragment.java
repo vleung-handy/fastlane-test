@@ -90,7 +90,7 @@ public class EditWeeklyAdhocAvailableHoursFragment extends EditWeeklyAvailableHo
             bundle.putSerializable(BundleKeys.MODE, EditAvailableHoursFragment.Mode.ADHOC);
             bundle.putSerializable(BundleKeys.DATE, date);
             bundle.putSerializable(BundleKeys.TIMELINE, mAvailabilityManager.getTimelineForDate(date));
-            mNavigationManager.navigateToPage(getFragmentManager(),
+            mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
                     MainViewPage.EDIT_AVAILABLE_HOURS, bundle, null, true);
         }
     };
