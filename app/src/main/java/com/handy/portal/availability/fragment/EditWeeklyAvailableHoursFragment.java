@@ -13,15 +13,19 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
-import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.helpcenter.constants.HelpCenterConstants;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public abstract class EditWeeklyAvailableHoursFragment extends ActionBarFragment {
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.fetch_error_view)
     View mFetchErrorView;
@@ -81,7 +85,8 @@ public abstract class EditWeeklyAvailableHoursFragment extends ActionBarFragment
                 BundleKeys.TARGET_URL,
                 dataManager.getBaseUrl() + HelpCenterConstants.SETTING_HOURS_INFO_PATH
         );
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.WEB_PAGE, arguments, true));
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(), MainViewPage.WEB_PAGE, arguments,
+                null, true);
     }
 
     @OnClick(R.id.try_again_button)

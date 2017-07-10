@@ -12,15 +12,11 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.ui.activity.ProShareActivity;
 import com.handy.portal.core.ui.view.ProHeaderView;
-import com.handy.portal.dashboard.fragment.DashboardVideoLibraryFragment;
-import com.handy.portal.dashboard.fragment.RatingsAndFeedbackFragment;
-import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
-import com.handy.portal.library.util.FragmentUtils;
-import com.handy.portal.payments.ui.fragment.PaymentsFragment;
 import com.handybook.shared.layer.LayerHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -31,6 +27,13 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.handy.portal.core.constant.MainViewPage.ACCOUNT_SETTINGS;
+import static com.handy.portal.core.constant.MainViewPage.DASHBOARD;
+import static com.handy.portal.core.constant.MainViewPage.DASHBOARD_VIDEO_LIBRARY;
+import static com.handy.portal.core.constant.MainViewPage.HELP_WEBVIEW;
+import static com.handy.portal.core.constant.MainViewPage.PAYMENTS;
+import static com.handy.portal.core.constant.MainViewPage.PROFILE_UPDATE;
+import static com.handy.portal.core.constant.MainViewPage.REFER_A_FRIEND;
 import static com.handy.portal.core.model.ProviderPersonalInfo.ProfileImage.Type.THUMBNAIL;
 
 public class MoreNavItemsFragment extends ActionBarFragment {
@@ -47,6 +50,8 @@ public class MoreNavItemsFragment extends ActionBarFragment {
     BookingManager mBookingManager;
     @Inject
     LayerHelper mLayerHelper;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.more_pro_header)
     ProHeaderView mProHeaderView;
@@ -84,7 +89,8 @@ public class MoreNavItemsFragment extends ActionBarFragment {
 
     @OnClick(R.id.more_pro_header)
     public void launchProfile() {
-        FragmentUtils.switchToFragment(this, new ProfileUpdateFragment(), true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                PROFILE_UPDATE, null, null, true);
     }
 
     @OnClick(R.id.more_view_and_share)
@@ -94,31 +100,37 @@ public class MoreNavItemsFragment extends ActionBarFragment {
 
     @OnClick(R.id.more_ratings_and_feedback)
     public void launchRatingAndFeedback() {
-        FragmentUtils.switchToFragment(this, new RatingsAndFeedbackFragment(), true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                DASHBOARD, null, null, true);
     }
 
     @OnClick(R.id.more_payments)
     public void launchPayments() {
-        FragmentUtils.switchToFragment(this, new PaymentsFragment(), true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                PAYMENTS, null, null, true);
     }
 
     @OnClick(R.id.more_refer_a_friend)
     public void launchReferral() {
-        FragmentUtils.switchToFragment(this, new ReferAFriendFragment(), true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                REFER_A_FRIEND, null, null, true);
     }
 
     @OnClick(R.id.more_account_settings)
     public void launchAccountSettings() {
-        FragmentUtils.switchToFragment(this, new AccountSettingsFragment(), true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                ACCOUNT_SETTINGS, null, null, true);
     }
 
     @OnClick(R.id.more_video_library)
     public void launchVideoLibrary() {
-        FragmentUtils.switchToFragment(this, DashboardVideoLibraryFragment.newInstance(), true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                DASHBOARD_VIDEO_LIBRARY, null, null, true);
     }
 
     @OnClick(R.id.more_help)
     public void launchHelp() {
-        FragmentUtils.switchToFragment(this, HelpWebViewFragment.newInstance(), true);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                HELP_WEBVIEW, null, null, true);
     }
 }

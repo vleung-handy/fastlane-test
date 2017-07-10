@@ -28,9 +28,9 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.event.ProviderSettingsEvent;
 import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.core.model.ProviderSettings;
 import com.handy.portal.core.ui.activity.MainActivity;
@@ -67,6 +67,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
     PrefsManager mPrefsManager;
     @Inject
     BookingManager mBookingManager;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.fetch_error_view)
     View mFetchErrorView;
@@ -413,8 +415,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
         arguments.putString(BundleKeys.BOOKING_SOURCE, getBookingSourceName());
         arguments.putString(BundleKeys.EVENT_CONTEXT, EventContext.AVAILABLE_JOBS);
         arguments.putSerializable(BundleKeys.PAGE, getAppPage());
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.JOB_DETAILS, arguments,
-                TransitionStyle.JOB_LIST_TO_DETAILS, true));
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.JOB_DETAILS, arguments, TransitionStyle.JOB_LIST_TO_DETAILS, true);
     }
 
     private void setRefreshing(final boolean refreshing) {

@@ -19,9 +19,10 @@ import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.bookings.ui.fragment.dialog.ConfirmBookingActionDialogFragment;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
@@ -49,6 +50,8 @@ public class RescheduleDialogFragment extends ConfirmBookingActionDialogFragment
     ProviderManager mProviderManager;
     @Inject
     EventBus mBus;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.reschedule_dialog_title)
     TextView mTitle;
@@ -203,13 +206,14 @@ public class RescheduleDialogFragment extends ConfirmBookingActionDialogFragment
     private void navigateToEditWeeklyAvailability() {
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.FLOW_CONTEXT, EventContext.AVAILABILITY);
-        mBus.post(new NavigationEvent.NavigateToPage(
+        mNavigationManager.navigateToPage(
+                getActivity().getSupportFragmentManager(),
                 mConfigManager.getConfigurationResponse().isTemplateAvailabilityEnabled()
                         ? MainViewPage.EDIT_WEEKLY_TEMPLATE_AVAILABLE_HOURS
                         : MainViewPage.EDIT_WEEKLY_ADHOC_AVAILABLE_HOURS,
                 arguments,
-                true
-        ));
+                TransitionStyle.NATIVE_TO_NATIVE,
+                true);
         dismiss();
     }
 
@@ -219,7 +223,8 @@ public class RescheduleDialogFragment extends ConfirmBookingActionDialogFragment
                 BundleKeys.TARGET_URL,
                 mDataManager.getBaseUrl() + HelpCenterConstants.SETTING_HOURS_INFO_PATH
         );
-        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.WEB_PAGE, arguments, true));
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.WEB_PAGE, arguments, TransitionStyle.NATIVE_TO_NATIVE, true);
         dismiss();
     }
 }

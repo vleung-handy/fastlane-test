@@ -17,8 +17,8 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
-import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
@@ -50,9 +50,10 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
 
     @Inject
     ConfigManager mConfigManager;
-
     @Inject
     PaymentsManager mPaymentsManager;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     //TODO: investigate using @Produce and make manager handle more of this logic
     @BindView(R.id.slide_up_panel_container)
@@ -231,7 +232,8 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
             Bundle arguments = PaymentsDetailFragment.createBundle((NeoPaymentBatch) paymentBatch,
                     isCurrentWeekBatch,
                     oneTimeCashOutInfo);
-            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PAYMENTS_DETAIL, arguments, true));
+            mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                    MainViewPage.PAYMENTS_DETAIL, arguments, null, true);
         }
     }
 
@@ -250,7 +252,8 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
     private void goToHelpCenterWebView() {
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.HELP_REDIRECT_PATH, HELP_PAYMENTS_SECTION_REDIRECT_PATH);
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.HELP_WEBVIEW, arguments, true));
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.HELP_WEBVIEW, arguments, null, true);
     }
 
     private void onReceivePaymentBatchesSuccess(@NonNull final PaymentBatches paymentBatches,

@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.TransitionStyle;
-import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.library.ui.fragment.dialog.PopupDialogFragment;
 
 import org.greenrobot.eventbus.EventBus;
@@ -26,6 +26,8 @@ public class PaymentBillBlockerDialogFragment extends PopupDialogFragment //TODO
 {
     @Inject
     EventBus mBus;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.payments_bill_blocker_content)
     TextView mPaymentBlockerContentText;
@@ -59,7 +61,8 @@ public class PaymentBillBlockerDialogFragment extends PopupDialogFragment //TODO
         updateNowButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.SELECT_PAYMENT_METHOD, new Bundle(), TransitionStyle.REFRESH_PAGE, true));
+                mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                        MainViewPage.SELECT_PAYMENT_METHOD, null, TransitionStyle.REFRESH_PAGE, true);
                 PaymentBillBlockerDialogFragment.this.dismiss();
             }
         });

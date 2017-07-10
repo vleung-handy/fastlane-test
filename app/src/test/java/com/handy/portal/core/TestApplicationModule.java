@@ -10,6 +10,8 @@ import com.handy.portal.bookings.ui.fragment.BookingFragment;
 import com.handy.portal.bookings.ui.fragment.InProgressBookingFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
+import com.handy.portal.clients.ui.fragment.ClientConversationsFragment;
+import com.handy.portal.clients.ui.fragment.ClientsFragment;
 import com.handy.portal.clients.ui.fragment.ProRequestedJobsFragment;
 import com.handy.portal.clients.ui.fragment.dialog.SwapBookingClaimDialogFragment;
 import com.handy.portal.core.manager.AppseeManager;
@@ -17,6 +19,7 @@ import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.core.manager.FileManager;
 import com.handy.portal.core.manager.LoginManager;
 import com.handy.portal.core.manager.PageNavigationManager;
+import com.handy.portal.core.manager.PageNavigationManagerTest;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.manager.StripeManager;
@@ -25,13 +28,13 @@ import com.handy.portal.core.manager.UrbanAirshipManager;
 import com.handy.portal.core.manager.UserInterfaceUpdateManager;
 import com.handy.portal.core.ui.activity.LoginActivity;
 import com.handy.portal.core.ui.activity.MainActivity;
+import com.handy.portal.core.ui.activity.MainActivityTest;
 import com.handy.portal.core.ui.activity.SplashActivity;
 import com.handy.portal.core.ui.activity.TestActivity;
 import com.handy.portal.core.ui.element.SupportActionView;
 import com.handy.portal.core.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.core.ui.fragment.LoginActivityFragment;
 import com.handy.portal.core.ui.fragment.LoginSltFragment;
-import com.handy.portal.core.ui.fragment.MainActivityTest;
 import com.handy.portal.core.ui.fragment.ProfileUpdateFragment;
 import com.handy.portal.core.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.dashboard.fragment.DashboardFeedbackFragment;
@@ -66,6 +69,7 @@ import com.handy.portal.payments.ui.element.PaymentsBatchListView;
 import com.handy.portal.payments.ui.fragment.PaymentsDetailFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsFragmentTest;
+import com.handy.portal.payments.ui.fragment.SelectPaymentMethodFragment;
 import com.handy.portal.retrofit.DynamicEndpoint;
 import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
@@ -96,65 +100,73 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.when;
 
-@Module(injects = {
-        TestBaseApplication.class,
-        LoginActivityFragment.class,
-        LoginActivity.class,
-        MainActivity.class,
-        ProfileUpdateFragment.class,
-        PleaseUpdateFragment.class,
-        AvailableBookingsFragment.class,
-        ScheduledBookingsFragment.class,
-        UrbanAirshipManager.class,
-        PaymentsFragment.class,
-        PaymentsDetailFragment.class,
-        TestActivity.class,
-        PaymentsBatchListView.class,
-        SupportActionView.class,
-        PaymentsFragmentTest.class,
-        MainActivityTest.class,
-        LocationSettingsBlockerDialogFragment.class,
-        SendReceiptCheckoutFragment.class,
-        PaymentBatchListAdapter.class,
-        SetupHandler.class,
-        BookingDetailsWrapperFragment.class,
-        BookingFragment.class,
-        InProgressBookingFragment.class,
-        RatingsAndFeedbackFragment.class,
-        DashboardOptionsPerformanceView.class,
-        DashboardFeedbackFragment.class,
-        DashboardFeedbackView.class,
-        DashboardReviewsFragment.class,
-        DashboardTiersFragment.class,
-        ProRequestedJobsFragment.class,
-        NotificationsFragment.class,
-        ReferAFriendFragment.class,
-        AccountSettingsFragment.class,
-        DashboardVideoLibraryFragment.class,
-        HelpWebViewFragment.class,
-        SwapBookingClaimDialogFragment.class,
-        OnboardingFlowActivity.class,
-        OnboardingSubflowActivity.class,
-        OnboardingStatusFragment.class,
-        IDVerificationFragment.class,
-        SchedulePreferencesFragment.class,
-        ScheduleBuilderFragment.class,
-        PurchaseSuppliesFragment.class,
-        PurchaseSuppliesConfirmationFragment.class,
-        NewPurchaseSuppliesFragment.class,
-        ScheduleConfirmationFragment.class,
-        EventLogManagerTest.class,
-        LoginActivity.class,
-        LoginSltFragment.class,
-        SplashActivity.class,
-        SchedulePreferencesFragmentTest.class,
-        ScheduleConfirmationFragmentTest.class,
-        AcceptTermsStep.class,
-        SetConfigurationStep.class,
-        SetProviderProfileStep.class,
-        PortalWebViewClient.class,
-
-}, library = true)
+@Module(
+        injects = {
+                TestBaseApplication.class,
+                LoginActivityFragment.class,
+                LoginActivity.class,
+                MainActivity.class,
+                ProfileUpdateFragment.class,
+                PleaseUpdateFragment.class,
+                AvailableBookingsFragment.class,
+                ScheduledBookingsFragment.class,
+                UrbanAirshipManager.class,
+                PaymentsFragment.class,
+                PaymentsDetailFragment.class,
+                TestActivity.class,
+                PaymentsBatchListView.class,
+                SupportActionView.class,
+                PaymentsFragmentTest.class,
+                MainActivityTest.class,
+                LocationSettingsBlockerDialogFragment.class,
+                SendReceiptCheckoutFragment.class,
+                PaymentBatchListAdapter.class,
+                SetupHandler.class,
+                BookingDetailsWrapperFragment.class,
+                BookingFragment.class,
+                InProgressBookingFragment.class,
+                RatingsAndFeedbackFragment.class,
+                DashboardOptionsPerformanceView.class,
+                DashboardFeedbackFragment.class,
+                DashboardFeedbackView.class,
+                DashboardReviewsFragment.class,
+                DashboardTiersFragment.class,
+                ProRequestedJobsFragment.class,
+                NotificationsFragment.class,
+                ReferAFriendFragment.class,
+                AccountSettingsFragment.class,
+                DashboardVideoLibraryFragment.class,
+                HelpWebViewFragment.class,
+                SwapBookingClaimDialogFragment.class,
+                OnboardingFlowActivity.class,
+                OnboardingSubflowActivity.class,
+                OnboardingStatusFragment.class,
+                IDVerificationFragment.class,
+                SchedulePreferencesFragment.class,
+                ScheduleBuilderFragment.class,
+                PurchaseSuppliesFragment.class,
+                PurchaseSuppliesConfirmationFragment.class,
+                NewPurchaseSuppliesFragment.class,
+                ScheduleConfirmationFragment.class,
+                EventLogManagerTest.class,
+                LoginActivity.class,
+                LoginSltFragment.class,
+                SplashActivity.class,
+                SchedulePreferencesFragmentTest.class,
+                ScheduleConfirmationFragmentTest.class,
+                AcceptTermsStep.class,
+                SetConfigurationStep.class,
+                SetProviderProfileStep.class,
+                PortalWebViewClient.class,
+                PageNavigationManagerTest.class,
+                ClientsFragment.class,
+                ClientConversationsFragment.class,
+                SelectPaymentMethodFragment.class,
+        },
+        includes = {
+                InjectionModule.class,
+        },
+        library = true)
 public class TestApplicationModule {
     private final Application mApplication;
 

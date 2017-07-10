@@ -2,51 +2,40 @@ package com.handy.portal.core.manager;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 
-import com.google.common.collect.ImmutableMap;
 import com.handy.portal.RobolectricGradleTestWrapper;
+import com.handy.portal.TestUtils;
+import com.handy.portal.core.TestBaseApplication;
 import com.handy.portal.core.constant.MainViewPage;
-import com.handy.portal.core.event.NavigationEvent;
-import com.handy.portal.deeplink.DeeplinkMapper;
+import com.handy.portal.core.ui.activity.MainActivity;
 import com.handy.portal.deeplink.DeeplinkUtils;
-import com.handy.portal.payments.PaymentsManager;
-import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 
-import org.greenrobot.eventbus.EventBus;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.ArgumentCaptor;
-import org.mockito.Mock;
+import org.robolectric.Robolectric;
+import org.robolectric.android.controller.ActivityController;
+import org.robolectric.shadows.ShadowApplication;
 
 import javax.inject.Inject;
 
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.atLeastOnce;
-import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.initMocks;
+import static com.handy.portal.logger.handylogger.model.DeeplinkLog.Source.WEBVIEW;
+import static org.hamcrest.Matchers.instanceOf;
+import static org.junit.Assert.assertThat;
 
 public class PageNavigationManagerTest extends RobolectricGradleTestWrapper {
-    @Mock
-    private EventBus bus;
-    @Mock
-    private PrefsManager prefsManager;
-    @Mock
-    private ProviderManager mProviderManager;
-    @Mock
-    private PaymentsManager mPaymentsManager;
-    @Mock
-    private ConfigManager mConfigManager;
-    @Mock
-    private HandyRetrofitEndpoint mEndpoint;
-
     @Inject
-    PageNavigationManager pageNavigationManager;
+    PageNavigationManager mNavigationManager;
+
+    private MainActivity mActivity;
 
     @Before
     public void setUp() throws Exception {
-        initMocks(this);
+        ((TestBaseApplication) ShadowApplication.getInstance().getApplicationContext()).inject(this);
 
-        pageNavigationManager = new PageNavigationManager(bus);
+        ActivityController<MainActivity> activityController = Robolectric.buildActivity(MainActivity.class).create();
+        activityController.start().resume().visible();
+        mActivity = activityController.get();
     }
 
     /**
@@ -56,43 +45,36 @@ public class PageNavigationManagerTest extends RobolectricGradleTestWrapper {
      */
     @Test
     public void onHandleSupportedDeeplinkUrl_shouldPostNavigationEventForDeeplinkPage() throws Exception {
-        ArgumentCaptor<NavigationEvent.NavigateToPage> captor = ArgumentCaptor
-                .forClass(NavigationEvent.NavigateToPage.class);
-        /*
-        verify the deeplinks defined in DeeplinkMapper
-         */
-        ImmutableMap<String, MainViewPage> deeplinkMap = DeeplinkMapper.getDeeplinkMap();
-        for (String deeplinkUrl : deeplinkMap.keySet()) {
-            MainViewPage targetDeeplinkPage = deeplinkMap.get(deeplinkUrl);
+        // verify the deeplinks defined in DeeplinkMapper.java
 
-            pageNavigationManager.handleDeeplinkUrl(null, deeplinkUrl);
+        Fragment currentFragment;
 
-            //verify bus event emitted
-            verify(bus, atLeastOnce()).post(captor.capture());
+        mNavigationManager.handleDeeplinkUrl(mActivity.getSupportFragmentManager(), WEBVIEW, "clients");
+        currentFragment = TestUtils.getScreenFragment(mActivity.getSupportFragmentManager());
+        assertThat(currentFragment, instanceOf(MainViewPage.CLIENTS.getClassType()));
 
-            //verify that the event's target page matches the deeplink's
-            assertEquals(targetDeeplinkPage, captor.getValue().targetPage);
-        }
+        mNavigationManager.handleDeeplinkUrl(mActivity.getSupportFragmentManager(), WEBVIEW, "payments");
+        currentFragment = TestUtils.getScreenFragment(mActivity.getSupportFragmentManager());
+        assertThat(currentFragment, instanceOf(MainViewPage.PAYMENTS.getClassType()));
     }
+
 
     @Test
     public void onHandleSupportedNonUriDerivedDeeplinkBundle_shouldPostNavigationEventForDeeplinkPage() throws Exception {
-        ArgumentCaptor<NavigationEvent.NavigateToPage> captor = ArgumentCaptor
-                .forClass(NavigationEvent.NavigateToPage.class);
-        /*
-        verify the deeplinks defined in DeeplinkMapper
-         */
-        ImmutableMap<String, MainViewPage> deeplinkMap = DeeplinkMapper.getDeeplinkMap();
-        for (String deeplinkUrl : deeplinkMap.keySet()) {
-            Bundle deeplinkDataBundle = DeeplinkUtils.createDeeplinkBundleFromUri(Uri.parse(deeplinkUrl));
-            pageNavigationManager.handleNonUriDerivedDeeplinkDataBundle(deeplinkDataBundle, null);
+        // verify the deeplinks defined in DeeplinkMapper.java
 
-            //verify bus event emitted
-            verify(bus, atLeastOnce()).post(captor.capture());
+        Bundle deeplinkDataBundle;
+        Fragment currentFragment;
 
-            //verify that the event's target page matches the deeplink's
-            MainViewPage mainViewPage = deeplinkMap.get(deeplinkUrl);
-            assertEquals(mainViewPage, captor.getValue().targetPage);
-        }
+        deeplinkDataBundle = DeeplinkUtils.createDeeplinkBundleFromUri(Uri.parse("account_settings/edit_profile"));
+        mNavigationManager.handleNonUriDerivedDeeplinkDataBundle(mActivity.getSupportFragmentManager(), deeplinkDataBundle, WEBVIEW);
+        currentFragment = TestUtils.getScreenFragment(mActivity.getSupportFragmentManager());
+        assertThat(currentFragment, instanceOf(MainViewPage.PROFILE_UPDATE.getClassType()));
+
+        deeplinkDataBundle = DeeplinkUtils.createDeeplinkBundleFromUri(Uri.parse("account_settings/edit_payment_method"));
+        mNavigationManager.handleNonUriDerivedDeeplinkDataBundle(mActivity.getSupportFragmentManager(), deeplinkDataBundle, WEBVIEW);
+        currentFragment = TestUtils.getScreenFragment(mActivity.getSupportFragmentManager());
+        assertThat(currentFragment, instanceOf(MainViewPage.SELECT_PAYMENT_METHOD.getClassType()));
+
     }
 }

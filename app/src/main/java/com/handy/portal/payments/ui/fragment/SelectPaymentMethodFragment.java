@@ -7,9 +7,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.handy.portal.R;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.model.ProviderProfile;
-import com.handy.portal.core.MainContentFragmentHolder;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.model.PaymentFlow;
@@ -22,9 +22,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.handy.portal.core.constant.MainViewPage.UPDATE_BANK_ACCOUNT;
+import static com.handy.portal.core.constant.MainViewPage.UPDATE_DEBIT_CARD;
+
 public class SelectPaymentMethodFragment extends ActionBarFragment {
     @Inject
     ProviderManager providerManager;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.bank_account_details)
     TextView bankAccountDetails;
@@ -57,13 +62,14 @@ public class SelectPaymentMethodFragment extends ActionBarFragment {
      */
     @OnClick(R.id.debit_card_option)
     public void onDebitCardOptionClicked() {
-
-        ((MainContentFragmentHolder) getActivity()).replaceMainContentFragment(PaymentsUpdateDebitCardFragment.newInstance(), true);
+        mNavigationManager.navigateToPage(
+                getActivity().getSupportFragmentManager(), UPDATE_DEBIT_CARD, null, null, true);
     }
 
     @OnClick(R.id.bank_account_option)
     public void onBankAccountOptionClicked() {
-        ((MainContentFragmentHolder) getActivity()).replaceMainContentFragment(PaymentsUpdateBankAccountFragment.newInstance(), true);
+        mNavigationManager.navigateToPage(
+                getActivity().getSupportFragmentManager(), UPDATE_BANK_ACCOUNT, null, null, true);
     }
 
     @Override

@@ -1,5 +1,7 @@
 package com.handy.portal.core.constant;
 
+import com.handy.portal.availability.fragment.EditAvailableHoursFragment;
+import com.handy.portal.availability.fragment.EditWeeklyAdhocAvailableHoursFragment;
 import com.handy.portal.availability.fragment.EditWeeklyTemplateAvailableHoursFragment;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.BookingDetailsWrapperFragment;
@@ -31,8 +33,6 @@ import com.handy.portal.payments.ui.fragment.PaymentsFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsUpdateBankAccountFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsUpdateDebitCardFragment;
 import com.handy.portal.payments.ui.fragment.SelectPaymentMethodFragment;
-import com.handy.portal.availability.fragment.EditAvailableHoursFragment;
-import com.handy.portal.availability.fragment.EditWeeklyAdhocAvailableHoursFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
 
 import java.io.Serializable;

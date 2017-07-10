@@ -14,10 +14,9 @@ import com.handy.portal.availability.view.WeeklyAvailableHoursView;
 import com.handy.portal.availability.viewmodel.AvailableHoursViewModel;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
-import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
-import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProAvailabilityLog;
 
@@ -30,11 +29,11 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 
-import static com.handy.portal.R.string.date;
-
 public class EditWeeklyTemplateAvailableHoursFragment extends EditWeeklyAvailableHoursFragment {
     @Inject
     AvailabilityManager mAvailabilityManager;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.available_hours_content)
     ViewGroup mAvailableHoursContent;
@@ -126,9 +125,8 @@ public class EditWeeklyTemplateAvailableHoursFragment extends EditWeeklyAvailabl
         bundle.putSerializable(BundleKeys.DAY, day);
         bundle.putSerializable(BundleKeys.TIMELINE,
                 mTemplateTimelinesWrapper.findTemplateTimelineForDay(day));
-        final NavigationEvent.NavigateToPage navigationEvent =
-                new NavigationEvent.NavigateToPage(MainViewPage.EDIT_AVAILABLE_HOURS, bundle, true);
-        bus.post(navigationEvent);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.EDIT_AVAILABLE_HOURS, bundle, null, true);
     }
 
     private List<AvailableHoursViewModel> getViewModelsFromTemplateTimelines() {

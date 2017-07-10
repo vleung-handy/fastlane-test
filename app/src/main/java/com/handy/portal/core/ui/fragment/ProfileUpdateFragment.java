@@ -21,12 +21,13 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.Country;
 import com.handy.portal.core.constant.FormDefinitionKey;
 import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.event.ProfileEvent;
 import com.handy.portal.core.event.RegionDefinitionEvent;
 import com.handy.portal.core.manager.AppseeManager;
 import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.model.ConfigurationResponse;
@@ -91,6 +92,8 @@ public class ProfileUpdateFragment extends ActionBarFragment {
     ConfigManager mConfigManager;
     @Inject
     PrefsManager mPrefsManager;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     private FormDefinitionWrapper mFormDefinitionWrapper;
     private boolean mEditingProImage;
@@ -169,11 +172,12 @@ public class ProfileUpdateFragment extends ActionBarFragment {
     @OnClick({R.id.provider_image, R.id.provider_image_edit_button})
     public void onEditImageClicked() {
         final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
-        if (configuration != null && configuration.isProfilePictureUploadEnabled()) {
+        if (configuration.isProfilePictureUploadEnabled()) {
             mEditingProImage = true;
             final Bundle bundle = new Bundle();
             bundle.putSerializable(BundleKeys.NAVIGATION_SOURCE, EditPhotoFragment.Source.PROFILE);
-            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_PICTURE, bundle, true));
+            mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                    MainViewPage.PROFILE_PICTURE, bundle, TransitionStyle.NATIVE_TO_NATIVE, true);
         }
     }
 

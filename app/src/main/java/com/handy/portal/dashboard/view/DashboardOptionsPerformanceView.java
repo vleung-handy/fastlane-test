@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,7 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
-import com.handy.portal.core.event.NavigationEvent;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.dashboard.model.ProviderEvaluation;
 import com.handy.portal.dashboard.model.ProviderFeedback;
 import com.handy.portal.dashboard.model.ProviderRating;
@@ -36,6 +37,8 @@ import butterknife.OnClick;
 public class DashboardOptionsPerformanceView extends FrameLayout {
     @Inject
     EventBus mBus;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.weekly_tier_text)
     TextView mWeeklyTierText;
@@ -159,7 +162,10 @@ public class DashboardOptionsPerformanceView extends FrameLayout {
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
         arguments.putSerializable(BundleKeys.TIERS_TITLE, mTiersTitle);
         mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.TierSelected()));
-        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.DASHBOARD_TIERS, arguments, true));
+        if (getContext() instanceof AppCompatActivity) {
+            mNavigationManager.navigateToPage(((AppCompatActivity) getContext()).getSupportFragmentManager(),
+                    MainViewPage.DASHBOARD_TIERS, arguments, null, false);
+        }
     }
 
     @OnClick(R.id.feedback_option)
@@ -167,7 +173,10 @@ public class DashboardOptionsPerformanceView extends FrameLayout {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
         mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.FeedbackSelected()));
-        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.DASHBOARD_FEEDBACK, arguments, true));
+        if (getContext() instanceof AppCompatActivity) {
+            mNavigationManager.navigateToPage(((AppCompatActivity) getContext()).getSupportFragmentManager(),
+                    MainViewPage.DASHBOARD_FEEDBACK, arguments, null, false);
+        }
     }
 
 
@@ -176,6 +185,9 @@ public class DashboardOptionsPerformanceView extends FrameLayout {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
         mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.FiveStarReviewsSelected()));
-        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.DASHBOARD_REVIEWS, arguments, true));
+        if (getContext() instanceof AppCompatActivity) {
+            mNavigationManager.navigateToPage(((AppCompatActivity) getContext()).getSupportFragmentManager(),
+                    MainViewPage.DASHBOARD_REVIEWS, arguments, null, false);
+        }
     }
 }

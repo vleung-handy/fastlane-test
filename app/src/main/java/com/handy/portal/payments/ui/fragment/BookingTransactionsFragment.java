@@ -16,9 +16,10 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
+import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.ui.element.bookings.BookingResultBannerTextView;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
@@ -57,6 +58,8 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
     ProviderManager mProviderManager;
     @Inject
     PaymentsManager mPaymentsManager;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @BindView(R.id.booking_transactions_banner_text)
     BookingResultBannerTextView mBannerText;
@@ -106,7 +109,9 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
         public void launchUrl(final String url) {
             Bundle arguments = new Bundle();
             arguments.putString(BundleKeys.TARGET_URL, url);
-            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.WEB_PAGE, arguments, true));
+            mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                    MainViewPage.WEB_PAGE, arguments, TransitionStyle.NATIVE_TO_NATIVE, true);
+
             bus.post(new LogEvent.AddLogEvent(new CompletedJobsLog.HelpClicked(mBooking)));
         }
     };

@@ -17,8 +17,8 @@ import com.handy.portal.R;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.event.HandyEvent;
-import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.manager.ConfigManager;
+import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.model.ProviderProfile;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
@@ -80,6 +80,8 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     ConfigManager mConfigManager;
     @Inject
     EventBus mBus;
+    @Inject
+    PageNavigationManager mNavigationManager;
 
     @Override
     protected MainViewPage getAppPage() {
@@ -223,9 +225,8 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.BOOKING_ID, bookingId);
         arguments.putString(BundleKeys.BOOKING_TYPE, bookingType);
-        NavigationEvent.NavigateToPage event =
-                new NavigationEvent.NavigateToPage(MainViewPage.JOB_PAYMENT_DETAILS, arguments, true);
-        bus.post(event);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.JOB_PAYMENT_DETAILS, arguments, null, true);
     }
 
     /**
@@ -354,6 +355,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     public void onCashOutSuccess(@NonNull final String message) {
         //parent fragment is null, not payments fragment, so can't use its callback
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
-        mBus.post(new NavigationEvent.NavigateToPage(MainViewPage.PAYMENTS, false));
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.PAYMENTS, null, null, false);
     }
 }

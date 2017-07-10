@@ -6,9 +6,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -33,7 +31,6 @@ import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.ui.element.BookingMapView;
 import com.handy.portal.core.EnvironmentModifier;
-import com.handy.portal.core.MainContentFragmentHolder;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.RequestCode;
@@ -49,7 +46,6 @@ import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.core.model.ProviderProfile;
 import com.handy.portal.core.ui.element.bookings.BookingMapProvider;
 import com.handy.portal.core.ui.fragment.EditPhotoFragment;
-import com.handy.portal.library.ui.fragment.dialog.TransientOverlayDialogFragment;
 import com.handy.portal.library.ui.layout.TabbedLayout;
 import com.handy.portal.library.ui.widget.TabButton;
 import com.handy.portal.library.ui.widget.TabButtonGroup;
@@ -79,7 +75,7 @@ import static com.handy.portal.core.model.ProviderPersonalInfo.ProfileImage.Type
 
 //TODO: should move some of this logic out of here
 public class MainActivity extends BaseActivity
-        implements BookingMapProvider, LayerHelper.UnreadConversationsCountChangedListener, MainContentFragmentHolder {
+        implements BookingMapProvider, LayerHelper.UnreadConversationsCountChangedListener {
     @Inject
     ProviderManager providerManager;
     @Inject
@@ -294,7 +290,8 @@ public class MainActivity extends BaseActivity
                 && !mUploadProfilePictureBlockerShown) {
             final Bundle arguments = new Bundle();
             arguments.putSerializable(BundleKeys.NAVIGATION_SOURCE, EditPhotoFragment.Source.APP);
-            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_PICTURE, arguments, true));
+            mPageNavigationManager.navigateToPage(getSupportFragmentManager(),
+                    MainViewPage.PROFILE_PICTURE, arguments, null, true);
             mUploadProfilePictureBlockerShown = true;
         }
     }
@@ -345,7 +342,8 @@ public class MainActivity extends BaseActivity
 
     private void handleDeeplinkIfNecessary() {
         if (!mDeeplinkHandled) {
-            mPageNavigationManager.handleNonUriDerivedDeeplinkDataBundle(mDeeplinkData, mDeeplinkSource);
+            mPageNavigationManager.handleNonUriDerivedDeeplinkDataBundle(
+                    getSupportFragmentManager(), mDeeplinkData, mDeeplinkSource);
         }
         mDeeplinkHandled = true;
     }
@@ -399,7 +397,8 @@ public class MainActivity extends BaseActivity
             startActivityForResult(activityPickerIntent, RequestCode.PICK_ACTIVITY);
         }
         else {
-            bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_UPDATE, true));
+            mPageNavigationManager.navigateToPage(getSupportFragmentManager(),
+                    MainViewPage.PROFILE_UPDATE, null, null, true);
         }
     }
 
@@ -444,7 +443,8 @@ public class MainActivity extends BaseActivity
 
     @OnClick(R.id.provider_image)
     public void onProfileImageClicked() {
-        bus.post(new NavigationEvent.NavigateToPage(MainViewPage.PROFILE_UPDATE, true));
+        mPageNavigationManager.navigateToPage(getSupportFragmentManager(),
+                MainViewPage.PROFILE_UPDATE, null, null, true);
     }
 
     @Subscribe
@@ -474,9 +474,14 @@ public class MainActivity extends BaseActivity
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         setTabVisibility(true);
         setDrawerActive(false);
-        swapFragment(event);
+        mPageNavigationManager.navigateToPage(getSupportFragmentManager(), event.targetPage,
+                event.arguments, event.transitionStyle, event.addToBackStack);
         clearOnBackPressedListenerStack();
-        mCurrentPage = event.targetPage;
+    }
+
+    @Subscribe
+    public void updateCurrentPage(NavigationEvent.SelectPage event) {
+        mCurrentPage = event.page;
     }
 
     @Override
@@ -625,7 +630,7 @@ public class MainActivity extends BaseActivity
                 new TabOnClickListener(mAlertsButton, MainViewPage.NOTIFICATIONS));
 
         ConfigurationResponse config = mConfigManager.getConfigurationResponse();
-        if (config != null && config.isMoreFullTabEnabled()) {
+        if (config.isMoreFullTabEnabled()) {
             mMoreButton.setOnClickListener(new TabOnClickListener(mMoreButton, MainViewPage.MORE_ITEMS));
         }
         else {
@@ -648,87 +653,16 @@ public class MainActivity extends BaseActivity
 
     private void switchToPage(@NonNull MainViewPage targetPage, @NonNull Bundle argumentsBundle,
                               @NonNull TransitionStyle overrideTransitionStyle) {
-        bus.post(new NavigationEvent.NavigateToPage(targetPage, argumentsBundle, overrideTransitionStyle, false));
+        mPageNavigationManager.navigateToPage(getSupportFragmentManager(), targetPage,
+                argumentsBundle, overrideTransitionStyle, false);
     }
 
 // Fragment swapping and related
-
     private void clearFragmentBackStack() {
         clearingBackStack = true;
         FragmentManager supportFragmentManager = getSupportFragmentManager();
         supportFragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE); //clears out the whole stack
         clearingBackStack = false;
-    }
-
-    private void swapFragment(NavigationEvent.SwapFragmentEvent swapFragmentEvent) {
-        Fragment newFragment = null;
-        if (swapFragmentEvent.targetPage != null) {
-            try {
-                newFragment = (Fragment) swapFragmentEvent.targetPage.getClassType().newInstance();
-            }
-            catch (Exception e) {
-                Crashlytics.logException(new RuntimeException("Error instantiating fragment class", e));
-                return;
-            }
-        }
-        swapFragment(newFragment,
-                swapFragmentEvent.getReturnFragment(),
-                swapFragmentEvent.getActivityRequestCode(),
-                swapFragmentEvent.arguments,
-                swapFragmentEvent.transitionStyle,
-                swapFragmentEvent.addToBackStack);
-    }
-
-    private void swapFragment(@Nullable Fragment newFragment,
-                              @Nullable Fragment targetFragment,
-                              int activityRequestCode,
-                              @Nullable Bundle arguments,
-                              @Nullable TransitionStyle transitionStyle,
-                              boolean addToBackStack) {
-        if (!addToBackStack) {
-            clearFragmentBackStack();
-        }
-
-        //replace the existing fragment with the new fragment
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-        if (newFragment != null && arguments != null) {
-            newFragment.setArguments(arguments);
-            if (targetFragment != null) {
-                newFragment.setTargetFragment(targetFragment, activityRequestCode);
-            }
-        }
-
-        //Animate the transition, animations must come before the .replace call
-        if (transitionStyle != null) {
-            transaction.setCustomAnimations(
-                    transitionStyle.getIncomingAnimId(),
-                    transitionStyle.getOutgoingAnimId(),
-                    transitionStyle.getPopIncomingAnimId(),
-                    transitionStyle.getPopOutgoingAnimId()
-            );
-
-            //Runs async, covers the transition
-            if (transitionStyle.shouldShowOverlay()) {
-                TransientOverlayDialogFragment overlayDialogFragment = TransientOverlayDialogFragment
-                        .newInstance(R.anim.overlay_fade_in_then_out, R.drawable.ic_success_circle, transitionStyle.getOverlayStringId());
-                overlayDialogFragment.show(getSupportFragmentManager(), "overlay dialog fragment");
-            }
-        }
-
-        // Replace whatever is in the fragment_container view with this fragment,
-        // and add the transaction to the back stack so the user can navigate back
-        transaction.replace(R.id.main_container, newFragment);
-
-        if (addToBackStack) {
-            transaction.addToBackStack(null);
-        }
-        else {
-            transaction.disallowAddToBackStack();
-        }
-
-        // Commit the transaction
-        transaction.commit();
     }
 
     // TODO: consider move log out logic somewhere else
@@ -760,12 +694,6 @@ public class MainActivity extends BaseActivity
         bus.post(new HandyEvent.UserLoggedOut());
         startActivity(new Intent(this, LoginActivity.class));
         finish();
-    }
-
-    //todo will refactor navigation in this class later; this is just being used to support the interface that the select payment method screen expects
-    @Override
-    public void replaceMainContentFragment(@NonNull final Fragment replacementFragment, final boolean addToBackStack) {
-        swapFragment(replacementFragment, null, 0, replacementFragment.getArguments(), TransitionStyle.NATIVE_TO_NATIVE, addToBackStack);
     }
 
     // Inner classes
