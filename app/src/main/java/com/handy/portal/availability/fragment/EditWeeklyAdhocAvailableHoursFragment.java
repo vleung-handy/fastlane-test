@@ -24,7 +24,6 @@ import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProAvailabilityLog;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -82,9 +81,9 @@ public class EditWeeklyAdhocAvailableHoursFragment extends EditWeeklyAvailableHo
         @Override
         public void onCellClicked(final AvailableHoursViewModel viewModel) {
             final Date date = (Date) viewModel.getIdentifier();
-            bus.post(new LogEvent.AddLogEvent(
+            bus.post(
                     new ProAvailabilityLog.SetDayAvailabilitySelected(mFlowContext,
-                            DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date))));
+                            DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(date)));
             final Bundle bundle = new Bundle();
             bundle.putString(BundleKeys.FLOW_CONTEXT, mFlowContext);
             bundle.putSerializable(BundleKeys.MODE, EditAvailableHoursFragment.Mode.ADHOC);
@@ -108,8 +107,8 @@ public class EditWeeklyAdhocAvailableHoursFragment extends EditWeeklyAvailableHo
 
     @OnClick(R.id.copy_hours_button)
     public void onCopyHoursClicked() {
-        bus.post(new LogEvent.AddLogEvent(
-                new ProAvailabilityLog.CopyCurrentWeekSelected(mFlowContext)));
+        bus.post(
+                new ProAvailabilityLog.CopyCurrentWeekSelected(mFlowContext));
         final Availability.Wrapper.AdhocTimelines timelinesWrapper =
                 createNextWeekTimelinesWrapperFromCurrentWeekRange();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));

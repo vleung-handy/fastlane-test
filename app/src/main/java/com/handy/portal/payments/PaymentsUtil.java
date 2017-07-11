@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.handy.portal.R;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.FragmentUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.model.PaymentSupportItem;
@@ -59,8 +58,7 @@ public abstract class PaymentsUtil {
                         new View.OnClickListener() {
                             @Override
                             public void onClick(final View v) {
-                                logEventBus.post(new LogEvent.AddLogEvent(
-                                        new PaymentsLog.CashOut.Adhoc.CashOutEarlySelected()));
+                                logEventBus.post(new PaymentsLog.CashOut.Adhoc.CashOutEarlySelected());
 
                                 //this needs to be launched from a fragment so that callbacks can be properly handled
                                 FragmentUtils.safeLaunchDialogFragment(

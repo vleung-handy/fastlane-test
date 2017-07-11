@@ -15,7 +15,6 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.library.ui.view.JumioCameraDialogBlockerView;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -50,7 +49,7 @@ public class CameraPermissionsBlockerDialogFragment extends InjectedDialogFragme
                     @Override
                     public void onClick(final View v) {
                         if (mBus != null) {
-                            mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.CameraSettingsOpenedLog()));
+                            mBus.post(new NativeOnboardingLog.CameraSettingsOpenedLog());
                         }
 
                         Intent intent = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);

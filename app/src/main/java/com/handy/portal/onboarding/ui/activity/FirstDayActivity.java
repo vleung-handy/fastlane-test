@@ -21,7 +21,6 @@ import com.handy.portal.core.BaseApplication;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.util.MyLeadingMarginSpan2;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.onboarding.model.status.LearningLinkDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowData;
@@ -106,7 +105,7 @@ public class FirstDayActivity extends AppCompatActivity {
                 @Override
                 public void onClick(final View v) {
                     String url = (String) v.getTag();
-                    mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.HelpLinkSelected(url)));
+                    mBus.post(new NativeOnboardingLog.HelpLinkSelected(url));
                     final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     Utils.safeLaunchIntent(intent, FirstDayActivity.this);
                 }
@@ -224,12 +223,12 @@ public class FirstDayActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.HelpArticleOpened(LOG_ARTICLE_NAME)));
+        mBus.post(new NativeOnboardingLog.HelpArticleOpened(LOG_ARTICLE_NAME));
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.HelpArticleClosed(LOG_ARTICLE_NAME)));
+        mBus.post(new NativeOnboardingLog.HelpArticleClosed(LOG_ARTICLE_NAME));
     }
 }

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import com.handy.portal.R;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 
 
@@ -18,8 +17,8 @@ public class NewPurchaseSuppliesFragment extends OnboardingSubflowUIFragment {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.Types.SUPPLIES_SUGGESTION_SHOWN)));
+        bus.post(new NativeOnboardingLog(
+                NativeOnboardingLog.Types.SUPPLIES_SUGGESTION_SHOWN));
 
     }
 
@@ -52,8 +51,8 @@ public class NewPurchaseSuppliesFragment extends OnboardingSubflowUIFragment {
 
     @Override
     protected void onPrimaryButtonClicked() {
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.Types.SUPPLIES_SUGGESTION_TAPPED)));
+        bus.post(new NativeOnboardingLog(
+                NativeOnboardingLog.Types.SUPPLIES_SUGGESTION_TAPPED));
         terminate(new Intent());
     }
 

@@ -40,7 +40,6 @@ import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.library.ui.widget.SafeSwipeRefreshLayout;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FragmentUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.EventContext;
 import com.handy.portal.logger.handylogger.model.EventType;
 import com.handy.portal.logger.handylogger.model.JobsLog;
@@ -122,9 +121,9 @@ public class ProRequestedJobsFragment extends InjectedFragment {
                     FragmentUtils.safeLaunchDialogFragment(
                             dialogFragment, ProRequestedJobsFragment.this, null
                     );
-                    bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobShown(
+                    bus.post(new RequestedJobsLog.DismissJobShown(
                             EventContext.REQUESTED_JOBS, booking
-                    )));
+                    ));
                 }
                 else {
                     dismissJob(booking);
@@ -138,9 +137,9 @@ public class ProRequestedJobsFragment extends InjectedFragment {
                         ProRequestedJobsFragment.this,
                         null
                 );
-                bus.post(new LogEvent.AddLogEvent(new SendAvailabilityLog.SendAvailabilitySelected(
+                bus.post(new SendAvailabilityLog.SendAvailabilitySelected(
                         EventContext.REQUESTED_JOBS, booking)
-                ));
+                );
             }
         };
     }
@@ -173,7 +172,7 @@ public class ProRequestedJobsFragment extends InjectedFragment {
         else {
             showContentViewAndHideOthers(mJobListSwipeRefreshLayout);
         }
-        bus.post(new LogEvent.AddLogEvent(
+        bus.post(
                 new RequestedJobsLog.RequestsShown(
                         EventContext.REQUESTED_JOBS,
                         mUnreadJobsCount,
@@ -181,7 +180,7 @@ public class ProRequestedJobsFragment extends InjectedFragment {
                         BookingListUtils.getOverallCountPerAuxType(filteredJobList, AuxiliaryInfo.Type.FAVORITE),
                         null
                 )
-        ));
+        );
     }
 
     private void navigateToJobDetails(@NonNull Booking booking) {
@@ -191,7 +190,7 @@ public class ProRequestedJobsFragment extends InjectedFragment {
         arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
         arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
         arguments.putString(BundleKeys.EVENT_CONTEXT, EventContext.REQUESTED_JOBS);
-        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.Clicked(booking)));
+        bus.post(new RequestedJobsLog.Clicked(booking));
         mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
                 MainViewPage.JOB_DETAILS, arguments, TransitionStyle.JOB_LIST_TO_DETAILS, true);
     }
@@ -309,8 +308,8 @@ public class ProRequestedJobsFragment extends InjectedFragment {
 
     private void requestClaimJob(final Booking booking) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new LogEvent.AddLogEvent(new JobsLog(EventType.CLAIM_SUBMITTED,
-                EventContext.REQUESTED_JOBS, booking)));
+        bus.post(new JobsLog(EventType.CLAIM_SUBMITTED,
+                EventContext.REQUESTED_JOBS, booking));
         mBookingManager.requestClaimJob(booking, null);
     }
 
@@ -318,8 +317,8 @@ public class ProRequestedJobsFragment extends InjectedFragment {
     public void onReceiveClaimJobSuccess(final HandyEvent.ReceiveClaimJobSuccess event) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         final Booking booking = event.originalBooking;
-        bus.post(new LogEvent.AddLogEvent(new JobsLog(EventType.CLAIM_SUCCESS,
-                EventContext.REQUESTED_JOBS, booking)));
+        bus.post(new JobsLog(EventType.CLAIM_SUCCESS,
+                EventContext.REQUESTED_JOBS, booking));
         bus.post(new BookingEvent.ReceiveProRequestedJobsCountSuccess(--mUnreadJobsCount));
         mAdapter.remove(booking);
         Snackbar.make(mJobListSwipeRefreshLayout, R.string.job_claim_success,
@@ -336,8 +335,8 @@ public class ProRequestedJobsFragment extends InjectedFragment {
         if (TextUtils.isEmpty(errorMessage)) {
             errorMessage = getString(R.string.job_claim_error);
         }
-        bus.post(new LogEvent.AddLogEvent(new JobsLog(EventType.CLAIM_ERROR,
-                EventContext.REQUESTED_JOBS, event.getBooking())));
+        bus.post(new JobsLog(EventType.CLAIM_ERROR,
+                EventContext.REQUESTED_JOBS, event.getBooking()));
         Snackbar.make(mJobListSwipeRefreshLayout, errorMessage, Snackbar.LENGTH_LONG).show();
     }
 
@@ -370,8 +369,8 @@ public class ProRequestedJobsFragment extends InjectedFragment {
 
     private void dismissJob(@NonNull final Booking booking,
                             @NonNull @DismissalReason final String dismissalReason) {
-        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobSubmitted(
-                EventContext.REQUESTED_JOBS, booking, dismissalReason)));
+        bus.post(new RequestedJobsLog.DismissJobSubmitted(
+                EventContext.REQUESTED_JOBS, booking, dismissalReason));
 
         final Booking.RequestAttributes requestAttributes = booking.getRequestAttributes();
         String customerId = null;
@@ -387,8 +386,8 @@ public class ProRequestedJobsFragment extends InjectedFragment {
     public void onReceiveDismissJobSuccess(final HandyEvent.ReceiveDismissJobSuccess event) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         final Booking booking = event.getBooking();
-        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobSuccess(
-                EventContext.REQUESTED_JOBS, booking)));
+        bus.post(new RequestedJobsLog.DismissJobSuccess(
+                EventContext.REQUESTED_JOBS, booking));
         bus.post(new BookingEvent.ReceiveProRequestedJobsCountSuccess(--mUnreadJobsCount));
         mAdapter.remove(booking);
         if (BookingManager.DISMISSAL_REASON_BLOCK_CUSTOMER.equals(event.getDismissalReason())) {
@@ -425,8 +424,8 @@ public class ProRequestedJobsFragment extends InjectedFragment {
         if (TextUtils.isEmpty(errorMessage)) {
             errorMessage = getString(R.string.request_dismissal_error);
         }
-        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobError(
-                EventContext.REQUESTED_JOBS, event.getBooking(), errorMessage)));
+        bus.post(new RequestedJobsLog.DismissJobError(
+                EventContext.REQUESTED_JOBS, event.getBooking(), errorMessage));
         Snackbar.make(mJobListSwipeRefreshLayout, errorMessage, Snackbar.LENGTH_LONG).show();
     }
 

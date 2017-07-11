@@ -15,7 +15,6 @@ import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.library.util.CurrencyUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -59,13 +58,13 @@ public class ConfirmBookingCancelKeepRateDialogFragment extends ConfirmBookingAc
 
         final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
         if (removeAction != null) {
-            mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
+            mBus.post(new ScheduledJobsLog.RemoveJobConfirmationShown(
                     mBooking,
                     ScheduledJobsLog.RemoveJobLog.KEEP_RATE,
                     removeAction.getFeeAmount(),
                     removeAction.getWaivedAmount(),
                     removeAction.getWarningText()
-            )));
+            ));
         }
     }
 
@@ -122,14 +121,14 @@ public class ConfirmBookingCancelKeepRateDialogFragment extends ConfirmBookingAc
 
         final Booking.Action removeAction = mBooking.getAction(Booking.Action.ACTION_REMOVE);
         if (removeAction != null) {
-            mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
+            mBus.post(new ScheduledJobsLog.RemoveJobSubmitted(
                     mBooking,
                     ScheduledJobsLog.RemoveJobLog.KEEP_RATE,
                     null, //don't have a remove reason
                     removeAction.getFeeAmount(),
                     removeAction.getWaivedAmount(),
                     removeAction.getWarningText()
-            )));
+            ));
         }
         if (getTargetFragment() != null) {
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);

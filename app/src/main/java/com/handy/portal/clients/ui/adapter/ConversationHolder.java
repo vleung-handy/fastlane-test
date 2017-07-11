@@ -13,7 +13,6 @@ import com.handy.portal.R;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FontUtils;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ConversationsLog;
 import com.handybook.shared.layer.LayerConstants;
 import com.handybook.shared.layer.LayerUtil;
@@ -53,10 +52,10 @@ public class ConversationHolder extends RecyclerView.ViewHolder {
         mContext.startActivity(intent);
 
         final Identity opposingParticipant = LayerUtil.getOpposingParticipant(mConversation);
-        mBus.post(new LogEvent.AddLogEvent(
+        mBus.post(
                 new ConversationsLog.ConversationSelected(
                         opposingParticipant != null ? opposingParticipant.getUserId() : null,
-                        mConversation.getId().toString())));
+                        mConversation.getId().toString()));
     }
 
     private Conversation mConversation;

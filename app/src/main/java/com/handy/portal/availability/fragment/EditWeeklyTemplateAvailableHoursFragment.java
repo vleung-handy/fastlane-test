@@ -17,7 +17,6 @@ import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProAvailabilityLog;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -116,9 +115,7 @@ public class EditWeeklyTemplateAvailableHoursFragment extends EditWeeklyAvailabl
     private void navigateToEditAvailableHours(final AvailableHoursViewModel viewModel) {
         final Availability.TemplateTimeline.Day day =
                 (Availability.TemplateTimeline.Day) viewModel.getIdentifier();
-        bus.post(new LogEvent.AddLogEvent(
-                new ProAvailabilityLog.SetTemplateDayAvailabilitySelected(mFlowContext, day)
-        ));
+        bus.post(new ProAvailabilityLog.SetTemplateDayAvailabilitySelected(mFlowContext, day));
         final Bundle bundle = new Bundle();
         bundle.putString(BundleKeys.FLOW_CONTEXT, mFlowContext);
         bundle.putSerializable(BundleKeys.MODE, EditAvailableHoursFragment.Mode.TEMPLATE);

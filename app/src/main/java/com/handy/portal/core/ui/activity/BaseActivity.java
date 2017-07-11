@@ -101,10 +101,10 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
                         intent.getBooleanExtra(BundleKeys.DEEPLINK_OPENED_LOGGED, false);
                 if (!deeplinkOpenedLogged) {
                     final String deeplinkSource = intent.getStringExtra(BundleKeys.DEEPLINK_SOURCE);
-                    bus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Opened(
+                    bus.post(new DeeplinkLog.Opened(
                             deeplinkSource,
                             deeplinkData
-                    )));
+                    ));
                     intent.putExtra(BundleKeys.DEEPLINK_OPENED_LOGGED, true);
                 }
             }
@@ -132,7 +132,7 @@ public abstract class BaseActivity extends AppCompatActivity implements AppUpdat
         LocationUtils.showLocationBlockersOrStartServiceIfNecessary(this, isLocationServiceEnabled());
         bus.post(new LogEvent.SendLogsEvent());
         if (mWasOpenBefore) {
-            bus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(false, false)));
+            bus.post(new AppLog.AppOpenLog(false, false));
         }
 
         /**

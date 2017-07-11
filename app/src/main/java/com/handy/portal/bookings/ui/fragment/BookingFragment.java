@@ -58,7 +58,6 @@ import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
 import com.handy.portal.location.manager.LocationManager;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.CheckInFlowLog;
 import com.handy.portal.logger.handylogger.model.EventContext;
 import com.handy.portal.logger.handylogger.model.EventType;
@@ -471,13 +470,13 @@ public class BookingFragment extends TimerActionBarFragment {
     public void callCustomer() {
         bus.post(new HandyEvent.CallCustomerClicked());
         User user = mBooking.getUser();
-        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
-                EventType.CALL_CUSTOMER_SELECTED, user == null ? null : user.getId())));
+        bus.post(new ScheduledJobsLog.ContactCustomerLog(
+                EventType.CALL_CUSTOMER_SELECTED, user == null ? null : user.getId()));
 
         String phoneNumber = mBooking.getBookingPhone();
         if (phoneNumber == null) {
-            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
-                    EventType.CALL_CUSTOMER_FAILED, user == null ? null : user.getId())));
+            bus.post(new ScheduledJobsLog.ContactCustomerLog(
+                    EventType.CALL_CUSTOMER_FAILED, user == null ? null : user.getId()));
             showInvalidPhoneNumberToast();
             Crashlytics.logException(new Exception("Phone number is null for booking " + mBooking.getId()));
             return;
@@ -494,8 +493,8 @@ public class BookingFragment extends TimerActionBarFragment {
         final User user = mBooking.getUser();
         if (chatOptions != null && chatOptions.isDirectToInAppChat() && user != null
                 && !android.text.TextUtils.isEmpty(user.getId())) {
-            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
-                    EventType.IN_APP_CHAT_WITH_CUSTOMER_SELECTED, user.getId())));
+            bus.post(new ScheduledJobsLog.ContactCustomerLog(
+                    EventType.IN_APP_CHAT_WITH_CUSTOMER_SELECTED, user.getId()));
 
             HandyLibrary.getInstance().getHandyService().createConversationForPro(
                     user.getId(), "", new Callback<CreateConversationResponse>() {
@@ -503,8 +502,8 @@ public class BookingFragment extends TimerActionBarFragment {
                         public void success(
                                 final CreateConversationResponse conversationResponse,
                                 final Response response) {
-                            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
-                                    EventType.IN_APP_CHAT_WITH_CUSTOMER_SUCCESS, user.getId())));
+                            bus.post(new ScheduledJobsLog.ContactCustomerLog(
+                                    EventType.IN_APP_CHAT_WITH_CUSTOMER_SUCCESS, user.getId()));
                             Intent intent = new Intent(getContext(), MessagesListActivity.class);
                             intent.putExtra(LayerConstants.LAYER_CONVERSATION_KEY,
                                     Uri.parse(conversationResponse.getConversationId()));
@@ -514,19 +513,19 @@ public class BookingFragment extends TimerActionBarFragment {
 
                         @Override
                         public void failure(final RetrofitError error) {
-                            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
-                                    EventType.IN_APP_CHAT_WITH_CUSTOMER_FAILED, user.getId())));
+                            bus.post(new ScheduledJobsLog.ContactCustomerLog(
+                                    EventType.IN_APP_CHAT_WITH_CUSTOMER_FAILED, user.getId()));
                             showToast(R.string.an_error_has_occurred);
                         }
                     });
         }
         else {
-            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
-                    EventType.TEXT_CUSTOMER_SELECTED, user == null ? null : user.getId())));
+            bus.post(new ScheduledJobsLog.ContactCustomerLog(
+                    EventType.TEXT_CUSTOMER_SELECTED, user == null ? null : user.getId()));
             String phoneNumber = mBooking.getBookingPhone();
             if (phoneNumber == null) {
-                bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.ContactCustomerLog(
-                        EventType.TEXT_CUSTOMER_FAILED, user == null ? null : user.getId())));
+                bus.post(new ScheduledJobsLog.ContactCustomerLog(
+                        EventType.TEXT_CUSTOMER_FAILED, user == null ? null : user.getId()));
                 showInvalidPhoneNumberToast();
                 Crashlytics.logException(
                         new Exception("Phone number is null for booking " + mBooking.getId()));
@@ -587,8 +586,8 @@ public class BookingFragment extends TimerActionBarFragment {
 
     private void requestClaimJob() {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new LogEvent.AddLogEvent(new JobsLog(EventType.CLAIM_SUBMITTED,
-                mOriginEventContext, mBooking, mSource, mSourceExtras)));
+        bus.post(new JobsLog(EventType.CLAIM_SUBMITTED,
+                mOriginEventContext, mBooking, mSource, mSourceExtras));
         mBookingManager.requestClaimJob(mBooking, mSource);
     }
 
@@ -623,8 +622,8 @@ public class BookingFragment extends TimerActionBarFragment {
                     @Override
                     public void onClick(final View v) {
                         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                        bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.OnMyWaySubmitted(
-                                mBooking, mLocationManager.getLastKnownLocationData())));
+                        bus.post(new CheckInFlowLog.OnMyWaySubmitted(
+                                mBooking, mLocationManager.getLastKnownLocationData()));
                         mBookingManager.requestNotifyOnMyWay(
                                 mBooking.getId(), mLocationManager.getLastKnownLocationData());
                     }
@@ -648,16 +647,16 @@ public class BookingFragment extends TimerActionBarFragment {
                     public void onClick(final View v) {
                         if (isUserInRangeOfBooking()) {
                             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-                            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInSubmitted(
-                                    mBooking, mLocationManager.getLastKnownLocationData())));
+                            bus.post(new CheckInFlowLog.CheckInSubmitted(
+                                    mBooking, mLocationManager.getLastKnownLocationData()));
                             mBookingManager.requestNotifyCheckIn(
                                     mBooking.getId(), mLocationManager.getLastKnownLocationData());
                         }
                         else {
                             showToast(R.string.too_far);
-                            bus.post(new LogEvent.AddLogEvent(new CheckInFlowLog.CheckInFailure(
+                            bus.post(new CheckInFlowLog.CheckInFailure(
                                     mBooking, mLocationManager.getLastKnownLocationData()
-                            )));
+                            ));
                         }
                     }
                 });

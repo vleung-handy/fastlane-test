@@ -32,7 +32,6 @@ import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.model.ProviderProfile;
 import com.handy.portal.core.ui.activity.LoginActivity;
 import com.handy.portal.deeplink.DeeplinkUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.payments.PaymentEvent;
@@ -126,7 +125,7 @@ public class AccountSettingsFragment extends ActionBarFragment {
 
     @OnClick(R.id.contact_info_layout)
     public void switchToProfile() {
-        bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileSelected()));
+        bus.post(new ProfileLog.EditProfileSelected());
         mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
                 MainViewPage.PROFILE_UPDATE, null, TransitionStyle.NATIVE_TO_NATIVE, true);
     }
@@ -139,7 +138,7 @@ public class AccountSettingsFragment extends ActionBarFragment {
 
     @OnClick(R.id.order_resupply_layout)
     public void getResupplyKit() {
-        mBus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitSelected()));
+        mBus.post(new ProfileLog.ResupplyKitSelected());
         mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
                 MainViewPage.REQUEST_SUPPLIES, null, TransitionStyle.NATIVE_TO_NATIVE, true);
     }

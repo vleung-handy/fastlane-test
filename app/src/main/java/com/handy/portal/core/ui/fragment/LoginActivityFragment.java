@@ -34,7 +34,6 @@ import com.handy.portal.library.ui.widget.PinCodeInputTextView;
 import com.handy.portal.library.util.EnvironmentUtils;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.LoginLog;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -100,7 +99,7 @@ public class LoginActivityFragment extends InjectedFragment {
 
         registerControlListeners();
 
-        bus.post(new LogEvent.AddLogEvent(new LoginLog.Shown(LoginLog.TYPE_PHONE)));
+        bus.post(new LoginLog.Shown(LoginLog.TYPE_PHONE));
 
         return view;
     }
@@ -123,7 +122,7 @@ public class LoginActivityFragment extends InjectedFragment {
             public void onClick(View v) {
                 switch (currentLoginState) {
                     case INPUTTING_PHONE_NUMBER: {
-                        bus.post(new LogEvent.AddLogEvent(new LoginLog.LoginSubmitted(LoginLog.TYPE_PHONE)));
+                        bus.post(new LoginLog.LoginSubmitted(LoginLog.TYPE_PHONE));
                         if (phoneNumberEditText.validate()) {
                             sendPhoneNumber(phoneNumberEditText.getPhoneNumber());
                             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -132,7 +131,7 @@ public class LoginActivityFragment extends InjectedFragment {
                     }
                     break;
                     case INPUTTING_PIN: {
-                        bus.post(new LogEvent.AddLogEvent(new LoginLog.LoginSubmitted(TYPE_PIN)));
+                        bus.post(new LoginLog.LoginSubmitted(TYPE_PIN));
                         if (pinCodeEditText.validate()) {
                             sendLoginRequest(storedPhoneNumber, pinCodeEditText.getString());
                             InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -219,11 +218,11 @@ public class LoginActivityFragment extends InjectedFragment {
     public void onPinCodeRequestReceived(HandyEvent.ReceivePinCodeSuccess event) {
         if (currentLoginState == LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE) {
             if (event.pinRequestDetails.getSuccess()) {
-                bus.post(new LogEvent.AddLogEvent(new LoginLog.Success(LoginLog.TYPE_PHONE)));
+                bus.post(new LoginLog.Success(LoginLog.TYPE_PHONE));
                 changeState(LoginState.INPUTTING_PIN);
             }
             else {
-                bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(LoginLog.TYPE_PHONE)));
+                bus.post(new LoginLog.Error(LoginLog.TYPE_PHONE));
                 postLoginErrorEvent("phone number");
                 showToast(R.string.login_error_bad_phone);
                 changeState(LoginState.INPUTTING_PHONE_NUMBER);
@@ -235,7 +234,7 @@ public class LoginActivityFragment extends InjectedFragment {
     @Subscribe
     public void onPinCodeRequestError(HandyEvent.ReceivePinCodeError event) {
         if (currentLoginState == LoginState.WAITING_FOR_PHONE_NUMBER_RESPONSE) {
-            bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(LoginLog.TYPE_PHONE)));
+            bus.post(new LoginLog.Error(LoginLog.TYPE_PHONE));
             postLoginErrorEvent("server");
             if (event.error != null && !TextUtils.isNullOrEmpty(event.error.getMessage())) {
                 new AlertDialog.Builder(getActivity())
@@ -261,13 +260,13 @@ public class LoginActivityFragment extends InjectedFragment {
     public void onLoginRequestSuccess(HandyEvent.ReceiveLoginSuccess event) {
         if (currentLoginState == LoginState.WAITING_FOR_LOGIN_RESPONSE) {
             if (event.loginDetails.getSuccess()) {
-                bus.post(new LogEvent.AddLogEvent(new LoginLog.Success(LoginLog.TYPE_PIN)));
+                bus.post(new LoginLog.Success(LoginLog.TYPE_PIN));
                 beginLogin(event.loginDetails);
             }
             else {
                 //this should never happen anymore since we changed the HTTP response code for login failure. logging for now just in case
                 Crashlytics.logException(new Exception("Login request success event fired but login details success parameter is false"));
-                bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(LoginLog.TYPE_PIN)));
+                bus.post(new LoginLog.Error(LoginLog.TYPE_PIN));
                 showToast(R.string.login_error_bad_login);
                 changeState(LoginState.INPUTTING_PIN);
                 pinCodeEditText.highlight();
@@ -278,7 +277,7 @@ public class LoginActivityFragment extends InjectedFragment {
     @Subscribe
     public void onLoginRequestError(HandyEvent.ReceiveLoginError event) {
         if (currentLoginState == LoginState.WAITING_FOR_LOGIN_RESPONSE) {
-            bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(LoginLog.TYPE_PIN)));
+            bus.post(new LoginLog.Error(LoginLog.TYPE_PIN));
             DataManager.DataManagerError.Type errorType = event.error == null ? null : event.error.getType();
             if (errorType != null) {
                 if (errorType.equals(DataManager.DataManagerError.Type.NETWORK)) {

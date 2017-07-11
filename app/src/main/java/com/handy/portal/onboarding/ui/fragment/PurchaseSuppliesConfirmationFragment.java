@@ -25,7 +25,6 @@ import com.handy.portal.library.ui.view.SimpleContentLayout;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.onboarding.model.supplies.SuppliesInfo;
 import com.handy.portal.onboarding.model.supplies.SuppliesOrderInfo;
@@ -130,8 +129,8 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
             mOrderSummary.setVisibility(View.GONE);
         }
 
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.Types.SUPPLIES_CONFIRMATION_SHOWN)));
+        bus.post(new NativeOnboardingLog(
+                NativeOnboardingLog.Types.SUPPLIES_CONFIRMATION_SHOWN));
     }
 
     @Override
@@ -272,8 +271,8 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
         mShippingSummary.setVisibility(View.GONE);
         mAddress1Field.requestFocus();
 
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.Types.EDIT_ADDRESS_SHOWN)));
+        bus.post(new NativeOnboardingLog(
+                NativeOnboardingLog.Types.EDIT_ADDRESS_SHOWN));
     }
 
     @Subscribe
@@ -334,8 +333,8 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
 
     @Override
     protected void onPrimaryButtonClicked() {
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.Types.SUPPLIES_CONFIRM_PURCHASE_SELECTED)));
+        bus.post(new NativeOnboardingLog(
+                NativeOnboardingLog.Types.SUPPLIES_CONFIRM_PURCHASE_SELECTED));
 
         UIUtils.dismissKeyboard(getActivity());
 
@@ -358,8 +357,8 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
                     mStateField.getValue().getText(),
                     mZipField.getValue().getText()
             ));
-            bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                    NativeOnboardingLog.ServerTypes.UPDATE_ADDRESS.submitted())));
+            bus.post(new NativeOnboardingLog(
+                    NativeOnboardingLog.ServerTypes.UPDATE_ADDRESS.submitted()));
         }
         else {
             mAddressReady = true;
@@ -377,8 +376,8 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
             showLoadingOverlay();
             mPaymentLoading = true;
             bus.post(new StripeEvent.RequestStripeChargeToken(mCard, Country.US));
-            bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                    NativeOnboardingLog.ServerTypes.GET_STRIPE_TOKEN.submitted())));
+            bus.post(new NativeOnboardingLog(
+                    NativeOnboardingLog.ServerTypes.GET_STRIPE_TOKEN.submitted()));
         }
         else {
             mPaymentReady = true;
@@ -422,8 +421,8 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
     public void onReceiveProfileUpdateSuccess(final ProfileEvent.ReceiveProfileUpdateSuccess event) {
         mAddressReady = true;
         mAddressLoading = false;
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.ServerTypes.UPDATE_ADDRESS.success())));
+        bus.post(new NativeOnboardingLog(
+                NativeOnboardingLog.ServerTypes.UPDATE_ADDRESS.success()));
         mProviderPersonalInfo = event.providerPersonalInfo;
         populateShippingSummary();
         confirmPurchase();
@@ -432,8 +431,8 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
     @Subscribe
     public void onReceiveProfileUpdateError(final ProfileEvent.ReceiveProfileUpdateError event) {
         mAddressLoading = false;
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.ServerTypes.UPDATE_ADDRESS.error())));
+        bus.post(new NativeOnboardingLog(
+                NativeOnboardingLog.ServerTypes.UPDATE_ADDRESS.error()));
         smartHideLoadingOverlay();
         showError(event.error.getMessage(), true);
     }
@@ -446,11 +445,11 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
     @Subscribe
     public void onReceiveStripeChargeTokenSuccess(
             final StripeEvent.ReceiveStripeChargeTokenSuccess event) {
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.ServerTypes.GET_STRIPE_TOKEN.success())));
+        bus.post(new NativeOnboardingLog(
+                NativeOnboardingLog.ServerTypes.GET_STRIPE_TOKEN.success()));
         bus.post(new PaymentEvent.RequestUpdateCreditCard(event.getToken()));
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.ServerTypes.UPDATE_CREDIT_CARD.submitted())));
+        bus.post(new NativeOnboardingLog(
+                NativeOnboardingLog.ServerTypes.UPDATE_CREDIT_CARD.submitted()));
     }
 
     /**
@@ -463,8 +462,8 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
             final PaymentEvent.ReceiveUpdateCreditCardSuccess event) {
         mPaymentReady = true;
         mPaymentLoading = false;
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.ServerTypes.UPDATE_CREDIT_CARD.success())));
+        bus.post(new NativeOnboardingLog(
+                NativeOnboardingLog.ServerTypes.UPDATE_CREDIT_CARD.success()));
         final String cardInfoFormatted = getString(R.string.card_info_formatted,
                 mCard.getType(), mCard.getLast4());
         mSuppliesOrderInfo.setPaymentText(cardInfoFormatted);
@@ -475,8 +474,8 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
     public void onReceiveStripeChargeTokenError(
             final StripeEvent.ReceiveStripeChargeTokenError event) {
         mPaymentLoading = false;
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.ServerTypes.GET_STRIPE_TOKEN.error())));
+        bus.post(new NativeOnboardingLog(
+                NativeOnboardingLog.ServerTypes.GET_STRIPE_TOKEN.error()));
         smartHideLoadingOverlay();
         showError(event.getError().getMessage(), true);
     }
@@ -485,8 +484,8 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
     public void onReceiveUpdateCreditCardError(
             final PaymentEvent.ReceiveUpdateCreditCardError event) {
         mPaymentLoading = false;
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.ServerTypes.UPDATE_CREDIT_CARD.error())));
+        bus.post(new NativeOnboardingLog(
+                NativeOnboardingLog.ServerTypes.UPDATE_CREDIT_CARD.error()));
         smartHideLoadingOverlay();
         showError(event.error.getMessage(), true);
     }
@@ -495,8 +494,8 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
         if (mAddressReady && mPaymentReady) {
             showLoadingOverlay();
             bus.post(new HandyEvent.RequestOnboardingSupplies(true));
-            bus.post(new LogEvent.AddLogEvent(
-                    new NativeOnboardingLog.RequestSupplies.Submitted(true)));
+            bus.post(
+                    new NativeOnboardingLog.RequestSupplies.Submitted(true));
         }
         else {
             smartHideLoadingOverlay();
@@ -514,8 +513,8 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
 
     @Subscribe
     public void onReceiveOnboardingSuppliesSuccess(final HandyEvent.ReceiveOnboardingSuppliesSuccess event) {
-        bus.post(new LogEvent.AddLogEvent(
-                new NativeOnboardingLog.RequestSupplies.Success(true)));
+        bus.post(
+                new NativeOnboardingLog.RequestSupplies.Success(true));
         hideLoadingOverlay();
         final Intent data = new Intent();
         mSuppliesOrderInfo.setDesignation(Designation.YES);
@@ -525,8 +524,8 @@ public class PurchaseSuppliesConfirmationFragment extends OnboardingSubflowUIFra
 
     @Subscribe
     public void onReceiveOnboardingSuppliesError(final HandyEvent.ReceiveOnboardingSuppliesError event) {
-        bus.post(new LogEvent.AddLogEvent(
-                new NativeOnboardingLog.RequestSupplies.Error(true)));
+        bus.post(
+                new NativeOnboardingLog.RequestSupplies.Error(true));
         hideLoadingOverlay();
         showError(event.error.getMessage(), true);
     }

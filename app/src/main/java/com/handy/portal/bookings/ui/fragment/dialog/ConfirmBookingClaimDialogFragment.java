@@ -9,7 +9,6 @@ import com.crashlytics.android.Crashlytics;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.core.constant.BundleKeys;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -52,17 +51,17 @@ public class ConfirmBookingClaimDialogFragment
         else {
             Crashlytics.logException(new Exception("getTargetFragment() is null for confirm booking claim dialog fragment"));
         }
-        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ConfirmClaimConfirmed()));
+        mBus.post(new AvailableJobsLog.ConfirmClaimConfirmed());
         dismiss();
     }
 
     @Override
     public void afterShowCancellationPolicyButtonClicked() {
-        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ConfirmClaimDetailsShown()));
+        mBus.post(new AvailableJobsLog.ConfirmClaimDetailsShown());
     }
 
     @Override
     public void afterViewCreated() {
-        mBus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.ConfirmClaimShown()));
+        mBus.post(new AvailableJobsLog.ConfirmClaimShown());
     }
 }

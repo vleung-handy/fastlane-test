@@ -17,7 +17,6 @@ import com.handy.portal.core.ui.adapter.CheckBoxListAdapter;
 import com.handy.portal.library.ui.view.StaticFieldTableRow;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.UIUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.onboarding.model.claim.StartDateRange;
 import com.handy.portal.onboarding.model.claim.Zipcluster;
@@ -137,8 +136,8 @@ public class SchedulePreferencesFragment extends OnboardingSubflowUIFragment {
             mLocationField.setVisibility(View.GONE);
             mSchedulePreferencesNotice.setVisibility(View.GONE);
         }
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.Types.JOB_SEARCH_SHOWN)));
+        bus.post(new NativeOnboardingLog(
+                NativeOnboardingLog.Types.JOB_SEARCH_SHOWN));
     }
 
     @Override
@@ -199,8 +198,8 @@ public class SchedulePreferencesFragment extends OnboardingSubflowUIFragment {
         }
         else {
             showError(getString(R.string.no_jobs_matching_preferences), true);
-            bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                    NativeOnboardingLog.Types.NO_JOBS_LOADED)));
+            bus.post(new NativeOnboardingLog(
+                    NativeOnboardingLog.Types.NO_JOBS_LOADED));
         }
     }
 
@@ -225,8 +224,8 @@ public class SchedulePreferencesFragment extends OnboardingSubflowUIFragment {
 
     public void updateSelectedStartedDate(final Date date) {
         mSelectedStartDate = date;
-        bus.post(new LogEvent.AddLogEvent(
-                new NativeOnboardingLog.StartDateSelected(mSelectedStartDate)));
+        bus.post(
+                new NativeOnboardingLog.StartDateSelected(mSelectedStartDate));
         displaySelectedStartDate();
     }
 
@@ -247,9 +246,9 @@ public class SchedulePreferencesFragment extends OnboardingSubflowUIFragment {
                 mSelectedZipclusterIds.add(item.getId());
             }
         }
-        bus.post(new LogEvent.AddLogEvent(
+        bus.post(
                 new NativeOnboardingLog.LocationsSelected(
-                        new ArrayList<>(mSelectedZipclusterIds))));
+                        new ArrayList<>(mSelectedZipclusterIds)));
         displaySelectedLocations();
     }
 
