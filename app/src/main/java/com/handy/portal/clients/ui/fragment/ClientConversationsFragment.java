@@ -16,7 +16,7 @@ import android.view.ViewGroup;
 
 import com.handy.portal.R;
 import com.handy.portal.clients.ui.adapter.ConversationsAdapter;
-import com.handy.portal.library.ui.fragment.InjectedFragment;
+import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ConversationsLog;
 import com.handybook.shared.layer.LayerConstants;
@@ -31,8 +31,8 @@ import butterknife.ButterKnife;
 import static com.handybook.shared.layer.LayerConstants.LAYER_CONVERSATION_KEY;
 
 
-public class ClientConversationsFragment extends InjectedFragment
-        implements ConversationsAdapter.Listener {
+public class ClientConversationsFragment  extends ActionBarFragment
+        implements LayerHelper.UnreadConversationsCountChangedListener, ConversationsAdapter.Listener {
     private static final int REFRESH_DURATION_MILLIS = 3000;
 
     @Inject
@@ -67,8 +67,21 @@ public class ClientConversationsFragment extends InjectedFragment
     }
 
     @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mLayerHelper.registerUnreadConversationsCountChangedListener(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        mLayerHelper.unregisterUnreadConversationsCountChangedListener(this);
+    }
+
+    @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
+        super.onCreateView(inflater, container, savedInstanceState);
         final View view = inflater.inflate(R.layout.fragment_client_conversations, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -105,6 +118,7 @@ public class ClientConversationsFragment extends InjectedFragment
 
     @Override
     public void onResume() {
+        setActionBar(R.string.messages, false);
         final IntentFilter filter = new IntentFilter(LayerConstants.ACTION_SHOW_NOTIFICATION);
         filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
         getActivity().registerReceiver(mPushNotificationReceiver, filter);

@@ -10,6 +10,7 @@ import com.handy.portal.bookings.ui.fragment.CancellationRequestFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.bookings.ui.fragment.SoftwareLicensesFragment;
+import com.handy.portal.clients.ui.fragment.ClientConversationsFragment;
 import com.handy.portal.clients.ui.fragment.ClientsFragment;
 import com.handy.portal.core.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.core.ui.fragment.EditPhotoFragment;
@@ -53,6 +54,7 @@ public enum MainViewPage implements Serializable {
     SEND_RECEIPT_CHECKOUT(SendReceiptCheckoutFragment.class),
     SOFTWARE_LICENSES(SoftwareLicensesFragment.class),
 
+    MESSAGES(ClientConversationsFragment.class),
     NOTIFICATIONS(NotificationsFragment.class),
 
     MORE_ITEMS(MoreNavItemsFragment.class),
