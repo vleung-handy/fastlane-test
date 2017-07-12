@@ -31,7 +31,7 @@ import butterknife.ButterKnife;
 import static com.handybook.shared.layer.LayerConstants.LAYER_CONVERSATION_KEY;
 
 
-public class ClientConversationsFragment  extends ActionBarFragment
+public class ClientConversationsFragment extends ActionBarFragment
         implements LayerHelper.UnreadConversationsCountChangedListener, ConversationsAdapter.Listener {
     private static final int REFRESH_DURATION_MILLIS = 3000;
 
@@ -81,7 +81,6 @@ public class ClientConversationsFragment  extends ActionBarFragment
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
-        super.onCreateView(inflater, container, savedInstanceState);
         final View view = inflater.inflate(R.layout.fragment_client_conversations, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -89,6 +88,7 @@ public class ClientConversationsFragment  extends ActionBarFragment
 
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
+        setActionBar(R.string.messages, false);
         initRefreshLayout(mRefreshLayout);
         initRefreshLayout(mEmptyRefreshLayout);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -118,7 +118,6 @@ public class ClientConversationsFragment  extends ActionBarFragment
 
     @Override
     public void onResume() {
-        setActionBar(R.string.messages, false);
         final IntentFilter filter = new IntentFilter(LayerConstants.ACTION_SHOW_NOTIFICATION);
         filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
         getActivity().registerReceiver(mPushNotificationReceiver, filter);

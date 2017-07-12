@@ -583,14 +583,14 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onUnreadConversationsCountChanged(final long count) {
-        updateClientsButtonUnreadCount();
+        if (mMessagesButton != null) {
+            mMessagesButton.setUnreadCount((int) mLayerHelper.getUnreadConversationsCount());
+        }
     }
 
     private void updateClientsButtonUnreadCount() {
         if (mClientsButton != null && mJobRequestsCount != null) {
-            int clientsButtonUnreadCount = mJobRequestsCount;
-            clientsButtonUnreadCount += mLayerHelper.getUnreadConversationsCount();
-            mClientsButton.setUnreadCount(clientsButtonUnreadCount);
+            mClientsButton.setUnreadCount(mJobRequestsCount);
         }
     }
 
@@ -612,7 +612,7 @@ public class MainActivity extends BaseActivity
                 .init(R.string.tab_schedule, R.drawable.ic_menu_schedule);
         mScheduleButton.setId(R.id.tab_nav_schedule);
         mMessagesButton = new TabButton(this)
-                .init(R.string.tab_messages, R.drawable.ic_menu_alerts);
+                .init(R.string.tab_messages, R.drawable.ic_menu_messages);
         mMessagesButton.setId(R.id.tab_nav_messages);
         mMoreButton = new TabButton(this)
                 .init(R.string.tab_more, R.drawable.ic_menu_more);
