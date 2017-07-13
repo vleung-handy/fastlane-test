@@ -67,14 +67,14 @@ public class ConfigurationResponse {
     private boolean mScheduleTabRequestedEnabled;
 
     @SerializedName("daily_pro_payments_enabled")
-    private boolean mDailyProPaymentsEnabled;
+    private boolean mAdhocCashOutEnabled;
 
     @SerializedName("template_availability_enabled")
     private boolean mTemplateAvailabilityEnabled;
 
     // Getters
-    public boolean isDailyProPaymentsEnabled() {
-        return mDailyProPaymentsEnabled;
+    public boolean isAdhocCashOutEnabled() {
+        return mAdhocCashOutEnabled;
     }
 
     public boolean areAnnouncementsEnabled() {

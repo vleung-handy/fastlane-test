@@ -130,7 +130,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
 
         paymentDetailExpandableListView.updateData(
                 mNeoPaymentBatch,
-                mConfigManager.getConfigurationResponse().isDailyProPaymentsEnabled()
+                mConfigManager.getConfigurationResponse().isAdhocCashOutEnabled()
                         && mIsCurrentWeekPaymentBatch);
         paymentDetailExpandableListView.getPaymentSupportButton().setOnClickListener(
                 new View.OnClickListener() {

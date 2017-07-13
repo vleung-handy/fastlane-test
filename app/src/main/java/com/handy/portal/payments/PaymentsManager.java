@@ -90,7 +90,7 @@ public class PaymentsManager {
         mDataManager.getBookingTransactions(bookingId, bookingType.toLowerCase(), callback);
     }
 
-    public void requestPaymentCashOutInfo(final DataManager.Callback<AdhocCashOutInfo> cb) {
+    public void requestAdhocCashOutInfo(final DataManager.Callback<AdhocCashOutInfo> cb) {
         mDataManager.getAdhocCashOutInfo(cb);
     }
 
