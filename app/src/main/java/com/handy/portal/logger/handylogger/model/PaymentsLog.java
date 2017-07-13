@@ -28,42 +28,52 @@ public class PaymentsLog extends EventLog {
     }
 
 
-    public static class CashOutEarlyBankHelpSelected extends PaymentsLog {
-        private static final String EVENT_TYPE = "cash_out_early_bank_help_selected";
+    public abstract static class CashOut {
+        public abstract static class Adhoc {
 
-        public CashOutEarlyBankHelpSelected() {
-            super(EVENT_TYPE);
+            public static class CashOutEarlyBankHelpSelected extends PaymentsLog {
+                private static final String EVENT_TYPE = "cash_out_early_bank_help_selected";
+
+                public CashOutEarlyBankHelpSelected() {
+                    super(EVENT_TYPE);
+                }
+            }
+
+
+            public static class CashOutEarlyPaymentMethodSelected extends PaymentsLog {
+                private static final String EVENT_TYPE = "cash_out_early_payment_method_selected";
+
+                public CashOutEarlyPaymentMethodSelected() {
+                    super(EVENT_TYPE);
+                }
+            }
+
+
+            public static class CashOutEarlySelected extends PaymentsLog {
+                private static final String EVENT_TYPE = "cash_out_early_selected";
+
+                public CashOutEarlySelected() {
+                    super(EVENT_TYPE);
+                }
+            }
+
+
+            public static class CashOutEarlyConfirmSelected extends PaymentsLog {
+                private static final String EVENT_TYPE = "cash_out_early_confirm_selected";
+
+                @SerializedName("cash_out_profit")
+                private int mCashOutProfitCents;
+
+                public CashOutEarlyConfirmSelected(int cashOutProfitCents) {
+                    super(EVENT_TYPE);
+                    mCashOutProfitCents = cashOutProfitCents;
+                }
+            }
         }
-    }
 
 
-    public static class CashOutEarlyPaymentMethodSelected extends PaymentsLog {
-        private static final String EVENT_TYPE = "cash_out_early_payment_method_selected";
-
-        public CashOutEarlyPaymentMethodSelected() {
-            super(EVENT_TYPE);
-        }
-    }
-
-
-    public static class CashOutEarlySelected extends PaymentsLog {
-        private static final String EVENT_TYPE = "cash_out_early_selected";
-
-        public CashOutEarlySelected() {
-            super(EVENT_TYPE);
-        }
-    }
-
-
-    public static class CashOutEarlyConfirmSelected extends PaymentsLog {
-        private static final String EVENT_TYPE = "cash_out_early_confirm_selected";
-
-        @SerializedName("cash_out_profit")
-        private int mCashOutProfitCents;
-
-        public CashOutEarlyConfirmSelected(int cashOutProfitCents) {
-            super(EVENT_TYPE);
-            mCashOutProfitCents = cashOutProfitCents;
+        public abstract static class Recurring {
+            
         }
     }
 
