@@ -1,5 +1,7 @@
 package com.handy.portal.logger.handylogger.model;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 public class PaymentsLog extends EventLog {
@@ -72,8 +74,63 @@ public class PaymentsLog extends EventLog {
         }
 
 
-        public abstract static class Recurring {
-            
+        public abstract static class Recurring extends PaymentsLog {
+            private static final String EVENT_TYPE_PREFIX = "recurring_cash_out_";
+
+            public Recurring(@NonNull String eventTypeSuffix) {
+                super(EVENT_TYPE_PREFIX + eventTypeSuffix);
+            }
+
+            public static class ToggleTapped extends Recurring {
+                private static final String EVENT_TYPE_SUFFIX = "toggle_tapped";
+
+                @SerializedName("attempting_to_enable")
+                private boolean mAttemptingToEnable;
+
+                public ToggleTapped(boolean attemptingToEnable) {
+                    super(EVENT_TYPE_SUFFIX);
+                    mAttemptingToEnable = attemptingToEnable;
+                }
+            }
+
+
+            public static class ToggleConfirmationCancelled extends Recurring {
+                private static final String EVENT_TYPE_SUFFIX = "toggle_confirmation_cancelled";
+
+                @SerializedName("attempting_to_enable")
+                private boolean mAttemptingToEnable;
+
+                public ToggleConfirmationCancelled(boolean attemptingToEnable) {
+                    super(EVENT_TYPE_SUFFIX);
+                    mAttemptingToEnable = attemptingToEnable;
+                }
+            }
+
+
+            public static class ToggleConfirmationConfirmed extends Recurring {
+                private static final String EVENT_TYPE_SUFFIX = "toggle_confirmation_confirmed";
+
+                @SerializedName("attempting_to_enable")
+                private boolean mAttemptingToEnable;
+
+                public ToggleConfirmationConfirmed(boolean attemptingToEnable) {
+                    super(EVENT_TYPE_SUFFIX);
+                    mAttemptingToEnable = attemptingToEnable;
+                }
+            }
+
+
+            public static class HelpButtonTapped extends Recurring {
+                private static final String EVENT_TYPE_SUFFIX = "help_tapped";
+
+                @SerializedName("recurring_cash_out_enabled")
+                private boolean mRecurringCashOutEnabled;
+
+                public HelpButtonTapped(boolean recurringCashOutEnabled) {
+                    super(EVENT_TYPE_SUFFIX);
+                    mRecurringCashOutEnabled = recurringCashOutEnabled;
+                }
+            }
         }
     }
 
