@@ -19,19 +19,19 @@ public class PaymentBatches implements Serializable {
      * acknowledged that this key name is confusing, but it is too late to rename now
      */
     @SerializedName("cash_out")
-    private OneTimeCashOutInfo mOneTimeCashOutInfo;
+    private AdhocCashOutInfo mAdhocCashOutInfo;
 
-    @SerializedName("daily_cash_out")
-    private DailyCashOutInfo mDailyCashOutInfo;
+    @SerializedName("recurring_cash_out")
+    private RecurringCashOutInfo mRecurringCashOutInfo;
 
     @Nullable
-    public DailyCashOutInfo getDailyCashOutInfo() {
-        return mDailyCashOutInfo;
+    public RecurringCashOutInfo getRecurringCashOutInfo() {
+        return mRecurringCashOutInfo;
     }
 
     @Nullable
-    public OneTimeCashOutInfo getOneTimeCashOutInfo() {
-        return mOneTimeCashOutInfo;
+    public AdhocCashOutInfo getAdhocCashOutInfo() {
+        return mAdhocCashOutInfo;
     }
 
     public NeoPaymentBatch[] getNeoPaymentBatches() {
@@ -67,7 +67,7 @@ public class PaymentBatches implements Serializable {
     /**
      * used to render UI for the "cash out now" feature
      */
-    public static class OneTimeCashOutInfo implements Serializable
+    public static class AdhocCashOutInfo implements Serializable
     {
         @SerializedName("cash_out_minimum_threshold")
         private Integer mCashOutMinimumThresholdCents;
@@ -96,55 +96,78 @@ public class PaymentBatches implements Serializable {
 
 
     /**
-     * used to render UI related to the daily cash out feature,
+     * used to render UI related to the recurring cash out feature,
      * including the toggle and confirmation screen.
-     * <p>
-     * we will never support any frequency besides daily.
      */
-    public static class DailyCashOutInfo implements Serializable {
-        @SerializedName("enabled")
-        private boolean mEnabled;
+    public static class RecurringCashOutInfo implements Serializable {
+        @SerializedName("payment_batch_period")
+        private PaymentBatchPeriodInfo mPaymentBatchPeriodInfo;
         /**
          * the fee charged per cash out
          */
-        @SerializedName("fee")
-        private PaymentAmount mCashOutFee;
-        @SerializedName("help_center_url")
+        @SerializedName("recurring_fee")
+        private PaymentAmount mRecurringFee;
+        @SerializedName("help_center_article_url")
         private String mHelpCenterArticleUrl;
-        @SerializedName("toggle_confirmation_copy")
-        private ToggleConfirmationCopy mToggleConfirmationCopy;
+        @SerializedName("toggle_confirmation")
+        private ToggleConfirmationInfo mToggleConfirmationInfo;
+        @SerializedName("edit_disabled_dialog")
+        private EditDisabledDialogInfo mEditDisabledDialogInfo;
 
-        public boolean isEnabled() {
-            return mEnabled;
+        @NonNull
+        public PaymentBatchPeriodInfo getPaymentBatchPeriodInfo() {
+            return mPaymentBatchPeriodInfo;
         }
 
         @NonNull
-        public PaymentAmount getCashOutFee() {
-            return mCashOutFee;
+        public PaymentAmount getRecurringFee() {
+            return mRecurringFee;
         }
 
-        @NonNull
-        public ToggleConfirmationCopy getToggleConfirmationCopy() {
-            return mToggleConfirmationCopy;
-        }
 
         @NonNull
         public String getHelpCenterArticleUrl() {
             return mHelpCenterArticleUrl;
         }
 
+        @NonNull
+        public ToggleConfirmationInfo getToggleConfirmationInfo() {
+            return mToggleConfirmationInfo;
+        }
 
-        public static class ToggleConfirmationCopy implements Serializable {
-            @SerializedName("title")
+        @Nullable
+        public EditDisabledDialogInfo getEditDisabledDialogInfo() {
+            return mEditDisabledDialogInfo;
+        }
+
+        public static class PaymentBatchPeriodInfo implements Serializable {
+            @SerializedName("editable")
+            private boolean mEditable;
+
+            @SerializedName("days")
+            private Integer mDays;
+
+            public boolean isEditable() {
+                return mEditable;
+            }
+
+            @Nullable
+            public Integer getDays() {
+                return mDays;
+            }
+        }
+
+        public static class ToggleConfirmationInfo implements Serializable {
+            @SerializedName("title_text")
             private String mTitleText;
 
-            @SerializedName("body")
+            @SerializedName("body_text")
             private String mBodyText;
 
-            @SerializedName("confirm_button")
+            @SerializedName("confirm_button_text")
             private String mConfirmButtonText;
 
-            @SerializedName("cancel_button")
+            @SerializedName("cancel_button_text")
             private String mCancelButtonText;
 
             @NonNull
@@ -165,6 +188,24 @@ public class PaymentBatches implements Serializable {
             @NonNull
             public String getCancelButtonText() {
                 return mCancelButtonText;
+            }
+        }
+
+        public static class EditDisabledDialogInfo implements Serializable {
+            @SerializedName("title_text")
+            private String mTitleText;
+
+            @SerializedName("body_text")
+            private String mBodyText;
+
+            @NonNull
+            public String getTitleText() {
+                return mTitleText;
+            }
+
+            @NonNull
+            public String getBodyText() {
+                return mBodyText;
             }
         }
     }

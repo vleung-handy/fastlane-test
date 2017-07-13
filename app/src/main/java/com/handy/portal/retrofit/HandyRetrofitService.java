@@ -10,8 +10,8 @@ import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.payments.model.BatchPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingPaymentReviewRequest;
-import com.handy.portal.payments.model.PaymentCashOutRequest;
-import com.handy.portal.payments.model.DailyCashOutRequest;
+import com.handy.portal.payments.model.AdhocCashOutRequest;
+import com.handy.portal.payments.model.RecurringCashOutRequest;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -131,13 +131,13 @@ public interface HandyRetrofitService {
                     HandyRetrofitCallback cb);
 
     @GET(PAYMENTS_PATH + "cash_out")
-    void getPaymentCashOutInfo(HandyRetrofitCallback cb);
+    void getAdhocCashOutInfo(HandyRetrofitCallback cb);
 
     @POST(PAYMENTS_PATH + "cash_out")
-    void requestPaymentCashOut(@Body PaymentCashOutRequest paymentCashOutRequest, HandyRetrofitCallback cb);
+    void requestAdhocCashOut(@Body AdhocCashOutRequest adhocCashOutRequest, HandyRetrofitCallback cb);
 
-    @POST(PAYMENTS_PATH + "daily_cash_out")
-    void requestDailyCashOut(@Body DailyCashOutRequest dailyCashOutRequest, HandyRetrofitCallback cb);
+    @POST(PAYMENTS_PATH + "cash_out/recurring")
+    void requestRecurringCashOut(@Body RecurringCashOutRequest recurringCashOutRequest, HandyRetrofitCallback cb);
 
     @GET(PAYMENTS_PATH)
     void getPaymentBatches(@Query("date_range_start") Date startDate,

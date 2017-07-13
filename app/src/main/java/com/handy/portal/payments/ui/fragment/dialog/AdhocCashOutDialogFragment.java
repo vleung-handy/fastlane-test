@@ -30,8 +30,8 @@ import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.PaymentsManager;
-import com.handy.portal.payments.model.PaymentCashOutInfo;
-import com.handy.portal.payments.model.PaymentCashOutRequest;
+import com.handy.portal.payments.model.AdhocCashOutInfo;
+import com.handy.portal.payments.model.AdhocCashOutRequest;
 import com.handy.portal.payments.ui.element.PaymentBreakdownLineItemView;
 import com.handy.portal.payments.ui.fragment.SelectPaymentMethodFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
@@ -44,7 +44,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
+public class AdhocCashOutDialogFragment extends FullScreenDialogFragment {
 
     @BindView(R.id.payments_cash_out_content_container)
     View mContentContainer;
@@ -86,14 +86,14 @@ public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
     @Inject
     EventBus mBus;
 
-    private PaymentCashOutInfo mPaymentCashOutInfo;
+    private AdhocCashOutInfo mAdhocCashOutInfo;
 
-    public static final String TAG = PaymentCashOutDialogFragment.class.getName();
+    public static final String TAG = AdhocCashOutDialogFragment.class.getName();
 
-    public static PaymentCashOutDialogFragment newInstance() {
+    public static AdhocCashOutDialogFragment newInstance() {
 
         Bundle args = new Bundle();
-        PaymentCashOutDialogFragment fragment = new PaymentCashOutDialogFragment();
+        AdhocCashOutDialogFragment fragment = new AdhocCashOutDialogFragment();
         fragment.setArguments(args);
         return fragment;
     }
@@ -103,9 +103,9 @@ public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
         mContentContainer.setVisibility(View.GONE);
         showLoadingOverlay();
         mPaymentsManager.requestPaymentCashOutInfo(
-                new FragmentSafeCallback<PaymentCashOutInfo>(this) {
+                new FragmentSafeCallback<AdhocCashOutInfo>(this) {
             @Override
-            public void onCallbackSuccess(final PaymentCashOutInfo response) {
+            public void onCallbackSuccess(final AdhocCashOutInfo response) {
                 if (response.getSuccess() != null
                         && !response.getSuccess()) {
                     showErrorMessage(android.text.TextUtils.isEmpty(response.getErrorMessage()) ?
@@ -138,11 +138,11 @@ public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
         refresh(); //don't want to risk showing outdated payment information
     }
 
-    private void updateWithModel(@NonNull final PaymentCashOutInfo paymentCashOutInfo) {
-        mPaymentCashOutInfo = paymentCashOutInfo;
+    private void updateWithModel(@NonNull final AdhocCashOutInfo adhocCashOutInfo) {
+        mAdhocCashOutInfo = adhocCashOutInfo;
 
         String headerHtml = getString(R.string.payment_cash_out_dialog_subtitle_html_formatted,
-                paymentCashOutInfo.getHelpCenterArticleUrl());
+                adhocCashOutInfo.getHelpCenterArticleUrl());
         mHeaderText.setText(TextUtils.Support.fromHtml(headerHtml));
 
         /*
@@ -170,7 +170,7 @@ public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
                     //get the link at the tap position
                     final ClickableSpan[] link = buffer.getSpans(off, off, ClickableSpan.class);
                     if (link.length != 0 && off < buffer.length()) {
-                        onBankHelpButtonClicked(paymentCashOutInfo.getHelpCenterArticleUrl());
+                        onBankHelpButtonClicked(adhocCashOutInfo.getHelpCenterArticleUrl());
                         return true;
                     }
                 }
@@ -181,18 +181,18 @@ public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
 
         mDateRangeText.setText(DateTimeUtils.formatDateRange(
                 DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER,
-                paymentCashOutInfo.getDateStart(),
-                paymentCashOutInfo.getDateEnd()));
+                adhocCashOutInfo.getDateStart(),
+                adhocCashOutInfo.getDateEnd()));
 
-        mNetEarningsLineItem.updatePrice(paymentCashOutInfo.getNetEarningsCents(), paymentCashOutInfo.getCurrencySymbol());
+        mNetEarningsLineItem.updatePrice(adhocCashOutInfo.getNetEarningsCents(), adhocCashOutInfo.getCurrencySymbol());
 
-        Integer cashOutFeeCents = paymentCashOutInfo.getCashOutFeeCents();
+        Integer cashOutFeeCents = adhocCashOutInfo.getCashOutFeeCents();
         if (cashOutFeeCents != null && cashOutFeeCents > 0) {
             //cash out fee should always show as negative
             cashOutFeeCents = -cashOutFeeCents;
         }
-        mFeeLineItem.updatePrice(cashOutFeeCents, paymentCashOutInfo.getCurrencySymbol());
-        if(mPaymentCashOutInfo.getExpectedPaymentCents() == null)
+        mFeeLineItem.updatePrice(cashOutFeeCents, adhocCashOutInfo.getCurrencySymbol());
+        if(mAdhocCashOutInfo.getExpectedPaymentCents() == null)
         {
             mExpectedPaymentText.setText(getString(R.string.no_data));
         }
@@ -200,21 +200,21 @@ public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
         {
             mExpectedPaymentText.setText(
                     CurrencyUtils.formatPrice(
-                            mPaymentCashOutInfo.getExpectedPaymentCents(),
-                            paymentCashOutInfo.getCurrencySymbol(),
+                            mAdhocCashOutInfo.getExpectedPaymentCents(),
+                            adhocCashOutInfo.getCurrencySymbol(),
                             true
                     ));
         }
 
-        if (paymentCashOutInfo.getPaymentMethodInfo() == null ||
-                android.text.TextUtils.isEmpty(paymentCashOutInfo.getPaymentMethodInfo().getLast4Digits())) {
+        if (adhocCashOutInfo.getPaymentMethodInfo() == null ||
+                android.text.TextUtils.isEmpty(adhocCashOutInfo.getPaymentMethodInfo().getLast4Digits())) {
             showErrorMessage(getString(R.string.an_error_has_occurred));
             dismiss();
         }
         else {
             mPaymentMethodDetailsText.setText(
                     getString(R.string.payment_method_details_button_formatted,
-                            paymentCashOutInfo.getPaymentMethodInfo().getLast4Digits())
+                            adhocCashOutInfo.getPaymentMethodInfo().getLast4Digits())
             );
         }
 
@@ -252,24 +252,24 @@ public class PaymentCashOutDialogFragment extends FullScreenDialogFragment {
     @OnClick(R.id.payments_cash_out_button)
     public void onCashOutButtonClicked() {
 
-        if (mPaymentCashOutInfo.getCashOutFeeCents() == null) {
+        if (mAdhocCashOutInfo.getCashOutFeeCents() == null) {
             //should never happen
             Crashlytics.logException(new Exception("Got null expected payment"));
             showErrorMessage(getString(R.string.an_error_has_occurred));
             return;
         }
-        int expectedPaymentCents = mPaymentCashOutInfo.getExpectedPaymentCents();
+        int expectedPaymentCents = mAdhocCashOutInfo.getExpectedPaymentCents();
         mBus.post(new LogEvent.AddLogEvent(
                 new PaymentsLog.CashOutEarlyConfirmSelected(expectedPaymentCents)));
 
         showLoadingOverlay();
 
-        PaymentCashOutRequest paymentCashOutRequest
-                = new PaymentCashOutRequest(mProviderManager.getLastProviderId(),
+        AdhocCashOutRequest adhocCashOutRequest
+                = new AdhocCashOutRequest(mProviderManager.getLastProviderId(),
                 expectedPaymentCents);
 
-        mPaymentsManager.requestCashOut(
-                paymentCashOutRequest,
+        mPaymentsManager.requestAdhocCashOut(
+                adhocCashOutRequest,
                 new FragmentSafeCallback<SuccessWrapper>(this) {
                     @Override
                     public void onCallbackSuccess(final SuccessWrapper response) {
