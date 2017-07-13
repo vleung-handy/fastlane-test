@@ -32,7 +32,7 @@ import static com.handybook.shared.layer.LayerConstants.LAYER_CONVERSATION_KEY;
 
 
 public class ClientConversationsFragment extends ActionBarFragment
-        implements LayerHelper.UnreadConversationsCountChangedListener, ConversationsAdapter.Listener {
+        implements ConversationsAdapter.Listener {
     private static final int REFRESH_DURATION_MILLIS = 3000;
 
     @Inject
@@ -69,13 +69,11 @@ public class ClientConversationsFragment extends ActionBarFragment
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mLayerHelper.registerUnreadConversationsCountChangedListener(this);
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mLayerHelper.unregisterUnreadConversationsCountChangedListener(this);
     }
 
     @Override
