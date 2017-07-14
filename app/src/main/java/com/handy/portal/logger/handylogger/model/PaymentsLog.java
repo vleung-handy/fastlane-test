@@ -1,5 +1,7 @@
 package com.handy.portal.logger.handylogger.model;
 
+import android.support.annotation.NonNull;
+
 import com.google.gson.annotations.SerializedName;
 
 public class PaymentsLog extends EventLog {
@@ -28,42 +30,107 @@ public class PaymentsLog extends EventLog {
     }
 
 
-    public static class CashOutEarlyBankHelpSelected extends PaymentsLog {
-        private static final String EVENT_TYPE = "cash_out_early_bank_help_selected";
+    public abstract static class CashOut {
+        public abstract static class Adhoc {
 
-        public CashOutEarlyBankHelpSelected() {
-            super(EVENT_TYPE);
+            public static class CashOutEarlyBankHelpSelected extends PaymentsLog {
+                private static final String EVENT_TYPE = "cash_out_early_bank_help_selected";
+
+                public CashOutEarlyBankHelpSelected() {
+                    super(EVENT_TYPE);
+                }
+            }
+
+
+            public static class CashOutEarlyPaymentMethodSelected extends PaymentsLog {
+                private static final String EVENT_TYPE = "cash_out_early_payment_method_selected";
+
+                public CashOutEarlyPaymentMethodSelected() {
+                    super(EVENT_TYPE);
+                }
+            }
+
+
+            public static class CashOutEarlySelected extends PaymentsLog {
+                private static final String EVENT_TYPE = "cash_out_early_selected";
+
+                public CashOutEarlySelected() {
+                    super(EVENT_TYPE);
+                }
+            }
+
+
+            public static class CashOutEarlyConfirmSelected extends PaymentsLog {
+                private static final String EVENT_TYPE = "cash_out_early_confirm_selected";
+
+                @SerializedName("cash_out_profit")
+                private int mCashOutProfitCents;
+
+                public CashOutEarlyConfirmSelected(int cashOutProfitCents) {
+                    super(EVENT_TYPE);
+                    mCashOutProfitCents = cashOutProfitCents;
+                }
+            }
         }
-    }
 
 
-    public static class CashOutEarlyPaymentMethodSelected extends PaymentsLog {
-        private static final String EVENT_TYPE = "cash_out_early_payment_method_selected";
+        public abstract static class Recurring extends PaymentsLog {
+            private static final String EVENT_TYPE_PREFIX = "recurring_cash_out_";
 
-        public CashOutEarlyPaymentMethodSelected() {
-            super(EVENT_TYPE);
-        }
-    }
+            public Recurring(@NonNull String eventTypeSuffix) {
+                super(EVENT_TYPE_PREFIX + eventTypeSuffix);
+            }
+
+            public static class ToggleTapped extends Recurring {
+                private static final String EVENT_TYPE_SUFFIX = "toggle_tapped";
+
+                @SerializedName("attempting_to_enable")
+                private boolean mAttemptingToEnable;
+
+                public ToggleTapped(boolean attemptingToEnable) {
+                    super(EVENT_TYPE_SUFFIX);
+                    mAttemptingToEnable = attemptingToEnable;
+                }
+            }
 
 
-    public static class CashOutEarlySelected extends PaymentsLog {
-        private static final String EVENT_TYPE = "cash_out_early_selected";
+            public static class ToggleConfirmationCancelled extends Recurring {
+                private static final String EVENT_TYPE_SUFFIX = "toggle_confirmation_cancelled";
 
-        public CashOutEarlySelected() {
-            super(EVENT_TYPE);
-        }
-    }
+                @SerializedName("attempting_to_enable")
+                private boolean mAttemptingToEnable;
+
+                public ToggleConfirmationCancelled(boolean attemptingToEnable) {
+                    super(EVENT_TYPE_SUFFIX);
+                    mAttemptingToEnable = attemptingToEnable;
+                }
+            }
 
 
-    public static class CashOutEarlyConfirmSelected extends PaymentsLog {
-        private static final String EVENT_TYPE = "cash_out_early_confirm_selected";
+            public static class ToggleConfirmationConfirmed extends Recurring {
+                private static final String EVENT_TYPE_SUFFIX = "toggle_confirmation_confirmed";
 
-        @SerializedName("cash_out_profit")
-        private int mCashOutProfitCents;
+                @SerializedName("attempting_to_enable")
+                private boolean mAttemptingToEnable;
 
-        public CashOutEarlyConfirmSelected(int cashOutProfitCents) {
-            super(EVENT_TYPE);
-            mCashOutProfitCents = cashOutProfitCents;
+                public ToggleConfirmationConfirmed(boolean attemptingToEnable) {
+                    super(EVENT_TYPE_SUFFIX);
+                    mAttemptingToEnable = attemptingToEnable;
+                }
+            }
+
+
+            public static class HelpButtonTapped extends Recurring {
+                private static final String EVENT_TYPE_SUFFIX = "help_tapped";
+
+                @SerializedName("recurring_cash_out_enabled")
+                private boolean mRecurringCashOutEnabled;
+
+                public HelpButtonTapped(boolean recurringCashOutEnabled) {
+                    super(EVENT_TYPE_SUFFIX);
+                    mRecurringCashOutEnabled = recurringCashOutEnabled;
+                }
+            }
         }
     }
 

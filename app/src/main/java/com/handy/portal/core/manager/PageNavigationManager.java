@@ -19,7 +19,6 @@ import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.deeplink.DeeplinkMapper;
 import com.handy.portal.deeplink.DeeplinkUtils;
 import com.handy.portal.library.ui.fragment.dialog.TransientOverlayDialogFragment;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -55,18 +54,18 @@ public class PageNavigationManager {
             if (!TextUtils.isEmpty(deeplink)) {
                 final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
                 if (page != null) {
-                    mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
+                    mBus.post(new DeeplinkLog.Processed(
                             deeplinkSource,
                             deeplinkDataBundle
-                    )));
+                    ));
                     navigateToPage(fragmentManager, page, deeplinkDataBundle, null, false);
                 }
                 else {
-                    mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
+                    mBus.post(new DeeplinkLog.Ignored(
                             deeplinkSource,
                             DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
                             deeplinkDataBundle
-                    )));
+                    ));
                 }
             }
         }
@@ -91,34 +90,34 @@ public class PageNavigationManager {
             /*
             TODO don't know why the Opened log event is being triggered here instead of on the actual click
              */
-            mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Opened(deeplinkSource, deeplinkUri)));
+            mBus.post(new DeeplinkLog.Opened(deeplinkSource, deeplinkUri));
             final String deeplink = deeplinkDataBundle.getString(BundleKeys.DEEPLINK);
             if (!TextUtils.isEmpty(deeplink)) {
                 final MainViewPage page = DeeplinkMapper.getPageForDeeplink(deeplink);
                 if (page != null) {
 
-                    mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Processed(
+                    mBus.post(new DeeplinkLog.Processed(
                             deeplinkSource,
                             deeplinkUri
-                    )));
+                    ));
                     navigateToPage(fragmentManager, page, deeplinkDataBundle, null, !page.isTopLevel());
                     //TODO PortalWebViewClient didn't use !page.isTopLevel() to determine whether to add to back stack. check if OK
                 }
                 else {
-                    mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
+                    mBus.post(new DeeplinkLog.Ignored(
                             deeplinkSource,
                             DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
                             deeplinkUri
-                    )));
+                    ));
                 }
             }
         }
         else if (deeplinkUri != null) {
-            mBus.post(new LogEvent.AddLogEvent(new DeeplinkLog.Ignored(
+            mBus.post(new DeeplinkLog.Ignored(
                     deeplinkSource,
                     DeeplinkLog.Ignored.Reason.UNRECOGNIZED,
                     deeplinkUri
-            )));
+            ));
         }
     }
 

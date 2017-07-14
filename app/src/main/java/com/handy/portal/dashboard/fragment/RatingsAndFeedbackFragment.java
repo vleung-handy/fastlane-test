@@ -25,7 +25,6 @@ import com.handy.portal.dashboard.view.DashboardOptionsPerformanceView;
 import com.handy.portal.dashboard.view.DashboardRatingsView;
 import com.handy.portal.dashboard.view.DashboardWelcomeView;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PerformanceLog;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -127,10 +126,10 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment {
                 bus.post(new ProviderDashboardEvent.AnimateFiveStarPercentageGraph());
                 switch (position) {
                     case DashboardRatingsPagerAdapter.LIFETIME_PAGE_POSITION:
-                        bus.post(new LogEvent.AddLogEvent(new PerformanceLog.LifetimeRatingsShown()));
+                        bus.post(new PerformanceLog.LifetimeRatingsShown());
                         break;
                     case DashboardRatingsPagerAdapter.PAST_28_DAYS_PAGE_POSITION:
-                        bus.post(new LogEvent.AddLogEvent(new PerformanceLog.RollingRatingsShown()));
+                        bus.post(new PerformanceLog.RollingRatingsShown());
                         break;
                 }
             }
@@ -207,7 +206,7 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
 
-        bus.post(new LogEvent.AddLogEvent(new PerformanceLog.FeedbackSelected()));
+        bus.post(new PerformanceLog.FeedbackSelected());
         mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
                 MainViewPage.DASHBOARD_FEEDBACK, arguments, NATIVE_TO_NATIVE, true);
     }

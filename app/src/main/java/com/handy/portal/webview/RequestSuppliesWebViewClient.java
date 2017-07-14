@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.support.v4.app.Fragment;
 import android.webkit.WebView;
 
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -26,7 +25,7 @@ public class RequestSuppliesWebViewClient extends PortalWebViewClient {
         super.onReceivedError(view, errorCode, description, failingUrl);
         if (!loadFailedLogSent) {
             loadFailedLogSent = true;
-            bus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitSiteLoadFailed()));
+            bus.post(new ProfileLog.ResupplyKitSiteLoadFailed());
         }
     }
 
@@ -35,7 +34,7 @@ public class RequestSuppliesWebViewClient extends PortalWebViewClient {
         super.onPageStarted(view, url, favicon);
         if (!loadStartedLogSent) {
             loadStartedLogSent = true;
-            bus.post(new LogEvent.AddLogEvent(new ProfileLog.ResupplyKitSiteLoadStarted()));
+            bus.post(new ProfileLog.ResupplyKitSiteLoadStarted());
         }
     }
 }

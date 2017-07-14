@@ -33,7 +33,6 @@ import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.UIUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.CheckOutFlowLog;
 import com.handy.portal.logger.handylogger.model.EventContext;
 import com.handy.portal.logger.handylogger.model.EventType;
@@ -158,9 +157,9 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
         initCustomerPreferenceSection();
         initJobsList();
         initFeedbackHeader();
-        mBus.post(new LogEvent.AddLogEvent(
+        mBus.post(
                 new CheckOutFlowLog(EventType.CUSTOMER_PREFERENCE_SHOWN, mBooking)
-        ));
+        );
     }
 
     private void initHeader() {
@@ -277,37 +276,37 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
                     new FragmentSafeCallback<PostCheckoutResponse>(this) {
                         @Override
                         public void onCallbackSuccess(final PostCheckoutResponse response) {
-                            mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.PostCheckoutLog(
+                            mBus.post(new CheckOutFlowLog.PostCheckoutLog(
                                     EventType.POST_CHECKOUT_SUCCESS,
                                     mBooking,
                                     mCustomerPreferred,
                                     feedback,
                                     jobClaims.size()
-                            )));
+                            ));
                             logClaims(response.getClaims());
                             onSubmitPostCheckoutInfoSuccess(response);
                         }
 
                         @Override
                         public void onCallbackError(final DataManager.DataManagerError error) {
-                            mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.PostCheckoutLog(
+                            mBus.post(new CheckOutFlowLog.PostCheckoutLog(
                                     EventType.POST_CHECKOUT_ERROR,
                                     mBooking,
                                     mCustomerPreferred,
                                     feedback,
                                     jobClaims.size()
-                            )));
+                            ));
                             onSubmitPostCheckoutInfoError(error);
                         }
                     }
             );
-            mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.PostCheckoutLog(
+            mBus.post(new CheckOutFlowLog.PostCheckoutLog(
                     EventType.POST_CHECKOUT_SUBMITTED,
                     mBooking,
                     mCustomerPreferred,
                     feedback,
                     jobClaims.size()
-            )));
+            ));
         }
     }
 
@@ -318,12 +317,12 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
                 final Booking booking = claimDetails.getBooking();
                 if (booking.inferBookingStatus(providerId)
                         == Booking.BookingStatus.CLAIMED) {
-                    mBus.post(new LogEvent.AddLogEvent(new JobsLog(EventType.CLAIM_SUCCESS,
-                            EventContext.CHECKOUT_FLOW, booking)));
+                    mBus.post(new JobsLog(EventType.CLAIM_SUCCESS,
+                            EventContext.CHECKOUT_FLOW, booking));
                 }
                 else {
-                    mBus.post(new LogEvent.AddLogEvent(new JobsLog(EventType.CLAIM_ERROR,
-                            EventContext.CHECKOUT_FLOW, booking)));
+                    mBus.post(new JobsLog(EventType.CLAIM_ERROR,
+                            EventContext.CHECKOUT_FLOW, booking));
                 }
             }
         }
@@ -339,9 +338,9 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
             mJobsSection.setVisibility(View.GONE);
             mFeedbackSection.setVisibility(View.VISIBLE);
             updateSubmitButton();
-            mBus.post(new LogEvent.AddLogEvent(
+            mBus.post(
                     new CheckOutFlowLog.CustomerPreferenceSelected(mBooking, false)
-            ));
+            );
         }
     }
 
@@ -356,14 +355,14 @@ public class PostCheckoutDialogFragment extends InjectedDialogFragment
             mFeedbackSection.setVisibility(View.GONE);
             mJobsSection.setVisibility(View.VISIBLE);
             updateSubmitButton();
-            mBus.post(new LogEvent.AddLogEvent(
+            mBus.post(
                     new CheckOutFlowLog.CustomerPreferenceSelected(mBooking, true)
-            ));
-            mBus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.UpcomingJobsShown(
+            );
+            mBus.post(new CheckOutFlowLog.UpcomingJobsShown(
                     mBooking,
                     mPostCheckoutInfo.getSuggestedJobs().size(),
                     mPostCheckoutInfo.getTotalPotentialCents() / 100)
-            ));
+            );
         }
     }
 

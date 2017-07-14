@@ -27,7 +27,6 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.ui.view.timepicker.HandyTimePicker;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.EventType;
 import com.handy.portal.logger.handylogger.model.ProAvailabilityLog;
 
@@ -275,13 +274,13 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
             final Availability.Wrapper.AdhocTimelines timelinesWrapper
     ) {
         final Availability.AdhocTimeline timeline = timelinesWrapper.get().get(0);
-        bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.SetHoursLog(
+        bus.post(new ProAvailabilityLog.SetHoursLog(
                 eventType,
                 mFlowContext,
                 timeline.getDateString(),
                 getIntervalsSum(timeline.getIntervals()),
                 !timeline.hasIntervals())
-        ));
+        );
     }
 
     private void logSetHours(
@@ -289,13 +288,13 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
             final Availability.Wrapper.TemplateTimelines timelinesWrapper
     ) {
         final Availability.TemplateTimeline timeline = timelinesWrapper.get().get(0);
-        bus.post(new LogEvent.AddLogEvent(new ProAvailabilityLog.SetTemplateHoursLog(
+        bus.post(new ProAvailabilityLog.SetTemplateHoursLog(
                 eventType,
                 mFlowContext,
                 timeline.getDay(),
                 getIntervalsSum(timeline.getIntervals()),
                 !timeline.hasIntervals())
-        ));
+        );
     }
 
     private int getIntervalsSum(final List<Availability.Interval> intervals) {

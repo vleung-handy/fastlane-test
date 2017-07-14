@@ -18,6 +18,7 @@ import com.handy.portal.R;
 import com.handy.portal.clients.ui.adapter.ConversationsAdapter;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.logger.handylogger.LogEvent;
+import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.logger.handylogger.model.ConversationsLog;
 import com.handybook.shared.layer.LayerConstants;
 import com.handybook.shared.layer.LayerHelper;
@@ -152,10 +153,10 @@ public class ClientConversationsFragment extends ActionBarFragment
 
     private void logConversationsShown() {
         if (bus != null && mAdapter != null && !mIsConversationsShownLogged) {
-            bus.post(new LogEvent.AddLogEvent(
+            bus.post(
                     new ConversationsLog.ConversationsShown(
                             (int) mLayerHelper.getUnreadConversationsCount(),
-                            mAdapter.getConversationsCount())));
+                            mAdapter.getConversationsCount()));
             mIsConversationsShownLogged = true;
         }
     }

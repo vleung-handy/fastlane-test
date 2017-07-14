@@ -89,8 +89,8 @@ public class EventLogManagerTest extends RobolectricGradleTestWrapper {
         mEventLogManager.addLog(getLogEvent(eventName));
     }
 
-    private LogEvent.AddLogEvent getLogEvent(String eventName) {
-        return new LogEvent.AddLogEvent(new TestEventLog(eventName, "event_context"));
+    private EventLog getLogEvent(String eventName) {
+        return new TestEventLog(eventName, "event_context");
     }
 
     /**

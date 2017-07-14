@@ -53,7 +53,6 @@ import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.ShareUtils;
 import com.handy.portal.library.util.SystemUtils;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.logger.handylogger.model.SideMenuLog;
 import com.handy.portal.notification.NotificationUtils;
@@ -170,14 +169,14 @@ public class MainActivity extends BaseActivity
             @Override
             public void onDrawerOpened(final View drawerView) {
                 super.onDrawerOpened(drawerView);
-                bus.post(new LogEvent.AddLogEvent(new SideMenuLog.Opened()));
+                bus.post(new SideMenuLog.Opened());
                 setDrawerActive(true);
             }
 
             @Override
             public void onDrawerClosed(final View drawerView) {
                 super.onDrawerClosed(drawerView);
-                bus.post(new LogEvent.AddLogEvent(new SideMenuLog.Closed()));
+                bus.post(new SideMenuLog.Closed());
                 setDrawerActive(false);
             }
         };
@@ -283,10 +282,7 @@ public class MainActivity extends BaseActivity
     }
 
     private void showUploadProfilePictureBlockerIfNecessary() {
-        final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
-        if (configuration != null
-                && configuration.isProfilePictureUploadEnabled()
-                && mProviderManager.getCachedProfileImageUrl(THUMBNAIL) == null
+        if (mProviderManager.getCachedProfileImageUrl(THUMBNAIL) == null
                 && !mUploadProfilePictureBlockerShown) {
             final Bundle arguments = new Bundle();
             arguments.putSerializable(BundleKeys.NAVIGATION_SOURCE, EditPhotoFragment.Source.APP);
@@ -384,7 +380,7 @@ public class MainActivity extends BaseActivity
     @OnClick(R.id.navigation_header_cta_button)
     public void onNavigationHeaderCtaClicked() {
         if (shouldEnableProfileShareButton()) {
-            bus.post(new LogEvent.AddLogEvent(new ProfileLog.ProfileShareClicked()));
+            bus.post(new ProfileLog.ProfileShareClicked());
 
             final Intent dummyIntent = new Intent();
             dummyIntent.setAction(Intent.ACTION_SEND);
@@ -425,8 +421,8 @@ public class MainActivity extends BaseActivity
             Utils.safeLaunchIntent(intent, this);
 
             final String appName = SystemUtils.getAppNameFromIntent(this, intent);
-            bus.post(new LogEvent.AddLogEvent(new ProfileLog.ProfileShareSubmitted(
-                    appName, channel)));
+            bus.post(new ProfileLog.ProfileShareSubmitted(
+                    appName, channel));
         }
         super.onActivityResult(requestCode, resultCode, intent);
     }
@@ -733,7 +729,7 @@ public class MainActivity extends BaseActivity
 
         @Override
         public void onClick(View view) {
-            bus.post(new LogEvent.AddLogEvent(new SideMenuLog.ItemSelected(mPage.name().toLowerCase())));
+            bus.post(new SideMenuLog.ItemSelected(mPage.name().toLowerCase()));
             mMoreButton.toggle();
             if (mTransitionStyle != null) {
                 switchToPage(mPage, new Bundle(), mTransitionStyle);

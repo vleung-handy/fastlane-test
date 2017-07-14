@@ -18,7 +18,6 @@ import com.handy.portal.announcements.AnnouncementsManager;
 import com.handy.portal.announcements.model.Announcement;
 import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AnnouncementsLog;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -153,10 +152,10 @@ public class AnnouncementCarouselDialogFragment extends InjectedDialogFragment i
             final long timeElapsedSinceTrackedAnnouncementShownMs =
                     System.currentTimeMillis() - mCurrentTrackedAnnouncementTimestampShownMs;
 
-            mEventBus.post(new LogEvent.AddLogEvent(new AnnouncementsLog.Dismissed(
+            mEventBus.post(new AnnouncementsLog.Dismissed(
                     mCurrentTrackedAnnouncement.getId(),
                     timeElapsedSinceTrackedAnnouncementShownMs
-            )));
+            ));
         }
 
 
@@ -171,9 +170,9 @@ public class AnnouncementCarouselDialogFragment extends InjectedDialogFragment i
         }
 
         mAnnouncementsManager.markAnnouncementAsShown(announcement);
-        mEventBus.post(new LogEvent.AddLogEvent(new AnnouncementsLog.Shown(
+        mEventBus.post(new AnnouncementsLog.Shown(
                 announcement.getId()
-        )));
+        ));
 
         //update the current tracked announcement reference for logging purposes
         mCurrentTrackedAnnouncement = announcement;

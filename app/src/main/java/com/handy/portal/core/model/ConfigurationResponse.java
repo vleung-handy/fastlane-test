@@ -39,9 +39,6 @@ public class ConfigurationResponse {
     @SerializedName("number_of_days_for_requested_jobs")
     private int mNumberOfDaysForRequestedJobs;
 
-    @SerializedName("profile_picture_upload_enabled")
-    private boolean mProfilePictureUploadEnabled;
-
     @SerializedName("request_dismissal")
     private RequestDismissal mRequestDismissal;
 
@@ -67,7 +64,7 @@ public class ConfigurationResponse {
     private boolean mScheduleTabRequestedEnabled;
 
     @SerializedName("daily_pro_payments_enabled")
-    private boolean mDailyProPaymentsEnabled;
+    private boolean mAdhocCashOutEnabled;
 
     @SerializedName("template_availability_enabled")
     private boolean mTemplateAvailabilityEnabled;
@@ -76,8 +73,8 @@ public class ConfigurationResponse {
     private boolean mIsMyClientsViewEnabled;
 
     // Getters
-    public boolean isDailyProPaymentsEnabled() {
-        return mDailyProPaymentsEnabled;
+    public boolean isAdhocCashOutEnabled() {
+        return mAdhocCashOutEnabled;
     }
 
     public boolean areAnnouncementsEnabled() {
@@ -144,10 +141,6 @@ public class ConfigurationResponse {
         return mShowBookingTransactionSummary;
     }
 
-    public boolean isProfilePictureUploadEnabled() {
-        return mProfilePictureUploadEnabled;
-    }
-
     public RequestDismissal getRequestDismissal() {
         return mRequestDismissal;
     }
@@ -164,11 +157,6 @@ public class ConfigurationResponse {
 
     public boolean isMoreFullTabEnabled() {
         return mMoreTabEnabled;
-    }
-
-    // Setters
-    public void setProfilePictureUploadEnabled(final boolean profilePictureUploadEnabled) {
-        mProfilePictureUploadEnabled = profilePictureUploadEnabled;
     }
 
     public boolean isScheduleTabRequestedEnabled() {

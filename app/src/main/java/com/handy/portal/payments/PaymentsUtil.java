@@ -14,11 +14,10 @@ import android.widget.Toast;
 import com.handy.portal.R;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.FragmentUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.model.PaymentSupportItem;
-import com.handy.portal.payments.ui.fragment.dialog.PaymentCashOutDialogFragment;
+import com.handy.portal.payments.ui.fragment.dialog.AdhocCashOutDialogFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportReasonsDialogFragment;
 
 import org.greenrobot.eventbus.EventBus;
@@ -40,7 +39,7 @@ public abstract class PaymentsUtil {
     public abstract static class CashOut {
         /**
          * @param callbackFragment the callback fragment that should be used to launch another fragment if necessary
-         * @param oneTimeCashOutInfo
+         * @param adhocCashOutInfo
          * @param logEventBus      for logging purposes only
          * @return a click listener that shows one of the following:
          * - dialog fragment
@@ -50,7 +49,7 @@ public abstract class PaymentsUtil {
         public static View.OnClickListener createCashOutButtonClickListener(
                 @NonNull final Fragment callbackFragment,
                 boolean cashOutEnabled,
-                @Nullable PaymentBatches.OneTimeCashOutInfo oneTimeCashOutInfo,
+                @Nullable PaymentBatches.AdhocCashOutInfo adhocCashOutInfo,
                 @NonNull final EventBus logEventBus) {
             final Context context = callbackFragment.getContext();
             View.OnClickListener cashOutButtonClickedListener;
@@ -59,23 +58,22 @@ public abstract class PaymentsUtil {
                         new View.OnClickListener() {
                             @Override
                             public void onClick(final View v) {
-                                logEventBus.post(new LogEvent.AddLogEvent(
-                                        new PaymentsLog.CashOutEarlySelected()));
+                                logEventBus.post(new PaymentsLog.CashOut.Adhoc.CashOutEarlySelected());
 
                                 //this needs to be launched from a fragment so that callbacks can be properly handled
                                 FragmentUtils.safeLaunchDialogFragment(
-                                        PaymentCashOutDialogFragment.newInstance(),
+                                        AdhocCashOutDialogFragment.newInstance(),
                                         callbackFragment,
-                                        PaymentCashOutDialogFragment.TAG,
+                                        AdhocCashOutDialogFragment.TAG,
                                         true);
                             }
                         };
             }
             else {
-                if (oneTimeCashOutInfo == null
-                        || oneTimeCashOutInfo.getCashOutThresholdExceeded() == null
-                        || oneTimeCashOutInfo.getCashOutMinimumThresholdCents() == null
-                        || oneTimeCashOutInfo.getCashOutThresholdExceeded()) {
+                if (adhocCashOutInfo == null
+                        || adhocCashOutInfo.getCashOutThresholdExceeded() == null
+                        || adhocCashOutInfo.getCashOutMinimumThresholdCents() == null
+                        || adhocCashOutInfo.getCashOutThresholdExceeded()) {
                     cashOutButtonClickedListener = new View.OnClickListener() {
                         @Override
                         public void onClick(final View v) {
@@ -88,8 +86,8 @@ public abstract class PaymentsUtil {
                 else {
                     final String cashOutThresholdFormatted =
                             CurrencyUtils.formatPrice(
-                                    oneTimeCashOutInfo.getCashOutMinimumThresholdCents(),
-                                    oneTimeCashOutInfo.getCashOutCurrencySymbol(),
+                                    adhocCashOutInfo.getCashOutMinimumThresholdCents(),
+                                    adhocCashOutInfo.getCashOutCurrencySymbol(),
                                     false);
 
                     cashOutButtonClickedListener = new View.OnClickListener() {

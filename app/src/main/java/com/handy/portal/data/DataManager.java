@@ -40,14 +40,14 @@ import com.handy.portal.payments.model.BookingPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
 import com.handy.portal.payments.model.PaymentBatches;
-import com.handy.portal.payments.model.PaymentCashOutInfo;
-import com.handy.portal.payments.model.PaymentCashOutRequest;
+import com.handy.portal.payments.model.AdhocCashOutInfo;
+import com.handy.portal.payments.model.AdhocCashOutRequest;
 import com.handy.portal.payments.model.PaymentFlow;
 import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.model.PaymentReviewResponse;
 import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
 import com.handy.portal.payments.model.StripeTokenResponse;
-import com.handy.portal.payments.model.DailyCashOutRequest;
+import com.handy.portal.payments.model.RecurringCashOutRequest;
 import com.handy.portal.retrofit.DynamicEndpoint;
 import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
@@ -308,18 +308,18 @@ public class DataManager {
         mService.updateCreditCard(token, new CreateBankAccountRetroFitCallback(cb));
     }
 
-    public void getPaymentCashOutInfo(final Callback<PaymentCashOutInfo> cb) {
-        mService.getPaymentCashOutInfo(new GetPaymentCashOutInfoRetroFitCallback(cb));
+    public void getAdhocCashOutInfo(final Callback<AdhocCashOutInfo> cb) {
+        mService.getAdhocCashOutInfo(new GetAdhocCashOutInfoRetroFitCallback(cb));
     }
 
-    public void requestPaymentCashOut(final PaymentCashOutRequest paymentCashOutRequest,
-                                      final Callback<SuccessWrapper> cb) {
-        mService.requestPaymentCashOut(paymentCashOutRequest, new SuccessWrapperRetroFitCallback(cb));
-    }
-
-    public void requestDailyCashOut(final DailyCashOutRequest dailyCashOutRequest,
+    public void requestAdhocCashOut(final AdhocCashOutRequest adhocCashOutRequest,
                                     final Callback<SuccessWrapper> cb) {
-        mService.requestDailyCashOut(dailyCashOutRequest, new SuccessWrapperRetroFitCallback(cb));
+        mService.requestAdhocCashOut(adhocCashOutRequest, new SuccessWrapperRetroFitCallback(cb));
+    }
+
+    public void requestRecurringCashOut(final RecurringCashOutRequest recurringCashOutRequest,
+                                        final Callback<SuccessWrapper> cb) {
+        mService.requestRecurringCashOut(recurringCashOutRequest, new SuccessWrapperRetroFitCallback(cb));
     }
 
     public void getPaymentFlow(String providerId, final Callback<PaymentFlow> cb) {

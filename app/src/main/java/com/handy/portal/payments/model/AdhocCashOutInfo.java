@@ -7,7 +7,7 @@ import com.google.gson.annotations.SerializedName;
 import java.io.Serializable;
 import java.util.Date;
 
-public class PaymentCashOutInfo implements Serializable {
+public class AdhocCashOutInfo implements Serializable {
     @SerializedName("date_start")
     private Date mDateStart;
     @SerializedName("date_end")

@@ -24,7 +24,6 @@ import com.handy.portal.dashboard.view.DashboardTiersHelp;
 import com.handy.portal.dashboard.view.DashboardViewPagerListener;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.TextUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.DashboardTiersLog;
 
 import butterknife.BindView;
@@ -152,8 +151,8 @@ public class DashboardTiersFragment extends ActionBarFragment implements Dashboa
                 }
             }
 
-            bus.post(new LogEvent.AddLogEvent(new DashboardTiersLog.TiersCardViewedLog(
-                    currentIncentive.getRegionName(), currentIncentive.getServiceName())));
+            bus.post(new DashboardTiersLog.TiersCardViewedLog(
+                    currentIncentive.getRegionName(), currentIncentive.getServiceName()));
         }
         else {
             Crashlytics.logException(new NullPointerException("Evaluation or incentives was" +

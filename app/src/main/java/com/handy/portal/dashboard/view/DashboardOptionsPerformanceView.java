@@ -21,7 +21,6 @@ import com.handy.portal.dashboard.model.ProviderFeedback;
 import com.handy.portal.dashboard.model.ProviderRating;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PerformanceLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -161,7 +160,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
         arguments.putSerializable(BundleKeys.TIERS_TITLE, mTiersTitle);
-        mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.TierSelected()));
+        mBus.post(new PerformanceLog.TierSelected());
         if (getContext() instanceof AppCompatActivity) {
             mNavigationManager.navigateToPage(((AppCompatActivity) getContext()).getSupportFragmentManager(),
                     MainViewPage.DASHBOARD_TIERS, arguments, null, false);
@@ -172,7 +171,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout {
     public void switchToFeedback() {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
-        mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.FeedbackSelected()));
+        mBus.post(new PerformanceLog.FeedbackSelected());
         if (getContext() instanceof AppCompatActivity) {
             mNavigationManager.navigateToPage(((AppCompatActivity) getContext()).getSupportFragmentManager(),
                     MainViewPage.DASHBOARD_FEEDBACK, arguments, null, false);
@@ -184,7 +183,7 @@ public class DashboardOptionsPerformanceView extends FrameLayout {
     public void switchToReviews() {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PROVIDER_EVALUATION, mProviderEvaluation);
-        mBus.post(new LogEvent.AddLogEvent(new PerformanceLog.FiveStarReviewsSelected()));
+        mBus.post(new PerformanceLog.FiveStarReviewsSelected());
         if (getContext() instanceof AppCompatActivity) {
             mNavigationManager.navigateToPage(((AppCompatActivity) getContext()).getSupportFragmentManager(),
                     MainViewPage.DASHBOARD_REVIEWS, arguments, null, false);

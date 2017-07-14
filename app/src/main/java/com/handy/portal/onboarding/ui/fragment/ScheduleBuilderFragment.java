@@ -12,7 +12,6 @@ import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.ui.element.OnboardingAvailableBookingElementView;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.library.util.TextUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.onboarding.ui.view.SelectableJobsViewGroup;
 import com.handy.portal.onboarding.viewmodel.BookingViewModel;
@@ -57,8 +56,8 @@ public class ScheduleBuilderFragment extends OnboardingSubflowUIFragment
         initBookingsWrapperViewModels();
         displayBookings();
         updateButton();
-        bus.post(new LogEvent.AddLogEvent(
-                new NativeOnboardingLog.ScheduleJobsShown(countBookings())));
+        bus.post(
+                new NativeOnboardingLog.ScheduleJobsShown(countBookings()));
     }
 
     private void initBookingsWrapperViewModels() {
@@ -152,8 +151,8 @@ public class ScheduleBuilderFragment extends OnboardingSubflowUIFragment
     protected void onPrimaryButtonClicked() {
         final ArrayList<Booking> selectedBookings = getSelectedBookings();
         if (!selectedBookings.isEmpty()) {
-            bus.post(new LogEvent.AddLogEvent(
-                    new NativeOnboardingLog.ScheduleJobsSubmitted(selectedBookings.size())));
+            bus.post(
+                    new NativeOnboardingLog.ScheduleJobsSubmitted(selectedBookings.size()));
             final Intent data = new Intent();
             data.putExtra(BundleKeys.BOOKINGS, selectedBookings);
             terminate(data);

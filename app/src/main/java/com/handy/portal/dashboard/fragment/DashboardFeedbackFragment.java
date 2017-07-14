@@ -16,7 +16,6 @@ import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.dashboard.model.ProviderEvaluation;
 import com.handy.portal.dashboard.model.ProviderFeedback;
 import com.handy.portal.dashboard.view.DashboardFeedbackView;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.FeedbackLog;
 
 import javax.inject.Inject;
@@ -79,7 +78,7 @@ public class DashboardFeedbackFragment extends ActionBarFragment {
 
     @OnClick(R.id.video_library)
     public void switchToVideoLibrary() {
-        bus.post(new LogEvent.AddLogEvent(new FeedbackLog.VideoLibrarySelected()));
+        bus.post(new FeedbackLog.VideoLibrarySelected());
         mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
                 MainViewPage.DASHBOARD_VIDEO_LIBRARY, null, null, true);
     }

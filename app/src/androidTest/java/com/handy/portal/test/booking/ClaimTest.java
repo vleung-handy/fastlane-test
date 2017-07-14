@@ -61,6 +61,7 @@ public class ClaimTest {
     @Test
     public void testBookingClaim() {
         TermsPageUtil.acceptAllTermsIfPresent();
+        AppInteractionUtil.removePhotoUpload();
 
         ViewUtil.waitForViewVisible(R.id.main_container, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         ViewUtil.waitForViewNotVisible(R.id.loading_overlay, ViewUtil.SHORT_MAX_WAIT_TIME_MS);

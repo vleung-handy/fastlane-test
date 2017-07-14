@@ -6,7 +6,6 @@ import android.os.Bundle;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.core.constant.BundleKeys;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -47,14 +46,14 @@ public class ConfirmBookingCancelCancellationPolicyDialogFragment
     @Override
     protected void onConfirmActionButtonClicked() {
         if (mAction != null) {
-            mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
+            mBus.post(new ScheduledJobsLog.RemoveJobSubmitted(
                     mBooking,
                     ScheduledJobsLog.RemoveJobLog.CANCELLATION_POLICY,
                     null, //don't have a remove reason
                     mAction.getFeeAmount(),
                     mAction.getWaivedAmount(),
                     mAction.getWarningText()
-            )));
+            ));
         }
         if (getTargetFragment() != null) {
             getTargetFragment().onActivityResult(getTargetRequestCode(), Activity.RESULT_OK, null);

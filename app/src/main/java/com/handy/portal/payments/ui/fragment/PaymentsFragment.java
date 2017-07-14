@@ -25,7 +25,6 @@ import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.library.ui.widget.InfiniteScrollListView;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsUtil;
@@ -34,7 +33,7 @@ import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
 import com.handy.portal.payments.ui.element.PaymentsBatchListView;
-import com.handy.portal.payments.ui.fragment.dialog.PaymentCashOutDialogFragment;
+import com.handy.portal.payments.ui.fragment.dialog.AdhocCashOutDialogFragment;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -45,7 +44,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public final class PaymentsFragment extends ActionBarFragment implements PaymentCashOutDialogFragment.OnCashOutSuccessListener {
+public final class PaymentsFragment extends ActionBarFragment implements AdhocCashOutDialogFragment.OnCashOutSuccessListener {
     private static final String HELP_PAYMENTS_SECTION_REDIRECT_PATH = "/sections/203828247";
 
     @Inject
@@ -178,11 +177,11 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
         }
     }
 
-    private void updateCashOutButtonClickListener(@Nullable PaymentBatches.OneTimeCashOutInfo oneTimeCashOutInfo, boolean isCashOutEnabled) {
+    private void updateCashOutButtonClickListener(@Nullable PaymentBatches.AdhocCashOutInfo adhocCashOutInfo, boolean isCashOutEnabled) {
         View.OnClickListener onClickListener = PaymentsUtil.CashOut.createCashOutButtonClickListener(
                 this,
                 isCashOutEnabled,
-                oneTimeCashOutInfo,
+                adhocCashOutInfo,
                 bus);
         paymentsBatchListView.setCashOutButtonClickListener(onClickListener);
     }
@@ -204,14 +203,14 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
 
         NeoPaymentBatch currentWeekBatch = paymentsBatchListView.getWrappedAdapter().getCurrentWeekBatch();
 
-        updateCashOutButtonClickListener(paymentBatches.getOneTimeCashOutInfo(),
+        updateCashOutButtonClickListener(paymentBatches.getAdhocCashOutInfo(),
                 currentWeekBatch != null && currentWeekBatch.isCashOutEnabled());
 
         //updating with data from payment batches
         paymentsBatchListView.setOnDataItemClickListener(new PaymentsBatchListView.OnDataItemClickListener() {
             @Override
             public void onDataItemClicked(PaymentBatch paymentBatch, boolean isCurrentWeekBatch) {
-                showPaymentDetailsForBatch(paymentBatch, isCurrentWeekBatch, paymentBatches.getOneTimeCashOutInfo());
+                showPaymentDetailsForBatch(paymentBatch, isCurrentWeekBatch, paymentBatches.getAdhocCashOutInfo());
             }
         });
         paymentsBatchListView.setOnScrollToBottomListener(new InfiniteScrollListView.OnScrollToBottomListener() {
@@ -227,11 +226,11 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
 
     public void showPaymentDetailsForBatch(@NonNull PaymentBatch paymentBatch,
                                            boolean isCurrentWeekBatch,
-                                           @Nullable PaymentBatches.OneTimeCashOutInfo oneTimeCashOutInfo) {
+                                           @Nullable PaymentBatches.AdhocCashOutInfo adhocCashOutInfo) {
         if (paymentBatch instanceof NeoPaymentBatch) {
             Bundle arguments = PaymentsDetailFragment.createBundle((NeoPaymentBatch) paymentBatch,
                     isCurrentWeekBatch,
-                    oneTimeCashOutInfo);
+                    adhocCashOutInfo);
             mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
                     MainViewPage.PAYMENTS_DETAIL, arguments, null, true);
         }
@@ -241,7 +240,7 @@ public final class PaymentsFragment extends ActionBarFragment implements Payment
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_help:
-                bus.post(new LogEvent.AddLogEvent(new PaymentsLog.HelpSelected()));
+                bus.post(new PaymentsLog.HelpSelected());
                 goToHelpCenterWebView();
                 return true;
             default:

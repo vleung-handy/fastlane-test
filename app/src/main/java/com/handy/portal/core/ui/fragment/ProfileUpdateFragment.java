@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -37,7 +36,6 @@ import com.handy.portal.core.model.definitions.FieldDefinition;
 import com.handy.portal.core.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.UIUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.squareup.picasso.Picasso;
 
@@ -83,8 +81,6 @@ public class ProfileUpdateFragment extends ActionBarFragment {
     ImageView mImage;
     @BindView(R.id.provider_image_holder)
     ViewGroup mImageHolder;
-    @BindView(R.id.provider_image_edit_button)
-    TextView mEditImageButton;
 
     @Inject
     ProviderManager mProviderManager;
@@ -156,7 +152,7 @@ public class ProfileUpdateFragment extends ActionBarFragment {
     @OnClick(R.id.profile_update_provider_button)
     public void onSubmitForm() {
         if (validate()) {
-            bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileSubmitted()));
+            bus.post(new ProfileLog.EditProfileSubmitted());
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new ProfileEvent.RequestProfileUpdate(mEmailText.getText(), mPhoneText.getText(), mAddressText.getText(),
                     mAddress2Text.getText(), mCityText.getText(), mStateText.getText(), mZipCodeText.getText()));
@@ -164,21 +160,18 @@ public class ProfileUpdateFragment extends ActionBarFragment {
         }
         else {
             final String errorMessage = getString(R.string.form_not_filled_out_correctly);
-            bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileValidationFailure(errorMessage)));
+            bus.post(new ProfileLog.EditProfileValidationFailure(errorMessage));
             showToast(errorMessage, Toast.LENGTH_LONG);
         }
     }
 
     @OnClick({R.id.provider_image, R.id.provider_image_edit_button})
     public void onEditImageClicked() {
-        final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
-        if (configuration.isProfilePictureUploadEnabled()) {
-            mEditingProImage = true;
-            final Bundle bundle = new Bundle();
-            bundle.putSerializable(BundleKeys.NAVIGATION_SOURCE, EditPhotoFragment.Source.PROFILE);
-            mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
-                    MainViewPage.PROFILE_PICTURE, bundle, TransitionStyle.NATIVE_TO_NATIVE, true);
-        }
+        mEditingProImage = true;
+        final Bundle bundle = new Bundle();
+        bundle.putSerializable(BundleKeys.NAVIGATION_SOURCE, EditPhotoFragment.Source.PROFILE);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.PROFILE_PICTURE, bundle, TransitionStyle.NATIVE_TO_NATIVE, true);
     }
 
     @Subscribe
@@ -190,7 +183,7 @@ public class ProfileUpdateFragment extends ActionBarFragment {
     @Subscribe
     public void onReceiveUpdateProfileSuccess(ProfileEvent.ReceiveProfileUpdateSuccess event) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileConfirmed()));
+        bus.post(new ProfileLog.EditProfileConfirmed());
         showToast(R.string.update_profile_success, Toast.LENGTH_LONG);
         UIUtils.dismissOnBackPressed(getActivity());
     }
@@ -202,7 +195,7 @@ public class ProfileUpdateFragment extends ActionBarFragment {
         if (errorMessage == null) {
             errorMessage = getString(R.string.update_profile_failed);
         }
-        bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileError(errorMessage)));
+        bus.post(new ProfileLog.EditProfileError(errorMessage));
         showToast(errorMessage, Toast.LENGTH_LONG);
     }
 
@@ -253,10 +246,6 @@ public class ProfileUpdateFragment extends ActionBarFragment {
         }
         else {
             mImage.setImageResource(R.drawable.img_pro_placeholder);
-        }
-
-        if (!configuration.isProfilePictureUploadEnabled()) {
-            mEditImageButton.setVisibility(View.GONE);
         }
     }
 

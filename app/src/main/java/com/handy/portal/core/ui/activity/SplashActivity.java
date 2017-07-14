@@ -26,7 +26,6 @@ import com.handy.portal.core.manager.PrefsManager;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.deeplink.DeeplinkMapper;
 import com.handy.portal.deeplink.DeeplinkUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AppLog;
 import com.handy.portal.logger.handylogger.model.DeeplinkLog;
 import com.handy.portal.logger.handylogger.model.LoginLog;
@@ -176,7 +175,7 @@ public class SplashActivity extends BaseActivity {
 
     @Subscribe
     public void onLoginSuccess(HandyEvent.ReceiveLoginSuccess event) {
-        mBus.post(new LogEvent.AddLogEvent(new LoginLog.Success(LoginLog.TYPE_TOKEN)));
+        mBus.post(new LoginLog.Success(LoginLog.TYPE_TOKEN));
         mAuthToken = mPrefsManager.getSecureString(PrefsKey.AUTH_TOKEN, null);
         initLayerHelper();
         triggerSetup();
@@ -184,7 +183,7 @@ public class SplashActivity extends BaseActivity {
 
     @Subscribe
     public void onLoginError(HandyEvent.ReceiveLoginError event) {
-        mBus.post(new LogEvent.AddLogEvent(new LoginLog.Error(LoginLog.TYPE_TOKEN)));
+        mBus.post(new LoginLog.Error(LoginLog.TYPE_TOKEN));
         DataManager.DataManagerError.Type errorType = event.error == null ? null : event.error.getType();
         if (errorType != null) {
             if (errorType.equals(DataManager.DataManagerError.Type.NETWORK)) {
@@ -351,7 +350,7 @@ public class SplashActivity extends BaseActivity {
             String n = getIntent().getData().getQueryParameter("n");
             String sig = getIntent().getData().getQueryParameter("sig");
             String slt = getIntent().getData().getQueryParameter("slt");
-            bus.post(new LogEvent.AddLogEvent(new LoginLog.LoginSubmitted(LoginLog.TYPE_TOKEN)));
+            bus.post(new LoginLog.LoginSubmitted(LoginLog.TYPE_TOKEN));
             mLoginManager.loginWithSlt(n, sig, slt);
         }
     }
@@ -367,11 +366,11 @@ public class SplashActivity extends BaseActivity {
 
     private void logFirstLaunch() {
         if (mPrefsManager.getSecureBoolean(PrefsKey.APP_FIRST_LAUNCH, true)) {
-            mBus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(true, true)));
+            mBus.post(new AppLog.AppOpenLog(true, true));
             mPrefsManager.setSecureBoolean(PrefsKey.APP_FIRST_LAUNCH, false);
         }
         else {
-            mBus.post(new LogEvent.AddLogEvent(new AppLog.AppOpenLog(false, true)));
+            mBus.post(new AppLog.AppOpenLog(false, true));
         }
     }
 

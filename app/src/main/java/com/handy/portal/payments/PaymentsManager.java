@@ -12,13 +12,13 @@ import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
-import com.handy.portal.payments.model.PaymentCashOutInfo;
-import com.handy.portal.payments.model.PaymentCashOutRequest;
+import com.handy.portal.payments.model.AdhocCashOutInfo;
+import com.handy.portal.payments.model.AdhocCashOutRequest;
 import com.handy.portal.payments.model.PaymentGroup;
 import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.model.PaymentReviewResponse;
 import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
-import com.handy.portal.payments.model.DailyCashOutRequest;
+import com.handy.portal.payments.model.RecurringCashOutRequest;
 import com.stripe.android.model.Token;
 
 import org.greenrobot.eventbus.EventBus;
@@ -90,20 +90,20 @@ public class PaymentsManager {
         mDataManager.getBookingTransactions(bookingId, bookingType.toLowerCase(), callback);
     }
 
-    public void requestPaymentCashOutInfo(final DataManager.Callback<PaymentCashOutInfo> cb) {
-        mDataManager.getPaymentCashOutInfo(cb);
+    public void requestAdhocCashOutInfo(final DataManager.Callback<AdhocCashOutInfo> cb) {
+        mDataManager.getAdhocCashOutInfo(cb);
     }
 
-    public void requestCashOut(
-            @NonNull PaymentCashOutRequest paymentCashOutRequest,
+    public void requestAdhocCashOut(
+            @NonNull AdhocCashOutRequest adhocCashOutRequest,
             @NonNull final DataManager.Callback<SuccessWrapper> callback) {
-        mDataManager.requestPaymentCashOut(paymentCashOutRequest, callback);
+        mDataManager.requestAdhocCashOut(adhocCashOutRequest, callback);
     }
 
-    public void requestDailyCashOut(
-            @NonNull DailyCashOutRequest dailyCashOutRequest,
+    public void requestRecurringCashOut(
+            @NonNull RecurringCashOutRequest recurringCashOutRequest,
             @NonNull final DataManager.Callback<SuccessWrapper> callback) {
-        mDataManager.requestDailyCashOut(dailyCashOutRequest, callback);
+        mDataManager.requestRecurringCashOut(recurringCashOutRequest, callback);
     }
 
     public void requestPaymentBatches(@NonNull final Date startDate,

@@ -17,7 +17,6 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.event.ProviderSettingsEvent;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.IDVerificationUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.onboarding.model.OnboardingDetails;
 import com.handy.portal.onboarding.model.subflow.SubflowData;
@@ -61,15 +60,15 @@ public class IDVerificationFragment extends OnboardingSubflowFragment {
                 requestedCameraPermissions = true;
             }
             else {
-                bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.CameraPermissionDeniedLog()));
+                bus.post(new NativeOnboardingLog.CameraPermissionDeniedLog());
                 initJumioPermissionsBlocker();
             }
         }
         else {
             //has camera permissions
             if (mOnboardingDetails != null) {
-                bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.CameraPermissionGrantedLog()));
-                bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NativeIDVerificationStartedLog()));
+                bus.post(new NativeOnboardingLog.CameraPermissionGrantedLog());
+                bus.post(new NativeOnboardingLog.NativeIDVerificationStartedLog());
 
                 SubflowData subflowData =
                         mOnboardingDetails.getSubflowDataByType(SubflowType.ID_VERIFICATION);
@@ -113,7 +112,7 @@ public class IDVerificationFragment extends OnboardingSubflowFragment {
             mAfterIdVerificationFinishUrl = subflowData.getAfterIdVerificationFinishUrl();
             jumioAfterFinishCallback("", IDVerificationUtils.ID_VERIFICATION_INIT_ERROR);
             if (!Strings.isNullOrEmpty(subflowData.getJumioURL())) {
-                bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.WebIDVerificationFlowStarted()));
+                bus.post(new NativeOnboardingLog.WebIDVerificationFlowStarted());
                 IDVerificationUtils.initJumioWebFlow(getContext(), subflowData.getJumioURL());
             }
             else {
@@ -164,8 +163,8 @@ public class IDVerificationFragment extends OnboardingSubflowFragment {
     private boolean isNativeJumioFlowSupported(@NonNull SubflowData subflowData) {
         boolean isSupportedPlatform = NetverifySDK.isSupportedPlatform();
 
-        bus.post(new LogEvent.AddLogEvent(
-                new NativeOnboardingLog.NativeIDVerificationPlatformSupportStatusLog(isSupportedPlatform)));
+        bus.post(
+                new NativeOnboardingLog.NativeIDVerificationPlatformSupportStatusLog(isSupportedPlatform));
         return isSupportedPlatform &&
                 !Strings.isNullOrEmpty(subflowData.getJumioSecret())
                 && !Strings.isNullOrEmpty(subflowData.getJumioToken()) &&
@@ -218,7 +217,7 @@ public class IDVerificationFragment extends OnboardingSubflowFragment {
             }
 
             if (resultCode == Activity.RESULT_OK) {
-                bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NativeIDVerificationCompletedLog()));
+                bus.post(new NativeOnboardingLog.NativeIDVerificationCompletedLog());
                 jumioAfterFinishCallback(scanReference, IDVerificationUtils.ID_VERIFICATION_SUCCESS);
                 terminate(new Intent());
             }
@@ -235,10 +234,10 @@ public class IDVerificationFragment extends OnboardingSubflowFragment {
 
                     // Cancelled by user
                     if (errorCode == 250) {
-                        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NativeIDVerificationCancelledLog()));
+                        bus.post(new NativeOnboardingLog.NativeIDVerificationCancelledLog());
                     }
                     else {
-                        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.NativeIDVerificationFailedLog()));
+                        bus.post(new NativeOnboardingLog.NativeIDVerificationFailedLog());
                     }
                 }
 

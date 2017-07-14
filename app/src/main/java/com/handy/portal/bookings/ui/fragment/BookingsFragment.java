@@ -40,7 +40,6 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.deeplink.DeeplinkUtils;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.UIUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.AvailableJobsLog;
 import com.handy.portal.logger.handylogger.model.EventContext;
 
@@ -135,8 +134,8 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
 
             if (mMessage.equals(getString(R.string.job_no_longer_available))) {
                 final Bundle extras = getArguments().getBundle(BundleKeys.EXTRAS);
-                bus.post(new LogEvent.AddLogEvent(
-                        new AvailableJobsLog.UnavailableJobNoticeShown(extras)));
+                bus.post(
+                        new AvailableJobsLog.UnavailableJobNoticeShown(extras));
             }
             mMessage = null; // this is a one-off
         }
@@ -399,7 +398,7 @@ public abstract class BookingsFragment<T extends HandyEvent.ReceiveBookingsSucce
                 if (booking != null) {
                     int oneBasedIndex = position + 1;
                     if (getTrackingType().equalsIgnoreCase(getString(R.string.available_job))) {
-                        bus.post(new LogEvent.AddLogEvent(new AvailableJobsLog.Clicked(booking, oneBasedIndex)));
+                        bus.post(new AvailableJobsLog.Clicked(booking, oneBasedIndex));
                     }
                     showBookingDetails(booking);
                 }

@@ -62,7 +62,6 @@ import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.deeplink.DeeplinkUtils;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FragmentUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.EventContext;
 import com.handy.portal.logger.handylogger.model.EventType;
 import com.handy.portal.logger.handylogger.model.JobsLog;
@@ -234,8 +233,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
                     FragmentUtils.safeLaunchDialogFragment(
                             dialogFragment, ScheduledBookingsFragment.this, null
                     );
-                    bus.post(new LogEvent.AddLogEvent(
-                            new RequestedJobsLog.DismissJobShown(EventContext.SCHEDULED_JOBS, booking)));
+                    bus.post(
+                            new RequestedJobsLog.DismissJobShown(EventContext.SCHEDULED_JOBS, booking));
                 }
                 else {
                     dismissJob(booking);
@@ -249,9 +248,9 @@ public class ScheduledBookingsFragment extends ActionBarFragment
                         ScheduledBookingsFragment.this,
                         null
                 );
-                bus.post(new LogEvent.AddLogEvent(new SendAvailabilityLog.SendAvailabilitySelected(
+                bus.post(new SendAvailabilityLog.SendAvailabilitySelected(
                         EventContext.SCHEDULED_JOBS, booking)
-                ));
+                );
             }
         };
         mRefreshRunnable = new Runnable() {
@@ -368,8 +367,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
             //use today as our selected day.
             mSelectedDay = DateTimeUtils.getDateWithoutTime(new Date());
         }
-        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.SetWeekAvailabilitySelected(
-                DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(mSelectedDay))));
+        bus.post(new ScheduledJobsLog.SetWeekAvailabilitySelected(
+                DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(mSelectedDay)));
         final Bundle arguments = new Bundle();
         arguments.putString(BundleKeys.FLOW_CONTEXT, EventContext.AVAILABILITY);
         mNavigationManager.navigateToPage(
@@ -706,7 +705,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
             if (mScheduledJobsView.getChildCount() > 0) {
                 showJobs();
             }
-            bus.post(new LogEvent.AddLogEvent(
+            bus.post(
                     new RequestedJobsLog.RequestsShown(
                             EventContext.SCHEDULED_JOBS,
                             undismissedBookings.size(),
@@ -714,7 +713,7 @@ public class ScheduledBookingsFragment extends ActionBarFragment
                             BookingListUtils.getCountPerAuxType(undismissedBookings, AuxiliaryInfo.Type.FAVORITE),
                             requestedJobsWrapper.getDate()
                     )
-            ));
+            );
         }
     }
 
@@ -756,9 +755,9 @@ public class ScheduledBookingsFragment extends ActionBarFragment
 
     @OnClick(R.id.available_hours_view)
     public void onAvailableHoursClicked() {
-        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.SetDayAvailabilitySelected(
+        bus.post(new ScheduledJobsLog.SetDayAvailabilitySelected(
                 mSelectedDay != null ? DateTimeUtils.YEAR_MONTH_DAY_FORMATTER.format(mSelectedDay)
-                        : null)));
+                        : null));
         final Bundle bundle = new Bundle();
         bundle.putString(BundleKeys.FLOW_CONTEXT, EventContext.SCHEDULED_JOBS);
         bundle.putSerializable(BundleKeys.MODE, EditAvailableHoursFragment.Mode.ADHOC);
@@ -808,16 +807,16 @@ public class ScheduledBookingsFragment extends ActionBarFragment
 
     private void requestClaimJob(final Booking booking) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new LogEvent.AddLogEvent(new JobsLog(EventType.CLAIM_SUBMITTED,
-                EventContext.SCHEDULED_JOBS, booking)));
+        bus.post(new JobsLog(EventType.CLAIM_SUBMITTED,
+                EventContext.SCHEDULED_JOBS, booking));
         mBookingManager.requestClaimJob(booking, null);
     }
 
     @Subscribe
     public void onReceiveClaimJobSuccess(final HandyEvent.ReceiveClaimJobSuccess event) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new LogEvent.AddLogEvent(new JobsLog(EventType.CLAIM_SUCCESS,
-                EventContext.SCHEDULED_JOBS, event.originalBooking)));
+        bus.post(new JobsLog(EventType.CLAIM_SUCCESS,
+                EventContext.SCHEDULED_JOBS, event.originalBooking));
         Snackbar.make(mContent, R.string.job_claim_success,
                 Snackbar.LENGTH_LONG).show();
         mBookingManager.requestProRequestedJobsCount();
@@ -831,8 +830,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         if (TextUtils.isEmpty(errorMessage)) {
             errorMessage = getString(R.string.job_claim_error);
         }
-        bus.post(new LogEvent.AddLogEvent(new JobsLog(EventType.CLAIM_ERROR,
-                EventContext.SCHEDULED_JOBS, event.getBooking())));
+        bus.post(new JobsLog(EventType.CLAIM_ERROR,
+                EventContext.SCHEDULED_JOBS, event.getBooking()));
         Snackbar.make(mContent, errorMessage, Snackbar.LENGTH_LONG).show();
     }
 
@@ -848,8 +847,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     private void dismissJob(@NonNull final Booking booking,
                             @NonNull @BookingManager.DismissalReason final String dismissalReason) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobSubmitted(
-                EventContext.SCHEDULED_JOBS, booking, dismissalReason)));
+        bus.post(new RequestedJobsLog.DismissJobSubmitted(
+                EventContext.SCHEDULED_JOBS, booking, dismissalReason));
         final Booking.RequestAttributes requestAttributes = booking.getRequestAttributes();
         String customerId = null;
         if (requestAttributes != null && requestAttributes.hasCustomer()) {
@@ -861,8 +860,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
     @Subscribe
     public void onReceiveDismissJobSuccess(final HandyEvent.ReceiveDismissJobSuccess event) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobSuccess(
-                EventContext.SCHEDULED_JOBS, event.getBooking())));
+        bus.post(new RequestedJobsLog.DismissJobSuccess(
+                EventContext.SCHEDULED_JOBS, event.getBooking()));
         Snackbar.make(mContent, R.string.request_dismissal_success_message,
                 Snackbar.LENGTH_LONG).show();
         mBookingManager.requestProRequestedJobsCount();
@@ -876,8 +875,8 @@ public class ScheduledBookingsFragment extends ActionBarFragment
         if (TextUtils.isEmpty(errorMessage)) {
             errorMessage = getString(R.string.request_dismissal_error);
         }
-        bus.post(new LogEvent.AddLogEvent(new RequestedJobsLog.DismissJobError(
-                EventContext.SCHEDULED_JOBS, event.getBooking(), errorMessage)));
+        bus.post(new RequestedJobsLog.DismissJobError(
+                EventContext.SCHEDULED_JOBS, event.getBooking(), errorMessage));
         Snackbar.make(mContent, errorMessage, Snackbar.LENGTH_LONG).show();
     }
 }

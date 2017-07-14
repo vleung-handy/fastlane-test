@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.handy.portal.R;
 import com.handy.portal.library.ui.widget.InfiniteScrollListView;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
@@ -85,7 +84,7 @@ public final class PaymentsBatchListView extends InfiniteScrollListView implemen
         final boolean isCurrentWeek =
                 getWrappedAdapter().getViewTypeForPosition(position)
                         == PaymentBatchListAdapter.VIEW_TYPE_CURRENT_WEEK_BATCH;
-        mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.BatchSelected(isCurrentWeek, position + 1))); // index needs to be one based
+        mBus.post(new PaymentsLog.BatchSelected(isCurrentWeek, position + 1)); // index needs to be one based
         PaymentBatch paymentBatch = getWrappedAdapter().getDataItem(position);
         notifyDataItemClickListener(paymentBatch, isCurrentWeek);
     }

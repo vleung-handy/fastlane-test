@@ -39,7 +39,6 @@ import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.UriUtils;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ImageUploadLog;
 import com.handy.portal.logger.handylogger.model.ProfilePhotoLog;
 import com.handy.portal.logger.handylogger.model.ProfilePhotoUploadLog;
@@ -129,7 +128,7 @@ public class EditPhotoFragment extends ActionBarFragment {
                     REQUEST_CODE_PERMISSION_CAMERA);
             return;
         }
-        bus.post(new LogEvent.AddLogEvent(new ProfilePhotoLog.CameraTapped()));
+        bus.post(new ProfilePhotoLog.CameraTapped());
 
         final Intent cameraImageIntent = new Intent(ACTION_IMAGE_CAPTURE);
         /*
@@ -195,18 +194,18 @@ public class EditPhotoFragment extends ActionBarFragment {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == UCrop.REQUEST_CROP) {
                 bus.post(new ProfileEvent.RequestPhotoUploadUrl(IMAGE_MIME_TYPE));
-                bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.MetadataRequestSubmitted()));
-                bus.post(new LogEvent.AddLogEvent(
-                        new ProfilePhotoUploadLog.ProfilePhotoUploadSubmitted(mSource)));
+                bus.post(new ImageUploadLog.MetadataRequestSubmitted());
+                bus.post(
+                        new ProfilePhotoUploadLog.ProfilePhotoUploadSubmitted(mSource));
             }
             else {
-                bus.post(new LogEvent.AddLogEvent(new ProfilePhotoLog.ImageChosen()));
+                bus.post(new ProfilePhotoLog.ImageChosen());
                 mShowLoadingOverlayOnResume = true;
                 cropImage();
             }
         }
         else {
-            bus.post(new LogEvent.AddLogEvent(new ProfilePhotoLog.ImagePickerDismissed()));
+            bus.post(new ProfilePhotoLog.ImagePickerDismissed());
             mShowLoadingOverlayOnResume = false;
         }
     }
@@ -239,16 +238,16 @@ public class EditPhotoFragment extends ActionBarFragment {
     @Subscribe
     public void onReceivePhotoUploadUrlError(
             final ProfileEvent.ReceivePhotoUploadUrlError event) {
-        bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.MetadataRequestError()));
-        bus.post(new LogEvent.AddLogEvent(
-                new ProfilePhotoUploadLog.ProfilePhotoUploadError(mSource)));
+        bus.post(new ImageUploadLog.MetadataRequestError());
+        bus.post(
+                new ProfilePhotoUploadLog.ProfilePhotoUploadError(mSource));
         showError(event.error);
     }
 
     @Subscribe
     public void onReceivePhotoUploadUrlSuccess(
             final ProfileEvent.ReceivePhotoUploadUrlSuccess event) {
-        bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.MetadataRequestSuccess()));
+        bus.post(new ImageUploadLog.MetadataRequestSuccess());
         final File imageFile = getImageFile();
         if (!imageFile.exists()) {
             showToast(R.string.an_error_has_occurred);
@@ -316,21 +315,21 @@ public class EditPhotoFragment extends ActionBarFragment {
         dataManager.uploadPhoto(uploadUrl, file, new FragmentSafeCallback<Void>(this) {
             @Override
             public void onCallbackSuccess(final Void response) {
-                bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.ImageRequestSuccess()));
-                bus.post(new LogEvent.AddLogEvent(
-                        new ProfilePhotoUploadLog.ProfilePhotoUploadSuccess(mSource)));
+                bus.post(new ImageUploadLog.ImageRequestSuccess());
+                bus.post(
+                        new ProfilePhotoUploadLog.ProfilePhotoUploadSuccess(mSource));
                 bus.post(new ProfileEvent.RequestProviderProfile(false));
             }
 
             @Override
             public void onCallbackError(final DataManager.DataManagerError error) {
-                bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.ImageRequestError()));
-                bus.post(new LogEvent.AddLogEvent(
-                        new ProfilePhotoUploadLog.ProfilePhotoUploadError(mSource)));
+                bus.post(new ImageUploadLog.ImageRequestError());
+                bus.post(
+                        new ProfilePhotoUploadLog.ProfilePhotoUploadError(mSource));
                 showError(error);
             }
         });
-        bus.post(new LogEvent.AddLogEvent(new ImageUploadLog.ImageRequestSubmitted()));
+        bus.post(new ImageUploadLog.ImageRequestSubmitted());
     }
 
     @Subscribe

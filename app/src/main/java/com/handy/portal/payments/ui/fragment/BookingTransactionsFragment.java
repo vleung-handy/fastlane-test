@@ -29,7 +29,6 @@ import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.UIUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.CompletedJobsLog;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.PaymentsManager;
@@ -112,7 +111,7 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
             mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
                     MainViewPage.WEB_PAGE, arguments, TransitionStyle.NATIVE_TO_NATIVE, true);
 
-            bus.post(new LogEvent.AddLogEvent(new CompletedJobsLog.HelpClicked(mBooking)));
+            bus.post(new CompletedJobsLog.HelpClicked(mBooking));
         }
     };
 
@@ -216,12 +215,12 @@ public class BookingTransactionsFragment extends ActionBarFragment implements Pa
                 paymentSupportItem.getMachineName(),
                 null);
 
-        bus.post(new LogEvent.AddLogEvent(
+        bus.post(
                 new PaymentsLog.BookingTransaction.SupportDialogSubmitButtonPressed(
                         mBooking.getId(),
                         paymentSupportItem.getMachineName(),
                         null
-                )));
+                ));
 
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         mPaymentsManager.submitBookingPaymentReviewRequest(paymentReviewRequest, new FragmentSafeCallback<PaymentReviewResponse>(this) {

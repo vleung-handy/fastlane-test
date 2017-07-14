@@ -29,7 +29,6 @@ import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.UIUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsUtil;
@@ -42,7 +41,7 @@ import com.handy.portal.payments.model.PaymentReviewResponse;
 import com.handy.portal.payments.model.PaymentSupportItem;
 import com.handy.portal.payments.ui.element.PaymentDetailExpandableListView;
 import com.handy.portal.payments.ui.element.PaymentsDetailListHeaderView;
-import com.handy.portal.payments.ui.fragment.dialog.PaymentCashOutDialogFragment;
+import com.handy.portal.payments.ui.fragment.dialog.AdhocCashOutDialogFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentFailedDialogFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportReasonsDialogFragment;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentSupportRequestReviewDialogFragment;
@@ -58,7 +57,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         implements ExpandableListView.OnChildClickListener,
         PaymentSupportReasonsDialogFragment.Callback,
         PaymentSupportRequestReviewDialogFragment.Callback,
-        PaymentCashOutDialogFragment.OnCashOutSuccessListener {
+        AdhocCashOutDialogFragment.OnCashOutSuccessListener {
     @BindView(R.id.payments_detail_list_view)
     PaymentDetailExpandableListView paymentDetailExpandableListView; //using ExpandableListView because it is the only ListView that offers group view support
     @BindView(R.id.fragment_payments_detail_content)
@@ -69,7 +68,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     /**
      * used to determine what happens when the cash out button is clicked
      */
-    private PaymentBatches.OneTimeCashOutInfo mOneTimeCashOutInfo;
+    private PaymentBatches.AdhocCashOutInfo mAdhocCashOutInfo;
     private View mFragmentView;
 
     @Inject
@@ -90,11 +89,11 @@ public final class PaymentsDetailFragment extends ActionBarFragment
 
     public static Bundle createBundle(@NonNull NeoPaymentBatch neoPaymentBatch,
                                       boolean isCurrentWeekPaymentBatch,
-                                      @Nullable PaymentBatches.OneTimeCashOutInfo oneTimeCashOutInfo) {
+                                      @Nullable PaymentBatches.AdhocCashOutInfo adhocCashOutInfo) {
         Bundle arguments = new Bundle();
         arguments.putSerializable(BundleKeys.PAYMENT_BATCH, neoPaymentBatch);
         arguments.putBoolean(BundleKeys.IS_CURRENT_WEEK_PAYMENT_BATCH, isCurrentWeekPaymentBatch);
-        arguments.putSerializable(BundleKeys.PAYMENT_CASH_OUT_INFO, oneTimeCashOutInfo);
+        arguments.putSerializable(BundleKeys.PAYMENT_CASH_OUT_INFO, adhocCashOutInfo);
         return arguments;
     }
 
@@ -105,7 +104,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         if (getArguments() != null) {
             mNeoPaymentBatch = (NeoPaymentBatch) getArguments().getSerializable(BundleKeys.PAYMENT_BATCH);
             mIsCurrentWeekPaymentBatch = getArguments().getBoolean(BundleKeys.IS_CURRENT_WEEK_PAYMENT_BATCH, false);
-            mOneTimeCashOutInfo = (PaymentBatches.OneTimeCashOutInfo) getArguments().getSerializable(BundleKeys.PAYMENT_CASH_OUT_INFO);
+            mAdhocCashOutInfo = (PaymentBatches.AdhocCashOutInfo) getArguments().getSerializable(BundleKeys.PAYMENT_CASH_OUT_INFO);
         }
         else {
             Crashlytics.logException(new Exception("Null arguments for class " + this.getClass().getName()));
@@ -130,7 +129,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
 
         paymentDetailExpandableListView.updateData(
                 mNeoPaymentBatch,
-                mConfigManager.getConfigurationResponse().isDailyProPaymentsEnabled()
+                mConfigManager.getConfigurationResponse().isAdhocCashOutEnabled()
                         && mIsCurrentWeekPaymentBatch);
         paymentDetailExpandableListView.getPaymentSupportButton().setOnClickListener(
                 new View.OnClickListener() {
@@ -171,7 +170,7 @@ public final class PaymentsDetailFragment extends ActionBarFragment
                     PaymentsUtil.CashOut.createCashOutButtonClickListener(
                             this,
                             mNeoPaymentBatch.isCashOutEnabled(),
-                            mOneTimeCashOutInfo,
+                            mAdhocCashOutInfo,
                             bus
                     );
             paymentDetailExpandableListView.getHeaderView()
@@ -210,8 +209,8 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         final ExpandableListAdapter parentListAdapter = parent.getExpandableListAdapter();
 
         final PaymentGroup paymentGroup = (PaymentGroup) parentListAdapter.getGroup(groupPosition);
-        bus.post(new LogEvent.AddLogEvent(
-                new PaymentsLog.DetailSelected(paymentGroup.getMachineName())));
+        bus.post(
+                new PaymentsLog.DetailSelected(paymentGroup.getMachineName()));
 
         final Payment payment = (Payment) parentListAdapter.getChild(groupPosition, childPosition);
 
@@ -238,12 +237,12 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     public void onPaymentSupportItemSubmitted(PaymentSupportItem paymentSupportItem) {
         String itemMachineName = paymentSupportItem.getMachineName();
 
-        mBus.post(new LogEvent.AddLogEvent(
+        mBus.post(
                 new PaymentsLog.BatchTransaction.SupportDialogSubmitted(
                         String.valueOf(mNeoPaymentBatch.getBatchId()),
                         itemMachineName,
                         null
-                )));
+                ));
 
         switch (itemMachineName) {
             case PaymentSupportItem.MachineName.MISSING_DEPOSIT:
@@ -320,11 +319,11 @@ public final class PaymentsDetailFragment extends ActionBarFragment
                 null
         );
 
-        bus.post(new LogEvent.AddLogEvent(new PaymentsLog.BatchTransaction.RequestReviewSubmitted(
+        bus.post(new PaymentsLog.BatchTransaction.RequestReviewSubmitted(
                 String.valueOf(mNeoPaymentBatch.getBatchId()),
                 paymentSupportItem.getMachineName()
 
-        )));
+        ));
 
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         mPaymentsManager.submitBatchPaymentReviewRequest(paymentReviewRequest,

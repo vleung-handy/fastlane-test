@@ -26,7 +26,6 @@ import com.handy.portal.core.model.Designation;
 import com.handy.portal.library.ui.view.LabelAndValueView;
 import com.handy.portal.library.ui.view.SimpleContentLayout;
 import com.handy.portal.library.util.TextUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.onboarding.model.claim.JobClaim;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
@@ -126,8 +125,8 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowUIFragment {
                 .getSerializable(BundleKeys.SUPPLIES_ORDER_INFO);
         initJobsView();
         initSuppliesView();
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog(
-                NativeOnboardingLog.Types.CONFIRMATION_PAGE_SHOWN)));
+        bus.post(new NativeOnboardingLog(
+                NativeOnboardingLog.Types.CONFIRMATION_PAGE_SHOWN));
     }
 
     @Override
@@ -257,15 +256,15 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowUIFragment {
                 suppliesRequested = false;
             }
         }
-        bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.ConfirmationPageSubmitted(
-                mPendingBookings.size(), suppliesRequested)));
+        bus.post(new NativeOnboardingLog.ConfirmationPageSubmitted(
+                mPendingBookings.size(), suppliesRequested));
     }
 
     @Subscribe
     public void onReceiveClaimJobsSuccess(HandyEvent.ReceiveClaimJobsSuccess event) {
         hideLoadingOverlay();
-        bus.post(new LogEvent.AddLogEvent(
-                new NativeOnboardingLog.ClaimBatchSuccess(mPendingBookings)));
+        bus.post(
+                new NativeOnboardingLog.ClaimBatchSuccess(mPendingBookings));
         final List<Booking> claimedBookings =
                 logAndGetClaimedBookings(event.getJobClaimResponse().getJobs());
         if (!claimedBookings.isEmpty()) {
@@ -287,8 +286,8 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowUIFragment {
     public void onReceiveClaimJobsError(HandyEvent.ReceiveClaimJobsError error) {
         hideLoadingOverlay();
         final String errorMessage = error.error.getMessage();
-        bus.post(new LogEvent.AddLogEvent(
-                new NativeOnboardingLog.ClaimBatchError(mPendingBookings, errorMessage)));
+        bus.post(
+                new NativeOnboardingLog.ClaimBatchError(mPendingBookings, errorMessage));
         showError(errorMessage, true);
     }
 
@@ -303,12 +302,12 @@ public class ScheduleConfirmationFragment extends OnboardingSubflowUIFragment {
                         booking.inferBookingStatus(providerId);
                 if (bookingStatus == Booking.BookingStatus.CLAIMED) {
                     claimedBookings.add(booking);
-                    bus.post(new LogEvent.AddLogEvent(
-                            new NativeOnboardingLog.ClaimSuccess(booking)));
+                    bus.post(
+                            new NativeOnboardingLog.ClaimSuccess(booking));
                 }
                 else {
-                    bus.post(new LogEvent.AddLogEvent(
-                            new NativeOnboardingLog.ClaimError(booking)));
+                    bus.post(
+                            new NativeOnboardingLog.ClaimError(booking));
                 }
             }
         }
