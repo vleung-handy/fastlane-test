@@ -39,9 +39,6 @@ public class ConfigurationResponse {
     @SerializedName("number_of_days_for_requested_jobs")
     private int mNumberOfDaysForRequestedJobs;
 
-    @SerializedName("profile_picture_upload_enabled")
-    private boolean mProfilePictureUploadEnabled;
-
     @SerializedName("request_dismissal")
     private RequestDismissal mRequestDismissal;
 
@@ -141,10 +138,6 @@ public class ConfigurationResponse {
         return mShowBookingTransactionSummary;
     }
 
-    public boolean isProfilePictureUploadEnabled() {
-        return mProfilePictureUploadEnabled;
-    }
-
     public RequestDismissal getRequestDismissal() {
         return mRequestDismissal;
     }
@@ -161,11 +154,6 @@ public class ConfigurationResponse {
 
     public boolean isMoreFullTabEnabled() {
         return mMoreTabEnabled;
-    }
-
-    // Setters
-    public void setProfilePictureUploadEnabled(final boolean profilePictureUploadEnabled) {
-        mProfilePictureUploadEnabled = profilePictureUploadEnabled;
     }
 
     public boolean isScheduleTabRequestedEnabled() {

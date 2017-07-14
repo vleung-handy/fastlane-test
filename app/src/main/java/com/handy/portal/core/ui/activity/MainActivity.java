@@ -282,10 +282,7 @@ public class MainActivity extends BaseActivity
     }
 
     private void showUploadProfilePictureBlockerIfNecessary() {
-        final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
-        if (configuration != null
-                && configuration.isProfilePictureUploadEnabled()
-                && mProviderManager.getCachedProfileImageUrl(THUMBNAIL) == null
+        if (mProviderManager.getCachedProfileImageUrl(THUMBNAIL) == null
                 && !mUploadProfilePictureBlockerShown) {
             final Bundle arguments = new Bundle();
             arguments.putSerializable(BundleKeys.NAVIGATION_SOURCE, EditPhotoFragment.Source.APP);

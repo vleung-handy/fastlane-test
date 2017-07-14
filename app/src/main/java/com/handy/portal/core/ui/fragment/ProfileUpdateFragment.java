@@ -170,14 +170,11 @@ public class ProfileUpdateFragment extends ActionBarFragment {
 
     @OnClick({R.id.provider_image, R.id.provider_image_edit_button})
     public void onEditImageClicked() {
-        final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
-        if (configuration.isProfilePictureUploadEnabled()) {
-            mEditingProImage = true;
-            final Bundle bundle = new Bundle();
-            bundle.putSerializable(BundleKeys.NAVIGATION_SOURCE, EditPhotoFragment.Source.PROFILE);
-            mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
-                    MainViewPage.PROFILE_PICTURE, bundle, TransitionStyle.NATIVE_TO_NATIVE, true);
-        }
+        mEditingProImage = true;
+        final Bundle bundle = new Bundle();
+        bundle.putSerializable(BundleKeys.NAVIGATION_SOURCE, EditPhotoFragment.Source.PROFILE);
+        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                MainViewPage.PROFILE_PICTURE, bundle, TransitionStyle.NATIVE_TO_NATIVE, true);
     }
 
     @Subscribe
@@ -252,10 +249,6 @@ public class ProfileUpdateFragment extends ActionBarFragment {
         }
         else {
             mImage.setImageResource(R.drawable.img_pro_placeholder);
-        }
-
-        if (!configuration.isProfilePictureUploadEnabled()) {
-            mEditImageButton.setVisibility(View.GONE);
         }
     }
 

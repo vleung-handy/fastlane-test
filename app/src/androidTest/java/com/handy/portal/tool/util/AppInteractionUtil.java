@@ -3,6 +3,7 @@ package com.handy.portal.tool.util;
 import com.handy.portal.R;
 
 import static android.support.test.espresso.Espresso.onView;
+import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -22,5 +23,15 @@ public class AppInteractionUtil {
             onView(withText(R.string.yes)).perform(click());
         }
         catch (Exception e) {}
+    }
+
+    public static void removePhotoUpload() {
+        try {
+            ViewUtil.waitForViewVisible(R.id.take_photo_button, ViewUtil.SHORT_MAX_WAIT_TIME_MS);
+            pressBack();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
