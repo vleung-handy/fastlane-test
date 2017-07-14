@@ -7,12 +7,12 @@ import com.handy.portal.RobolectricGradleTestWrapper;
 import com.handy.portal.TestUtils;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
+import com.handy.portal.clients.ui.fragment.ClientConversationsFragment;
 import com.handy.portal.core.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.core.ui.fragment.ReferAFriendFragment;
 import com.handy.portal.dashboard.fragment.DashboardVideoLibraryFragment;
 import com.handy.portal.dashboard.fragment.RatingsAndFeedbackFragment;
 import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
-import com.handy.portal.notification.ui.fragment.NotificationsFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsFragment;
 
 import org.junit.Before;
@@ -56,15 +56,15 @@ public class MainActivityTest extends RobolectricGradleTestWrapper {
     }
 
     @Test
-    public void testAlertTab() throws Exception {
+    public void testMessagesTab() throws Exception {
         try {
-            mActivity.findViewById(R.id.tab_nav_alert).performClick();
+            mActivity.findViewById(R.id.tab_nav_messages).performClick();
         }
         catch (Exception e) {
             // Robolectric has trouble rendering NotificationsListView
         }
         Fragment currentFragment = TestUtils.getScreenFragment(mActivity.getSupportFragmentManager());
-        assertThat(currentFragment, instanceOf(NotificationsFragment.class));
+        assertThat(currentFragment, instanceOf(ClientConversationsFragment.class));
     }
 
     @Test
