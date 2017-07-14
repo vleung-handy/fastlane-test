@@ -25,7 +25,6 @@ import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.library.ui.widget.InfiniteScrollListView;
 import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsUtil;
@@ -241,7 +240,7 @@ public final class PaymentsFragment extends ActionBarFragment implements AdhocCa
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_help:
-                bus.post(new LogEvent.AddLogEvent(new PaymentsLog.HelpSelected()));
+                bus.post(new PaymentsLog.HelpSelected());
                 goToHelpCenterWebView();
                 return true;
             default:

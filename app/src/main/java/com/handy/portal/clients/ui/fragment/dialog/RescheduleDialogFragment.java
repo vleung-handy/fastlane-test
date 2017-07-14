@@ -29,7 +29,6 @@ import com.handy.portal.data.callback.FragmentSafeCallback;
 import com.handy.portal.helpcenter.constants.HelpCenterConstants;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.TextUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.EventContext;
 import com.handy.portal.logger.handylogger.model.SendAvailabilityLog;
 
@@ -156,9 +155,9 @@ public class RescheduleDialogFragment extends ConfirmBookingActionDialogFragment
                     new FragmentSafeCallback<Void>(this) {
                         @Override
                         public void onCallbackSuccess(final Void response) {
-                            mBus.post(new LogEvent.AddLogEvent(
+                            mBus.post(
                                     new SendAvailabilityLog.SendAvailabilitySuccess(mBooking)
-                            ));
+                            );
                             mBus.post(new HandyEvent.AvailableHoursSent(mBooking));
                             Toast.makeText(
                                     getActivity(),
@@ -173,9 +172,9 @@ public class RescheduleDialogFragment extends ConfirmBookingActionDialogFragment
 
                         @Override
                         public void onCallbackError(final DataManager.DataManagerError error) {
-                            mBus.post(new LogEvent.AddLogEvent(
+                            mBus.post(
                                     new SendAvailabilityLog.SendAvailabilityError(mBooking)
-                            ));
+                            );
                             String errorMessage = error.getMessage();
                             if (TextUtils.isNullOrEmpty(errorMessage)) {
                                 errorMessage = getString(R.string.reschedule_message_error);
@@ -184,9 +183,9 @@ public class RescheduleDialogFragment extends ConfirmBookingActionDialogFragment
                         }
                     }
             );
-            mBus.post(new LogEvent.AddLogEvent(
+            mBus.post(
                     new SendAvailabilityLog.SendAvailabilitySubmitted(mBooking)
-            ));
+            );
         }
         else {
             navigateToEditWeeklyAvailability();

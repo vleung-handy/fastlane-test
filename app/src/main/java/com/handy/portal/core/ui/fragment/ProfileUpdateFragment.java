@@ -37,7 +37,6 @@ import com.handy.portal.core.model.definitions.FieldDefinition;
 import com.handy.portal.core.model.definitions.FormDefinitionWrapper;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.UIUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.squareup.picasso.Picasso;
 
@@ -156,7 +155,7 @@ public class ProfileUpdateFragment extends ActionBarFragment {
     @OnClick(R.id.profile_update_provider_button)
     public void onSubmitForm() {
         if (validate()) {
-            bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileSubmitted()));
+            bus.post(new ProfileLog.EditProfileSubmitted());
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             bus.post(new ProfileEvent.RequestProfileUpdate(mEmailText.getText(), mPhoneText.getText(), mAddressText.getText(),
                     mAddress2Text.getText(), mCityText.getText(), mStateText.getText(), mZipCodeText.getText()));
@@ -164,7 +163,7 @@ public class ProfileUpdateFragment extends ActionBarFragment {
         }
         else {
             final String errorMessage = getString(R.string.form_not_filled_out_correctly);
-            bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileValidationFailure(errorMessage)));
+            bus.post(new ProfileLog.EditProfileValidationFailure(errorMessage));
             showToast(errorMessage, Toast.LENGTH_LONG);
         }
     }
@@ -190,7 +189,7 @@ public class ProfileUpdateFragment extends ActionBarFragment {
     @Subscribe
     public void onReceiveUpdateProfileSuccess(ProfileEvent.ReceiveProfileUpdateSuccess event) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileConfirmed()));
+        bus.post(new ProfileLog.EditProfileConfirmed());
         showToast(R.string.update_profile_success, Toast.LENGTH_LONG);
         UIUtils.dismissOnBackPressed(getActivity());
     }
@@ -202,7 +201,7 @@ public class ProfileUpdateFragment extends ActionBarFragment {
         if (errorMessage == null) {
             errorMessage = getString(R.string.update_profile_failed);
         }
-        bus.post(new LogEvent.AddLogEvent(new ProfileLog.EditProfileError(errorMessage)));
+        bus.post(new ProfileLog.EditProfileError(errorMessage));
         showToast(errorMessage, Toast.LENGTH_LONG);
     }
 

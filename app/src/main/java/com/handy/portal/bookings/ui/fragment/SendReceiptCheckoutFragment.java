@@ -35,7 +35,6 @@ import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.location.manager.LocationManager;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.CheckOutFlowLog;
 import com.handy.portal.logger.handylogger.model.EventType;
 
@@ -130,7 +129,7 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
 
         initialize();
 
-        bus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog(EventType.RECEIPT_SHOWN, mBooking)));
+        bus.post(new CheckOutFlowLog(EventType.RECEIPT_SHOWN, mBooking));
     }
 
     @Override
@@ -173,9 +172,9 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
 
     @Subscribe
     public void onReceiveNotifyJobCheckOutSuccess(final HandyEvent.ReceiveNotifyJobCheckOutSuccess event) {
-        bus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.ManualCheckOutLog(
+        bus.post(new CheckOutFlowLog.ManualCheckOutLog(
                 EventType.MANUAL_CHECKOUT_SUCCESS, mBooking, true, event.getCheckoutRequest()
-        )));
+        ));
         mPrefsManager.setBookingInstructions(mBooking.getId(), null);
         mBookingManager.requestPostCheckoutInfo(mBooking.getId());
     }
@@ -183,9 +182,9 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
     @Subscribe
     public void onReceiveNotifyJobCheckOutError(final HandyEvent.ReceiveNotifyJobCheckOutError event) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        bus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.ManualCheckOutLog(
+        bus.post(new CheckOutFlowLog.ManualCheckOutLog(
                 EventType.MANUAL_CHECKOUT_ERROR, mBooking, true, event.getCheckoutRequest()
-        )));
+        ));
         handleNotifyCheckOutError(event);
     }
 
@@ -267,9 +266,9 @@ public class SendReceiptCheckoutFragment extends ActionBarFragment implements Vi
 
     private void requestNotifyCheckOutJob(String bookingId, CheckoutRequest checkoutRequest) {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
-        bus.post(new LogEvent.AddLogEvent(new CheckOutFlowLog.ManualCheckOutLog(
+        bus.post(new CheckOutFlowLog.ManualCheckOutLog(
                 EventType.MANUAL_CHECKOUT_SUBMITTED, mBooking, true, checkoutRequest
-        )));
+        ));
         mBookingManager.requestNotifyCheckOut(bookingId, checkoutRequest);
     }
 

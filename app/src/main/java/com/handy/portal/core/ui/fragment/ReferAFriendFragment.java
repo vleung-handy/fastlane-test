@@ -18,7 +18,6 @@ import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.model.ProviderProfile;
 import com.handy.portal.core.model.ReferralInfo;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ProfileLog;
 import com.handy.portal.logger.handylogger.model.ReferralLog;
 
@@ -67,7 +66,7 @@ public class ReferAFriendFragment extends ActionBarFragment {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bus.post(new LogEvent.AddLogEvent(new ProfileLog.ReferralOpen()));
+        bus.post(new ProfileLog.ReferralOpen());
     }
 
     @Nullable
@@ -110,13 +109,13 @@ public class ReferAFriendFragment extends ActionBarFragment {
 
     @OnClick(R.id.referral_code_layout)
     public void createReferral() {
-        mBus.post(new LogEvent.AddLogEvent(new ProfileLog.ReferralSelected()));
+        mBus.post(new ProfileLog.ReferralSelected());
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT, mReferralInfo.getReferralLink());
         sendIntent.setType("text/plain");
         Utils.safeLaunchIntent(Intent.createChooser(sendIntent, getContext().getString(R.string.share_with)), getContext());
-        bus.post(new LogEvent.AddLogEvent(new ReferralLog.ReferralCompletedLog()));
+        bus.post(new ReferralLog.ReferralCompletedLog());
     }
 
     @OnClick(R.id.try_again_button)

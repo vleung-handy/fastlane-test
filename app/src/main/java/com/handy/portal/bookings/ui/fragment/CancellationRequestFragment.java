@@ -26,7 +26,6 @@ import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.UIUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 
 import org.greenrobot.eventbus.Subscribe;
@@ -71,13 +70,13 @@ public class CancellationRequestFragment extends ActionBarFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_cancellation_request, container, false);
-        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobConfirmationShown(
+        bus.post(new ScheduledJobsLog.RemoveJobConfirmationShown(
                 mBooking,
                 ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
                 mAction.getFeeAmount(),
                 mAction.getWaivedAmount(),
                 mAction.getWarningText()
-        )));
+        ));
         return view;
     }
 
@@ -123,14 +122,14 @@ public class CancellationRequestFragment extends ActionBarFragment {
             showToast(R.string.select_a_reason);
         }
         else {
-            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSubmitted(
+            bus.post(new ScheduledJobsLog.RemoveJobSubmitted(
                     mBooking,
                     ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
                     selectedReason,
                     mAction.getFeeAmount(),
                     mAction.getWaivedAmount(),
                     mAction.getWarningText()
-            )));
+            ));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
             mBookingManager.requestRemoveJob(mBooking);
         }
@@ -139,14 +138,14 @@ public class CancellationRequestFragment extends ActionBarFragment {
     @Subscribe
     public void onReceiveRemoveJobSuccess(final HandyEvent.ReceiveRemoveJobSuccess event) {
         if (event.booking.getId().equals(mBooking.getId())) {
-            bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobSuccess(
+            bus.post(new ScheduledJobsLog.RemoveJobSuccess(
                     mBooking,
                     ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
                     getSelectedReason(),
                     mAction.getFeeAmount(),
                     mAction.getWaivedAmount(),
                     mAction.getWarningText()
-            )));
+            ));
             bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
             TransitionStyle transitionStyle = TransitionStyle.JOB_REMOVE_SUCCESS;
             Bundle arguments = new Bundle();
@@ -163,7 +162,7 @@ public class CancellationRequestFragment extends ActionBarFragment {
         if (errorMessage == null) {
             errorMessage = getString(R.string.job_remove_error_generic);
         }
-        bus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.RemoveJobError(
+        bus.post(new ScheduledJobsLog.RemoveJobError(
                 mBooking,
                 ScheduledJobsLog.RemoveJobLog.REASON_FLOW,
                 getSelectedReason(),
@@ -171,7 +170,7 @@ public class CancellationRequestFragment extends ActionBarFragment {
                 mAction.getWaivedAmount(),
                 mAction.getWarningText(),
                 errorMessage
-        )));
+        ));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         showToast(errorMessage);
     }

@@ -21,7 +21,6 @@ import com.handy.portal.library.ui.view.YoutubeImagePlaceholderView;
 import com.handy.portal.library.ui.widget.BulletTextView;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.FeedbackLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -106,7 +105,7 @@ public class DashboardFeedbackView extends FrameLayout implements View.OnClickLi
         Bundle bundle = new Bundle();
         bundle.putString(BundleKeys.YOUTUBE_VIDEO_ID, view.getID());
 
-        mBus.post(new LogEvent.AddLogEvent(new FeedbackLog.VideoSelected(view.getSection())));
+        mBus.post(new FeedbackLog.VideoSelected(view.getSection()));
         if (getContext() instanceof AppCompatActivity) {
             mNavigationManager.navigateToPage(((AppCompatActivity) getContext()).getSupportFragmentManager(),
                     MainViewPage.YOUTUBE_PLAYER, bundle, null, false);

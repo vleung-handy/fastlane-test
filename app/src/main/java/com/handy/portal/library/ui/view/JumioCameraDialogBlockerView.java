@@ -10,7 +10,6 @@ import android.widget.TextView;
 
 import com.handy.portal.R;
 import com.handy.portal.library.util.IDVerificationUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -71,7 +70,7 @@ public class JumioCameraDialogBlockerView extends RelativeLayout {
     @OnClick(R.id.camera_broken_text)
     public void clickedCameraBroken() {
         if (mBus != null) {
-            mBus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.WebIDVerificationFlowStarted()));
+            mBus.post(new NativeOnboardingLog.WebIDVerificationFlowStarted());
         }
         IDVerificationUtils.initJumioWebFlow(getContext(), mUrl);
     }

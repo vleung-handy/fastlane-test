@@ -10,7 +10,6 @@ import android.support.annotation.NonNull;
 import android.util.Log;
 
 import com.handy.portal.core.event.SystemEvent;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NetworkConnectionLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -65,14 +64,14 @@ public class SystemManager extends BroadcastReceiver {
         {
             if (hasConnectivity) //reconnected
             {
-                mBus.post(new LogEvent.AddLogEvent(
-                        new NetworkConnectionLog.Reconnected()));
+                mBus.post(
+                        new NetworkConnectionLog.Reconnected());
                 mBus.post(new SystemEvent.NetworkReconnected());
             }
             else //disconnected
             {
-                mBus.post(new LogEvent.AddLogEvent(
-                        new NetworkConnectionLog.Disconnected()));
+                mBus.post(
+                        new NetworkConnectionLog.Disconnected());
             }
         }
 

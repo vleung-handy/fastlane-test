@@ -25,7 +25,6 @@ import com.handy.portal.library.ui.view.SimpleContentLayout;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.NativeOnboardingLog;
 import com.handy.portal.onboarding.model.status.LearningLinkDetails;
 import com.handy.portal.onboarding.model.status.StatusButton;
@@ -93,8 +92,8 @@ public class OnboardingStatusFragment extends OnboardingSubflowUIFragment {
     public void onResume() {
         super.onResume();
         bus.register(this);
-        bus.post(new LogEvent.AddLogEvent(
-                new NativeOnboardingLog.StatusPageShown(mStatusData.getApplicationStatus())));
+        bus.post(
+                new NativeOnboardingLog.StatusPageShown(mStatusData.getApplicationStatus()));
         if (mProviderPersonalInfo == null) {
             requestProviderProfile();
         }
@@ -233,7 +232,7 @@ public class OnboardingStatusFragment extends OnboardingSubflowUIFragment {
                 @Override
                 public void onClick(final View v) {
                     String url = (String) v.getTag();
-                    bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.HelpLinkSelected(url)));
+                    bus.post(new NativeOnboardingLog.HelpLinkSelected(url));
                     final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
                     Utils.safeLaunchIntent(intent, getActivity());
                 }
@@ -325,8 +324,8 @@ public class OnboardingStatusFragment extends OnboardingSubflowUIFragment {
     protected void onPrimaryButtonClicked() {
         final StatusButton statusButton = mStatusData.getButton();
         if (statusButton != null) {
-            bus.post(new LogEvent.AddLogEvent(new NativeOnboardingLog.StatusPageSubmitted(
-                    mStatusData.getApplicationStatus())));
+            bus.post(new NativeOnboardingLog.StatusPageSubmitted(
+                    mStatusData.getApplicationStatus()));
             final String url = statusButton.getUrl();
             if (!TextUtils.isNullOrEmpty(url)) {
                 final Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));

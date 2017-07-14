@@ -7,7 +7,6 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ConversationsLog;
 import com.handybook.shared.layer.LayerConstants;
 import com.handybook.shared.layer.receiver.PushNotificationReceiver;
@@ -33,7 +32,7 @@ public class LayerPushReceiver extends PushNotificationReceiver {
             final Intent orderedBroadcastIntent = new Intent(LayerConstants.ACTION_SHOW_NOTIFICATION);
             orderedBroadcastIntent.putExtras(intent.getExtras());
             context.sendOrderedBroadcast(orderedBroadcastIntent, null);
-            mBus.post(new LogEvent.AddLogEvent(new ConversationsLog.PushNotificationReceived()));
+            mBus.post(new ConversationsLog.PushNotificationReceived());
         }
         else {
             super.onReceive(context, intent);

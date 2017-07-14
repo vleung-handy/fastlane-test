@@ -29,7 +29,6 @@ import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.FragmentUtils;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.UIUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.PaymentsUtil;
@@ -210,8 +209,8 @@ public final class PaymentsDetailFragment extends ActionBarFragment
         final ExpandableListAdapter parentListAdapter = parent.getExpandableListAdapter();
 
         final PaymentGroup paymentGroup = (PaymentGroup) parentListAdapter.getGroup(groupPosition);
-        bus.post(new LogEvent.AddLogEvent(
-                new PaymentsLog.DetailSelected(paymentGroup.getMachineName())));
+        bus.post(
+                new PaymentsLog.DetailSelected(paymentGroup.getMachineName()));
 
         final Payment payment = (Payment) parentListAdapter.getChild(groupPosition, childPosition);
 
@@ -238,12 +237,12 @@ public final class PaymentsDetailFragment extends ActionBarFragment
     public void onPaymentSupportItemSubmitted(PaymentSupportItem paymentSupportItem) {
         String itemMachineName = paymentSupportItem.getMachineName();
 
-        mBus.post(new LogEvent.AddLogEvent(
+        mBus.post(
                 new PaymentsLog.BatchTransaction.SupportDialogSubmitted(
                         String.valueOf(mNeoPaymentBatch.getBatchId()),
                         itemMachineName,
                         null
-                )));
+                ));
 
         switch (itemMachineName) {
             case PaymentSupportItem.MachineName.MISSING_DEPOSIT:
@@ -320,11 +319,11 @@ public final class PaymentsDetailFragment extends ActionBarFragment
                 null
         );
 
-        bus.post(new LogEvent.AddLogEvent(new PaymentsLog.BatchTransaction.RequestReviewSubmitted(
+        bus.post(new PaymentsLog.BatchTransaction.RequestReviewSubmitted(
                 String.valueOf(mNeoPaymentBatch.getBatchId()),
                 paymentSupportItem.getMachineName()
 
-        )));
+        ));
 
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         mPaymentsManager.submitBatchPaymentReviewRequest(paymentReviewRequest,

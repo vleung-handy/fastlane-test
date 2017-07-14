@@ -22,7 +22,6 @@ import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.helpcenter.constants.HelpCenterConstants;
 import com.handy.portal.library.ui.fragment.dialog.InjectedDialogFragment;
 import com.handy.portal.library.ui.widget.BulletListItem;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -64,7 +63,7 @@ public class CustomerNoShowDialogFragment extends InjectedDialogFragment {
             dismiss();
             return;
         }
-        mBus.post(new LogEvent.AddLogEvent(new ScheduledJobsLog.CustomerNoShowModalShown(mBooking.getId())));
+        mBus.post(new ScheduledJobsLog.CustomerNoShowModalShown(mBooking.getId()));
     }
 
     public static CustomerNoShowDialogFragment newInstance(@NonNull Booking booking) {

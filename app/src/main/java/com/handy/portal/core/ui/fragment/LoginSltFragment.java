@@ -24,7 +24,6 @@ import com.handy.portal.library.ui.layout.SlideUpPanelLayout;
 import com.handy.portal.library.ui.widget.PhoneInputTextView;
 import com.handy.portal.library.util.TextUtils;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.LoginLog;
 
 import javax.inject.Inject;
@@ -56,7 +55,7 @@ public class LoginSltFragment extends InjectedFragment {
 
         ButterKnife.bind(this, view);
 
-        bus.post(new LogEvent.AddLogEvent(new LoginLog.Shown(LoginLog.TYPE_PHONE_TOKEN)));
+        bus.post(new LoginLog.Shown(LoginLog.TYPE_PHONE_TOKEN));
 
         return view;
     }
@@ -65,7 +64,7 @@ public class LoginSltFragment extends InjectedFragment {
     public void login() {
         if (!mPhoneNumberEditText.validate()) { return; }
 
-        bus.post(new LogEvent.AddLogEvent(new LoginLog.LoginSubmitted(LoginLog.TYPE_PHONE_TOKEN)));
+        bus.post(new LoginLog.LoginSubmitted(LoginLog.TYPE_PHONE_TOKEN));
         mLoginManager.requestSlt(mPhoneNumberEditText.getPhoneNumber(), new FragmentSafeCallback<SuccessWrapper>(this) {
             @Override
             public void onCallbackSuccess(SuccessWrapper response) {
@@ -81,20 +80,20 @@ public class LoginSltFragment extends InjectedFragment {
 
     private void onRequestSltSuccess(SuccessWrapper response) {
         if (response.getSuccess()) {
-            bus.post(new LogEvent.AddLogEvent(new LoginLog.Success(LoginLog.TYPE_PHONE_TOKEN)));
+            bus.post(new LoginLog.Success(LoginLog.TYPE_PHONE_TOKEN));
 
             mInstructionsText.setText(getString(R.string.login_instructions_slt2, mPhoneNumberEditText.getPhoneNumber()));
             mLoginButton.setText(R.string.request_slt_again);
         }
         else {
-            bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(LoginLog.TYPE_PHONE_TOKEN)));
+            bus.post(new LoginLog.Error(LoginLog.TYPE_PHONE_TOKEN));
             showToast(R.string.login_error_bad_phone);
             mPhoneNumberEditText.highlight();
         }
     }
 
     private void onRequestSltError(DataManager.DataManagerError error) {
-        bus.post(new LogEvent.AddLogEvent(new LoginLog.Error(LoginLog.TYPE_PHONE_TOKEN)));
+        bus.post(new LoginLog.Error(LoginLog.TYPE_PHONE_TOKEN));
 
         if (error != null && !TextUtils.isNullOrEmpty(error.getMessage())) {
             new AlertDialog.Builder(getActivity())

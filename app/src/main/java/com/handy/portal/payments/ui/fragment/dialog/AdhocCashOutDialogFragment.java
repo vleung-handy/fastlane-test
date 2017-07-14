@@ -27,7 +27,6 @@ import com.handy.portal.library.ui.fragment.dialog.FullScreenDialogFragment;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.TextUtils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.model.AdhocCashOutInfo;
@@ -236,7 +235,7 @@ public class AdhocCashOutDialogFragment extends FullScreenDialogFragment {
 
     @OnClick(R.id.payments_cash_out_payment_method_details_button)
     public void onPaymentMethodDetailsButtonClicked() {
-        mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.CashOut.Adhoc.CashOutEarlyPaymentMethodSelected()));
+        mBus.post(new PaymentsLog.CashOut.Adhoc.CashOutEarlyPaymentMethodSelected());
         startActivity(FragmentContainerActivity.getIntent(
                 getContext(),
                 SelectPaymentMethodFragment.class,
@@ -259,8 +258,7 @@ public class AdhocCashOutDialogFragment extends FullScreenDialogFragment {
             return;
         }
         int expectedPaymentCents = mAdhocCashOutInfo.getExpectedPaymentCents();
-        mBus.post(new LogEvent.AddLogEvent(
-                new PaymentsLog.CashOut.Adhoc.CashOutEarlyConfirmSelected(expectedPaymentCents)));
+        mBus.post(new PaymentsLog.CashOut.Adhoc.CashOutEarlyConfirmSelected(expectedPaymentCents));
 
         showLoadingOverlay();
 
@@ -301,7 +299,7 @@ public class AdhocCashOutDialogFragment extends FullScreenDialogFragment {
 
     private void onBankHelpButtonClicked(@NonNull String helpUrl)
     {
-        mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.CashOut.Adhoc.CashOutEarlyBankHelpSelected()));
+        mBus.post(new PaymentsLog.CashOut.Adhoc.CashOutEarlyBankHelpSelected());
 
         Bundle arguments = PortalWebViewFragment.createBundle(helpUrl, getString(R.string.help));
         Intent webviewIntent = FragmentContainerActivity.getIntent(

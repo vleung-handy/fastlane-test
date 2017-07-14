@@ -15,7 +15,6 @@ import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.Utils;
-import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatch;
@@ -160,7 +159,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
                                     ((AppCompatActivity) getContext()).getSupportFragmentManager(),
                                     MainViewPage.OUTSTANDING_FEES, null, null, false);
                         }
-                        mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.FeeDetailSelected()));
+                        mBus.post(new PaymentsLog.FeeDetailSelected());
                     }
                 });
             }
@@ -177,10 +176,10 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
 
             paymentsBatchListHeaderView.updateDisplay(paymentBatchListHeaderViewModel);
 
-            mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.PageShown(
+            mBus.post(new PaymentsLog.PageShown(
                     paymentBatchListHeaderViewModel.shouldShowCashOutButton(),
                     paymentBatchListHeaderViewModel.shouldApparentlyEnableCashOutButton()
-            )));
+            ));
 
             paymentsBatchListHeaderView.setOnCashOutButtonClickedListener(mCashOutButtonClickedListener);
         }
