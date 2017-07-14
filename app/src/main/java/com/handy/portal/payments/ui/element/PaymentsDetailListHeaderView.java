@@ -8,12 +8,10 @@ import android.text.TextUtils;
 import android.text.style.ForegroundColorSpan;
 import android.util.AttributeSet;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.payments.PaymentsUtil;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.viewmodel.PaymentDetailHeaderViewModel;
 
@@ -43,8 +41,8 @@ public class PaymentsDetailListHeaderView extends LinearLayout {
     @BindView(R.id.payments_detail_list_header_payment_status_payment_method_text)
     TextView mPaymentStatusPaymentMethodText;
 
-    @BindView(R.id.payment_details_list_header_cash_out_button)
-    Button mCashOutButton;
+    @BindView(R.id.payments_detail_list_header_cash_out_button_container)
+    CashOutButtonContainerView mCashOutButtonContainerView;
 
     private Callback mCallback;
 
@@ -104,9 +102,8 @@ public class PaymentsDetailListHeaderView extends LinearLayout {
     }
 
     private void updateCashOutButton(@NonNull PaymentDetailHeaderViewModel paymentDetailHeaderViewModel) {
-        PaymentsUtil.CashOut.styleCashOutButtonForApparentEnabledState(mCashOutButton,
-                paymentDetailHeaderViewModel.shouldApparentlyEnableCashOutButton());
-        mCashOutButton.setVisibility(paymentDetailHeaderViewModel.shouldShowCashOutButton() ? VISIBLE : GONE);
+        mCashOutButtonContainerView.setApparentlyEnabled(paymentDetailHeaderViewModel.shouldApparentlyEnableCashOutButton());
+        mCashOutButtonContainerView.setVisibility(paymentDetailHeaderViewModel.shouldShowCashOutButton() ? VISIBLE : GONE);
     }
 
     private void updatePaymentMethodText(@NonNull PaymentDetailHeaderViewModel paymentDetailHeaderViewModel) {
@@ -163,6 +160,6 @@ public class PaymentsDetailListHeaderView extends LinearLayout {
     }
 
     public void setOnCashOutButtonClickListener(OnClickListener onCashOutButtonClickListener) {
-        mCashOutButton.setOnClickListener(onCashOutButtonClickListener);
+        mCashOutButtonContainerView.setButtonOnClickListener(onCashOutButtonClickListener);
     }
 }

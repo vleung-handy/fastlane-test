@@ -741,7 +741,8 @@
     <string name="payment_cash_out_denied_error">You cannot cash out at this time</string>
     <string name="payment_cash_out_disabled_dialog_title_formatted">How to unlock the Cash Out feature</string>
     <string name="payment_cash_out_disabled_dialog_body_formatted">Your payment is normally processed every week at no cost.\n\nOnce you\'ve earned more than %1$s with Handy, you\'ll be able to access the \'Cash Out Now\' button anytime and get paid faster for a small fee.</string>
-    <string name="payment_daily_cash_out_toggle_info_text"><![CDATA[A cash out fee of %1$s will be applied daily to each payment. <a href=\"%2$s\">Learn more</a>]]></string>
+    <string name="payment_recurring_cash_out_toggle_info_text"><![CDATA[A cash out fee of %1$s will be applied daily to each payment. <a href=\"%2$s\">Learn more</a>]]></string>
+    <string name="payments_daily_cash_out_toggle_info_title">Daily Cash Out</string>
 
     <!-- Announcements -->
     <string name="announcements_next_button">Next</string>

@@ -17,34 +17,20 @@ import com.handy.portal.payments.model.PaymentBatches;
 public class PaymentBatchListHeaderViewModel {
 
     private final NeoPaymentBatch mNeoPaymentBatch;
-    private final PaymentBatches.DailyCashOutInfo mDailyCashOutInfoInfo;
     private final boolean mShouldShowCashOutButton;
+    private final DailyCashOutToggleContainerViewModel mDailyCashOutToggleContainerViewModel;
 
     public PaymentBatchListHeaderViewModel(@NonNull NeoPaymentBatch neoPaymentBatch,
-                                           @Nullable PaymentBatches.DailyCashOutInfo dailyCashOutInfoInfo,
+                                           @Nullable PaymentBatches.RecurringCashOutInfo recurringCashOutInfo,
                                            boolean canShowCashOutButton) {
         mNeoPaymentBatch = neoPaymentBatch;
-        mDailyCashOutInfoInfo = dailyCashOutInfoInfo;
         mShouldShowCashOutButton = canShowCashOutButton;
+        mDailyCashOutToggleContainerViewModel = new DailyCashOutToggleContainerViewModel(recurringCashOutInfo);
     }
 
-    public boolean shouldShowDailyCashOutToggle() {
-        return mDailyCashOutInfoInfo != null;
-    }
-
-    public boolean isDailyCashOutEnabled() {
-        return mDailyCashOutInfoInfo != null && mDailyCashOutInfoInfo.isEnabled();
-    }
-
-    public String getFormattedDailyCashOutInfoText(@NonNull Context context) {
-        if (mDailyCashOutInfoInfo == null || mDailyCashOutInfoInfo.getCashOutFee().getAmountCents() == null) {
-            return null;
-        }
-        String formattedFee = CurrencyUtils.formatPrice(mDailyCashOutInfoInfo.getCashOutFee().getAmountCents(),
-                mDailyCashOutInfoInfo.getCashOutFee().getCurrencySymbol(),
-                true);
-        return context.getResources().getString(R.string.payment_daily_cash_out_toggle_info_text,
-                formattedFee, mDailyCashOutInfoInfo.getHelpCenterArticleUrl());
+    @NonNull
+    public DailyCashOutToggleContainerViewModel getDailyCashOutToggleContainerViewModel() {
+        return mDailyCashOutToggleContainerViewModel;
     }
 
     public boolean shouldShowCashOutButton() {

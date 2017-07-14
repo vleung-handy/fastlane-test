@@ -18,6 +18,12 @@ public class CurrencyUtils {
         return sign + currencySymbol + decimalFormat.format(Math.abs(price));
     }
 
+    /**
+     * NOTE: ideally we should format using the currency code, ex. "USD"
+     * so that we can use the built-in Java currency formatter,
+     * which handles formats in which the currency symbol should be a suffix and the
+     * decimal separator is not a '.'
+     */
     public static String formatPrice(final int priceCents,
                                      @NonNull final String currencySymbol,
                                      boolean shouldDisplayEmptyDecimals) {

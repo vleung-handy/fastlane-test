@@ -193,39 +193,23 @@
 
         </TableLayout>
 
-        <LinearLayout
+        <com.handy.portal.payments.ui.element.CashOutButtonContainerView
+            android:background="@color/white"
+            android:layout_marginTop="@dimen/default_margin_half"
             android:id="@+id/payments_batch_list_current_week_cash_out_button_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
             android:visibility="gone"
             tools:visiblity="visible"
-            android:orientation="vertical"
-            >
-
-            <Button
-                android:id="@+id/payments_batch_list_current_week_cash_out_button"
-                style="@style/Button.Green.Round"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/cash_out_now"
-                />
-
-            <TextView
-                style="@style/TextView.Small"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginTop="@dimen/default_margin_half"
-                android:text="@string/payments_cash_out_button_sub_text"
-                />
-        </LinearLayout>
-
-
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            />
     </LinearLayout>
 
-    <com.handy.portal.payments.ui.element.DailyCashOutToggleView
-        android:padding="@dimen/default_padding"
+    <!--this is outside of the linear layout because it needs its own border without the linear layout's padding-->
+    <com.handy.portal.payments.ui.element.DailyCashOutToggleContainerView
+        android:paddingLeft="@dimen/payment_container_horizontal_padding"
+        android:paddingRight="@dimen/payment_container_horizontal_padding"
+        android:paddingTop="@dimen/payment_container_vertical_padding"
+        android:paddingBottom="@dimen/payment_container_vertical_padding"
         android:background="@drawable/border_gray_bg_white"
         android:id="@+id/payments_batch_list_current_week_daily_pro_pay_toggle_container"
         android:layout_width="match_parent"

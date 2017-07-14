@@ -3,30 +3,23 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
+    android:id="@+id/payments_daily_cash_out_toggle_container"
     >
 
-    <android.support.v7.widget.SwitchCompat
-        android:id="@+id/payments_daily_cash_out_toggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:checked="false"
-        android:paddingRight="@dimen/default_padding"
-        android:textColor="@color/handy_text_black"
-        android:textSize="@dimen/default_text_size"
-        />
-
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_weight="1"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         >
 
         <TextView
-            style="@style/TextView.Large.Bold"
+            style="@style/TextView.Medium.Bold"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Daily Cash Out"
+            android:text="@string/payments_daily_cash_out_toggle_info_title"
             />
 
         <TextView
@@ -36,10 +29,20 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/default_margin_quarter"
             android:textColorLink="@color/handy_blue"
-            android:text="A cash out fee of $3.14 will be applied daily to each payment."
+            tools:text="A cash out fee of $3.14 will be applied daily to each payment."
             />
 
         <!--todo remove hard-coded strings-->
     </LinearLayout>
+
+    <android.support.v7.widget.SwitchCompat
+        android:id="@+id/payments_daily_cash_out_toggle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checked="false"
+        android:paddingLeft="@dimen/default_padding"
+        android:textColor="@color/handy_text_black"
+        android:textSize="@dimen/default_text_size"
+        />
 
 </LinearLayout>

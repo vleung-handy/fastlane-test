@@ -101,17 +101,17 @@ public class PaymentsManager {
     }
 
     public void requestTestPaymentCashOutInfo(final Context context,
-                                              final DataManager.Callback<PaymentCashOutInfo> callback) {
+                                              final DataManager.Callback<AdhocCashOutInfo> callback) {
         Handler handler = new Handler();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
                 try {
                     String json = IOUtils.loadJSONFromAsset(context, "test/test_payments_cash_out_response.json");
-                    PaymentCashOutInfo paymentCashOutInfo =
+                    AdhocCashOutInfo paymentCashOutInfo =
                             (new GsonBuilder().setDateFormat(DateTimeUtils.UNIVERSAL_DATE_FORMAT).
                                     create()
-                                    .fromJson(json, PaymentCashOutInfo.class));
+                                    .fromJson(json, AdhocCashOutInfo.class));
                     callback.onSuccess(paymentCashOutInfo);
                     return;
                 }

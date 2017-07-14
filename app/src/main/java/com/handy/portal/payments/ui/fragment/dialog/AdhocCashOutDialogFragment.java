@@ -231,17 +231,6 @@ public class AdhocCashOutDialogFragment extends FullScreenDialogFragment {
         mErrorText.setText(R.string.error_missing_server_data);
     }
 
-
-    @OnClick(R.id.payments_cash_out_payment_method_details_button)
-    public void onPaymentMethodDetailsButtonClicked() {
-        mBus.post(new PaymentsLog.CashOut.Adhoc.CashOutEarlyPaymentMethodSelected());
-        startActivity(FragmentContainerActivity.getIntent(
-                getContext(),
-                SelectPaymentMethodFragment.class,
-                null
-        ));
-    }
-
     @OnClick(R.id.payments_cash_out_dismiss_button)
     public void onDismissButtonClicked() {
         dismiss();

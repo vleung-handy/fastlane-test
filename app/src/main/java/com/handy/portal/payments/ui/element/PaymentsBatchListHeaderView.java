@@ -6,14 +6,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.util.AttributeSet;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.handy.portal.R;
-import com.handy.portal.payments.PaymentsUtil;
 import com.handy.portal.payments.viewmodel.PaymentBatchListHeaderViewModel;
 
 import butterknife.BindView;
@@ -43,13 +40,10 @@ public class PaymentsBatchListHeaderView extends FrameLayout //TODO: see if we c
     TextView mExpectedDepositDate;
 
     @BindView(R.id.payments_batch_list_current_week_cash_out_button_container)
-    View mCashOutButtonContainer;
-
-    @BindView(R.id.payments_batch_list_current_week_cash_out_button)
-    Button mCashOutButton;
+    CashOutButtonContainerView mCashOutButtonContainerView;
 
     @BindView(R.id.payments_batch_list_current_week_daily_pro_pay_toggle_container)
-    DailyCashOutToggleView mDailyCashOutToggleView;
+    DailyCashOutToggleContainerView mDailyCashOutToggleContainerView;
 
     public PaymentsBatchListHeaderView(final Context context) {
         super(context);
@@ -89,32 +83,19 @@ public class PaymentsBatchListHeaderView extends FrameLayout //TODO: see if we c
         mExpectedDepositDate.setText(paymentBatchListHeaderViewModel.getExpectedDepositDate(getContext()));
 
         updateCashOutButton(paymentBatchListHeaderViewModel);
-        updateDailyCashOutToggle(paymentBatchListHeaderViewModel);
-    }
-
-    private void updateDailyCashOutToggle(@NonNull PaymentBatchListHeaderViewModel paymentBatchListHeaderViewModel) {
-        if (paymentBatchListHeaderViewModel.shouldShowDailyCashOutToggle()) {
-            mDailyCashOutToggleView.setVisibility(VISIBLE);
-            mDailyCashOutToggleView.setToggleChecked(paymentBatchListHeaderViewModel.isDailyCashOutEnabled());
-            mDailyCashOutToggleView.setBodyText(paymentBatchListHeaderViewModel.getFormattedDailyCashOutInfoText(getContext()));
-        }
-        else {
-            mDailyCashOutToggleView.setVisibility(GONE);
-        }
+        mDailyCashOutToggleContainerView.updateWithModel(paymentBatchListHeaderViewModel.getDailyCashOutToggleContainerViewModel());
     }
 
     private void updateCashOutButton(@NonNull PaymentBatchListHeaderViewModel paymentBatchListHeaderViewModel) {
-        PaymentsUtil.CashOut.styleCashOutButtonForApparentEnabledState(mCashOutButton,
-                paymentBatchListHeaderViewModel.shouldApparentlyEnableCashOutButton());
-        mCashOutButtonContainer.setVisibility(paymentBatchListHeaderViewModel.shouldShowCashOutButton() ? VISIBLE : GONE);
+        mCashOutButtonContainerView.setApparentlyEnabled(paymentBatchListHeaderViewModel.shouldApparentlyEnableCashOutButton());
+        mCashOutButtonContainerView.setVisibility(paymentBatchListHeaderViewModel.shouldShowCashOutButton() ? VISIBLE : GONE);
     }
 
     public void setOnCashOutButtonClickedListener(OnClickListener onCashOutButtonClickedListener) {
-        mCashOutButton.setOnClickListener(onCashOutButtonClickedListener);
+        mCashOutButtonContainerView.setButtonOnClickListener(onCashOutButtonClickedListener);
     }
 
-    public void setDailyCashOutListeners(DailyCashOutToggleView.OnToggleClickedListener onToggleClickedListener,
-                                         OnClickListener onHelpCenterUrlClickListener) {
-        mDailyCashOutToggleView.setClickListeners(onToggleClickedListener, onHelpCenterUrlClickListener);
+    public void setDailyCashOutToggleContainerClickedListener(DailyCashOutToggleContainerView.ToggleContainerClickListener toggleContainerClickedListener) {
+        mDailyCashOutToggleContainerView.setClickListeners(toggleContainerClickedListener);
     }
 }

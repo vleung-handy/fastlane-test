@@ -19,7 +19,7 @@ import com.handy.portal.logger.handylogger.model.PaymentsLog;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
-import com.handy.portal.payments.ui.element.DailyCashOutToggleView;
+import com.handy.portal.payments.ui.element.DailyCashOutToggleContainerView;
 import com.handy.portal.payments.ui.element.PaymentsBatchListHeaderView;
 import com.handy.portal.payments.ui.element.PaymentsBatchListItemView;
 import com.handy.portal.payments.viewmodel.PaymentBatchListHeaderViewModel;
@@ -46,8 +46,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
     public static final int DAYS_TO_REQUEST_PER_BATCH = 28;
     private Date nextRequestEndDate;
     private View.OnClickListener mCashOutButtonClickedListener;
-    private DailyCashOutToggleView.OnToggleClickedListener mOnToggleClickedListener;
-    private View.OnClickListener mOnHelpCenterUrlClickedListener;
+    private DailyCashOutToggleContainerView.ToggleContainerClickListener mToggleContainerClickListener;
 
     public static final int VIEW_TYPE_CURRENT_WEEK_BATCH = 0;
     public static final int VIEW_TYPE_PAST_BATCH = 1;
@@ -80,11 +79,12 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
         return nextRequestEndDate;
     }
 
-    private PaymentBatches.DailyCashOutInfo mDailyCashOutInfo;
+    private PaymentBatches.RecurringCashOutInfo mDailyCashOutInfo;
 
-    public void setDailyCashOutInfo(PaymentBatches.DailyCashOutInfo dailyCashOutInfo) {
+    public void setDailyCashOutInfo(PaymentBatches.RecurringCashOutInfo dailyCashOutInfo) {
         mDailyCashOutInfo = dailyCashOutInfo;
     }
+
     public void appendData(PaymentBatches paymentBatches, Date requestStartDate) //this should also be called if paymentBatch is empty
     {
         addAll(paymentBatches.getAggregateBatchList());
@@ -150,10 +150,8 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
         mCashOutButtonClickedListener = cashOutEnabledClickListener;
     }
 
-    public void setDailyCashOutListeners(DailyCashOutToggleView.OnToggleClickedListener onToggleClickedListener,
-                                         View.OnClickListener onHelpCenterUrlClickedListener) {
-        mOnToggleClickedListener = onToggleClickedListener;
-        mOnHelpCenterUrlClickedListener = onHelpCenterUrlClickedListener;
+    public void setDailyCashOutToggleContainerClickListener(DailyCashOutToggleContainerView.ToggleContainerClickListener toggleContainerClickListener) {
+        mToggleContainerClickListener = toggleContainerClickListener;
     }
 
     @Override
@@ -198,10 +196,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
             ));
 
             paymentsBatchListHeaderView.setOnCashOutButtonClickedListener(mCashOutButtonClickedListener);
-            paymentsBatchListHeaderView.setDailyCashOutListeners(
-                    mOnToggleClickedListener,
-                    mOnHelpCenterUrlClickedListener
-            );
+            paymentsBatchListHeaderView.setDailyCashOutToggleContainerClickedListener(mToggleContainerClickListener);
         }
         else {
             if (convertView == null || !(convertView instanceof PaymentsBatchListItemView)) {
