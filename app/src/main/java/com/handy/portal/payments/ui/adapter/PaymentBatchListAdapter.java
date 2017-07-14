@@ -173,7 +173,7 @@ public class PaymentBatchListAdapter extends ArrayAdapter<PaymentBatch> implemen
 
             PaymentBatchListHeaderViewModel paymentBatchListHeaderViewModel
                     = new PaymentBatchListHeaderViewModel((NeoPaymentBatch) paymentBatch,
-                    mConfigManager.getConfigurationResponse().isDailyProPaymentsEnabled());
+                    mConfigManager.getConfigurationResponse().isAdhocCashOutEnabled());
 
             paymentsBatchListHeaderView.updateDisplay(paymentBatchListHeaderViewModel);
 
