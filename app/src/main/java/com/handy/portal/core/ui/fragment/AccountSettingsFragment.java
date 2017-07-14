@@ -226,9 +226,6 @@ public class AccountSettingsFragment extends ActionBarFragment {
     @Subscribe
     public void onReceiveProviderProfileError(ProfileEvent.ReceiveProviderProfileError event) {
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        mAccountSettingsLayout.setVisibility(View.GONE);
-        mFetchErrorView.setVisibility(View.VISIBLE);
-        mFetchErrorText.setText(getString(R.string.error_loading_profile));
     }
 
     @Subscribe
