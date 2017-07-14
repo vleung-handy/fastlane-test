@@ -236,7 +236,7 @@ public class AdhocCashOutDialogFragment extends FullScreenDialogFragment {
 
     @OnClick(R.id.payments_cash_out_payment_method_details_button)
     public void onPaymentMethodDetailsButtonClicked() {
-        mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.CashOutEarlyPaymentMethodSelected()));
+        mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.CashOut.Adhoc.CashOutEarlyPaymentMethodSelected()));
         startActivity(FragmentContainerActivity.getIntent(
                 getContext(),
                 SelectPaymentMethodFragment.class,
@@ -260,7 +260,7 @@ public class AdhocCashOutDialogFragment extends FullScreenDialogFragment {
         }
         int expectedPaymentCents = mAdhocCashOutInfo.getExpectedPaymentCents();
         mBus.post(new LogEvent.AddLogEvent(
-                new PaymentsLog.CashOutEarlyConfirmSelected(expectedPaymentCents)));
+                new PaymentsLog.CashOut.Adhoc.CashOutEarlyConfirmSelected(expectedPaymentCents)));
 
         showLoadingOverlay();
 
@@ -301,7 +301,7 @@ public class AdhocCashOutDialogFragment extends FullScreenDialogFragment {
 
     private void onBankHelpButtonClicked(@NonNull String helpUrl)
     {
-        mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.CashOutEarlyBankHelpSelected()));
+        mBus.post(new LogEvent.AddLogEvent(new PaymentsLog.CashOut.Adhoc.CashOutEarlyBankHelpSelected()));
 
         Bundle arguments = PortalWebViewFragment.createBundle(helpUrl, getString(R.string.help));
         Intent webviewIntent = FragmentContainerActivity.getIntent(

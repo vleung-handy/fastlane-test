@@ -60,7 +60,7 @@ public abstract class PaymentsUtil {
                             @Override
                             public void onClick(final View v) {
                                 logEventBus.post(new LogEvent.AddLogEvent(
-                                        new PaymentsLog.CashOutEarlySelected()));
+                                        new PaymentsLog.CashOut.Adhoc.CashOutEarlySelected()));
 
                                 //this needs to be launched from a fragment so that callbacks can be properly handled
                                 FragmentUtils.safeLaunchDialogFragment(
