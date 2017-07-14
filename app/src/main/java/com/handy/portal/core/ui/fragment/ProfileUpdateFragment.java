@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -82,8 +81,6 @@ public class ProfileUpdateFragment extends ActionBarFragment {
     ImageView mImage;
     @BindView(R.id.provider_image_holder)
     ViewGroup mImageHolder;
-    @BindView(R.id.provider_image_edit_button)
-    TextView mEditImageButton;
 
     @Inject
     ProviderManager mProviderManager;
