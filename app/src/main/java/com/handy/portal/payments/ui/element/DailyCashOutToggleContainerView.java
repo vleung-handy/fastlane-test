@@ -111,6 +111,8 @@ public class DailyCashOutToggleContainerView extends FrameLayout {
 
     private void setBodyText(@Nullable String text) {
         mDailyCashOutInfoText.setText(TextUtils.Support.fromHtml(text));
+
+        //TODO copied from somewhere; this only handles the case in which there is one link. put this in a util
         mDailyCashOutInfoText.setMovementMethod(new LinkMovementMethod() {
             @Override
             public boolean onTouchEvent(
