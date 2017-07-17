@@ -220,13 +220,13 @@ public final class PaymentsFragment extends ActionBarFragment implements AdhocCa
                         boolean requestEnableDailyCashOut = !toggleView.isChecked();
 
                         //FIXME ask PM whether this should be logged even if the toggle is apparently disabled
-                        bus.post(new LogEvent.AddLogEvent(new PaymentsLog.CashOut.Recurring.ToggleTapped(requestEnableDailyCashOut)));
+                        bus.post(new PaymentsLog.CashOut.Recurring.ToggleTapped(requestEnableDailyCashOut));
                         showDailyCashOutDialogForState(recurringCashOutInfo, requestEnableDailyCashOut);
                     }
 
                     @Override
                     public void onToggleInfoHelpCenterLinkClicked(@NonNull final SwitchCompat toggleView) {
-                        bus.post(new LogEvent.AddLogEvent(new PaymentsLog.CashOut.Recurring.HelpButtonTapped(toggleView.isChecked())));
+                        bus.post(new PaymentsLog.CashOut.Recurring.HelpButtonTapped(toggleView.isChecked()));
                         showHelpCenterArticle(recurringCashOutInfo.getHelpCenterArticleUrl());
 
                     }
@@ -266,7 +266,7 @@ public final class PaymentsFragment extends ActionBarFragment implements AdhocCa
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(final DialogInterface dialog, final int which) {
-                                bus.post(new LogEvent.AddLogEvent(new PaymentsLog.CashOut.Recurring.ToggleConfirmationConfirmed(requestEnableDailyCashOut)));
+                                bus.post(new PaymentsLog.CashOut.Recurring.ToggleConfirmationConfirmed(requestEnableDailyCashOut));
                                 RecurringCashOutRequest dailyCashOutRequest
                                         = createUpdateRecurringCashOutRequest((requestEnableDailyCashOut));
                                 requestDailyCashOut(dailyCashOutRequest);
@@ -275,7 +275,7 @@ public final class PaymentsFragment extends ActionBarFragment implements AdhocCa
                 .setNegativeButton(toggleConfirmationInfo.getCancelButtonText(), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(final DialogInterface dialog, final int which) {
-                        bus.post(new LogEvent.AddLogEvent(new PaymentsLog.CashOut.Recurring.ToggleConfirmationCancelled(requestEnableDailyCashOut)));
+                        bus.post(new PaymentsLog.CashOut.Recurring.ToggleConfirmationCancelled(requestEnableDailyCashOut));
                     }
                 })
                 .setMessage(toggleConfirmationInfo.getBodyText())
