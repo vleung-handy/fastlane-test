@@ -11,9 +11,9 @@ public class ErrorResponse {
     @SerializedName("code")
     private Integer mErrorCode;
     @SerializedName("messages")
-    private String[] messages;
+    private String[] mMessages;
     @SerializedName("invalid_inputs")
-    private String[] invalidInputs;
+    private String[] mInvalidInputs;
 
     public boolean isError() {
         return mError;
@@ -26,11 +26,11 @@ public class ErrorResponse {
 
     @Nullable
     public String[] getMessages() {
-        return messages;
+        return mMessages;
     }
 
     @Nullable
     public String[] getInvalidInputs() {
-        return invalidInputs;
+        return mInvalidInputs;
     }
 }
