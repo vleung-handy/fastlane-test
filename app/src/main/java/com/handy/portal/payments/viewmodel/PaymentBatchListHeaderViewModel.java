@@ -47,7 +47,7 @@ public class PaymentBatchListHeaderViewModel {
 
     public String getExpectedDepositDate(@NonNull Context context) {
         return context.getResources().getString(R.string.expected_deposit_formatted,
-                DateTimeUtils.DAY_OF_WEEK_MONTH_DATE_FORMATTER.format(
+                DateTimeUtils.formatDayOfWeekMonthDate(
                         mNeoPaymentBatch.getExpectedDepositDate()));
     }
 
