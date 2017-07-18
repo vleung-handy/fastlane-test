@@ -1,6 +1,7 @@
 package com.handy.portal.data;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.google.gson.JsonObject;
 import com.handy.portal.announcements.model.AnnouncementsWrapper;
@@ -15,6 +16,7 @@ import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.bookings.model.PostCheckoutResponse;
 import com.handy.portal.bookings.model.PostCheckoutSubmission;
+import com.handy.portal.clients.model.Client;
 import com.handy.portal.core.constant.LocationKey;
 import com.handy.portal.core.constant.ProviderKey;
 import com.handy.portal.core.model.ConfigurationResponse;
@@ -406,6 +408,12 @@ public class DataManager {
                             final Callback<Void> cb) {
         mDynamicEndpoint.setUrl(url);
         mDynamicEndpointService.uploadImage(file, new EmptyHandyRetroFitCallback(cb));
+    }
+
+    public void getClientList(@NonNull final String providerId,
+                              @Nullable final String clientId,
+                              final Callback<List<Client>> cb) {
+        mService.getClientList(providerId, clientId, new ClientListHandyRetroFitCallback(cb));
     }
 
     public interface Callback<T> {

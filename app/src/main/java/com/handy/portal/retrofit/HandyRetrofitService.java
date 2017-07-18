@@ -1,5 +1,7 @@
 package com.handy.portal.retrofit;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.JsonObject;
 import com.handy.portal.announcements.model.CurrentAnnouncementsRequest;
 import com.handy.portal.availability.model.Availability;
@@ -8,9 +10,9 @@ import com.handy.portal.bookings.model.PostCheckoutSubmission;
 import com.handy.portal.core.model.ProviderSettings;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
+import com.handy.portal.payments.model.AdhocCashOutRequest;
 import com.handy.portal.payments.model.BatchPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingPaymentReviewRequest;
-import com.handy.portal.payments.model.AdhocCashOutRequest;
 import com.handy.portal.payments.model.RecurringCashOutRequest;
 
 import java.util.ArrayList;
@@ -397,6 +399,14 @@ public interface HandyRetrofitService {
     void requestPhotoUploadUrl(@Path("id") String providerId,
                                @Field("mime_type") String imageMimeType,
                                HandyRetrofitCallback cb);
+
+    @GET(PROVIDERS_PATH + "{id}/clients")
+    /**
+     * if clientId is null, it'll start at the beginning
+     */
+    void getClientList(@Path(value = "id", encode = false) String providerId,
+                       @Nullable @Query("starting_after") String clientId,
+                       HandyRetrofitCallback cb);
 
     //For logging
     @POST("/events")
