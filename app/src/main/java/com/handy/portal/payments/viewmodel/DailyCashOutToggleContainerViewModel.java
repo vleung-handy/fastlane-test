@@ -34,6 +34,7 @@ public class DailyCashOutToggleContainerViewModel {
                 && mRecurringCashOutInfo.getPaymentBatchPeriodInfo().getDays() == PaymentBatches.RecurringCashOutInfo.PaymentBatchPeriodInfo.PAYMENT_BATCH_PERIOD_DAYS_DAILY;
     }
 
+    @Nullable
     public String getInfoTextFormatted(@NonNull Context context) {
         if (mRecurringCashOutInfo == null
                 || mRecurringCashOutInfo.getRecurringFee().getAmountCents() == null) {

@@ -97,28 +97,32 @@ public class DailyCashOutToggleContainerView extends FrameLayout {
             @Override
             public boolean onTouch(final View v, final MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP
-                        && mToggleContainerClickListener != null
-                        && mDailyCashOutToggleContainerViewModel != null
-                        && mDailyCashOutToggleContainerViewModel.isViewApparentlyEnabled()) {
+                        && mToggleContainerClickListener != null) {
                     mToggleContainerClickListener.onToggleClicked(mDailyCashOutToggle);
                 }
                 return true;
             }
         });
 
-        //FIXME this seems to only get triggered when its children are not in the way
-        //for logging purposes only
-        mContainer.setOnClickListener(new OnClickListener() {
+        setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(final View v) {
-                if (mDailyCashOutToggleContainerViewModel != null &&
-                        !mDailyCashOutToggleContainerViewModel.isViewApparentlyEnabled()
+                if (mDailyCashOutToggleContainerViewModel != null
+                        && !mDailyCashOutToggleContainerViewModel.isViewApparentlyEnabled()
                         && mToggleContainerClickListener != null) {
                     mToggleContainerClickListener.onApparentlyDisabledContainerClicked();
                 }
             }
         });
+    }
 
+    @Override
+    public boolean onInterceptTouchEvent(final MotionEvent ev) {
+        if (mDailyCashOutToggleContainerViewModel != null
+                && !mDailyCashOutToggleContainerViewModel.isViewApparentlyEnabled()) {
+            return true; //don't propagate this event to children
+        }
+        return false;
     }
 
     public interface ToggleContainerClickListener {
@@ -150,7 +154,7 @@ public class DailyCashOutToggleContainerView extends FrameLayout {
                     final Spannable buffer, final MotionEvent event
             ) {
                 final int action = event.getAction();
-                if (action == MotionEvent.ACTION_DOWN) {
+                if (action == MotionEvent.ACTION_UP) {
                     final int x = (int) event.getX() - widget.getTotalPaddingLeft() +
                             widget.getScrollX();
                     final int y = (int) event.getY() - widget.getTotalPaddingTop() +
@@ -163,12 +167,10 @@ public class DailyCashOutToggleContainerView extends FrameLayout {
                     //get the link at the tap position
                     final ClickableSpan[] link = buffer.getSpans(off, off, ClickableSpan.class);
                     if (link.length != 0 && off < buffer.length()) {
-                        if (mToggleContainerClickListener != null
-                                && mDailyCashOutToggleContainerViewModel != null
-                                && mDailyCashOutToggleContainerViewModel.isViewApparentlyEnabled()) {
+                        if (mToggleContainerClickListener != null) {
                             mToggleContainerClickListener.onToggleInfoHelpCenterLinkClicked(mDailyCashOutToggle);
+                            return true;
                         }
-                        return true;
                     }
                 }
                 return false;
