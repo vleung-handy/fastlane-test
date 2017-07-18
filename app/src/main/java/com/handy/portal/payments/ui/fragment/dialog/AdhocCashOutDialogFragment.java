@@ -100,8 +100,7 @@ public class AdhocCashOutDialogFragment extends FullScreenDialogFragment {
         mErrorView.setVisibility(View.GONE);
         mContentContainer.setVisibility(View.GONE);
         showLoadingOverlay();
-        mPaymentsManager.requestTestPaymentCashOutInfo(getContext(),//todo revert
-                new FragmentSafeCallback<AdhocCashOutInfo>(this) {
+        mPaymentsManager.requestAdhocCashOutInfo(new FragmentSafeCallback<AdhocCashOutInfo>(this) {
             @Override
             public void onCallbackSuccess(final AdhocCashOutInfo response) {
                 if (response.getSuccess() != null

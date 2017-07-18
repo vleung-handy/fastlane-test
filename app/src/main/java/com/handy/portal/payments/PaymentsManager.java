@@ -1,16 +1,11 @@
 package com.handy.portal.payments;
 
-import android.content.Context;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import com.google.gson.GsonBuilder;
 import com.handy.portal.core.model.SuccessWrapper;
 import com.handy.portal.data.DataManager;
-import com.handy.portal.library.util.DateTimeUtils;
-import com.handy.portal.library.util.IOUtils;
 import com.handy.portal.payments.model.AdhocCashOutInfo;
 import com.handy.portal.payments.model.AdhocCashOutRequest;
 import com.handy.portal.payments.model.BatchPaymentReviewRequest;
@@ -29,7 +24,6 @@ import com.stripe.android.model.Token;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-import java.io.IOException;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -100,30 +94,6 @@ public class PaymentsManager {
         mDataManager.getAdhocCashOutInfo(cb);
     }
 
-    public void requestTestPaymentCashOutInfo(final Context context,
-                                              final DataManager.Callback<AdhocCashOutInfo> callback) {
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String json = IOUtils.loadJSONFromAsset(context, "test/test_payments_cash_out_response.json");
-                    AdhocCashOutInfo paymentCashOutInfo =
-                            (new GsonBuilder().setDateFormat(DateTimeUtils.UNIVERSAL_DATE_FORMAT).
-                                    create()
-                                    .fromJson(json, AdhocCashOutInfo.class));
-                    callback.onSuccess(paymentCashOutInfo);
-                    return;
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-                callback.onError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.CLIENT, "blah"));
-
-            }
-        }, 1000);
-    }
-
     public void requestAdhocCashOut(
             @NonNull AdhocCashOutRequest adhocCashOutRequest,
             @NonNull final DataManager.Callback<SuccessWrapper> callback) {
@@ -133,8 +103,7 @@ public class PaymentsManager {
     public void requestRecurringCashOut(
             @NonNull RecurringCashOutRequest recurringCashOutRequest,
             @NonNull final DataManager.Callback<SuccessWrapper> callback) {
-//        mDataManager.requestRecurringCashOut(recurringCashOutRequest, callback);
-        callback.onSuccess(new SuccessWrapper(true));//fixme remove, test only
+        mDataManager.requestRecurringCashOut(recurringCashOutRequest, callback);
     }
 
     public void requestPaymentBatches(@NonNull final Date startDate,

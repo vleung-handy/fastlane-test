@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
+    android:id="@+id/payments_daily_cash_out_toggle_container"
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
     android:orientation="horizontal"
-    android:id="@+id/payments_daily_cash_out_toggle_container"
     >
 
     <LinearLayout
-        android:layout_weight="1"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:orientation="vertical"
         >
 
@@ -31,8 +31,6 @@
             android:textColorLink="@color/handy_blue"
             tools:text="A cash out fee of $3.14 will be applied daily to each payment."
             />
-
-        <!--todo remove hard-coded strings-->
     </LinearLayout>
 
     <android.support.v7.widget.SwitchCompat
