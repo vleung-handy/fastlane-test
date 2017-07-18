@@ -34,6 +34,7 @@ public class DailyCashOutToggleContainerView extends FrameLayout {
     View mContainer;
 
     private ToggleContainerClickListener mToggleContainerClickListener;
+    private DailyCashOutToggleContainerViewModel mDailyCashOutToggleContainerViewModel;
 
     public DailyCashOutToggleContainerView(final Context context) {
         super(context);
@@ -64,6 +65,8 @@ public class DailyCashOutToggleContainerView extends FrameLayout {
     }
 
     public void updateWithModel(@NonNull DailyCashOutToggleContainerViewModel dailyCashOutToggleContainerViewModel) {
+        mDailyCashOutToggleContainerViewModel = dailyCashOutToggleContainerViewModel;
+
         if (dailyCashOutToggleContainerViewModel.isViewVisible()) {
             mDailyCashOutToggle.setChecked(dailyCashOutToggleContainerViewModel.isToggleChecked());
             setBodyText(dailyCashOutToggleContainerViewModel.getInfoTextFormatted(getContext()));
@@ -94,19 +97,46 @@ public class DailyCashOutToggleContainerView extends FrameLayout {
             @Override
             public boolean onTouch(final View v, final MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_UP
-                        && mToggleContainerClickListener != null) {
+                        && mToggleContainerClickListener != null
+                        && mDailyCashOutToggleContainerViewModel != null
+                        && mDailyCashOutToggleContainerViewModel.isViewApparentlyEnabled()) {
                     mToggleContainerClickListener.onToggleClicked(mDailyCashOutToggle);
                 }
                 return true;
             }
         });
 
+        //FIXME this seems to only get triggered when its children are not in the way
+        //for logging purposes only
+        mContainer.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(final View v) {
+                if (mDailyCashOutToggleContainerViewModel != null &&
+                        !mDailyCashOutToggleContainerViewModel.isViewApparentlyEnabled()
+                        && mToggleContainerClickListener != null) {
+                    mToggleContainerClickListener.onApparentlyDisabledContainerClicked();
+                }
+            }
+        });
+
     }
 
     public interface ToggleContainerClickListener {
+
+        /**
+         * only gets triggered if the container is apparently enabled
+         */
         void onToggleClicked(@NonNull SwitchCompat toggleView);
 
+        /**
+         * only gets triggered if the container is apparently enabled
+         */
         void onToggleInfoHelpCenterLinkClicked(@NonNull SwitchCompat toggleView);
+
+        /**
+         * only gets triggered if the container is apparently disabled
+         */
+        void onApparentlyDisabledContainerClicked();
     }
 
     private void setBodyText(@Nullable String text) {
@@ -133,7 +163,9 @@ public class DailyCashOutToggleContainerView extends FrameLayout {
                     //get the link at the tap position
                     final ClickableSpan[] link = buffer.getSpans(off, off, ClickableSpan.class);
                     if (link.length != 0 && off < buffer.length()) {
-                        if (mToggleContainerClickListener != null) {
+                        if (mToggleContainerClickListener != null
+                                && mDailyCashOutToggleContainerViewModel != null
+                                && mDailyCashOutToggleContainerViewModel.isViewApparentlyEnabled()) {
                             mToggleContainerClickListener.onToggleInfoHelpCenterLinkClicked(mDailyCashOutToggle);
                         }
                         return true;

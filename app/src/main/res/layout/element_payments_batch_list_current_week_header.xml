@@ -210,7 +210,7 @@
         android:paddingRight="@dimen/payment_container_horizontal_padding"
         android:paddingTop="@dimen/payment_container_vertical_padding"
         android:paddingBottom="@dimen/payment_container_vertical_padding"
-        android:background="@drawable/border_gray_bg_white"
+        android:background="@drawable/border_gray_top"
         android:id="@+id/payments_batch_list_current_week_daily_pro_pay_toggle_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

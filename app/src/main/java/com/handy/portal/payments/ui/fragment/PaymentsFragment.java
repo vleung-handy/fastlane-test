@@ -183,14 +183,7 @@ public final class PaymentsFragment extends ActionBarFragment implements AdhocCa
                     onReceivePaymentBatchesError(error);
                 }
             };
-//            mPaymentsManager.requestPaymentBatches(startDate, endDate, mCurrentPaymentBatchCallback);
-
-            //fixme test only remove
-            mPaymentsManager.requestTestPaymentBatches(getContext(),
-                    startDate,
-                    endDate,
-                    mCurrentPaymentBatchCallback);
-
+            mPaymentsManager.requestPaymentBatches(startDate, endDate, mCurrentPaymentBatchCallback);
             paymentsBatchListView.showFooter(R.string.loading_more_payments);
         }
         else {
@@ -219,9 +212,8 @@ public final class PaymentsFragment extends ActionBarFragment implements AdhocCa
                     public void onToggleClicked(@NonNull final SwitchCompat toggleView) {
                         boolean requestEnableDailyCashOut = !toggleView.isChecked();
 
-                        //FIXME ask PM whether this should be logged even if the toggle is apparently disabled
                         bus.post(new PaymentsLog.CashOut.Recurring.ToggleTapped(requestEnableDailyCashOut));
-                        showDailyCashOutDialogForState(recurringCashOutInfo, requestEnableDailyCashOut);
+                        showDailyCashOutToggleConfirmationDialog(recurringCashOutInfo.getToggleConfirmationInfo(), requestEnableDailyCashOut);
                     }
 
                     @Override
@@ -230,20 +222,13 @@ public final class PaymentsFragment extends ActionBarFragment implements AdhocCa
                         showHelpCenterArticle(recurringCashOutInfo.getHelpCenterArticleUrl());
 
                     }
-                });
-    }
 
-    private void showDailyCashOutDialogForState(@NonNull PaymentBatches.RecurringCashOutInfo recurringCashOutInfo,
-                                                final boolean requestEnableDailyCashOut)
-    {
-        if(recurringCashOutInfo.getPaymentBatchPeriodInfo().isEditable())
-        {
-            showDailyCashOutToggleConfirmationDialog(recurringCashOutInfo.getToggleConfirmationInfo(), requestEnableDailyCashOut);
-        }
-        else
-        {
-            showDailyCashOutEditDisabledDialog(recurringCashOutInfo.getEditDisabledDialogInfo());
-        }
+                    @Override
+                    public void onApparentlyDisabledContainerClicked() {
+                        bus.post(new PaymentsLog.CashOut.Recurring.UneditableViewTapped());
+                        showDailyCashOutEditDisabledDialog(recurringCashOutInfo.getEditDisabledDialogInfo());
+                    }
+                });
     }
 
     private void showDailyCashOutEditDisabledDialog(@Nullable PaymentBatches.RecurringCashOutInfo.EditDisabledDialogInfo editDisabledDialogInfo)

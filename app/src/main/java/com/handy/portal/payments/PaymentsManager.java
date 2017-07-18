@@ -11,19 +11,19 @@ import com.handy.portal.core.model.SuccessWrapper;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.library.util.IOUtils;
+import com.handy.portal.payments.model.AdhocCashOutInfo;
+import com.handy.portal.payments.model.AdhocCashOutRequest;
 import com.handy.portal.payments.model.BatchPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
-import com.handy.portal.payments.model.AdhocCashOutInfo;
-import com.handy.portal.payments.model.AdhocCashOutRequest;
 import com.handy.portal.payments.model.PaymentGroup;
 import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.model.PaymentReviewResponse;
-import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
 import com.handy.portal.payments.model.RecurringCashOutRequest;
+import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
 import com.stripe.android.model.Token;
 
 import org.greenrobot.eventbus.EventBus;
@@ -134,34 +134,9 @@ public class PaymentsManager {
             @NonNull RecurringCashOutRequest recurringCashOutRequest,
             @NonNull final DataManager.Callback<SuccessWrapper> callback) {
 //        mDataManager.requestRecurringCashOut(recurringCashOutRequest, callback);
-        callback.onSuccess(new SuccessWrapper(true));//todo remove, test only
+        callback.onSuccess(new SuccessWrapper(true));//fixme remove, test only
     }
-    //fixme test only remove
-    public void requestTestPaymentBatches(
-            @NonNull final Context context,
-            @NonNull final Date startDate,
-            @NonNull final Date endDate,
-            @NonNull final DataManager.Callback<PaymentBatches> callback) {
 
-        Handler handler = new Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    String json = IOUtils.loadJSONFromAsset(context, "test/test_payments_response.json");
-                    PaymentBatches paymentBatches = (new GsonBuilder().setDateFormat(DateTimeUtils.UNIVERSAL_DATE_FORMAT).create()
-                            .fromJson(json, PaymentBatches.class));
-                    callback.onSuccess(paymentBatches);
-                    return;
-                }
-                catch (IOException e) {
-                    e.printStackTrace();
-                }
-                callback.onError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.CLIENT, "blah"));
-
-            }
-        }, 1000);
-    }
     public void requestPaymentBatches(@NonNull final Date startDate,
                                       @NonNull final Date endDate,
                                       @NonNull final DataManager.Callback<PaymentBatches> callback) {

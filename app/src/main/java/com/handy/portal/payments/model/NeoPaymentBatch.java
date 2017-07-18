@@ -68,7 +68,7 @@ public class NeoPaymentBatch extends PaymentBatch {
     }
 
     public boolean isCashOutEnabled() {
-        return mCashOutEnabled;
+        return true;
     }
 
     public String getPaymentMethodLast4Digits() {
