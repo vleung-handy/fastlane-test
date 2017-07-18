@@ -141,7 +141,7 @@
     <string name="tab_clients">Clients</string>
     <string name="tab_schedule">Schedule</string>
     <string name="tab_notifications">Notifications</string>
-    <string name="tab_alerts">Alerts</string>
+    <string name="tab_messages">Messages</string>
     <string name="tab_more">More</string>
     <string name="title_activity_please_update">PleaseUpdateActivity</string>
     <string name="available_jobs">Available Jobs</string>

@@ -69,6 +69,9 @@ public class ConfigurationResponse {
     @SerializedName("template_availability_enabled")
     private boolean mTemplateAvailabilityEnabled;
 
+    @SerializedName("my_clients_view_enabled")
+    private boolean mIsMyClientsViewEnabled;
+
     // Getters
     public boolean isAdhocCashOutEnabled() {
         return mAdhocCashOutEnabled;
@@ -162,6 +165,10 @@ public class ConfigurationResponse {
 
     public boolean isTemplateAvailabilityEnabled() {
         return mTemplateAvailabilityEnabled;
+    }
+
+    public boolean isMyClientsViewEnabled() {
+        return false;//mIsMyClientsViewEnabled;
     }
 
     // Static classes

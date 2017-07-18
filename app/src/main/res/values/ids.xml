@@ -26,6 +26,6 @@
           type="id"/>
     <item name="tab_nav_schedule"
           type="id"/>
-    <item name="tab_nav_alert"
+    <item name="tab_nav_messages"
           type="id"/>
 </resources>

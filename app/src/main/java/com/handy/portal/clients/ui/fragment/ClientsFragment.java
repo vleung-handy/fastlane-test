@@ -4,11 +4,13 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
@@ -32,9 +34,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class ClientsFragment extends ActionBarFragment
-        implements LayerHelper.UnreadConversationsCountChangedListener {
-    public static final String CONVERSATIONS_DEEPLINK_SUFFIX = "conversations";
+public class ClientsFragment extends ActionBarFragment {
     @Inject
     BookingManager mBookingManager;
     @Inject
@@ -42,13 +42,13 @@ public class ClientsFragment extends ActionBarFragment
     @Inject
     EventBus mBus;
 
-    @BindView(R.id.clients_pager)
-    ViewPager mViewPager;
-    @BindView(R.id.clients_tab_layout)
-    TabLayout mTabLayout;
+    private ViewPager mViewPager;
+    private TabLayout mTabLayout;
 
     private TabWithCountView mRequestsTab;
-    private TabWithCountView mMessagesTab;
+    private TabWithCountView mClientsTab;
+
+    private boolean mShowTabs;
 
     @Override
     protected MainViewPage getAppPage() {
@@ -58,25 +58,34 @@ public class ClientsFragment extends ActionBarFragment
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mShowTabs = configManager.getConfigurationResponse().isMyClientsViewEnabled();
         mBus.register(this);
-        mLayerHelper.registerUnreadConversationsCountChangedListener(this);
     }
 
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
-        final View view = inflater.inflate(R.layout.fragment_clients, container, false);
-        ButterKnife.bind(this, view);
+        View view;
+        if(mShowTabs) {
+            view = inflater.inflate(R.layout.fragment_clients, container, false);
+            mViewPager = (ViewPager) view.findViewById(R.id.clients_pager);
+            mTabLayout = (TabLayout) view.findViewById(R.id.clients_tab_layout);
+        } else {
+            view = inflater.inflate(R.layout.fragment_clients_no_tab, container, false);
+        }
+
         return view;
     }
 
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
-        final TabAdapter tabAdapter = new TabAdapter(getChildFragmentManager());
-        mViewPager.setAdapter(tabAdapter);
-        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-        mTabLayout.setupWithViewPager(mViewPager);
-        initTabViews();
+        if(mShowTabs) {
+            final TabAdapter tabAdapter = new TabAdapter(getChildFragmentManager());
+            mViewPager.setAdapter(tabAdapter);
+            mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+            mTabLayout.setupWithViewPager(mViewPager);
+            initTabViews();
+        }
     }
 
     private void initTabViews() {
@@ -85,41 +94,28 @@ public class ClientsFragment extends ActionBarFragment
         mTabLayout.getTabAt(0).setCustomView(mRequestsTab);
 
         mTabLayout.setVisibility(View.VISIBLE);
-        mMessagesTab = new TabWithCountView(getActivity());
-        mMessagesTab.setTitle(R.string.messages);
-        mTabLayout.getTabAt(1).setCustomView(mMessagesTab);
-
-        final Bundle deeplinkData =
-                getActivity().getIntent().getBundleExtra(BundleKeys.DEEPLINK_DATA);
-        if (deeplinkData != null) {
-            final String deeplink = deeplinkData.getString(BundleKeys.DEEPLINK);
-            if (!TextUtils.isEmpty(deeplink)
-                    && deeplink.endsWith(CONVERSATIONS_DEEPLINK_SUFFIX)) {
-                mViewPager.setCurrentItem(1);
-            }
-        }
+        mClientsTab = new TabWithCountView(getActivity());
+        mClientsTab.setTitle(R.string.messages);
+        mTabLayout.getTabAt(1).setCustomView(mClientsTab);
     }
 
     @Override
     public void onResume() {
         super.onResume();
         setActionBar(R.string.your_clients, false);
-        final Integer lastUnreadRequestsCount = mBookingManager.getLastUnreadRequestsCount();
-        if (lastUnreadRequestsCount != null) {
-            mRequestsTab.setCount((long) lastUnreadRequestsCount);
+        if(mShowTabs) {
+            final Integer lastUnreadRequestsCount = mBookingManager.getLastUnreadRequestsCount();
+            if (lastUnreadRequestsCount != null) {
+                mRequestsTab.setCount((long) lastUnreadRequestsCount);
+            }
         }
-        mMessagesTab.setCount(mLayerHelper.getUnreadConversationsCount());
     }
 
     @Subscribe
     public void onReceiveProRequestedJobsCountSuccess(
             final BookingEvent.ReceiveProRequestedJobsCountSuccess event) {
-        mRequestsTab.setCount((long) event.getCount());
-    }
-
-    @Override
-    public void onUnreadConversationsCountChanged(final long count) {
-        mMessagesTab.setCount(count);
+        if(mShowTabs)
+            mRequestsTab.setCount((long) event.getCount());
     }
 
     private class TabAdapter extends FragmentPagerAdapter {
@@ -144,7 +140,6 @@ public class ClientsFragment extends ActionBarFragment
 
     @Override
     public void onDestroy() {
-        mLayerHelper.unregisterUnreadConversationsCountChangedListener(this);
         mBus.unregister(this);
         super.onDestroy();
     }

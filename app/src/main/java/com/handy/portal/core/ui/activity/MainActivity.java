@@ -93,7 +93,7 @@ public class MainActivity extends BaseActivity
     private TabButton mJobsButton;
     private TabButton mClientsButton;
     private TabButton mScheduleButton;
-    private TabButton mAlertsButton;
+    private TabButton mMessagesButton;
     private TabButton mMoreButton;
 
     @BindView(R.id.loading_overlay)
@@ -204,7 +204,7 @@ public class MainActivity extends BaseActivity
             updateClientsButtonUnreadCount();
             mBookingManager.requestProRequestedJobsCount();
         }
-        if (mAlertsButton != null && mAlertsButton.getVisibility() == View.VISIBLE) {
+        if (mMessagesButton != null && mMessagesButton.getVisibility() == View.VISIBLE) {
             bus.post(new NotificationEvent.RequestUnreadCount());
         }
         if (mCurrentPage == null) {
@@ -346,8 +346,8 @@ public class MainActivity extends BaseActivity
 
     @Subscribe
     public void onReceiveUnreadCountSuccess(NotificationEvent.ReceiveUnreadCountSuccess event) {
-        if (mAlertsButton != null) {
-            mAlertsButton.setUnreadCount(event.getUnreadCount());
+        if (mMessagesButton != null) {
+            mMessagesButton.setUnreadCount(event.getUnreadCount());
         }
     }
 
@@ -523,7 +523,7 @@ public class MainActivity extends BaseActivity
             }
             break;
             case NOTIFICATIONS: {
-                mAlertsButton.toggle();
+                mMessagesButton.toggle();
                 mNavTrayLinks.clearCheck();
             }
             break;
@@ -579,14 +579,14 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onUnreadConversationsCountChanged(final long count) {
-        updateClientsButtonUnreadCount();
+        if (mMessagesButton != null) {
+            mMessagesButton.setUnreadCount((int) mLayerHelper.getUnreadConversationsCount());
+        }
     }
 
     private void updateClientsButtonUnreadCount() {
         if (mClientsButton != null && mJobRequestsCount != null) {
-            int clientsButtonUnreadCount = mJobRequestsCount;
-            clientsButtonUnreadCount += mLayerHelper.getUnreadConversationsCount();
-            mClientsButton.setUnreadCount(clientsButtonUnreadCount);
+            mClientsButton.setUnreadCount(mJobRequestsCount);
         }
     }
 
@@ -607,13 +607,13 @@ public class MainActivity extends BaseActivity
         mScheduleButton = new TabButton(this)
                 .init(R.string.tab_schedule, R.drawable.ic_menu_schedule);
         mScheduleButton.setId(R.id.tab_nav_schedule);
-        mAlertsButton = new TabButton(this)
-                .init(R.string.tab_alerts, R.drawable.ic_menu_alerts);
-        mAlertsButton.setId(R.id.tab_nav_alert);
+        mMessagesButton = new TabButton(this)
+                .init(R.string.tab_messages, R.drawable.ic_menu_messages);
+        mMessagesButton.setId(R.id.tab_nav_messages);
         mMoreButton = new TabButton(this)
                 .init(R.string.tab_more, R.drawable.ic_menu_more);
         mMoreButton.setId(R.id.tab_nav_item_more);
-        mTabs.setTabs(mJobsButton, mScheduleButton, mClientsButton, mAlertsButton, mMoreButton);
+        mTabs.setTabs(mJobsButton, mScheduleButton, mClientsButton, mMessagesButton, mMoreButton);
         mTabs.selected(mCurrentTabTitle);
 
         mJobsButton.setOnClickListener(
@@ -622,8 +622,8 @@ public class MainActivity extends BaseActivity
                 new TabOnClickListener(mScheduleButton, MainViewPage.SCHEDULED_JOBS));
         mClientsButton.setOnClickListener(
                 new TabOnClickListener(mClientsButton, MainViewPage.CLIENTS));
-        mAlertsButton.setOnClickListener(
-                new TabOnClickListener(mAlertsButton, MainViewPage.NOTIFICATIONS));
+        mMessagesButton.setOnClickListener(
+                new TabOnClickListener(mMessagesButton, MainViewPage.MESSAGES));
 
         ConfigurationResponse config = mConfigManager.getConfigurationResponse();
         if (config.isMoreFullTabEnabled()) {

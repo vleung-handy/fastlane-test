@@ -16,6 +16,8 @@ import android.view.ViewGroup;
 
 import com.handy.portal.R;
 import com.handy.portal.clients.ui.adapter.ConversationsAdapter;
+import com.handy.portal.core.ui.fragment.ActionBarFragment;
+import com.handy.portal.logger.handylogger.LogEvent;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
 import com.handy.portal.logger.handylogger.model.ConversationsLog;
 import com.handybook.shared.layer.LayerConstants;
@@ -30,7 +32,7 @@ import butterknife.ButterKnife;
 import static com.handybook.shared.layer.LayerConstants.LAYER_CONVERSATION_KEY;
 
 
-public class ClientConversationsFragment extends InjectedFragment
+public class ClientConversationsFragment extends ActionBarFragment
         implements ConversationsAdapter.Listener {
     private static final int REFRESH_DURATION_MILLIS = 3000;
 
@@ -66,6 +68,11 @@ public class ClientConversationsFragment extends InjectedFragment
     }
 
     @Override
+    public void onCreate(final Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+    }
+
+    @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
         final View view = inflater.inflate(R.layout.fragment_client_conversations, container, false);
@@ -75,6 +82,7 @@ public class ClientConversationsFragment extends InjectedFragment
 
     @Override
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
+        setActionBar(R.string.messages, false);
         initRefreshLayout(mRefreshLayout);
         initRefreshLayout(mEmptyRefreshLayout);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
