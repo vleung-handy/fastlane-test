@@ -94,7 +94,6 @@ public class ClientsFragment extends ActionBarFragment {
         mTabLayout.getTabAt(0).setCustomView(mRequestsTab);
 
         mTabLayout.setVisibility(View.VISIBLE);
-        // todo sammy for Clients Tab
         mClientsTab = new TabWithCountView(getActivity());
         mClientsTab.setTitle(R.string.messages);
         mTabLayout.getTabAt(1).setCustomView(mClientsTab);
@@ -125,7 +124,6 @@ public class ClientsFragment extends ActionBarFragment {
         public TabAdapter(final FragmentManager fragmentManager) {
             super(fragmentManager);
             mFragments.add(ProRequestedJobsFragment.newInstance());
-            // todo sammy for Clients Tab
             mFragments.add(ClientConversationsFragment.newInstance());
         }
 
