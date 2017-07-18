@@ -89,12 +89,27 @@ public final class PaymentsFragment extends ActionBarFragment implements AdhocCa
 
     private ViewGroup fragmentView;
 
+    /**
+     * used for a hack only
+     */
+    private Bundle mPreviousSavedInstanceState;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (fragmentView == null) {
+        /*
+
+        this is a hack to fix an issue in which the view isn't immediately redrawn
+        (opening the menu drawer seems to trigger a redraw) when returning to this fragment from another activity
+
+        TODO ideally, we should have a non-hacky way of instantly restoring the list view state (including scroll position)
+         */
+        boolean wasActivityJustRecreated = mPreviousSavedInstanceState != null;
+        if (fragmentView == null || wasActivityJustRecreated) {
             fragmentView = (ViewGroup) super.onCreateView(inflater, container, savedInstanceState);
             fragmentView.addView(inflater.inflate(R.layout.fragment_payments, container, false));
         }
+
+        mPreviousSavedInstanceState = savedInstanceState;
 
         ButterKnife.bind(this, fragmentView);
 
