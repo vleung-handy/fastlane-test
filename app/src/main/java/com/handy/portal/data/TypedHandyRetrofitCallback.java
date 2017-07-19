@@ -41,6 +41,8 @@ import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.setup.SetupData;
 import com.handy.portal.updater.model.UpdateDetails;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -165,6 +167,22 @@ class JobsCountHandyRetroFitCallback extends TypedHandyRetrofitCallback<HashMap<
 class ClientListHandyRetroFitCallback extends TypedHandyRetrofitCallback<List<Client>> {
     ClientListHandyRetroFitCallback(DataManager.Callback callback) {
         super(callback);
+    }
+
+    @Override
+    public void success(final JSONObject response) {
+        try {
+            JSONArray array = response.getJSONArray("clients");
+            TypeToken<List<Client>> typeToken = new TypeToken<List<Client>>(getClass()) {};
+            returnData = gsonBuilder.fromJson(array.toString(), typeToken.getType());
+            if (callback != null) {
+                callback.onSuccess(returnData);
+            }
+        }
+        catch (JSONException e) {
+            Crashlytics.logException(e);
+            callback.onError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.SERVER, e.getMessage()));
+        }
     }
 }
 

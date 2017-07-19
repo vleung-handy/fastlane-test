@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.core.model.Address;
 
 import java.io.Serializable;
 
@@ -30,7 +31,7 @@ public class Client implements Serializable {
 
     @SerializedName("address")
     @Nullable
-    private String mAddress;
+    private Address mAddress;
 
     @SerializedName("context")
     @Nullable
@@ -58,7 +59,7 @@ public class Client implements Serializable {
     }
 
     @Nullable
-    public String getAddress() {
+    public Address getAddress() {
         return mAddress;
     }
 
