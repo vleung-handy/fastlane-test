@@ -16,6 +16,7 @@ import org.robolectric.Robolectric;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -60,5 +61,33 @@ public class PaymentsDetailListHeaderViewTest extends RobolectricGradleTestWrapp
         paymentsDetailListHeaderView.updateDisplay(new PaymentDetailHeaderViewModel(neoPaymentBatch, true));
 
         assertEquals("Should see deposit date if in review", View.VISIBLE, expectDepositLayout.getVisibility());
+    }
+
+    @Test
+    public void shouldSetCashOutButtonContainerVisibilityAccordingToViewModel() {
+        PaymentDetailHeaderViewModel paymentDetailHeaderViewModel = mock(PaymentDetailHeaderViewModel.class);
+        when(paymentDetailHeaderViewModel.shouldShowPaymentStatusLayout()).thenReturn(true);
+
+        when(paymentDetailHeaderViewModel.shouldShowCashOutButton()).thenReturn(true);
+        paymentsDetailListHeaderView.updateDisplay(paymentDetailHeaderViewModel);
+        assertEquals("cash out button container is visible when view model denotes it", View.VISIBLE, paymentsDetailListHeaderView.mCashOutButtonContainerView.getVisibility());
+
+        when(paymentDetailHeaderViewModel.shouldShowCashOutButton()).thenReturn(false);
+        paymentsDetailListHeaderView.updateDisplay(paymentDetailHeaderViewModel);
+        assertEquals("cash out button container is not visible when view model denotes it", View.GONE, paymentsDetailListHeaderView.mCashOutButtonContainerView.getVisibility());
+    }
+
+    @Test
+    public void shouldSetCashOutButtonApparentlyEnabledAccordingToViewModel() {
+        PaymentDetailHeaderViewModel paymentDetailHeaderViewModel = mock(PaymentDetailHeaderViewModel.class);
+        when(paymentDetailHeaderViewModel.shouldShowPaymentStatusLayout()).thenReturn(true);
+
+        when(paymentDetailHeaderViewModel.shouldApparentlyEnableCashOutButton()).thenReturn(true);
+        paymentsDetailListHeaderView.updateDisplay(paymentDetailHeaderViewModel);
+        assertEquals("cash out button container is apparently enabled when view model denotes it", 1f, paymentsDetailListHeaderView.mCashOutButtonContainerView.getAlpha(), 0.0001f);
+
+        when(paymentDetailHeaderViewModel.shouldApparentlyEnableCashOutButton()).thenReturn(false);
+        paymentsDetailListHeaderView.updateDisplay(paymentDetailHeaderViewModel);
+        assertNotEquals("cash out button container is apparently disabled when view model denotes it", 1f, paymentsDetailListHeaderView.mCashOutButtonContainerView.getAlpha(), 0.0001f);
     }
 }

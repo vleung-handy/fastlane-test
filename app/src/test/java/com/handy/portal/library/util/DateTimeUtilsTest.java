@@ -3,8 +3,11 @@ package com.handy.portal.library.util;
 import org.junit.Test;
 
 import java.util.Calendar;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 
 public class DateTimeUtilsTest {
     @Test
@@ -68,5 +71,37 @@ public class DateTimeUtilsTest {
         Calendar fewWeeksAgo = Calendar.getInstance();
         fewWeeksAgo.add(Calendar.DATE, -4 * 7);
         assertEquals("4w", DateTimeUtils.formatDateToNumberTimeUnit(fewWeeksAgo.getTime()));
+    }
+
+    @Test
+    public void formatDayRange_shouldFormatOnlyOneDateIfDatesEqual() {
+        Date startDate = new Date();
+        Date endDate = new Date(startDate.getTime());
+
+        String formattedDayRange = DateTimeUtils.formatDayRange(
+                DateTimeUtils.DAY_OF_WEEK_MONTH_DATE_FORMATTER,
+                startDate,
+                endDate
+        );
+
+        String formattedDay = DateTimeUtils.DAY_OF_WEEK_MONTH_DATE_FORMATTER.format(startDate);
+
+        assertEquals(formattedDayRange, formattedDay);
+    }
+
+    @Test
+    public void formatDayRange_shouldNotFormatOnlyOneDateIfDatesNotEqual() {
+        Date startDate = new Date();
+        Date endDate = new Date(startDate.getTime() + TimeUnit.DAYS.toMillis(7));
+
+        String formattedDayRange = DateTimeUtils.formatDayRange(
+                DateTimeUtils.DAY_OF_WEEK_MONTH_DATE_FORMATTER,
+                startDate,
+                endDate
+        );
+
+        String formattedDay = DateTimeUtils.DAY_OF_WEEK_MONTH_DATE_FORMATTER.format(startDate);
+
+        assertNotEquals(formattedDayRange, formattedDay);
     }
 }
