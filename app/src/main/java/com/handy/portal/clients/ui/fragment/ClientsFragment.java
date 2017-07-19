@@ -83,12 +83,13 @@ public class ClientsFragment extends ActionBarFragment {
         mRequestsTab.setTitle(R.string.job_requests);
         mTabLayout.getTabAt(0).setCustomView(mRequestsTab);
 
-        if(mShowTabs) {
+        if (mShowTabs) {
             mTabLayout.setVisibility(View.VISIBLE);
             mClientsTab = new TabWithCountView(getActivity());
             mClientsTab.setTitle(R.string.messages);
             mTabLayout.getTabAt(1).setCustomView(mClientsTab);
-        } else {
+        }
+        else {
             mTabLayout.setVisibility(View.GONE);
         }
     }
@@ -106,7 +107,7 @@ public class ClientsFragment extends ActionBarFragment {
     @Subscribe
     public void onReceiveProRequestedJobsCountSuccess(
             final BookingEvent.ReceiveProRequestedJobsCountSuccess event) {
-            mRequestsTab.setCount((long) event.getCount());
+        mRequestsTab.setCount((long) event.getCount());
     }
 
     private class TabAdapter extends FragmentPagerAdapter {
@@ -116,7 +117,7 @@ public class ClientsFragment extends ActionBarFragment {
             super(fragmentManager);
             mFragments.add(ProRequestedJobsFragment.newInstance());
 
-            if(mShowTabs) {
+            if (mShowTabs) {
                 mFragments.add(ClientConversationsFragment.newInstance());
             }
         }
