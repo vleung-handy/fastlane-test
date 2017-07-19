@@ -94,6 +94,15 @@ public class PaymentsLog extends EventLog {
             }
 
 
+            public static class UneditableViewTapped extends Recurring {
+                private static final String EVENT_TYPE_SUFFIX = "unavailable_tapped";
+
+                public UneditableViewTapped() {
+                    super(EVENT_TYPE_SUFFIX);
+                }
+            }
+
+
             public static class ToggleConfirmationCancelled extends Recurring {
                 private static final String EVENT_TYPE_SUFFIX = "toggle_confirmation_cancelled";
 

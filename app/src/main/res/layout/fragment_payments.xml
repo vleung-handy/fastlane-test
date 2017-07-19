@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     >
 
-    <include layout="@layout/layout_fetch_error"/>
-
     <ScrollView
         android:id="@+id/payments_scroll_view"
         android:layout_width="match_parent"
@@ -29,5 +27,7 @@
         </LinearLayout>
 
     </ScrollView>
+
+    <include layout="@layout/layout_fetch_error"/>
 
 </com.handy.portal.library.ui.layout.SlideUpPanelLayout>

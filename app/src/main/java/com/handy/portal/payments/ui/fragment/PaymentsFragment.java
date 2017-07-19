@@ -1,8 +1,14 @@
 package com.handy.portal.payments.ui.fragment;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.SwitchCompat;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -19,6 +25,9 @@ import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.manager.ConfigManager;
 import com.handy.portal.core.manager.PageNavigationManager;
+import com.handy.portal.core.manager.ProviderManager;
+import com.handy.portal.core.model.SuccessWrapper;
+import com.handy.portal.core.ui.activity.FragmentContainerActivity;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.data.callback.FragmentSafeCallback;
@@ -31,9 +40,12 @@ import com.handy.portal.payments.PaymentsUtil;
 import com.handy.portal.payments.model.NeoPaymentBatch;
 import com.handy.portal.payments.model.PaymentBatch;
 import com.handy.portal.payments.model.PaymentBatches;
+import com.handy.portal.payments.model.RecurringCashOutRequest;
 import com.handy.portal.payments.ui.adapter.PaymentBatchListAdapter;
+import com.handy.portal.payments.ui.element.DailyCashOutToggleContainerView;
 import com.handy.portal.payments.ui.element.PaymentsBatchListView;
 import com.handy.portal.payments.ui.fragment.dialog.AdhocCashOutDialogFragment;
+import com.handy.portal.webview.PortalWebViewFragment;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -53,6 +65,9 @@ public final class PaymentsFragment extends ActionBarFragment implements AdhocCa
     PaymentsManager mPaymentsManager;
     @Inject
     PageNavigationManager mNavigationManager;
+
+    @Inject
+    ProviderManager mProviderManager;
 
     //TODO: investigate using @Produce and make manager handle more of this logic
     @BindView(R.id.slide_up_panel_container)
@@ -74,12 +89,27 @@ public final class PaymentsFragment extends ActionBarFragment implements AdhocCa
 
     private ViewGroup fragmentView;
 
+    /**
+     * used for a hack only
+     */
+    private Bundle mPreviousSavedInstanceState;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        if (fragmentView == null) {
+        /*
+
+        this is a hack to fix an issue in which the view isn't immediately redrawn
+        (opening the menu drawer seems to trigger a redraw) when returning to this fragment from another activity
+
+        TODO ideally, we should have a non-hacky way of instantly restoring the list view state (including scroll position)
+         */
+        boolean wasActivityJustRecreated = mPreviousSavedInstanceState != null;
+        if (fragmentView == null || wasActivityJustRecreated) {
             fragmentView = (ViewGroup) super.onCreateView(inflater, container, savedInstanceState);
             fragmentView.addView(inflater.inflate(R.layout.fragment_payments, container, false));
         }
+
+        mPreviousSavedInstanceState = savedInstanceState;
 
         ButterKnife.bind(this, fragmentView);
 
@@ -169,7 +199,6 @@ public final class PaymentsFragment extends ActionBarFragment implements AdhocCa
                 }
             };
             mPaymentsManager.requestPaymentBatches(startDate, endDate, mCurrentPaymentBatchCallback);
-
             paymentsBatchListView.showFooter(R.string.loading_more_payments);
         }
         else {
@@ -186,6 +215,113 @@ public final class PaymentsFragment extends ActionBarFragment implements AdhocCa
         paymentsBatchListView.setCashOutButtonClickListener(onClickListener);
     }
 
+    private void updateDailyCashOutListeners(@Nullable final PaymentBatches.RecurringCashOutInfo recurringCashOutInfo) {
+        if (recurringCashOutInfo == null) {
+            paymentsBatchListView.getWrappedAdapter().setDailyCashOutToggleContainerClickListener(null);
+            return;
+        }
+
+        paymentsBatchListView.getWrappedAdapter().setDailyCashOutToggleContainerClickListener(
+                new DailyCashOutToggleContainerView.ToggleContainerClickListener() {
+                    @Override
+                    public void onToggleClicked(@NonNull final SwitchCompat toggleView) {
+                        boolean requestEnableDailyCashOut = !toggleView.isChecked();
+
+                        bus.post(new PaymentsLog.CashOut.Recurring.ToggleTapped(requestEnableDailyCashOut));
+                        showDailyCashOutToggleConfirmationDialog(recurringCashOutInfo.getToggleConfirmationInfo(), requestEnableDailyCashOut);
+                    }
+
+                    @Override
+                    public void onToggleInfoHelpCenterLinkClicked(@NonNull final SwitchCompat toggleView) {
+                        bus.post(new PaymentsLog.CashOut.Recurring.HelpButtonTapped(toggleView.isChecked()));
+                        showHelpCenterArticle(recurringCashOutInfo.getHelpCenterArticleUrl());
+
+                    }
+
+                    @Override
+                    public void onApparentlyDisabledContainerClicked() {
+                        bus.post(new PaymentsLog.CashOut.Recurring.UneditableViewTapped());
+                        showDailyCashOutEditDisabledDialog(recurringCashOutInfo.getEditDisabledDialogInfo());
+                    }
+                });
+    }
+
+    private void showDailyCashOutEditDisabledDialog(@Nullable PaymentBatches.RecurringCashOutInfo.EditDisabledDialogInfo editDisabledDialogInfo)
+    {
+        if(editDisabledDialogInfo == null) return;
+        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                .setPositiveButton(R.string.ok, null)
+                .setMessage(editDisabledDialogInfo.getBodyText())
+                .setTitle(editDisabledDialogInfo.getTitleText())
+                .create();
+        alertDialog.show();
+    }
+
+    private void showDailyCashOutToggleConfirmationDialog(
+            @NonNull PaymentBatches.RecurringCashOutInfo.ToggleConfirmationInfo toggleConfirmationInfo,
+            final boolean requestEnableDailyCashOut
+    ) {
+        AlertDialog alertDialog = new AlertDialog.Builder(getContext())
+                .setPositiveButton(toggleConfirmationInfo.getConfirmButtonText(),
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(final DialogInterface dialog, final int which) {
+                                bus.post(new PaymentsLog.CashOut.Recurring.ToggleConfirmationConfirmed(requestEnableDailyCashOut));
+                                RecurringCashOutRequest dailyCashOutRequest
+                                        = createUpdateRecurringCashOutRequest((requestEnableDailyCashOut));
+                                requestDailyCashOut(dailyCashOutRequest);
+                            }
+                        })
+                .setNegativeButton(toggleConfirmationInfo.getCancelButtonText(), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(final DialogInterface dialog, final int which) {
+                        bus.post(new PaymentsLog.CashOut.Recurring.ToggleConfirmationCancelled(requestEnableDailyCashOut));
+                    }
+                })
+                .setMessage(toggleConfirmationInfo.getBodyText())
+                .setTitle(toggleConfirmationInfo.getTitleText())
+                .create();
+        alertDialog.show();
+        //can only update buttons after show() is called
+        alertDialog.getButton(AlertDialog.BUTTON_NEGATIVE).setTextColor(
+                ContextCompat.getColor(getContext(), R.color.handy_tertiary_gray));
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setTextColor(
+                ContextCompat.getColor(getContext(), R.color.handy_blue));
+    }
+
+    @NonNull
+    private RecurringCashOutRequest createUpdateRecurringCashOutRequest(boolean requestEnableDailyCashOut) {
+        int paymentBatchPeriodDays = requestEnableDailyCashOut ?
+                PaymentBatches.RecurringCashOutInfo.PaymentBatchPeriodInfo.PAYMENT_BATCH_PERIOD_DAYS_DAILY :
+                PaymentBatches.RecurringCashOutInfo.PaymentBatchPeriodInfo.PAYMENT_BATCH_PERIOD_DAYS_WEEKLY;
+
+        return new RecurringCashOutRequest(
+                mProviderManager.getLastProviderId(),
+                paymentBatchPeriodDays);
+    }
+
+    private void requestDailyCashOut(@NonNull final RecurringCashOutRequest dailyCashOutRequest) {
+        showProgressSpinner();
+        mPaymentsManager.requestRecurringCashOut(dailyCashOutRequest, new FragmentSafeCallback<SuccessWrapper>(this) {
+            @Override
+            public void onCallbackSuccess(final SuccessWrapper response) {
+                hideProgressSpinner();
+                if (!TextUtils.isEmpty(response.getMessage())) {
+                    Toast.makeText(getContext(), response.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+                if (response.getSuccess() != null && response.getSuccess()) {
+                    requestInitialPaymentsInfo();
+                }
+            }
+
+            @Override
+            public void onCallbackError(final DataManager.DataManagerError error) {
+                hideProgressSpinner();
+                Toast.makeText(getContext(), error.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
     public void onInitialPaymentBatchReceived(final PaymentBatches paymentBatches, Date requestStartDate) //should only be called once in this instance. should never be empty
     {
         //reset payment batch list view and its adapter
@@ -199,12 +335,14 @@ public final class PaymentsFragment extends ActionBarFragment implements AdhocCa
             showToast(R.string.an_error_has_occurred);
             return;
         }
+        paymentsBatchListView.getWrappedAdapter().setDailyCashOutInfo(paymentBatches.getRecurringCashOutInfo());
         paymentsBatchListView.appendData(paymentBatches, requestStartDate);
 
         NeoPaymentBatch currentWeekBatch = paymentsBatchListView.getWrappedAdapter().getCurrentWeekBatch();
 
         updateCashOutButtonClickListener(paymentBatches.getAdhocCashOutInfo(),
                 currentWeekBatch != null && currentWeekBatch.isCashOutEnabled());
+        updateDailyCashOutListeners(paymentBatches.getRecurringCashOutInfo());
 
         //updating with data from payment batches
         paymentsBatchListView.setOnDataItemClickListener(new PaymentsBatchListView.OnDataItemClickListener() {
@@ -300,5 +438,15 @@ public final class PaymentsFragment extends ActionBarFragment implements AdhocCa
     public void onCashOutSuccess(@NonNull final String message) {
         Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
         requestInitialPaymentsInfo();
+    }
+
+    private void showHelpCenterArticle(@NonNull String helpUrl) {
+        Bundle arguments = PortalWebViewFragment.createBundle(helpUrl, getString(R.string.help));
+        Intent webviewIntent = FragmentContainerActivity.getIntent(
+                getContext(),
+                PortalWebViewFragment.class,
+                arguments
+        );
+        startActivity(webviewIntent);
     }
 }

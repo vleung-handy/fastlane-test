@@ -32,7 +32,6 @@ import com.handy.portal.payments.PaymentsManager;
 import com.handy.portal.payments.model.AdhocCashOutInfo;
 import com.handy.portal.payments.model.AdhocCashOutRequest;
 import com.handy.portal.payments.ui.element.PaymentBreakdownLineItemView;
-import com.handy.portal.payments.ui.fragment.SelectPaymentMethodFragment;
 import com.handy.portal.webview.PortalWebViewFragment;
 
 import org.greenrobot.eventbus.EventBus;
@@ -101,8 +100,7 @@ public class AdhocCashOutDialogFragment extends FullScreenDialogFragment {
         mErrorView.setVisibility(View.GONE);
         mContentContainer.setVisibility(View.GONE);
         showLoadingOverlay();
-        mPaymentsManager.requestAdhocCashOutInfo(
-                new FragmentSafeCallback<AdhocCashOutInfo>(this) {
+        mPaymentsManager.requestAdhocCashOutInfo(new FragmentSafeCallback<AdhocCashOutInfo>(this) {
             @Override
             public void onCallbackSuccess(final AdhocCashOutInfo response) {
                 if (response.getSuccess() != null
@@ -178,7 +176,7 @@ public class AdhocCashOutDialogFragment extends FullScreenDialogFragment {
         });
         TextUtils.stripUnderlines(mHeaderText);
 
-        mDateRangeText.setText(DateTimeUtils.formatDateRange(
+        mDateRangeText.setText(DateTimeUtils.formatDayRange(
                 DateTimeUtils.SHORT_DAY_OF_WEEK_MONTH_DAY_FORMATTER,
                 adhocCashOutInfo.getDateStart(),
                 adhocCashOutInfo.getDateEnd()));
@@ -230,17 +228,6 @@ public class AdhocCashOutDialogFragment extends FullScreenDialogFragment {
     public void onViewCreated(final View view, @Nullable final Bundle savedInstanceState) {
         ButterKnife.bind(this, view);
         mErrorText.setText(R.string.error_missing_server_data);
-    }
-
-
-    @OnClick(R.id.payments_cash_out_payment_method_details_button)
-    public void onPaymentMethodDetailsButtonClicked() {
-        mBus.post(new PaymentsLog.CashOut.Adhoc.CashOutEarlyPaymentMethodSelected());
-        startActivity(FragmentContainerActivity.getIntent(
-                getContext(),
-                SelectPaymentMethodFragment.class,
-                null
-        ));
     }
 
     @OnClick(R.id.payments_cash_out_dismiss_button)
