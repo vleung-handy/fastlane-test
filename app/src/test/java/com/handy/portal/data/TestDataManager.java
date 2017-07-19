@@ -1,9 +1,11 @@
 package com.handy.portal.data;
 
+import android.support.annotation.NonNull;
 import android.text.format.DateUtils;
 
 import com.handy.portal.bookings.constant.BookingProgress;
 import com.handy.portal.bookings.model.Booking;
+import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.core.model.LoginDetails;
 import com.handy.portal.core.model.SuccessWrapper;
@@ -12,6 +14,7 @@ import com.handy.portal.dashboard.model.ProviderFeedback;
 import com.handy.portal.dashboard.model.ProviderRating;
 import com.handy.portal.retrofit.DynamicEndpoint;
 import com.handy.portal.retrofit.DynamicEndpointService;
+import com.handy.portal.retrofit.HandyRetrofit2Service;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
@@ -20,6 +23,7 @@ import com.handy.portal.setup.SetupData;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.spy;
@@ -31,16 +35,20 @@ public class TestDataManager extends DataManager {
     public static final String BOOKING_IN_PROGRESS_ID = "333";
 
     public TestDataManager(final HandyRetrofitService service,
+                           final HandyRetrofit2Service service2,
                            final HandyRetrofitEndpoint endpoint,
                            final StripeRetrofitService stripeService,
                            final DynamicEndpoint dynamicEndpoint,
                            final DynamicEndpointService dynamicEndpointService) {
-        super(service, endpoint, stripeService, dynamicEndpoint, dynamicEndpointService);
+        super(service, service2, endpoint, stripeService, dynamicEndpoint, dynamicEndpointService);
     }
 
     public void getSetupData(final Callback<SetupData> cb) {
         cb.onSuccess(new SetupData());
     }
+
+    @Override
+    public void getAvailableBookings(@NonNull final Date[] dates, @NonNull final Map<String, Object> additionalOptions, final retrofit2.Callback<BookingsListWrapper> cb) {}
 
     @Override
     public void getConfiguration(final Callback<ConfigurationResponse> cb) {

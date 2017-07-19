@@ -6,6 +6,7 @@ import android.os.Build;
 import android.telephony.TelephonyManager;
 import android.util.Base64;
 
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.handy.portal.BuildConfig;
 import com.handy.portal.announcements.AnnouncementsModule;
@@ -39,6 +40,7 @@ import com.handy.portal.onboarding.OnboardingModule;
 import com.handy.portal.payments.PaymentsModule;
 import com.handy.portal.retrofit.DynamicEndpoint;
 import com.handy.portal.retrofit.DynamicEndpointService;
+import com.handy.portal.retrofit.HandyRetrofit2Service;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitFluidEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -53,6 +55,7 @@ import com.squareup.okhttp.OkHttpClient;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.IOException;
 import java.util.Properties;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
@@ -61,6 +64,10 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
+import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit.ErrorHandler;
 import retrofit.RequestInterceptor;
 import retrofit.RestAdapter;
@@ -68,6 +75,10 @@ import retrofit.RetrofitError;
 import retrofit.client.OkClient;
 import retrofit.client.Response;
 import retrofit.converter.GsonConverter;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
+import static com.handy.portal.library.util.DateTimeUtils.UNIVERSAL_DATE_FORMAT;
 
 @Module(
         injects = {
@@ -207,6 +218,82 @@ public final class ApplicationModule {
 
     @Provides
     @Singleton
+    final HandyRetrofit2Service provideRetrofit2Service(
+            final HandyRetrofitEndpoint endpoint, final PrefsManager prefsManager) {
+        final String username = configs.getProperty("api_username");
+        final String password = configs.getProperty("api_password");
+        final String auth = "Basic " +
+                Base64.encodeToString((username + ":" + password).getBytes(), Base64.NO_WRAP);
+
+        HttpLoggingInterceptor httpInterceptor = new HttpLoggingInterceptor();
+        if (BuildConfig.DEBUG) {
+            httpInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+        }
+        okhttp3.OkHttpClient.Builder httpClientBuilder = new okhttp3.OkHttpClient
+                .Builder()
+                .readTimeout(60, TimeUnit.SECONDS)
+                .connectTimeout(60, TimeUnit.SECONDS)
+                .addInterceptor(new Interceptor() {
+                    @Override
+                    public okhttp3.Response intercept(Chain chain) throws IOException {
+
+                        Request original = chain.request();
+                        HttpUrl originalHttpUrl = original.url();
+
+                        okhttp3.HttpUrl.Builder urlBuilder = originalHttpUrl
+                                .newBuilder()
+                                .addQueryParameter("client", "android")
+                                .addQueryParameter("app_version", BuildConfig.VERSION_NAME)
+                                .addQueryParameter("device_id", SystemUtils.getDeviceId(context))
+                                .addQueryParameter("device_model", SystemUtils.getDeviceModel())
+                                .addQueryParameter("os_version", Build.VERSION.RELEASE)
+                                .addQueryParameter("device_carrier", getDeviceCarrier())
+                                .addQueryParameter("timezone", TimeZone.getDefault().getID());
+
+                        Request.Builder requestBuilder = original
+                                .newBuilder()
+                                .addHeader("Authorization", auth)
+                                .addHeader("Accept", "application/json")
+                                .url(urlBuilder.build());
+
+                        String authToken = prefsManager.getSecureString(PrefsKey.AUTH_TOKEN, null);
+                        if (authToken != null) {
+                            requestBuilder.addHeader("X-Auth-Token", authToken);
+                        }
+                        Request request = requestBuilder.build();
+                        return chain.proceed(request);
+                    }
+                })
+                .addInterceptor(httpInterceptor);
+
+        if (!BuildConfig.DEBUG) {
+            httpClientBuilder.certificatePinner(
+                    new okhttp3.CertificatePinner.Builder().add(
+                            configs.getProperty("hostname"),
+                            "sha1/tbHJQrYmt+5isj5s44sk794iYFc=",
+                            "sha1/SXxoaOSEzPC6BgGmxAt/EAcsajw=",
+                            "sha1/blhOM3W9V/bVQhsWAcLYwPU6n24=",
+                            "sha1/T5x9IXmcrQ7YuQxXnxoCmeeQ84c="
+                    ).build());
+        }
+
+        Gson gson = new GsonBuilder()
+                .setDateFormat(UNIVERSAL_DATE_FORMAT)
+                .create();
+
+        Retrofit retrofit = new Retrofit
+                .Builder()
+                .baseUrl(endpoint.getUrl())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(httpClientBuilder.build())
+                .build();
+
+        return retrofit.create(HandyRetrofit2Service.class);
+    }
+
+
+    @Provides
+    @Singleton
     final HandyRetrofitService provideHandyService(final RestAdapter restAdapter) {
         return restAdapter.create(HandyRetrofitService.class);
     }
@@ -285,12 +372,13 @@ public final class ApplicationModule {
     @Provides
     @Singleton
     final DataManager provideDataManager(final HandyRetrofitService service,
+                                         final HandyRetrofit2Service service2,
                                          final HandyRetrofitEndpoint endpoint,
                                          final StripeRetrofitService stripeService, //TODO: refactor and move somewhere else?
                                          final DynamicEndpoint dynamicEndpoint,
                                          final DynamicEndpointService dynamicEndpointService
     ) {
-        return new DataManager(service, endpoint, stripeService, dynamicEndpoint, dynamicEndpointService);
+        return new DataManager(service, service2, endpoint, stripeService, dynamicEndpoint, dynamicEndpointService);
     }
 
     @Provides

@@ -1,10 +1,11 @@
 package com.handy.portal.bookings.model;
 
 import com.google.gson.annotations.SerializedName;
+import com.handy.portal.core.model.ErrorResponse;
 
 import java.util.ArrayList;
 
-public class BookingsListWrapper {
+public class BookingsListWrapper extends ErrorResponse {
     @SerializedName("job_days")
     private ArrayList<BookingsWrapper> mBookingsWrappers;
     @SerializedName("message")
