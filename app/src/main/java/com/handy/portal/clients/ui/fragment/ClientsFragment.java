@@ -2,20 +2,17 @@ package com.handy.portal.clients.ui.fragment;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
-import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
@@ -29,9 +26,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
-
-import butterknife.BindView;
-import butterknife.ButterKnife;
 
 
 public class ClientsFragment extends ActionBarFragment {
@@ -85,6 +79,12 @@ public class ClientsFragment extends ActionBarFragment {
             mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
             mTabLayout.setupWithViewPager(mViewPager);
             initTabViews();
+        } else {
+            // Add the new tab fragment
+            getFragmentManager().beginTransaction()
+                    .replace(R.id.clients_no_tab_fragment_container, ProRequestedJobsFragment.newInstance())
+                    .addToBackStack(null)
+                    .commit();
         }
     }
 
