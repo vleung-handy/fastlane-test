@@ -1,6 +1,5 @@
 <FrameLayout
     android:id="@+id/clients_no_tab_fragment_container"
-    class="com.handy.portal.clients.ui.fragment.ProRequestedJobsFragment"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
