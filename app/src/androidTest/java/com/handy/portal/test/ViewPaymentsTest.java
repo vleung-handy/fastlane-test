@@ -20,6 +20,7 @@ import org.junit.runner.RunWith;
 
 import static android.support.test.espresso.Espresso.onView;
 import static android.support.test.espresso.action.ViewActions.click;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -83,6 +84,7 @@ public class ViewPaymentsTest {
         String previousWeekExpectedPaymentString = "$40.00";
         //check the list item
         onView(withId(R.id.payments_batch_list_item_payment_amount_text))
+                .perform(scrollTo())
                 .check(matches(withText(previousWeekExpectedPaymentString)));
         onView(withId(R.id.payments_batch_list_item_payment_amount_text)).perform(click());
 
