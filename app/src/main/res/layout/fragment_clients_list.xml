@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_alignParentBottom="true"
+    android:layout_gravity="bottom"
+    android:background="@color/handy_bg"
+    >
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/fragment_clients_list_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:groupIndicator="@color/transparent"
+        android:paddingTop="@dimen/extra_padding_small"
+        android:transcriptMode="disabled"
+        />
+
+    <include
+        layout="@layout/layout_fetch_error"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
+
+    <include
+        android:id="@+id/client_list_empty"
+        layout="@layout/layout_client_list_empty"
+        android:visibility="gone"
+        tools:visibility="visible"
+        />
+
+</FrameLayout>

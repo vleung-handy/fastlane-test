@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:id="@+id/client_conversations_empty_refresh_layout"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/handy_bg"
+    android:clickable="true"
+    android:gravity="center"
+    android:orientation="vertical"
+    >
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_clients_empty_state_icon"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/default_margin_xlarge"
+        android:layout_marginLeft="@dimen/default_margin_xlarge"
+        android:layout_marginRight="@dimen/default_margin_xlarge"
+        android:layout_marginTop="@dimen/default_margin"
+        android:gravity="center_horizontal"
+        android:text="@string/client_list_empty"
+        android:textColor="@color/tertiary_gray"
+        android:textSize="@dimen/large_text_size"
+        />
+
+    <Button
+        android:id="@+id/client_list_find_job"
+        style="@style/Button.PartnerBlueEmpty.Round"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:minHeight="0dp"
+        android:padding="@dimen/default_padding_half"
+        android:text="@string/client_list_find_job"
+        android:textAllCaps="false"
+        android:textSize="@dimen/small_text_size"
+        />
+</LinearLayout>
