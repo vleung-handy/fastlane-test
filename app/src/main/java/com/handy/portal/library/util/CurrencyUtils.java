@@ -9,6 +9,7 @@ import java.text.DecimalFormat;
 public class CurrencyUtils {
     private static final String DEFAULT_CURRENCY_SYMBOL = "$";
 
+    @Deprecated
     public static String formatPrice(final double price, final String currencyChar) {
         String currencySymbol = currencyChar != null ? currencyChar : DEFAULT_CURRENCY_SYMBOL;
         String sign = price < 0 ? "-" : "";
@@ -17,6 +18,12 @@ public class CurrencyUtils {
         return sign + currencySymbol + decimalFormat.format(Math.abs(price));
     }
 
+    /**
+     * NOTE: ideally we should format using the currency code, ex. "USD"
+     * so that we can use the built-in Java currency formatter,
+     * which handles formats in which the currency symbol should be a suffix and the
+     * decimal separator is not a '.'
+     */
     public static String formatPrice(final int priceCents,
                                      @NonNull final String currencySymbol,
                                      boolean shouldDisplayEmptyDecimals) {
@@ -33,6 +40,7 @@ public class CurrencyUtils {
         return decimalFormat.format(new BigDecimal(priceCents).movePointLeft(2));
     }
 
+    @Deprecated
     public static String formatPriceWithCents(final int priceCents, final String currencyChar) {
         String dollarText = formatPrice(priceCents * 0.01, currencyChar);
         String centsText = formatCents(priceCents);
@@ -40,11 +48,13 @@ public class CurrencyUtils {
         return dollarText + centsText;
     }
 
+    @Deprecated
     public static String formatCents(final int price) {
         int centsValue = Math.abs(price) % 100;
         return new DecimalFormat(".00").format(centsValue * 0.01);
     }
 
+    @Deprecated
     public static String formatPriceWithoutCents(final int priceCents, final String currencyChar) {
         return formatPrice(priceCents * 0.01, currencyChar);
     }

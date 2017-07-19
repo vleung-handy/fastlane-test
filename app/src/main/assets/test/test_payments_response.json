@@ -2,12 +2,12 @@
   "payments_batches": [
     {
       "batch_id": 1234,
-      "start_date": "2017-05-29T23:59:59-04:00",
-      "end_date": "2017-06-04T23:59:59-04:00",
+      "start_date": "2017-05-29T21:59:59-04:00",
+      "end_date": "2017-05-29T23:59:59-04:00",
       "expected_deposit_date": "2017-06-12T23:59:59-04:00",
       "status": "In Review",
       "last4": "1234",
-      "cash_out_enabled": true,
+      "cash_out_enabled": false,
       "currency_symbol": "$",
       "num_completed_jobs": 1,
       "num_withholdings": 0,
@@ -52,5 +52,27 @@
     "cash_out_minimum_threshold": 20000,
     "cash_out_threshold_exceeded": false,
     "cash_out_currency_symbol": "$"
+  },
+  "recurring_cash_out": {
+    "payment_batch_period": {
+      "editable": true,
+      "days": 7
+    },
+    "help_center_article_url": "http://www.google.com",
+    "recurring_fee": {
+      "currency_symbol": "$",
+      "currency_code": "USD",
+      "amount": 200
+    },
+    "toggle_confirmation": {
+      "title_text": "Turn on Daily Cash Out",
+      "body_text": "A cash out fee of $2.00 will be applied daily. The fee only applies to days with earnings.\n\nYour earnings will be sent automatically every midnight. It may take up to 3 business days to appear in your account, depending on your bank.",
+      "confirm_button_text": "Turn On",
+      "cancel_button_text": "Nevermind"
+    },
+    "edit_disabled_dialog": {
+      "title_text": "Edit disabled",
+      "body_text": "Body body body"
+    }
   }
 }

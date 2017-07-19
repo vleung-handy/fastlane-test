@@ -1,6 +1,5 @@
 package com.handy.portal.payments.ui.element;
 
-import android.view.LayoutInflater;
 import android.view.View;
 
 import com.handy.portal.R;
@@ -27,8 +26,7 @@ public class PaymentsBatchListHeaderViewTest extends RobolectricGradleTestWrappe
 
     @Before
     public void setUp() throws Exception {
-        batchListHeaderView = (PaymentsBatchListHeaderView) LayoutInflater
-                .from(Robolectric.setupActivity(TestActivity.class)).inflate(R.layout.element_payments_batch_list_current_week_header, null);
+        batchListHeaderView = new PaymentsBatchListHeaderView(Robolectric.setupActivity(TestActivity.class));
         remainingRow = batchListHeaderView.findViewById(R.id.payments_current_week_remaining_fees_row);
 
         neoPaymentBatch = mock(NeoPaymentBatch.class);
@@ -40,7 +38,7 @@ public class PaymentsBatchListHeaderViewTest extends RobolectricGradleTestWrappe
     @Test
     public void shouldNotDisplayRemainingIfItIsZero() {
         when(neoPaymentBatch.getRemainingFeeAmount()).thenReturn(0);
-        batchListHeaderView.updateDisplay(new PaymentBatchListHeaderViewModel(paymentBatches.getNeoPaymentBatches()[0], true));
+        batchListHeaderView.updateDisplay(new PaymentBatchListHeaderViewModel(paymentBatches.getNeoPaymentBatches()[0], null, true));
 
         assertEquals("Should not see remaining payments row if remaining fee is 0", View.GONE, remainingRow.getVisibility());
     }
@@ -48,7 +46,7 @@ public class PaymentsBatchListHeaderViewTest extends RobolectricGradleTestWrappe
     @Test
     public void shouldDisplayRemainingIfItIsNotZero() {
         when(neoPaymentBatch.getRemainingFeeAmount()).thenReturn(100);
-        batchListHeaderView.updateDisplay(new PaymentBatchListHeaderViewModel(paymentBatches.getNeoPaymentBatches()[0], true));
+        batchListHeaderView.updateDisplay(new PaymentBatchListHeaderViewModel(paymentBatches.getNeoPaymentBatches()[0], null, true));
 
         assertEquals("Should see remaining payments row if remaining fee is not 0", View.VISIBLE, remainingRow.getVisibility());
     }

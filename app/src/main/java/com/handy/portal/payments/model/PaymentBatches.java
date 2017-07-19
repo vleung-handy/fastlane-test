@@ -141,6 +141,9 @@ public class PaymentBatches implements Serializable {
         }
 
         public static class PaymentBatchPeriodInfo implements Serializable {
+            public static final int PAYMENT_BATCH_PERIOD_DAYS_DAILY = 1;
+            public static final int PAYMENT_BATCH_PERIOD_DAYS_WEEKLY = 7;
+
             @SerializedName("editable")
             private boolean mEditable;
 

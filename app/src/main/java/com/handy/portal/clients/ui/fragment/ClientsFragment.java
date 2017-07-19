@@ -2,20 +2,17 @@ package com.handy.portal.clients.ui.fragment;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 
 import com.handy.portal.R;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
-import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.library.ui.fragment.InjectedFragment;
@@ -42,8 +39,10 @@ public class ClientsFragment extends ActionBarFragment {
     @Inject
     EventBus mBus;
 
-    private ViewPager mViewPager;
-    private TabLayout mTabLayout;
+    @BindView(R.id.clients_pager)
+    ViewPager mViewPager;
+    @BindView(R.id.clients_tab_layout)
+    TabLayout mTabLayout;
 
     private TabWithCountView mRequestsTab;
     private TabWithCountView mClientsTab;
@@ -65,27 +64,18 @@ public class ClientsFragment extends ActionBarFragment {
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container,
                              final Bundle savedInstanceState) {
-        View view;
-        if(mShowTabs) {
-            view = inflater.inflate(R.layout.fragment_clients, container, false);
-            mViewPager = (ViewPager) view.findViewById(R.id.clients_pager);
-            mTabLayout = (TabLayout) view.findViewById(R.id.clients_tab_layout);
-        } else {
-            view = inflater.inflate(R.layout.fragment_clients_no_tab, container, false);
-        }
-
+        View view = inflater.inflate(R.layout.fragment_clients, container, false);
+        ButterKnife.bind(this, view);
         return view;
     }
 
     @Override
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
-        if(mShowTabs) {
-            final TabAdapter tabAdapter = new TabAdapter(getChildFragmentManager());
-            mViewPager.setAdapter(tabAdapter);
-            mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
-            mTabLayout.setupWithViewPager(mViewPager);
-            initTabViews();
-        }
+        final TabAdapter tabAdapter = new TabAdapter(getChildFragmentManager());
+        mViewPager.setAdapter(tabAdapter);
+        mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(mTabLayout));
+        mTabLayout.setupWithViewPager(mViewPager);
+        initTabViews();
     }
 
     private void initTabViews() {
@@ -93,29 +83,29 @@ public class ClientsFragment extends ActionBarFragment {
         mRequestsTab.setTitle(R.string.job_requests);
         mTabLayout.getTabAt(0).setCustomView(mRequestsTab);
 
-        mTabLayout.setVisibility(View.VISIBLE);
-        // todo sammy for Clients Tab
-        mClientsTab = new TabWithCountView(getActivity());
-        mClientsTab.setTitle(R.string.messages);
-        mTabLayout.getTabAt(1).setCustomView(mClientsTab);
+        if(mShowTabs) {
+            mTabLayout.setVisibility(View.VISIBLE);
+            mClientsTab = new TabWithCountView(getActivity());
+            mClientsTab.setTitle(R.string.messages);
+            mTabLayout.getTabAt(1).setCustomView(mClientsTab);
+        } else {
+            mTabLayout.setVisibility(View.GONE);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
         setActionBar(R.string.your_clients, false);
-        if(mShowTabs) {
-            final Integer lastUnreadRequestsCount = mBookingManager.getLastUnreadRequestsCount();
-            if (lastUnreadRequestsCount != null) {
-                mRequestsTab.setCount((long) lastUnreadRequestsCount);
-            }
+        final Integer lastUnreadRequestsCount = mBookingManager.getLastUnreadRequestsCount();
+        if (lastUnreadRequestsCount != null) {
+            mRequestsTab.setCount((long) lastUnreadRequestsCount);
         }
     }
 
     @Subscribe
     public void onReceiveProRequestedJobsCountSuccess(
             final BookingEvent.ReceiveProRequestedJobsCountSuccess event) {
-        if(mShowTabs)
             mRequestsTab.setCount((long) event.getCount());
     }
 
@@ -125,8 +115,10 @@ public class ClientsFragment extends ActionBarFragment {
         public TabAdapter(final FragmentManager fragmentManager) {
             super(fragmentManager);
             mFragments.add(ProRequestedJobsFragment.newInstance());
-            // todo sammy for Clients Tab
-            mFragments.add(ClientConversationsFragment.newInstance());
+
+            if(mShowTabs) {
+                mFragments.add(ClientConversationsFragment.newInstance());
+            }
         }
 
         @Override

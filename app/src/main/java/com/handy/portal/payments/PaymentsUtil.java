@@ -107,33 +107,6 @@ public abstract class PaymentsUtil {
             }
             return cashOutButtonClickedListener;
         }
-
-        /**
-         * we need to style the cash out button in multiple components
-         * based on whether it should look enabled.
-         * <p>
-         * this cannot be put into styles.xml and has to be done at runtime
-         * because we cannot use a native state, such as "state_enabled"
-         * because we still need it to be clickable
-         */
-        public static void styleCashOutButtonForApparentEnabledState(
-                @NonNull Button mCashOutButton,
-                boolean apparentlyEnabled) {
-            Context context = mCashOutButton.getContext();
-            if (apparentlyEnabled) {
-                mCashOutButton.setBackground(ContextCompat.getDrawable(context,
-                        R.drawable.button_green_round));
-                mCashOutButton.setTextColor(ContextCompat.getColorStateList(
-                        context,
-                        R.color.button_text_booking_action_white));
-            }
-            else {
-                mCashOutButton.setBackground(ContextCompat.getDrawable(context,
-                        R.drawable.button_apparently_disabled));
-                mCashOutButton.setTextColor(ContextCompat.getColor(context,
-                        R.color.border_mid_gray));
-            }
-        }
     }
 
 }
