@@ -58,11 +58,11 @@
 -dontwarn rx.**
 -dontwarn okio.**
 -dontwarn retrofit.appengine.UrlFetchClient
--dontwarn retrofit2.**
 -keepattributes Annotation
 -keep class retrofit.** { *; }
 -keepclasseswithmembers class * { @retrofit.http.* <methods>; }
 -keepattributes Signature
+-keepattributes Exceptions
 
 #OkHttp
 -keep class com.squareup.okhttp.** { *; }
@@ -70,9 +70,14 @@
 -dontwarn com.squareup.okhttp.**
 
 #Retrofit2
--keep class retrofit2.** { *; }
 -dontwarn retrofit2.**
-
+-keep class retrofit2.** { *; }
+-keepclasseswithmembers class * {
+    @retrofit2.http.* <methods>;
+}
+-keepclassmembernames interface * {
+    @retrofit2.http.* <methods>;
+}
 
 #OkHttp3
 -keep class okhttp3.** { *; }

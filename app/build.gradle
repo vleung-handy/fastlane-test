@@ -160,6 +160,7 @@ tasks.withType(Test) {
     include "**/*Test.class"
 }
 
+//WARNING: make sure a release build can be created after upgrading or adding libraries to ensure no proguard issues
 ext {
     supportLibraryVersion = '25.3.1'
     googlePlayServicesVersion = '10.2.4'
