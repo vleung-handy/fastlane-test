@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.handy.portal.R;
 import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.clients.model.Client;
+import com.handy.portal.clients.model.ClientList;
 import com.handy.portal.clients.ui.adapter.ClientListRecyclerViewAdapter;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
@@ -28,6 +29,7 @@ import com.handy.portal.library.ui.fragment.ProgressSpinnerFragment;
 import com.handy.portal.library.ui.listener.PaginationScrollListener;
 import com.handy.portal.logger.handylogger.model.EventContext;
 import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
+import com.handy.portal.retrofit.HandyRetrofit2Callback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -162,19 +164,19 @@ public class ClientsListFragment extends ProgressSpinnerFragment {
         dataManager.getClientList(mProviderManager.getLastProviderId(),
                 mAdapter.getLastClientId(),
                 CLIENT_REQUEST_LIST_LIMIT,
-                new DataManager.Callback<List<Client>>() {
+                new HandyRetrofit2Callback<ClientList>() {
 
                     @Override
-                    public void onSuccess(final List<Client> response) {
+                    public void onSuccess(@NonNull final ClientList response) {
                         hideProgressSpinner();
-
-                        if (response.size() > 0) {
+                        List<Client> clients = response.getClients();
+                        if (clients.size() > 0) {
                             //If the size of the response is less then the limit, then there's no more clients
-                            if (response.size() < CLIENT_REQUEST_LIST_LIMIT) {
+                            if (clients.size() < CLIENT_REQUEST_LIST_LIMIT) {
                                 mHasMoreClients = false;
                             }
                             showContentViewAndHideOthers(mClientsListRecyclerView);
-                            mAdapter.addAll(response);
+                            mAdapter.addAll(clients);
                         }
                         else {
                             //If there was no more clients and the existing item count is > 0 then show it

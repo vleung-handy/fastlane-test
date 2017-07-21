@@ -16,7 +16,7 @@ import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.bookings.model.PostCheckoutResponse;
 import com.handy.portal.bookings.model.PostCheckoutSubmission;
-import com.handy.portal.clients.model.Client;
+import com.handy.portal.clients.model.ClientList;
 import com.handy.portal.core.constant.LocationKey;
 import com.handy.portal.core.constant.ProviderKey;
 import com.handy.portal.core.model.ConfigurationResponse;
@@ -419,10 +419,20 @@ public class DataManager {
         mDynamicEndpointService.uploadImage(file, new EmptyHandyRetroFitCallback(cb));
     }
 
+    /**
+     *
+     * @param providerId
+     * @param clientId
+     * @param limit This is the number of clients to get back
+     * @param cb
+     */
     public void getClientList(@NonNull final String providerId,
                               @Nullable final String clientId,
-                              final Callback<List<Client>> cb) {
-        mService.getClientList(providerId, clientId, new ClientListHandyRetroFitCallback(cb));
+                              final int limit,
+                              final retrofit2.Callback<ClientList> cb
+    ) {
+        Call<ClientList> call = mService2.getClientList(providerId, clientId, limit);
+        call.enqueue(cb);
     }
 
     public interface Callback<T> {

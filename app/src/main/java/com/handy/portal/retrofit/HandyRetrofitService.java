@@ -1,7 +1,5 @@
 package com.handy.portal.retrofit;
 
-import android.support.annotation.Nullable;
-
 import com.google.gson.JsonObject;
 import com.handy.portal.announcements.model.CurrentAnnouncementsRequest;
 import com.handy.portal.availability.model.Availability;
@@ -399,16 +397,6 @@ public interface HandyRetrofitService {
     void requestPhotoUploadUrl(@Path("id") String providerId,
                                @Field("mime_type") String imageMimeType,
                                HandyRetrofitCallback cb);
-
-    @GET(PROVIDERS_PATH + "{id}/clients")
-    /**
-     * if clientId is null, it'll start at the beginning
-     * https://hackmd.io/EwQwDAJgHAnFBGBaAZgYygdkQFgMyqxjGQkQFMNVUA2eYAVipnqA?view
-     */
-    void getClientList(@Path(value = "id", encode = false) String providerId,
-                       @Nullable @Query("starting_after") String clientId,
-                       @Nullable @Query("limit") int limitSize,
-                       HandyRetrofitCallback cb);
 
     //For logging
     @POST("/events")
