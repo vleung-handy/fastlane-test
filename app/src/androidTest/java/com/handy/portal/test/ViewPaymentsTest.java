@@ -63,8 +63,8 @@ public class ViewPaymentsTest {
         onView(withId(R.id.tab_nav_item_more)).perform(click());
 
         //navigate to payment screen
-        ViewUtil.waitForViewVisible(R.id.nav_link_payments, ViewUtil.LONG_MAX_WAIT_TIME_MS);
-        onView(withId(R.id.nav_link_payments)).perform(click());
+        ViewUtil.waitForViewVisible(R.id.more_payments, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+        onView(withId(R.id.more_payments)).perform(click());
 
         //make sure payment on header is as expected
         String currentWeekExpectedPaymentString = "$0.00";

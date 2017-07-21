@@ -120,8 +120,7 @@ public class ProfileUpdateFragment extends ActionBarFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setFormFieldErrorStateRemovers();
-        boolean enableBack = mConfigManager.getConfigurationResponse().isMoreFullTabEnabled();
-        setActionBar(R.string.edit_your_profile, enableBack);
+        setActionBar(R.string.edit_your_profile, true);
         initialize();
     }
 

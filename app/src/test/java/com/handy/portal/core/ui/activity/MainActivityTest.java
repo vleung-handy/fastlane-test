@@ -8,12 +8,8 @@ import com.handy.portal.TestUtils;
 import com.handy.portal.bookings.ui.fragment.AvailableBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.clients.ui.fragment.ClientConversationsFragment;
-import com.handy.portal.core.ui.fragment.AccountSettingsFragment;
-import com.handy.portal.core.ui.fragment.ReferAFriendFragment;
-import com.handy.portal.dashboard.fragment.DashboardVideoLibraryFragment;
-import com.handy.portal.dashboard.fragment.RatingsAndFeedbackFragment;
-import com.handy.portal.helpcenter.ui.fragment.HelpWebViewFragment;
-import com.handy.portal.payments.ui.fragment.PaymentsFragment;
+import com.handy.portal.clients.ui.fragment.ClientsFragment;
+import com.handy.portal.core.ui.fragment.MoreNavItemsFragment;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -56,6 +52,19 @@ public class MainActivityTest extends RobolectricGradleTestWrapper {
     }
 
     @Test
+    public void testClientTab() throws Exception {
+        try {
+            mActivity.findViewById(R.id.tab_nav_clients).performClick();
+        }
+        catch (Exception e) {
+            // Robolectic calling DatesPagerAdapter.instantiateItem() too many times
+        }
+        Fragment currentFragment = TestUtils.getScreenFragment(mActivity.getSupportFragmentManager());
+        assertThat(currentFragment, instanceOf(ClientsFragment.class));
+        assertEquals(mActivity.getString(R.string.your_clients), mActivity.getSupportActionBar().getTitle());
+    }
+
+    @Test
     public void testMessagesTab() throws Exception {
         try {
             mActivity.findViewById(R.id.tab_nav_messages).performClick();
@@ -68,33 +77,15 @@ public class MainActivityTest extends RobolectricGradleTestWrapper {
     }
 
     @Test
-    public void testRatingFeedbackNav() throws Exception {
-        TestUtils.testFragmentNavigation(mActivity, R.id.nav_link_ratings_and_feedback, RatingsAndFeedbackFragment.class, R.string.ratings_and_feedback);
+    public void testMoreTab() throws Exception {
+        try {
+            mActivity.findViewById(R.id.tab_nav_item_more).performClick();
+        }
+        catch (Exception e) {
+            // Robolectic calling DatesPagerAdapter.instantiateItem() too many times
+        }
+        Fragment currentFragment = TestUtils.getScreenFragment(mActivity.getSupportFragmentManager());
+        assertThat(currentFragment, instanceOf(MoreNavItemsFragment.class));
+        assertEquals(mActivity.getString(R.string.profile), mActivity.getSupportActionBar().getTitle());
     }
-
-    @Test
-    public void testPaymentsNav() throws Exception {
-        TestUtils.testFragmentNavigation(mActivity, R.id.nav_link_payments, PaymentsFragment.class, R.string.payments);
-    }
-
-    @Test
-    public void testReferAFriendNav() throws Exception {
-        TestUtils.testFragmentNavigation(mActivity, R.id.nav_link_refer_a_friend, ReferAFriendFragment.class, R.string.earn_more_money);
-    }
-
-    @Test
-    public void testAccountSettingsNav() throws Exception {
-        TestUtils.testFragmentNavigation(mActivity, R.id.nav_link_account_settings, AccountSettingsFragment.class, R.string.account_settings);
-    }
-
-    @Test
-    public void testVideoLibraryNav() throws Exception {
-        TestUtils.testFragmentNavigation(mActivity, R.id.nav_link_video_library, DashboardVideoLibraryFragment.class, R.string.video_library);
-    }
-
-    @Test
-    public void testHelpNav() throws Exception {
-        TestUtils.testFragmentNavigation(mActivity, R.id.nav_link_help, HelpWebViewFragment.class, R.string.help);
-    }
-
 }
