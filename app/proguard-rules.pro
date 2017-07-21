@@ -58,7 +58,6 @@
 -dontwarn rx.**
 -dontwarn okio.**
 -dontwarn retrofit.appengine.UrlFetchClient
--dontwarn retrofit2.**
 -keepattributes Annotation
 -keep class retrofit.** { *; }
 -keepclasseswithmembers class * { @retrofit.http.* <methods>; }
@@ -68,7 +67,15 @@
 -keep class com.squareup.okhttp.** { *; }
 -keep interface com.squareup.okhttp.** { *; }
 -dontwarn com.squareup.okhttp.**
--dontwarn com.squareup.okhttp3.**
+
+#Retrofit2
+-keep class retrofit2.** { *; }
+-dontwarn retrofit2.**
+
+
+#OkHttp3
+-keep class okhttp3.** { *; }
+-dontwarn okhttp3.**
 
 #Stripe
 -keep class com.stripe.** { *; }
