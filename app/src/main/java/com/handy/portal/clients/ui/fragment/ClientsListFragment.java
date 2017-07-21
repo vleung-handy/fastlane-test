@@ -43,7 +43,7 @@ import butterknife.OnClick;
 public class ClientsListFragment extends ProgressSpinnerFragment {
 
     //This is the max number of clients to send back in the client list request
-    private static final int CLIENT_REQUEST_LIST_LIMIT = 10;
+    private static final int CLIENT_REQUEST_LIST_LIMIT = 20;
 
     @Inject
     ProviderManager mProviderManager;
