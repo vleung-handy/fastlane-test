@@ -7,6 +7,7 @@ import com.handy.portal.core.model.LoginDetails;
 import com.handy.portal.core.model.SuccessWrapper;
 import com.handy.portal.retrofit.DynamicEndpoint;
 import com.handy.portal.retrofit.DynamicEndpointService;
+import com.handy.portal.retrofit.HandyRetrofit2Service;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -35,6 +36,8 @@ public class DataManagerTest extends RobolectricGradleTestWrapper {
     @Mock
     HandyRetrofitService service;
     @Mock
+    HandyRetrofit2Service service2;
+    @Mock
     HandyRetrofitEndpoint endpoint;
     @Mock
     StripeRetrofitService stripeService;
@@ -58,7 +61,7 @@ public class DataManagerTest extends RobolectricGradleTestWrapper {
     public void setUp() throws Exception {
         initMocks(this);
 
-        dataManager = new DataManager(service, endpoint, stripeService, dynamicEndpoint, dynamicEndpointService);
+        dataManager = new DataManager(service, service2, endpoint, stripeService, dynamicEndpoint, dynamicEndpointService);
     }
 
     @Test

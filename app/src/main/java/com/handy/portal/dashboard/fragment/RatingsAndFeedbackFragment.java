@@ -85,9 +85,7 @@ public class RatingsAndFeedbackFragment extends ActionBarFragment {
     public void onResume() {
         super.onResume();
         bus.register(this);
-        boolean enableBack = configManager.getConfigurationResponse() != null &&
-                configManager.getConfigurationResponse().isMoreFullTabEnabled();
-        setActionBar(R.string.ratings_and_feedback, enableBack);
+        setActionBar(R.string.ratings_and_feedback, true);
         getProviderEvaluation();
     }
 

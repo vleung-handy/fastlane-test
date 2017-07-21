@@ -36,7 +36,7 @@ public class AccountSettingsFragmentTest {
         // Go to dashboard.
 //        onView(withId(R.id.button_more)).perform(click()); //TODO uncomment and fix reference
 //        onView(withId(R.id.button_more)).perform(click()); // prevent flakiness
-        onView(withId(R.id.nav_link_account_settings)).perform(click());
+        onView(withId(R.id.more_account_settings)).perform(click());
 
         // See if all elements are there
         onView(withId(R.id.account_settings_layout)).check(matches(isDisplayed()));

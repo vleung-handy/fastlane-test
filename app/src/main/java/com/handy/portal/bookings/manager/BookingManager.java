@@ -25,6 +25,7 @@ import com.handy.portal.data.DataManager;
 import com.handy.portal.library.util.DateTimeUtils;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
+import com.handy.portal.retrofit.HandyRetrofit2Callback;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -136,11 +137,11 @@ public class BookingManager {
         if (!datesToRequest.isEmpty()) {
             mDataManager.getAvailableBookings(
                     datesToRequest.toArray(new Date[datesToRequest.size()]),
-                    null,
-                    new DataManager.Callback<BookingsListWrapper>() {
+                    new HashMap<String, Object>(),
+                    new HandyRetrofit2Callback<BookingsListWrapper>() {
                         @Override
-                        public void onSuccess(final BookingsListWrapper bookingsListWrapper) {
-                            if (bookingsListWrapper != null && bookingsListWrapper.getBookingsWrappers() != null) {
+                        public void onSuccess(@NonNull BookingsListWrapper bookingsListWrapper) {
+                            if (bookingsListWrapper.getBookingsWrappers() != null) {
                                 for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers()) {
                                     Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
                                     Crashlytics.log("Received available bookings for " + day);
@@ -154,7 +155,7 @@ public class BookingManager {
                         }
 
                         @Override
-                        public void onError(final DataManager.DataManagerError error) {
+                        public void onError(@NonNull DataManager.DataManagerError error) {
                             mBus.post(new HandyEvent.ReceiveAvailableBookingsError(error, datesToRequest));
                         }
                     }
@@ -241,10 +242,10 @@ public class BookingManager {
             options.put(BookingRequestKeys.IS_PROVIDER_REQUESTED, true);
             mDataManager.getAvailableBookings(datesForBookings.toArray(new Date[datesForBookings.size()]),
                     options,
-                    new DataManager.Callback<BookingsListWrapper>() {
+                    new HandyRetrofit2Callback<BookingsListWrapper>() {
                         @Override
-                        public void onSuccess(final BookingsListWrapper bookingsListWrapper) {
-                            if (bookingsListWrapper != null && bookingsListWrapper.getBookingsWrappers() != null) {
+                        public void onSuccess(@NonNull BookingsListWrapper bookingsListWrapper) {
+                            if (bookingsListWrapper.getBookingsWrappers() != null) {
                                 for (BookingsWrapper bookingsWrapper : bookingsListWrapper.getBookingsWrappers()) {
                                     Date day = DateTimeUtils.getDateWithoutTime(bookingsWrapper.getDate());
                                     Crashlytics.log("Received requested bookings for " + day);
@@ -258,7 +259,7 @@ public class BookingManager {
                         }
 
                         @Override
-                        public void onError(final DataManager.DataManagerError error) {
+                        public void onError(@NonNull DataManager.DataManagerError error) {
                             mBus.post(new BookingEvent.ReceiveProRequestedJobsError(error));
                         }
                     }

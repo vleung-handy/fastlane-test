@@ -63,7 +63,7 @@ android {
         applicationId "com.handy.portal"
         minSdkVersion 16
         targetSdkVersion 25
-        versionName '1.31.1'
+        versionName '1.32.0'
         versionCode computeVersionCode(versionName)
         proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -164,6 +164,7 @@ ext {
     supportLibraryVersion = '25.3.1'
     googlePlayServicesVersion = '10.2.4'
     jumioVersion = '2.4.0'
+    retrofitVersion = '2.3.0'
 }
 
 dependencies {
@@ -198,6 +199,9 @@ dependencies {
     provided 'com.squareup.dagger:dagger-compiler:1.2.2'
     compile 'com.jakewharton:butterknife:8.1.0'
     apt 'com.jakewharton:butterknife-compiler:8.1.0'
+    compile "com.squareup.retrofit2:retrofit:$retrofitVersion"
+    compile "com.squareup.retrofit2:converter-gson:$retrofitVersion"
+    compile 'com.squareup.okhttp3:logging-interceptor:3.8.0'
 
     compile 'org.greenrobot:eventbus:3.0.0'
 

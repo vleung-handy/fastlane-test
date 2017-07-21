@@ -37,21 +37,22 @@ import com.handy.portal.logger.handylogger.model.EventLogResponse;
 import com.handy.portal.notification.model.NotificationMessages;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
 import com.handy.portal.onboarding.model.claim.JobClaimResponse;
+import com.handy.portal.payments.model.AdhocCashOutInfo;
+import com.handy.portal.payments.model.AdhocCashOutRequest;
 import com.handy.portal.payments.model.BatchPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingTransactions;
 import com.handy.portal.payments.model.CreateDebitCardResponse;
 import com.handy.portal.payments.model.PaymentBatches;
-import com.handy.portal.payments.model.AdhocCashOutInfo;
-import com.handy.portal.payments.model.AdhocCashOutRequest;
 import com.handy.portal.payments.model.PaymentFlow;
 import com.handy.portal.payments.model.PaymentOutstandingFees;
 import com.handy.portal.payments.model.PaymentReviewResponse;
+import com.handy.portal.payments.model.RecurringCashOutRequest;
 import com.handy.portal.payments.model.RequiresPaymentInfoUpdate;
 import com.handy.portal.payments.model.StripeTokenResponse;
-import com.handy.portal.payments.model.RecurringCashOutRequest;
 import com.handy.portal.retrofit.DynamicEndpoint;
 import com.handy.portal.retrofit.DynamicEndpointService;
+import com.handy.portal.retrofit.HandyRetrofit2Service;
 import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
@@ -70,9 +71,11 @@ import java.util.Map;
 import javax.inject.Inject;
 
 import retrofit.mime.TypedFile;
+import retrofit2.Call;
 
 public class DataManager {
     private final HandyRetrofitService mService;
+    private final HandyRetrofit2Service mService2;
     private final HandyRetrofitEndpoint mEndpoint;
 
     private final StripeRetrofitService mStripeService; // should refactor and move somewhere else?
@@ -81,11 +84,13 @@ public class DataManager {
 
     @Inject
     public DataManager(final HandyRetrofitService service,
+                       final HandyRetrofit2Service service2,
                        final HandyRetrofitEndpoint endpoint,
                        final StripeRetrofitService stripeService,
                        final DynamicEndpoint dynamicEndpoint,
                        final DynamicEndpointService dynamicEndpointService) {
         mService = service;
+        mService2 = service2;
         mEndpoint = endpoint;
         mStripeService = stripeService;
         mDynamicEndpoint = dynamicEndpoint;
@@ -118,9 +123,13 @@ public class DataManager {
         mService.getJobsCount(dates, options, new JobsCountHandyRetroFitCallback(cb));
     }
 
-    public void getAvailableBookings(Date[] dates, Map<String, Object> additionalOptions, final Callback<BookingsListWrapper> cb) {
-
-        mService.getAvailableBookings(dates, additionalOptions, new BookingsListWrapperHandyRetroFitCallback(cb));
+    public void getAvailableBookings(
+            final @NonNull Date[] dates,
+            final @NonNull Map<String, Object> additionalOptions,
+            final retrofit2.Callback<BookingsListWrapper> cb
+    ) {
+        Call<BookingsListWrapper> call = mService2.getAvailableBookings(dates, additionalOptions);
+        call.enqueue(cb);
     }
 
     public void getOnboardingJobs(final Date startDate,

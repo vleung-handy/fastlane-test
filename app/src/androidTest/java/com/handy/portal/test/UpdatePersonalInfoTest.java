@@ -81,8 +81,8 @@ public class UpdatePersonalInfoTest {
         ViewUtil.waitForViewVisible(R.id.tab_nav_item_more, ViewUtil.LONG_MAX_WAIT_TIME_MS);
         onView(withId(R.id.tab_nav_item_more)).perform(click());
 
-        ViewUtil.waitForViewVisible(R.id.nav_link_account_settings, ViewUtil.LONG_MAX_WAIT_TIME_MS);
-        onView(withId(R.id.nav_link_account_settings)).perform(click());
+        ViewUtil.waitForViewVisible(R.id.more_account_settings, ViewUtil.LONG_MAX_WAIT_TIME_MS);
+        onView(withId(R.id.more_account_settings)).perform(click());
 
         //click into the update personal info page
         ViewUtil.waitForViewVisible(R.id.contact_info_layout, ViewUtil.LONG_MAX_WAIT_TIME_MS);

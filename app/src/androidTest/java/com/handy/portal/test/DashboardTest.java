@@ -36,7 +36,7 @@ public class DashboardTest {
         // Go to dashboard.
 //        onView(withId(R.id.button_more)).perform(click()); //TODO uncomment and fix reference
 //        onView(withId(R.id.button_more)).perform(click()); // prevent flakiness
-        onView(withId(R.id.nav_link_ratings_and_feedback)).perform(click());
+        onView(withId(R.id.more_ratings_and_feedback)).perform(click());
 
         // See if all elements are there
         onView(withId(R.id.dashboard_welcome_view)).check(matches(isDisplayed()));

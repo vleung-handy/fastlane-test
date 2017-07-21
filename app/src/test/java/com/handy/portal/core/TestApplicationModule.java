@@ -72,6 +72,7 @@ import com.handy.portal.payments.ui.fragment.PaymentsFragmentTest;
 import com.handy.portal.payments.ui.fragment.SelectPaymentMethodFragment;
 import com.handy.portal.retrofit.DynamicEndpoint;
 import com.handy.portal.retrofit.DynamicEndpointService;
+import com.handy.portal.retrofit.HandyRetrofit2Service;
 import com.handy.portal.retrofit.HandyRetrofitEndpoint;
 import com.handy.portal.retrofit.HandyRetrofitService;
 import com.handy.portal.retrofit.stripe.StripeRetrofitService;
@@ -204,6 +205,11 @@ public class TestApplicationModule {
     }
 
     @Provides
+    final HandyRetrofit2Service provideHandyService2() {
+        return mock(HandyRetrofit2Service.class);
+    }
+
+    @Provides
     final HandyRetrofitService provideHandyService() {
         return mock(HandyRetrofitService.class);
     }
@@ -213,6 +219,7 @@ public class TestApplicationModule {
     final DataManager provideDataManager(final HandyRetrofitEndpoint endpoint) {
         return new TestDataManager(
                 mock(HandyRetrofitService.class),
+                mock(HandyRetrofit2Service.class),
                 endpoint,
                 mock(StripeRetrofitService.class),
                 mock(DynamicEndpoint.class),

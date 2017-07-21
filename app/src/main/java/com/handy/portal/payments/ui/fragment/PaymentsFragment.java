@@ -137,9 +137,7 @@ public final class PaymentsFragment extends ActionBarFragment implements AdhocCa
     public void onResume() {
         super.onResume();
 
-        boolean enableBack = mConfigManager.getConfigurationResponse() != null &&
-                mConfigManager.getConfigurationResponse().isMoreFullTabEnabled();
-        setActionBar(R.string.payments, enableBack);
+        setActionBar(R.string.payments, true);
 
         if (paymentsBatchListView.isDataEmpty() && paymentsBatchListView.shouldRequestMoreData())//if initial batch has not been received yet
         {

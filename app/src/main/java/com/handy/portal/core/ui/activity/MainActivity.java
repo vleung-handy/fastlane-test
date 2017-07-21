@@ -1,26 +1,15 @@
 package com.handy.portal.core.ui.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.view.View;
-import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
@@ -33,34 +22,23 @@ import com.handy.portal.bookings.ui.element.BookingMapView;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
-import com.handy.portal.core.constant.RequestCode;
 import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
 import com.handy.portal.core.event.NotificationEvent;
-import com.handy.portal.core.event.ProfileEvent;
-import com.handy.portal.core.manager.AppseeManager;
 import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.ProviderManager;
-import com.handy.portal.core.model.ConfigurationResponse;
-import com.handy.portal.core.model.ProviderProfile;
 import com.handy.portal.core.ui.element.bookings.BookingMapProvider;
 import com.handy.portal.core.ui.fragment.EditPhotoFragment;
 import com.handy.portal.library.ui.layout.TabbedLayout;
 import com.handy.portal.library.ui.widget.TabButton;
 import com.handy.portal.library.ui.widget.TabButtonGroup;
 import com.handy.portal.library.util.FragmentUtils;
-import com.handy.portal.library.util.ShareUtils;
-import com.handy.portal.library.util.SystemUtils;
-import com.handy.portal.library.util.Utils;
-import com.handy.portal.logger.handylogger.model.ProfileLog;
-import com.handy.portal.logger.handylogger.model.SideMenuLog;
 import com.handy.portal.notification.NotificationUtils;
 import com.handy.portal.notification.ui.fragment.NotificationBlockerDialogFragment;
 import com.handy.portal.payments.PaymentEvent;
 import com.handy.portal.payments.ui.fragment.dialog.PaymentBillBlockerDialogFragment;
 import com.handybook.shared.layer.LayerHelper;
-import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.Subscribe;
 
@@ -68,7 +46,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 import static com.handy.portal.core.model.ProviderPersonalInfo.ProfileImage.Type.THUMBNAIL;
 
@@ -98,39 +75,39 @@ public class MainActivity extends BaseActivity
 
     @BindView(R.id.loading_overlay)
     View mLoadingOverlayView;
-    @BindView(R.id.nav_link_payments)
-    RadioButton mNavLinkPayments;
-    @BindView(R.id.nav_link_ratings_and_feedback)
-    RadioButton mNavLinkRatingsAndFeedback;
-    @BindView(R.id.nav_link_refer_a_friend)
-    RadioButton mNavLinkReferAFriend;
-    @BindView(R.id.nav_link_account_settings)
-    RadioButton mNavAccountSettings;
-    @BindView(R.id.nav_link_video_library)
-    RadioButton mNavLinkVideoLibrary;
-    @BindView(R.id.nav_link_help)
-    RadioButton mNavLinkHelp;
-    @BindView(R.id.drawer_layout)
-    DrawerLayout mDrawerLayout;
-    @BindView(R.id.navigation_drawer)
-    ViewGroup mNavigationDrawer;
-    @BindView(R.id.nav_tray_links)
-    RadioGroup mNavTrayLinks;
-    @BindView(R.id.navigation_header_pro_name)
-    TextView mNavigationHeaderProName;
+    //    @BindView(R.id.nav_link_payments)
+//    RadioButton mNavLinkPayments;
+//    @BindView(R.id.nav_link_ratings_and_feedback)
+//    RadioButton mNavLinkRatingsAndFeedback;
+//    @BindView(R.id.nav_link_refer_a_friend)
+//    RadioButton mNavLinkReferAFriend;
+//    @BindView(R.id.nav_link_account_settings)
+//    RadioButton mNavAccountSettings;
+//    @BindView(R.id.nav_link_video_library)
+//    RadioButton mNavLinkVideoLibrary;
+//    @BindView(R.id.nav_link_help)
+//    RadioButton mNavLinkHelp;
+//    @BindView(R.id.drawer_layout)
+//    DrawerLayout mDrawerLayout;
+//    @BindView(R.id.navigation_drawer)
+//    ViewGroup mNavigationDrawer;
+//    @BindView(R.id.nav_tray_links)
+//    RadioGroup mNavTrayLinks;
+//    @BindView(R.id.navigation_header_pro_name)
+//    TextView mNavigationHeaderProName;
     @BindView(R.id.content_frame)
     TabbedLayout mContentFrame;
-    @BindView(R.id.provider_image)
-    ImageView mProImage;
-    @BindView(R.id.navigation_header_cta_button)
-    Button mNavigationHeaderCtaButton;
+//    @BindView(R.id.provider_image)
+//    ImageView mProImage;
+//    @BindView(R.id.navigation_header_cta_button)
+//    Button mNavigationHeaderCtaButton;
 
     private BookingMapView mBookingMapView;
 
     private NotificationBlockerDialogFragment mNotificationBlockerDialogFragment
             = new NotificationBlockerDialogFragment();
 
-    private ActionBarDrawerToggle mActionBarDrawerToggle;
+    //    private ActionBarDrawerToggle mActionBarDrawerToggle;
     private MainViewPage mCurrentPage = null;
     private String mCurrentTabTitle = null;
 
@@ -164,23 +141,6 @@ public class MainActivity extends BaseActivity
             mCurrentTabTitle = savedInstanceState.getString(BundleKeys.TAB_TITLE);
         }
 
-        mActionBarDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
-                R.string.navigation_drawer_open, R.string.navigation_drawer_close) {
-            @Override
-            public void onDrawerOpened(final View drawerView) {
-                super.onDrawerOpened(drawerView);
-                bus.post(new SideMenuLog.Opened());
-                setDrawerActive(true);
-            }
-
-            @Override
-            public void onDrawerClosed(final View drawerView) {
-                super.onDrawerClosed(drawerView);
-                bus.post(new SideMenuLog.Closed());
-                setDrawerActive(false);
-            }
-        };
-
         mLayerHelper.registerUnreadConversationsCountChangedListener(this);
 
         registerButtonListeners();
@@ -212,21 +172,11 @@ public class MainActivity extends BaseActivity
         }
         handleDeeplinkIfNecessary();
 
-        handleDrawerOpen();
-        mDrawerLayout.addDrawerListener(mActionBarDrawerToggle);
-
-        AppseeManager.markViewsAsSensitive(mNavigationHeaderProName, mProImage);
-
-        initProName();
-        initProImage(null);
-        initNavigationHeaderCtaButton();
-
         bus.post(new AnnouncementEvent.ShowAnnouncementForTrigger(Announcement.TriggerContext.MAIN_FLOW_OPEN));
     }
 
     @Override
     public void onPause() {
-        mDrawerLayout.removeDrawerListener(mActionBarDrawerToggle);
         bus.unregister(this);
         super.onPause();
     }
@@ -298,44 +248,6 @@ public class MainActivity extends BaseActivity
         setDeeplinkData(savedInstanceState);
     }
 
-    private void initProName() {
-        final ProviderProfile providerProfile = mProviderManager.getCachedProviderProfile();
-        if (providerProfile != null && providerProfile.getProviderPersonalInfo() != null) {
-            mNavigationHeaderProName.setText(providerProfile.getProviderPersonalInfo().getFullName());
-        }
-    }
-
-    @Subscribe
-    public void initProImage(final ProfileEvent.ProfilePhotoUpdated event) {
-        mProImage.setVisibility(View.VISIBLE);
-        final String profilePhotoUrl = mProviderManager.getCachedProfileImageUrl(THUMBNAIL);
-        Picasso.with(this)
-                .load(profilePhotoUrl)
-                .placeholder(R.drawable.img_pro_placeholder)
-                .noFade()
-                .into(mProImage);
-    }
-
-    private void initNavigationHeaderCtaButton() {
-        if (shouldEnableProfileShareButton()) {
-            mNavigationHeaderCtaButton.setText(R.string.share_profile);
-        }
-        else {
-            mNavigationHeaderCtaButton.setText(R.string.edit_profile);
-        }
-    }
-
-    /**
-     * For the time being, since the "more" menu is still in the form of a drawer menu,
-     * it is possible that coming from a deeplink, we want the drawer to be opened. Detect and
-     * handle that here.
-     */
-    private void handleDrawerOpen() {
-        if (mDeeplinkData != null && mDeeplinkData.getBoolean(BundleKeys.DRAWER_OPEN)) {
-            mDrawerLayout.openDrawer(mNavigationDrawer);
-        }
-    }
-
     private void handleDeeplinkIfNecessary() {
         if (!mDeeplinkHandled) {
             mPageNavigationManager.handleNonUriDerivedDeeplinkDataBundle(
@@ -377,72 +289,6 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    @OnClick(R.id.navigation_header_cta_button)
-    public void onNavigationHeaderCtaClicked() {
-        if (shouldEnableProfileShareButton()) {
-            bus.post(new ProfileLog.ProfileShareClicked());
-
-            final Intent dummyIntent = new Intent();
-            dummyIntent.setAction(Intent.ACTION_SEND);
-            dummyIntent.setType("text/plain");
-
-            final Intent activityPickerIntent = new Intent();
-            activityPickerIntent.setAction(Intent.ACTION_PICK_ACTIVITY);
-            activityPickerIntent.putExtra(Intent.EXTRA_TITLE, getString(R.string.share_with));
-            activityPickerIntent.putExtra(Intent.EXTRA_INTENT, dummyIntent);
-            startActivityForResult(activityPickerIntent, RequestCode.PICK_ACTIVITY);
-        }
-        else {
-            mPageNavigationManager.navigateToPage(getSupportFragmentManager(),
-                    MainViewPage.PROFILE_UPDATE, null, null, true);
-        }
-    }
-
-    @Override
-    public void onActivityResult(final int requestCode, final int resultCode, final Intent intent) {
-        if (requestCode == RequestCode.PICK_ACTIVITY
-                && resultCode == Activity.RESULT_OK
-                && intent != null) {
-            final ProviderProfile providerProfile = mProviderManager.getCachedProviderProfile();
-
-            final String channel = ShareUtils.getChannelFromIntent(this, intent);
-            if (channel.equalsIgnoreCase(ShareUtils.CHANNEL_TWITTER)) {
-                intent.putExtra(Intent.EXTRA_TEXT, getString(
-                        R.string.profile_share_twitter_text_formatted,
-                        providerProfile.getReferralInfo().getProfileUrl())
-                );
-            }
-            else {
-                intent.putExtra(Intent.EXTRA_SUBJECT, getString(R.string.book_my_service));
-                intent.putExtra(Intent.EXTRA_TEXT, getString(R.string.profile_share_text_formatted,
-                        providerProfile.getProviderPersonalInfo().getFirstName(),
-                        providerProfile.getReferralInfo().getProfileUrl()));
-            }
-            Utils.safeLaunchIntent(intent, this);
-
-            final String appName = SystemUtils.getAppNameFromIntent(this, intent);
-            bus.post(new ProfileLog.ProfileShareSubmitted(
-                    appName, channel));
-        }
-        super.onActivityResult(requestCode, resultCode, intent);
-    }
-
-    private boolean shouldEnableProfileShareButton() {
-        final ConfigurationResponse configuration = mConfigManager.getConfigurationResponse();
-        final ProviderProfile providerProfile = mProviderManager.getCachedProviderProfile();
-        return configuration != null
-                && configuration.isProfileShareEnabled()
-                && providerProfile != null
-                && providerProfile.getReferralInfo() != null
-                && !TextUtils.isEmpty(providerProfile.getReferralInfo().getProfileUrl());
-    }
-
-    @OnClick(R.id.provider_image)
-    public void onProfileImageClicked() {
-        mPageNavigationManager.navigateToPage(getSupportFragmentManager(),
-                MainViewPage.PROFILE_UPDATE, null, null, true);
-    }
-
     @Subscribe
     public void onSetNavigationTabVisibility(NavigationEvent.SetNavigationTabVisibility event) {
         setTabVisibility(event.isVisible);
@@ -458,18 +304,11 @@ public class MainActivity extends BaseActivity
         }
     }
 
-    private void setDrawerActive(boolean isActive) {
-        if (mDrawerLayout != null) {
-            mDrawerLayout.setDrawerLockMode(isActive ? DrawerLayout.LOCK_MODE_UNLOCKED : DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
-        }
-    }
-
     @Subscribe
     public void onSwapFragment(NavigationEvent.SwapFragmentEvent event) {
         bus.post(new HandyEvent.Navigation(event.targetPage.toString().toLowerCase()));
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
         setTabVisibility(true);
-        setDrawerActive(false);
         mPageNavigationManager.navigateToPage(getSupportFragmentManager(), event.targetPage,
                 event.arguments, event.transitionStyle, event.addToBackStack);
         clearOnBackPressedListenerStack();
@@ -483,12 +322,7 @@ public class MainActivity extends BaseActivity
     @Override
     public void onBackPressed() {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-        if (mDrawerLayout.isDrawerOpen(GravityCompat.END)) {
-            mDrawerLayout.closeDrawers();
-        }
-        else {
-            super.onBackPressed();
-        }
+        super.onBackPressed();
     }
 
     @Subscribe
@@ -508,63 +342,27 @@ public class MainActivity extends BaseActivity
         switch (event.page) {
             case AVAILABLE_JOBS: {
                 mJobsButton.toggle();
-                mNavTrayLinks.clearCheck();
             }
             break;
             case CLIENTS: {
                 mClientsButton.toggle();
-                mNavTrayLinks.clearCheck();
             }
             break;
             case SEND_RECEIPT_CHECKOUT:
             case SCHEDULED_JOBS: {
                 mScheduleButton.toggle();
-                mNavTrayLinks.clearCheck();
             }
             break;
             case NOTIFICATIONS: {
                 mMessagesButton.toggle();
-                mNavTrayLinks.clearCheck();
             }
             break;
             case PAYMENTS: {
                 mMoreButton.toggle();
-                mNavLinkPayments.toggle();
-            }
-            break;
-            case YOUTUBE_PLAYER:
-            case DASHBOARD: {
-                mMoreButton.toggle();
-                mNavLinkRatingsAndFeedback.toggle();
-            }
-            break;
-            case REFER_A_FRIEND: {
-                mMoreButton.toggle();
-                mNavLinkReferAFriend.toggle();
             }
             break;
             case ACCOUNT_SETTINGS: {
                 mMoreButton.toggle();
-                mNavAccountSettings.toggle();
-            }
-            break;
-            case DASHBOARD_VIDEO_LIBRARY: {
-                mMoreButton.toggle();
-                mNavLinkVideoLibrary.toggle();
-            }
-            case PROFILE_UPDATE: {
-                mMoreButton.toggle();
-                mNavAccountSettings.toggle();
-            }
-            break;
-            case PROFILE_PICTURE: {
-                mMoreButton.toggle();
-                mNavAccountSettings.toggle();
-            }
-            break;
-            case HELP_WEBVIEW: {
-                mMoreButton.toggle();
-                mNavLinkHelp.toggle();
             }
             break;
         }
@@ -594,7 +392,6 @@ public class MainActivity extends BaseActivity
 
     private void registerButtonListeners() {
         registerBottomNavListeners();
-        registerNavDrawerListeners();
     }
 
     private void registerBottomNavListeners() {
@@ -624,23 +421,8 @@ public class MainActivity extends BaseActivity
                 new TabOnClickListener(mClientsButton, MainViewPage.CLIENTS));
         mMessagesButton.setOnClickListener(
                 new TabOnClickListener(mMessagesButton, MainViewPage.MESSAGES));
-
-        ConfigurationResponse config = mConfigManager.getConfigurationResponse();
-        if (config.isMoreFullTabEnabled()) {
-            mMoreButton.setOnClickListener(new TabOnClickListener(mMoreButton, MainViewPage.MORE_ITEMS));
-        }
-        else {
-            mMoreButton.setOnClickListener(new MoreButtonOnClickListener());
-        }
-    }
-
-    private void registerNavDrawerListeners() {
-        mNavLinkPayments.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.PAYMENTS, null));
-        mNavLinkRatingsAndFeedback.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.DASHBOARD, null));
-        mNavLinkReferAFriend.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.REFER_A_FRIEND, null));
-        mNavAccountSettings.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.ACCOUNT_SETTINGS, null));
-        mNavLinkVideoLibrary.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.DASHBOARD_VIDEO_LIBRARY, null));
-        mNavLinkHelp.setOnClickListener(new NavDrawerOnClickListener(MainViewPage.HELP_WEBVIEW, null));
+        mMoreButton.setOnClickListener(
+                new TabOnClickListener(mMoreButton, MainViewPage.MORE_ITEMS));
     }
 
     private void switchToPage(@NonNull MainViewPage page) {
@@ -653,7 +435,7 @@ public class MainActivity extends BaseActivity
                 argumentsBundle, overrideTransitionStyle, false);
     }
 
-// Fragment swapping and related
+    // Fragment swapping and related
     private void clearFragmentBackStack() {
         clearingBackStack = true;
         FragmentManager supportFragmentManager = getSupportFragmentManager();
@@ -710,43 +492,6 @@ public class MainActivity extends BaseActivity
             if (mPage != mCurrentPage) {
                 switchToPage(mPage);
             }
-        }
-    }
-
-
-    private class NavDrawerOnClickListener extends TabOnClickListener {
-        private MainViewPage mPage;
-        private TransitionStyle mTransitionStyle;
-
-        NavDrawerOnClickListener(
-                final MainViewPage mPage,
-                final TransitionStyle transitionStyleOverride
-        ) {
-            super(null, mPage);
-            this.mPage = mPage;
-            mTransitionStyle = transitionStyleOverride;
-        }
-
-        @Override
-        public void onClick(View view) {
-            bus.post(new SideMenuLog.ItemSelected(mPage.name().toLowerCase()));
-            mMoreButton.toggle();
-            if (mTransitionStyle != null) {
-                switchToPage(mPage, new Bundle(), mTransitionStyle);
-            }
-            else {
-                switchToPage(mPage);
-            }
-
-            mDrawerLayout.closeDrawers();
-        }
-    }
-
-
-    private class MoreButtonOnClickListener implements View.OnClickListener {
-        @Override
-        public void onClick(View view) {
-            mDrawerLayout.openDrawer(mNavigationDrawer);
         }
     }
 }

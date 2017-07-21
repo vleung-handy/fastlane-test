@@ -110,9 +110,7 @@ public class AccountSettingsFragment extends ActionBarFragment {
     public void onResume() {
         super.onResume();
         bus.register(this);
-        boolean enableBack = configManager.getConfigurationResponse() != null &&
-                configManager.getConfigurationResponse().isMoreFullTabEnabled();
-        setActionBar(getString(R.string.account_settings), enableBack);
+        setActionBar(getString(R.string.account_settings), true);
         mBus.post(new HandyEvent.SetLoadingOverlayVisibility(true));
         requestProviderProfile();
     }

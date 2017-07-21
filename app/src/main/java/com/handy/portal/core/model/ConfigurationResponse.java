@@ -51,12 +51,6 @@ public class ConfigurationResponse {
     @SerializedName("pro_availability_schedule_enabled")
     private boolean mAvailableHoursEnabled;
 
-    @SerializedName("portal_profile_share_enabled")
-    private boolean mProfileShareEnabled;
-
-    @SerializedName("more_tab_full_page_enabled")
-    private boolean mMoreTabEnabled;
-
     @SerializedName("pro_announcements_enabled")
     private boolean mAnnouncementsEnabled;
 
@@ -149,14 +143,6 @@ public class ConfigurationResponse {
 
     public boolean isAvailableHoursEnabled() {
         return mAvailableHoursEnabled;
-    }
-
-    public boolean isProfileShareEnabled() {
-        return mProfileShareEnabled;
-    }
-
-    public boolean isMoreFullTabEnabled() {
-        return mMoreTabEnabled;
     }
 
     public boolean isScheduleTabRequestedEnabled() {
