@@ -1,6 +1,8 @@
 package com.handy.portal.clients.ui.adapter;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,31 +24,118 @@ import butterknife.ButterKnife;
  */
 
 public class ClientListRecyclerViewAdapter extends
-        RecyclerView.Adapter<ClientListRecyclerViewAdapter.ClientItemViewHolder> {
+        RecyclerView.Adapter<RecyclerView.ViewHolder> {
+
+    private static final int VIEW_TYPE_CLIENT = 0;
+    private static final int VIEW_TYPE_LOADING = 1;
+    // flag for footer ProgressBar (i.e. last item of list)
+    private boolean mIsLoadingAdded = false;
 
     private Context mContext;
     private List<Client> mClientList;
 
-    public ClientListRecyclerViewAdapter(Context context, List<Client> clientList) {
+    public ClientListRecyclerViewAdapter(@NonNull Context context, @NonNull List<Client> clientList) {
         mContext = context;
         mClientList = clientList;
     }
 
     @Override
-    public ClientItemViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
-        return new ClientItemViewHolder(LayoutInflater
-                .from(mContext)
-                .inflate(R.layout.layout_client_list_item, parent, false));
+    public RecyclerView.ViewHolder onCreateViewHolder(final ViewGroup parent, final int viewType) {
+        switch (viewType) {
+            case VIEW_TYPE_CLIENT:
+                return new ClientItemViewHolder(LayoutInflater
+                        .from(mContext)
+                        .inflate(R.layout.layout_client_list_item, parent, false));
+            case VIEW_TYPE_LOADING:
+                return new LoadingViewHolder(LayoutInflater
+                        .from(mContext)
+                        .inflate(R.layout.layout_progress_spinner, parent, false));
+            default:
+                return null;
+        }
     }
 
     @Override
-    public void onBindViewHolder(final ClientItemViewHolder holder, final int position) {
-        holder.bind(mClientList.get(position));
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
+        if(holder instanceof ClientItemViewHolder)
+            ((ClientItemViewHolder) holder).bind(mClientList.get(position));
+    }
+
+    @Override
+    public int getItemViewType(final int position) {
+        return (position == mClientList.size() && mIsLoadingAdded)
+                ? VIEW_TYPE_LOADING : VIEW_TYPE_CLIENT;
     }
 
     @Override
     public int getItemCount() {
-        return mClientList == null ? 0 : mClientList.size();
+        return mClientList == null ? 0 : mClientList.size() + (mIsLoadingAdded ? 1 : 0);
+    }
+
+    @Nullable
+    public String getLastClientId() {
+        if(mClientList == null || mClientList.size() == 0)
+            return null;
+
+        return String.valueOf(mClientList.get(mClientList.size() - 1).getId());
+    }
+
+    //Helper methods
+    public void add(Client client) {
+        mClientList.add(client);
+        notifyItemInserted(mClientList.size() - 1);
+    }
+
+    public void addAll(List<Client> clientList) {
+        for (Client client : clientList) {
+            add(client);
+        }
+    }
+
+    public void remove(Client client) {
+        int position = mClientList.indexOf(client);
+        if (position > -1) {
+            mClientList.remove(position);
+            notifyItemRemoved(position);
+        }
+    }
+
+    public void clear() {
+        mIsLoadingAdded = false;
+        while (getItemCount() > 0) {
+            remove(getItem(0));
+        }
+    }
+
+    public boolean isEmpty() {
+        return getItemCount() == 0;
+    }
+
+    public void addLoadingFooter() {
+        mIsLoadingAdded = true;
+        //add footer is automatic in the view card holder
+        notifyItemInserted(mClientList.size());
+    }
+
+    public void removeLoadingFooter() {
+        mIsLoadingAdded = false;
+
+        int position = mClientList.size();
+        notifyItemRemoved(mClientList.size());
+    }
+
+    public Client getItem(int position) {
+        if(position < 0)
+            return null;
+
+        return mClientList.get(position);
+    }
+
+    public class LoadingViewHolder extends RecyclerView.ViewHolder {
+
+        public LoadingViewHolder(final View itemView) {
+            super(itemView);
+        }
     }
 
     public class ClientItemViewHolder extends RecyclerView.ViewHolder {
@@ -91,7 +180,7 @@ public class ClientListRecyclerViewAdapter extends
                 mDescriptionTextView.setText(clientContext.getDescription());
                 mGreenDotImageView.setVisibility(
                         clientContext.getContextType() == Client.ContextType.UpcomingBooking
-                        ? View.VISIBLE : View.GONE);
+                                ? View.VISIBLE : View.GONE);
             }
         }
     }
