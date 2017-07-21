@@ -57,8 +57,9 @@ public class ClientListRecyclerViewAdapter extends
 
     @Override
     public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        if(holder instanceof ClientItemViewHolder)
+        if (holder instanceof ClientItemViewHolder) {
             ((ClientItemViewHolder) holder).bind(mClientList.get(position));
+        }
     }
 
     @Override
@@ -74,8 +75,7 @@ public class ClientListRecyclerViewAdapter extends
 
     @Nullable
     public String getLastClientId() {
-        if(mClientList == null || mClientList.size() == 0)
-            return null;
+        if (mClientList == null || mClientList.size() == 0) { return null; }
 
         return String.valueOf(mClientList.get(mClientList.size() - 1).getId());
     }
@@ -125,8 +125,7 @@ public class ClientListRecyclerViewAdapter extends
     }
 
     public Client getItem(int position) {
-        if(position < 0)
-            return null;
+        if (position < 0) { return null; }
 
         return mClientList.get(position);
     }
@@ -138,9 +137,14 @@ public class ClientListRecyclerViewAdapter extends
         }
     }
 
+
     public class ClientItemViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.client_list_item_img_view)
         ImageView mImageView;
+        @BindView(R.id.client_list_item_initials_layout)
+        ViewGroup mInitialsLayout;
+        @BindView(R.id.client_list_item_initials)
+        TextView mInitialsTextView;
         @BindView(R.id.client_list_item_name)
         TextView mNameTextView;
         @BindView(R.id.client_list_item_city)
@@ -157,11 +161,23 @@ public class ClientListRecyclerViewAdapter extends
 
         public void bind(Client client) {
             Context context = ClientListRecyclerViewAdapter.this.mContext;
-            Picasso.with(context)
-                    .load(client.getProfileImageUrl())
-                    .placeholder(R.drawable.img_pro_placeholder)
-                    .noFade()
-                    .into(mImageView);
+
+            //If there's no profile url then just display initials
+            if (android.text.TextUtils.isEmpty(client.getProfileImageUrl())) {
+                mImageView.setVisibility(View.GONE);
+                mInitialsLayout.setVisibility(View.VISIBLE);
+                mInitialsTextView.setText(client.getFirstName().substring(0, 1) +
+                                          client.getLastName().substring(0, 1));
+            }
+            else {
+                mImageView.setVisibility(View.VISIBLE);
+                mInitialsLayout.setVisibility(View.GONE);
+                Picasso.with(context)
+                        .load(client.getProfileImageUrl())
+                        .placeholder(R.drawable.img_pro_placeholder)
+                        .noFade()
+                        .into(mImageView);
+            }
 
             mNameTextView.setText(context.getString(
                     R.string.client_list_item_name,
@@ -172,12 +188,14 @@ public class ClientListRecyclerViewAdapter extends
 
             Client.Context clientContext = client.getContext();
 
+            //If there's no client context then don't show a green dot.
             if (clientContext == null) {
                 mDescriptionTextView.setText("");
                 mGreenDotImageView.setVisibility(View.GONE);
             }
             else {
                 mDescriptionTextView.setText(clientContext.getDescription());
+                //Green dot only displays for upcoming bookings
                 mGreenDotImageView.setVisibility(
                         clientContext.getContextType() == Client.ContextType.UpcomingBooking
                                 ? View.VISIBLE : View.GONE);
