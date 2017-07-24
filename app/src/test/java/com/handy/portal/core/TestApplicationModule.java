@@ -70,6 +70,8 @@ import com.handy.portal.payments.ui.fragment.PaymentsDetailFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsFragment;
 import com.handy.portal.payments.ui.fragment.PaymentsFragmentTest;
 import com.handy.portal.payments.ui.fragment.SelectPaymentMethodFragment;
+import com.handy.portal.payments.ui.fragment.dialog.AdhocCashOutDialogFragment;
+import com.handy.portal.payments.ui.fragment.dialog.AdhocCashOutDialogFragmentTest;
 import com.handy.portal.retrofit.DynamicEndpoint;
 import com.handy.portal.retrofit.DynamicEndpointService;
 import com.handy.portal.retrofit.HandyRetrofit2Service;
@@ -163,6 +165,8 @@ import static org.mockito.Mockito.when;
                 ClientsFragment.class,
                 ClientConversationsFragment.class,
                 SelectPaymentMethodFragment.class,
+                AdhocCashOutDialogFragment.class,
+                AdhocCashOutDialogFragmentTest.class
         },
         includes = {
                 InjectionModule.class,

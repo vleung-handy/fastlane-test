@@ -56,7 +56,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public final class PaymentsFragment extends ActionBarFragment implements AdhocCashOutDialogFragment.OnCashOutSuccessListener {
+public class PaymentsFragment extends ActionBarFragment implements AdhocCashOutDialogFragment.OnCashOutSuccessListener {
     private static final String HELP_PAYMENTS_SECTION_REDIRECT_PATH = "/sections/203828247";
 
     @Inject
