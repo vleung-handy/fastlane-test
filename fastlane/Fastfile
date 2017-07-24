@@ -29,6 +29,8 @@ end
 
 lane :beta do |options|
   notes = options[:notes]
+  tester_emails = options[:tester_emails]
+  tester_groups = options[:tester_groups] || ["android-devs", "android-internal-testers"]
 
   ensure_git_branch_release_candidate
   ensure_git_branch_clean_and_latest
@@ -41,7 +43,8 @@ lane :beta do |options|
   crashlytics(
     api_token: ENV["CRASHLYTICS_API_TOKEN"],
     build_secret: ENV["CRASHLYTICS_BUILD_SECRET"],
-    groups: ["android-devs", "android-internal-testers"],
+    groups: tester_groups,
+    emails: tester_emails,
     notes: notes
   )
 
