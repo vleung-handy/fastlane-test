@@ -25,7 +25,6 @@ import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.event.NavigationEvent;
-import com.handy.portal.core.event.NotificationEvent;
 import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.ui.element.bookings.BookingMapProvider;
@@ -159,14 +158,12 @@ public class MainActivity extends BaseActivity
         checkIfUserShouldUpdatePaymentInfo();
         checkIfNotificationIsEnabled();
 
-        if (mClientsButton != null && mClientsButton.getVisibility() == View.VISIBLE) {
-            mJobRequestsCount = mBookingManager.getLastUnreadRequestsCount();
-            updateClientsButtonUnreadCount();
-            mBookingManager.requestProRequestedJobsCount();
-        }
-        if (mMessagesButton != null && mMessagesButton.getVisibility() == View.VISIBLE) {
-            bus.post(new NotificationEvent.RequestUnreadCount());
-        }
+        mJobRequestsCount = mBookingManager.getLastUnreadRequestsCount();
+        updateClientsButtonUnreadCount();
+        mBookingManager.requestProRequestedJobsCount();
+
+        mMessagesButton.setUnreadCount((int) mLayerHelper.getUnreadConversationsCount());
+
         if (mCurrentPage == null) {
             switchToPage(MainViewPage.AVAILABLE_JOBS);
         }
@@ -254,13 +251,6 @@ public class MainActivity extends BaseActivity
                     getSupportFragmentManager(), mDeeplinkData, mDeeplinkSource);
         }
         mDeeplinkHandled = true;
-    }
-
-    @Subscribe
-    public void onReceiveUnreadCountSuccess(NotificationEvent.ReceiveUnreadCountSuccess event) {
-        if (mMessagesButton != null) {
-            mMessagesButton.setUnreadCount(event.getUnreadCount());
-        }
     }
 
     private void setDeeplinkData(final Bundle savedInstanceState) {
@@ -353,7 +343,7 @@ public class MainActivity extends BaseActivity
                 mScheduleButton.toggle();
             }
             break;
-            case NOTIFICATIONS: {
+            case MESSAGES: {
                 mMessagesButton.toggle();
             }
             break;
@@ -377,13 +367,11 @@ public class MainActivity extends BaseActivity
 
     @Override
     public void onUnreadConversationsCountChanged(final long count) {
-        if (mMessagesButton != null) {
-            mMessagesButton.setUnreadCount((int) mLayerHelper.getUnreadConversationsCount());
-        }
+        mMessagesButton.setUnreadCount((int) mLayerHelper.getUnreadConversationsCount());
     }
 
     private void updateClientsButtonUnreadCount() {
-        if (mClientsButton != null && mJobRequestsCount != null) {
+        if (mJobRequestsCount != null) {
             mClientsButton.setUnreadCount(mJobRequestsCount);
         }
     }
