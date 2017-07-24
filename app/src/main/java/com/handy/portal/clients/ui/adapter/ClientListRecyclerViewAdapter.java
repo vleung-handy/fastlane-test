@@ -70,7 +70,11 @@ public class ClientListRecyclerViewAdapter extends
 
     @Override
     public int getItemCount() {
-        return mClientList == null ? 0 : mClientList.size() + (mIsLoadingAdded ? 1 : 0);
+        return mClientList == null ? 0 : mClientList.size() + getFooterItemCount();
+    }
+
+    private int getFooterItemCount() {
+        return  mIsLoadingAdded ? 1 : 0;
     }
 
     @Nullable
