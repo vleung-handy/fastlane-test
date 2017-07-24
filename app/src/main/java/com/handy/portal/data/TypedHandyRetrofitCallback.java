@@ -13,6 +13,7 @@ import com.handy.portal.bookings.model.BookingsListWrapper;
 import com.handy.portal.bookings.model.BookingsWrapper;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.bookings.model.PostCheckoutResponse;
+import com.handy.portal.clients.model.Client;
 import com.handy.portal.core.model.ConfigurationResponse;
 import com.handy.portal.core.model.LoginDetails;
 import com.handy.portal.core.model.ProviderProfile;
@@ -40,6 +41,8 @@ import com.handy.portal.retrofit.HandyRetrofitCallback;
 import com.handy.portal.setup.SetupData;
 import com.handy.portal.updater.model.UpdateDetails;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -158,6 +161,28 @@ class BookingsWrapperRetroFitCallback extends TypedHandyRetrofitCallback<Booking
 class JobsCountHandyRetroFitCallback extends TypedHandyRetrofitCallback<HashMap<String, Object>> {
     JobsCountHandyRetroFitCallback(DataManager.Callback callback) {
         super(callback);
+    }
+}
+
+class ClientListHandyRetroFitCallback extends TypedHandyRetrofitCallback<List<Client>> {
+    ClientListHandyRetroFitCallback(DataManager.Callback callback) {
+        super(callback);
+    }
+
+    @Override
+    public void success(final JSONObject response) {
+        try {
+            JSONArray array = response.getJSONArray("clients");
+            TypeToken<List<Client>> typeToken = new TypeToken<List<Client>>(getClass()) {};
+            returnData = gsonBuilder.fromJson(array.toString(), typeToken.getType());
+            if (callback != null) {
+                callback.onSuccess(returnData);
+            }
+        }
+        catch (JSONException e) {
+            Crashlytics.logException(e);
+            callback.onError(new DataManager.DataManagerError(DataManager.DataManagerError.Type.SERVER, e.getMessage()));
+        }
     }
 }
 
