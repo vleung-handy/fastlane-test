@@ -48,7 +48,6 @@ import butterknife.ButterKnife;
 
 import static com.handy.portal.core.model.ProviderPersonalInfo.ProfileImage.Type.THUMBNAIL;
 
-//TODO: should move some of this logic out of here
 public class MainActivity extends BaseActivity
         implements BookingMapProvider, LayerHelper.UnreadConversationsCountChangedListener {
     @Inject
@@ -74,32 +73,8 @@ public class MainActivity extends BaseActivity
 
     @BindView(R.id.loading_overlay)
     View mLoadingOverlayView;
-    //    @BindView(R.id.nav_link_payments)
-//    RadioButton mNavLinkPayments;
-//    @BindView(R.id.nav_link_ratings_and_feedback)
-//    RadioButton mNavLinkRatingsAndFeedback;
-//    @BindView(R.id.nav_link_refer_a_friend)
-//    RadioButton mNavLinkReferAFriend;
-//    @BindView(R.id.nav_link_account_settings)
-//    RadioButton mNavAccountSettings;
-//    @BindView(R.id.nav_link_video_library)
-//    RadioButton mNavLinkVideoLibrary;
-//    @BindView(R.id.nav_link_help)
-//    RadioButton mNavLinkHelp;
-//    @BindView(R.id.drawer_layout)
-//    DrawerLayout mDrawerLayout;
-//    @BindView(R.id.navigation_drawer)
-//    ViewGroup mNavigationDrawer;
-//    @BindView(R.id.nav_tray_links)
-//    RadioGroup mNavTrayLinks;
-//    @BindView(R.id.navigation_header_pro_name)
-//    TextView mNavigationHeaderProName;
     @BindView(R.id.content_frame)
     TabbedLayout mContentFrame;
-//    @BindView(R.id.provider_image)
-//    ImageView mProImage;
-//    @BindView(R.id.navigation_header_cta_button)
-//    Button mNavigationHeaderCtaButton;
 
     private BookingMapView mBookingMapView;
 
