@@ -1,6 +1,7 @@
 package com.handy.portal.core;
 
 import com.handy.portal.bookings.ui.fragment.SoftwareLicensesFragment;
+import com.handy.portal.clients.ui.fragment.ClientDetailFragment;
 import com.handy.portal.core.manager.UrbanAirshipManager;
 import com.handy.portal.core.ui.activity.BaseActivity;
 import com.handy.portal.core.ui.activity.FragmentContainerActivity;
@@ -83,5 +84,6 @@ import dagger.Module;
                 ShareProviderWebViewFragment.class,
                 ProShareActivity.class,
                 FragmentContainerActivity.class,
+                ClientDetailFragment.class,
         })
 public final class InjectionModule {}

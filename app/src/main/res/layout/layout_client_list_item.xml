@@ -6,6 +6,7 @@
                                              android:layout_height="92dp"
                                              android:background="@color/white"
                                              android:padding="@dimen/default_padding"
+                                             android:id="@+id/client_list_item_layout"
     >
 
     <FrameLayout

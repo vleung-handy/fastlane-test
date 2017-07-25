@@ -154,7 +154,7 @@ public class ConfigurationResponse {
     }
 
     public boolean isMyClientsViewEnabled() {
-        return false;//mIsMyClientsViewEnabled;
+        return true;//mIsMyClientsViewEnabled;
     }
 
     // Static classes

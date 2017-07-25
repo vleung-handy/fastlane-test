@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="match_parent"
+                                             android:background="@color/white"
+    >
+
+    <FrameLayout
+        android:id="@+id/client_detail_img_wrapper"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_margin="@dimen/default_padding"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/client_detail_img_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:civ_border_color="@color/border_gray"
+            app:civ_border_width="1dp"
+            tools:src="@drawable/ic_profile"
+            />
+
+        <RelativeLayout
+            android:id="@+id/client_detail_initials_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:background="@drawable/circle_grey"
+            >
+
+            <TextView
+                android:id="@+id/client_detail_initials"
+                style="@style/TextView.XXLarge"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textColor="@color/dark_gray"
+                tools:text="SN"
+                />
+        </RelativeLayout>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/client_detail_city"
+        style="@style/HandyTextAppearanceMedium"
+        android:layout_width="368dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/default_padding_quarter"
+        android:gravity="center"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/client_detail_img_wrapper"
+        tools:text="New York, NY"
+        />
+
+    <ImageView
+        android:id="@+id/client_detail_green_dot"
+        android:layout_marginTop="@dimen/default_padding_half"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:paddingRight="6dp"
+        android:paddingTop="6dp"
+        android:src="@drawable/circle_green"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/client_detail_description"
+        app:layout_constraintTop_toBottomOf="@+id/client_detail_city"
+        />
+
+    <TextView
+        android:id="@+id/client_detail_description"
+        style="@style/HandyTextAppearanceMedium"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/tertiary_gray"
+        android:layout_marginTop="@dimen/default_padding_half"
+        app:layout_constraintLeft_toRightOf="@+id/client_detail_green_dot"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/client_detail_city"
+        tools:text="Upcoming booking Fri, Jul 14"
+        />
+
+    <Button
+        android:id="@+id/client_detail_send_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/default_padding"
+        android:paddingLeft="@dimen/default_padding_double"
+        android:paddingRight="@dimen/default_padding_double"
+        style="@style/Button.PartnerBlueEmpty.Round"
+        android:text="@string/send_message"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/client_detail_description"
+        />
+
+    <include
+        android:id="@+id/divider"
+        layout="@layout/divider"
+        android:layout_width="0dp"
+        android:layout_height="11dp"
+        android:layout_marginTop="@dimen/default_padding"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/client_detail_send_message"
+        />
+
+    <LinearLayout
+        android:id="@+id/client_detail_total_earnings_layout"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/default_padding"
+        android:paddingRight="@dimen/default_padding"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider"
+        >
+
+        <TextView
+            style="@style/TextView.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/client_details_total_earnings"
+            />
+
+        <TextView
+            android:id="@+id/client_detail_total_earnings"
+            style="@style/TextView.Large.Bold"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            tools:text="$295.05"
+            />
+
+    </LinearLayout>
+
+    <include
+        android:id="@+id/divider2"
+        layout="@layout/divider"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/client_detail_total_earnings_layout"
+        />
+
+    <LinearLayout
+        android:id="@+id/client_detail_activity_layout"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:paddingLeft="@dimen/default_padding"
+        android:paddingRight="@dimen/default_padding"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider2"
+        >
+
+        <TextView
+            style="@style/TextView.Large"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:text="@string/client_details_activity"
+            />
+
+        <TextView
+            android:id="@+id/client_detail_activity"
+            style="@style/TextView.Large.Bold"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:gravity="right|center_vertical"
+            tools:text="7 completed jobs"
+            />
+    </LinearLayout>
+</android.support.constraint.ConstraintLayout>
