@@ -304,11 +304,6 @@ public class MainActivity extends BaseActivity
         clearOnBackPressedListenerStack();
     }
 
-    @Subscribe
-    public void updateCurrentPage(NavigationEvent.SelectPage event) {
-        mCurrentPage = event.page;
-    }
-
     @Override
     public void onBackPressed() {
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
@@ -329,6 +324,7 @@ public class MainActivity extends BaseActivity
     @Subscribe
     public void updateSelectedTabButton(NavigationEvent.SelectPage event) {
         if (event.page == null) { return; }
+        mCurrentPage = event.page;
         switch (event.page) {
             case AVAILABLE_JOBS: {
                 mJobsButton.toggle();
