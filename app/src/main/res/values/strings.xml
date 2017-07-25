@@ -772,7 +772,11 @@
     <string name="client_list_error">We\'re having trouble gathering your list of clients.</string>
     <string name="client_list_empty">You don\'t have any clients yet. Start claiming jobs.</string>
     <string name="client_details_titlebar_text">%1$s\'s Profile</string>
-    <string name="client_details_jobs_completed">%1$s completed jobs</string>
+    <plurals name="client_details_jobs_completed">
+        <item quantity="one">%d completed job</item>
+        <item quantity="other">%d completed jobs</item>
+    </plurals>
     <string name="client_details_total_earnings">Total Earnings</string>
     <string name="client_details_activity">Activity</string>
+    <string name="client_details_stat_placeholder">--</string>
 </resources>

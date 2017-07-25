@@ -1,7 +1,6 @@
 package com.handy.portal.clients.ui.fragment;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -103,7 +102,8 @@ public class ClientDetailFragment extends ActionBarFragment {
 
         try {
             MapsInitializer.initialize(getContext());
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -111,7 +111,7 @@ public class ClientDetailFragment extends ActionBarFragment {
     @NonNull
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        bus.post(new ClientsLog.DetailViewShown(mClient.getId()));
+        bus.post(new ClientsLog.DetailViewShown());
         View view = inflater.inflate(R.layout.fragment_client_details, container, false);
         ButterKnife.bind(this, view);
         return view;
@@ -161,7 +161,7 @@ public class ClientDetailFragment extends ActionBarFragment {
 
     private void initializeMaps(Bundle savedInstanceState) {
 
-        mMapView.onCreate (savedInstanceState);
+        mMapView.onCreate(savedInstanceState);
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap mMap) {
@@ -181,7 +181,6 @@ public class ClientDetailFragment extends ActionBarFragment {
                 // Get back the mutable Circle
                 Circle circle = mGoogleMap.addCircle(circleOptions);
 
-
                 mGoogleMap.moveCamera(center);
                 mGoogleMap.animateCamera(zoom);
             }
@@ -200,16 +199,17 @@ public class ClientDetailFragment extends ActionBarFragment {
                         //Bind the stats data
                         Price price = response.getStats().getTotalEarnings();
                         mTotalEarningsText.setText(CurrencyUtils.formatPriceWithCents(
-                                                    price.getAmount(),
-                                                    price.getSymbol()));
-                        mActivityText.setText(getString(R.string.client_details_jobs_completed,
-                                String.valueOf(response.getStats().getTotalJobsCount())));
+                                price.getAmount(),
+                                price.getSymbol()));
+                        mActivityText.setText(getContext().
+                                getResources().getQuantityString(R.plurals.client_details_jobs_completed,
+                                response.getStats().getTotalJobsCount(),
+                                response.getStats().getTotalJobsCount()));
                     }
 
                     @Override
                     public void onError(final DataManager.DataManagerError error) {
-                        mTotalEarningsText.setText("-");
-                        mActivityText.setText(getString(R.string.client_details_jobs_completed, "-"));
+                        //Do nothing
                     }
                 });
     }
