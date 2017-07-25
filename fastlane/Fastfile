@@ -18,11 +18,11 @@ lane :release do
   ensure_git_branch_clean_and_latest
 
   gradle(task: "clean")
+
   gradle(task: "assembleHostedRelease")
   upload_apk_to_github_release(apk_file_name_pattern: 'handy-pro-hosted-release*')
   beta(skip_build: true)
 
-  gradle(task: "clean")
   gradle(task: "assembleStoreRelease")
   upload_apk_to_github_release(apk_file_name_pattern: 'handy-pro-store-release*')
 end
@@ -66,6 +66,7 @@ lane :applause do |options|
   # Set namespace override
   sh("cd ..; ./scripts/override environment=#{namespace}")
 
+  gradle(task: "clean")
   gradle(task: "assembleStageRelease")
 
   # Remove namespace override
