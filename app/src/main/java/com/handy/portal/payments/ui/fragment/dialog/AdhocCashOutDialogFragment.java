@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.VisibleForTesting;
 import android.text.Layout;
 import android.text.Spannable;
 import android.text.method.LinkMovementMethod;
@@ -135,7 +136,8 @@ public class AdhocCashOutDialogFragment extends FullScreenDialogFragment {
         refresh(); //don't want to risk showing outdated payment information
     }
 
-    private void updateWithModel(@NonNull final AdhocCashOutInfo adhocCashOutInfo) {
+    @VisibleForTesting
+    protected void updateWithModel(@NonNull final AdhocCashOutInfo adhocCashOutInfo) {
         mAdhocCashOutInfo = adhocCashOutInfo;
 
         String headerHtml = getString(R.string.payment_cash_out_dialog_subtitle_html_formatted,
