@@ -71,7 +71,6 @@ public class ClientsListFragment extends ProgressSpinnerFragment {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bus.register(this);
         mAdapter = new ClientListRecyclerViewAdapter(getActivity(), new ArrayList<Client>());
     }
 
@@ -132,12 +131,6 @@ public class ClientsListFragment extends ProgressSpinnerFragment {
     public void onResume() {
         super.onResume();
         bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
-    }
-
-    @Override
-    public void onDestroy() {
-        bus.unregister(this);
-        super.onDestroy();
     }
 
     /**

@@ -83,7 +83,6 @@ public class ClientDetailFragment extends ActionBarFragment {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bus.register(this);
         Bundle bundle = getArguments();
         if (bundle != null) {
             mClient = (Client) bundle.getSerializable(KEY_CLIENT);
@@ -138,13 +137,6 @@ public class ClientDetailFragment extends ActionBarFragment {
                             ? View.VISIBLE : View.GONE);
         }
     }
-
-    @Override
-    public void onDestroy() {
-        //todo       bus.unregister(this);
-        super.onDestroy();
-    }
-
 
     /**
      * requests jobs for which this pro was requested by customers for
