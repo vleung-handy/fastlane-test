@@ -14,7 +14,7 @@ import java.io.Serializable;
 
 public class Client implements Serializable {
     @SerializedName("id")
-    private int mId;
+    private String mId;
 
     @SerializedName("first_name")
     @NonNull
@@ -40,7 +40,7 @@ public class Client implements Serializable {
     @Nullable
     private Context mContext;
 
-    public int getId() {
+    public String getId() {
         return mId;
     }
 

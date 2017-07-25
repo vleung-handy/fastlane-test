@@ -3,6 +3,7 @@ package com.handy.portal.retrofit;
 import android.support.annotation.Nullable;
 
 import com.handy.portal.bookings.model.BookingsListWrapper;
+import com.handy.portal.clients.model.ClientDetail;
 import com.handy.portal.clients.model.ClientList;
 
 import java.util.Date;
@@ -32,4 +33,12 @@ public interface HandyRetrofit2Service {
     Call<ClientList> getClientList(@Path(value = "id") String providerId,
                                    @Nullable @Query("starting_after") String clientId,
                                    @Nullable @Query("limit") int limitSize);
+
+    /**
+     * if clientId is null, it'll start at the beginning
+     * https://hackmd.io/EwQwDAJgHAnFBGBaAZgYygdkQFgMyqxjGQkQFMNVUA2eYAVipnqA?view
+     */
+    @GET(PROVIDERS_PATH + "{provider_id}/clients/{client_id}")
+    Call<ClientDetail> getClientDetails(@Path(value = "provider_id") String providerId,
+                                        @Path(value = "client_id") String clientId);
 }

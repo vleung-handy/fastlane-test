@@ -11,6 +11,7 @@ import com.handy.portal.bookings.ui.fragment.ScheduledBookingsFragment;
 import com.handy.portal.bookings.ui.fragment.SendReceiptCheckoutFragment;
 import com.handy.portal.bookings.ui.fragment.SoftwareLicensesFragment;
 import com.handy.portal.clients.ui.fragment.ClientConversationsFragment;
+import com.handy.portal.clients.ui.fragment.ClientDetailFragment;
 import com.handy.portal.clients.ui.fragment.ClientsFragment;
 import com.handy.portal.core.ui.fragment.AccountSettingsFragment;
 import com.handy.portal.core.ui.fragment.EditPhotoFragment;
@@ -86,6 +87,7 @@ public enum MainViewPage implements Serializable {
     WEB_PAGE(PortalWebViewFragment.class),
 
     CLIENTS(ClientsFragment.class),
+    CLIENT_DETAILS(ClientDetailFragment.class),
     EDIT_AVAILABLE_HOURS(EditAvailableHoursFragment.class),
     EDIT_WEEKLY_ADHOC_AVAILABLE_HOURS(EditWeeklyAdhocAvailableHoursFragment.class),
     EDIT_WEEKLY_TEMPLATE_AVAILABLE_HOURS(EditWeeklyTemplateAvailableHoursFragment.class),;
