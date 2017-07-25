@@ -14,7 +14,6 @@ import java.io.Serializable;
 
 public class Client implements Serializable {
     @SerializedName("id")
-    @NonNull
     private int mId;
 
     @SerializedName("first_name")
@@ -45,10 +44,12 @@ public class Client implements Serializable {
         return mId;
     }
 
+    @NonNull
     public String getFirstName() {
         return mFirstName;
     }
 
+    @NonNull
     public String getLastName() {
         return mLastName;
     }
@@ -58,6 +59,7 @@ public class Client implements Serializable {
         return mProfileImageUrl;
     }
 
+    @NonNull
     public String getLayerUserId() {
         return mLayerUserId;
     }

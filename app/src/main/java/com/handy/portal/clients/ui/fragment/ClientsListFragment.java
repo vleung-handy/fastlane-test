@@ -115,7 +115,11 @@ public class ClientsListFragment extends ProgressSpinnerFragment {
             }
         });
 
-        if (mAdapter.getItemCount() == 0) { requestClientList(false); }
+        //This can be greater then 0 if in the lifecycle the views were destroyed and recreated at
+        //some point. the adapter data would still be there
+        if (mAdapter.getItemCount() == 0) {
+            requestClientList(false);
+        }
     }
 
     @Override
