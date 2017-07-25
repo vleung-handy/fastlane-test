@@ -215,7 +215,7 @@ public class ClientDetailFragment extends ActionBarFragment {
 
     @OnClick(R.id.client_detail_send_message)
     public void sendMessage() {
-        //TODO how to get this to work. Plus, hitting back goes to the wrong screen
+        //Only works on Release builds
         HandyLibrary.getInstance().getHandyService().createConversationForPro(
                 mClient.getId(), "", new Callback<CreateConversationResponse>() {
                     @Override
