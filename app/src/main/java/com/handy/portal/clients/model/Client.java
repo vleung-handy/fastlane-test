@@ -14,12 +14,15 @@ import java.io.Serializable;
 
 public class Client implements Serializable {
     @SerializedName("id")
+    @NonNull
     private int mId;
 
     @SerializedName("first_name")
+    @NonNull
     private String mFirstName;
 
     @SerializedName("last_name")
+    @NonNull
     private String mLastName;
 
     @SerializedName("profile_image_url")
@@ -27,6 +30,7 @@ public class Client implements Serializable {
     private String mProfileImageUrl;
 
     @SerializedName("layer_user_id")
+    @NonNull
     private String mLayerUserId;
 
     @SerializedName("address")
