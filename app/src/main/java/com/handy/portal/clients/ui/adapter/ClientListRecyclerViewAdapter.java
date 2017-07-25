@@ -198,7 +198,11 @@ public class ClientListRecyclerViewAdapter extends
                     client.getFirstName(),
                     client.getLastName().substring(0, 1)));
 
-            mCityTextView.setText(client.getAddress().getCityState());
+            if(client.getAddress() == null) {
+                mCityTextView.setText("");
+            } else {
+                mCityTextView.setText(client.getAddress().getCityState());
+            }
 
             Client.Context clientContext = client.getContext();
 
