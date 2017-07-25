@@ -33,6 +33,7 @@ public class ClientListRecyclerViewAdapter extends
 
     private Context mContext;
     private List<Client> mClientList;
+    private OnItemClickListener mOnItemClickListener;
 
     public ClientListRecyclerViewAdapter(@NonNull Context context, @NonNull List<Client> clientList) {
         mContext = context;
@@ -128,6 +129,10 @@ public class ClientListRecyclerViewAdapter extends
         return mClientList.get(position);
     }
 
+    public void setOnItemClickListener(OnItemClickListener listener) {
+        mOnItemClickListener = listener;
+    }
+
     public class LoadingViewHolder extends RecyclerView.ViewHolder {
 
         public LoadingViewHolder(final View itemView) {
@@ -137,6 +142,8 @@ public class ClientListRecyclerViewAdapter extends
 
 
     public class ClientItemViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.client_list_item_layout)
+        View mListItemLayout;
         @BindView(R.id.client_list_item_img_view)
         ImageView mImageView;
         @BindView(R.id.client_list_item_initials_layout)
@@ -157,8 +164,17 @@ public class ClientListRecyclerViewAdapter extends
             ButterKnife.bind(this, view);
         }
 
-        public void bind(@NonNull Client client) {
+        public void bind(@NonNull final Client client) {
             Context context = ClientListRecyclerViewAdapter.this.mContext;
+
+            if(mOnItemClickListener != null) {
+                mListItemLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(final View v) {
+                        mOnItemClickListener.onItemClick(client);
+                    }
+                });
+            }
 
             //If there's no profile url then just display initials
             if (android.text.TextUtils.isEmpty(client.getProfileImageUrl())) {
@@ -203,5 +219,9 @@ public class ClientListRecyclerViewAdapter extends
                                 ? View.VISIBLE : View.GONE);
             }
         }
+    }
+
+    public interface OnItemClickListener {
+        void onItemClick(Client client);
     }
 }

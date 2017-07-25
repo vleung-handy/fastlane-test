@@ -13,11 +13,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.handy.portal.R;
-import com.handy.portal.bookings.model.Booking;
 import com.handy.portal.clients.model.Client;
 import com.handy.portal.clients.model.ClientList;
 import com.handy.portal.clients.ui.adapter.ClientListRecyclerViewAdapter;
-import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.TransitionStyle;
 import com.handy.portal.core.manager.PageNavigationManager;
@@ -26,8 +24,7 @@ import com.handy.portal.core.ui.view.SimpleDividerItemDecoration;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.library.ui.fragment.ProgressSpinnerFragment;
 import com.handy.portal.library.ui.listener.PaginationScrollListener;
-import com.handy.portal.logger.handylogger.model.EventContext;
-import com.handy.portal.logger.handylogger.model.RequestedJobsLog;
+import com.handy.portal.logger.handylogger.model.ClientsLog;
 import com.handy.portal.retrofit.HandyRetrofit2Callback;
 
 import java.util.ArrayList;
@@ -74,12 +71,12 @@ public class ClientsListFragment extends ProgressSpinnerFragment {
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAdapter = new ClientListRecyclerViewAdapter(getActivity(), new ArrayList<Client>());
-        //todo       bus.register(this);
     }
 
     @NonNull
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+        bus.post(new ClientsLog.ListShown());
         View view = getActivity().findViewById(R.id.progress_spinner_layout);
         //this saves the exact view state, including scroll position
         if (view == null) {
@@ -114,6 +111,17 @@ public class ClientsListFragment extends ProgressSpinnerFragment {
                 return mIsLoading;
             }
         });
+        mAdapter.setOnItemClickListener(new ClientListRecyclerViewAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(final Client client) {
+                mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
+                        MainViewPage.CLIENT_DETAILS,
+                        ClientDetailFragment.getBundle(client),
+                        TransitionStyle.JOB_LIST_TO_DETAILS, true);
+
+                bus.post(ClientDetailFragment.newInstance(client));
+            }
+        });
 
         //This can be greater then 0 if in the lifecycle the views were destroyed and recreated at
         //some point. the adapter data would still be there
@@ -125,12 +133,6 @@ public class ClientsListFragment extends ProgressSpinnerFragment {
     @Override
     public void onResume() {
         super.onResume();
-    }
-
-    @Override
-    public void onDestroy() {
-        //todo       bus.unregister(this);
-        super.onDestroy();
     }
 
     /**
@@ -215,19 +217,6 @@ public class ClientsListFragment extends ProgressSpinnerFragment {
                         }
                     }
                 });
-    }
-
-    //TODO sammy
-    private void navigateToClientDetails(@NonNull Booking booking) {
-        Bundle arguments = new Bundle();
-        arguments.putSerializable(BundleKeys.BOOKING, booking);
-        arguments.putString(BundleKeys.BOOKING_ID, booking.getId());
-        arguments.putString(BundleKeys.BOOKING_TYPE, booking.getType().toString());
-        arguments.putLong(BundleKeys.BOOKING_DATE, booking.getStartDate().getTime());
-        arguments.putString(BundleKeys.EVENT_CONTEXT, EventContext.REQUESTED_JOBS);
-        bus.post(new RequestedJobsLog.Clicked(booking));
-//        mNavigationManager.navigateToPage(getActivity().getSupportFragmentManager(),
-//                MainViewPage.JOB_DETAILS, arguments, TransitionStyle.JOB_LIST_TO_DETAILS, true);
     }
 
     @OnClick(R.id.try_again_button)

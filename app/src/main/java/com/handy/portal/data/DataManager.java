@@ -16,6 +16,7 @@ import com.handy.portal.bookings.model.CheckoutRequest;
 import com.handy.portal.bookings.model.PostCheckoutInfo;
 import com.handy.portal.bookings.model.PostCheckoutResponse;
 import com.handy.portal.bookings.model.PostCheckoutSubmission;
+import com.handy.portal.clients.model.ClientDetail;
 import com.handy.portal.clients.model.ClientList;
 import com.handy.portal.core.constant.LocationKey;
 import com.handy.portal.core.constant.ProviderKey;
@@ -432,6 +433,20 @@ public class DataManager {
                               final retrofit2.Callback<ClientList> cb
     ) {
         Call<ClientList> call = mService2.getClientList(providerId, clientId, limit);
+        call.enqueue(cb);
+    }
+
+    /**
+     *
+     * @param providerId
+     * @param clientId
+     * @param cb
+     */
+    public void getClientDetail(@NonNull final String providerId,
+                              @NonNull final String clientId,
+                              final retrofit2.Callback<ClientDetail> cb
+    ) {
+        Call<ClientDetail> call = mService2.getClientDetails(providerId, clientId);
         call.enqueue(cb);
     }
 

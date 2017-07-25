@@ -2,6 +2,7 @@
 <resources>
     <!--Primary Colors-->
     <color name="handy_blue">#00CDED</color>
+    <color name="handy_blue_trans_10">#1600CDED</color>
     <color name="handy_green">#8CC63f</color>
     <color name="plumber_red">#FF5C5C</color>
     <color name="handyman_teal">#43D1B8</color>
