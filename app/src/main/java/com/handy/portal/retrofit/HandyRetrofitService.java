@@ -8,9 +8,9 @@ import com.handy.portal.bookings.model.PostCheckoutSubmission;
 import com.handy.portal.core.model.ProviderSettings;
 import com.handy.portal.location.model.LocationBatchUpdate;
 import com.handy.portal.onboarding.model.claim.JobClaimRequest;
+import com.handy.portal.payments.model.AdhocCashOutRequest;
 import com.handy.portal.payments.model.BatchPaymentReviewRequest;
 import com.handy.portal.payments.model.BookingPaymentReviewRequest;
-import com.handy.portal.payments.model.AdhocCashOutRequest;
 import com.handy.portal.payments.model.RecurringCashOutRequest;
 
 import java.util.ArrayList;

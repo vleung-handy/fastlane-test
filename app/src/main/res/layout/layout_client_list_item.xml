@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="92dp"
+                                             android:background="@color/white"
+                                             android:padding="@dimen/default_padding"
+    >
+
+    <FrameLayout
+        android:id="@+id/client_list_item_img_wrapper"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintLeft_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        >
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/client_list_item_img_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:civ_border_color="@color/border_gray"
+            app:civ_border_width="1dp"
+            tools:src="@drawable/ic_profile"
+            />
+
+        <RelativeLayout
+            android:id="@+id/client_list_item_initials_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:background="@drawable/circle_grey">
+
+            <TextView
+                style="@style/TextView.XXLarge"
+                android:id="@+id/client_list_item_initials"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textColor="@color/dark_gray"
+                tools:text="SN" />
+        </RelativeLayout>
+    </FrameLayout>
+
+
+    <TextView
+        android:id="@+id/client_list_item_name"
+        style="@style/TextView.Medium.Bold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/default_padding"
+        app:layout_constraintLeft_toRightOf="@+id/client_list_item_img_wrapper"
+        app:layout_constraintTop_toTopOf="@+id/client_list_item_img_wrapper"
+        tools:text="First L."
+        />
+
+    <TextView
+        android:id="@+id/client_list_item_city"
+        style="@style/HandyTextAppearanceSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="0dp"
+        android:layout_marginTop="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/client_list_item_description"
+        app:layout_constraintLeft_toLeftOf="@+id/client_list_item_name"
+        app:layout_constraintTop_toBottomOf="@+id/client_list_item_name"
+        tools:text="New York, NY"
+        />
+
+    <ImageView
+        android:id="@+id/client_list_item_green_dot"
+        android:layout_width="@dimen/dot_size"
+        android:layout_height="@dimen/dot_size"
+        android:paddingBottom="3dp"
+        android:paddingRight="6dp"
+        android:paddingTop="3dp"
+        android:src="@drawable/circle_green"
+        app:layout_constraintBottom_toBottomOf="@+id/client_list_item_img_wrapper"
+        app:layout_constraintLeft_toLeftOf="@+id/client_list_item_name"
+        />
+
+    <TextView
+        android:id="@+id/client_list_item_description"
+        style="@style/HandyTextAppearanceSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/tertiary_gray"
+        app:layout_constraintBottom_toBottomOf="@+id/client_list_item_img_wrapper"
+        app:layout_constraintLeft_toRightOf="@+id/client_list_item_green_dot"
+        tools:text="Upcoming booking Fri, Jul 14"
+        />
+</android.support.constraint.ConstraintLayout>

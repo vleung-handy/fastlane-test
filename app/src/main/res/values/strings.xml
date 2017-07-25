@@ -765,4 +765,10 @@
     <string name="reschedule_message_formatted">Hi %1$s, I can\'t make your booking on %2$s, but if you\'d like you can reschedule and view my availability. Hope to see you soon!</string>
     <string name="reschedule_message_sent_formatted">Your message has been sent to %1$s</string>
     <string name="reschedule_message_error">There was an error sending your message</string>
+
+    <!-- Client list item -->
+    <string name="client_list_find_job">Find Jobs</string>
+    <string name="client_list_item_name">%1$s %2$s.</string>
+    <string name="client_list_error">We\'re having trouble gathering your list of clients.</string>
+    <string name="client_list_empty">You don\'t have any clients yet. Start claiming jobs.</string>
 </resources>

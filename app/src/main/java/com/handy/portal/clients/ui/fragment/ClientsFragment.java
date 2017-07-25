@@ -86,7 +86,7 @@ public class ClientsFragment extends ActionBarFragment {
         if (mShowTabs) {
             mTabLayout.setVisibility(View.VISIBLE);
             mClientsTab = new TabWithCountView(getActivity());
-            mClientsTab.setTitle(R.string.messages);
+            mClientsTab.setTitle(R.string.tab_clients);
             mTabLayout.getTabAt(1).setCustomView(mClientsTab);
         }
         else {
@@ -118,7 +118,7 @@ public class ClientsFragment extends ActionBarFragment {
             mFragments.add(ProRequestedJobsFragment.newInstance());
 
             if (mShowTabs) {
-                mFragments.add(ClientConversationsFragment.newInstance());
+                mFragments.add(ClientsListFragment.newInstance());
             }
         }
 
