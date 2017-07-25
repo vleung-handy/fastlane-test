@@ -123,9 +123,11 @@ android {
         }
         applicationVariants.all { variant ->
             variant.outputs.each { output ->
-                def buildType = variant.buildType.name == 'release' ? '' : '-' + variant.buildType.name;
+                def buildInfo = "${flavorName}-${variant.buildType.name}"
+                def versionInfo = "${variant.versionName}-${variant.versionCode}"
+
                 output.outputFile = new File(output.outputFile.parentFile,
-                        "handy-pro${buildType}-${variant.versionName}.apk");
+                        "handy-pro-${buildInfo}-${versionInfo}.apk");
             }
         }
     }

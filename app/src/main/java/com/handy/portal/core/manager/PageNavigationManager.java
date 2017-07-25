@@ -78,7 +78,7 @@ public class PageNavigationManager {
      * @param deeplinkUrl
      */
     public void handleDeeplinkUrl(
-            @NonNull FragmentManager fragmentManager,
+            @Nullable FragmentManager fragmentManager,
             @DeeplinkLog.Source.DeeplinkSource String deeplinkSource,
             @NonNull String deeplinkUrl) {
         final Uri deeplinkUri = Uri.parse(deeplinkUrl);
@@ -122,7 +122,7 @@ public class PageNavigationManager {
     }
 
     public void navigateToPage(
-            @NonNull FragmentManager fragmentManager,
+            @Nullable FragmentManager fragmentManager,
             @NonNull MainViewPage newPage,
             @Nullable Bundle arguments,
             @Nullable TransitionStyle transitionStyle,
@@ -154,11 +154,12 @@ public class PageNavigationManager {
     }
 
     public void switchFragment(
-            FragmentManager fragmentManager,
+            @Nullable FragmentManager fragmentManager,
             Fragment newFragment,
             TransitionStyle transitionStyle,
             boolean addToBackStack
     ) {
+        if (fragmentManager == null) { return; }
         if (!addToBackStack) {
             fragmentManager.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
         }

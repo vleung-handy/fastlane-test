@@ -1,0 +1,230 @@
+# More documentation about how to customize your build
+# can be found here:
+# https://docs.fastlane.tools
+fastlane_version "1.111.0"
+
+default_platform :android
+
+before_all do
+  ENV["SLACK_URL"] = "https://hooks.slack.com/services/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"
+
+  repo_name = "handybook/android-provider"
+  ENV["GITHUB_API_URL"] = "https://api.github.com/repos/#{repo_name}"
+  ENV["GITHUB_URL"] = "https://github.com/#{repo_name}"
+end
+
+lane :release do
+  ensure_git_branch_release_candidate
+  ensure_git_branch_clean_and_latest
+
+  gradle(task: "clean")
+
+  gradle(task: "assembleHostedRelease")
+  upload_apk_to_github_release(apk_file_name_pattern: 'handy-pro-hosted-release*')
+  beta(skip_build: true)
+
+  gradle(task: "assembleStoreRelease")
+  upload_apk_to_github_release(apk_file_name_pattern: 'handy-pro-store-release*')
+end
+
+lane :beta do |options|
+  notes = options[:notes]
+  tester_emails = options[:tester_emails]
+  tester_groups = options[:tester_groups] || ["android-devs", "android-internal-testers"]
+
+  ensure_git_branch_release_candidate
+  ensure_git_branch_clean_and_latest
+
+  if !options[:skip_build]
+    gradle(task: "clean")
+    gradle(task: "assembleHostedRelease")
+  end
+
+  crashlytics(
+    api_token: ENV["CRASHLYTICS_API_TOKEN"],
+    build_secret: ENV["CRASHLYTICS_BUILD_SECRET"],
+    groups: tester_groups,
+    emails: tester_emails,
+    notes: notes
+  )
+
+  slack(
+    message: "New Android build uploaded to Crashlytics!",
+    channel: "pro-app-releases"
+  )
+end
+
+lane :applause do |options|
+  ensure_git_branch_release_candidate
+  ensure_git_branch_clean_and_latest
+
+  namespace = options[:namespace]
+  unless namespace
+    exit_with_error(error_message: 'Must specify namespace (e.g. fastlane applause namespace:applause-android)')
+  end
+
+  # Set namespace override
+  sh("cd ..; ./scripts/override environment=#{namespace}")
+
+  gradle(task: "clean")
+  gradle(task: "assembleStageRelease")
+
+  # Remove namespace override
+  sh("cd ..; ./scripts/kill-override")
+
+  upload_apk_to_github_release(apk_file_name_pattern: 'handy-pro-stage-release*')
+
+  slack(
+    message: "New Applause Android Provider build uploaded to Github! #{ENV["GITHUB_URL"]}/releases/tag/#{tag_name}",
+    channel: "applause-testing"
+  )
+end
+
+lane :release_candidate do |options|
+  ensure_git_branch(branch: 'develop')
+  ensure_git_branch_clean_and_latest
+  _, major, minor, _ = get_current_version.split(/([0-9]+)\.([0-9]+)\.([0-9]+)/)
+  version_suffix = "#{major}.#{minor}.x"
+  release_candidate_branch_name = 'release_candidate_v' + version_suffix
+  sh('git checkout -b ' + release_candidate_branch_name)
+  sh('git push --set-upstream origin ' + release_candidate_branch_name)
+end
+
+lane :version_bump do |options|
+  ensure_git_branch_clean_and_latest
+  version_bump_type = options[:type]
+
+  valid_version_bump_types = ["major", "minor", "patch"]
+
+  unless valid_version_bump_types.include?(version_bump_type)
+    exit_with_error(error_message: "Must specify version bump type (i.e. fastlane version_bump type:[#{valid_version_bump_types.join('|')}])")
+  end
+
+  if version_bump_type == "patch"
+    ensure_git_branch_release_candidate
+  end
+
+  version_number = increase_version_number(type: version_bump_type)
+
+  # Remove all tags not on remote
+  sh("git tag -l | xargs git tag -d")
+  sh("git fetch --tags")
+
+  if version_bump_type == "patch"
+    version_tag = "v#{version_number}"
+    if git_tag_exists(tag: version_tag)
+      UI.error("Unable to add tag #{version_tag}")
+    else
+      create_release(tag: version_tag)
+    end
+  end
+end
+
+private_lane :increase_version_number do |options|
+  version_bump_type = options[:type]
+  old_version = get_current_version
+  _, major, minor, patch = old_version.split(/([0-9]+)\.([0-9]+)\.([0-9]+)/)
+  case version_bump_type
+  when 'major'
+    major = major.to_i + 1
+  when 'minor'
+    minor = minor.to_i + 1
+  when 'patch'
+    patch = patch.to_i + 1
+  else
+    exit_with_error(error_message: "Unrecognized version_bump_type: " + version_bump_type)
+  end
+  new_version = "#{major}.#{minor}.#{patch}"
+  sh("sed -i '' -E 's/#{old_version}/#{new_version}/g' ../app/build.gradle")
+  version_bump_message = "Bumped up version to #{new_version}"
+  git_commit(path: './app/build.gradle', message: version_bump_message)
+  push_to_git_remote
+  UI.success(version_bump_message)
+  new_version
+end
+
+private_lane :create_release do |options|
+  version_tag = options[:tag]
+  data = {
+    tag_name:         version_tag,
+    target_commitish: branch_name,
+    name:             version_tag,
+    body:             "Release #{version_tag}",
+    prerelease:       true,
+  }
+
+  url = "#{ENV["GITHUB_API_URL"]}/releases?access_token=#{ENV["GITHUB_ACCESS_TOKEN"]}"
+  sh("curl -s -S -X POST -H 'Content-Type: application/json' -d '#{JSON.generate(data)}' #{url} > /dev/null")
+end
+
+private_lane :upload_asset_github do |options|
+  tag_name     = options[:tag]
+  file_path    = options[:path]
+  file_name    = options[:name]
+  content_type = options[:content_type]
+
+  # Get upload URL
+  url = "#{ENV["GITHUB_API_URL"]}/releases/tags/#{tag_name}?access_token=#{ENV["GITHUB_ACCESS_TOKEN"]}"
+  raw_response = sh("curl -s -S -X GET -H 'Content-Type: application/json' #{url}", log: false)
+  response = JSON.parse(raw_response, symbolize_names: true)
+  upload_url = response[:upload_url]
+  upload_url = upload_url.split(/\{\?.*\}/)[0] if upload_url # removes query spec (e.g. "{?name, label}" ) from the URL
+
+  unless upload_url
+    exit_with_error(error_message: "Upload URL not found for release #{tag_name}")
+  end
+
+  url = "#{upload_url}?name=#{file_name}"
+  sh("curl -s -S -X POST"\
+     " -H 'Authorization: token #{ENV["GITHUB_ACCESS_TOKEN"]}'"\
+     " -H 'Content-Type: #{content_type}'"\
+     " --data-binary @#{file_path}"\
+     " #{url}", log: false)
+  UI.success("Upload success!")
+end
+
+private_lane :upload_apk_to_github_release do |options|
+  apk_file_name_pattern = options[:apk_file_name_pattern]
+  unless apk_file_name_pattern
+    exit_with_error(error_message: "Must specify apk_file_name_pattern (ex. 'handy-pro*')")
+  end
+  apk_dir = '../app/build/outputs/apk'
+  tag_name = "v#{get_current_version}"
+
+  apk_file_name = Dir.entries(apk_dir).select{ |entry| /#{apk_file_name_pattern}/.match(entry) }.first
+  unless apk_file_name
+    exit_with_error(error_message: "APK with pattern #{apk_file_name_pattern} not found in #{apk_dir}")
+  end
+
+  upload_asset_github(
+    tag:          tag_name,
+    path:         "#{apk_dir}/#{apk_file_name}",
+    name:         "#{apk_file_name}",
+    content_type: "application/vnd.android.package-archive"
+  )
+end
+
+private_lane :get_current_version do
+  sh('cat ../app/build.gradle | sed -n -E "s/^.*\versionName[[:space:]]+\'(.*)\'.*$/\1/p"').strip
+end
+
+private_lane :ensure_git_branch_release_candidate do
+  release_candidate_branch_pattern = /release_candidate_v[0-9]+\.[0-9]+\.x/
+  if release_candidate_branch_pattern.match(branch_name).nil?
+    exit_with_error(error_message: "Current branch must be a release candidate branch (e.g. release_candidate_v1.29.x)")
+  end
+end
+
+private_lane :ensure_git_branch_clean_and_latest do |options|
+  ensure_git_status_clean
+  git_pull
+end
+
+private_lane :branch_name do
+  sh('git symbolic-ref HEAD 2>/dev/null | cut -d"/" -f 3').strip
+end
+
+private_lane :exit_with_error do |options|
+  UI.error(options[:error_message])
+  exit
+end
