@@ -1,186 +1,201 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             xmlns:tools="http://schemas.android.com/tools"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="match_parent"
-                                             android:background="@color/white"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:map="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
     >
 
-    <FrameLayout
-        android:id="@+id/client_detail_img_wrapper"
-        android:layout_width="80dp"
-        android:layout_height="80dp"
-        android:layout_margin="@dimen/default_padding"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
         >
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/client_detail_img_view"
+        <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:civ_border_color="@color/border_gray"
-            app:civ_border_width="1dp"
-            tools:src="@drawable/ic_profile"
+            android:background="@color/white"
+            android:paddingBottom="@dimen/default_padding"
+            android:paddingTop="@dimen/default_padding"
+            >
+
+            <FrameLayout
+                android:id="@+id/client_detail_img_wrapper"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                >
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/client_detail_img_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:civ_border_color="@color/border_gray"
+                    app:civ_border_width="1dp"
+                    tools:src="@drawable/ic_profile"
+                    />
+
+                <RelativeLayout
+                    android:id="@+id/client_detail_initials_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:background="@drawable/circle_grey"
+                    >
+
+                    <TextView
+                        android:id="@+id/client_detail_initials"
+                        style="@style/TextView.XXLarge"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:gravity="center"
+                        android:textColor="@color/dark_gray"
+                        tools:text="SN"
+                        />
+                </RelativeLayout>
+            </FrameLayout>
+
+            <TextView
+                android:id="@+id/client_detail_city"
+                style="@style/HandyTextAppearanceMedium"
+                android:layout_width="368dp"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/default_padding_quarter"
+                android:gravity="center"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/client_detail_img_wrapper"
+                tools:text="New York, NY"
+                />
+
+            <ImageView
+                android:id="@+id/client_detail_green_dot"
+                android:layout_width="16dp"
+                android:layout_height="16dp"
+                android:layout_marginTop="@dimen/default_padding_half"
+                android:paddingRight="6dp"
+                android:paddingTop="6dp"
+                android:src="@drawable/circle_green"
+                app:layout_constraintHorizontal_chainStyle="packed"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@+id/client_detail_description"
+                app:layout_constraintTop_toBottomOf="@+id/client_detail_city"
+                />
+
+            <TextView
+                android:id="@+id/client_detail_description"
+                style="@style/HandyTextAppearanceMedium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_padding_half"
+                android:textColor="@color/tertiary_gray"
+                app:layout_constraintLeft_toRightOf="@+id/client_detail_green_dot"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/client_detail_city"
+                tools:text="Upcoming booking Fri, Jul 14"
+                />
+
+            <Button
+                android:id="@+id/client_detail_send_message"
+                style="@style/Button.PartnerBlueEmpty.Round"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/default_padding"
+                android:paddingLeft="@dimen/default_padding_double"
+                android:paddingRight="@dimen/default_padding_double"
+                android:text="@string/send_message"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/client_detail_description"
+                />
+        </android.support.constraint.ConstraintLayout>
+
+        <include
+            layout="@layout/divider"
+            android:layout_width="match_parent"
+            android:layout_height="11dp"
             />
 
-        <RelativeLayout
-            android:id="@+id/client_detail_initials_layout"
+        <LinearLayout
+            android:id="@+id/client_detail_total_earnings_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center"
-            android:background="@drawable/circle_grey"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingRight="@dimen/default_padding"
             >
 
             <TextView
-                android:id="@+id/client_detail_initials"
-                style="@style/TextView.XXLarge"
-                android:layout_width="match_parent"
+                style="@style/TextView.Large"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:gravity="center"
-                android:textColor="@color/dark_gray"
-                tools:text="SN"
+                android:gravity="center_vertical"
+                android:text="@string/client_details_total_earnings"
                 />
-        </RelativeLayout>
-    </FrameLayout>
 
-    <TextView
-        android:id="@+id/client_detail_city"
-        style="@style/HandyTextAppearanceMedium"
-        android:layout_width="368dp"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/default_padding_quarter"
-        android:gravity="center"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/client_detail_img_wrapper"
-        tools:text="New York, NY"
-        />
+            <TextView
+                android:id="@+id/client_detail_total_earnings"
+                style="@style/TextView.Large.Bold"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                tools:text="$295.05"
+                />
 
-    <ImageView
-        android:id="@+id/client_detail_green_dot"
-        android:layout_marginTop="@dimen/default_padding_half"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:paddingRight="6dp"
-        android:paddingTop="6dp"
-        android:src="@drawable/circle_green"
-        app:layout_constraintHorizontal_chainStyle="packed"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toLeftOf="@+id/client_detail_description"
-        app:layout_constraintTop_toBottomOf="@+id/client_detail_city"
-        />
+        </LinearLayout>
 
-    <TextView
-        android:id="@+id/client_detail_description"
-        style="@style/HandyTextAppearanceMedium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="@color/tertiary_gray"
-        android:layout_marginTop="@dimen/default_padding_half"
-        app:layout_constraintLeft_toRightOf="@+id/client_detail_green_dot"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/client_detail_city"
-        tools:text="Upcoming booking Fri, Jul 14"
-        />
-
-    <Button
-        android:id="@+id/client_detail_send_message"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/default_padding"
-        android:paddingLeft="@dimen/default_padding_double"
-        android:paddingRight="@dimen/default_padding_double"
-        style="@style/Button.PartnerBlueEmpty.Round"
-        android:text="@string/send_message"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/client_detail_description"
-        />
-
-    <include
-        android:id="@+id/divider"
-        layout="@layout/divider"
-        android:layout_width="0dp"
-        android:layout_height="11dp"
-        android:layout_marginTop="@dimen/default_padding"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/client_detail_send_message"
-        />
-
-    <LinearLayout
-        android:id="@+id/client_detail_total_earnings_layout"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/default_padding"
-        android:paddingRight="@dimen/default_padding"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider"
-        >
-
-        <TextView
-            style="@style/TextView.Large"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/client_details_total_earnings"
+        <include
+            layout="@layout/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
             />
 
-        <TextView
-            android:id="@+id/client_detail_total_earnings"
-            style="@style/TextView.Large.Bold"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="right|center_vertical"
-            tools:text="$295.05"
+        <LinearLayout
+            android:id="@+id/client_detail_activity_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal"
+            android:paddingLeft="@dimen/default_padding"
+            android:paddingRight="@dimen/default_padding"
+            >
+
+            <TextView
+                style="@style/TextView.Large"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center_vertical"
+                android:text="@string/client_details_activity"
+                />
+
+            <TextView
+                android:id="@+id/client_detail_activity"
+                style="@style/TextView.Large.Bold"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="right|center_vertical"
+                tools:text="7 completed jobs"
+                />
+        </LinearLayout>
+
+        <include
+            layout="@layout/divider"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/divider_height"
             />
 
-    </LinearLayout>
-
-    <include
-        android:id="@+id/divider2"
-        layout="@layout/divider"
-        android:layout_width="0dp"
-        android:layout_height="1dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/client_detail_total_earnings_layout"
-        />
-
-    <LinearLayout
-        android:id="@+id/client_detail_activity_layout"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:paddingLeft="@dimen/default_padding"
-        android:paddingRight="@dimen/default_padding"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/divider2"
-        >
-
-        <TextView
-            style="@style/TextView.Large"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:gravity="center_vertical"
-            android:text="@string/client_details_activity"
-            />
-
-        <TextView
-            android:id="@+id/client_detail_activity"
-            style="@style/TextView.Large.Bold"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="1"
-            android:gravity="right|center_vertical"
-            tools:text="7 completed jobs"
+        <com.google.android.gms.maps.MapView
+            android:id="@+id/client_detail_map"
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            map:cameraZoom="15"
+            map:liteMode="true"
+            map:mapType="normal"
             />
     </LinearLayout>
-</android.support.constraint.ConstraintLayout>
+</ScrollView>

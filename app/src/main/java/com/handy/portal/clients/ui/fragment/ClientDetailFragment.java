@@ -4,24 +4,31 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapView;
+import com.google.android.gms.maps.MapsInitializer;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
 import com.handy.portal.R;
 import com.handy.portal.clients.model.Client;
 import com.handy.portal.clients.model.ClientDetail;
 import com.handy.portal.clients.model.Price;
 import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.ProviderManager;
+import com.handy.portal.core.model.Address;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.library.util.CurrencyUtils;
 import com.handy.portal.logger.handylogger.model.ClientsLog;
-import com.handy.portal.logger.handylogger.model.EventType;
-import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.retrofit.HandyRetrofit2Callback;
 import com.handybook.shared.core.HandyLibrary;
 import com.handybook.shared.layer.LayerConstants;
@@ -61,6 +68,10 @@ public class ClientDetailFragment extends ActionBarFragment {
     TextView mTotalEarningsText;
     @BindView(R.id.client_detail_activity)
     TextView mActivityText;
+    @BindView(R.id.client_detail_map)
+    MapView mMapView;
+
+    private GoogleMap mGoogleMap;
 
     private Client mClient;
 
@@ -87,6 +98,12 @@ public class ClientDetailFragment extends ActionBarFragment {
         if (bundle != null) {
             mClient = (Client) bundle.getSerializable(KEY_CLIENT);
         }
+
+        try {
+            MapsInitializer.initialize(getContext());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @NonNull
@@ -100,6 +117,7 @@ public class ClientDetailFragment extends ActionBarFragment {
     public void onViewCreated(final View view, final Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+        initializeMaps(savedInstanceState);
         requestClientDetails();
         setActionBar(getString(R.string.client_details_titlebar_text, mClient.getFirstName()), true);
 
@@ -136,6 +154,26 @@ public class ClientDetailFragment extends ActionBarFragment {
                     clientContext.getContextType() == Client.ContextType.UpcomingBooking
                             ? View.VISIBLE : View.GONE);
         }
+    }
+
+    private void initializeMaps(Bundle savedInstanceState) {
+
+        mMapView.onCreate (savedInstanceState);
+        mMapView.getMapAsync(new OnMapReadyCallback() {
+            @Override
+            public void onMapReady(GoogleMap mMap) {
+                mGoogleMap = mMap;
+                Address address = mClient.getAddress();
+
+                CameraUpdate center =
+                        CameraUpdateFactory.newLatLng(new LatLng(address.getLatitude(),
+                                address.getLongitude()));
+                CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
+
+                mGoogleMap.moveCamera(center);
+                mGoogleMap.animateCamera(zoom);
+            }
+        });
     }
 
     /**
