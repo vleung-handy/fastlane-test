@@ -19,6 +19,7 @@ import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.logger.handylogger.model.ClientsLog;
 import com.handy.portal.logger.handylogger.model.EventType;
 import com.handy.portal.logger.handylogger.model.ScheduledJobsLog;
 import com.handy.portal.retrofit.HandyRetrofit2Callback;
@@ -82,16 +83,17 @@ public class ClientDetailFragment extends ActionBarFragment {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bus.register(this);
         Bundle bundle = getArguments();
         if (bundle != null) {
             mClient = (Client) bundle.getSerializable(KEY_CLIENT);
         }
-        //todo       bus.register(this);
     }
 
     @NonNull
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+        bus.post(new ClientsLog.DetailViewShown(mClient.getId()));
         return inflater.inflate(R.layout.fragment_client_details, container, false);
     }
 

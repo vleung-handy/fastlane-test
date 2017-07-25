@@ -25,6 +25,7 @@ import com.handy.portal.core.ui.view.SimpleDividerItemDecoration;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.library.ui.fragment.ProgressSpinnerFragment;
 import com.handy.portal.library.ui.listener.PaginationScrollListener;
+import com.handy.portal.logger.handylogger.model.ClientsLog;
 import com.handy.portal.retrofit.HandyRetrofit2Callback;
 
 import java.util.ArrayList;
@@ -70,13 +71,14 @@ public class ClientsListFragment extends ProgressSpinnerFragment {
     @Override
     public void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        bus.register(this);
         mAdapter = new ClientListRecyclerViewAdapter(getActivity(), new ArrayList<Client>());
-        //todo       bus.register(this);
     }
 
     @NonNull
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
+        bus.post(new ClientsLog.ListShown());
         View view = getActivity().findViewById(R.id.progress_spinner_layout);
         //this saves the exact view state, including scroll position
         if (view == null) {
@@ -134,7 +136,7 @@ public class ClientsListFragment extends ProgressSpinnerFragment {
 
     @Override
     public void onDestroy() {
-        //todo       bus.unregister(this);
+        bus.unregister(this);
         super.onDestroy();
     }
 
