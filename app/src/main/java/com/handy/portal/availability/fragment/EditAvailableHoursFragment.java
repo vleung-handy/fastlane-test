@@ -427,4 +427,10 @@ public class EditAvailableHoursFragment extends ActionBarFragment {
         bus.post(new NavigationEvent.SetNavigationTabVisibility(true));
         super.onDestroyView();
     }
+
+    @Override
+    public void onDestroy() {
+        ((BaseActivity) getActivity()).clearOnBackPressedListenerStack();
+        super.onDestroy();
+    }
 }
