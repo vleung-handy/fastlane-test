@@ -105,13 +105,6 @@ public class ClientListRecyclerViewAdapter extends
         }
     }
 
-    public void clear() {
-        mIsLoadingAdded = false;
-        while (getItemCount() > 0) {
-            remove(getItem(0));
-        }
-    }
-
     public boolean isEmpty() {
         return getItemCount() == 0;
     }
@@ -124,13 +117,14 @@ public class ClientListRecyclerViewAdapter extends
 
     public void removeLoadingFooter() {
         mIsLoadingAdded = false;
-
-        int position = mClientList.size();
         notifyItemRemoved(mClientList.size());
     }
 
     public Client getItem(int position) {
-        if (position < 0) { return null; }
+        //Check if it's a valid position and not a footer position
+        if (position < 0 && position < mClientList.size()) {
+            return null;
+        }
 
         return mClientList.get(position);
     }
@@ -170,7 +164,7 @@ public class ClientListRecyclerViewAdapter extends
             ButterKnife.bind(this, view);
         }
 
-        public void bind(final Client client) {
+        public void bind(@NonNull final Client client) {
             Context context = ClientListRecyclerViewAdapter.this.mContext;
 
             if(mOnItemClickListener != null) {
@@ -226,5 +220,4 @@ public class ClientListRecyclerViewAdapter extends
     public interface OnItemClickListener {
         void onItemClick(Client client);
     }
-
 }

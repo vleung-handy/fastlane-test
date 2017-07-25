@@ -17,9 +17,11 @@ public class Client implements Serializable {
     private String mId;
 
     @SerializedName("first_name")
+    @NonNull
     private String mFirstName;
 
     @SerializedName("last_name")
+    @NonNull
     private String mLastName;
 
     @SerializedName("profile_image_url")
@@ -27,6 +29,7 @@ public class Client implements Serializable {
     private String mProfileImageUrl;
 
     @SerializedName("layer_user_id")
+    @NonNull
     private String mLayerUserId;
 
     @SerializedName("address")
@@ -41,10 +44,12 @@ public class Client implements Serializable {
         return mId;
     }
 
+    @NonNull
     public String getFirstName() {
         return mFirstName;
     }
 
+    @NonNull
     public String getLastName() {
         return mLastName;
     }
@@ -54,6 +59,7 @@ public class Client implements Serializable {
         return mProfileImageUrl;
     }
 
+    @NonNull
     public String getLayerUserId() {
         return mLayerUserId;
     }

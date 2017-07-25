@@ -18,7 +18,6 @@ import com.handy.portal.clients.model.ClientList;
 import com.handy.portal.clients.ui.adapter.ClientListRecyclerViewAdapter;
 import com.handy.portal.core.constant.MainViewPage;
 import com.handy.portal.core.constant.TransitionStyle;
-import com.handy.portal.core.event.HandyEvent;
 import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.ui.view.SimpleDividerItemDecoration;
@@ -124,13 +123,16 @@ public class ClientsListFragment extends ProgressSpinnerFragment {
             }
         });
 
-        if (mAdapter.getItemCount() == 0) { requestClientList(false); }
+        //This can be greater then 0 if in the lifecycle the views were destroyed and recreated at
+        //some point. the adapter data would still be there
+        if (mAdapter.getItemCount() == 0) {
+            requestClientList(false);
+        }
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        bus.post(new HandyEvent.SetLoadingOverlayVisibility(false));
     }
 
     /**
@@ -181,7 +183,8 @@ public class ClientsListFragment extends ProgressSpinnerFragment {
                             mAdapter.addAll(clients);
                         }
                         else {
-                            //If there was no more clients and the existing item count is > 0 then show it
+                            //If we're paginating there was no more additional clients and there are
+                            // existing items, then show it
                             if (mAdapter.getItemCount() > 0) {
                                 mHasMoreClients = false;
                                 showContentViewAndHideOthers(mClientsListRecyclerView);
