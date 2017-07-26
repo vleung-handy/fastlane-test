@@ -133,7 +133,7 @@
             >
 
             <TextView
-                style="@style/TextView.Large"
+                style="@style/TextView.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
@@ -142,7 +142,7 @@
 
             <TextView
                 android:id="@+id/client_detail_total_earnings"
-                style="@style/TextView.Large.Bold"
+                style="@style/TextView.Medium.Bold"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -169,7 +169,7 @@
             >
 
             <TextView
-                style="@style/TextView.Large"
+                style="@style/TextView.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
@@ -178,7 +178,7 @@
 
             <TextView
                 android:id="@+id/client_detail_activity"
-                style="@style/TextView.Large"
+                style="@style/TextView.Medium"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
