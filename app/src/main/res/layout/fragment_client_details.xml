@@ -6,20 +6,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:background="@color/border_gray"
+            android:fillViewport="true"
     >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/border_gray"
-        android:clipToPadding="false"
         android:orientation="vertical"
-        android:paddingBottom="@dimen/default_padding"
         >
 
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/white"
             android:paddingBottom="@dimen/default_padding"
             android:paddingTop="@dimen/default_padding"
@@ -199,15 +198,11 @@
             android:id="@+id/client_detail_map"
             android:layout_width="match_parent"
             android:layout_height="220dp"
+            android:minHeight="220dp"
+            android:layout_weight="1"
             map:cameraZoom="15"
             map:liteMode="true"
             map:mapType="normal"
-            />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
             />
     </LinearLayout>
 </ScrollView>
