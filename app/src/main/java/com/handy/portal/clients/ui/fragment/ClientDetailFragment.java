@@ -216,6 +216,7 @@ public class ClientDetailFragment extends ActionBarFragment {
 
     @OnClick(R.id.client_detail_send_message)
     public void sendMessage() {
+        bus.post(new ClientsLog.SendMessageTapped(mClient.getId()));
         //Only works on Release builds
         HandyLibrary.getInstance().getHandyService().createConversationForPro(
                 mClient.getId(), "", new Callback<CreateConversationResponse>() {
