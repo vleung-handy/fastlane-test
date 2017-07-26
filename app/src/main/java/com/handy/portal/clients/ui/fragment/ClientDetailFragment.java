@@ -112,19 +112,20 @@ public class ClientDetailFragment extends ActionBarFragment {
     @NonNull
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        bus.post(new ClientsLog.DetailViewShown());
+        bus.post(new ClientsLog.DetailViewShown(mClient.getId()));
+
         View view = inflater.inflate(R.layout.fragment_client_details, container, false);
         ButterKnife.bind(this, view);
-        return view;
-    }
-
-    @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+        
         setActionBar(getString(R.string.client_details_titlebar_text, mClient.getFirstName()), true);
         initializeMaps(savedInstanceState);
         requestClientDetails();
+        initializeUI();
 
+        return view;
+    }
+
+    private void initializeUI() {
         //If there's no profile url then just display initials
         if (android.text.TextUtils.isEmpty(mClient.getProfileImageUrl())) {
             mProfileImgView.setVisibility(View.GONE);
