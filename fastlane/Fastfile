@@ -29,6 +29,7 @@ end
 
 desc "Build the hosted and store APKs and upload them to Github and AWS"
 lane :release do
+  ensure_required_env_variables_present
   ensure_git_branch_release_candidate
   ensure_git_branch_clean_and_latest
 
@@ -49,6 +50,7 @@ lane :release do
 end
 
 lane :beta do |options|
+  #TODO allow build flavor to be specified
   notes = options[:notes]
   tester_emails = options[:tester_emails]
   tester_groups = options[:tester_groups] || ["android-devs", "android-internal-testers"]
@@ -252,6 +254,14 @@ private_lane :ensure_git_branch_release_candidate do
   release_candidate_branch_pattern = /release_candidate_v[0-9]+\.[0-9]+\.x/
   if release_candidate_branch_pattern.match(branch_name).nil?
     exit_with_error(error_message: "Current branch must be a release candidate branch (e.g. release_candidate_v1.29.x)")
+  end
+end
+
+private_lane :ensure_required_env_variables_present do
+  ["GITHUB_ACCESS_TOKEN", "CRASHLYTICS_API_TOKEN", "CRASHLYTICS_BUILD_SECRET", "S3_ACCESS_KEY", "S3_SECRET_ACCESS_KEY"].each do |variable|
+    if ENV[variable].to_s.empty?
+      exit_with_error(error_message: "required env variable '#{variable}' is not defined")
+    end
   end
 end
 
