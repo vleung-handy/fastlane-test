@@ -136,6 +136,7 @@ lane :version_bump do |options|
     if git_tag_exists(tag: version_tag)
       UI.error("Unable to add tag #{version_tag}")
     else
+      UI.success("tag #{version_tag} does not exist yet")
       create_release(tag: version_tag)
     end
   end
