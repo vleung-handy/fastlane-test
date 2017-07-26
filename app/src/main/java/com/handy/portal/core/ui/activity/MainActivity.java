@@ -20,6 +20,7 @@ import com.handy.portal.announcements.model.Announcement;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.ui.element.BookingMapView;
+import com.handy.portal.clients.ui.element.ClientMapProvider;
 import com.handy.portal.clients.ui.element.ClientMapView;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.core.constant.BundleKeys;
@@ -51,7 +52,7 @@ import butterknife.ButterKnife;
 import static com.handy.portal.core.model.ProviderPersonalInfo.ProfileImage.Type.THUMBNAIL;
 
 public class MainActivity extends BaseActivity
-        implements BookingMapProvider, LayerHelper.UnreadConversationsCountChangedListener {
+        implements BookingMapProvider, ClientMapProvider, LayerHelper.UnreadConversationsCountChangedListener {
     @Inject
     ProviderManager providerManager;
     @Inject
@@ -171,6 +172,7 @@ public class MainActivity extends BaseActivity
         return mBookingMapView;
     }
 
+    @Override
     public ClientMapView getClientMapView() {
         if (mClientMapView == null) {
             mClientMapView = new ClientMapView(this, ClientMapView.getDefaultClientGoogleMapOptions());
