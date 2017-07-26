@@ -209,4 +209,7 @@
 
     <!-- Pro Availability -->
     <dimen name="time_range_reset_button_size">26dp</dimen>
+
+    <!-- Client details map height -->
+    <dimen name="client_detail_map_min_height">220dp</dimen>
 </resources>

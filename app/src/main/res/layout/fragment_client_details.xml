@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
-            xmlns:map="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -194,15 +193,16 @@
             android:layout_height="@dimen/divider_height"
             />
 
-        <com.google.android.gms.maps.MapView
-            android:id="@+id/client_detail_map"
+        <View
+            android:id="@+id/client_details_map_placeholder"
             android:layout_width="match_parent"
-            android:layout_height="220dp"
-            android:minHeight="220dp"
-            android:layout_weight="1"
-            map:cameraZoom="15"
-            map:liteMode="true"
-            map:mapType="normal"
+            android:layout_height="match_parent"
             />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="@color/white" />
     </LinearLayout>
 </ScrollView>
