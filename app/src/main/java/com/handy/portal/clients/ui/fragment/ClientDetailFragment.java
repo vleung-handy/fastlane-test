@@ -1,5 +1,6 @@
 package com.handy.portal.clients.ui.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -17,6 +18,7 @@ import com.handy.portal.R;
 import com.handy.portal.clients.model.Client;
 import com.handy.portal.clients.model.ClientDetail;
 import com.handy.portal.clients.model.Price;
+import com.handy.portal.clients.ui.element.ClientMapProvider;
 import com.handy.portal.clients.ui.element.ClientMapView;
 import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.ProviderManager;
@@ -159,7 +161,7 @@ public class ClientDetailFragment extends ActionBarFragment {
             mMapLayout.setVisibility(View.GONE);
             return;
         } else {
-            mapView = ((MainActivity) getActivity()).getClientMapView();
+            mapView = ((ClientMapProvider) getContext()).getClientMapView();
         }
 
 
@@ -240,7 +242,7 @@ public class ClientDetailFragment extends ActionBarFragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        ClientMapView mapView = ((MainActivity) getActivity()).getClientMapView();
+        ClientMapView mapView = ((ClientMapProvider) getContext()).getClientMapView();
         mapView.onPause();
         mapView.onStop();
     }
