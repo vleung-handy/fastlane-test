@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -160,11 +161,14 @@ public class ClientDetailFragment extends ActionBarFragment {
     }
 
     private void initializeMaps(Bundle savedInstanceState) {
-
         mMapView.onCreate(savedInstanceState);
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
             public void onMapReady(GoogleMap mMap) {
+                //If it's detached this means the fragment is in limbo. Just return
+                if(isDetached())
+                    return;
+
                 mGoogleMap = mMap;
                 Address address = mClient.getAddress();
                 LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
@@ -174,9 +178,9 @@ public class ClientDetailFragment extends ActionBarFragment {
                 CircleOptions circleOptions = new CircleOptions()
                         .center(latLng)
                         .radius(300)
-                        .strokeColor(getContext().getResources().getColor(R.color.light_gray_trans))
+                        .strokeColor(ContextCompat.getColor(getContext(), R.color.light_gray_trans))
                         .strokeWidth(5)
-                        .fillColor(getContext().getResources().getColor(R.color.handy_blue_trans_10));
+                        .fillColor(ContextCompat.getColor(getContext(), R.color.handy_blue_trans_10));
 
                 // Get back the mutable Circle
                 Circle circle = mGoogleMap.addCircle(circleOptions);
@@ -196,6 +200,10 @@ public class ClientDetailFragment extends ActionBarFragment {
                 new HandyRetrofit2Callback<ClientDetail>() {
                     @Override
                     public void onSuccess(@NonNull final ClientDetail response) {
+                        //If it's detached this means the fragment is in limbo. Just return
+                        if(isDetached())
+                            return;
+
                         //Bind the stats data
                         Price price = response.getStats().getTotalEarnings();
                         mTotalEarningsText.setText(CurrencyUtils.formatPriceWithCents(
