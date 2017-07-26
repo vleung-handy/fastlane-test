@@ -8,7 +8,7 @@ default_platform :android
 before_all do
   ENV["SLACK_URL"] = "https://hooks.slack.com/services/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"
 
-  repo_name = "handybook/android-provider"
+  repo_name = "vleung/fastlane-test"
   ENV["GITHUB_API_URL"] = "https://api.github.com/repos/#{repo_name}"
   ENV["GITHUB_URL"] = "https://github.com/#{repo_name}"
 
@@ -51,7 +51,7 @@ end
 lane :beta do |options|
   notes = options[:notes]
   tester_emails = options[:tester_emails]
-  tester_groups = options[:tester_groups] || ["android-devs", "android-internal-testers"]
+  tester_groups = options[:tester_groups]
 
   ensure_git_branch_release_candidate
   ensure_git_branch_clean_and_latest
@@ -69,10 +69,10 @@ lane :beta do |options|
     notes: notes
   )
 
-  slack(
-    message: "New Android build uploaded to Crashlytics!",
-    channel: "pro-app-releases"
-  )
+  #slack(
+  #  message: "New Android build uploaded to Crashlytics!",
+  #  channel: "pro-app-releases"
+  #)
 end
 
 lane :applause do |options|
