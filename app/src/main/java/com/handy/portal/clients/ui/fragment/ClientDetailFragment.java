@@ -1,5 +1,6 @@
 package com.handy.portal.clients.ui.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -7,28 +8,26 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.Circle;
-import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.handy.portal.R;
 import com.handy.portal.clients.model.Client;
 import com.handy.portal.clients.model.ClientDetail;
 import com.handy.portal.clients.model.Price;
+import com.handy.portal.clients.ui.element.ClientMapProvider;
+import com.handy.portal.clients.ui.element.ClientMapView;
 import com.handy.portal.core.manager.PageNavigationManager;
 import com.handy.portal.core.manager.ProviderManager;
 import com.handy.portal.core.model.Address;
+import com.handy.portal.core.ui.activity.MainActivity;
 import com.handy.portal.core.ui.fragment.ActionBarFragment;
 import com.handy.portal.data.DataManager;
 import com.handy.portal.library.util.CurrencyUtils;
+import com.handy.portal.library.util.UIUtils;
 import com.handy.portal.logger.handylogger.model.ClientsLog;
 import com.handy.portal.retrofit.HandyRetrofit2Callback;
 import com.handybook.shared.core.HandyLibrary;
@@ -69,10 +68,8 @@ public class ClientDetailFragment extends ActionBarFragment {
     TextView mTotalEarningsText;
     @BindView(R.id.client_detail_activity)
     TextView mActivityText;
-    @BindView(R.id.client_detail_map)
-    MapView mMapView;
-
-    private GoogleMap mGoogleMap;
+    @BindView(R.id.client_details_map_placeholder)
+    ViewGroup mMapLayout;
 
     private Client mClient;
 
@@ -99,31 +96,25 @@ public class ClientDetailFragment extends ActionBarFragment {
         if (bundle != null) {
             mClient = (Client) bundle.getSerializable(KEY_CLIENT);
         }
-
-        try {
-            MapsInitializer.initialize(getContext());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @NonNull
     @Override
     public View onCreateView(final LayoutInflater inflater, final ViewGroup container, final Bundle savedInstanceState) {
-        bus.post(new ClientsLog.DetailViewShown());
+        bus.post(new ClientsLog.DetailViewShown(mClient.getId()));
+
         View view = inflater.inflate(R.layout.fragment_client_details, container, false);
         ButterKnife.bind(this, view);
+
+        setActionBar(getString(R.string.client_details_titlebar_text, mClient.getFirstName()), true);
+        initializeUI();
+        initializeMaps();
+        requestClientDetails();
+
         return view;
     }
 
-    @Override
-    public void onViewCreated(final View view, final Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setActionBar(getString(R.string.client_details_titlebar_text, mClient.getFirstName()), true);
-        initializeMaps(savedInstanceState);
-        requestClientDetails();
-
+    private void initializeUI() {
         //If there's no profile url then just display initials
         if (android.text.TextUtils.isEmpty(mClient.getProfileImageUrl())) {
             mProfileImgView.setVisibility(View.GONE);
@@ -141,7 +132,11 @@ public class ClientDetailFragment extends ActionBarFragment {
                     .into(mProfileImgView);
         }
 
-        mCityTextView.setText(mClient.getAddress().getCityState());
+        if(mClient.getAddress() == null) {
+            mCityTextView.setVisibility(View.GONE);
+        } else {
+            mCityTextView.setText(mClient.getAddress().getCityState());
+        }
 
         Client.Context clientContext = mClient.getContext();
 
@@ -159,32 +154,32 @@ public class ClientDetailFragment extends ActionBarFragment {
         }
     }
 
-    private void initializeMaps(Bundle savedInstanceState) {
+    private void initializeMaps() {
+        ClientMapView mapView;
+        Address address = mClient.getAddress();
+        if(address == null) {
+            mMapLayout.setVisibility(View.GONE);
+            return;
+        } else {
+            mapView = ((ClientMapProvider) getContext()).getClientMapView();
+        }
 
-        mMapView.onCreate(savedInstanceState);
-        mMapView.getMapAsync(new OnMapReadyCallback() {
-            @Override
-            public void onMapReady(GoogleMap mMap) {
-                mGoogleMap = mMap;
-                Address address = mClient.getAddress();
-                LatLng latLng = new LatLng(address.getLatitude(), address.getLongitude());
-                CameraUpdate center = CameraUpdateFactory.newLatLng(latLng);
-                CameraUpdate zoom = CameraUpdateFactory.zoomTo(15);
-                // In meters
-                CircleOptions circleOptions = new CircleOptions()
-                        .center(latLng)
-                        .radius(300)
-                        .strokeColor(getContext().getResources().getColor(R.color.light_gray_trans))
-                        .strokeWidth(5)
-                        .fillColor(getContext().getResources().getColor(R.color.handy_blue_trans_10));
 
-                // Get back the mutable Circle
-                Circle circle = mGoogleMap.addCircle(circleOptions);
+        if(mapView.getLayoutParams() == null) {
+            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
+            mapView.setLayoutParams(layoutParams);
+        }
 
-                mGoogleMap.moveCamera(center);
-                mGoogleMap.animateCamera(zoom);
-            }
-        });
+        if (mapView.getParent() != null) {
+            ((ViewGroup) mapView.getParent()).removeView(mapView);
+        }
+
+        mMapLayout.addView(mapView);
+        mapView.onStart();
+        mapView.onResume();
+        mapView.getMapAsync(new LatLng(address.getLatitude(), address.getLongitude()));
     }
 
     /**
@@ -196,11 +191,17 @@ public class ClientDetailFragment extends ActionBarFragment {
                 new HandyRetrofit2Callback<ClientDetail>() {
                     @Override
                     public void onSuccess(@NonNull final ClientDetail response) {
+                        //If it's detached this means the fragment is in limbo. Just return
+                        if(isDetached())
+                            return;
+
                         //Bind the stats data
                         Price price = response.getStats().getTotalEarnings();
-                        mTotalEarningsText.setText(CurrencyUtils.formatPriceWithCents(
-                                price.getAmount(),
-                                price.getSymbol()));
+                        if(price != null) {
+                            mTotalEarningsText.setText(CurrencyUtils.formatPriceWithCents(
+                                    price.getAmount(),
+                                    price.getSymbol()));
+                        }
                         mActivityText.setText(getContext().
                                 getResources().getQuantityString(R.plurals.client_details_jobs_completed,
                                 response.getStats().getTotalJobsCount(),
@@ -216,6 +217,7 @@ public class ClientDetailFragment extends ActionBarFragment {
 
     @OnClick(R.id.client_detail_send_message)
     public void sendMessage() {
+        bus.post(new ClientsLog.SendMessageTapped(mClient.getId()));
         //Only works on Release builds
         HandyLibrary.getInstance().getHandyService().createConversationForPro(
                 mClient.getId(), "", new Callback<CreateConversationResponse>() {
@@ -235,5 +237,13 @@ public class ClientDetailFragment extends ActionBarFragment {
                         showToast(R.string.an_error_has_occurred);
                     }
                 });
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        ClientMapView mapView = ((ClientMapProvider) getContext()).getClientMapView();
+        mapView.onPause();
+        mapView.onStop();
     }
 }

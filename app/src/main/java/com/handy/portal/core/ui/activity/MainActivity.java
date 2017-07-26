@@ -13,12 +13,15 @@ import android.webkit.CookieSyncManager;
 import android.widget.Toast;
 
 import com.crashlytics.android.Crashlytics;
+import com.google.android.gms.maps.MapView;
 import com.handy.portal.R;
 import com.handy.portal.announcements.AnnouncementEvent;
 import com.handy.portal.announcements.model.Announcement;
 import com.handy.portal.bookings.BookingEvent;
 import com.handy.portal.bookings.manager.BookingManager;
 import com.handy.portal.bookings.ui.element.BookingMapView;
+import com.handy.portal.clients.ui.element.ClientMapProvider;
+import com.handy.portal.clients.ui.element.ClientMapView;
 import com.handy.portal.core.EnvironmentModifier;
 import com.handy.portal.core.constant.BundleKeys;
 import com.handy.portal.core.constant.MainViewPage;
@@ -49,7 +52,7 @@ import butterknife.ButterKnife;
 import static com.handy.portal.core.model.ProviderPersonalInfo.ProfileImage.Type.THUMBNAIL;
 
 public class MainActivity extends BaseActivity
-        implements BookingMapProvider, LayerHelper.UnreadConversationsCountChangedListener {
+        implements BookingMapProvider, ClientMapProvider, LayerHelper.UnreadConversationsCountChangedListener {
     @Inject
     ProviderManager providerManager;
     @Inject
@@ -77,6 +80,7 @@ public class MainActivity extends BaseActivity
     TabbedLayout mContentFrame;
 
     private BookingMapView mBookingMapView;
+    private ClientMapView mClientMapView;
 
     private NotificationBlockerDialogFragment mNotificationBlockerDialogFragment
             = new NotificationBlockerDialogFragment();
@@ -166,6 +170,17 @@ public class MainActivity extends BaseActivity
             mBookingMapView.onCreate(null);
         }
         return mBookingMapView;
+    }
+
+    @Override
+    public ClientMapView getClientMapView() {
+        if (mClientMapView == null) {
+            mClientMapView = new ClientMapView(this, ClientMapView.getDefaultClientGoogleMapOptions());
+            MapView.LayoutParams layoutParams = new MapView.LayoutParams(MapView.LayoutParams.MATCH_PARENT, MapView.LayoutParams.MATCH_PARENT);
+            mClientMapView.setLayoutParams(layoutParams);
+            mClientMapView.onCreate(Bundle.EMPTY);
+        }
+        return mClientMapView;
     }
 
     private void checkIfUserShouldUpdatePaymentInfo() {
