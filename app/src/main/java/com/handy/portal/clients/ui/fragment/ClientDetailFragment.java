@@ -216,9 +216,11 @@ public class ClientDetailFragment extends ActionBarFragment {
 
                         //Bind the stats data
                         Price price = response.getStats().getTotalEarnings();
-                        mTotalEarningsText.setText(CurrencyUtils.formatPriceWithCents(
-                                price.getAmount(),
-                                price.getSymbol()));
+                        if(price != null) {
+                            mTotalEarningsText.setText(CurrencyUtils.formatPriceWithCents(
+                                    price.getAmount(),
+                                    price.getSymbol()));
+                        }
                         mActivityText.setText(getContext().
                                 getResources().getQuantityString(R.plurals.client_details_jobs_completed,
                                 response.getStats().getTotalJobsCount(),

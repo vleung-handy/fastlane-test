@@ -1,5 +1,7 @@
 package com.handy.portal.clients.model;
 
+import android.support.annotation.Nullable;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -9,12 +11,14 @@ import java.io.Serializable;
  */
 
 public class Stats implements Serializable {
+    @Nullable
     @SerializedName("total_earnings")
     private Price mTotalEarnings;
 
     @SerializedName("total_jobs_count")
     private int mTotalJobsCount;
 
+    @Nullable
     public Price getTotalEarnings() {
         return mTotalEarnings;
     }
