@@ -45,12 +45,9 @@ lane :release do
   store_apk_file_name_pattern = 'handy-pro-store-release*'
   upload_apk_to_github_release(apk_file_name_pattern: store_apk_file_name_pattern)
   upload_apk_to_aws_release_folder(apk_file_name_pattern: store_apk_file_name_pattern)
-
-  #TODO also create entry in provider app releases dashboard
 end
 
 lane :beta do |options|
-  #TODO allow build flavor to be specified
   notes = options[:notes]
   tester_emails = options[:tester_emails]
   tester_groups = options[:tester_groups] || ["android-devs", "android-internal-testers"]
@@ -59,8 +56,12 @@ lane :beta do |options|
   ensure_git_branch_clean_and_latest
 
   if !options[:skip_build]
+    build_variant = options[:variant] || "hostedRelease"
+    build_variant[0] = build_variant[0,1].upcase
+    gradle_build_variant = "assemble" + build_variant
+
     gradle(task: "clean")
-    gradle(task: "assembleHostedRelease")
+    gradle(task: gradle_build_variant)
   end
 
   crashlytics(
