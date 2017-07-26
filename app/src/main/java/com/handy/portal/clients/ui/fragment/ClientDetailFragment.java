@@ -67,7 +67,7 @@ public class ClientDetailFragment extends ActionBarFragment {
     @BindView(R.id.client_detail_activity)
     TextView mActivityText;
     @BindView(R.id.client_details_map_placeholder)
-    View mMapLayout;
+    ViewGroup mMapLayout;
 
     private Client mClient;
 
@@ -162,17 +162,19 @@ public class ClientDetailFragment extends ActionBarFragment {
             mapView = ((MainActivity) getActivity()).getClientMapView();
         }
 
+
         if(mapView.getLayoutParams() == null) {
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                    LinearLayout.LayoutParams.MATCH_PARENT,
-                    getResources().getDimensionPixelOffset(R.dimen.client_detail_map_min_height));
+            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT);
             mapView.setLayoutParams(layoutParams);
         }
 
         if (mapView.getParent() != null) {
             ((ViewGroup) mapView.getParent()).removeView(mapView);
         }
-        UIUtils.replaceView(mMapLayout, mapView);
+
+        mMapLayout.addView(mapView);
         mapView.onStart();
         mapView.onResume();
         mapView.getMapAsync(new LatLng(address.getLatitude(), address.getLongitude()));

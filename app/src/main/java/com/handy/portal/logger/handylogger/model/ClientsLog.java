@@ -5,15 +5,11 @@ import android.support.annotation.NonNull;
 import com.google.gson.annotations.SerializedName;
 
 public class ClientsLog extends EventLog {
-    private static final String CLIENT_DETAIL = "client_detail";
-    private static final String EVENT_CONTEXT = "app";
-    private static final String EVENT_TYPE = "navigation";
-
     @SerializedName("page")
     private String mPage;
 
     public ClientsLog(String page) {
-        super(EVENT_TYPE, EVENT_CONTEXT);
+        super(EventType.NAVIGATION, EventContext.APP);
         mPage = page;
     }
 
@@ -26,11 +22,12 @@ public class ClientsLog extends EventLog {
     }
 
     public static class DetailViewShown extends ClientsLog {
+        private static final String PAGE = EventContext.CLIENT_DETAIL;
         @SerializedName("user_id")
         private String mClientId;
 
         public DetailViewShown(@NonNull String clientId) {
-            super(CLIENT_DETAIL);
+            super(PAGE);
             mClientId = clientId;
         }
     }
@@ -41,7 +38,7 @@ public class ClientsLog extends EventLog {
         private String mClientId;
 
         public SendMessageTapped(@NonNull String clientId) {
-            super(PAGE_NAME, CLIENT_DETAIL);
+            super(PAGE_NAME, EventContext.CLIENT_DETAIL);
             mClientId = clientId;
         }
     }

@@ -10,4 +10,6 @@ public interface EventContext {
     String REQUESTED_JOBS = "requested_jobs";
     String SCHEDULED_JOBS = "scheduled_jobs";
     String CHECKOUT_FLOW = "checkout_flow";
+    String CLIENT_DETAIL = "client_detail";
+    String APP = "app";
 }

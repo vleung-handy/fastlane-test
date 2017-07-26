@@ -193,16 +193,17 @@
             android:layout_height="@dimen/divider_height"
             />
 
-        <View
+        <FrameLayout
             android:id="@+id/client_details_map_placeholder"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="@dimen/client_detail_map_height"
             />
 
         <View
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
-            android:background="@color/white" />
+            android:background="@color/white"
+            />
     </LinearLayout>
 </ScrollView>

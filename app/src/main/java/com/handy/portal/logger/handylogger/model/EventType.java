@@ -29,4 +29,6 @@ public interface EventType {
     String SET_TEMPLATE_HOURS_SUBMITTED = "set_template_hours_submitted";
     String SET_TEMPLATE_HOURS_SUCCESS = "set_template_hours_success";
     String SET_TEMPLATE_HOURS_ERROR = "set_template_hours_error";
+
+    String NAVIGATION = "navigation";
 }
