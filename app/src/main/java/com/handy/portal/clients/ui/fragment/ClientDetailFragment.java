@@ -100,13 +100,6 @@ public class ClientDetailFragment extends ActionBarFragment {
         if (bundle != null) {
             mClient = (Client) bundle.getSerializable(KEY_CLIENT);
         }
-
-        try {
-            MapsInitializer.initialize(getContext());
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-        }
     }
 
     @NonNull
@@ -116,11 +109,11 @@ public class ClientDetailFragment extends ActionBarFragment {
 
         View view = inflater.inflate(R.layout.fragment_client_details, container, false);
         ButterKnife.bind(this, view);
-        
+
         setActionBar(getString(R.string.client_details_titlebar_text, mClient.getFirstName()), true);
+        initializeUI();
         initializeMaps(savedInstanceState);
         requestClientDetails();
-        initializeUI();
 
         return view;
     }
@@ -143,7 +136,11 @@ public class ClientDetailFragment extends ActionBarFragment {
                     .into(mProfileImgView);
         }
 
-        mCityTextView.setText(mClient.getAddress().getCityState());
+        if(mClient.getAddress() == null) {
+            mCityTextView.setVisibility(View.GONE);
+        } else {
+            mCityTextView.setText(mClient.getAddress().getCityState());
+        }
 
         Client.Context clientContext = mClient.getContext();
 
@@ -162,6 +159,18 @@ public class ClientDetailFragment extends ActionBarFragment {
     }
 
     private void initializeMaps(Bundle savedInstanceState) {
+        if(mClient.getAddress() == null) {
+            mMapView.setVisibility(View.GONE);
+            return;
+        }
+
+        try {
+            MapsInitializer.initialize(getContext());
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+
         mMapView.onCreate(savedInstanceState);
         mMapView.getMapAsync(new OnMapReadyCallback() {
             @Override
