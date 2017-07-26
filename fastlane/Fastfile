@@ -175,7 +175,7 @@ private_lane :create_release do |options|
   }
 
   url = "#{ENV["GITHUB_API_URL"]}/releases?access_token=#{ENV["GITHUB_ACCESS_TOKEN"]}"
-  sh("curl -s -S -X POST -H 'Content-Type: application/json' -d '#{JSON.generate(data)}' #{url} > /dev/null")
+  sh("curl -s -S -X POST -H 'Content-Type: application/json' -d '#{JSON.generate(data)}' #{url} > ../../fastlane_create_release.txt")
 end
 
 private_lane :upload_asset_github do |options|
