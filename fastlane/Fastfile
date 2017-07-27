@@ -50,7 +50,14 @@ end
 lane :beta do |options|
   notes = options[:notes]
   tester_emails = options[:tester_emails]
-  tester_groups = options[:tester_groups] || ["android-devs", "android-internal-testers"]
+
+  #only set tester groups if specified or tester_emails not specified
+  if !options[:tester_groups].nil?
+    tester_groups = options[:tester_groups]
+  elsif tester_emails.nil?
+    #no testers specified; use this as default
+    tester_groups = ["android-devs", "android-internal-testers"]
+  end
 
   ensure_git_branch_release_candidate
   ensure_git_branch_clean_and_latest
