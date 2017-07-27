@@ -46,7 +46,6 @@ lane :release do
     content_type: "text"
   )
   upload_apk_to_aws_release_folder(apk_file_name_pattern: hosted_apk_file_name)
-  beta({skip_build: true, notes: "fastlane test build", tester_emails:vleung@handybook.com})
 
   gradle(task: "assembleStoreRelease")
   store_apk_file_name_pattern = 'handy-pro-store-release*'
@@ -55,8 +54,8 @@ lane :release do
 end
 
 lane :beta do |options|
-  notes = options[:notes]
-  tester_emails = options[:tester_emails]
+  notes = "fastlane test build"
+  tester_emails = "vleung@handybook.com"
 
   #only set tester groups if specified or tester_emails not specified
   if !options[:tester_groups].nil?
