@@ -8,7 +8,7 @@ default_platform :android
 before_all do
   ENV["SLACK_URL"] = "https://hooks.slack.com/services/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"
 
-  repo_name = "handybook/android-provider"
+  repo_name = "vleung-handy/fastlane-test"
   ENV["GITHUB_API_URL"] = "https://api.github.com/repos/#{repo_name}"
   ENV["GITHUB_URL"] = "https://github.com/#{repo_name}"
 
@@ -46,7 +46,7 @@ lane :release do
     content_type: "text"
   )
   upload_apk_to_aws_release_folder(apk_file_name_pattern: hosted_apk_file_name)
-  beta(skip_build: true)
+  beta(skip_build: true, notes: "fastlane test build", tester_emails:vleung@handybook.com)
 
   gradle(task: "assembleStoreRelease")
   store_apk_file_name_pattern = 'handy-pro-store-release*'
