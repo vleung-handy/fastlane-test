@@ -56,7 +56,7 @@ lane :release do |options|
     release_patch
   elsif type == "minor"
     release_minor
-  elseif type == "major"
+  elsif type == "major"
     exit_with_error(error_message: 'Major release not supported right now')
   else
     exit_with_error(error_message: 'Missing release type. Options: type:<patch|minor>')
