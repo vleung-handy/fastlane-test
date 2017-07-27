@@ -16,7 +16,8 @@ before_all do
   ENV["S3_BUCKET"] = "mobile-android-assets"
   ENV["S3_REGION"] = "us-east-1"
 
-  ENV["APK_DIR"] = Dir.pwd + '/../app/build/outputs/apk'
+  ENV["APP_BUILD_OUTPUT_DIR"] = Dir.pwd + '/../app/build/outputs'
+  ENV["APK_DIR"] = "#{ENV['APP_BUILD_OUTPUT_DIR']}/apk"
 
   #the following variables should be set in your ~/.bash_profile
   #GITHUB_ACCESS_TOKEN
@@ -36,14 +37,20 @@ lane :release do
   gradle(task: "clean")
 
   gradle(task: "assembleHostedRelease")
-  hosted_apk_file_name_pattern = 'handy-pro-hosted-release*'
-  upload_apk_to_github_release(apk_file_name_pattern: hosted_apk_file_name_pattern)
-  upload_apk_to_aws_release_folder(apk_file_name_pattern: hosted_apk_file_name_pattern)
+  hosted_apk_file_name = get_apk_file_name_by_pattern('handy-pro-hosted-release*')
+  hosted_apk_file_base_name = File.basename(hosted_apk_file_name, File.extname(hosted_apk_file_name))
+  upload_apk_to_current_github_release(apk_file_name_pattern: hosted_apk_file_name)
+  upload_asset_to_current_github_release(
+    path:         "#{ENV['APP_BUILD_OUTPUT_DIR']}/mapping/hosted/release/mapping.txt",
+    name:         "#{hosted_apk_file_base_name}-mapping.txt",
+    content_type: "text"
+  )
+  upload_apk_to_aws_release_folder(apk_file_name_pattern: hosted_apk_file_name)
   beta(skip_build: true)
 
   gradle(task: "assembleStoreRelease")
   store_apk_file_name_pattern = 'handy-pro-store-release*'
-  upload_apk_to_github_release(apk_file_name_pattern: store_apk_file_name_pattern)
+  upload_apk_to_current_github_release(apk_file_name_pattern: store_apk_file_name_pattern)
   upload_apk_to_aws_release_folder(apk_file_name_pattern: store_apk_file_name_pattern)
 end
 
@@ -103,7 +110,7 @@ lane :applause do |options|
   # Remove namespace override
   sh("cd ..; ./scripts/kill-override")
 
-  upload_apk_to_github_release(apk_file_name_pattern: 'handy-pro-stage-release*')
+  upload_apk_to_current_github_release(apk_file_name_pattern: 'handy-pro-stage-release*')
 
   slack(
     message: "New Applause Android Provider build uploaded to Github! #{ENV["GITHUB_URL"]}/releases/tag/#{tag_name}",
@@ -233,21 +240,24 @@ private_lane :upload_apk_to_aws_release_folder do |options|
   )
 end
 
-private_lane :upload_apk_to_github_release do |options|
+private_lane :upload_asset_to_current_github_release do |options|
+  options[:tag] = "v#{get_current_version}"
+  upload_asset_github(options)
+end
+
+private_lane :upload_apk_to_current_github_release do |options|
   apk_file_name_pattern = options[:apk_file_name_pattern]
   unless apk_file_name_pattern
     exit_with_error(error_message: "Must specify apk_file_name_pattern (ex. 'handy-pro*')")
   end
   apk_dir = ENV["APK_DIR"]
-  tag_name = "v#{get_current_version}"
 
   apk_file_name = get_apk_file_name_by_pattern(apk_file_name_pattern)
   unless apk_file_name
     exit_with_error(error_message: "APK with pattern #{apk_file_name_pattern} not found in #{apk_dir}")
   end
 
-  upload_asset_github(
-    tag:          tag_name,
+  upload_asset_to_current_github_release(
     path:         "#{apk_dir}/#{apk_file_name}",
     name:         "#{apk_file_name}",
     content_type: "application/vnd.android.package-archive"
