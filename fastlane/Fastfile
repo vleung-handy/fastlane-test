@@ -28,34 +28,53 @@ before_all do
 
 end
 
-desc "Build the hosted and store APKs and upload them to Github and AWS"
-lane :release do
+
+# creates a minor release from the current develop branch
+private_lane :release_minor do |options|
+  ensure_git_branch(branch: 'develop')
+  ensure_git_branch_clean_and_latest
+  release_candidate
+  release_patch
+  sh('git checkout develop')
+  ensure_git_branch(branch: 'develop') #just in case above fails for some reason
+  ensure_git_branch_clean_and_latest
+  version_bump(type:"minor")
+end
+
+# creates a patch release from the current release candidate branch
+private_lane :release_patch do
+  ensure_git_branch_release_candidate
+  ensure_git_branch_clean_and_latest
+  version_bump(type:"patch")
+  build_and_upload_release_assets
+end
+
+desc "options: type:<patch|minor>"
+lane :release do |options|
+  type = options[:type]
+  if type == "patch"
+    release_patch
+  elsif type == "minor"
+    release_minor
+  elseif type == "major"
+    exit_with_error(error_message: 'Major release not supported right now')
+  else
+    exit_with_error(error_message: 'Missing release type. Options: type:<patch|minor>')
+  end
+end
+
+# Build the hosted and store APKs and upload them to Github, Fabric, and AWS
+private_lane :build_and_upload_release_assets do
   ensure_required_env_variables_present
   ensure_git_branch_release_candidate
   ensure_git_branch_clean_and_latest
 
   gradle(task: "clean")
-
-  gradle(task: "assembleHostedRelease")
-  hosted_apk_file_name = get_apk_file_name_by_pattern('handy-pro-hosted-release*')
-  hosted_apk_file_base_name = File.basename(hosted_apk_file_name, File.extname(hosted_apk_file_name))
-  upload_apk_to_current_github_release(apk_file_name_pattern: hosted_apk_file_name)
-  upload_asset_to_current_github_release(
-    path:         "#{ENV['APP_BUILD_OUTPUT_DIR']}/mapping/hosted/release/mapping.txt",
-    name:         "#{hosted_apk_file_base_name}-mapping.txt",
-    content_type: "text"
-  )
-  upload_apk_to_aws_release_folder(apk_file_name_pattern: hosted_apk_file_name)
-
-  gradle(task: "assembleStoreRelease")
-  store_apk_file_name_pattern = 'handy-pro-store-release*'
-  upload_apk_to_current_github_release(apk_file_name_pattern: store_apk_file_name_pattern)
-  upload_apk_to_aws_release_folder(apk_file_name_pattern: store_apk_file_name_pattern)
 end
 
 lane :beta do |options|
-  notes = "fastlane test build"
-  tester_emails = "vleung@handybook.com"
+  notes = options[:notes]
+  tester_emails = options[:tester_emails]
 
   #only set tester groups if specified or tester_emails not specified
   if !options[:tester_groups].nil?
