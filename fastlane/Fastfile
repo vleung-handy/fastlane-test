@@ -11,33 +11,71 @@ before_all do
   repo_name = "handybook/android-provider"
   ENV["GITHUB_API_URL"] = "https://api.github.com/repos/#{repo_name}"
   ENV["GITHUB_URL"] = "https://github.com/#{repo_name}"
+
+  ENV["S3_BUCKET_APP_RELEASE_DIR"] = "provider"
+  ENV["S3_BUCKET"] = "mobile-android-assets"
+  ENV["S3_REGION"] = "us-east-1"
+
+  ENV["APP_BUILD_OUTPUT_DIR"] = Dir.pwd + '/../app/build/outputs'
+  ENV["APK_DIR"] = "#{ENV['APP_BUILD_OUTPUT_DIR']}/apk"
+
+  #the following variables should be set in your ~/.bash_profile
+  #GITHUB_ACCESS_TOKEN
+  #CRASHLYTICS_API_TOKEN
+  #CRASHLYTICS_BUILD_SECRET
+  #S3_ACCESS_KEY
+  #S3_SECRET_ACCESS_KEY
+
 end
 
+desc "Build the hosted and store APKs and upload them to Github and AWS"
 lane :release do
+  ensure_required_env_variables_present
   ensure_git_branch_release_candidate
   ensure_git_branch_clean_and_latest
 
   gradle(task: "clean")
 
   gradle(task: "assembleHostedRelease")
-  upload_apk_to_github_release(apk_file_name_pattern: 'handy-pro-hosted-release*')
+  hosted_apk_file_name = get_apk_file_name_by_pattern('handy-pro-hosted-release*')
+  hosted_apk_file_base_name = File.basename(hosted_apk_file_name, File.extname(hosted_apk_file_name))
+  upload_apk_to_current_github_release(apk_file_name_pattern: hosted_apk_file_name)
+  upload_asset_to_current_github_release(
+    path:         "#{ENV['APP_BUILD_OUTPUT_DIR']}/mapping/hosted/release/mapping.txt",
+    name:         "#{hosted_apk_file_base_name}-mapping.txt",
+    content_type: "text"
+  )
+  upload_apk_to_aws_release_folder(apk_file_name_pattern: hosted_apk_file_name)
   beta(skip_build: true)
 
   gradle(task: "assembleStoreRelease")
-  upload_apk_to_github_release(apk_file_name_pattern: 'handy-pro-store-release*')
+  store_apk_file_name_pattern = 'handy-pro-store-release*'
+  upload_apk_to_current_github_release(apk_file_name_pattern: store_apk_file_name_pattern)
+  upload_apk_to_aws_release_folder(apk_file_name_pattern: store_apk_file_name_pattern)
 end
 
 lane :beta do |options|
   notes = options[:notes]
   tester_emails = options[:tester_emails]
-  tester_groups = options[:tester_groups] || ["android-devs", "android-internal-testers"]
+
+  #only set tester groups if specified or tester_emails not specified
+  if !options[:tester_groups].nil?
+    tester_groups = options[:tester_groups]
+  elsif tester_emails.nil?
+    #no testers specified; use this as default
+    tester_groups = ["android-devs", "android-internal-testers"]
+  end
 
   ensure_git_branch_release_candidate
   ensure_git_branch_clean_and_latest
 
   if !options[:skip_build]
+    build_variant = options[:variant] || "hostedRelease"
+    build_variant[0] = build_variant[0,1].upcase
+    gradle_build_variant = "assemble" + build_variant
+
     gradle(task: "clean")
-    gradle(task: "assembleHostedRelease")
+    gradle(task: gradle_build_variant)
   end
 
   crashlytics(
@@ -72,7 +110,7 @@ lane :applause do |options|
   # Remove namespace override
   sh("cd ..; ./scripts/kill-override")
 
-  upload_apk_to_github_release(apk_file_name_pattern: 'handy-pro-stage-release*')
+  upload_apk_to_current_github_release(apk_file_name_pattern: 'handy-pro-stage-release*')
 
   slack(
     message: "New Applause Android Provider build uploaded to Github! #{ENV["GITHUB_URL"]}/releases/tag/#{tag_name}",
@@ -183,21 +221,43 @@ private_lane :upload_asset_github do |options|
   UI.success("Upload success!")
 end
 
-private_lane :upload_apk_to_github_release do |options|
+private_lane :upload_apk_to_aws_release_folder do |options|
+  apk_dir = ENV["APK_DIR"]
+  apk_file_name_pattern = options[:apk_file_name_pattern]
+  apk_file_name = get_apk_file_name_by_pattern(apk_file_name_pattern)
+
+  apk_file_path = "#{apk_dir}/#{apk_file_name}"
+
+  aws_s3(
+    access_key: ENV['S3_ACCESS_KEY'],
+    secret_access_key: ENV['S3_SECRET_ACCESS_KEY'],
+    bucket: ENV['S3_BUCKET'],
+    region: ENV['S3_REGION'],
+    apk: apk_file_path,
+    app_directory: ENV["S3_BUCKET_APP_RELEASE_DIR"],
+    path: '',
+    upload_metadata: false
+  )
+end
+
+private_lane :upload_asset_to_current_github_release do |options|
+  options[:tag] = "v#{get_current_version}"
+  upload_asset_github(options)
+end
+
+private_lane :upload_apk_to_current_github_release do |options|
   apk_file_name_pattern = options[:apk_file_name_pattern]
   unless apk_file_name_pattern
     exit_with_error(error_message: "Must specify apk_file_name_pattern (ex. 'handy-pro*')")
   end
-  apk_dir = '../app/build/outputs/apk'
-  tag_name = "v#{get_current_version}"
+  apk_dir = ENV["APK_DIR"]
 
-  apk_file_name = Dir.entries(apk_dir).select{ |entry| /#{apk_file_name_pattern}/.match(entry) }.first
+  apk_file_name = get_apk_file_name_by_pattern(apk_file_name_pattern)
   unless apk_file_name
     exit_with_error(error_message: "APK with pattern #{apk_file_name_pattern} not found in #{apk_dir}")
   end
 
-  upload_asset_github(
-    tag:          tag_name,
+  upload_asset_to_current_github_release(
     path:         "#{apk_dir}/#{apk_file_name}",
     name:         "#{apk_file_name}",
     content_type: "application/vnd.android.package-archive"
@@ -215,6 +275,14 @@ private_lane :ensure_git_branch_release_candidate do
   end
 end
 
+private_lane :ensure_required_env_variables_present do
+  ["GITHUB_ACCESS_TOKEN", "CRASHLYTICS_API_TOKEN", "CRASHLYTICS_BUILD_SECRET", "S3_ACCESS_KEY", "S3_SECRET_ACCESS_KEY"].each do |variable|
+    if ENV[variable].to_s.empty?
+      exit_with_error(error_message: "required env variable '#{variable}' is not defined")
+    end
+  end
+end
+
 private_lane :ensure_git_branch_clean_and_latest do |options|
   ensure_git_status_clean
   git_pull
@@ -227,4 +295,11 @@ end
 private_lane :exit_with_error do |options|
   UI.error(options[:error_message])
   exit
+end
+
+# helper methods
+
+def get_apk_file_name_by_pattern(apk_file_name_pattern)
+  apk_dir = ENV["APK_DIR"]
+  return Dir.entries(apk_dir).select{ |entry| /#{apk_file_name_pattern}/.match(entry) }.first
 end
